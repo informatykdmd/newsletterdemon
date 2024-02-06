@@ -16,12 +16,19 @@ def prepare_mailing_plan(posts, previous_mailings, time_interval_minutes):
 
     return mailing_plan
 def save_shedule(shcedule):
+    exiting_post = []
+    get_existing_posts = connect_to_database(
+        'SELECT post_id FROM schedule;')
+    for row in get_existing_posts:
+        exiting_post.append(row[0])
+    print(exiting_post)
     for row in shcedule:
-        formatedDate = row["send_time"].strftime("%Y-%m-%d %H:%M:%S")
-        insert_to_database(
-            'INSERT INTO schedule (post_id, send_time) VALUES (%s, %s)',
-            (row["post_id"], formatedDate)
-        )
+        if row["post_id"] not in exiting_post:
+            formatedDate = row["send_time"].strftime("%Y-%m-%d %H:%M:%S")
+            insert_to_database(
+                'INSERT INTO schedule (post_id, send_time) VALUES (%s, %s)',
+                (row["post_id"], formatedDate)
+            )
 
 def get_allPostsID():
     dumpDB = connect_to_database(
