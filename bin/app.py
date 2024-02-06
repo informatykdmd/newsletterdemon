@@ -16,7 +16,7 @@ def main():
                 'SELECT * FROM schedule;'):
             if row[2] > current_time:
                 TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')
-                nesletterDB = prepare_shedule.connect_to_database(f'SELECT (CLIENT_NAME, CLIENT_EMAIL) FROM newsletter;')
+                nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL FROM newsletter;')
                 for data in nesletterDB:
                     HTML = messagerCreator.create_html_message(row[1], data[0])
                     if HTML != '':
