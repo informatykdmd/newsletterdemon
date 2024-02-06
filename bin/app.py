@@ -20,6 +20,7 @@ def main():
                 for data in nesletterDB:
                     HTML = messagerCreator.create_html_message(row[1], data[0])
                     if HTML != '':
+                        print(data[1])
                         sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
                         archive_sents(row[1])
         print(f'{datetime.now()} - {__name__} is working...\n')
