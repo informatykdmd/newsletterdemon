@@ -14,6 +14,8 @@ def send_html_email(subject, html_body, to_email, smtp_server, smtp_port, smtp_u
 
     # Utwórz połączenie z serwerem SMTP
     with smtplib.SMTP(smtp_server, smtp_port) as server:
+        # Rozszerzenie STARTTLS
+        server.starttls()
         # Zaloguj się do konta SMTP
         server.login(smtp_username, smtp_password)
 
