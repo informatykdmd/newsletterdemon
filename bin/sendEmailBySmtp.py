@@ -7,13 +7,14 @@ from config_utils import smtp_config
 def send_html_email(subject, html_body, to_email):
     # Utwórz wiadomość
     message = MIMEMultipart()
-    message["From"] = smtp_username
-    message["To"] = to_email
-    message["Subject"] = subject
     smtp_server = smtp_config['smtp_server']
     smtp_port =smtp_config['smtp_port']
     smtp_username = smtp_config['smtp_username']
     smtp_password = smtp_config['smtp_password']
+    message["From"] = smtp_username
+    message["To"] = to_email
+    message["Subject"] = subject
+    
 
     # Dodaj treść HTML
     message.attach(MIMEText(html_body, "html"))
