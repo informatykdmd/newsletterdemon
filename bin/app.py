@@ -1,40 +1,30 @@
-# Główny skrypt demona
-import argparse
-import configparser
-import time
-from config_utils import get_config, get_database_name
-from smtplib import SMTP
-import appslib
-
+from time import time, sleep
+from datetime import datetime
+import prepare_shedule
+import messagerCreator 
+import sendEmailBySmtp
+from archiveSents import archive_sents
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config", help="Plik konfiguracyjny")
-    args = parser.parse_args()
-
-    config = configparser.ConfigParser()
-    config.read(args.config)
-
-    database_name = get_database_name()
-    database_config = get_config()["database"]
-    db = appslib.connect_to_database(database_config["name"], database_config["user"], database_config["password"])
-
-    daemon_name = config["general"]["daemon_name"]
-    send_interval = int(config["general"]["send_interval"])
-    recipients = config["general"]["recipients"]
-    subjects = config["general"]["subjects"]
-    bodies = config["general"]["bodies"]
-
-    server = SMTP(config["smtp"]["server"])
-    server.starttls()
-    server.login(config["smtp"]["username"], config["smtp"]["password"])
-
-    while True:
-        for recipient, subject, body in zip(recipients, subjects, bodies):
-            message = f"Subject: {subject}\n\n{body}"
-            server.sendmail(config["smtp"]["from"], recipient, message)
-
-        time.sleep(send_interval)
+    for _ in range(time()):
+        shcedule = prepare_shedule.prepare_mailing_plan(prepare_shedule.get_allPostsID(), prepare_shedule.get_sent())
+        sleep(1)
+        prepare_shedule.save_shedule(shcedule)
+        sleep(1)
+        current_time = datetime.now()
+        for row in prepare_shedule.connect_to_database(
+                'SELECT * FROM schedule;'):
+            row_time = datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S')
+            if row_time > current_time:
+                TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')
+                nesletterDB = prepare_shedule.connect_to_database(f'SELECT (CLIENT_NAME, CLIENT_EMAIL) FROM newsletter;')
+                for data in nesletterDB:
+                    HTML = messagerCreator.create_html_message(row[1], data[0])
+                    if HTML != '':
+                        sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
+                        archive_sents(row[1])
+        print(f'{datetime.now()} - {__name__} is working...\n')
+        sleep(3600)
 
 
 if __name__ == "__main__":

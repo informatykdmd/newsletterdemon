@@ -1,5 +1,5 @@
 from connectAndQuery import connect_to_database
-def create_html_message(postID):
+def create_html_message(postID, client_name):
     """
         Funkcja pobiera z bazy dane posta o podanym identyfikatorze i tworzy wiadomość HTML.
     """
@@ -7,14 +7,18 @@ def create_html_message(postID):
     dumpDB = connect_to_database(
                         f'SELECT * FROM contents WHERE ID = {postID};')
     formatDump = {}
-    formatDump['title'] = dumpDB[0][1]
-    formatDump['content_main'] = dumpDB[0][2]
-    formatDump['highlights'] = dumpDB[0][3]
-    formatDump['bullets'] = dumpDB[0][4]
-    formatDump['header_foto'] = dumpDB[0][5]
-    formatDump['content_foto'] = dumpDB[0][6]
-    formatDump['tags'] = dumpDB[0][7]
-    formatDump['category'] = dumpDB[0][8]
+    try:
+        formatDump['title'] = dumpDB[0][1]
+        formatDump['content_main'] = dumpDB[0][2]
+        formatDump['highlights'] = dumpDB[0][3]
+        formatDump['bullets'] = dumpDB[0][4]
+        formatDump['header_foto'] = dumpDB[0][5]
+        formatDump['content_foto'] = dumpDB[0][6]
+        formatDump['tags'] = dumpDB[0][7]
+        formatDump['category'] = dumpDB[0][8]
+    except IndexError as e:
+        print("Błąd w funkcji 'create_html_message': ",e)
+        return ''
 
     readyHtmlBullets = ''
     for text in formatDump['bullets'].split('#splx#'):
@@ -36,6 +40,7 @@ def create_html_message(postID):
         </style>
     </head>
     <body>
+        <p>Witaj, {{imie klienta}}. Przygotowaliśmy dla Ciebie nasze najnowsze newsy!</p>
         <h1>{{tytuł}}</h1>
         <p>{{wprowadzenie}}</p>
 
@@ -66,11 +71,11 @@ def create_html_message(postID):
     </body>
     </html>"""
 
-    ready_template = template.replace('{{tytuł}}', formatDump['title']).replace('{{tresc glowna}}', formatDump['content_main'])\
+    ready_template = template.replace('{{imie klienta}}', str(client_name)).replace('{{tytuł}}', formatDump['title']).replace('{{tresc glowna}}', formatDump['content_main'])\
                                 .replace('{{wprowadzenie}}', formatDump['highlights']).replace('{{wypunktowania}}', readyHtmlBullets)\
                                     .replace('{{zdjecie glowne}}', formatDump['header_foto']).replace('{{zdjecie dodatkowe}}', formatDump['content_foto'])\
                                         .replace('{{kategoria}}', formatDump['category']).replace('{{tagi}}', formatDump['tags'])
     return ready_template
 
 if __name__ == "__main__":
-    print(create_html_message(1))
+    print(create_html_message(1, 'michał'))
