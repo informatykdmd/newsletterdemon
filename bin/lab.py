@@ -6,7 +6,7 @@ def archive_sents(postIdFromSchedule):
     for row in scheduleDB:
         if row[1] == postIdFromSchedule:
             # Remove the entry from the Scheduled Posts table.
-            removeRowSQL = """DELETE FROM schedule WHERE postid='%s';"""
+            removeRowSQL = """DELETE FROM schedule WHERE post_id='%s';"""
             print("Removing scheduled post with ID '%s'." % (row[1]))
             delete_row_from_database(
                 removeRowSQL, 
