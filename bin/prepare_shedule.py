@@ -19,7 +19,7 @@ def prepare_mailing_plan(posts, previous_mailings, set_start_time = None):
 
     if lasted_date > set_start_time:
         set_start_time = lasted_date
-
+    set_start_time = set_start_time + + timedelta(minutes=time_interval_minutes)
     for post in posts:
         post_id = post['id']
         # Sprawdź, czy post został wcześniej wysłany
