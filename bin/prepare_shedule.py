@@ -23,7 +23,7 @@ def save_shedule(shcedule):
 
 def get_allPostsID():
     dumpDB = connect_to_database(
-        'SELECT ID FROM conntents;')
+        'SELECT ID FROM contents;')
     export = []
     for data in dumpDB: export.append({'id': data[1]})
     return export
