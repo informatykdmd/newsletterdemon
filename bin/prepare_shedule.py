@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from connectAndQuery import connect_to_database, insert_to_database
+from config_utils import time_interval_minutes
 def prepare_mailing_plan(posts, previous_mailings, time_interval_minutes):
     mailing_plan = []
     for post in posts:
@@ -21,7 +22,6 @@ def save_shedule(shcedule):
         'SELECT post_id FROM schedule;')
     for row in get_existing_posts:
         exiting_post.append(row[0])
-    print(exiting_post)
     for row in shcedule:
         if row["post_id"] not in exiting_post:
             formatedDate = row["send_time"].strftime("%Y-%m-%d %H:%M:%S")
@@ -29,6 +29,7 @@ def save_shedule(shcedule):
                 'INSERT INTO schedule (post_id, send_time) VALUES (%s, %s)',
                 (row["post_id"], formatedDate)
             )
+    return True
 
 def get_allPostsID():
     dumpDB = connect_to_database(
@@ -45,18 +46,6 @@ def get_sent():
     return export
 
 if __name__ == "__main__":
-    posts = [
-            {"id": 1 },
-            {"id": 2 },
-            {"id": 3 },
-            {"id": 5 },
-            {"id": 6 },
-            {"id": 7 },
-    ]
-    previous_mailings = [
-        {'post_id': 1},
-        {'post_id': 2}
-    ]
-    time_interval_minutes = 1440
+    # time_interval_minutes = 1440
     shcedule = prepare_mailing_plan(get_allPostsID(), get_sent(), time_interval_minutes)
     save_shedule(shcedule)
