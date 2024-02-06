@@ -55,10 +55,10 @@ def create_html_message(postID, client_name):
         </ul>
 
         <!-- Główne zdjęcie -->
-        <img src="{{zdjecie glowne}}" alt="Główne zdjęcie">
+        <img src="https://dmddomy.pl/{{zdjecie glowne}}" alt="Główne zdjęcie">
 
         <!-- Dodatkowe zdjęcie -->
-        <img src="{{zdjecie dodatkowe}}" alt="Dodatkowe zdjęcie">
+        <img src="https://dmddomy.pl/{{zdjecie dodatkowe}}" alt="Dodatkowe zdjęcie">
 
         <!-- Tagi i kategoria -->
         <p>Tagi: {{tagi}}</p>
