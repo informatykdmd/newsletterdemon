@@ -15,12 +15,11 @@ def main():
         for row in prepare_shedule.connect_to_database(
                 'SELECT * FROM schedule;'):
             if row[2] > current_time:
-                TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')
+                TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
                 nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL FROM newsletter;')
                 for data in nesletterDB:
                     HTML = messagerCreator.create_html_message(row[1], data[0])
                     if HTML != '':
-                        print(data[1])
                         sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
                         archive_sents(row[1])
         print(f'{datetime.now()} - {__name__} is working...\n')
