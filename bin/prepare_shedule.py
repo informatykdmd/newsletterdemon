@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from connectAndQuery import connect_to_database, insert_to_database
 from config_utils import time_interval_minutes
-def prepare_mailing_plan(posts, previous_mailings, time_interval_minutes):
+def prepare_mailing_plan(posts, previous_mailings):
     mailing_plan = []
     for post in posts:
         post_id = post['id']
@@ -47,5 +47,5 @@ def get_sent():
 
 if __name__ == "__main__":
     # time_interval_minutes = 1440
-    shcedule = prepare_mailing_plan(get_allPostsID(), get_sent(), time_interval_minutes)
+    shcedule = prepare_mailing_plan(get_allPostsID(), get_sent())
     save_shedule(shcedule)
