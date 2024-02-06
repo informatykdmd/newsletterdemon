@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from connectAndQuery import connect_to_database, insert_to_database
+from connectAndQuery import connect_to_database, insert_to_database, delete_row_from_database
 from config_utils import time_interval_minutes
 def prepare_mailing_plan(posts, previous_mailings, set_start_time = None):
     # exemple set_start_time:  '2024-08-30 14:56'
@@ -60,6 +60,7 @@ def get_sent():
     export = []
     for data in dumpDB: export.append({'post_id': data[0]})
     return export
+
 
 if __name__ == "__main__":
     # time_interval_minutes = 1440
