@@ -7,7 +7,7 @@ def prepare_mailing_plan(posts, previous_mailings, set_start_time = None):
     lasted_date = datetime.strptime('1980-01-01 00:00:00', "%Y-%m-%d %H:%M:%S")
 
     for row in plansDB:
-        date_from_db = datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S")
+        date_from_db = row[0] # datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S")
         if date_from_db > lasted_date:
             lasted_date = date_from_db
 
@@ -16,7 +16,7 @@ def prepare_mailing_plan(posts, previous_mailings, set_start_time = None):
         set_start_time = datetime.now()
     else:
         set_start_time = datetime.strptime(set_start_time, "%Y-%m-%d %H:%M")
-        
+
     if lasted_date > set_start_time:
         set_start_time = lasted_date
 
@@ -25,7 +25,7 @@ def prepare_mailing_plan(posts, previous_mailings, set_start_time = None):
         # Sprawdź, czy post został wcześniej wysłany
         if post_id not in [mailing['post_id'] for mailing in previous_mailings]:
             # Dodaj post do planu wysyłki
-            mailing_plan.append({'post_id': post_id, 'send_time': datetime.now()})
+            mailing_plan.append({'post_id': post_id, 'send_time': set_start_time})
 
     # Ustaw odstęp czasowy między wysyłkami
     for i, mailing in enumerate(mailing_plan):
