@@ -6,7 +6,7 @@ import sendEmailBySmtp
 from archiveSents import archive_sents
 
 def main():
-    for _ in range(time()):
+    for _ in range(int(time())):
         shcedule = prepare_shedule.prepare_mailing_plan(prepare_shedule.get_allPostsID(), prepare_shedule.get_sent())
         sleep(1)
         prepare_shedule.save_shedule(shcedule)
