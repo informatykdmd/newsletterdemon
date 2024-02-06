@@ -21,11 +21,3 @@ def connect_to_database(userA, passwordA, hostA, databaseA, queryA):
 
     return export_list
 
-if __name__ == "__main__":
-    promis = connect_to_database(
-                        'informatyk',
-                        'NJKjkhdsbjk7sdt$D4d',
-                        'localhost',
-                        'dmd',
-                        'SELECT * FROM blog_posts;')
-    print(promis)
