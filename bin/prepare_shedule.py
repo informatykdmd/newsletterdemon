@@ -25,14 +25,14 @@ def get_allPostsID():
     dumpDB = connect_to_database(
         'SELECT ID FROM contents;')
     export = []
-    for data in dumpDB: export.append({'id': data[1]})
+    for data in dumpDB: export.append({'id': data[0]})
     return export
 
 def get_sent():
     dumpDB = connect_to_database(
         'SELECT post_id FROM sent_newsletters;')
     export = []
-    for data in dumpDB: export.append({'post_id': data[1]})
+    for data in dumpDB: export.append({'post_id': data[0]})
     return export
 
 if __name__ == "__main__":
