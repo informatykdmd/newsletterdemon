@@ -1,7 +1,9 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+global smtp_config
 from config_utils import smtp_config
+
 def send_html_email(subject, html_body, to_email):
     # Utwórz wiadomość
     message = MIMEMultipart()
