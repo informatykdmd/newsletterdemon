@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from connectAndQuery import connect_to_database
+from connectAndQuery import connect_to_database, insert_to_database
 def prepare_mailing_plan(posts, previous_mailings, time_interval_minutes):
     mailing_plan = []
     for post in posts:
@@ -18,8 +18,9 @@ def prepare_mailing_plan(posts, previous_mailings, time_interval_minutes):
 def save_shedule(shcedule):
     for row in shcedule:
         formatedDate = row["send_time"].strftime("%Y-%m-%d %H:%M:%S")
-        connect_to_database(
-            f'INSERT INTO schedule (post_id, send_time) VALUES ({row["post_id"]}, {formatedDate});'
+        insert_to_database(
+            f'INSERT INTO schedule (post_id, send_time) VALUES (%s, %s)',
+            ({row["post_id"]}, {formatedDate})
         )
 
 def get_allPostsID():

@@ -9,6 +9,7 @@ def connect_to_database(queryA, userA=DB['user'], passwordA=DB['pass'], hostA=DB
         database=databaseA)
     cursor = polaczenie_DB.cursor()
     query = queryA # 'SELECT id, user, haslo, created FROM users_main'
+
     cursor.execute(query)
     export_list = []
     for data in cursor:
@@ -18,4 +19,21 @@ def connect_to_database(queryA, userA=DB['user'], passwordA=DB['pass'], hostA=DB
     polaczenie_DB.close()
 
     return export_list
+
+def insert_to_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):
+    """Łączy się z bazą danych i zwraca List"""
+    polaczenie_DB = mysql.connector.connect(
+        user=userA,
+        password=passwordA,
+        host=hostA,
+        database=databaseA)
+    cursor = polaczenie_DB.cursor()
+    query = queryA # 'INSERT INTO your_table (column1, column2, datetime_column) VALUES (%s, %s, %s)'
+    queryB # ("value1", "value2", datetime_value)
+    cursor.execute(query, queryB)
+    
+    polaczenie_DB.commit()
+    polaczenie_DB.close()
+
+    return True
 
