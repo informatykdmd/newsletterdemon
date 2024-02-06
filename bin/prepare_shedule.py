@@ -17,8 +17,9 @@ def prepare_mailing_plan(posts, previous_mailings, time_interval_minutes):
     return mailing_plan
 def save_shedule(shcedule):
     for row in shcedule:
+        formatedDate = row["send_time"].strftime("%Y-%m-%d %H:%M:%S")
         connect_to_database(
-            f'INSERT INTO schedule (post_id, send_time) VALUES ({row["post_id"]}, {row["send_time"]});'
+            f'INSERT INTO schedule (post_id, send_time) VALUES ({row["post_id"]}, {formatedDate});'
         )
 
 def get_allPostsID():
