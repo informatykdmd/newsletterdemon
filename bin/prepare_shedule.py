@@ -1,11 +1,27 @@
 from datetime import datetime, timedelta
 from connectAndQuery import connect_to_database, insert_to_database
 from config_utils import time_interval_minutes
-def prepare_mailing_plan(posts, previous_mailings):
+def prepare_mailing_plan(posts, previous_mailings, set_start_time = None):
+    # exemple set_start_time:  '2024-08-30 14:56'
+    plansDB = connect_to_database('SELECT send_time FROM schedule;')
+    lasted_date = datetime.strptime('1980-01-01 00:00:00', "%Y-%m-%d %H:%M:%S")
+
+    for row in plansDB:
+        date_from_db = datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S")
+        if date_from_db > lasted_date:
+            lasted_date = date_from_db
+
     mailing_plan = []
+    if not set_start_time or datetime.strptime(set_start_time, "%Y-%m-%d %H:%M") < datetime.now():
+        set_start_time = datetime.now()
+    else:
+        set_start_time = datetime.strptime(set_start_time, "%Y-%m-%d %H:%M")
+        
+    if lasted_date > set_start_time:
+        set_start_time = lasted_date
+
     for post in posts:
         post_id = post['id']
-
         # Sprawdź, czy post został wcześniej wysłany
         if post_id not in [mailing['post_id'] for mailing in previous_mailings]:
             # Dodaj post do planu wysyłki
