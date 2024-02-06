@@ -18,8 +18,8 @@ def prepare_mailing_plan(posts, previous_mailings, time_interval_minutes):
 def save_shedule(shcedule):
     for row in shcedule:
         connect_to_database(
-            'informatyk',
-            'NJKjkhdsbjk7sdt$D4d',
+            'root',
+            '',
             'localhost',
             'dmd',
             f'INSERT INTO schedule (post_id, send_time) VALUES ({row["post_id"]}, {row["send_time"]});'
@@ -27,8 +27,8 @@ def save_shedule(shcedule):
 
 def get_allPostsID():
     dumpDB = connect_to_database(
-        'informatyk',
-        'NJKjkhdsbjk7sdt$D4d',
+        'root',
+        '',
         'localhost',
         'dmd',
         'SELECT ID FROM conntents;')
@@ -38,8 +38,8 @@ def get_allPostsID():
 
 def get_sent():
     dumpDB = connect_to_database(
-        'informatyk',
-        'NJKjkhdsbjk7sdt$D4d',
+        'root',
+        '',
         'localhost',
         'dmd',
         'SELECT post_id FROM sent_newsletters;')
