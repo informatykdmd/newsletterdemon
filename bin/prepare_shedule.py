@@ -19,8 +19,8 @@ def save_shedule(shcedule):
     for row in shcedule:
         formatedDate = row["send_time"].strftime("%Y-%m-%d %H:%M:%S")
         insert_to_database(
-            f'INSERT INTO schedule (post_id, send_time) VALUES (%s, %s)',
-            ({row["post_id"]}, {formatedDate})
+            'INSERT INTO schedule (post_id, send_time) VALUES (%s, %s)',
+            (row["post_id"], formatedDate)
         )
 
 def get_allPostsID():
