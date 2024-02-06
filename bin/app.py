@@ -14,8 +14,7 @@ def main():
         current_time = datetime.now()
         for row in prepare_shedule.connect_to_database(
                 'SELECT * FROM schedule;'):
-            row_time = datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S')
-            if row_time > current_time:
+            if row[2] > current_time:
                 TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')
                 nesletterDB = prepare_shedule.connect_to_database(f'SELECT (CLIENT_NAME, CLIENT_EMAIL) FROM newsletter;')
                 for data in nesletterDB:
