@@ -6,8 +6,8 @@ def create_html_message(postID):
     """
     # Pobieranie z bazy danych
     dumpDB = connect_to_database(
-                        'informatyk',
-                        'NJKjkhdsbjk7sdt$D4d',
+                        'root',
+                        '',
                         'localhost',
                         'dmd',
                         f'SELECT * FROM contents WHERE ID = {postID};')
