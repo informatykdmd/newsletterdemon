@@ -1,15 +1,10 @@
 from connectAndQuery import connect_to_database
-
 def create_html_message(postID):
     """
         Funkcja pobiera z bazy dane posta o podanym identyfikatorze i tworzy wiadomość HTML.
     """
     # Pobieranie z bazy danych
     dumpDB = connect_to_database(
-                        'root',
-                        '',
-                        'localhost',
-                        'dmd',
                         f'SELECT * FROM contents WHERE ID = {postID};')
     formatDump = {}
     formatDump['title'] = dumpDB[0][1]

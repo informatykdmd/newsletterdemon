@@ -18,19 +18,11 @@ def prepare_mailing_plan(posts, previous_mailings, time_interval_minutes):
 def save_shedule(shcedule):
     for row in shcedule:
         connect_to_database(
-            'root',
-            '',
-            'localhost',
-            'dmd',
             f'INSERT INTO schedule (post_id, send_time) VALUES ({row["post_id"]}, {row["send_time"]});'
         )
 
 def get_allPostsID():
     dumpDB = connect_to_database(
-        'root',
-        '',
-        'localhost',
-        'dmd',
         'SELECT ID FROM conntents;')
     export = []
     for data in dumpDB: export.append({'id': data[1]})
@@ -38,10 +30,6 @@ def get_allPostsID():
 
 def get_sent():
     dumpDB = connect_to_database(
-        'root',
-        '',
-        'localhost',
-        'dmd',
         'SELECT post_id FROM sent_newsletters;')
     export = []
     for data in dumpDB: export.append({'post_id': data[1]})
