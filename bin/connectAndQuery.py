@@ -38,3 +38,19 @@ def insert_to_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], h
 
     return True
 
+def delete_row_from_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):
+    polaczenie_DB = mysql.connector.connect(
+        user=userA,
+        password=passwordA,
+        host=hostA,
+        database=databaseA)
+    cursor = polaczenie_DB.cursor()
+    query = queryA  # 'DELETE FROM twoja_tabela WHERE kolumna1 = %s AND kolumna2 = %s AND kolumna_daty = %s;'
+    values = queryB  # ("value1", "value2", datetime_value)
+    
+    cursor.execute(query, values)
+    
+    polaczenie_DB.commit()
+    polaczenie_DB.close()
+
+
