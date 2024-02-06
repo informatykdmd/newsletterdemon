@@ -1,0 +1,65 @@
+from datetime import datetime, timedelta
+from connectAndQuery import connect_to_database
+def prepare_mailing_plan(posts, previous_mailings, time_interval_minutes):
+    mailing_plan = []
+    for post in posts:
+        post_id = post['id']
+
+        # Sprawdź, czy post został wcześniej wysłany
+        if post_id not in [mailing['post_id'] for mailing in previous_mailings]:
+            # Dodaj post do planu wysyłki
+            mailing_plan.append({'post_id': post_id, 'send_time': datetime.now()})
+
+    # Ustaw odstęp czasowy między wysyłkami
+    for i, mailing in enumerate(mailing_plan):
+        mailing['send_time'] += timedelta(minutes=i * time_interval_minutes)
+
+    return mailing_plan
+def save_shedule(shcedule):
+    for row in shcedule:
+        connect_to_database(
+            'informatyk',
+            'NJKjkhdsbjk7sdt$D4d',
+            'localhost',
+            'dmd',
+            f'INSERT INTO schedule (post_id, send_time) VALUES ({row["post_id"]}, {row["send_time"]});'
+        )
+
+def get_allPostsID():
+    dumpDB = connect_to_database(
+        'informatyk',
+        'NJKjkhdsbjk7sdt$D4d',
+        'localhost',
+        'dmd',
+        'SELECT ID FROM conntents;')
+    export = []
+    for data in dumpDB: export.append({'id': data[1]})
+    return export
+
+def get_sent():
+    dumpDB = connect_to_database(
+        'informatyk',
+        'NJKjkhdsbjk7sdt$D4d',
+        'localhost',
+        'dmd',
+        'SELECT post_id FROM sent_newsletters;')
+    export = []
+    for data in dumpDB: export.append({'post_id': data[1]})
+    return export
+
+if __name__ == "__main__":
+    posts = [
+            {"id": 1 },
+            {"id": 2 },
+            {"id": 3 },
+            {"id": 5 },
+            {"id": 6 },
+            {"id": 7 },
+    ]
+    previous_mailings = [
+        {'post_id': 1},
+        {'post_id': 2}
+    ]
+    time_interval_minutes = 1440
+    shcedule = prepare_mailing_plan(get_allPostsID(), get_sent(), time_interval_minutes)
+    save_shedule(shcedule)
