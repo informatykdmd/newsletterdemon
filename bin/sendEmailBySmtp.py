@@ -1,0 +1,38 @@
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from config_utils import smtp_config
+def send_html_email(subject, html_body, to_email, smtp_server, smtp_port, smtp_username, smtp_password):
+    # Utwórz wiadomość
+    message = MIMEMultipart()
+    message["From"] = smtp_username
+    message["To"] = to_email
+    message["Subject"] = subject
+
+    # Dodaj treść HTML
+    message.attach(MIMEText(html_body, "html"))
+
+    # Utwórz połączenie z serwerem SMTP
+    with smtplib.SMTP(smtp_server, smtp_port) as server:
+        # Rozszerzenie STARTTLS
+        server.starttls()
+        # Zaloguj się do konta SMTP
+        server.login(smtp_username, smtp_password)
+
+        # Wyślij wiadomość
+        server.sendmail(smtp_username, to_email, message.as_string())
+
+
+if __name__ == "__main__":
+    
+    # Przykładowe dane
+    subject = "Testy"
+    html_body = "<html><body><h1>Witaj!</h1><p>To jest treść wiadomości HTML.</p></body></html>"
+    to_email = "informatyk@dmdbudownictwo.pl"
+    smtp_server = smtp_config['smtp_server']
+    smtp_port =smtp_config['smtp_port']
+    smtp_username = smtp_config['smtp_username']
+    smtp_password = smtp_config['smtp_password']
+
+    # Wywołaj funkcję wysyłania e-maila HTML
+    send_html_email(subject, html_body, to_email, smtp_server, smtp_port, smtp_username, smtp_password)
