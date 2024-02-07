@@ -77,5 +77,35 @@ def create_html_message(postID, client_name):
                                         .replace('{{kategoria}}', formatDump['category']).replace('{{tagi}}', formatDump['tags'])
     return ready_template
 
+HTML_ACTIVE = """<!DOCTYPE html>
+                    <html lang="pl">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Rejestracja w DMD Newsletter</title>
+                        <style>
+                            /* Dodaj stylizację, dostosowaną do Twoich potrzeb */
+                            body {
+                                font-family: 'Arial', sans-serif;
+                                line-height: 1.6;
+                            }
+                            /* Dodaj więcej stylów, jeśli to konieczne */
+                        </style>
+                    </head>
+                    <body>
+                        <p>
+                            Witaj, {{imie klienta}}. <br />
+                            Zostałeś zarejestrowany do newslettera DMD. 
+                            Prosimy o potwierdzenie swojej rejestracji klikając w poniższy link.
+                        </p>
+                        <a href="https://dmddomy.pl/aktywacja-newslettera" target="_blank">Potwierdź rejestrację.</a><br/>
+                        <a href="https://dmddomy.pl/usun-newslettera" target="_blank">Edytuj profil subskrybenta DMD.</a><br/>
+                        <a href="https://dmddomy.pl/usun-newslettera" target="_blank">Usuń z newslettera DMD.</a><br/>
+                        <footer>
+                            <p>© 2024 Twoja Firma. Wszelkie prawa zastrzeżone.</p>
+                        </footer>
+                    </body>
+                    </html>"""
+
 if __name__ == "__main__":
     print(create_html_message(1, 'michał'))

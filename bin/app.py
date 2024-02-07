@@ -25,40 +25,15 @@ def main():
                         archive_sents(row[1])
 
         # Aktywacja konta subskrybenta
-        nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL FROM newsletter WHERE ACTIVE=0;')
+        nesletterDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL FROM newsletter WHERE ACTIVE=0;')
         for data in nesletterDB:
             TITLE_ACTIVE = 'Aktywacja konta'
-            HTML_ACTIVE = """<!DOCTYPE html>
-                                <html lang="pl">
-                                <head>
-                                    <meta charset="UTF-8">
-                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                    <title>Rejestracja w DMD Newsletter</title>
-                                    <style>
-                                        /* Dodaj stylizację, dostosowaną do Twoich potrzeb */
-                                        body {
-                                            font-family: 'Arial', sans-serif;
-                                            line-height: 1.6;
-                                        }
-                                        /* Dodaj więcej stylów, jeśli to konieczne */
-                                    </style>
-                                </head>
-                                <body>
-                                    <p>
-                                        Witaj, {{imie klienta}}. <br />
-                                        Zostałeś zarejestrowany do newslettera DMD. 
-                                        Prosimy o potwierdzenie swojej rejestracji klikając w poniższy link.
-                                    </p>
-                                    <a href="https://dmddomy.pl/aktywacja-newslettera" target="_blank">Potwierdź rejestrację.</a><br/>
-                                    <a href="https://dmddomy.pl/usun-newslettera" target="_blank">Edytuj profil subskrybenta DMD.</a><br/>
-                                    <a href="https://dmddomy.pl/usun-newslettera" target="_blank">Usuń z newslettera DMD.</a><br/>
-                                    <footer>
-                                        <p>© 2024 Twoja Firma. Wszelkie prawa zastrzeżone.</p>
-                                    </footer>
-                                </body>
-                                </html>""".replace('{{imie klienta}}', data[0])
-            sendEmailBySmtp.send_html_email(TITLE_ACTIVE, HTML_ACTIVE, data[1])
-
+            message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1])
+            sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, data[2])
+            prepare_shedule.insert_to_database(
+                f"UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                (3, data[0], data[2])
+                )
         print(f'{datetime.now()} - {__name__} is working...\n')
         sleep(60)
 
