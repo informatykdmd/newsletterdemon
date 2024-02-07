@@ -32,7 +32,7 @@ def main():
                         sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
                         archive_sents(row[1])
         print(f'{datetime.now()} - {__name__} is working...\n')
-        sleep(3600)
+        sleep(60)
 
 
 if __name__ == "__main__":
