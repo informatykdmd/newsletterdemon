@@ -19,9 +19,10 @@ def main():
                 na przykład 'YYYY-MM-DD HH:MM:SS', musisz najpierw 
                 przekonwertować ten string na obiekt datetime.
             """
-            scheduled_time = datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S')
-            print(scheduled_time, current_time)
-            if scheduled_time > current_time:
+            print(row[2], current_time)
+            # scheduled_time = datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S')
+            # print(scheduled_time, current_time)
+            if row[2] > current_time:
                 TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
                 nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL FROM newsletter;')
                 for data in nesletterDB:
