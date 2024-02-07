@@ -23,7 +23,7 @@ def main():
             print(type(row[2]), type(current_time))
             # scheduled_time = datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S')
             # print(scheduled_time, current_time)
-            if row[2] > current_time:
+            if row[2] < current_time:
                 TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
                 nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL FROM newsletter;')
                 for data in nesletterDB:
