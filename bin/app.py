@@ -20,6 +20,7 @@ def main():
                 przekonwertować ten string na obiekt datetime.
             """
             print(row[2], current_time)
+            print(type(row[2]), type(current_time))
             # scheduled_time = datetime.strptime(row[2], '%Y-%m-%d %H:%M:%S')
             # print(scheduled_time, current_time)
             if row[2] > current_time:
