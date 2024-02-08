@@ -1,4 +1,5 @@
 from connectAndQuery import connect_to_database
+from config_utils import message_templates
 def create_html_message(postID, client_name):
     """
         Funkcja pobiera z bazy dane posta o podanym identyfikatorze i tworzy wiadomość HTML.
@@ -24,52 +25,8 @@ def create_html_message(postID, client_name):
     for text in formatDump['bullets'].split('#splx#'):
         readyHtmlBullets +=  f'<li>{text}</li>\n'
 
-    template = """<!DOCTYPE html>
-    <html lang="pl">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{tytuł}}</title>
-        <style>
-            /* Dodaj stylizację, dostosowaną do Twoich potrzeb */
-            body {
-                font-family: 'Arial', sans-serif;
-                line-height: 1.6;
-            }
-            /* Dodaj więcej stylów, jeśli to konieczne */
-        </style>
-    </head>
-    <body>
-        <p>Witaj, {{imie klienta}}. Przygotowaliśmy dla Ciebie nasze najnowsze newsy!</p>
-        <h1>{{tytuł}}</h1>
-        <p>{{wprowadzenie}}</p>
-
-        <!-- Główna treść -->
-        <div>
-            {{tresc glowna}}
-        </div>
-
-        <!-- Wypunktowania -->
-        <ul>
-            {{wypunktowania}}
-        </ul>
-
-        <!-- Główne zdjęcie -->
-        <img src="https://dmddomy.pl/{{zdjecie glowne}}" alt="Główne zdjęcie">
-
-        <!-- Dodatkowe zdjęcie -->
-        <img src="https://dmddomy.pl/{{zdjecie dodatkowe}}" alt="Dodatkowe zdjęcie">
-
-        <!-- Tagi i kategoria -->
-        <p>Tagi: {{tagi}}</p>
-        <p>Kategoria: {{kategoria}}</p>
-
-        <!-- Stopka, dodaj więcej informacji, jeśli to konieczne -->
-        <footer>
-            <p>© 2024 Twoja Firma. Wszelkie prawa zastrzeżone.</p>
-        </footer>
-    </body>
-    </html>"""
+    with open(message_templates['news'], 'r', encoding="utf-8") as plik:
+        template = plik.read()
 
     ready_template = template.replace('{{imie klienta}}', str(client_name)).replace('{{tytuł}}', formatDump['title']).replace('{{tresc glowna}}', formatDump['content_main'])\
                                 .replace('{{wprowadzenie}}', formatDump['highlights']).replace('{{wypunktowania}}', readyHtmlBullets)\
@@ -77,35 +34,8 @@ def create_html_message(postID, client_name):
                                         .replace('{{kategoria}}', formatDump['category']).replace('{{tagi}}', formatDump['tags'])
     return ready_template
 
-HTML_ACTIVE = """<!DOCTYPE html>
-                    <html lang="pl">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Rejestracja w DMD Newsletter</title>
-                        <style>
-                            /* Dodaj stylizację, dostosowaną do Twoich potrzeb */
-                            body {
-                                font-family: 'Arial', sans-serif;
-                                line-height: 1.6;
-                            }
-                            /* Dodaj więcej stylów, jeśli to konieczne */
-                        </style>
-                    </head>
-                    <body>
-                        <p>
-                            Witaj, {{imie klienta}}. <br />
-                            Zostałeś zarejestrowany do newslettera DMD. 
-                            Prosimy o potwierdzenie swojej rejestracji klikając w poniższy link.
-                        </p>
-                        <a href="https://dmddomy.pl/aktywacja-newslettera" target="_blank">Potwierdź rejestrację.</a><br/>
-                        <a href="https://dmddomy.pl/usun-newslettera" target="_blank">Edytuj profil subskrybenta DMD.</a><br/>
-                        <a href="https://dmddomy.pl/usun-newslettera" target="_blank">Usuń z newslettera DMD.</a><br/>
-                        <footer>
-                            <p>© 2024 Twoja Firma. Wszelkie prawa zastrzeżone.</p>
-                        </footer>
-                    </body>
-                    </html>"""
+with open(message_templates['config'], 'r', encoding="utf-8") as plik:
+        HTML_ACTIVE = plik.read()
 
 if __name__ == "__main__":
     print(create_html_message(1, 'michał'))

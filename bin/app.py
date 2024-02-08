@@ -4,6 +4,7 @@ import prepare_shedule
 import messagerCreator 
 import sendEmailBySmtp
 from archiveSents import archive_sents
+from appslib import handle_error
 
 def main():
     for _ in range(int(time())):
@@ -34,7 +35,7 @@ def main():
                 f"UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
                 (3, data[0], data[2])
                 )
-        print(f'{datetime.now()} - {__name__} is working...\n')
+        handle_error(f'{datetime.now()} - {__name__} is working...\n')
         sleep(60)
 
 

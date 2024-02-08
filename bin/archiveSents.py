@@ -1,4 +1,5 @@
 from connectAndQuery import connect_to_database, insert_to_database, delete_row_from_database
+from appslib import handle_error
 def archive_sents(postIdFromSchedule):
     scheduleDB = connect_to_database(
         "SELECT * FROM schedule;"
@@ -7,7 +8,9 @@ def archive_sents(postIdFromSchedule):
         if row[1] == postIdFromSchedule:
             # Remove the entry from the Scheduled Posts table.
             removeRowSQL = """DELETE FROM schedule WHERE post_id='%s';"""
-            print("Removing scheduled post with ID '%s'." % (row[1]))
+            rinf = "Removing scheduled post with ID '%s'." % (row[1])
+            handle_error(rinf)
+            print()
             delete_row_from_database(
                 removeRowSQL, 
                 (row[1],)
@@ -17,7 +20,8 @@ def archive_sents(postIdFromSchedule):
                 'INSERT INTO sent_newsletters (post_id, send_time) VALUES(%s,%s)', 
                 (row[1], row[2])
                 )
-            print("Adding archives post with ID '%s'." % (row[1]))
+            ainf = "Adding archives post with ID '%s'." % (row[1])
+            handle_error(ainf)
             return True
     return False
 if __name__ == "__main__":
