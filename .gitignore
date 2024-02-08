@@ -1,2 +1,3 @@
 # Ignoruj plik /bin/config_utils.py
 /bin/config_utils.py
+/logs/errors.log

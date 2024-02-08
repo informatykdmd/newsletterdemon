@@ -9,18 +9,74 @@
             body {
                 font-family: 'Arial', sans-serif;
                 line-height: 1.6;
+                background-color: whitesmoke;
             }
-            /* Dodaj więcej stylów, jeśli to konieczne */
+
+            .centered-div {
+                text-align: center;
+                padding: 20px;
+                background-color: #58506b;
+            }
+            .centered-div img {
+                width: 50%;
+                margin-bottom: 10px; 
+            }
+            .centered-div p {
+                margin-top: 10px;
+                font-size: 50px;
+                font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                color: aliceblue;
+            }
+            .wellcome {
+                font-size: 20px;
+                font-family: Arial, Helvetica, sans-serif;
+                font-style: italic;
+            }
+
+            .highlights {
+                background-color: white;
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                font-style: italic;
+                padding: 20px;
+                border-left: solid 4px;
+            }
+
+            .tags {
+                background-color: lightcyan;
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                padding: 20px;
+            }
+            .footer {
+                padding: 20px;
+                background-color: #58506b;
+                font-size: 14px;
+                font-family: Arial, Helvetica, sans-serif;
+                color: aliceblue;
+            }
+
+            .footer a {
+                color: aliceblue;
+            }
         </style>
     </head>
     <body>
-        <p>Witaj, {{imie klienta}}. Przygotowaliśmy dla Ciebie nasze najnowsze newsy!</p>
+        <div class="centered-div">
+            <img src="https://dmddomy.pl/images/images/logo_dmd_apl.png" alt="Logo" />
+            <p>Newsletter</p>
+        </div>
+        <div class="wellcome">
+            <p>Witaj, {{imie klienta}}. Przygotowaliśmy dla Ciebie nasze najnowsze newsy!</p>
+        </div>
         <h1>{{tytuł}}</h1>
-        <p>{{wprowadzenie}}</p>
+        <p>Kategoria: {{kategoria}}</p>
 
         <!-- Główna treść -->
         <div>
-            {{tresc glowna}}
+            
+            <p>{{tresc glowna}}</p>
+        </div>
+        <div class="highlights">
+            <p>“ {{wprowadzenie}} “</p>
         </div>
 
         <!-- Wypunktowania -->
@@ -29,18 +85,25 @@
         </ul>
 
         <!-- Główne zdjęcie -->
-        <img src="https://dmddomy.pl/{{zdjecie glowne}}" alt="Główne zdjęcie">
-
+        <div class="centered-div">
+            <img src="https://dmddomy.pl/{{zdjecie glowne}}" alt="Główne zdjęcie">
+        </div>
         <!-- Dodatkowe zdjęcie -->
-        <img src="https://dmddomy.pl/{{zdjecie dodatkowe}}" alt="Dodatkowe zdjęcie">
-
+        <div class="centered-div">
+            <img src="https://dmddomy.pl/{{zdjecie dodatkowe}}" alt="Dodatkowe zdjęcie">
+        </div>
         <!-- Tagi i kategoria -->
-        <p>Tagi: {{tagi}}</p>
-        <p>Kategoria: {{kategoria}}</p>
+        <div class="tags">
+            <p>Tagi:</p>
+            {{tagi}}
+        </div>
+        
 
         <!-- Stopka, dodaj więcej informacji, jeśli to konieczne -->
-        <footer>
-            <p>© 2024 Twoja Firma. Wszelkie prawa zastrzeżone.</p>
+        <footer class="footer">
+            <p>© 2024 DMD Newsletter. Wszelkie prawa zastrzeżone.</p>
+            <a href="https://dmddomy.pl"  target="_blank">www.dmddomy.pl</a>
+            
         </footer>
     </body>
     </html>
