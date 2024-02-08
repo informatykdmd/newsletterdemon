@@ -2,7 +2,7 @@ from datetime import datetime
 
 def handle_error(exception, retry_count=3):
     try:
-        with open("../logs/errors.log", "a+") as log:
+        with open("../logs/errors.log", "a") as log:
             now = str(datetime.now())
             message = "{0} {1}\n".format(now, exception)
             log.write(message)
