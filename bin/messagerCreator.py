@@ -1,6 +1,7 @@
 from connectAndQuery import connect_to_database
 from config_utils import message_templates
-def create_html_message(postID, client_name):
+from appslib import handle_error
+def create_html_message(postID, client_name, heshed):
     """
         Funkcja pobiera z bazy dane posta o podanym identyfikatorze i tworzy wiadomość HTML.
     """
@@ -18,7 +19,7 @@ def create_html_message(postID, client_name):
         formatDump['tags'] = dumpDB[0][7]
         formatDump['category'] = dumpDB[0][8]
     except IndexError as e:
-        print("Błąd w funkcji 'create_html_message': ",e)
+        handle_error(f"Błąd w funkcji 'create_html_message': {e}")
         return ''
 
     readyHtmlBullets = ''
@@ -31,11 +32,11 @@ def create_html_message(postID, client_name):
     ready_template = template.replace('{{imie klienta}}', str(client_name)).replace('{{tytuł}}', formatDump['title']).replace('{{tresc glowna}}', formatDump['content_main'])\
                                 .replace('{{wprowadzenie}}', formatDump['highlights']).replace('{{wypunktowania}}', readyHtmlBullets)\
                                     .replace('{{zdjecie glowne}}', formatDump['header_foto']).replace('{{zdjecie dodatkowe}}', formatDump['content_foto'])\
-                                        .replace('{{kategoria}}', formatDump['category']).replace('{{tagi}}', formatDump['tags'])
+                                        .replace('{{kategoria}}', formatDump['category']).replace('{{tagi}}', formatDump['tags']).replace('{{hashes}}', heshed)
     return ready_template
 
 with open(message_templates['config'], 'r', encoding="utf-8") as plik:
         HTML_ACTIVE = plik.read()
 
 if __name__ == "__main__":
-    print(create_html_message(1, 'michał'))
+    print(create_html_message(1, 'michał', 'hash'))
