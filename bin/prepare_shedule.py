@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
-from connectAndQuery import connect_to_database, insert_to_database, delete_row_from_database
+from connectAndQuery import connect_to_database, insert_to_database
 from config_utils import time_interval_minutes
+from appslib import handle_error
 def prepare_mailing_plan(posts, previous_mailings, set_start_time = None):
     # exemple set_start_time:  '2024-08-30 14:56'
     plansDB = connect_to_database('SELECT send_time FROM schedule;')
@@ -61,27 +62,6 @@ def get_sent():
     for data in dumpDB: export.append({'post_id': data[0]})
     return export
 
-def archive_sents(postIdFromSchedule):
-    scheduleDB = connect_to_database(
-        "SELECT * FROM schedule;"
-        )
-    for row in scheduleDB:
-        if row[1] == postIdFromSchedule:
-            # Remove the entry from the Scheduled Posts table.
-            removeRowSQL = """DELETE FROM schedule WHERE post_id='%s';"""
-            print("Removing scheduled post with ID '%s'." % (row[1]))
-            delete_row_from_database(
-                removeRowSQL, 
-                (row[1],)
-                )
-            # Insert a new record into the Archived Posts table.
-            insert_to_database(
-                'INSERT INTO sent_newsletters (post_id, send_time) VALUES(%s,%s)', 
-                (row[1], row[2])
-                )
-            print("Adding archives post with ID '%s'." % (row[1]))
-            return True
-    return False
 
 if __name__ == "__main__":
     # time_interval_minutes = 1440
