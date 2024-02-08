@@ -13,6 +13,16 @@
                 background-color: whitesmoke;
             }
 
+            li {
+                font-family: 'YourCustomFont', sans-serif; /* Dodaj niestandardową czcionkę */
+                color: #4a4b4c; /* Zastosuj niestandardowy kolor tekstu */
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Dodaj cień do tekstu */
+                transition: color 0.3s ease-in-out; /* Dodaj płynną zmianę koloru */
+            }
+
+            li:hover {
+                color: #5f6556; /* Zmiana koloru na najechanie myszką */
+            }
             .centered-div {
                 text-align: center;
                 padding: 20px;
@@ -29,8 +39,14 @@
                 color: aliceblue;
             }
 
+            .category {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 15px;
+                color: grey;
+            }
+
             .wellcome {
-                font-size: 20px;
+                font-size: 15px;
                 font-family: Arial, Helvetica, sans-serif;
                 font-style: italic;
             }
@@ -92,11 +108,17 @@
             <p>Przygotowaliśmy dla Ciebie nasze najnowsze newsy!</p>
         </div>
         <h1>{{tytuł}}</h1>
-        <p>Kategoria: {{kategoria}}</p>
+        <div class="category">
+            <p>Kategoria: {{kategoria}}</p>
+        </div>
 
+        
+        <!-- Główne zdjęcie -->
+        <div class="photos">
+            <img src="https://dmddomy.pl/{{zdjecie glowne}}" alt=". . .">
+        </div>
         <!-- Główna treść -->
-        <div>
-            
+        <div class="wellcome">
             <p>{{tresc glowna}}</p>
         </div>
         <div class="highlights">
@@ -108,10 +130,7 @@
             {{wypunktowania}}
         </ul>
 
-        <!-- Główne zdjęcie -->
-        <div class="photos">
-            <img src="https://dmddomy.pl/{{zdjecie glowne}}" alt=". . .">
-        </div>
+        
         <!-- Dodatkowe zdjęcie -->
         <div class="photos">
             <img src="https://dmddomy.pl/{{zdjecie dodatkowe}}" alt=". . .">
@@ -128,12 +147,12 @@
             <img src="https://dmddomy.pl/images/images/logo_dmd_apl.png" alt="DMD" />
             <p>© 2024 DMD Newsletter. Wszelkie prawa zastrzeżone.</p>
             <a href="https://dmddomy.pl" target="_blank">www.dmddomy.pl</a> | 
-            <a href="https://dmdbudownictwo.pl" target="_blank">www.dmddomy.pl</a> | 
-            <a href="https://dmdelitehome.pl" target="_blank">www.dmddomy.pl</a> | 
-            <a href="https://dmdinvestment.pl" target="_blank">www.dmddomy.pl</a>
+            <a href="https://dmdbudownictwo.pl" target="_blank">www.dmdbudownictwo.pl</a> | 
+            <a href="https://dmdelitehome.pl" target="_blank">www.dmdelitehome.pl</a> | 
+            <a href="https://dmdinvestment.pl" target="_blank">www.dmdinvestment.pl</a>
             <p>
-                <a href="https://dmddomy.pl/usun-newslettera" target="_blank"><i class="bi bi-person-lines-fill"></i>&nbsp;Edytuj profil subskrybenta DMD.</a><br/>
-                <a href="https://dmddomy.pl/usun-newslettera" target="_blank"><i class="bi bi-trash3"></i>&nbsp;Usuń z newslettera DMD.</a>
+                <a href="https://dmddomy.pl/usun-newslettera" target="_blank"><i class="bi bi-person-lines-fill"></i>&nbsp; &nbsp; &nbsp;Edytuj profil subskrybenta DMD.</a><br/>
+                <a href="https://dmddomy.pl/usun-newslettera" target="_blank"><i class="bi bi-trash3"></i>&nbsp; &nbsp; &nbsp;Usuń z newslettera DMD.</a>
             </p>
             <p>Obserwuj nas na:</p>
             <p>
