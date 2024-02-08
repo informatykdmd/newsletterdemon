@@ -18,19 +18,19 @@ def main():
                 'SELECT * FROM schedule;'):
             if row[2] < current_time:
                 TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
-                nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL FROM newsletter WHERE ACTIVE=1;')
+                nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=1;')
                 for data in nesletterDB:
-                    hashes = data[5]
+                    hashes = data[2]
                     HTML = messagerCreator.create_html_message(row[1], data[0], hashes)
                     if HTML != '':
                         sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
                         archive_sents(row[1])
 
         # Aktywacja konta subskrybenta
-        nesletterDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL FROM newsletter WHERE ACTIVE=0;')
+        nesletterDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=0;')
         for data in nesletterDB:
             TITLE_ACTIVE = 'Aktywacja konta'
-            message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1]).replace('{{hashes}}', data[1])
+            message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1]).replace('{{hashes}}', data[3])
             sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, data[2])
             prepare_shedule.insert_to_database(
                 f"UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
