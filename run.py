@@ -21,7 +21,7 @@ różnymi aspektami stron.
 """
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex(16)
-app.config['PER_PAGE'] = 5  # Określa liczbę elementów na stronie
+
 
 class LoginForm(FlaskForm):
     username = StringField('Nazwa użytkownika', validators=[DataRequired()])
@@ -58,6 +58,7 @@ def generator_settingsDB():
     }
     return settings
 settingsDB = generator_settingsDB()
+app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 
 @app.route('/')
 def index():
