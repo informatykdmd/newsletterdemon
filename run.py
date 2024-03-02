@@ -52,7 +52,7 @@ def generator_settingsDB():
         'smtp_admin': {
             'smtp_server': take_data_settingsDB('admin_smtp_server'),
             'smtp_port': take_data_settingsDB('admin_smtp_port'),
-            'smtp_username': take_data_settingsDB('admin_smtp_username'),
+            'smtp_username': take_data_settingsDB('admin_smtp_usernam'),
             'smtp_password': take_data_settingsDB('admin_smtp_password')
         }
     }
