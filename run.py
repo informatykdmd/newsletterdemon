@@ -35,7 +35,29 @@ def allowed_file(filename):
 def take_data_settingsDB(key):
     dump_key = msq.connect_to_database(f'SELECT {key} FROM admin_settings;')[0][0]
     return dump_key
-print(take_data_settingsDB('pagination'))
+
+def generator_settingsDB():
+    settings = {
+        'pagination': take_data_settingsDB('pagination'),
+        'main-domain': take_data_settingsDB('main-domain'),
+        'blog-pic-path': take_data_settingsDB('blog-pic-path'),
+        'avatar-pic-path': take_data_settingsDB('avatar-pic-path'),
+        'last-restart': take_data_settingsDB('last-restart'),
+        'domy': take_data_settingsDB('domy'),
+        'budownictwo': take_data_settingsDB('budownictwo'),
+        'development': take_data_settingsDB('development'),
+        'elitehome': take_data_settingsDB('elitehome'),
+        'inwestycje': take_data_settingsDB('inwestycje'),
+        'instalacje': take_data_settingsDB('instalacje'),
+        'smtp_admin': {
+            'smtp_server': take_data_settingsDB('admin_smtp_server'),
+            'smtp_port': take_data_settingsDB('admin_smtp_port'),
+            'smtp_username': take_data_settingsDB('admin_smtp_username'),
+            'smtp_password': take_data_settingsDB('admin_smtp_password')
+        }
+    }
+    return settings
+print(generator_settingsDB())
 
 @app.route('/')
 def index():
