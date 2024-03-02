@@ -3,6 +3,7 @@ from bin.config_utils import DBDATA as DB
 from bin.appslib import handle_error
 def connect_to_database(queryA, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):
     """Łączy się z bazą danych i zwraca List"""
+    export_list = []
     try:
         polaczenie_DB = mysql.connector.connect(
             user=userA,

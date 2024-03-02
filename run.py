@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 import secrets
 import app.utils.passwordSalt as hash
 from temp import daneDBList, subsDataDB, userDataDB, teamDB, newsletterSettingDB, settingsDB
+import mysqlDB as msq
 import time
 
 """
@@ -31,6 +32,10 @@ def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'webp'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def take_data_settingsDB(key):
+    dump_key = msq.connect_to_database(f'SELECT {key} FROM admin_settings;')
+    return dump_key
+print(take_data_settingsDB('pagination'))
 
 @app.route('/')
 def index():
