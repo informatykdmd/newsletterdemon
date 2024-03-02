@@ -39,10 +39,10 @@ def take_data_settingsDB(key):
 def generator_settingsDB():
     settings = {
         'pagination': take_data_settingsDB('pagination'),
-        'main-domain': take_data_settingsDB('main-domain'),
-        'blog-pic-path': take_data_settingsDB('blog-pic-path'),
-        'avatar-pic-path': take_data_settingsDB('avatar-pic-path'),
-        'last-restart': take_data_settingsDB('last-restart'),
+        'main-domain': take_data_settingsDB('main_domain'),
+        'blog-pic-path': take_data_settingsDB('blog_pic_path'),
+        'avatar-pic-path': take_data_settingsDB('avatar_pic_path'),
+        'last-restart': take_data_settingsDB('last_restart'),
         'domy': take_data_settingsDB('domy'),
         'budownictwo': take_data_settingsDB('budownictwo'),
         'development': take_data_settingsDB('development'),
