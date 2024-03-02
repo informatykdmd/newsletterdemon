@@ -1179,13 +1179,13 @@ def settings():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
         return redirect(url_for('index'))
     
-    settingsDB
+    settingsDB = generator_settingsDB()
     onPages = settingsDB['pagination']
     domain = settingsDB['main-domain']
     blog = settingsDB['blog-pic-path']
     avatar = settingsDB['avatar-pic-path']
     
-    settingsDB = generator_settingsDB()
+    
     restart = settingsDB['last-restart']
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
@@ -1194,9 +1194,6 @@ def settings():
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
     smtpAdmin = settingsDB['smtp_admin']
-
-    
-
 
     return render_template(
                             "setting_management.html", 
