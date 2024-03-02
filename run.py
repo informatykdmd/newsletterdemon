@@ -394,6 +394,7 @@ def newsletter():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
         return redirect(url_for('index'))
     
+    newsletterSettingDB = generator_newsletterSettingDB()
     newsletterPlan = newsletterSettingDB['time_interval_minutes']
     smtpSettingsDict = newsletterSettingDB['smtp_config']
     # Sortuj subsDataDB według klucza 'id' w malejącej kolejności
@@ -1099,7 +1100,7 @@ def team_instalacje():
         # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
         # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
         print('dane:', ready_exportDB)
-        
+
     settingsDB = generator_settingsDB()    
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
