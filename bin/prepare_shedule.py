@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from connectAndQuery import connect_to_database, insert_to_database
-from config_utils import time_interval_minutes
+time_interval_minutes = connect_to_database(f'SELECT time_interval_minutes FROM newsletter_setting;')[0][0] # 1440
+# from config_utils import time_interval_minutes
 from appslib import handle_error
 def prepare_mailing_plan(posts, previous_mailings, set_start_time = None):
     # exemple set_start_time:  '2024-08-30 14:56'

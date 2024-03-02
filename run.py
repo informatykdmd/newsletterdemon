@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
 import secrets
 import app.utils.passwordSalt as hash
-from temp import daneDBList, subsDataDB, userDataDB, teamDB, newsletterSettingDB
+from temp import daneDBList, subsDataDB, userDataDB, teamDB
 import mysqlDB as msq
 import time
 
@@ -57,8 +57,26 @@ def generator_settingsDB():
         }
     }
     return settings
+
+def take_data_newsletterSettingDB(key):
+    dump_key = msq.connect_to_database(f'SELECT {key} FROM newsletter_setting;')[0][0]
+    return dump_key
+def generator_newsletterSettingDB():
+    newsletterSetting = {
+        'time_interval_minutes': int(take_data_newsletterSettingDB('time_interval_minutes')),
+        'smtp_config': {
+            'smtp_server': take_data_newsletterSettingDB('config_smtp_server'),
+            'smtp_port': int(take_data_newsletterSettingDB('config_smtp_port')),
+            'smtp_username': take_data_newsletterSettingDB('config_smtp_username'),
+            'smtp_password': take_data_newsletterSettingDB('config_smtp_password')
+        }
+    }
+    return newsletterSetting
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
+
+
+newsletterSettingDB = generator_newsletterSettingDB()
 
 @app.route('/')
 def index():
