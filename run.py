@@ -33,7 +33,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def take_data_settingsDB(key):
-    dump_key = msq.connect_to_database(f'SELECT {key} FROM admin_settings;')
+    dump_key = msq.connect_to_database(f'SELECT {key} FROM admin_settings;')[0][0]
     return dump_key
 print(take_data_settingsDB('pagination'))
 
