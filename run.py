@@ -158,6 +158,7 @@ def home():
     #     return redirect(url_for('blog'))
     print(session['username'])
     
+    settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
@@ -201,6 +202,7 @@ def blog(router=True):
     posts = all_posts[offset: offset + per_page]
     if router:
         # Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
+        settingsDB = generator_settingsDB()
         domy = settingsDB['domy']
         budownictwo = settingsDB['budownictwo']
         development = settingsDB['development']
@@ -289,6 +291,7 @@ def save_post():
         print('Dane zostały zapisane poprawnie!')
         print(form_data)
 
+        settingsDB = generator_settingsDB()
         domy = settingsDB['domy']
         budownictwo = settingsDB['budownictwo']
         development = settingsDB['development']
@@ -354,7 +357,8 @@ def users(router=True):
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     users = all_users[offset: offset + per_page]
     if router:
-        # Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
+        
+        settingsDB = generator_settingsDB()# Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
         domy = settingsDB['domy']
         budownictwo = settingsDB['budownictwo']
         development = settingsDB['development']
@@ -402,6 +406,7 @@ def newsletter():
             elementItem = (item['id'], item['name'], item['email'])
             sortedListSubs.append(elementItem)
 
+    settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
@@ -517,6 +522,7 @@ def team_domy():
 
         print('dane:', ready_exportDB)
 
+    settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
@@ -631,6 +637,7 @@ def team_elitehome():
 
         print('dane:', ready_exportDB)
 
+    settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
@@ -746,6 +753,7 @@ def team_budownictwo():
 
         print('dane:', ready_exportDB)
 
+    settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
@@ -861,6 +869,7 @@ def team_development():
         
         print('dane:', ready_exportDB)
 
+    settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
@@ -975,6 +984,8 @@ def team_investment():
         # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
         # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
         print('dane:', ready_exportDB)
+
+    settingsDB = generator_settingsDB()    
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
@@ -1088,6 +1099,8 @@ def team_instalacje():
         # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
         # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
         print('dane:', ready_exportDB)
+        
+    settingsDB = generator_settingsDB()    
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
@@ -1129,7 +1142,9 @@ def subscribers(router=True):
 
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     subs = subscribers_all[offset: offset + per_page]
+    
     if router:
+        settingsDB = generator_settingsDB()
         domy = settingsDB['domy']
         budownictwo = settingsDB['budownictwo']
         development = settingsDB['development']
@@ -1168,6 +1183,8 @@ def settings():
     domain = settingsDB['main-domain']
     blog = settingsDB['blog-pic-path']
     avatar = settingsDB['avatar-pic-path']
+    
+    settingsDB = generator_settingsDB()
     restart = settingsDB['last-restart']
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
