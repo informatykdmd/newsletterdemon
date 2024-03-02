@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
 import secrets
 import app.utils.passwordSalt as hash
-from temp import daneDBList, subsDataDB, userDataDB, teamDB, newsletterSettingDB, settingsDB
+from temp import daneDBList, subsDataDB, userDataDB, teamDB, newsletterSettingDB
 import mysqlDB as msq
 import time
 
@@ -57,7 +57,7 @@ def generator_settingsDB():
         }
     }
     return settings
-print(generator_settingsDB())
+settingsDB = generator_settingsDB()
 
 @app.route('/')
 def index():
