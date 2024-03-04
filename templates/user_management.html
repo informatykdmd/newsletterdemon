@@ -210,10 +210,17 @@
                                                     </div>
                                                     <div class="tylko-klej">
                                                         <div class="formatuj formatuj-left" style="margin-bottom: 10px;">
-                                                            <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;">Zmień Avatar</button>
+                                                            <button type="submit" id="submit_button_{{user_id}}" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;">Zmień Avatar</button>
                                                         </div>
                                                     </div>
                                                 </form>
+                                                <script>
+                                                    // Nasłuchiwanie na kliknięcie przycisku
+                                                    document.getElementById('submit_button_{{user_id}}').addEventListener('click', function(event) {
+                                                        event.preventDefault(); // Zapobiegnij domyślnej akcji (przeładowania strony)
+                                                        send_elements('avatar_user_{{user_id}}');
+                                                    });
+                                                </script>
                                             </div>
                                         </div>
                                     </div>
