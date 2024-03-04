@@ -149,11 +149,11 @@ def generator_subsDataDB():
     subsData = []
     took_subsD = take_data_table('*', 'newsletter')
 
-    ID = 1
-    allComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID)
+    # ID = 1
+    # allComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID)
 
-    ID2 = 1
-    allComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID2)
+    # ID2 = 1
+    # allComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID2)
     for data in took_subsD:
         if data[4] != 1:
             continue
