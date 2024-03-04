@@ -362,13 +362,13 @@ def update_avatar():
         set_form_id = None
         print(form_data)
 
-    upload_path = ''
-    ava_foto = request.files.get(f'avaFoto_{set_form_id}')
+    # upload_path = ''
+    # ava_foto = request.files.get(f'avaFoto_{set_form_id}')
     
-    if ava_foto and allowed_file(ava_foto.filename):
-        print('jest')
-        filename = str(int(time.time())) + secure_filename(ava_foto.filename)
-        ava_foto.save(upload_path + filename)
+    # if ava_foto and allowed_file(ava_foto.filename):
+    #     print('jest')
+    #     filename = str(int(time.time())) + secure_filename(ava_foto.filename)
+    #     ava_foto.save(upload_path + filename)
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
