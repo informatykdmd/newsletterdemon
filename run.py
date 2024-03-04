@@ -360,15 +360,24 @@ def update_avatar():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         set_form_id = None
-        print(request.form)
+        # Znajdź id usera
+        for key in form_data.keys():
+            if '_' in key:
+                set_form_id = key.split('_')[1]
+                try: 
+                    int(set_form_id)
+                    break
+                except ValueError:
+                    set_form_id = None
+        
 
-    # upload_path = ''
-    # ava_foto = request.files.get(f'avaFoto_{set_form_id}')
-    
-    # if ava_foto and allowed_file(ava_foto.filename):
-    #     print('jest')
-    #     filename = str(int(time.time())) + secure_filename(ava_foto.filename)
-    #     ava_foto.save(upload_path + filename)
+        upload_path = ''
+        ava_foto = request.files.get(f'avaFoto_{set_form_id}')
+        
+        if ava_foto and allowed_file(ava_foto.filename):
+            print('jest')
+            # filename = str(int(time.time())) + secure_filename(ava_foto.filename)
+            # ava_foto.save(upload_path + filename)
     return redirect(url_for('users'))
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
