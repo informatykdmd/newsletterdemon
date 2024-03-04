@@ -191,6 +191,8 @@ def generator_subsDataDB():
                 }
             }
 
+generator_subsDataDB()
+
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 
