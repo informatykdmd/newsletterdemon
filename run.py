@@ -250,7 +250,7 @@ def login():
                 'stanowisko': un['stanowisko'],
                 'opis': un['opis'],
                 'status': un['status'],
-                'avatar': settingsDB['main-domain'] + settingsDB['avatar-pic-path'] + un['avatar']
+                'avatar': un['avatar']
             }
             brands_data[un['username']] = un['brands']
 
