@@ -86,23 +86,23 @@ def generator_userDataDB():
     took_usrD = take_data_table('*', 'admins')
     userData = []
     for data in took_usrD:
-
+        
         theme = {
             'id': data[0], 
             'username': data[2],
             'password': data[3], 
             'salt' : data[4], 
             "email": data[5],
-            "phone": data[8],
-            "facebook": data[9],
-            "instagram": data[10],
-            "twiter": data[11],
-            "linkedin": data[12],
+            "phone": '' if data[8] is None else data[8],
+            "facebook": '' if data[9] is None else data[9],
+            "instagram": '' if data[10] is None else data[10],
+            "twiter": '' if data[11] is None else data[11],
+            "linkedin": '' if data[12] is None else data[12],
             "name": data[1],
             'stanowisko': data[13],
             'opis': data[6],
             'status': str(data[14]),
-            'avatar': data[15],
+            'avatar': '' if data[15] is None else data[15],
             'uprawnienia': {
                 'users': data[16],
                 'brands': data[17],
