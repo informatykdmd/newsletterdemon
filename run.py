@@ -360,7 +360,7 @@ def update_avatar():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         set_form_id = None
-        print(form_data)
+        print(request.form)
 
     # upload_path = ''
     # ava_foto = request.files.get(f'avaFoto_{set_form_id}')
