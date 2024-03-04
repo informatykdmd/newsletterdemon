@@ -369,7 +369,7 @@ def update_avatar():
     #     print('jest')
     #     filename = str(int(time.time())) + secure_filename(ava_foto.filename)
     #     ava_foto.save(upload_path + filename)
-    return redirect(url_for('user'))
+    return redirect(url_for('users'))
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
