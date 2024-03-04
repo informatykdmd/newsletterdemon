@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
 import secrets
 import app.utils.passwordSalt as hash
-from temp import daneDBList, subsDataDB, userDataDB, teamDB
+from temp import daneDBList, subsDataDB, teamDB
 import mysqlDB as msq
 import time
 
@@ -125,12 +125,13 @@ def generator_userDataDB():
         }
         userData.append(theme)
     return userData
-print(generator_userDataDB())
+
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 
 newsletterSettingDB = generator_newsletterSettingDB()
+userDataDB = generator_userDataDB()
 
 @app.route('/')
 def index():
