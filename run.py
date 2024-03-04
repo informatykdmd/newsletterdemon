@@ -357,7 +357,7 @@ def blog(router=True):
 def update_avatar():
     """Aktualizacja awatara usera"""
     # Pobierz id usera z formularza
-    user_id = request.form.get('user_id')
+    user_id = int(request.form.get('user_id'))
     print([user_id])
     # Sprawdź, czy user_id jest poprawne
     if user_id is not None and user_id.isnumeric():
