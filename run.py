@@ -166,8 +166,8 @@ def generator_subsDataDB():
         for i, com in enumerate(allSubsComments, start=1):
             commentsCollector[i] = {}
             commentsCollector[i]['message'] = com[2]
-            BLOG_POST_ID = com[1]
-            commentsCollector[i]['post_title'] = take_data_where_ID('TITLE', 'contents', 'BLOG_POST_ID', BLOG_POST_ID)
+            BLOG_POST_ID = int(com[1])
+            commentsCollector[i]['post_title'] = take_data_where_ID('TITLE', 'contents', 'BLOG_POST_ID', BLOG_POST_ID)[0][0]
             print(com)
         print(commentsCollector)
 
