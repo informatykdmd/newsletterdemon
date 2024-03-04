@@ -145,6 +145,52 @@ def generator_teamDB():
         teamData.append(theme)
     return teamData
 
+def generator_subsDataDB():
+    subsData = []
+    took_subsD = take_data_table('*', 'newsletter')
+
+    ID = 1
+    allComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID)
+
+    ID2 = 1
+    allComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID2)
+    for data in took_subsD:
+        if data[4] != 1:
+            continue
+
+        ID = data[0]
+        BLOG_POST_ID = data[1]
+        AUTHOR_OF_COMMENT_ID = data[3]
+        allSubsComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', AUTHOR_OF_COMMENT_ID)
+        for com in allSubsComments:
+
+            print(com)
+
+
+        theme = {
+            'id': ID, 
+            'email':'michal@wp.pl',
+            'name':'Michał', 
+            'status': '1', 
+            'comments': {
+                    1: {
+                        'message': "Super! Takie domy są jak najlepiej.",
+                        'post_title': 'Willa Floryda',
+                        'data-time': '18 lutego 2024'
+                    },
+                    2: {
+                        'message': "Widzę to już w nowych projektach...",
+                        'post_title': 'Willa Floryda',
+                        'data-time': '1 marca 2024'
+                    },
+                    3: {
+                        'message': "To tak naprawdę ciekawo! Dzięki",
+                        'post_title': 'Willa Floryda',
+                        'data-time': '1 marca 2024'
+                    }
+                }
+            }
+
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 
