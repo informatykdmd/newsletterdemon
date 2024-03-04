@@ -353,6 +353,14 @@ def blog(router=True):
     else:
         return posts, session['username'], session['userperm'], pagination
 
+def update_avatar():
+    """Aktualizacja awatara usera"""
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        set_form_id = None
+        print(form_data)
+
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
     """Strona zapisywania edytowanego posta."""
