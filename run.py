@@ -250,7 +250,7 @@ def login():
                 'stanowisko': un['stanowisko'],
                 'opis': un['opis'],
                 'status': un['status'],
-                'avatar': un['avatar']
+                'avatar': settingsDB['main-domain'] + settingsDB['avatar-pic-path'] + un['avatar']
             }
             brands_data[un['username']] = un['brands']
 
@@ -284,13 +284,6 @@ def home():
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej    
     if 'username' not in session:
         return redirect(url_for('index'))
-    
-    # try:
-    #     users_data = users(False)[0]
-    # except Exception as e:
-    #     flash(f"Błąd! {e}", "error")
-    #     return redirect(url_for('blog'))
-    print(session['username'])
     
     settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
