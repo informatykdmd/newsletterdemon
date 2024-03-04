@@ -148,19 +148,9 @@ def generator_teamDB():
 def generator_subsDataDB():
     subsData = []
     took_subsD = take_data_table('*', 'newsletter')
-
-    # ID = 1
-    # allComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID)
-
-    # ID2 = 1
-    # allComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID2)
     for data in took_subsD:
-        if data[4] != 1:
-            continue
-
+        if data[4] != 1: continue
         ID = data[0]
-        # BLOG_POST_ID = data[1]
-        # AUTHOR_OF_COMMENT_ID = data[3]
         allSubsComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID)
         commentsCollector = {}
         for i, com in enumerate(allSubsComments, start=1):
@@ -168,34 +158,19 @@ def generator_subsDataDB():
             commentsCollector[i]['message'] = com[2]
             BLOG_POST_ID = int(com[1])
             commentsCollector[i]['post_title'] = take_data_where_ID('TITLE', 'contents', 'ID', BLOG_POST_ID)[0][0]
-            print(commentsCollector[i]['post_title'])
-        print(commentsCollector)
+            commentsCollector[i]['data-time'] = com[4]
 
         theme = {
             'id': ID, 
-            'email':'michal@wp.pl',
-            'name':'Michał', 
-            'status': '1', 
-            'comments': {
-                    1: {
-                        'message': "Super! Takie domy są jak najlepiej.",
-                        'post_title': 'Willa Floryda',
-                        'data-time': '18 lutego 2024'
-                    },
-                    2: {
-                        'message': "Widzę to już w nowych projektach...",
-                        'post_title': 'Willa Floryda',
-                        'data-time': '1 marca 2024'
-                    },
-                    3: {
-                        'message': "To tak naprawdę ciekawo! Dzięki",
-                        'post_title': 'Willa Floryda',
-                        'data-time': '1 marca 2024'
-                    }
-                }
+            'email':data[2],
+            'name':data[1], 
+            'status': str(data[4]), 
+            'comments': commentsCollector
             }
+        subsData.append(theme)
+    return subsData
 
-generator_subsDataDB()
+print(generator_subsDataDB())
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
