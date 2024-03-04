@@ -100,7 +100,7 @@ def generator_userDataDB():
             'stanowisko': data[13],
             'opis': data[6],
             'status': str(data[14]),
-            'avatar': '' if data[15] is None else generator_settingsDB()['main-domain'] + generator_settingsDB()['avatar-pic-path'] + data[15],
+            'avatar': '' if data[15] is None else data[15],
             'uprawnienia': {
                 'users': data[16],
                 'brands': data[17],
