@@ -131,16 +131,16 @@ def generator_teamDB():
     for data in took_teamD:
         theme = {
             'ID': int(data[0]),
-            'EMPLOYEE_PHOTO': data[0],
-            'EMPLOYEE_NAME': data[1],
-            'EMPLOYEE_ROLE': data[2],
-            'EMPLOYEE_DEPARTMENT': data[3],
-            'PHONE':'' if data[4] is None else data[4],
-            'EMAIL': '' if data[5] is None else data[5],
-            'FACEBOOK': '' if data[6] is None else data[6],
-            'LINKEDIN': '' if data[7] is None else data[7],
-            'DATE_TIME': data[8],
-            'STATUS': int(data[9])
+            'EMPLOYEE_PHOTO': data[1],
+            'EMPLOYEE_NAME': data[2],
+            'EMPLOYEE_ROLE': data[3],
+            'EMPLOYEE_DEPARTMENT': data[4],
+            'PHONE':'' if data[5] is None else data[5],
+            'EMAIL': '' if data[6] is None else data[6],
+            'FACEBOOK': '' if data[7] is None else data[7],
+            'LINKEDIN': '' if data[8] is None else data[8],
+            'DATE_TIME': data[9],
+            'STATUS': int(data[10])
         }
         teamData.append(theme)
     return teamData
