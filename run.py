@@ -162,10 +162,14 @@ def generator_subsDataDB():
         # BLOG_POST_ID = data[1]
         # AUTHOR_OF_COMMENT_ID = data[3]
         allSubsComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID)
-        for com in allSubsComments:
-
-            print(com)
-
+        commentsCollector = {}
+        for i, com in enumerate(allSubsComments, start=1):
+            commentsCollector[i] = {}
+            commentsCollector[i]['message'] = com[2]
+            BLOG_POST_ID = com[1]
+            commentsCollector[i]['post_title'] = take_data_where_ID('TITLE', 'contents', 'BLOG_POST_ID', BLOG_POST_ID)
+            # print(com)
+        print(commentsCollector)
 
         theme = {
             'id': ID, 
