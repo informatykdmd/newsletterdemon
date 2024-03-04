@@ -159,9 +159,9 @@ def generator_subsDataDB():
             continue
 
         ID = data[0]
-        BLOG_POST_ID = data[1]
-        AUTHOR_OF_COMMENT_ID = data[3]
-        allSubsComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', AUTHOR_OF_COMMENT_ID)
+        # BLOG_POST_ID = data[1]
+        # AUTHOR_OF_COMMENT_ID = data[3]
+        allSubsComments = take_data_where_ID('*', 'comments', 'AUTHOR_OF_COMMENT_ID', ID)
         for com in allSubsComments:
 
             print(com)
