@@ -372,7 +372,7 @@ def update_avatar():
         
 
         upload_path = ''
-        ava_foto = request.files.get(f'avaFoto_{set_form_id}')
+        ava_foto = request.files.get(f'upload_{set_form_id}')
         
         if ava_foto and allowed_file(ava_foto.filename):
             print('jest')
