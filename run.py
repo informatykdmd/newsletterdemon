@@ -83,7 +83,7 @@ def take_data_table(key, table):
     return dump_key
 
 def generator_userDataDB():
-    took_usrD = take_data_where_ID('*', 'admins')
+    took_usrD = take_data_table('*', 'admins')
     userData = []
     print(took_usrD)
     theme = {
