@@ -184,8 +184,8 @@ def generator_daneDBList():
         for i, com in enumerate(allPostComments):
             comments_dict[i] = {}
             comments_dict[i]['message'] = com[2]
-            comments_dict[i]['user'] = take_data_where_ID('CLIENT_NAME', 'newsletter', 'ID', com[3])
-            comments_dict[i]['e-mail'] = take_data_where_ID('CLIENT_EMAIL', 'newsletter', 'ID', com[3])
+            comments_dict[i]['user'] = take_data_where_ID('CLIENT_NAME', 'newsletter', 'ID', com[3])[0][0]
+            comments_dict[i]['e-mail'] = take_data_where_ID('CLIENT_EMAIL', 'newsletter', 'ID', com[3])[0][0]
             comments_dict[i]['data-time'] = com[4]
             
         theme = {
@@ -215,7 +215,7 @@ teamDB = generator_teamDB()
 
 subsDataDB = generator_subsDataDB()
 
-print(generator_daneDBList())
+daneDBList = generator_daneDBList()
 @app.route('/')
 def index():
     if 'username' in session:
