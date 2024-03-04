@@ -353,6 +353,7 @@ def blog(router=True):
     else:
         return posts, session['username'], session['userperm'], pagination
 
+@app.route('/update-avatar', methods=['GET', 'POST'])
 def update_avatar():
     """Aktualizacja awatara usera"""
     # Obsługa formularza POST
