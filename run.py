@@ -363,6 +363,9 @@ def update_avatar():
         # Przetwarzaj plik avatara
         upload_path = 'ścieżka/do/katalogu/z/avatarami'
         avatar_file = request.files.get(f'upload_{user_id}')
+        
+        print(request.files)  # Sprawdź, czy plik jest dostępny w formularzu
+        print(request.form)   # Wyświetl wartości pól formularza
 
         if avatar_file and allowed_file(avatar_file.filename):
             # Tutaj możesz dodać kod zapisujący plik na serwerze
