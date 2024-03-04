@@ -197,7 +197,7 @@
                                     <div class="collapse" style="max-width: 400px;" id="collapse_id_0_{{user_id}}">
                                         <div class="tylko-klej">
                                             <div>
-                                                <form method="POST" id="avatar_user_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data" >
+                                                <form method="POST" id="avatar_user_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
                                                     <div>
                                                         <h7>Podmień avatar</h7>
                                                     </div>
@@ -210,7 +210,7 @@
                                                     </div>
                                                     <div class="tylko-klej">
                                                         <div class="formatuj formatuj-left" style="margin-bottom: 10px;">
-                                                            <button type="submit" class="btn btn-outline-secondary btn-sm"  style="max-height: 30px; font-size: 12px;" >Zmień Avatar</button>
+                                                            <button id="submit_button_{{user_id}}" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;">Zmień Avatar</button>
                                                         </div>
                                                     </div>
                                                 </form>

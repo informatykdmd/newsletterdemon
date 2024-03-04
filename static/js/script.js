@@ -298,3 +298,24 @@ function pobierzIKonsolujKolejnosc(sekcjaId) {
     
     console.log(`Kolejność w sekcji ${sekcjaId}:`, kolejnosc);
 }
+// W kodzie JavaScript na stronie
+function send_elements(formId) {
+    // Pobierz formularz po ID
+    var form = document.getElementById(formId);
+
+    // Pobierz dane z formularza
+    var formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Odpowiedź z serwera:', data);
+        // Tutaj możesz dodać kod obsługi odpowiedzi od serwera, jeśli to konieczne
+    })
+    .catch(error => {
+        console.error('Błąd podczas wysyłania danych:', error);
+    });
+}
