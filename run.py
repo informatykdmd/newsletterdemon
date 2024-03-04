@@ -85,45 +85,47 @@ def take_data_table(key, table):
 def generator_userDataDB():
     took_usrD = take_data_table('*', 'admins')
     userData = []
-    print(took_usrD)
-    theme = {
-        'id': 1, 
-        'username': 'michal',
-        'password': '50e0ba9650b53f2b8627849578f5a93be4fca8f5c023a94bddf5b3c5194fc38e', 
-        'salt' : 'f87449159daaaf40e2b4631395801ce4', 
-        "email": "michal@gmail.com",
-        "phone": "+48 600 234 567",
-        "facebook": "facebook.com/fanpage/michal",
-        "instagram": 'instagram.com/user',
-        "twiter": "@user",
-        "linkedin": "linkedin.com/in/michaluser",
-        "name": "Michał Kowalski",
-        'stanowisko': 'kierownik informatyk',
-        'opis': 'Michał pełni rolę kierownika w naszej firmie. Jego zaangażowanie i skuteczność zostały docenione, gdy został uznany za Pracownika Roku. ',
-        'status': '1',
-        'avatar': 'https://dmddomy.pl/images/team/tm-01-460x460-michal_ploch.png',
-        'uprawnienia': {
-            'users': 1,
-            'brands': 1,
-            'blog': 1,
-            'subscribers': 1,
-            'commnets': 1,
-            'team': 1,
-            'permissions': 1,
-            'settings': 1,
-            'newsletter': 1
-            },
-        'brands': {
-            'domy': 1,
-            'budownictwo': 1,
-            'elitehome': 1,
-            'inwestycje': 1,
-            'instalacje': 0,
-            'development': 1
-            }
-    }
+    for data in took_usrD:
+
+        theme = {
+            'id': data[0], 
+            'username': data[2],
+            'password': data[3], 
+            'salt' : data[4], 
+            "email": data[5],
+            "phone": data[8],
+            "facebook": data[9],
+            "instagram": data[10],
+            "twiter": data[11],
+            "linkedin": data[12],
+            "name": data[1],
+            'stanowisko': data[13],
+            'opis': data[6],
+            'status': str(data[14]),
+            'avatar': data[15],
+            'uprawnienia': {
+                'users': data[16],
+                'brands': data[17],
+                'blog': data[18],
+                'subscribers': data[19],
+                'commnets': data[20],
+                'team': data[21],
+                'permissions': data[22],
+                'settings': data[30],
+                'newsletter': data[23]
+                },
+            'brands': {
+                'domy': data[24],
+                'budownictwo': data[25],
+                'elitehome': data[26],
+                'inwestycje': data[27],
+                'instalacje': data[28],
+                'development': data[29]
+                }
+        }
+        userData.append(theme)
     return userData
-generator_userDataDB()
+print(generator_userDataDB())
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
