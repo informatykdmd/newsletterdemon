@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
 import secrets
 import app.utils.passwordSalt as hash
-from temp import daneDBList, subsDataDB
+from temp import daneDBList
 import mysqlDB as msq
 import time
 
@@ -170,8 +170,6 @@ def generator_subsDataDB():
         subsData.append(theme)
     return subsData
 
-print(generator_subsDataDB())
-
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 
@@ -180,6 +178,7 @@ userDataDB = generator_userDataDB()
 
 teamDB = generator_teamDB()
 
+subsDataDB = generator_subsDataDB()
 @app.route('/')
 def index():
     if 'username' in session:
