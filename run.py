@@ -170,6 +170,41 @@ def generator_subsDataDB():
         subsData.append(theme)
     return subsData
 
+def generator_daneDBList():
+    daneList = []
+    took_allPost = take_data_table('*', 'blog_posts')
+    for post in took_allPost:
+        id = post[0]
+        id_content = post[1]
+        id_author = post[2]
+        post_data = post[3]
+
+        allPostComments = take_data_where_ID('*', 'comments', 'BLOG_POST_ID', id)
+        comments_dict = {}
+        for i, com in enumerate(allPostComments):
+            comments_dict[i] = {}
+            comments_dict[i]['message'] = com[2]
+            comments_dict[i]['user'] = take_data_where_ID('CLIENT_NAME', 'newsletter', 'ID', com[3])
+            comments_dict[i]['e-mail'] = take_data_where_ID('CLIENT_EMAIL', 'newsletter', 'ID', com[3])
+            comments_dict[i]['data-time'] = com[4]
+            
+        theme = {
+            'id': take_data_where_ID('ID', 'contents', 'ID', id_content)[0][0],
+            'title': take_data_where_ID('TITLE', 'contents', 'ID', id_content)[0][0],
+            'introduction': take_data_where_ID('CONTENT_MAIN', 'contents', 'ID', id_content)[0][0],
+            'highlight': take_data_where_ID('HIGHLIGHTS', 'contents', 'ID', id_content)[0][0],
+            'mainFoto': take_data_where_ID('HEADER_FOTO', 'contents', 'ID', id_content)[0][0],
+            'contentFoto': take_data_where_ID('CONTENT_FOTO', 'contents', 'ID', id_content)[0][0],
+            'additionalList': take_data_where_ID('BULLETS', 'contents', 'ID', id_content)[0][0],
+            'tags': take_data_where_ID('TAGS', 'contents', 'ID', id_content)[0][0],
+            'category': take_data_where_ID('CATEGORY', 'contents', 'ID', id_content)[0][0],
+            'data': take_data_where_ID('DATE_TIME', 'contents', 'ID', id_content)[0][0],
+            'author': take_data_where_ID('NAME_AUTHOR', 'authors', 'ID', id_author)[0][0],
+            'comments': comments_dict
+        }
+        daneList.append(theme)
+    return daneList
+
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 
@@ -179,6 +214,8 @@ userDataDB = generator_userDataDB()
 teamDB = generator_teamDB()
 
 subsDataDB = generator_subsDataDB()
+
+print(generator_daneDBList())
 @app.route('/')
 def index():
     if 'username' in session:
