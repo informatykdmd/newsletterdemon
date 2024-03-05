@@ -366,40 +366,61 @@ def update_password_user():
     # Pobierz id usera z formularza
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
         ID = form_data['id']
-        if form_data['new_Password'] == form_data['repeat_Password']:
+        PAGE = form_data['page']
+        if PAGE == 'home':
+            if form_data['new_Password'] == form_data['repeat_Password']:
 
-            salt_old = take_data_where_ID('SALT', 'admins', 'ID', ID)[0][0]
-            password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)[0][0]
-            verificated_old_password = hash.hash_password(form_data['old_Password'], salt_old)
+                salt_old = take_data_where_ID('SALT', 'admins', 'ID', ID)[0][0]
+                password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)[0][0]
+                verificated_old_password = hash.hash_password(form_data['old_Password'], salt_old)
 
-            if  verificated_old_password != password_old:
-                flash('Nieprawidłowe stare hasło')
+                if verificated_old_password != password_old:
+                    flash('Nieprawidłowe stare hasło')
+                    return redirect(url_for('index'))
+                
+                new_password = form_data['new_Password']
+
+                # Sprawdź, czy hasło ma co najmniej 8 znaków
+                if len(new_password) >= 8:
+                    # Sprawdź, czy hasło zawiera co najmniej jedną wielką literę
+                    if any(char.isupper() for char in new_password):
+                        # Sprawdź, czy hasło zawiera co najmniej jeden znak specjalny
+                        if any(char in '!@#$%^&*()-_=+[]{}|;:\'",.<>/?`~' for char in new_password):
+                            # Hasło spełnia wszystkie kryteria
+                            print("Hasło spełnia wymagania dotyczące długości, wielkiej litery i znaków specjalnych.")
+                            password_from_user = form_data['new_Password']
+                            # Haszowanie hasła z użyciem soli
+                            salt = hash.generate_salt()
+                            hashed_password = hash.hash_password(password_from_user, salt)
+                            zapytanie_sql = '''
+                                    UPDATE admins 
+                                    SET PASSWORD_HASH = %s, 
+                                        SALT = %s
+                                    WHERE ID = %s;
+                                '''
+                            dane = (
+                                    hashed_password, 
+                                    salt,
+                                    ID
+                                )
+                            if msq.insert_to_database(zapytanie_sql, dane):
+                                flash('Hasło zostało pomyślnie zmienione.')
+                                return redirect(url_for('logout'))
+                        else:
+                            flash("Hasło musi zawierać co najmniej jeden znak specjalny.")
+                            return redirect(url_for('index'))
+                    else:
+                        flash("Hasło musi zawierać co najmniej jedną wielką literę.")
+                        return redirect(url_for('index'))
+                else:
+                    flash("Hasło musi mieć co najmniej 8 znaków.")
+                    return redirect(url_for('index'))
+            else:
+                flash('Hasła muszą być identyczne!')
                 return redirect(url_for('index'))
-            
-            password_from_user = form_data['new_Password']
-            # Haszowanie hasła z użyciem soli
-            salt = hash.generate_salt()
-            hashed_password = hash.hash_password(password_from_user, salt)
-            zapytanie_sql = '''
-                    UPDATE admins 
-                    SET PASSWORD_HASH = %s, 
-                        SALT = %s
-                    WHERE ID = %s;
-                '''
-            dane = (
-                    hashed_password, 
-                    salt,
-                    ID
-                )
-            if msq.insert_to_database(zapytanie_sql, dane):
-                flash('Hasło zostało pomyślnie zmienione.')
-                return redirect(url_for('logout'))
-
-        else:
-            flash('Hasła muszą być identyczne!')
-
+        elif PAGE == 'users':
+            pass
     return redirect(url_for('index'))
 
 @app.route('/update-data-user', methods=['GET', 'POST'])
