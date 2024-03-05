@@ -394,6 +394,7 @@ def update_password_user():
                 )
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash('Hasło zostało pomyślnie zmienione.')
+                return redirect(url_for('logout'))
 
         else:
             flash('Hasła muszą być identyczne!')
