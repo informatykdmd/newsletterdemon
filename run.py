@@ -366,7 +366,7 @@ def update_avatar():
 
         if avatarPic and allowed_file(avatarPic.filename):
             filename = f"{int(time.time())}_{secure_filename(avatarPic.filename)}"
-            upload_path = os.path.join('/var/www/appdmddomy/public/'+settingsDB['avatar-pic-path'], filename)
+            upload_path = os.path.join('/var/www/html/appdmddomy/public/'+settingsDB['avatar-pic-path'], filename)
             full_path = os.path.join(upload_path, filename)
             print(full_path)
 
