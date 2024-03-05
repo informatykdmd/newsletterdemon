@@ -358,6 +358,15 @@ def blog(router=True):
 def update_data_user():
     """Aktualizacja awatara usera"""
 
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+        
+    # Pobierz id usera z formularza
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        
+    return redirect(url_for('home'))
 
 @app.route('/update-avatar', methods=['GET', 'POST'])
 def update_avatar():
