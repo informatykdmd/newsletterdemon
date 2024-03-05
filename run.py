@@ -361,6 +361,7 @@ def update_avatar():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         set_ava_id = form_data['user_id']
+        set_page = form_data['page']
         upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['avatar-pic-path']
         avatarPic = request.files.get(f'avatarFileByUser_{set_ava_id}')
 
@@ -395,7 +396,7 @@ def update_avatar():
             flash('Nieprawidłowy format pliku! ','danger')
     else:
         print('Błąd metody w /update-avatar')
-
+    print(set_page)
     return redirect(url_for('users'))
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
