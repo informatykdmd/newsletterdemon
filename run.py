@@ -361,17 +361,21 @@ def update_avatar():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         set_ava_id = form_data['user_id']
-        upload_path = '/var/www/html/appdmddomy/public/images/team/'
+        upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['avatar-pic-path']
         avatarPic = request.files.get(f'avatarFileByUser_{set_ava_id}')
 
         if avatarPic and allowed_file(avatarPic.filename):
             filename = f"{int(time.time())}_{secure_filename(avatarPic.filename)}"
             full_path = os.path.join(upload_path, filename)
-            print(full_path)
-
             avatarPic.save(full_path)
+            msq.insert_to_database(
+                        'UPDATE admins SET ADMIN_AVATAR = %s WHERE ID = %s;', 
+                        (settingsDB['main-domain'] + settingsDB['avatar-pic-path'] + filename, set_ava_id)
+                    )
+        else:
+            flash('Nieprawidłowy format pliku! Dopuszczalne są tylko pliki JPG i PNG.','danger')
     else:
-        print('brak danych')
+        print('Błąd metody w /update-avatar')
 
     return redirect(url_for('users'))
 
