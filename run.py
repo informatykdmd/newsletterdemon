@@ -362,16 +362,20 @@ def update_password_user():
     if 'username' not in session or 'userperm' not in session:
         return redirect(url_for('index'))
     
-    ID = None
-    salt = take_data_where_ID('SALT', 'admins', 'ID', ID)
-    password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)
-    print(password_old, salt)
-    password_from_user = 'password'
+    # Pobierz id usera z formularza
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        print(form_data)
+        ID = 1
+        salt = take_data_where_ID('SALT', 'admins', 'ID', ID)
+        password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)
+        print(password_old, salt)
+        password_from_user = 'password'
 
-    # salt = hash.generate_salt()
+        # salt = hash.generate_salt()
 
-    # Haszowanie hasła z użyciem soli
-    hashed_password = hash.hash_password(password_from_user, salt)
+        # Haszowanie hasła z użyciem soli
+        # hashed_password = hash.hash_password(password_from_user, salt)
 
 
 @app.route('/update-data-user', methods=['GET', 'POST'])
