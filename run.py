@@ -365,6 +365,7 @@ def update_data_user():
     # Pobierz id usera z formularza
     if request.method == 'POST':
         form_data = request.form.to_dict()
+        print(form_data)
         if form_data['page'] == 'home':
             zapytanie_sql = '''
                     UPDATE admins 
