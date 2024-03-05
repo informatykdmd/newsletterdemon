@@ -178,6 +178,19 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     form.submit();
 }
 
+function justSubmitOneElementForm(elementName, elementId, formName) {
+    // Sprawdź, czy wymagane pola są wypełnione
+    var oneElement = document.getElementById(elementName + elementId).value;
+    
+    if (!oneElement) {
+        alert('Wypełnij wszystkie wymagane pola przed zapisaniem artykułu.');
+        return;  // Zatrzymaj przesyłanie formularza
+    };
+  
+    var form = document.getElementById(formName+elementId);
+    form.submit();
+}
+
 function previewImage(input, previewId, targetWidth, targetHeight, errorMargin) {
     var preview = document.getElementById(previewId);
     var file = input.files[0];
