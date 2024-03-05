@@ -361,13 +361,11 @@ def update_avatar():
         form_data = request.form.to_dict()
         set_ava_id = form_data['user_id']
 
-        
-        print(set_ava_id)
-        print(request.files)
         upload_path = ''
-        # avatarPic = request.files.get(f'avatarFileByUser_{set_ava_id}')
-        # if avatarPic and allowed_file(avatarPic.filename):
-        #     filename = str(int(time.time())) + secure_filename(avatarPic.filename)
+        avatarPic = request.files.get(f'avatarFileByUser_{set_ava_id}')
+        if avatarPic and allowed_file(avatarPic.filename):
+            filename = str(int(time.time())) + secure_filename(avatarPic.filename)
+            print(filename)
         #     avatarPic.save(upload_path + filename)
     else:
         print('brak danych')
