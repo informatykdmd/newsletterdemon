@@ -354,6 +354,26 @@ def blog(router=True):
     else:
         return posts, session['username'], session['userperm'], pagination
 
+@app.route('/update-password-user', methods=['GET', 'POST'])
+def update_password_user():
+    """Aktualizacja awatara usera"""
+
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    ID = None
+    salt = take_data_where_ID('SALT', 'admins', 'ID', ID)[0][0]
+    password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)[0][0]
+    print(password_old, salt)
+    password_from_user = 'password'
+
+    # salt = hash.generate_salt()
+
+    # Haszowanie hasła z użyciem soli
+    hashed_password = hash.hash_password(password_from_user, salt)
+
+
 @app.route('/update-data-user', methods=['GET', 'POST'])
 def update_data_user():
     """Aktualizacja awatara usera"""
@@ -442,10 +462,7 @@ def update_data_user():
             )
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash('Dane zostały pomyślnie zaktualizowane.')
-            print(form_data)
             return redirect(url_for('users'))
-
-
     return redirect(url_for('index'))
 
 @app.route('/update-avatar', methods=['GET', 'POST'])
