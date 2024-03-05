@@ -389,30 +389,32 @@ def update_data_user():
                 form_data['linkedin'], 
                 int(form_data['id'])
             )
-            msq.insert_to_database(zapytanie_sql, dane)
-            flash('Dane zostały pomyślnie zaktualizowane.')
-            return redirect(url_for('home'))
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash('Dane zostały pomyślnie zaktualizowane.')
+                userDataDB = generator_userDataDB()
+                users_data = {}
+                for un in userDataDB: 
+                    users_data[un['username']] = {
+                        'id': un['id'], 
+                        'username': un['username'],  
+                        'email': un['email'],
+                        'phone': un['phone'],
+                        'facebook': un['facebook'],
+                        'linkedin': un['linkedin'],
+                        'instagram': un['instagram'],
+                        'twiter': un['twiter'],
+                        'name': un['name'], 
+                        'stanowisko': un['stanowisko'],
+                        'opis': un['opis'],
+                        'status': un['status'],
+                        'avatar': un['avatar']
+                    }
+                return redirect(url_for('home'))
+            
         if form_data['page'] == 'users':
             pass
 
-        userDataDB = generator_userDataDB()
-        users_data = {}
-        for un in userDataDB: 
-            users_data[un['username']] = {
-                'id': un['id'], 
-                'username': un['username'],  
-                'email': un['email'],
-                'phone': un['phone'],
-                'facebook': un['facebook'],
-                'linkedin': un['linkedin'],
-                'instagram': un['instagram'],
-                'twiter': un['twiter'],
-                'name': un['name'], 
-                'stanowisko': un['stanowisko'],
-                'opis': un['opis'],
-                'status': un['status'],
-                'avatar': un['avatar']
-            }
+        
         session['user_data'] = users_data[session['username']]
         flash('Avatar został zmieniony ','success')
 
