@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request
+from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request, current_app
 from flask_wtf import FlaskForm
 from flask_paginate import Pagination, get_page_args
 from wtforms import StringField, PasswordField, SubmitField
@@ -8,6 +8,7 @@ import secrets
 import app.utils.passwordSalt as hash
 import mysqlDB as msq
 import time
+import os
 
 """
 Aplikacja "Admin Panel" stanowi kompleksowe narzędzie do 
@@ -361,13 +362,16 @@ def update_avatar():
         form_data = request.form.to_dict()
         set_ava_id = form_data['user_id']
 
-        upload_path = '../../../../var/www/appdmddomy/public/' + settingsDB['avatar-pic-path']
-        avatarPic = request.files.get(f'avatarFileByUser_{set_ava_id}')
-        if avatarPic and allowed_file(avatarPic.filename):
-            filename = str(int(time.time())) + secure_filename(avatarPic.filename)
-            print(upload_path+filename)
+        upload_path = os.path.join(current_app.root_path, 'var', 'www', 'appdmddomy', 'public', settingsDB['avatar-pic-path'])
 
-            avatarPic.save(upload_path + filename)
+        avatarPic = request.files.get(f'avatarFileByUser_{set_ava_id}')
+
+        if avatarPic and allowed_file(avatarPic.filename):
+            filename = f"{int(time.time())}_{secure_filename(avatarPic.filename)}"
+            full_path = os.path.join(upload_path, filename)
+            print(full_path)
+
+            avatarPic.save(full_path)
     else:
         print('brak danych')
 
