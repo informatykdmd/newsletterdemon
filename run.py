@@ -366,16 +366,25 @@ def update_password_user():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         print(form_data)
-        ID = 1
-        salt = take_data_where_ID('SALT', 'admins', 'ID', ID)
-        password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)
-        print(password_old, salt)
-        password_from_user = 'password'
+        ID = form_data['id']
+        if form_data['new_Password'] == form_data['repeat_Password']:
 
-        # salt = hash.generate_salt()
+            salt_old = take_data_where_ID('SALT', 'admins', 'ID', ID)[0][0]
+            password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)[0][0]
 
-        # Haszowanie hasła z użyciem soli
-        # hashed_password = hash.hash_password(password_from_user, salt)
+            verificated_old_password = hash.hash_password(form_data['old_Password'], salt_old)
+
+            print(password_old, verificated_old_password)
+
+            password_from_user = 'password'
+
+            # salt = hash.generate_salt()
+
+            # Haszowanie hasła z użyciem soli
+            # hashed_password = hash.hash_password(password_from_user, salt)
+        else:
+            flash('Hasła muszą być identyczne!')
+
     return redirect(url_for('index'))
 
 @app.route('/update-data-user', methods=['GET', 'POST'])
