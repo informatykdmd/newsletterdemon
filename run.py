@@ -363,8 +363,8 @@ def update_password_user():
         return redirect(url_for('index'))
     
     ID = None
-    salt = take_data_where_ID('SALT', 'admins', 'ID', ID)[0][0]
-    password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)[0][0]
+    salt = take_data_where_ID('SALT', 'admins', 'ID', ID)
+    password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)
     print(password_old, salt)
     password_from_user = 'password'
 
