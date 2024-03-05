@@ -372,6 +372,7 @@ def update_avatar():
                         'UPDATE admins SET ADMIN_AVATAR = %s WHERE ID = %s;', 
                         (settingsDB['main-domain'] + settingsDB['avatar-pic-path'] + filename, set_ava_id)
                     )
+            session['user_data']['avatar'] = settingsDB['main-domain'] + settingsDB['avatar-pic-path'] + filename
         else:
             flash('Nieprawidłowy format pliku! Dopuszczalne są tylko pliki JPG i PNG.','danger')
     else:
