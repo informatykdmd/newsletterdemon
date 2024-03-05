@@ -378,7 +378,6 @@ def update_data_user():
                         ADMIN_LINKEDIN = %s
                     WHERE ID = %s;
                 '''
-
             dane = (
                 form_data['name'], 
                 form_data['email'], 
@@ -413,10 +412,41 @@ def update_data_user():
                 return redirect(url_for('home'))
             
         if form_data['page'] == 'users':
+            if session['userperm']['users'] == 0:
+                flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+                return redirect(url_for('index'))
+            zapytanie_sql = '''
+                    UPDATE admins 
+                    SET ADMIN_NAME = %s, 
+                        EMAIL_ADMIN = %s, 
+                        ADMIN_PHONE = %s, 
+                        ADMIN_FACEBOOK = %s, 
+                        ADMIN_INSTAGRAM = %s, 
+                        ADMIN_TWITTER = %s, 
+                        ADMIN_LINKEDIN = %s,
+                        ADMIN_ROLE = %s,
+                        ABOUT_ADMIN = %s
+                    WHERE ID = %s;
+                '''
+            dane = (
+                form_data['name'], 
+                form_data['email'], 
+                form_data['phone'], 
+                form_data['facebook'], 
+                form_data['instagram'], 
+                form_data['twitter'], 
+                form_data['linkedin'], 
+                form_data['role'], 
+                form_data['desc'], 
+                int(form_data['id'])
+            )
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash('Dane zostały pomyślnie zaktualizowane.')
             print(form_data)
+            return redirect(url_for('users'))
 
 
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 @app.route('/update-avatar', methods=['GET', 'POST'])
 def update_avatar():
