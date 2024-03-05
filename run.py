@@ -394,11 +394,12 @@ def update_avatar():
                     'avatar': un['avatar']
                 }
             session['user_data'] = users_data[session['username']]
+            flash('Avatar został zmieniony ','success')
         else:
             flash('Nieprawidłowy format pliku! ','danger')
     else:
         print('Błąd metody w /update-avatar')
-    print(set_page)
+
     if set_page == 'home':
         return redirect(url_for('home'))
     elif set_page == 'users':
