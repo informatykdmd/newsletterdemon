@@ -409,6 +409,7 @@ def update_data_user():
                         'status': un['status'],
                         'avatar': un['avatar']
                     }
+                session['user_data'] = users_data[session['username']]
                 return redirect(url_for('home'))
             
         if form_data['page'] == 'users':
