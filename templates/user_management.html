@@ -349,27 +349,31 @@
                                             <div class="collapse" style="max-width: 250px;" id="collapse_id_3_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                 <div class="tylko-klej col-auto">
                                                     <div>
-                                                        <div class="table-creator">
-                                                            <h7>Zmień dane</h7>
-                                                        </div>
-                                                        <input  type="text" value="{{users_data['name']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" id="name_{{user_id}}" placeholder="Imię i Nazwisko" />
-                                                        <input  type="email" value="{{users_data['email']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" id="email_{{user_id}}" placeholder="Adres e-mail" />
-                                                        <input  type="text" value="{{users_data['phone']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" id="phone_{{user_id}}" placeholder="Telefon" />
-                                                        <input  type="text" value="{{users_data['facebook']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" id="facebook_{{user_id}}" placeholder="Facebook" />
-                                                        <input  type="text" value="{{users_data['linkedin']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" id="linkedin_{{user_id}}" placeholder="Linkedin" />
-                                                        <input  type="text" value="{{users_data['instagram']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" id="instagram_{{user_id}}" placeholder="Instagram" />
-                                                        <input  type="text" value="{{users_data['twiter']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" id="twiter_{{user_id}}" placeholder="Twiter X" />
-                                                        <input  type="text" value="{{users_data['stanowisko']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" id="role_{{user_id}}" placeholder="Stanowisko" />
-                                                        <textarea  rows="4" cols="50" class="form-control bg-dark formatuj" style="font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" id="desc_{{user_id}}" placeholder="Opis">{{users_data['opis']}}</textarea>
-                                                        <!-- <input  input type="text" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px;" id="inputPassword3" placeholder="Repeat Password" /> -->
-                                                        <div class="tylko-klej">
-                                                            <div style="padding-left: 8px; max-width:  80px;">
-                                                                <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_3_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_3_{{user_id}}">Anuluj</button>
+                                                        <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <div class="table-creator">
+                                                                <h7>Zmień dane</h7>
                                                             </div>
-                                                            <div class="formatuj-left">
-                                                                <button type="submit" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Zapisz zmiany</button>
+                                                            <input type="hidden" name="id" value="{{user_id}}" />
+                                                            <input type="hidden" name="page" value="users" />
+                                                            <input  type="text" value="{{users_data['name']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="name" id="name_{{user_id}}" placeholder="Imię i Nazwisko" />
+                                                            <input  type="email" value="{{users_data['email']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="email" id="email_{{user_id}}" placeholder="Adres e-mail" />
+                                                            <input  type="text" value="{{users_data['phone']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="phone" id="phone_{{user_id}}" placeholder="Telefon" />
+                                                            <input  type="text" value="{{users_data['facebook']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="facebook" id="facebook_{{user_id}}" placeholder="Facebook" />
+                                                            <input  type="text" value="{{users_data['linkedin']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="linkedin" id="linkedin_{{user_id}}" placeholder="Linkedin" />
+                                                            <input  type="text" value="{{users_data['instagram']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="instagram" id="instagram_{{user_id}}" placeholder="Instagram" />
+                                                            <input  type="text" value="{{users_data['twiter']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="twitter" id="twiter_{{user_id}}" placeholder="Twiter X" />
+                                                            <input  type="text" value="{{users_data['stanowisko']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="role" id="role_{{user_id}}" placeholder="Stanowisko" />
+                                                            <textarea  rows="4" cols="50" class="form-control bg-dark formatuj" style="font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="desc" id="desc_{{user_id}}" placeholder="Opis">{{users_data['opis']}}</textarea>
+                                                            
+                                                            <div class="tylko-klej">
+                                                                <div style="padding-left: 8px; max-width:  80px;">
+                                                                    <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_3_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_3_{{user_id}}">Anuluj</button>
+                                                                </div>
+                                                                <div class="formatuj-left">
+                                                                    <button type="submit" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Zapisz zmiany</button>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>

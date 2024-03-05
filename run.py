@@ -365,7 +365,7 @@ def update_data_user():
     # Pobierz id usera z formularza
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
+        
         if form_data['page'] == 'home':
             zapytanie_sql = '''
                     UPDATE admins 
@@ -413,11 +413,7 @@ def update_data_user():
                 return redirect(url_for('home'))
             
         if form_data['page'] == 'users':
-            pass
-
-        
-        session['user_data'] = users_data[session['username']]
-        flash('Avatar został zmieniony ','success')
+            print(form_data)
 
 
     return redirect(url_for('home'))
