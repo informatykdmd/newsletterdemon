@@ -181,7 +181,7 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
 function justSubmitOneElementForm(elementName, elementId, formName) {
     // Sprawdź, czy wymagane pola są wypełnione
     var oneElement = document.getElementById(elementName + elementId).value;
-    
+    console.log('oneElement', oneElement);
     if (!oneElement) {
         alert('Wypełnij wszystkie wymagane pola przed zapisaniem artykułu.');
         return;  // Zatrzymaj przesyłanie formularza
