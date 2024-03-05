@@ -365,7 +365,56 @@ def update_data_user():
     # Pobierz id usera z formularza
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
+        if form_data['page'] == 'home':
+            zapytanie_sql = '''
+                    UPDATE admins 
+                    SET ADMIN_NAME = %s, 
+                        ADMIN_EMAIL = %s, 
+                        ADMIN_PHONE = %s, 
+                        ADMIN_FACEBOOK = %s, 
+                        ADMIN_INSTAGRAM = %s, 
+                        ADMIN_TWITTER = %s, 
+                        ADMIN_LINKEDIN = %s
+                    WHERE ID = %s;
+                '''
+
+            dane = (
+                form_data['name'], 
+                form_data['email'], 
+                form_data['phone'], 
+                form_data['facebook'], 
+                form_data['instagram'], 
+                form_data['twitter'], 
+                form_data['linkedin'], 
+                form_data['id']
+            )
+            msq.insert_to_database(zapytanie_sql, dane)
+            flash('Dane zostały pomyślnie zaktualizowane.')
+            return redirect(url_for('home'))
+        if form_data['page'] == 'users':
+            pass
+
+        userDataDB = generator_userDataDB()
+        users_data = {}
+        for un in userDataDB: 
+            users_data[un['username']] = {
+                'id': un['id'], 
+                'username': un['username'],  
+                'email': un['email'],
+                'phone': un['phone'],
+                'facebook': un['facebook'],
+                'linkedin': un['linkedin'],
+                'instagram': un['instagram'],
+                'twiter': un['twiter'],
+                'name': un['name'], 
+                'stanowisko': un['stanowisko'],
+                'opis': un['opis'],
+                'status': un['status'],
+                'avatar': un['avatar']
+            }
+        session['user_data'] = users_data[session['username']]
+        flash('Avatar został zmieniony ','success')
+
 
     return redirect(url_for('home'))
 
