@@ -232,6 +232,7 @@ def login():
         permTempDict = {}
         users_data = {}
         brands_data = {}
+        userDataDB = generator_userDataDB()
         for un in userDataDB: 
             usersTempDict[un['username']] = {
                 'hashed_password': un['password'],
