@@ -365,7 +365,8 @@ def update_data_user():
     # Pobierz id usera z formularza
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        
+        print(form_data)
+
     return redirect(url_for('home'))
 
 @app.route('/update-avatar', methods=['GET', 'POST'])
