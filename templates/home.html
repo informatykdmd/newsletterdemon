@@ -187,6 +187,7 @@
                                     <div class="table-creator">
                                         <h7>Zmień dane</h7>
                                     </div>
+                                    <input type="hidden" name="id" value="{{user_id}}" />
                                     <input  type="text" value="{{users_data['name']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="name" id="name_{{username}}" placeholder="Imię i Nazwisko" />
                                     <input  type="email" value="{{users_data['email']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="email" id="email_{{username}}" placeholder="Adres e-mail" />
                                     <input  type="text" value="{{users_data['phone']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="phone" id="phone_{{username}}" placeholder="Telefon" />
