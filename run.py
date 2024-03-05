@@ -367,7 +367,7 @@ def update_avatar():
             filename = str(int(time.time())) + secure_filename(avatarPic.filename)
             print(upload_path+filename)
 
-        #     avatarPic.save(upload_path + filename)
+            avatarPic.save(upload_path + filename)
     else:
         print('brak danych')
 
