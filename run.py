@@ -353,30 +353,15 @@ def blog(router=True):
     else:
         return posts, session['username'], session['userperm'], pagination
 
-@app.route('/update-avatar', methods=['POST'])
+@app.route('/update-avatar', methods=['GET', 'POST'])
 def update_avatar():
     """Aktualizacja awatara usera"""
     # Pobierz id usera z formularza
-    user_id = request.form.get('user_id')
-    # Sprawdź, czy user_id jest poprawne
-    if user_id is not None and user_id.isnumeric():
-        # Przetwarzaj plik avatara
-        upload_path = 'ścieżka/do/katalogu/z/avatarami'
-        avatar_file = request.files.get(f'upload_{user_id}')
-        
-        print(request.files)  # Sprawdź, czy plik jest dostępny w formularzu
-        print(request.form)   # Wyświetl wartości pól formularza
-
-        if avatar_file and allowed_file(avatar_file.filename):
-            # Tutaj możesz dodać kod zapisujący plik na serwerze
-            # Na przykład, używając secure_filename i zapisując do upload_path
-            # filename = secure_filename(avatar_file.filename)
-            # avatar_file.save(os.path.join(upload_path, filename))
-            print('Zapisano plik:', avatar_file.filename)
-        else:
-            print('Błędny plik avatara')
+    if request.method == 'POST':
+        print(request.form)
+        print(request.files)
     else:
-        print('Niepoprawne ID użytkownika')
+        print('brak danych')
 
     return redirect(url_for('users'))
 
