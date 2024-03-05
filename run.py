@@ -372,8 +372,27 @@ def update_avatar():
                         'UPDATE admins SET ADMIN_AVATAR = %s WHERE ID = %s;', 
                         (settingsDB['main-domain'] + settingsDB['avatar-pic-path'] + filename, set_ava_id)
                     )
+            userDataDB = generator_userDataDB()
+            users_data = {}
+            for un in userDataDB: 
+                users_data[un['username']] = {
+                    'id': un['id'], 
+                    'username': un['username'],  
+                    'email': un['email'],
+                    'phone': un['phone'],
+                    'facebook': un['facebook'],
+                    'linkedin': un['linkedin'],
+                    'instagram': un['instagram'],
+                    'twiter': un['twiter'],
+                    'name': un['name'], 
+                    'stanowisko': un['stanowisko'],
+                    'opis': un['opis'],
+                    'status': un['status'],
+                    'avatar': un['avatar']
+                }
+            session['user_data'] = users_data[session['username']]
         else:
-            flash('Nieprawidłowy format pliku! Dopuszczalne są tylko pliki JPG i PNG.','danger')
+            flash('Nieprawidłowy format pliku! ','danger')
     else:
         print('Błąd metody w /update-avatar')
 
