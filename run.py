@@ -376,7 +376,7 @@ def update_password_user():
 
         # Haszowanie hasła z użyciem soli
         # hashed_password = hash.hash_password(password_from_user, salt)
-
+    return redirect(url_for('index'))
 
 @app.route('/update-data-user', methods=['GET', 'POST'])
 def update_data_user():
