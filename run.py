@@ -500,6 +500,7 @@ def users(router=True):
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
         return redirect(url_for('index'))
     
+    userDataDB = generator_userDataDB()
     all_users = userDataDB
 
     # Ustawienia paginacji
