@@ -361,12 +361,11 @@ def update_avatar():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         set_ava_id = form_data['user_id']
-
+        upload_path = '/var/www/html/appdmddomy/public/images/team/'
         avatarPic = request.files.get(f'avatarFileByUser_{set_ava_id}')
 
         if avatarPic and allowed_file(avatarPic.filename):
             filename = f"{int(time.time())}_{secure_filename(avatarPic.filename)}"
-            upload_path = os.path.join('/var/www/html/appdmddomy/public/'+settingsDB['avatar-pic-path'], filename)
             full_path = os.path.join(upload_path, filename)
             print(full_path)
 
