@@ -371,17 +371,30 @@ def update_password_user():
 
             salt_old = take_data_where_ID('SALT', 'admins', 'ID', ID)[0][0]
             password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)[0][0]
-
             verificated_old_password = hash.hash_password(form_data['old_Password'], salt_old)
 
-            print(password_old, verificated_old_password)
-
-            password_from_user = 'password'
-
-            # salt = hash.generate_salt()
-
+            if  verificated_old_password != password_old:
+                flash('Nieprawidłowe stare hasło')
+                return redirect(url_for('index'))
+            
+            password_from_user = form_data['new_Password']
             # Haszowanie hasła z użyciem soli
-            # hashed_password = hash.hash_password(password_from_user, salt)
+            salt = hash.generate_salt()
+            hashed_password = hash.hash_password(password_from_user, salt)
+            zapytanie_sql = '''
+                    UPDATE admins 
+                    SET PASSWORD_HASH = %s, 
+                        SALT = %s
+                    WHERE ID = %s;
+                '''
+            dane = (
+                    hashed_password, 
+                    salt,
+                    ID
+                )
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash('Hasło zostało pomyślnie zmienione.')
+
         else:
             flash('Hasła muszą być identyczne!')
 
