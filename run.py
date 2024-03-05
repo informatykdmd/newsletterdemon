@@ -370,7 +370,7 @@ def update_data_user():
             zapytanie_sql = '''
                     UPDATE admins 
                     SET ADMIN_NAME = %s, 
-                        ADMIN_EMAIL = %s, 
+                        EMAIL_ADMIN = %s, 
                         ADMIN_PHONE = %s, 
                         ADMIN_FACEBOOK = %s, 
                         ADMIN_INSTAGRAM = %s, 
