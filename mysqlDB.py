@@ -21,7 +21,7 @@ def connect_to_database(queryA, userA=DB['user'], passwordA=DB['pass'], hostA=DB
         polaczenie_DB.commit()
         polaczenie_DB.close()
     except Exception as e:
-        handle_error(e)
+        handle_error(e, log_path='./logs/errors.log')
     return export_list
 
 def insert_to_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):
@@ -41,7 +41,7 @@ def insert_to_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], h
         polaczenie_DB.commit()
         polaczenie_DB.close()
     except Exception as e:
-        handle_error(e)
+        handle_error(e, log_path='./logs/errors.log')
     return True
 
 def delete_row_from_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):
@@ -60,5 +60,5 @@ def delete_row_from_database(queryA, queryB, userA=DB['user'], passwordA=DB['pas
         polaczenie_DB.commit()
         polaczenie_DB.close()
     except Exception as e:
-        handle_error(e)
+        handle_error(e, log_path='./logs/errors.log')
 

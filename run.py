@@ -387,7 +387,7 @@ def update_data_user():
                 form_data['instagram'], 
                 form_data['twitter'], 
                 form_data['linkedin'], 
-                form_data['id']
+                int(form_data['id'])
             )
             msq.insert_to_database(zapytanie_sql, dane)
             flash('Dane zostały pomyślnie zaktualizowane.')
