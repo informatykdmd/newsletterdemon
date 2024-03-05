@@ -399,7 +399,10 @@ def update_avatar():
     else:
         print('Błąd metody w /update-avatar')
     print(set_page)
-    return redirect(url_for('users'))
+    if set_page == 'home':
+        return redirect(url_for('home'))
+    elif set_page == 'users':
+        return redirect(url_for('users'))
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
