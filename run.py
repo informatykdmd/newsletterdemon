@@ -362,7 +362,8 @@ def update_avatar():
         form_data = request.form.to_dict()
         set_ava_id = form_data['user_id']
 
-        upload_path = os.path.join(current_app.root_path, 'var', 'www', 'appdmddomy', 'public', settingsDB['avatar-pic-path'])
+        
+        upload_path = os.path.join('/var/www/appdmddomy/public/'+settingsDB['avatar-pic-path'], filename)
 
         avatarPic = request.files.get(f'avatarFileByUser_{set_ava_id}')
 
