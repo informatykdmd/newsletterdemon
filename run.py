@@ -354,15 +354,30 @@ def blog(router=True):
     else:
         return posts, session['username'], session['userperm'], pagination
 
+@app.route('/update-data-user', methods=['GET', 'POST'])
+def update_data_user():
+    """Aktualizacja awatara usera"""
+
+
 @app.route('/update-avatar', methods=['GET', 'POST'])
 def update_avatar():
     """Aktualizacja awatara usera"""
+
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+        
     # Pobierz id usera z formularza
     if request.method == 'POST':
         form_data = request.form.to_dict()
 
         set_ava_id = form_data['user_id'].split('_')[0]
         set_page = form_data['user_id'].split('_')[1]
+
+        if set_page == 'users':
+            if session['userperm']['users'] == 0:
+                flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+                return redirect(url_for('index'))
 
         upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['avatar-pic-path']
         avatarPic = request.files.get(f'avatarFileByUser_{set_ava_id}')
