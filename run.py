@@ -665,7 +665,7 @@ def update_permission():
         #Aktualizacja uprawnienia
         if perm_id == 1: 
             'Zarządzanie Użytkownikami'
-            zapytanie_sql = '''UPDATE admins SET PERM_USER = %s WHERE ID = %s;'''
+            zapytanie_sql = '''UPDATE admins SET PERM_USERS = %s WHERE ID = %s;'''
             if permission: onOff = 1
             else: onOff = 0
             dane = (onOff, user_id)
