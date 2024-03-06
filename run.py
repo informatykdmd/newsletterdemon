@@ -629,7 +629,7 @@ def update_permission():
     data = request.json
     user_id = data.get('user_id')
     permission = data.get('permission')
-    
+    print(user_id, permission)
     # Tutaj możesz dodać logikę aktualizacji uprawnienia w bazie danych
     # ...
 
