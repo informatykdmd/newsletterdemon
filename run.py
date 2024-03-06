@@ -630,10 +630,13 @@ def update_permission():
     perm_id = data.get('perm_id')
     user_id = data.get('user_id')
     permission = data.get('permission')
-    print(perm_id, user_id, permission)
+    print([perm_id], [user_id], [permission])
     # Tutaj możesz dodać logikę aktualizacji uprawnienia w bazie danych
     # ...
-
+    perm_name = None
+    if perm_id == 1:
+        perm_name = 'Zarządzanie Użytkownikami'
+    print(perm_name)
     return jsonify({'success': True, 'message': 'Uprawnienie zostało zaktualizowane.', 'user_id': user_id})
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
