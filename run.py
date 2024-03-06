@@ -597,7 +597,14 @@ def remove_user():
     # Pobierz id usera z formularza
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
+        
+        ID=int(form_data['UserId'])
+        take_user_data = take_data_where_ID('*', 'admins', 'ID', ID)[0]
+        ADMIN_NAME = take_user_data[1]
+        LOGIN = take_user_data[1]
+        print(take_user_data)
+        print(ADMIN_NAME)
+        print(LOGIN)
     
     return redirect(url_for('index'))
 
