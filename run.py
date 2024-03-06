@@ -601,7 +601,13 @@ def remove_user():
         ID=int(form_data['UserId'])
         take_user_data = take_data_where_ID('*', 'admins', 'ID', ID)[0]
         ADMIN_NAME = take_user_data[1]
-        LOGIN = take_user_data[1]
+        LOGIN = take_user_data[2]
+        msq.delete_row_from_database(
+            """
+            DELETE FROM admins WHERE ID = %s AND ADMIN_NAME = %s AND LOGIN = %s;
+            """,
+            (ID, ADMIN_NAME, LOGIN)
+        )
         print(take_user_data)
         print(ADMIN_NAME)
         print(LOGIN)
