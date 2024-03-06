@@ -54,7 +54,7 @@
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form method="POST" id="new_user" action="{{ url_for('save_post') }}" enctype="multipart/form-data" >
+                                <form method="POST" id="new_user" action="{{ url_for('save_new_user') }}" enctype="multipart/form-data" >
                                     <!-- Login -->
                                     <div class="mb-3">
                                     <label for="Login_new_user" class="form-label">Login</label>
@@ -134,7 +134,7 @@
                                     <input type="hidden" name="_new_user" id="_new_user" />
                                     <input type="hidden" name="_new_user" id="_new_user" />
                                     <!-- Przycisk Dodaj Usera -->
-                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitForm('9999999', false)">Dodaj użytkownika</button>
+                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="newUserSubmitForm()">Dodaj użytkownika</button>
                                 </form>
                             </div>
                         </div>

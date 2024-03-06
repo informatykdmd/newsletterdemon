@@ -819,8 +819,88 @@ def update_user_status():
     flash('Zmiana statusu nie powiodła się, skontaktuj się z Administratorem Systemu!', 'danger')
     return redirect(url_for('users'))
 
+@app.route('/add-new-user', methods=['GET', 'POST'])
+def save_new_user():
+    """Strona zapisywania edytowanego posta."""
+    
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['users'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        set_form_id = None
+        print(form_data)
+        # print(form_data)
+        # # Znajdź id posta
+        # for key in form_data.keys():
+        #     if '_' in key:
+        #         set_form_id = key.split('_')[1]
+        #         try: 
+        #             int(set_form_id)
+        #             break
+        #         except ValueError:
+        #             set_form_id = None
+        # if set_form_id == '9999999':
+        #     new_post = True
+        #     set_form_id = None
+        #     print(f"procedura dodawania nowego posta = {new_post}" )
+        #     flash(f"procedura dodawania nowego posta = {new_post}" )
 
+        #     return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
+
+        # # Sprawdzenie czy udało się ustalić id posta
+        # if not set_form_id:
+        #     flash('Ustalenie id posta okazało się niemożliwe')
+        #     return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
+        
+        # # Przygotowanie ścieżki do zapisu plików
+        # upload_path = '../'
+
+        # # Obsługa Main Foto
+        # main_foto = request.files.get(f'mainFoto_{set_form_id}')
+        # if main_foto and allowed_file(main_foto.filename):
+        #     filename = str(int(time.time())) + secure_filename(main_foto.filename)
+        #     main_foto.save(upload_path + filename)
+
+        # # Obsługa Content Foto
+        # content_foto = request.files.get(f'contentFoto_{set_form_id}')
+        # if content_foto and allowed_file(content_foto.filename):
+        #     filename = str(int(time.time())) + secure_filename(content_foto.filename)
+        #     content_foto.save(upload_path + filename)
+
+        # flash('Dane zostały zapisane poprawnie!')
+        # print('Dane zostały zapisane poprawnie!')
+        # print(form_data)
+
+        # settingsDB = generator_settingsDB()
+        # domy = settingsDB['domy']
+        # budownictwo = settingsDB['budownictwo']
+        # development = settingsDB['development']
+        # elitehome = settingsDB['elitehome']
+        # inwestycje = settingsDB['inwestycje']
+        # instalacje = settingsDB['instalacje']
+
+        # return render_template(
+        #                     "blog_management.html", 
+        #                     posts=posts, 
+        #                     username=username, 
+        #                     userperm=userperm, 
+        #                     pagination=pagination,
+        #                     domy=domy,
+        #                     budownictwo=budownictwo,
+        #                     development=development,
+        #                     elitehome=elitehome,
+        #                     inwestycje=inwestycje,
+        #                     instalacje=instalacje)
+    
     return redirect(url_for('users'))
+
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
     """Strona zapisywania edytowanego posta."""

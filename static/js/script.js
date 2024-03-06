@@ -178,6 +178,28 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     form.submit();
 }
 
+function newUserSubmitForm() {
+    // Sprawdź, czy wymagane pola są wypełnione
+    var login = document.getElementById('Login_new_user').value;
+    var name = document.getElementById('Name_new_user').value;
+    var email = document.getElementById('Email_new_user').value;
+
+    var avatar = document.getElementById('Avatar_new_user').value;
+
+    var role = document.getElementById('Stanowsko_new_user').value;
+    var opis = document.getElementById('Description_new_user').value;
+
+    if (!login || !name || !email || !avatar || !role || !opis) {
+        alert('Wypełnij wszystkie wymagane pola.');
+        return;  // Zatrzymaj przesyłanie formularza
+    };
+
+
+    // Znajdź formularz i wyślij go
+    var form = document.getElementById('new_user');
+    form.submit();
+}
+
 function justSubmitOneElementForm(elementName, elementId, formName) {
     // Sprawdź, czy wymagane pola są wypełnione
     var oneElement = document.getElementById(elementName + elementId).value;
