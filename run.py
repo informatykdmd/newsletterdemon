@@ -629,14 +629,28 @@ def update_permission():
     data = request.json
     perm_id = int(data.get('perm_id'))
     user_id = int(data.get('user_id'))
-    perm_type= data.get('permissionType')
+    perm_type= int(data.get('permissionType'))
     permission = data.get('permission')
     print([perm_id], [user_id], [perm_type], [permission])
     # Tutaj możesz dodać logikę aktualizacji uprawnienia w bazie danych
     # ...
     perm_name = None
-    if perm_id == 1:
-        perm_name = 'Zarządzanie Użytkownikami'
+    if perm_id == 1: perm_name = 'Zarządzanie Użytkownikami'
+    if perm_id == 2: perm_name = 'Zarządzanie Brendami'
+    if perm_id == 3: perm_name = 'Zarządzanie Blogiem'
+    if perm_id == 4: perm_name = 'Zarządzanie Subskrybentami'
+    if perm_id == 5: perm_name = 'Zarządzanie Komentarzami'
+    if perm_id == 6: perm_name = 'Zarządzanie Personelem'
+    if perm_id == 7: perm_name = 'Zarządzanie Newsletterem'
+    if perm_id == 8: perm_name = 'Zarządzanie Uprawnieniami'
+    if perm_id == 9: perm_name = 'Zarządzanie Ustawieniami'
+    if perm_id == 10: perm_name = 'Przynależność do DMD Domy'
+    if perm_id == 11: perm_name = 'Przynależność do DMD Budownictwo'
+    if perm_id == 12: perm_name = 'Przynależność do DMD EliteHome'
+    if perm_id == 13: perm_name = 'Przynależność do DMD Inwestycje'
+    if perm_id == 14: perm_name = 'Przynależność do DMD Instalacje'
+    if perm_id == 15: perm_name = 'Przynależność do DMD Development'
+
     print(perm_name)
     return jsonify({'success': True, 'message': 'Uprawnienie zostało zaktualizowane.', 'user_id': user_id})
 
