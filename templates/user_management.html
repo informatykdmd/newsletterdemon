@@ -144,7 +144,7 @@
                         <div class="row">
                             <div class="klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
                                 <div class="column-id" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
-                                    {{user_id}}
+                                    <img class="avatar-mini" src="{{users_data['avatar']}}" alt=""/>
                                 </div>
                                 <div  class="column-expand" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
