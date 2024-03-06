@@ -750,12 +750,9 @@
                                     {% endif %}
                                 </div>
                             </div>
-                                
-                            
-                            
                         </div>
                         <!-- collapse end -->
-                        {% endfor %}
+                    {% endfor %}
                         <!-- Paginacja -->
                         <span class="formatuj-maly-logout">{{ pagination.info }}</span>
                         <div class="pagination formatuj-margin-top">
@@ -793,7 +790,7 @@
                     console.log(data);
 
                     // Zaktualizuj interfejs użytkownika
-                    const permissionsChangeInfo = document.getElementById(`permissions_change_info_${data.user_id}`);
+                    const permissionsChangeInfo = document.getElementById(`permissions_change_info_${user_id}`);
                     if (permissionsChangeInfo) {
                         permissionsChangeInfo.innerHTML = data.message;
 
