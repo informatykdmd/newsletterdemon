@@ -268,7 +268,7 @@ def login():
             session['brands'] = brands_data[username]
 
             return redirect(url_for('index'))
-        elif int(users_data[username]['status']) == 1:
+        elif int(users_data[username]['status']) == 0:
             flash('Konto nie aktywne!')
         else:
             flash('Błędne nazwa użytkownika lub hasło')
