@@ -836,6 +836,7 @@ def save_new_user():
         form_data = request.form.to_dict()
         set_form_id = None
         print(form_data)
+        print(request.files)
         # print(form_data)
         # # Znajdź id posta
         # for key in form_data.keys():
