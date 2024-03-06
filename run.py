@@ -805,7 +805,17 @@ def update_user_status():
     # Pobierz id usera z formularza
     if request.method == 'POST':
         form_data = request.form.to_dict()
+        user_id = int(form_data['id'])
         print(form_data)
+        if form_data['status'] == 'active': onOff = 1
+        if form_data['status'] == 'deactive': onOff = 0
+        zapytanie_sql = '''UPDATE admins SET ADMIN_STATUS = %s WHERE ID = %s;'''
+        dane = (onOff, user_id)
+        if msq.insert_to_database(zapytanie_sql, dane):
+            return redirect(url_for('users'))
+    flash('Zmiana statusu nie powiodła się, skontaktuj się z Administratorem Systemu!', 'danger')
+    return redirect(url_for('users'))
+
 
     return redirect(url_for('users'))
 @app.route('/save-blog-post', methods=['GET', 'POST'])
