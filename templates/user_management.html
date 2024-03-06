@@ -606,6 +606,7 @@
                                             {% endif %}
                                         </form>
                                     </div>
+                                    <div class="colapse-column-ender-mini" id="permissions_change_info"></div>
                                 </div>
                                 <div class="colapse-column-usual formatuj-left">
                                     <div class="klej">
@@ -749,15 +750,7 @@
                                     {% endif %}
                                 </div>
                             </div>
-                                <!-- <div  class="colapse-column-ender-mini">
-                                    <form id="removeComment_{{user_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
-                                    <a data-bs-toggle="collapse" href="#collapse_id_0" role="button" aria-expanded="false" aria-controls="collapse_id_0"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
-                                    <a href="#"><i class="bi bi-file-lock" style="color: rgb(179, 178, 177) !important;"></i></a>
-                                    <a href="#"><i class="bi bi-ban" style="color: rgb(149, 47, 47) !important;"></i></a>
-                                        <input type="hidden" name="UserName_{{user_id}}" id="UserName_{{user_id}}" value="{{username}}"/>
-                                        <button type="submit" class="custom-icon-button"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></button>
-                                    </form>
-                                </div> -->
+                                
                             
                             
                         </div>
@@ -797,13 +790,21 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Tutaj możesz zaktualizować interfejs użytkownika na podstawie odpowiedzi
                     console.log(data);
-                    // Dodaj kod do wprowadzenia zmian w interfejsie użytkownika, np. animacje, zmiana koloru, itp.
+
+                    // Zaktualizuj interfejs użytkownika
+                    const permissionsChangeInfo = document.getElementById('permissions_change_info');
+                    if (permissionsChangeInfo) {
+                        if (data.success) {
+                            permissionsChangeInfo.innerHTML = 'Uprawnienie zostało zaktualizowane.';
+                        } else {
+                            permissionsChangeInfo.innerHTML = 'Błąd: ' + data.message;
+                        }
+                    }
                 })
                 .catch((error) => {
                     console.error('Error:', error);
-                    // Tutaj możesz dodatkowo obsłużyć błąd, np. wyświetlić użytkownikowi komunikat o problemie
+                    // Obsłuż błąd, na przykład, wyświetl komunikat dla użytkownika
                 });
             });
         });
