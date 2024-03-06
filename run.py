@@ -627,10 +627,11 @@ def remove_user():
 @app.route('/update-permission', methods=['POST'])
 def update_permission():
     data = request.json
-    perm_id = data.get('perm_id')
-    user_id = data.get('user_id')
+    perm_id = int(data.get('perm_id'))
+    user_id = int(data.get('user_id'))
+    perm_type= data.get('permissionType')
     permission = data.get('permission')
-    print([perm_id], [user_id], [permission])
+    print([perm_id], [user_id], [perm_type], [permission])
     # Tutaj możesz dodać logikę aktualizacji uprawnienia w bazie danych
     # ...
     perm_name = None
