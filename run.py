@@ -626,14 +626,20 @@ def remove_user():
 
 @app.route('/update-permission', methods=['POST'])
 def update_permission():
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['users'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        return redirect(url_for('index'))
     data = request.json
     perm_id = int(data.get('perm_id'))
     user_id = int(data.get('user_id'))
     perm_type= int(data.get('permissionType'))
     permission = data.get('permission')
     print([perm_id], [user_id], [perm_type], [permission])
-    # Tutaj możesz dodać logikę aktualizacji uprawnienia w bazie danych
-    # ...
+
     perm_name = None
     if perm_id == 1: perm_name = 'Zarządzanie Użytkownikami'
     if perm_id == 2: perm_name = 'Zarządzanie Brendami'
@@ -641,9 +647,10 @@ def update_permission():
     if perm_id == 4: perm_name = 'Zarządzanie Subskrybentami'
     if perm_id == 5: perm_name = 'Zarządzanie Komentarzami'
     if perm_id == 6: perm_name = 'Zarządzanie Personelem'
-    if perm_id == 7: perm_name = 'Zarządzanie Newsletterem'
-    if perm_id == 8: perm_name = 'Zarządzanie Uprawnieniami'
+    if perm_id == 7: perm_name = 'Zarządzanie Uprawnieniami'
+    if perm_id == 8: perm_name = 'Zarządzanie Newsletterem'
     if perm_id == 9: perm_name = 'Zarządzanie Ustawieniami'
+
     if perm_id == 10: perm_name = 'Przynależność do DMD Domy'
     if perm_id == 11: perm_name = 'Przynależność do DMD Budownictwo'
     if perm_id == 12: perm_name = 'Przynależność do DMD EliteHome'
@@ -651,8 +658,140 @@ def update_permission():
     if perm_id == 14: perm_name = 'Przynależność do DMD Instalacje'
     if perm_id == 15: perm_name = 'Przynależność do DMD Development'
 
-    print(perm_name)
-    return jsonify({'success': True, 'message': 'Uprawnienie zostało zaktualizowane.', 'user_id': user_id})
+    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9]:
+        if session['uprawnienia']['permissions'] == 0:
+            flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+            return redirect(url_for('users'))
+        #Aktualizacja uprawnienia
+        if perm_id == 1: 
+            'Zarządzanie Użytkownikami'
+            zapytanie_sql = '''UPDATE admins SET PERM_USER = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+
+        if perm_id == 2:
+            'Zarządzanie Brendami'
+            zapytanie_sql = '''UPDATE admins SET PERM_BRANDS = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 3: 
+            'Zarządzanie Blogiem'
+            zapytanie_sql = '''UPDATE admins SET PERM_BLOG = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 4: 
+            'Zarządzanie Subskrybentami'
+            zapytanie_sql = '''UPDATE admins SET PERM_SUBS = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 5: 
+            'Zarządzanie Komentarzami'
+            zapytanie_sql = '''UPDATE admins SET PERM_COMMENTS = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 6: 
+            'Zarządzanie Personelem'
+            zapytanie_sql = '''UPDATE admins SET PERM_TEAM = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 7: 
+            'Zarządzanie Uprawnieniami'
+            zapytanie_sql = '''UPDATE admins SET PERM_PERMISSIONS = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 8: 
+            'Zarządzanie Newsletterem'
+            zapytanie_sql = '''UPDATE admins SET PERM_NEWSLETTER = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 9: 
+            'Zarządzanie Ustawieniami'
+            zapytanie_sql = '''UPDATE admins SET PERM_SETTINGS = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+    
+    if perm_id in [10, 11, 12, 13, 14, 15]:
+        if session['uprawnienia']['brands'] == 0:
+            flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+            return redirect(url_for('users'))
+        #Aktualizacja przynależności
+        if perm_id == 10: 
+            'Przynależność do DMD Domy'
+            zapytanie_sql = '''UPDATE admins SET BRANDS_DOMY = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 11: 
+            'Przynależność do DMD Budownictwo'
+            zapytanie_sql = '''UPDATE admins SET BRANDS_BUDOWNICTWO = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 12: 
+            'Przynależność do DMD EliteHome'
+            zapytanie_sql = '''UPDATE admins SET BRANDS_ELITEHOME = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 13: 
+            'Przynależność do DMD Inwestycje'
+            zapytanie_sql = '''UPDATE admins SET BRANDS_INWESTYCJE = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 14: 
+            'Przynależność do DMD Instalacje'
+            zapytanie_sql = '''UPDATE admins SET BRANDS_INSTALACJE = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        if perm_id == 15: 
+            'Przynależność do DMD Development'
+            zapytanie_sql = '''UPDATE admins SET BRANDS_DEVELOPMENT = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+
+    return jsonify({'success': False, 'message': 'Coś poszło nie tak, zgłoś to Administratorowi', 'user_id': user_id})
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
