@@ -773,8 +773,8 @@
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll('.custom-checkbox').forEach(item => {
             item.addEventListener('change', function(e) {
-                const user_id = this.id.split('_')[3];
-                const permissionType = this.id.split('_')[4]; // Dodano zmienną dla typu uprawnienia
+                const user_id = this.id.split('_')[2];
+                const permissionType = this.id.split('_')[3]; // Dodano zmienną dla typu uprawnienia
                 
                 const permission = this.checked;
 
