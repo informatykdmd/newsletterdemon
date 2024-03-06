@@ -1679,8 +1679,8 @@ def team_instalacje():
     
     return render_template(
                             "team_management_instalacje.html", 
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'],  
+                            userperm=session['userperm'],
+                            user_brands=session['brands'],
                             members=collections['instalacje'], 
                             photos_dict=employee_photo_dict,
                             domy=domy,

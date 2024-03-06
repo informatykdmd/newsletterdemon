@@ -748,6 +748,11 @@
                                             <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
                                         </div>
                                     {% endif %}
+                                    {% if users_data['status'] == '1' %}
+                                        <div class="formatuj-padding">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj Konto</button>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
