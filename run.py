@@ -260,7 +260,8 @@ def login():
         if username in usersTempDict and \
             hash.hash_password(
                 password, usersTempDict[username]['salt']
-                ) == usersTempDict[username]['hashed_password']:
+                ) == usersTempDict[username]['hashed_password'] and \
+                    int(userDataDB[username]['status']) == 1:
             session['username'] = username
             session['userperm'] = permTempDict[username]
             session['user_data'] = users_data[username]
