@@ -795,11 +795,7 @@
                     // Zaktualizuj interfejs użytkownika
                     const permissionsChangeInfo = document.getElementById('permissions_change_info');
                     if (permissionsChangeInfo) {
-                        if (data.success) {
-                            permissionsChangeInfo.innerHTML = 'Uprawnienie zostało zaktualizowane.';
-                        } else {
-                            permissionsChangeInfo.innerHTML = 'Błąd: ' + data.message;
-                        }
+                        permissionsChangeInfo.innerHTML = data.message;
 
                         // Ukryj komunikat po 5 sekundach
                         setTimeout(function() {
