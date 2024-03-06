@@ -188,7 +188,7 @@ function newUserSubmitForm() {
 
     var role = document.getElementById('Stanowsko_new_user').value;
     var opis = document.getElementById('Description_new_user').value;
-
+    console.log(login, name, email, avatar, role, opis);
     if (!login || !name || !email || !avatar || !role || !opis) {
         alert('Wypełnij wszystkie wymagane pola.');
         return;  // Zatrzymaj przesyłanie formularza
