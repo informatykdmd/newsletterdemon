@@ -659,7 +659,7 @@ def update_permission():
     if perm_id == 15: perm_name = 'Przynależność do DMD Development'
 
     if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9]:
-        if session['uprawnienia']['permissions'] == 0:
+        if session['userperm']['permissions'] == 0:
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
             return redirect(url_for('users'))
         #Aktualizacja uprawnienia
@@ -738,7 +738,7 @@ def update_permission():
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
     
     if perm_id in [10, 11, 12, 13, 14, 15]:
-        if session['uprawnienia']['brands'] == 0:
+        if session['userperm']['brands'] == 0:
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
             return redirect(url_for('users'))
         #Aktualizacja przynależności
