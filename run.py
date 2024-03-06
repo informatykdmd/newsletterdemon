@@ -368,9 +368,9 @@ def update_password_user():
         form_data = request.form.to_dict()
         ID = form_data['id']
         PAGE = form_data['page']
-        if PAGE == 'home':
-            if form_data['new_Password'] == form_data['repeat_Password']:
-
+        
+        if form_data['new_Password'] == form_data['repeat_Password']:
+            if PAGE == 'home':
                 salt_old = take_data_where_ID('SALT', 'admins', 'ID', ID)[0][0]
                 password_old = take_data_where_ID('PASSWORD_HASH', 'admins', 'ID', ID)[0][0]
                 verificated_old_password = hash.hash_password(form_data['old_Password'], salt_old)
@@ -378,7 +378,7 @@ def update_password_user():
                 if verificated_old_password != password_old:
                     flash('Nieprawidłowe stare hasło')
                     return redirect(url_for('index'))
-                
+            if PAGE == 'users' or PAGE=='home':
                 new_password = form_data['new_Password']
 
                 # Sprawdź, czy hasło ma co najmniej 8 znaków
@@ -419,8 +419,7 @@ def update_password_user():
             else:
                 flash('Hasła muszą być identyczne!')
                 return redirect(url_for('index'))
-        elif PAGE == 'users':
-            pass
+
     return redirect(url_for('index'))
 
 @app.route('/update-data-user', methods=['GET', 'POST'])
