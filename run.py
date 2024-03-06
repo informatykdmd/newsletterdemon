@@ -602,15 +602,25 @@ def remove_user():
         take_user_data = take_data_where_ID('*', 'admins', 'ID', ID)[0]
         ADMIN_NAME = take_user_data[1]
         LOGIN = take_user_data[2]
+        EMAIL = take_user_data[5]
+        # Usuwanie danych z admins
         msq.delete_row_from_database(
             """
             DELETE FROM admins WHERE ID = %s AND ADMIN_NAME = %s AND LOGIN = %s;
             """,
             (ID, ADMIN_NAME, LOGIN)
         )
-        print(take_user_data)
-        print(ADMIN_NAME)
-        print(LOGIN)
+        print(f'Usunieto użytkownika {ADMIN_NAME} o loginie {LOGIN} z bazy admins.')
+        # Usuwanie danych z workers_team
+        msq.delete_row_from_database(
+            """
+            DELETE FROM workers_team WHERE EMPLOYEE_NAME = %s AND EMAIL = %s;
+            """,
+            (ADMIN_NAME, EMAIL)
+        )
+        print(f'Usunieto użytkownika {ADMIN_NAME} o loginie {LOGIN} z bazy workers_team.')
+        flash(f'Pomyślnie usunięto użytkownika {ADMIN_NAME}.')
+        return redirect(url_for('users'))
     
     return redirect(url_for('index'))
 
