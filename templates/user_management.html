@@ -483,7 +483,7 @@
                                     <div class="form-check form-switch">
                                         <form action="">
                                             {% if userperm['permissions'] == 0 %}
-                                                {% if users_data['uprawnienia']['subscriber'] == 0 %}
+                                                {% if users_data['uprawnienia']['subscribers'] == 0 %}
                                                     <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}" disabled/>
                                                     <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}">Zarządzanie Subskrybentami</label>
                                                 {% else %}
@@ -491,7 +491,7 @@
                                                     <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}">Zarządzanie Subskrybentami</label>
                                                 {% endif %}
                                             {% else %}
-                                                {% if users_data['uprawnienia']['subscriber'] == 0 %}
+                                                {% if users_data['uprawnienia']['subscribers'] == 0 %}
                                                     <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}_0" />
                                                     <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}_0">Zarządzanie Subskrybentami</label>
                                                 {% else %}
@@ -504,7 +504,7 @@
                                     <div class="form-check form-switch">
                                         <form action="">
                                             {% if userperm['permissions'] == 0 %}
-                                                {% if users_data['uprawnienia']['comments'] == 0 %}
+                                                {% if users_data['uprawnienia']['commnets'] == 0 %}
                                                     <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}" disabled/>
                                                     <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}">Zarządzanie Komentarzami</label>
                                                 {% else %}
@@ -512,7 +512,7 @@
                                                     <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}">Zarządzanie Komentarzami</label>
                                                 {% endif %}
                                             {% else %}
-                                                {% if users_data['uprawnienia']['comments'] == 0 %}
+                                                {% if users_data['uprawnienia']['commnets'] == 0 %}
                                                     <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}_0" />
                                                     <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}_0">Zarządzanie Komentarzami</label>
                                                 {% else %}
