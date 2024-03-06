@@ -428,11 +428,11 @@
                                                 {% endif %}
                                             {% else %}
                                                 {% if users_data['uprawnienia']['users'] == 0 %}
-                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}" />
-                                                    <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}_0}">Zarządzanie Użytkownikami</label>
                                                 {% else %}
-                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}" checked/>
-                                                    <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}_1" checked/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}_1">Zarządzanie Użytkownikami</label>
                                                 {% endif %}
                                             {% endif %}
                                         </form>
@@ -775,8 +775,38 @@
                             </nav>
                         </div>
 {% endblock %}
-
-
 {% block footer %}
  To jest stopka panelu administracyjnego. All right reserved &copy; 2024 by DMD Panel Administratora.<br/>
+{% endblock %}
+{% block bottom-script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.custom-checkbox').forEach(item => {
+            item.addEventListener('change', function(e) {
+                const user_id = this.id.split('_')[3];
+                const permissionType = this.id.split('_')[4]; // Dodano zmienną dla typu uprawnienia
+
+                const permission = this.checked;
+
+                fetch('/update-permission', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_id: user_id, permissionType: permissionType, permission: permission })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Tutaj możesz zaktualizować interfejs użytkownika na podstawie odpowiedzi
+                    console.log(data);
+                    // Dodaj kod do wprowadzenia zmian w interfejsie użytkownika, np. animacje, zmiana koloru, itp.
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // Tutaj możesz dodatkowo obsłużyć błąd, np. wyświetlić użytkownikowi komunikat o problemie
+                });
+            });
+        });
+    });
+</script>
 {% endblock %}

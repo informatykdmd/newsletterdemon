@@ -618,11 +618,22 @@ def remove_user():
             """,
             (ADMIN_NAME, EMAIL)
         )
-        print(f'Usunieto użytkownika {ADMIN_NAME} o loginie {LOGIN} z bazy workers_team.')
+        print(f'Usunieto użytkownika {ADMIN_NAME} o emailu {EMAIL} z bazy workers_team.')
         flash(f'Pomyślnie usunięto użytkownika {ADMIN_NAME}.')
         return redirect(url_for('users'))
     
     return redirect(url_for('index'))
+
+@app.route('/update-permission', methods=['POST'])
+def update_permission():
+    data = request.json
+    user_id = data.get('user_id')
+    permission = data.get('permission')
+    
+    # Tutaj możesz dodać logikę aktualizacji uprawnienia w bazie danych
+    # ...
+
+    return jsonify({'success': True, 'message': 'Uprawnienie zostało zaktualizowane.'})
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
