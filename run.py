@@ -406,7 +406,10 @@ def update_password_user():
                                 )
                             if msq.insert_to_database(zapytanie_sql, dane):
                                 flash('Hasło zostało pomyślnie zmienione.')
-                                return redirect(url_for('logout'))
+                                if PAGE == 'users':
+                                    return redirect(url_for('users'))
+                                if PAGE=='home':
+                                    return redirect(url_for('logout'))
                         else:
                             flash("Hasło musi zawierać co najmniej jeden znak specjalny.")
                             return redirect(url_for('index'))
