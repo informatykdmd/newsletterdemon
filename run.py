@@ -378,6 +378,12 @@ def update_password_user():
                 if verificated_old_password != password_old:
                     flash('Nieprawidłowe stare hasło')
                     return redirect(url_for('index'))
+                
+            if PAGE == 'users':
+                if session['userperm']['users'] == 0:
+                    flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+                    return redirect(url_for('index'))
+                
             if PAGE == 'users' or PAGE=='home':
                 new_password = form_data['new_Password']
 
@@ -576,6 +582,24 @@ def update_avatar():
         return redirect(url_for('home'))
     elif set_page == 'users':
         return redirect(url_for('users'))
+
+@app.route('/delete-user', methods=['GET', 'POST'])
+def remove_user():
+    """Aktualizacja awatara usera"""
+
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['users'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        return redirect(url_for('index'))
+    # Pobierz id usera z formularza
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        print(form_data)
+    
+    return redirect(url_for('index'))
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():

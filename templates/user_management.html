@@ -167,7 +167,7 @@
                                         {% if users_data['status'] == '1' %}
                                             <span style="color: #46ff56 !important;">Aktywny</span>
                                         {% else %}
-                                        <span style="color: #878787 !important;">Nieaktywny</span>
+                                            <span style="color: #878787 !important;">Nieaktywny</span>
                                         {% endif %}
                                     </a>
                                 </div>
@@ -397,7 +397,11 @@
                                                                 <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_4_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_4_{{user_id}}">Anuluj</button>
                                                             </div>
                                                             <div class="formatuj-left">
-                                                                <button type="submit" class="btn btn-danger btn-sm rogi" style="max-height: 30px; font-size: 12px;" onclick>Usuń konto</button>
+                                                                <form action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
+                                                                    <input type="hidden" name="UserId" id="UserId_{{user_id}}" value="{{user_id}}"/>
+                                                                    <input type="hidden" name="UserName" id="UserName_{{user_id}}" value="{{users_data['username']}}"/>
+                                                                    <button type="submit" class="btn btn-danger btn-sm rogi" style="max-height: 30px; font-size: 12px;" onclick>Usuń konto</button>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </div>
