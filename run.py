@@ -633,7 +633,7 @@ def update_permission():
     # Tutaj możesz dodać logikę aktualizacji uprawnienia w bazie danych
     # ...
 
-    return jsonify({'success': True, 'message': 'Uprawnienie zostało zaktualizowane.'})
+    return jsonify({'success': True, 'message': 'Uprawnienie zostało zaktualizowane.', 'user_id': user_id})
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
