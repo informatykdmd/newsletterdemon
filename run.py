@@ -793,6 +793,21 @@ def update_permission():
 
     return jsonify({'success': False, 'message': 'Coś poszło nie tak, zgłoś to Administratorowi', 'user_id': user_id})
 
+@app.route('/update-user-status', methods=['GET', 'POST'])
+def update_user_status():
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['users'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        return redirect(url_for('index'))
+    # Pobierz id usera z formularza
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        print(form_data)
+
+    return redirect(url_for('users'))
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
     """Strona zapisywania edytowanego posta."""
