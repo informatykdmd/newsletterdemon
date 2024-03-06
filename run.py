@@ -294,10 +294,10 @@ def home():
     elitehome = settingsDB['elitehome']
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
-
+    
     return render_template(
                             "home.html", 
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             username=session['username'], 
                             users_data=session['user_data'],
                             domy=domy,
@@ -343,7 +343,7 @@ def blog(router=True):
                             "blog_management.html", 
                             posts=posts, 
                             username=session['username'], 
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             pagination=pagination,
                             domy=domy,
                             budownictwo=budownictwo,
@@ -832,12 +832,12 @@ def save_post():
             print(f"procedura dodawania nowego posta = {new_post}" )
             flash(f"procedura dodawania nowego posta = {new_post}" )
 
-            return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
+            return render_template("blog_management.html", posts=posts, username=username, userperm=generator_userDataDB()[session['username']]['uprawnienia'], pagination=pagination)
 
         # Sprawdzenie czy udało się ustalić id posta
         if not set_form_id:
             flash('Ustalenie id posta okazało się niemożliwe')
-            return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
+            return render_template("blog_management.html", posts=posts, username=username, userperm=generator_userDataDB()[session['username']]['uprawnienia'], pagination=pagination)
         
         # Przygotowanie ścieżki do zapisu plików
         upload_path = '../'
@@ -870,7 +870,7 @@ def save_post():
                             "blog_management.html", 
                             posts=posts, 
                             username=username, 
-                            userperm=userperm, 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             pagination=pagination,
                             domy=domy,
                             budownictwo=budownictwo,
@@ -892,7 +892,7 @@ def remove_post():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
         return redirect(url_for('index'))
     
-    return render_template("home.html", userperm=session['userperm'])
+    return render_template("home.html", userperm=generator_userDataDB()[session['username']]['uprawnienia'])
 
 @app.route('/remove-comment')
 def remove_comment():
@@ -901,7 +901,7 @@ def remove_comment():
     if 'username' not in session:
         return redirect(url_for('index'))
     
-    return render_template("home.html", userperm=session['userperm'])
+    return render_template("home.html", userperm=generator_userDataDB()[session['username']]['uprawnienia'])
 
 @app.route('/user')
 def users(router=True):
@@ -925,8 +925,8 @@ def users(router=True):
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     users = all_users[offset: offset + per_page]
     if router:
-        
-        settingsDB = generator_settingsDB()# Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
+        # Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
+        settingsDB = generator_settingsDB()
         domy = settingsDB['domy']
         budownictwo = settingsDB['budownictwo']
         development = settingsDB['development']
@@ -938,7 +938,7 @@ def users(router=True):
                             "user_management.html", 
                             users=users, 
                             username=session['username'], 
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             pagination=pagination,
                             domy=domy,
                             budownictwo=budownictwo,
@@ -986,7 +986,7 @@ def newsletter():
     return render_template(
                             "newsletter_management.html", 
                             username=session['username'],
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             newsletterPlan=newsletterPlan, 
                             smtpSettingsDict=smtpSettingsDict,
                             sortedListSubs=sortedListSubs,
@@ -1102,7 +1102,7 @@ def team_domy():
     return render_template(
                             "team_management_domy.html", 
                             username=session['username'],
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             user_brands=session['brands'], 
                             members=collections['domy'], 
                             photos_dict=employee_photo_dict,
@@ -1217,7 +1217,7 @@ def team_elitehome():
     return render_template(
                             "team_management_elitehome.html",
                             username=session['username'], 
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             user_brands=session['brands'],  
                             members=collections['elitehome'], 
                             photos_dict=employee_photo_dict,
@@ -1333,7 +1333,7 @@ def team_budownictwo():
     return render_template(
                             "team_management_budownictwo.html", 
                             username=session['username'],
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             user_brands=session['brands'],  
                             members=collections['budownictwo'], 
                             photos_dict=employee_photo_dict,
@@ -1449,7 +1449,7 @@ def team_development():
     return render_template(
                             "team_management_development.html", 
                             username=session['username'],
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             user_brands=session['brands'],  
                             members=collections['development'], 
                             photos_dict=employee_photo_dict,
@@ -1565,7 +1565,7 @@ def team_investment():
     return render_template(
                             "team_management_inwestycje.html", 
                             username=session['username'],
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             user_brands=session['brands'],  
                             members=collections['inwestycje'], 
                             photos_dict=employee_photo_dict,
@@ -1679,7 +1679,7 @@ def team_instalacje():
     
     return render_template(
                             "team_management_instalacje.html", 
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             user_brands=session['brands'],  
                             members=collections['instalacje'], 
                             photos_dict=employee_photo_dict,
@@ -1723,8 +1723,9 @@ def subscribers(router=True):
         # Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
         return render_template(
                                 "subscriber_management.html", 
-                                subs=subs, username=session['username'], 
-                                userperm=session['userperm'], 
+                                subs=subs, 
+                                username=session['username'], 
+                                userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                                 pagination=pagination,
                                 domy=domy,
                                 budownictwo=budownictwo,
@@ -1766,7 +1767,7 @@ def settings():
     return render_template(
                             "setting_management.html", 
                             username=session['username'],
-                            userperm=session['userperm'], 
+                            userperm=generator_userDataDB()[session['username']]['uprawnienia'], 
                             onPages=onPages, 
                             domain=domain,
                             blog=blog,
