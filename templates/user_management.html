@@ -606,7 +606,7 @@
                                             {% endif %}
                                         </form>
                                     </div>
-                                    <div class="colapse-column-usual-mini" id="permissions_change_info"></div>
+                                    <div class="colapse-column-usual-mini alert alert-success" role="alert" id="permissions_change_info"></div>
                                 </div>
                                 <div class="colapse-column-usual formatuj-left">
                                     <div class="klej">
@@ -800,6 +800,11 @@
                         } else {
                             permissionsChangeInfo.innerHTML = 'Błąd: ' + data.message;
                         }
+
+                        // Ukryj komunikat po 5 sekundach
+                        setTimeout(function() {
+                            permissionsChangeInfo.innerHTML = '';
+                        }, 5000);
                     }
                 })
                 .catch((error) => {
@@ -811,3 +816,4 @@
     });
 </script>
 {% endblock %}
+
