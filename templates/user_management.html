@@ -773,6 +773,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll('.custom-checkbox').forEach(item => {
             item.addEventListener('change', function(e) {
+                const perm_id = this.id.split('_')[1];
                 const user_id = this.id.split('_')[2];
                 const permissionType = this.id.split('_')[3]; // Dodano zmienną dla typu uprawnienia
                 
@@ -783,7 +784,11 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ user_id: user_id, permissionType: permissionType, permission: permission })
+                    body: JSON.stringify({ 
+                        perm_id: perm_id,
+                        user_id: user_id, 
+                        permissionType: permissionType, 
+                        permission: permission })
                 })
                 .then(response => response.json())
                 .then(data => {
