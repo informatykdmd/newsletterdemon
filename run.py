@@ -1058,7 +1058,7 @@ def save_post():
                 """,
                 (
                     users_data_dict[AUTHOR_LOGIN]['avatar'], 
-                    users_data[AUTHOR_LOGIN]['name'], 
+                    users_data_dict[AUTHOR_LOGIN]['name'], 
                     users_data_dict[AUTHOR_LOGIN]['opis'],
                     users_data_dict[AUTHOR_LOGIN]['facebook'],
                     users_data_dict[AUTHOR_LOGIN]['twiter'],
