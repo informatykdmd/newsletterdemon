@@ -181,13 +181,13 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
 function newUserSubmitForm(logins_allowed, email_allowed) {
     // Sprawdź, czy wymagane pola są wypełnione
     var login = document.getElementById('Login_new_user').value;
-    if (login in logins_allowed) {
+    if (logins_allowed.includes(login)) {
         alert('Podany login już istnieje.');
         return;  // Zatrzymaj przesyłanie formularza
     };
     var name = document.getElementById('Name_new_user').value;
     var email = document.getElementById('Email_new_user').value;
-    if (email in logins_allowed) {
+    if (email_allowed.includes(login)) {
         alert('Podany email już istnieje.');
         return;  // Zatrzymaj przesyłanie formularza
     };
