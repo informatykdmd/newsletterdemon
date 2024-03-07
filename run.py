@@ -1046,7 +1046,8 @@ def save_post():
         users_data_dict = {}
         for user in users_data:
             users_data_dict[user['username']] = user
-        
+        print(users_data_dict)
+        users_data_dict[AUTHOR_LOGIN]['name']
         if users_data_dict[AUTHOR_LOGIN]['name'] not in [a['NAME_AUTHOR'] for a in author_data.values()]:
             # dodaj nowego uathora i pobierz jego id
 
@@ -1056,12 +1057,12 @@ def save_post():
                 VALUES (%s, %s, %s, %s, %s, %s, %s);
                 """,
                 (
-                    users_data['avatar'], 
-                    users_data['name'], 
-                    users_data['opis'],
-                    users_data['facebook'],
-                    users_data['twiter'],
-                    users_data['instagram'],
+                    users_data_dict[AUTHOR_LOGIN]['avatar'], 
+                    users_data[AUTHOR_LOGIN]['name'], 
+                    users_data_dict[AUTHOR_LOGIN]['opis'],
+                    users_data_dict[AUTHOR_LOGIN]['facebook'],
+                    users_data_dict[AUTHOR_LOGIN]['twiter'],
+                    users_data_dict[AUTHOR_LOGIN]['instagram'],
                     ''
                 )
 
