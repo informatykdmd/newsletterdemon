@@ -8,7 +8,11 @@ import secrets
 import app.utils.passwordSalt as hash
 import mysqlDB as msq
 import time
+import datetime
 import os
+import random
+import string
+import adminSmtpSender as mails
 
 """
 Aplikacja "Admin Panel" stanowi kompleksowe narzędzie do 
@@ -834,9 +838,137 @@ def save_new_user():
     # Obsługa formularza POST
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        set_form_id = None
+
         print(form_data)
         print(request.files)
+        {
+            'Login_new_user': '', 
+            'Name_new_user': '', 
+            'Email_new_user': '@', 
+            'Stanowsko_new_user': '1', 
+            'Description_new_user': '1'
+        }
+
+        NAME = form_data['Name_new_user']
+        LOGIN = form_data['Login_new_user'].lower()
+
+        def generate_password(length=8):
+            if length < 4:  # Ustaw minimalną długość hasła na 4, aby można było spełnić wszystkie wymagania
+                raise ValueError("Password must be at least 4 characters long")
+
+            letters = string.ascii_letters  # Duże i małe litery
+            digits = string.digits          # Cyfry
+            special_chars = "!@#$%^&*()-_=+[]{}|;:'\",.<>/?`~"  # Znaki specjalne
+            password = [
+                random.choice(string.ascii_uppercase),  # Przynajmniej jedna duża litera
+                random.choice(special_chars),           # Przynajmniej jeden znak specjalny
+                random.choice(digits),                  # Dodajemy cyfrę dla pewności
+                random.choice(letters)                  # Dodatkowa litera
+            ]
+            for _ in range(length - 4):
+                password.append(random.choice(letters + digits + special_chars))
+            random.shuffle(password)
+            return ''.join(password)
+
+        # Haszowanie hasła z użyciem soli
+        TEXT_PASSWORD = generate_password(length=12)
+        salt = hash.generate_salt()
+        hashed_password = hash.hash_password(TEXT_PASSWORD, salt)
+        PASSWORD_HASH = hashed_password
+        SALT = salt
+
+        EMAIL = form_data['Email_new_user'].lower()
+        ABOUT = form_data['Description_new_user']
+        DATE_TIME = datetime.datetime.now()
+
+        PHONE = ''
+        FACEBOOK = ''
+        INSTAGRAM = ''
+        TWITTER = ''
+        LINKEDIN = ''
+        ROLE = form_data['Stanowsko_new_user']
+        ADMIN_STATUS = 0
+
+        upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['avatar-pic-path']
+        avatarPic = request.files.get(f'Avatar_new_user')
+
+        ADMIN_AVATAR = None
+        PERM_USERS = 0
+        PERM_BRANDS = 0
+        PERM_BLOG = 0
+        PERM_SUBS = 1
+        PERM_COMMENTS = 1
+        PERM_TEAM = 0
+        PERM_PERMISSIONS = 0
+        PERM_NEWSLETTER = 0
+        PERM_SETTINGS = 0
+        BRANDS_DOMY = 0
+        BRANDS_BUDOWNICTWO = 1
+        BRANDS_ELITEHOME = 0
+        BRANDS_INSTALACJE = 0
+        BRANDS_INWESTYCJE = 0
+        BRANDS_DEVELOPMENT = 0
+
+        logins = [x['username'].lower() for x in generator_userDataDB()]
+        emails = [x['email'].lower() for x in generator_userDataDB()]
+        names = [x['name'].lower() for x in generator_userDataDB()]
+        if LOGIN not in logins and EMAIL not in emails and NAME not in names:
+            if avatarPic and allowed_file(avatarPic.filename):
+                filename = f"{int(time.time())}_{secure_filename(avatarPic.filename)}"
+                full_path = os.path.join(upload_path, filename)
+                avatarPic.save(full_path)
+                ADMIN_AVATAR = settingsDB['main-domain']+settingsDB['avatar-pic-path']+filename
+            else:
+                ADMIN_AVATAR = settingsDB['main-domain']+settingsDB['avatar-pic-path']+'tm-01-460x460-anonim.png'
+
+            zapytanie_sql = '''
+                    INSERT INTO admins 
+                        (ADMIN_NAME, LOGIN, PASSWORD_HASH, SALT, EMAIL_ADMIN, ABOUT_ADMIN, DATE_TIME, ADMIN_PHONE, ADMIN_FACEBOOK, 
+                        ADMIN_INSTAGRAM, ADMIN_TWITTER, ADMIN_LINKEDIN, ADMIN_ROLE, ADMIN_STATUS, ADMIN_AVATAR, PERM_USERS, PERM_BRANDS, 
+                        PERM_BLOG, PERM_SUBS, PERM_COMMENTS, PERM_TEAM, PERM_PERMISSIONS, PERM_NEWSLETTER, PERM_SETTINGS, 
+                        BRANDS_DOMY, BRANDS_BUDOWNICTWO, BRANDS_ELITEHOME, BRANDS_INSTALACJE, BRANDS_INWESTYCJE, BRANDS_DEVELOPMENT) 
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+            dane = (
+                NAME, LOGIN, PASSWORD_HASH, SALT, EMAIL, ABOUT, DATE_TIME, 
+                PHONE, FACEBOOK, INSTAGRAM, TWITTER, LINKEDIN, ROLE, ADMIN_STATUS,
+                ADMIN_AVATAR, PERM_USERS, PERM_BRANDS, PERM_BLOG, PERM_SUBS, PERM_COMMENTS,
+                PERM_TEAM, PERM_PERMISSIONS,  PERM_NEWSLETTER, PERM_SETTINGS,
+                BRANDS_DOMY, BRANDS_BUDOWNICTWO, BRANDS_ELITEHOME, BRANDS_INSTALACJE, 
+                BRANDS_INWESTYCJE, BRANDS_DEVELOPMENT
+                )
+            if msq.insert_to_database(zapytanie_sql, dane):
+                # Przykładowe dane
+                subject = "Aktywacja konta użytkownika"
+                html_body = f"""
+                <html><body>
+                <h1>Witaj {NAME}!</h1>
+                <p>To jest wiadomości wygenerowana automatycznie.</p>
+                <p>Zostałeś dodany(a) do systemu informatycznego firmy DMD.</p>
+                <p>Dane do logowania</p>
+                <p>Login: {LOGIN}</p>
+                <p>Hasło: {TEXT_PASSWORD}<br/>(Jeśli nie chcesz zmieniać hasła, możesz pominąć tę wiadomość.)</p>
+                <p>Konto jest nieaktywne. Kliknij w ten link aby aktywować konto:</p>
+                <a href="{settingsDB['main-domain']}">Aktywuj konto</a>
+                </body></html>
+                """
+
+                to_email = EMAIL
+
+                mails.send_html_email(subject, html_body, to_email)
+
+                flash('Administrator został dodany', 'success')
+                return redirect(url_for('users'))
+            else:
+                flash('Nie udało się dodać administratora', 'error')
+                return redirect(url_for('users'))
+
+
+
+        # dodaję do bazy jako nieaktywny
+
+        # wysyłam emaila aktywacyjne
+        
         # print(form_data)
         # # Znajdź id posta
         # for key in form_data.keys():
@@ -1045,7 +1177,7 @@ def users(router=True):
         logins = [x['username'] for x in all_users]
         emails = [x['email'] for x in all_users]
         names = [x['name'] for x in all_users]
-        print(logins, emails, names)
+
         return render_template(
                             "user_management.html", 
                             users=users, 
