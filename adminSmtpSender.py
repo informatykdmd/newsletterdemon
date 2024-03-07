@@ -8,10 +8,10 @@ from mysqlDB import connect_to_database
 
 global smtp_config
 smtp_config = {
-    'smtp_server': connect_to_database(f'SELECT admin_smtp_server FROM admin_setting;'),
-    'smtp_port': connect_to_database(f'SELECT admin_smtp_port FROM admin_setting;'),  # Domyślny port dla TLS
-    'smtp_username': connect_to_database(f'SELECT admin_smtp_usernam FROM admin_setting;'),
-    'smtp_password': connect_to_database(f'SELECT admin_smtp_password FROM admin_setting;')
+    'smtp_server': connect_to_database(f'SELECT admin_smtp_server FROM admin_settings;')[0][0],
+    'smtp_port': connect_to_database(f'SELECT admin_smtp_port FROM admin_settings;')[0][0],  # Domyślny port dla TLS
+    'smtp_username': connect_to_database(f'SELECT admin_smtp_usernam FROM admin_settings;')[0][0],
+    'smtp_password': connect_to_database(f'SELECT admin_smtp_password FROM admin_settings;')[0][0]
 }
 print(smtp_config)
 from bin.appslib import handle_error
