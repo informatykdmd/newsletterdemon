@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 
 {% block title %}DMD Panel Administratora - Zarządzanie Subskrybentami{% endblock %}
-{% block scripts %}{% endblock %}
+{% block scripts %}
+<script>
+    var logins = `{{ logins | tojson }}`;
+    var emails = `{{ emails | tojson }}`;
+    console.log(logins, emails);
+</script>
+{% endblock %}
 {% block addButton %}
     <li style="margin-left: 15px;">
         <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(14, 144, 14) !important;"></i></a>
