@@ -184,13 +184,13 @@ function newUserSubmitForm(logins_allowed, email_allowed) {
     if (logins_allowed.includes(login)) {
         alert('Podany login już istnieje.');
         return;  // Zatrzymaj przesyłanie formularza
-    };
+    }
     var name = document.getElementById('Name_new_user').value;
     var email = document.getElementById('Email_new_user').value;
-    if (email_allowed.includes(login)) {
+    if (email_allowed.includes(email)) {
         alert('Podany email już istnieje.');
         return;  // Zatrzymaj przesyłanie formularza
-    };
+    }
     var avatar = document.getElementById('Avatar_new_user').value;
 
     var role = document.getElementById('Stanowsko_new_user').value;
@@ -199,7 +199,7 @@ function newUserSubmitForm(logins_allowed, email_allowed) {
     if (!login || !name || !email || !avatar || !role || !opis) {
         alert('Wypełnij wszystkie wymagane pola.');
         return;  // Zatrzymaj przesyłanie formularza
-    };
+    }
 
 
     // Znajdź formularz i wyślij go
