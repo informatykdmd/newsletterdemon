@@ -996,19 +996,76 @@ def save_post():
             return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
         
         # Przygotowanie ścieżki do zapisu plików
-        upload_path = '../'
+
+        upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['blog-pic-path']
 
         # Obsługa Main Foto
         main_foto = request.files.get(f'mainFoto_{set_form_id}')
         if main_foto and allowed_file(main_foto.filename):
             filename = str(int(time.time())) + secure_filename(main_foto.filename)
-            # main_foto.save(upload_path + filename)
+            main_foto.save(upload_path + filename)
 
         # Obsługa Content Foto
         content_foto = request.files.get(f'contentFoto_{set_form_id}')
         if content_foto and allowed_file(content_foto.filename):
             filename = str(int(time.time())) + secure_filename(content_foto.filename)
-            # content_foto.save(upload_path + filename)
+            content_foto.save(upload_path + filename)
+
+        {
+            'title_9999999': 't', 'introduction_9999999': 'w', 'Highlight_9999999': 'h', 
+            'dynamicField9999999': 'a1', 'dynamicTagsField9999999': 't1', 'category_9999999': 'k', 
+            'tagsFieldData_9999999': 't1, t2', 'dynamicFieldData_9999999': 'a1#splx#a2', 
+            'UserName_9999999': 'michal'
+        }
+
+        # dane podstawowe
+        TYTUL = form_data[f'title_{set_form_id}']
+        WSTEP = form_data[f'introduction_{set_form_id}']
+        AKAPIT = form_data[f'Highlight_{set_form_id}']
+        PUNKTY = form_data[f'dynamicFieldData_{set_form_id}']
+        TAGI = form_data[f'tagsFieldData_{set_form_id}']
+        KATEGORIA = form_data[f'category_{set_form_id}']
+        AUTHOR_LOGIN = form_data[f'UserName_{set_form_id}']
+
+        # wymagane dane
+        cala_tabela_authors = msq.connect_to_database(
+            '''
+                SELECT * FROM authors'; 
+            ''')
+        author_data = {}
+        for autor in cala_tabela_authors:
+            author_data[autor[2]] = {
+                'ID': autor[0], 'AVATAR_AUTHOR': autor[1], 
+                'NAME_AUTHOR': autor[2], 'ABOUT_AUTHOR': autor[3],
+                'FACEBOOK': autor[4], 'TWITER_X': autor[5],  
+                'INSTAGRAM': autor[6], 'GOOGLE': autor[7],
+                'DATE_TIME': autor[8]
+                }
+        
+        users_data = generator_userDataDB()
+        users_data_dict = {}
+        for user in users_data:
+            users_data_dict[user['username']] = user
+        
+        if users_data_dict[AUTHOR_LOGIN]['name'] not in [a['NAME_AUTHOR'] for a in author_data.values()]:
+            # dodaj nowego uathora i pobierz jego id
+
+            msq.insert_to_database(
+                """
+                INSERT INTO authors (AVATAR_AUTHOR, NAME_AUTHOR, ABOUT_AUTHOR, FACEBOOK, TWITER_X, INSTAGRAM, GOOGLE) VALUES  
+                ('%s','%s','%s);
+                                """,
+                (1, 2, 3, 4, 5, 6, 7)
+
+            )
+            
+            ID_NOWEGO_AWORU = take_data_where_ID('ID', 'authors', 'NAME_AUTHOR', users_data_dict[AUTHOR_LOGIN]['name'])[0][0]
+            print(ID_NOWEGO_AWORU)
+
+
+
+        
+
 
         if set_form_id == '9999999':
             # zapytanie_sql = '''
