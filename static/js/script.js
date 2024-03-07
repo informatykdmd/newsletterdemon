@@ -7,7 +7,7 @@ function addListFields(
     classes = "form-control bg-dark formatuj-maly-font",
     idName = "additionalList",
     rowsAmount = "4",
-    styleColor = "#6d6d6d",
+    styleColor = "#c2c2c2",
     styleBorders = "#6a6a6a solid 1px",
     req = true,
     itemStyles = "no-border formatuj-margin form-control bg-dark formatuj-right",
