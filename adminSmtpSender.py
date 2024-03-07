@@ -13,7 +13,7 @@ smtp_config = {
     'smtp_username': connect_to_database(f'SELECT admin_smtp_usernam FROM admin_settings;')[0][0],
     'smtp_password': connect_to_database(f'SELECT admin_smtp_password FROM admin_settings;')[0][0]
 }
-print(smtp_config)
+# print(smtp_config)
 from bin.appslib import handle_error
 
 def send_html_email(subject, html_body, to_email):

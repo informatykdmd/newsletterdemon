@@ -887,7 +887,7 @@ def save_new_user():
         TWITTER = ''
         LINKEDIN = ''
         ROLE = form_data['Stanowsko_new_user']
-        ADMIN_STATUS = 0
+        ADMIN_STATUS = 1
 
         upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['avatar-pic-path']
         avatarPic = request.files.get(f'Avatar_new_user')
@@ -948,8 +948,6 @@ def save_new_user():
                 <p>Dane do logowania</p>
                 <p>Login: {LOGIN}</p>
                 <p>Hasło: {TEXT_PASSWORD}<br/>(Jeśli nie chcesz zmieniać hasła, możesz pominąć tę wiadomość.)</p>
-                <p>Konto jest nieaktywne. Kliknij w ten link aby aktywować konto:</p>
-                <a href="{settingsDB['main-domain']}">Aktywuj konto</a>
                 </body></html>
                 """
 

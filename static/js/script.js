@@ -208,13 +208,13 @@ function newUserSubmitForm(logins_allowed, email_allowed, name_allowed) {
     toggleWarning('Name_new_user', name_allowed.includes(name) || name === '');
 
     // Sprawdzenie innych pól
-    // var name = document.getElementById('Name_new_user').value;
-    var avatar = document.getElementById('Avatar_new_user').value;
+
+    // var avatar = document.getElementById('Avatar_new_user').value;
     var role = document.getElementById('Stanowsko_new_user').value;
     var opis = document.getElementById('Description_new_user').value;
 
-    // toggleWarning('Name_new_user', !name);
-    toggleWarning('Avatar_new_user', !avatar);
+
+    // toggleWarning('Avatar_new_user', !avatar);
     toggleWarning('Stanowsko_new_user', !role);
     toggleWarning('Description_new_user', !opis);
 
