@@ -178,34 +178,79 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     form.submit();
 }
 
+// function newUserSubmitForm(logins_allowed, email_allowed) {
+//     // Sprawdź, czy wymagane pola są wypełnione
+//     var login = document.getElementById('Login_new_user').value;
+//     if (logins_allowed.includes(login)) {
+//         alert('Podany login już istnieje.');
+//         return;  // Zatrzymaj przesyłanie formularza
+//     }
+//     var name = document.getElementById('Name_new_user').value;
+//     var email = document.getElementById('Email_new_user').value;
+//     if (email_allowed.includes(email)) {
+//         alert('Podany email już istnieje.');
+//         return;  // Zatrzymaj przesyłanie formularza
+//     }
+//     var avatar = document.getElementById('Avatar_new_user').value;
+
+//     var role = document.getElementById('Stanowsko_new_user').value;
+//     var opis = document.getElementById('Description_new_user').value;
+//     console.log(login, name, email, avatar, role, opis);
+//     if (!login || !name || !email || !avatar || !role || !opis) {
+//         alert('Wypełnij wszystkie wymagane pola.');
+//         return;  // Zatrzymaj przesyłanie formularza
+//     }
+
+
+//     // Znajdź formularz i wyślij go
+//     var form = document.getElementById('new_user');
+//     form.submit();
+// }
+
 function newUserSubmitForm(logins_allowed, email_allowed) {
+    var isValid = true; // flaga wskazująca, czy formularz jest prawidłowy
+
     // Sprawdź, czy wymagane pola są wypełnione
-    var login = document.getElementById('Login_new_user').value;
-    if (logins_allowed.includes(login)) {
-        alert('Podany login już istnieje.');
-        return;  // Zatrzymaj przesyłanie formularza
-    }
-    var name = document.getElementById('Name_new_user').value;
-    var email = document.getElementById('Email_new_user').value;
-    if (email_allowed.includes(email)) {
-        alert('Podany email już istnieje.');
-        return;  // Zatrzymaj przesyłanie formularza
-    }
-    var avatar = document.getElementById('Avatar_new_user').value;
-
-    var role = document.getElementById('Stanowsko_new_user').value;
-    var opis = document.getElementById('Description_new_user').value;
-    console.log(login, name, email, avatar, role, opis);
-    if (!login || !name || !email || !avatar || !role || !opis) {
-        alert('Wypełnij wszystkie wymagane pola.');
-        return;  // Zatrzymaj przesyłanie formularza
+    var login = document.getElementById('Login_new_user');
+    if (logins_allowed.includes(login.value)) {
+        login.classList.add('input-warning'); // zmień klasę dla pola login
+        isValid = false;
+    } else {
+        login.classList.remove('input-warning'); // usuń klasę ostrzeżenia, jeśli pole jest prawidłowe
     }
 
+    var email = document.getElementById('Email_new_user');
+    if (email_allowed.includes(email.value)) {
+        email.classList.add('input-warning'); // zmień klasę dla pola email
+        isValid = false;
+    } else {
+        email.classList.remove('input-warning');
+    }
+
+    var name = document.getElementById('Name_new_user');
+    var avatar = document.getElementById('Avatar_new_user');
+    var role = document.getElementById('Stanowsko_new_user');
+    var opis = document.getElementById('Description_new_user');
+
+    // Sprawdzanie pozostałych pól formularza
+    [name, avatar, role, opis].forEach(field => {
+        if (!field.value) {
+            field.classList.add('input-warning'); // zmień klasę dla pól
+            isValid = false;
+        } else {
+            field.classList.remove('input-warning');
+        }
+    });
+
+    if (!isValid) {
+        return;  // Zatrzymaj przesyłanie formularza, jeśli którykolwiek z testów walidacji zawiedzie
+    }
 
     // Znajdź formularz i wyślij go
     var form = document.getElementById('new_user');
     form.submit();
 }
+
 
 function justSubmitOneElementForm(elementName, elementId, formName) {
     // Sprawdź, czy wymagane pola są wypełnione

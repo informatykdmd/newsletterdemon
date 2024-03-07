@@ -616,3 +616,7 @@ color:#969696;
 .active-color-bg {
     background-color: #0e1d13 !important;
 }
+
+.input-warning {
+    border: 1px solid red; /* czerwona obramówka dla błędnych pól */
+}
