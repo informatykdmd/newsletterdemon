@@ -1011,14 +1011,14 @@ def save_post():
             # content_foto.save(upload_path + filename)
 
         if set_form_id == '9999999':
-            zapytanie_sql = '''
-                    INSERT INTO admins 
-                        (ADMIN_NAME, LOGIN, PASSWORD_HASH, SALT, EMAIL_ADMIN, ABOUT_ADMIN, DATE_TIME, ADMIN_PHONE, ADMIN_FACEBOOK, 
-                        ADMIN_INSTAGRAM, ADMIN_TWITTER, ADMIN_LINKEDIN, ADMIN_ROLE, ADMIN_STATUS, ADMIN_AVATAR, PERM_USERS, PERM_BRANDS, 
-                        PERM_BLOG, PERM_SUBS, PERM_COMMENTS, PERM_TEAM, PERM_PERMISSIONS, PERM_NEWSLETTER, PERM_SETTINGS, 
-                        BRANDS_DOMY, BRANDS_BUDOWNICTWO, BRANDS_ELITEHOME, BRANDS_INSTALACJE, BRANDS_INWESTYCJE, BRANDS_DEVELOPMENT) 
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-                    '''
+            # zapytanie_sql = '''
+            #         INSERT INTO admins 
+            #             (ADMIN_NAME, LOGIN, PASSWORD_HASH, SALT, EMAIL_ADMIN, ABOUT_ADMIN, DATE_TIME, ADMIN_PHONE, ADMIN_FACEBOOK, 
+            #             ADMIN_INSTAGRAM, ADMIN_TWITTER, ADMIN_LINKEDIN, ADMIN_ROLE, ADMIN_STATUS, ADMIN_AVATAR, PERM_USERS, PERM_BRANDS, 
+            #             PERM_BLOG, PERM_SUBS, PERM_COMMENTS, PERM_TEAM, PERM_PERMISSIONS, PERM_NEWSLETTER, PERM_SETTINGS, 
+            #             BRANDS_DOMY, BRANDS_BUDOWNICTWO, BRANDS_ELITEHOME, BRANDS_INSTALACJE, BRANDS_INWESTYCJE, BRANDS_DEVELOPMENT) 
+            #             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+            #         '''
             dane = (
                 # NAME, LOGIN, PASSWORD_HASH, SALT, EMAIL, ABOUT, DATE_TIME, 
                 # PHONE, FACEBOOK, INSTAGRAM, TWITTER, LINKEDIN, ROLE, ADMIN_STATUS,
@@ -1027,7 +1027,7 @@ def save_post():
                 # BRANDS_DOMY, BRANDS_BUDOWNICTWO, BRANDS_ELITEHOME, BRANDS_INSTALACJE, 
                 # BRANDS_INWESTYCJE, BRANDS_DEVELOPMENT
                 )
-            if msq.insert_to_database(zapytanie_sql, dane):
+            # if msq.insert_to_database(zapytanie_sql, dane):
                 # # Przykładowe dane
                 # subject = "Czas się aktywować – Witaj w DMD!"
                 # html_body = f"""
@@ -1048,8 +1048,8 @@ def save_post():
                 #         """
                 # to_email = EMAIL
                 # mails.send_html_email(subject, html_body, to_email)
-                flash('Dane zostały zapisane poprawnie!', 'success')
-                return redirect(url_for('blog'))
+                # flash('Dane zostały zapisane poprawnie!', 'success')
+                # return redirect(url_for('blog'))
         else:
             new_post = False
         
