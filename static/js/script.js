@@ -213,7 +213,7 @@ function newUserSubmitForm(logins_allowed, email_allowed, name_allowed) {
     var role = document.getElementById('Stanowsko_new_user').value;
     var opis = document.getElementById('Description_new_user').value;
 
-    toggleWarning('Name_new_user', !name);
+    // toggleWarning('Name_new_user', !name);
     toggleWarning('Avatar_new_user', !avatar);
     toggleWarning('Stanowsko_new_user', !role);
     toggleWarning('Description_new_user', !opis);
