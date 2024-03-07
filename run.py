@@ -1043,10 +1043,13 @@ def users(router=True):
         inwestycje = settingsDB['inwestycje']
         instalacje = settingsDB['instalacje']
         logins = [x['username'] for x in all_users]
-        print(logins)
+        emails = [x['email'] for x in all_users]
+        print(logins, emails)
         return render_template(
                             "user_management.html", 
                             users=users, 
+                            logins=logins,
+                            emails=emails,
                             username=session['username'], 
                             userperm=session['userperm'], 
                             pagination=pagination,
