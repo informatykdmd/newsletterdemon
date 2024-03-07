@@ -988,13 +988,7 @@ def save_post():
                     break
                 except ValueError:
                     set_form_id = None
-        if set_form_id == '9999999':
-            new_post = True
-            set_form_id = None
-            print(f"procedura dodawania nowego posta = {new_post}" )
-            flash(f"procedura dodawania nowego posta = {new_post}", 'danger' )
-
-            return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
+        
 
         # Sprawdzenie czy udało się ustalić id posta
         if not set_form_id:
@@ -1008,14 +1002,57 @@ def save_post():
         main_foto = request.files.get(f'mainFoto_{set_form_id}')
         if main_foto and allowed_file(main_foto.filename):
             filename = str(int(time.time())) + secure_filename(main_foto.filename)
-            main_foto.save(upload_path + filename)
+            # main_foto.save(upload_path + filename)
 
         # Obsługa Content Foto
         content_foto = request.files.get(f'contentFoto_{set_form_id}')
         if content_foto and allowed_file(content_foto.filename):
             filename = str(int(time.time())) + secure_filename(content_foto.filename)
-            content_foto.save(upload_path + filename)
+            # content_foto.save(upload_path + filename)
 
+        if set_form_id == '9999999':
+            zapytanie_sql = '''
+                    INSERT INTO admins 
+                        (ADMIN_NAME, LOGIN, PASSWORD_HASH, SALT, EMAIL_ADMIN, ABOUT_ADMIN, DATE_TIME, ADMIN_PHONE, ADMIN_FACEBOOK, 
+                        ADMIN_INSTAGRAM, ADMIN_TWITTER, ADMIN_LINKEDIN, ADMIN_ROLE, ADMIN_STATUS, ADMIN_AVATAR, PERM_USERS, PERM_BRANDS, 
+                        PERM_BLOG, PERM_SUBS, PERM_COMMENTS, PERM_TEAM, PERM_PERMISSIONS, PERM_NEWSLETTER, PERM_SETTINGS, 
+                        BRANDS_DOMY, BRANDS_BUDOWNICTWO, BRANDS_ELITEHOME, BRANDS_INSTALACJE, BRANDS_INWESTYCJE, BRANDS_DEVELOPMENT) 
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+            dane = (
+                # NAME, LOGIN, PASSWORD_HASH, SALT, EMAIL, ABOUT, DATE_TIME, 
+                # PHONE, FACEBOOK, INSTAGRAM, TWITTER, LINKEDIN, ROLE, ADMIN_STATUS,
+                # ADMIN_AVATAR, PERM_USERS, PERM_BRANDS, PERM_BLOG, PERM_SUBS, PERM_COMMENTS,
+                # PERM_TEAM, PERM_PERMISSIONS,  PERM_NEWSLETTER, PERM_SETTINGS,
+                # BRANDS_DOMY, BRANDS_BUDOWNICTWO, BRANDS_ELITEHOME, BRANDS_INSTALACJE, 
+                # BRANDS_INWESTYCJE, BRANDS_DEVELOPMENT
+                )
+            if msq.insert_to_database(zapytanie_sql, dane):
+                # # Przykładowe dane
+                # subject = "Czas się aktywować – Witaj w DMD!"
+                # html_body = f"""
+                #         <html><body>
+                #         <h1>Szanowny {NAME}, witamy w firmie DMD!</h1>
+                #         <p>Ta wiadomość została wygenerowana automatycznie i zawiera ważne informacje dotyczące Twojego dostępu do systemów informatycznych firmy DMD.</p>
+                #         <p>Jesteśmy przekonani, że Twoje doświadczenie i zaangażowanie wniosą znaczący wkład w nasz zespół. Poniżej znajdziesz dane dostępowe, które umożliwią Ci logowanie do naszego systemu.</p>
+                #         <p><strong>Dane do logowania:</strong></p>
+                #         <ul>
+                #             <li>Login: {LOGIN}</li>
+                #             <li>Hasło: {TEXT_PASSWORD}</li>
+                #         </ul>
+                #         <p>Zachęcamy do zmiany hasła przy pierwszym logowaniu w celu zapewnienia bezpieczeństwa danych. Jeśli nie planujesz w najbliższym czasie korzystać z systemu, możesz zignorować tę wiadomość.</p>
+                #         <p>W razie pytań lub potrzeby wsparcia, nasz zespół IT jest do Twojej dyspozycji. Skontaktuj się z nami wysyłając wiadomość na adres: support@dmd.com</p>
+                #         <p>Życzymy Ci owocnej współpracy i sukcesów w realizacji powierzonych zadań.</p>
+                #         <p>Z wyrazami szacunku,<br/>Zespół DMD</p>
+                #         </body></html>
+                #         """
+                # to_email = EMAIL
+                # mails.send_html_email(subject, html_body, to_email)
+                flash('Dane zostały zapisane poprawnie!', 'success')
+                return redirect(url_for('blog'))
+        else:
+            new_post = False
+        
         flash('Dane zostały zapisane poprawnie!', 'success')
         print('Dane zostały zapisane poprawnie!')
         print(form_data)
