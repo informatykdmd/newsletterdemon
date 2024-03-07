@@ -136,40 +136,52 @@ function joinListFields(id, sep, elementName="dynamicField",) {
     return resultString;
 }
 
-
-
 function prepareAndSubmitForm(postId, oldFotos=true) {
-    // Sprawdź, czy wymagane pola są wypełnione
+    let formIsValid = true;
+
+    // Funkcja pomocnicza do zmiany koloru ramki wokół elementów formularza
+    function toggleWarning(elementId, condition) {
+        const element = document.getElementById(elementId);
+        if (condition) {
+            element.classList.add('input-warning');
+            formIsValid = false; // Formularz jest niepoprawnie wypełniony
+        } else {
+            element.classList.remove('input-warning');
+        }
+    }
+
+    // Sprawdzenie czy pola są wypełnione, zmiana logiki na wykorzystanie toggleWarning
     var title = document.getElementById('title_' + postId).value;
+    toggleWarning('title_' + postId, !title);
+
     var introduction = document.getElementById('introduction_' + postId).value;
+    toggleWarning('introduction_' + postId, !introduction);
+
     var highlight = document.getElementById('Highlight_' + postId).value;
+    toggleWarning('Highlight_' + postId, !highlight);
 
-    var mainFoto = document.getElementById('mainFoto_' + postId).value;
-    var contentFoto = document.getElementById('contentFoto_' + postId).value;
-
-    var category = document.getElementById('category_' + postId).value;
+    var tagsFieldData = joinListFields(postId, ', ', 'dynamicTagsField');
+    toggleWarning('dynamicTagsField_' + postId, !tagsFieldData);
 
     var dynamicFieldData = joinListFields(postId, '#splx#', 'dynamicField');
-    var tagsFieldData = joinListFields(postId, ', ', 'dynamicTagsField');
-    
+    toggleWarning('dynamicField_' + postId, !dynamicFieldData);
 
-    console.log("tags Field Data: " + tagsFieldData, "Dynamic field data: " + dynamicFieldData);
+    var category = document.getElementById('category_' + postId).value;
+    toggleWarning('category_' + postId, !category);
 
     if (!oldFotos) {
-        if (!title || !introduction || !highlight || !mainFoto || !contentFoto || !tagsFieldData || !dynamicFieldData || !category ) {
-            alert('Wypełnij wszystkie wymagane pola przed zapisaniem artykułu.');
-            return;  // Zatrzymaj przesyłanie formularza
-        };
-    } else {
-        if (!title || !introduction || !highlight || !tagsFieldData || !dynamicFieldData || !category) {
-            alert('Wypełnij wszystkie wymagane pola przed zapisaniem artykułu.');
-            return;  // Zatrzymaj przesyłanie formularza
-        };
+        var mainFoto = document.getElementById('mainFoto_' + postId).value;
+        toggleWarning('mainFoto_' + postId, !mainFoto);
+
+        var contentFoto = document.getElementById('contentFoto_' + postId).value;
+        toggleWarning('contentFoto_' + postId, !contentFoto);
+    }
+
+    if (!formIsValid) {
+        return; // Zatrzymaj przesyłanie formularza, jeśli którykolwiek test nie przeszedł
     }
 
     // Pobierz dane za pomocą funkcji joinListFields i ustaw wartości ukrytych pól formularza
-    
-
     document.getElementById('tagsFieldData_'+postId).value = tagsFieldData;
     document.getElementById('dynamicFieldData_'+postId).value = dynamicFieldData;
 
@@ -177,6 +189,47 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     var form = document.getElementById('editPost_'+postId);
     form.submit();
 }
+
+
+// function prepareAndSubmitForm(postId, oldFotos=true) {
+//     // Sprawdź, czy wymagane pola są wypełnione
+//     var title = document.getElementById('title_' + postId).value;
+//     var introduction = document.getElementById('introduction_' + postId).value;
+//     var highlight = document.getElementById('Highlight_' + postId).value;
+
+//     var mainFoto = document.getElementById('mainFoto_' + postId).value;
+//     var contentFoto = document.getElementById('contentFoto_' + postId).value;
+
+//     var category = document.getElementById('category_' + postId).value;
+
+//     var dynamicFieldData = joinListFields(postId, '#splx#', 'dynamicField');
+//     var tagsFieldData = joinListFields(postId, ', ', 'dynamicTagsField');
+    
+
+//     console.log("tags Field Data: " + tagsFieldData, "Dynamic field data: " + dynamicFieldData);
+
+//     if (!oldFotos) {
+//         if (!title || !introduction || !highlight || !mainFoto || !contentFoto || !tagsFieldData || !dynamicFieldData || !category ) {
+//             alert('Wypełnij wszystkie wymagane pola przed zapisaniem artykułu.');
+//             return;  // Zatrzymaj przesyłanie formularza
+//         };
+//     } else {
+//         if (!title || !introduction || !highlight || !tagsFieldData || !dynamicFieldData || !category) {
+//             alert('Wypełnij wszystkie wymagane pola przed zapisaniem artykułu.');
+//             return;  // Zatrzymaj przesyłanie formularza
+//         };
+//     }
+
+//     // Pobierz dane za pomocą funkcji joinListFields i ustaw wartości ukrytych pól formularza
+    
+
+//     document.getElementById('tagsFieldData_'+postId).value = tagsFieldData;
+//     document.getElementById('dynamicFieldData_'+postId).value = dynamicFieldData;
+
+//     // Znajdź formularz i wyślij go
+//     var form = document.getElementById('editPost_'+postId);
+//     form.submit();
+// }
 
 
 
