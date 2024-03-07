@@ -618,5 +618,5 @@ color:#969696;
 }
 
 .input-warning {
-    border: 1px solid red; /* czerwona obramówka dla błędnych pól */
+    border: 1px solid red !important; /* czerwona obramówka dla błędnych pól */
 }
