@@ -1052,14 +1052,23 @@ def save_post():
 
             msq.insert_to_database(
                 """
-                INSERT INTO authors (AVATAR_AUTHOR, NAME_AUTHOR, ABOUT_AUTHOR, FACEBOOK, TWITER_X, INSTAGRAM, GOOGLE) VALUES  
-                ('%s','%s','%s);
-                                """,
-                (1, 2, 3, 4, 5, 6, 7)
+                INSERT INTO authors (AVATAR_AUTHOR, NAME_AUTHOR, ABOUT_AUTHOR, FACEBOOK, TWITER_X, INSTAGRAM, GOOGLE) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s);
+                """,
+                (
+                    users_data['avatar'], 
+                    users_data['name'], 
+                    users_data['opis'],
+                    users_data['facebook'],
+                    users_data['twiter'],
+                    users_data['instagram'],
+                    ''
+                )
 
             )
             
             ID_NOWEGO_AWORU = take_data_where_ID('ID', 'authors', 'NAME_AUTHOR', users_data_dict[AUTHOR_LOGIN]['name'])[0][0]
+            
             print(ID_NOWEGO_AWORU)
 
 
