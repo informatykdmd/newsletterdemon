@@ -5,16 +5,6 @@
 {% block addButton %}{% endblock %}
 {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Zarządzanie Subskrybentami</a>{% endblock %}
 
-
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <div>
-            {% for message in messages %}
-                <div style="color: #8bff4d;">{{ message }}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
 {% block tableHeader %}
                         <div class="row">
                             <div class="klej formatuj-header">
@@ -68,7 +58,7 @@
                                 <div class="column-ender">
                                     
                                     <form id="removePost_{{subs_id}}" action="{{ url_for('remove_post') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć subskrybenta?');">
-                                        {% if userperm['commnets'] == 1 %}
+                                        {% if userperm['commnets'] == 1 and subs_data['comments']|length > 0 %}
                                             <a data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}"><i class="bi bi-chat-left-text" style="color: rgb(217, 217, 217) !important;"></i></a>
                                         {% endif %}
                                         <a href="mailto:{{subs_data['name']}}"><i class="bi bi-envelope-at" style="color: rgb(89, 176, 90) !important;"></i></a>
@@ -79,7 +69,7 @@
                             </div>
                         </div>
                         <!-- collapse start -->
-                        {% if userperm['commnets'] == 1 %}
+                        {% if userperm['commnets'] == 1 and subs_data['comments']|length > 0 %}
                         <div class="sub-panel podswietlaj rogi collapse formatyj-maly-wiersz" id="collapse_id_{{subs_id}}">
                             {% for comment in subs_data['comments'].values() %}
                             <div class="tylko-klej">
