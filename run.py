@@ -1062,13 +1062,12 @@ def save_post():
                     users_data_dict[AUTHOR_LOGIN]['opis'],
                     users_data_dict[AUTHOR_LOGIN]['facebook'],
                     users_data_dict[AUTHOR_LOGIN]['twiter'],
-                    users_data_dict[AUTHOR_LOGIN]['instagram'],
-
+                    users_data_dict[AUTHOR_LOGIN]['instagram']
                 )
 
             )
             
-            ID_NOWEGO_AWORU = take_data_where_ID('ID', 'authors', 'NAME_AUTHOR', users_data_dict[AUTHOR_LOGIN]['name'])[0][0]
+            ID_NOWEGO_AWORU = take_data_where_ID('ID', 'authors', 'NAME_AUTHOR', f"""'{users_data_dict[AUTHOR_LOGIN]['name']}'""")[0][0]
             
             print(ID_NOWEGO_AWORU)
 
