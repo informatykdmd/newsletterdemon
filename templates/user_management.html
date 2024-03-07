@@ -3,9 +3,14 @@
 {% block title %}DMD Panel Administratora - Zarządzanie Subskrybentami{% endblock %}
 {% block scripts %}
 <script>
-    var logins = `{{ logins | tojson }}`;
-    var emails = `{{ emails | tojson }}`;
-    // console.log(logins, emails);
+    // Te literały szablonowe są używane do wstrzyknięcia JSON-a jako stringi.
+    var loginsString = `{{ logins | tojson }}`;
+    var emailsString = `{{ emails | tojson }}`;
+
+    // Następnie, przekształcamy te stringi z powrotem na obiekty JavaScript.
+    var logins = JSON.parse(loginsString);
+    var emails = JSON.parse(emailsString);
+
 </script>
 {% endblock %}
 {% block addButton %}
