@@ -372,7 +372,7 @@
                         </div>
                        
                         <!-- collapse start -->
-                        {% if userperm['commnets'] == 1 % and post_data['comments']|length > 0 %}
+                        {% if userperm['commnets'] == 1 and post_data['comments']|length > 0 %}
                         <div class="sub-panel podswietlaj rogi collapse formatyj-maly-wiersz" id="collapse_id_{{post_id}}">
                             {% for comment in post_data['comments'].values() %}
                             <div class="tylko-klej">
