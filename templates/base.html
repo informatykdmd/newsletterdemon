@@ -184,11 +184,13 @@
                     
                     <div class="table-creator">
                         <!-- Kod do wyświetlania flash messages -->
-                        {% with messages = get_flashed_messages() %}
+                        {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
                                 <div>
-                                    {% for message in messages %}
-                                        <div style="color: green;">{{ message }}</div>
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{ category }} rogi table-creator formatuj-maly-font">
+                                            {{ message }}
+                                        </div>
                                     {% endfor %}
                                 </div>
                             {% endif %}

@@ -273,9 +273,9 @@ def login():
 
             return redirect(url_for('index'))
         elif int(users_data[username]['status']) == 0:
-            flash('Konto nie aktywne!')
+            flash('Konto nie aktywne!', 'danger')
         else:
-            flash('Błędne nazwa użytkownika lub hasło')
+            flash('Błędne nazwa użytkownika lub hasło', 'danger')
 
     return render_template('gateway.html', form=form)
 
@@ -323,7 +323,7 @@ def blog(router=True):
         return redirect(url_for('index'))
     
     if session['userperm']['blog'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
@@ -383,12 +383,12 @@ def update_password_user():
                 verificated_old_password = hash.hash_password(form_data['old_Password'], salt_old)
 
                 if verificated_old_password != password_old:
-                    flash('Nieprawidłowe stare hasło')
+                    flash('Nieprawidłowe stare hasło', 'danger')
                     return redirect(url_for('index'))
                 
             if PAGE == 'users':
                 if session['userperm']['users'] == 0:
-                    flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+                    flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
                     return redirect(url_for('index'))
                 
             if PAGE == 'users' or PAGE=='home':
@@ -418,22 +418,22 @@ def update_password_user():
                                     ID
                                 )
                             if msq.insert_to_database(zapytanie_sql, dane):
-                                flash('Hasło zostało pomyślnie zmienione.')
+                                flash('Hasło zostało pomyślnie zmienione.', 'success')
                                 if PAGE == 'users':
                                     return redirect(url_for('users'))
                                 if PAGE=='home':
                                     return redirect(url_for('logout'))
                         else:
-                            flash("Hasło musi zawierać co najmniej jeden znak specjalny.")
+                            flash("Hasło musi zawierać co najmniej jeden znak specjalny.", 'danger')
                             return redirect(url_for('index'))
                     else:
-                        flash("Hasło musi zawierać co najmniej jedną wielką literę.")
+                        flash("Hasło musi zawierać co najmniej jedną wielką literę.", 'danger')
                         return redirect(url_for('index'))
                 else:
-                    flash("Hasło musi mieć co najmniej 8 znaków.")
+                    flash("Hasło musi mieć co najmniej 8 znaków.", 'danger')
                     return redirect(url_for('index'))
             else:
-                flash('Hasła muszą być identyczne!')
+                flash('Hasła muszą być identyczne!', 'danger')
                 return redirect(url_for('index'))
 
     return redirect(url_for('index'))
@@ -473,7 +473,7 @@ def update_data_user():
                 int(form_data['id'])
             )
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash('Dane zostały pomyślnie zaktualizowane.')
+                flash('Dane zostały pomyślnie zaktualizowane.', 'success')
                 userDataDB = generator_userDataDB()
                 users_data = {}
                 for un in userDataDB: 
@@ -497,7 +497,7 @@ def update_data_user():
             
         if form_data['page'] == 'users':
             if session['userperm']['users'] == 0:
-                flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+                flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
                 return redirect(url_for('index'))
             zapytanie_sql = '''
                     UPDATE admins 
@@ -525,7 +525,7 @@ def update_data_user():
                 int(form_data['id'])
             )
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash('Dane zostały pomyślnie zaktualizowane.')
+                flash('Dane zostały pomyślnie zaktualizowane.', 'success')
             return redirect(url_for('users'))
     return redirect(url_for('index'))
 
@@ -546,7 +546,7 @@ def update_avatar():
 
         if set_page == 'users':
             if session['userperm']['users'] == 0:
-                flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+                flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
                 return redirect(url_for('index'))
 
         upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['avatar-pic-path']
@@ -599,7 +599,7 @@ def remove_user():
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     # Pobierz id usera z formularza
     if request.method == 'POST':
@@ -626,7 +626,7 @@ def remove_user():
             (ADMIN_NAME, EMAIL)
         )
         print(f'Usunieto użytkownika {ADMIN_NAME} o emailu {EMAIL} z bazy workers_team.')
-        flash(f'Pomyślnie usunięto użytkownika {ADMIN_NAME}.')
+        flash(f'Pomyślnie usunięto użytkownika {ADMIN_NAME}.', 'success')
         return redirect(url_for('users'))
     
     return redirect(url_for('index'))
@@ -638,7 +638,7 @@ def update_permission():
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     data = request.json
     perm_id = int(data.get('perm_id'))
@@ -667,7 +667,7 @@ def update_permission():
 
     if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9]:
         if session['userperm']['permissions'] == 0:
-            flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+            flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
             return redirect(url_for('users'))
         #Aktualizacja uprawnienia
         if perm_id == 1: 
@@ -746,7 +746,7 @@ def update_permission():
     
     if perm_id in [10, 11, 12, 13, 14, 15]:
         if session['userperm']['brands'] == 0:
-            flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+            flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
             return redirect(url_for('users'))
         #Aktualizacja przynależności
         if perm_id == 10: 
@@ -807,7 +807,7 @@ def update_user_status():
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     # Pobierz id usera z formularza
     if request.method == 'POST':
@@ -832,22 +832,12 @@ def save_new_user():
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     # Obsługa formularza POST
     if request.method == 'POST':
         form_data = request.form.to_dict()
-
-        print(form_data)
-        print(request.files)
-        {
-            'Login_new_user': '', 
-            'Name_new_user': '', 
-            'Email_new_user': '@', 
-            'Stanowsko_new_user': '1', 
-            'Description_new_user': '1'
-        }
 
         NAME = form_data['Name_new_user']
         LOGIN = form_data['Login_new_user'].lower()
@@ -956,86 +946,13 @@ def save_new_user():
                         <p>Z wyrazami szacunku,<br/>Zespół DMD</p>
                         </body></html>
                         """
-
                 to_email = EMAIL
-
                 mails.send_html_email(subject, html_body, to_email)
-
                 flash('Administrator został dodany', 'success')
                 return redirect(url_for('users'))
             else:
-                flash('Nie udało się dodać administratora', 'error')
+                flash('Nie udało się dodać administratora', 'danger')
                 return redirect(url_for('users'))
-
-
-
-        # dodaję do bazy jako nieaktywny
-
-        # wysyłam emaila aktywacyjne
-        
-        # print(form_data)
-        # # Znajdź id posta
-        # for key in form_data.keys():
-        #     if '_' in key:
-        #         set_form_id = key.split('_')[1]
-        #         try: 
-        #             int(set_form_id)
-        #             break
-        #         except ValueError:
-        #             set_form_id = None
-        # if set_form_id == '9999999':
-        #     new_post = True
-        #     set_form_id = None
-        #     print(f"procedura dodawania nowego posta = {new_post}" )
-        #     flash(f"procedura dodawania nowego posta = {new_post}" )
-
-        #     return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
-
-        # # Sprawdzenie czy udało się ustalić id posta
-        # if not set_form_id:
-        #     flash('Ustalenie id posta okazało się niemożliwe')
-        #     return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
-        
-        # # Przygotowanie ścieżki do zapisu plików
-        # upload_path = '../'
-
-        # # Obsługa Main Foto
-        # main_foto = request.files.get(f'mainFoto_{set_form_id}')
-        # if main_foto and allowed_file(main_foto.filename):
-        #     filename = str(int(time.time())) + secure_filename(main_foto.filename)
-        #     main_foto.save(upload_path + filename)
-
-        # # Obsługa Content Foto
-        # content_foto = request.files.get(f'contentFoto_{set_form_id}')
-        # if content_foto and allowed_file(content_foto.filename):
-        #     filename = str(int(time.time())) + secure_filename(content_foto.filename)
-        #     content_foto.save(upload_path + filename)
-
-        # flash('Dane zostały zapisane poprawnie!')
-        # print('Dane zostały zapisane poprawnie!')
-        # print(form_data)
-
-        # settingsDB = generator_settingsDB()
-        # domy = settingsDB['domy']
-        # budownictwo = settingsDB['budownictwo']
-        # development = settingsDB['development']
-        # elitehome = settingsDB['elitehome']
-        # inwestycje = settingsDB['inwestycje']
-        # instalacje = settingsDB['instalacje']
-
-        # return render_template(
-        #                     "blog_management.html", 
-        #                     posts=posts, 
-        #                     username=username, 
-        #                     userperm=userperm, 
-        #                     pagination=pagination,
-        #                     domy=domy,
-        #                     budownictwo=budownictwo,
-        #                     development=development,
-        #                     elitehome=elitehome,
-        #                     inwestycje=inwestycje,
-        #                     instalacje=instalacje)
-    
     return redirect(url_for('users'))
 
 @app.route('/save-blog-post', methods=['GET', 'POST'])
@@ -1054,7 +971,7 @@ def save_post():
         return redirect(url_for('index'))
     
     if session['userperm']['blog'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     # Obsługa formularza POST
@@ -1075,13 +992,13 @@ def save_post():
             new_post = True
             set_form_id = None
             print(f"procedura dodawania nowego posta = {new_post}" )
-            flash(f"procedura dodawania nowego posta = {new_post}" )
+            flash(f"procedura dodawania nowego posta = {new_post}", 'danger' )
 
             return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
 
         # Sprawdzenie czy udało się ustalić id posta
         if not set_form_id:
-            flash('Ustalenie id posta okazało się niemożliwe')
+            flash('Ustalenie id posta okazało się niemożliwe', 'danger')
             return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
         
         # Przygotowanie ścieżki do zapisu plików
@@ -1099,7 +1016,7 @@ def save_post():
             filename = str(int(time.time())) + secure_filename(content_foto.filename)
             content_foto.save(upload_path + filename)
 
-        flash('Dane zostały zapisane poprawnie!')
+        flash('Dane zostały zapisane poprawnie!', 'success')
         print('Dane zostały zapisane poprawnie!')
         print(form_data)
 
@@ -1134,7 +1051,7 @@ def remove_post():
         return redirect(url_for('index'))
     
     if session['userperm']['blog'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     return render_template("home.html", userperm=session['userperm'])
@@ -1156,7 +1073,7 @@ def users(router=True):
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     userDataDB = generator_userDataDB()
@@ -1210,7 +1127,7 @@ def newsletter():
         return redirect(url_for('index'))
     
     if session['userperm']['newsletter'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     newsletterSettingDB = generator_newsletterSettingDB()
@@ -1257,7 +1174,7 @@ def team_domy():
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     curent_settings_team = teamDB
@@ -1373,7 +1290,7 @@ def team_elitehome():
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     curent_settings_team = teamDB
@@ -1488,7 +1405,7 @@ def team_budownictwo():
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     curent_settings_team = teamDB
@@ -1604,7 +1521,7 @@ def team_development():
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     curent_settings_team = teamDB
@@ -1720,7 +1637,7 @@ def team_investment():
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     curent_settings_team = teamDB
@@ -1836,7 +1753,7 @@ def team_instalacje():
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     curent_settings_team = teamDB
@@ -1951,7 +1868,7 @@ def subscribers(router=True):
         return redirect(url_for('index'))
     
     if session['userperm']['subscribers'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     subscribers_all = subsDataDB
@@ -1996,7 +1913,7 @@ def settings():
         return redirect(url_for('index'))
     
     if session['userperm']['settings'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!')
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     settingsDB = generator_settingsDB()
