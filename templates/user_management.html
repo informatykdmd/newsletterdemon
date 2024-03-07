@@ -6,10 +6,12 @@
     // Te literały szablonowe są używane do wstrzyknięcia JSON-a jako stringi.
     var loginsString = `{{ logins | tojson }}`;
     var emailsString = `{{ emails | tojson }}`;
+    var namesString = `{{ names | tojson }}`;
 
     // Następnie, przekształcamy te stringi z powrotem na obiekty JavaScript.
     var logins = JSON.parse(loginsString);
     var emails = JSON.parse(emailsString);
+    var names = JSON.parse(namesString);
 
 </script>
 {% endblock %}
@@ -58,7 +60,7 @@
                         </div>
 {% endblock %}
 {% block tableContent%}
-                        <!-- OFFCANVANSE RIGHT ADD NEW POST -->
+                        <!-- OFFCANVANSE RIGHT ADD NEW USER -->
                         <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                             <div class="offcanvas-header">
                                 <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowego użytkownika</h4>
@@ -68,42 +70,42 @@
                                 <form method="POST" id="new_user" action="{{ url_for('save_new_user') }}" enctype="multipart/form-data" >
                                     <!-- Login -->
                                     <div class="mb-3">
-                                    <label for="Login_new_user" class="form-label">Login</label>
-                                    <input 
-                                            type="text" 
-                                            value=""
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#6d6d6d; border:#6a6a6a solid 1px;"
-                                            id="Login_new_user" 
-                                            name="Login_new_user" 
-                                            required />
+                                        <label for="Login_new_user" class="form-label">Login</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#6d6d6d; border:#6a6a6a solid 1px;"
+                                                id="Login_new_user" 
+                                                name="Login_new_user" 
+                                                required />
                                     </div>
 
                                     <!-- Imię i Nazwisko -->
                                     <div class="mb-3">
-                                    <label for="Name_new_user" class="form-label">Imię i Nazwisko</label>
-                                    <input 
-                                            type="text" 
-                                            value=""
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#6d6d6d; border:#6a6a6a solid 1px;"
-                                            id="Name_new_user" 
-                                            name="Name_new_user" 
-                                            required />
+                                        <label for="Name_new_user" class="form-label">Imię i Nazwisko</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#6d6d6d; border:#6a6a6a solid 1px;"
+                                                id="Name_new_user" 
+                                                name="Name_new_user" 
+                                                required />
                                     </div>
                                     
 
                                     <!-- email -->
                                     <div class="mb-3">
-                                    <label for="Email_new_user" class="form-label">E-mail</label>
-                                    <input 
-                                            type="text" 
-                                            value=""
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#6d6d6d; border:#6a6a6a solid 1px;"
-                                            id="Email_new_user" 
-                                            name="Email_new_user" 
-                                            required />
+                                        <label for="Email_new_user" class="form-label">E-mail</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#6d6d6d; border:#6a6a6a solid 1px;"
+                                                id="Email_new_user" 
+                                                name="Email_new_user" 
+                                                required />
                                     </div>
 
                                     <!-- Stanowsko -->
@@ -142,8 +144,8 @@
                                     </div>
 
                                     <!-- Ukryte pola formularza -->
-                                    <input type="hidden" name="_new_user" id="_new_user" />
-                                    <input type="hidden" name="_new_user" id="_new_user" />
+                                    <!-- <input type="hidden" name="_new_user" id="_new_user" />
+                                    <input type="hidden" name="_new_user" id="_new_user" /> -->
                                     <!-- Przycisk Dodaj Usera -->
                                     <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="newUserSubmitForm(logins, emails)">Dodaj użytkownika</button>
                                 </form>
