@@ -1042,7 +1042,8 @@ def users(router=True):
         elitehome = settingsDB['elitehome']
         inwestycje = settingsDB['inwestycje']
         instalacje = settingsDB['instalacje']
-
+        logins = [x['username'] for x in all_users]
+        print(logins)
         return render_template(
                             "user_management.html", 
                             users=users, 
