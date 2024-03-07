@@ -1054,7 +1054,7 @@ def save_post():
             msq.insert_to_database(
                 """
                 INSERT INTO authors (AVATAR_AUTHOR, NAME_AUTHOR, ABOUT_AUTHOR, FACEBOOK, TWITER_X, INSTAGRAM, GOOGLE) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s);
+                VALUES ("%s", "%s", "%s", "%s", "%s", "%s", '%s');
                 """,
                 (
                     users_data_dict[AUTHOR_LOGIN]['avatar'], 
