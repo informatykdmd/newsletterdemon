@@ -1,10 +1,8 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
-
 from mysqlDB import connect_to_database
-
+from bin.appslib import handle_error
 
 global smtp_config
 smtp_config = {
@@ -13,8 +11,8 @@ smtp_config = {
     'smtp_username': connect_to_database(f'SELECT admin_smtp_usernam FROM admin_settings;')[0][0],
     'smtp_password': connect_to_database(f'SELECT admin_smtp_password FROM admin_settings;')[0][0]
 }
-# print(smtp_config)
-from bin.appslib import handle_error
+
+
 
 def send_html_email(subject, html_body, to_email):
     try:

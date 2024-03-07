@@ -939,17 +939,23 @@ def save_new_user():
                 )
             if msq.insert_to_database(zapytanie_sql, dane):
                 # Przykładowe dane
-                subject = "Aktywacja konta użytkownika"
+                subject = "Czas się aktywować – Witaj w DMD!"
                 html_body = f"""
-                <html><body>
-                <h1>Witaj {NAME}!</h1>
-                <p>To jest wiadomości wygenerowana automatycznie.</p>
-                <p>Zostałeś dodany(a) do systemu informatycznego firmy DMD.</p>
-                <p>Dane do logowania</p>
-                <p>Login: {LOGIN}</p>
-                <p>Hasło: {TEXT_PASSWORD}<br/>(Jeśli nie chcesz zmieniać hasła, możesz pominąć tę wiadomość.)</p>
-                </body></html>
-                """
+                        <html><body>
+                        <h1>Szanowny {NAME}, witamy w firmie DMD!</h1>
+                        <p>Ta wiadomość została wygenerowana automatycznie i zawiera ważne informacje dotyczące Twojego dostępu do systemów informatycznych firmy DMD.</p>
+                        <p>Jesteśmy przekonani, że Twoje doświadczenie i zaangażowanie wniosą znaczący wkład w nasz zespół. Poniżej znajdziesz dane dostępowe, które umożliwią Ci logowanie do naszego systemu.</p>
+                        <p><strong>Dane do logowania:</strong></p>
+                        <ul>
+                            <li>Login: {LOGIN}</li>
+                            <li>Hasło: {TEXT_PASSWORD}</li>
+                        </ul>
+                        <p>Zachęcamy do zmiany hasła przy pierwszym logowaniu w celu zapewnienia bezpieczeństwa danych. Jeśli nie planujesz w najbliższym czasie korzystać z systemu, możesz zignorować tę wiadomość.</p>
+                        <p>W razie pytań lub potrzeby wsparcia, nasz zespół IT jest do Twojej dyspozycji. Skontaktuj się z nami wysyłając wiadomość na adres: support@dmd.com</p>
+                        <p>Życzymy Ci owocnej współpracy i sukcesów w realizacji powierzonych zadań.</p>
+                        <p>Z wyrazami szacunku,<br/>Zespół DMD</p>
+                        </body></html>
+                        """
 
                 to_email = EMAIL
 
