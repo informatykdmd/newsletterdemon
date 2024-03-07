@@ -997,7 +997,7 @@ def save_post():
         
         # Przygotowanie ścieżki do zapisu plików
 
-        upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['blog-pic-path']
+        upload_path = '/var/www/html/appdmddomy/public/'+ generator_settingsDB()['blog-pic-path']
 
         # Obsługa Main Foto
         main_foto = request.files.get(f'mainFoto_{set_form_id}')
