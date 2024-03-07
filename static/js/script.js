@@ -178,12 +178,19 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     form.submit();
 }
 
-function newUserSubmitForm() {
+function newUserSubmitForm(logins_allowed, email_allowed) {
     // Sprawdź, czy wymagane pola są wypełnione
     var login = document.getElementById('Login_new_user').value;
+    if (login in logins_allowed) {
+        alert('Podany login już istnieje.');
+        return;  // Zatrzymaj przesyłanie formularza
+    };
     var name = document.getElementById('Name_new_user').value;
     var email = document.getElementById('Email_new_user').value;
-
+    if (email in logins_allowed) {
+        alert('Podany email już istnieje.');
+        return;  // Zatrzymaj przesyłanie formularza
+    };
     var avatar = document.getElementById('Avatar_new_user').value;
 
     var role = document.getElementById('Stanowsko_new_user').value;
