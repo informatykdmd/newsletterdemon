@@ -998,16 +998,44 @@ def save_post():
         upload_path = '/var/www/html/appdmddomy/public/'+ generator_settingsDB()['blog-pic-path']
 
         # Obsługa Main Foto
-        main_foto = request.files.get(f'mainFoto_{set_form_id}')
-        if main_foto and allowed_file(main_foto.filename) and set_form_id == '9999999':
+        if set_form_id == '9999999':
+            main_foto = request.files.get(f'mainFoto_{set_form_id}')
+            if main_foto and allowed_file(main_foto.filename) and set_form_id == '9999999':
+                filename_main = str(int(time.time())) + secure_filename(main_foto.filename)
+                main_foto.save(upload_path + filename_main)
+
+            # Obsługa Content Foto
+            content_foto = request.files.get(f'contentFoto_{set_form_id}')
+            if content_foto and allowed_file(content_foto.filename) and set_form_id == '9999999':
+                filename_content = str(int(time.time())) + secure_filename(content_foto.filename)
+                content_foto.save(upload_path + filename_content)
+
+        if set_form_id == '9999999':
+            MAIN_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_main
+            CONTENT_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_content
+
+        update_main_foto = False
+        update_content_foto = False
+        if set_form_id != '9999999':
+            main_foto = request.files.get(f'mainFoto_{set_form_id}')
+            content_foto = request.files.get(f'contentFoto_{set_form_id}')
+
+        if set_form_id != '9999999' and main_foto: update_main_foto = True
+        if set_form_id != '9999999' and content_foto: update_content_foto = True
+
+        # Obsługa Content Foto        
+        if main_foto and allowed_file(main_foto.filename) and update_main_foto:
             filename_main = str(int(time.time())) + secure_filename(main_foto.filename)
             main_foto.save(upload_path + filename_main)
 
-        # Obsługa Content Foto
-        content_foto = request.files.get(f'contentFoto_{set_form_id}')
-        if content_foto and allowed_file(content_foto.filename) and set_form_id == '9999999':
+        # Obsługa Content Foto        
+        if content_foto and allowed_file(content_foto.filename) and update_content_foto:
             filename_content = str(int(time.time())) + secure_filename(content_foto.filename)
             content_foto.save(upload_path + filename_content)
+        
+        if set_form_id != '9999999':
+            MAIN_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_main
+            CONTENT_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_content
 
         # dane podstawowe
         TYTUL = form_data[f'title_{set_form_id}']
@@ -1019,74 +1047,50 @@ def save_post():
         AUTHOR_LOGIN = form_data[f'UserName_{set_form_id}']
 
         if set_form_id == '9999999':
-            MAIN_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_main
-            CONTENT_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_content
-
-        update_main_foto = False
-        update_content_foto = False
-        if set_form_id != '9999999' and main_foto:
-            MAIN_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_main
-            update_main_foto = True
-        if set_form_id != '9999999' and content_foto:
-            CONTENT_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_content
-            update_content_foto = True
-
-        # Obsługa Content Foto
-        main_foto = request.files.get(f'mainFoto_{set_form_id}')
-        if main_foto and allowed_file(main_foto.filename) and update_main_foto:
-            filename_main = str(int(time.time())) + secure_filename(main_foto.filename)
-            main_foto.save(upload_path + filename_main)
-
-        # Obsługa Content Foto
-        content_foto = request.files.get(f'contentFoto_{set_form_id}')
-        if content_foto and allowed_file(content_foto.filename) and update_content_foto:
-            filename_content = str(int(time.time())) + secure_filename(content_foto.filename)
-            content_foto.save(upload_path + filename_content)
-
-        # wymagane dane
-        cala_tabela_authors = msq.connect_to_database(
-            '''
-                SELECT * FROM authors; 
-            ''')
-        
-        author_data = {}
-        for autor in cala_tabela_authors:
-            author_data[autor[2]] = {
-                'ID': autor[0], 'AVATAR_AUTHOR': autor[1], 
-                'NAME_AUTHOR': autor[2], 'ABOUT_AUTHOR': autor[3],
-                'FACEBOOK': autor[4], 'TWITER_X': autor[5],  
-                'INSTAGRAM': autor[6], 'GOOGLE': autor[7],
-                'DATE_TIME': autor[8]
-                }
-        
-        users_data = generator_userDataDB()
-        users_data_dict = {}
-        for user in users_data:
-            users_data_dict[user['username']] = user
-        
-        if users_data_dict[AUTHOR_LOGIN]['name'] not in [a['NAME_AUTHOR'] for a in author_data.values()]:
-            # dodaj nowego uathora i pobierz jego id
-            msq.insert_to_database(
-                """
-                INSERT INTO authors (AVATAR_AUTHOR, NAME_AUTHOR, ABOUT_AUTHOR, FACEBOOK, TWITER_X, INSTAGRAM) 
-                VALUES (%s, %s, %s, %s, %s, %s);
-                """,
-                (
-                    users_data_dict[AUTHOR_LOGIN]['avatar'], 
-                    users_data_dict[AUTHOR_LOGIN]['name'], 
-                    users_data_dict[AUTHOR_LOGIN]['opis'],
-                    users_data_dict[AUTHOR_LOGIN]['facebook'],
-                    users_data_dict[AUTHOR_LOGIN]['twiter'],
-                    users_data_dict[AUTHOR_LOGIN]['instagram']
-                )
-            )
+            # wymagane dane
+            cala_tabela_authors = msq.connect_to_database(
+                '''
+                    SELECT * FROM authors; 
+                ''')
             
-        ID_AUTHOR = take_data_where_ID(
-            'ID', 'authors', 'NAME_AUTHOR', 
-            f"""'{users_data_dict[AUTHOR_LOGIN]['name']}'"""
-            )[0][0]
+            author_data = {}
+            for autor in cala_tabela_authors:
+                author_data[autor[2]] = {
+                    'ID': autor[0], 'AVATAR_AUTHOR': autor[1], 
+                    'NAME_AUTHOR': autor[2], 'ABOUT_AUTHOR': autor[3],
+                    'FACEBOOK': autor[4], 'TWITER_X': autor[5],  
+                    'INSTAGRAM': autor[6], 'GOOGLE': autor[7],
+                    'DATE_TIME': autor[8]
+                    }
+            
+            users_data = generator_userDataDB()
+            users_data_dict = {}
+            for user in users_data:
+                users_data_dict[user['username']] = user
+            
+            if users_data_dict[AUTHOR_LOGIN]['name'] not in [a['NAME_AUTHOR'] for a in author_data.values()]:
+                # dodaj nowego uathora i pobierz jego id
+                msq.insert_to_database(
+                    """
+                    INSERT INTO authors (AVATAR_AUTHOR, NAME_AUTHOR, ABOUT_AUTHOR, FACEBOOK, TWITER_X, INSTAGRAM) 
+                    VALUES (%s, %s, %s, %s, %s, %s);
+                    """,
+                    (
+                        users_data_dict[AUTHOR_LOGIN]['avatar'], 
+                        users_data_dict[AUTHOR_LOGIN]['name'], 
+                        users_data_dict[AUTHOR_LOGIN]['opis'],
+                        users_data_dict[AUTHOR_LOGIN]['facebook'],
+                        users_data_dict[AUTHOR_LOGIN]['twiter'],
+                        users_data_dict[AUTHOR_LOGIN]['instagram']
+                    )
+                )
+                
+            ID_AUTHOR = take_data_where_ID(
+                'ID', 'authors', 'NAME_AUTHOR', 
+                f"""'{users_data_dict[AUTHOR_LOGIN]['name']}'"""
+                )[0][0]
         
-        if set_form_id == '9999999':
+        
             zapytanie_sql = '''
                     INSERT INTO contents (
                         TITLE, CONTENT_MAIN, HIGHLIGHTS, HEADER_FOTO, CONTENT_FOTO, BULLETS, TAGS, CATEGORY
@@ -1130,7 +1134,7 @@ def save_post():
                             CATEGORY = %s,
                         WHERE ID = %s;
                     '''
-                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
+                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, set_form_id)
             if not update_main_foto and update_content_foto:
                 zapytanie_sql = '''
                         UPDATE contents 
@@ -1144,7 +1148,7 @@ def save_post():
                             CATEGORY = %s,
                         WHERE ID = %s;
                     '''
-                dane = (TYTUL, WSTEP, AKAPIT, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
+                dane = (TYTUL, WSTEP, AKAPIT, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, set_form_id)
             if update_main_foto and not update_content_foto:
                 zapytanie_sql = '''
                         UPDATE contents 
@@ -1158,7 +1162,7 @@ def save_post():
                             CATEGORY = %s,
                         WHERE ID = %s;
                     '''
-                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
+                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, PUNKTY, TAGI, KATEGORIA, set_form_id)
             if not update_main_foto and not update_content_foto:
                 zapytanie_sql = '''
                         UPDATE contents 
@@ -1172,15 +1176,16 @@ def save_post():
                             CATEGORY = %s,
                         WHERE ID = %s;
                     '''
-                dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
-            
+                dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, set_form_id)
+            print('form_data')
+            print(form_data)
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash('Dane zostały zapisane poprawnie!', 'success')
                 return redirect(url_for('blog'))
         
             flash('Dane zostały zapisane poprawnie!', 'success')
             print('Dane zostały zapisane poprawnie!')
-            print(form_data)
+            
 
             return redirect(url_for('blog'))
     
