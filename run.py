@@ -1370,17 +1370,11 @@ def set_settings():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         print(form_data)
-        SENDER_EMAIL = int(form_data['sender_email'])
-        SENDER_URL = int(form_data['sender_url'])
-        SENDER_PORT = int(form_data['sender_port'])
-        SENDER_PASSWORD = int(form_data['sender_password'])
-        if SENDER_PASSWORD == '':
-            # 'time_interval_minutes': int(take_data_newsletterSettingDB('time_interval_minutes')),
-            # 'smtp_config': {
-            #     'smtp_server': take_data_newsletterSettingDB('config_smtp_server'),
-            #     'smtp_port': int(take_data_newsletterSettingDB('config_smtp_port')),
-            #     'smtp_username': take_data_newsletterSettingDB('config_smtp_username'),
-            #     'smtp_password': take_data_newsletterSettingDB('config_smtp_password')
+
+        ADMIN_EMAIL = form_data['admin_email']
+
+        ADMIN_PASSWORD = form_data['sender_password']
+        if ADMIN_PASSWORD == '':
             zapytanie_sql = '''
                     UPDATE newsletter_setting, 
                     SET time_interval_minutes = %s
@@ -1396,9 +1390,9 @@ def set_settings():
             dane = (None, None)
         if msq.insert_to_database(zapytanie_sql, dane):
             flash('Plan został aktywowany!', 'success')
-            return redirect(url_for('newsletter'))
+            return redirect(url_for('settings'))
 
-    return redirect(url_for('newsletter'))
+    return redirect(url_for('settings'))
 
 @app.route('/user')
 def users(router=True):
