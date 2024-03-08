@@ -327,7 +327,7 @@ def blog(router=True):
         return redirect(url_for('index'))
     
     # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
-    all_posts = daneDBList
+    all_posts = generator_daneDBList()
 
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
