@@ -1301,6 +1301,7 @@ def set_plan():
         form_data = request.form.to_dict()
         print(form_data)
 
+    return redirect(url_for('newsletter'))
 @app.route('/user')
 def users(router=True):
     """Strona z zarządzaniem użytkownikami."""
