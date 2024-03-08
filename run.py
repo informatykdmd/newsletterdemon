@@ -1339,14 +1339,14 @@ def set_sender():
             #     'smtp_port': int(take_data_newsletterSettingDB('config_smtp_port')),
             #     'smtp_username': take_data_newsletterSettingDB('config_smtp_username'),
             #     'smtp_password': take_data_newsletterSettingDB('config_smtp_password')
-        zapytanie_sql = '''
+        zapytanie_sql = """
                 UPDATE newsletter_setting 
                 SET config_smtp_server = %s,
-                    config_smtp_port = %,
-                    config_smtp_username = %,
-                    config_smtp_password = %
+                    config_smtp_port = %s,
+                    config_smtp_username = %s,
+                    config_smtp_password = %s
                 WHERE ID = %s;
-            '''
+            """
         dane = (SENDER_URL, SENDER_PORT, SENDER_EMAIL, SENDER_PASSWORD, 1)
         
         if msq.insert_to_database(zapytanie_sql, dane):
