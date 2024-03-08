@@ -1050,8 +1050,8 @@ def save_post():
         # print(users_data_dict)
         print(users_data_dict[AUTHOR_LOGIN]['name'])
         print(author_data)
-        print([a['NAME_AUTHOR'] for a in users_data_dict.values()])
-        if users_data_dict[AUTHOR_LOGIN]['name'] not in [a['NAME_AUTHOR'] for a in users_data_dict.values()]:
+        print([a['NAME_AUTHOR'] for a in author_data.values()])
+        if users_data_dict[AUTHOR_LOGIN]['name'] not in [a['NAME_AUTHOR'] for a in author_data.values()]:
             # dodaj nowego uathora i pobierz jego id
 
             msq.insert_to_database(
