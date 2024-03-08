@@ -390,8 +390,8 @@
                                     {{comment['data-time']}}
                                 </div>
                                 <div  class="colapse-column-ender-mini">
-                                    <form id="removeComment_{{post_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
-                                        <input type="hidden" name="UserName_{{post_id}}" id="UserName_{{post_id}}" value="{{username}}"/>
+                                    <form method="POST" id="removeComment_{{post_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
+                                        <input type="hidden" name="comment_id" id="CommName_{{post_id}}" value="{{comment['id']}}"/>
                                         <button type="submit" class="custom-icon-button"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></button>
                                     </form>
                                     <!-- <a href="#"><i class="bi bi-person-video2" style="color: rgb(193, 156, 156) !important;"></i></a> -->

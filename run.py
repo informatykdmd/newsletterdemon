@@ -159,6 +159,7 @@ def generator_subsDataDB():
         commentsCollector = {}
         for i, com in enumerate(allSubsComments, start=1):
             commentsCollector[i] = {}
+            commentsCollector[i]['id'] = com[0]
             commentsCollector[i]['message'] = com[2]
             BLOG_POST_ID = int(com[1])
             commentsCollector[i]['post_title'] = take_data_where_ID('TITLE', 'contents', 'ID', BLOG_POST_ID)[0][0]
@@ -187,6 +188,7 @@ def generator_daneDBList():
         comments_dict = {}
         for i, com in enumerate(allPostComments):
             comments_dict[i] = {}
+            comments_dict[i]['id'] = com[0]
             comments_dict[i]['message'] = com[2]
             comments_dict[i]['user'] = take_data_where_ID('CLIENT_NAME', 'newsletter', 'ID', com[3])[0][0]
             comments_dict[i]['e-mail'] = take_data_where_ID('CLIENT_EMAIL', 'newsletter', 'ID', com[3])[0][0]
@@ -1228,10 +1230,10 @@ def remove_comment():
     
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        try: form_data['PostID']
+        try: form_data['comment_id']
         except KeyError: return redirect(url_for('index'))
-        set_post_id = int(form_data['PostID'])
-
+        set_comm_id = int(form_data['comment_id'])
+        print(set_comm_id)
         if form_data['page'] == 'subs':
             return redirect(url_for('subscriber'))
         if form_data['page'] == 'blog':
