@@ -1102,7 +1102,7 @@ def save_post():
                 ID_NEW_POST_CONTENT = msq.connect_to_database(
                     '''
                         SELECT * FROM contents ORDER BY ID DESC;
-                    ''')
+                    ''')[0][0]
                 print(ID_NEW_POST_CONTENT)
             else:
                 flash(f'Błąd podczas tworzenia nowego posta', 'danger')
