@@ -978,7 +978,7 @@ def save_post():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         set_form_id = None
-        print(form_data)
+        # print(form_data)
         # Znajdź id posta
         for key in form_data.keys():
             if '_' in key:
@@ -1030,7 +1030,7 @@ def save_post():
         # wymagane dane
         cala_tabela_authors = msq.connect_to_database(
             '''
-                SELECT * FROM authors'; 
+                SELECT * FROM authors; 
             ''')
         print(cala_tabela_authors)
         author_data = {}
