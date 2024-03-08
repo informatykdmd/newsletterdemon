@@ -1253,7 +1253,7 @@ def remove_subscriber():
         set_subs_id = int(form_data['SubasID'])
         print(set_subs_id)
 
-    return redirect(url_for('subscriber'))
+    return redirect(url_for('subscribers'))
 
 @app.route('/user')
 def users(router=True):
