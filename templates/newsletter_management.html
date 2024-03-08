@@ -26,13 +26,14 @@
                   <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body bg-dark">
                         <div>
-                            <form action="">
+                            <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
                                 <p>Codzienna wysyłka newslettera - ciekawe rozwiązanie dla agresywnego marketingu.</p>
                                 <div class="formatuj-right">
+                                    <input type="hidden" name="plan_name" id="Plan_1440" value="1440"/>
                                     {% if newsletterPlan == 1440 %}
                                         <input type="submit" class="btn btn-secondary btn-sm" value="Aktywny plan" disabled/>
                                     {% else %}
-                                        <input type="submit" class="btn btn-success btn-sm" value="Ustaw plan"/>
+                                        <button type="submit" class="btn btn-success btn-sm" value="Ustaw plan">Ustaw plan</button>
                                     {% endif %}
                                 </div>
                             </form>
@@ -53,13 +54,15 @@
                   <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body bg-dark">
                         <div>
-                            <form action="">
+                            
+                            <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
                                 <p>Wysyłka newslettera dwa razy w tygodniu - idealne rozwiązanie dla regularnej komunikacji z odbiorcami.</p>
                                 <div class="formatuj-right">
+                                    <input type="hidden" name="plan_name" id="Plan_3600" value="3600"/>
                                     {% if newsletterPlan == 3600 %}
                                         <input type="submit" class="btn btn-secondary btn-sm" value="Aktywny plan" disabled/>
                                     {% else %}
-                                        <input type="submit" class="btn btn-success btn-sm" value="Ustaw plan"/>
+                                        <button type="submit" class="btn btn-success btn-sm" value="Ustaw plan">Ustaw plan</button>
                                     {% endif %}
                                 </div>
                             </form>
@@ -80,13 +83,15 @@
                   <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body bg-dark">
                         <div>
-                            <form action="">
+                            
+                            <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
                                 <p>Wysyłka newslettera raz w tygodniu - świetny sposób na utrzymanie regularnego kontaktu z odbiorcami.</p>
                                 <div class="formatuj-right">
+                                    <input type="hidden" name="plan_name" id="Plan_10080" value="10080"/>
                                     {% if newsletterPlan == 10080 %}
                                         <input type="submit" class="btn btn-secondary btn-sm" value="Aktywny plan" disabled/>
                                     {% else %}
-                                        <input type="submit" class="btn btn-success btn-sm" value="Ustaw plan"/>
+                                        <button type="submit" class="btn btn-success btn-sm" value="Ustaw plan">Ustaw plan</button>
                                     {% endif %}
                                 </div>
                             </form>
@@ -108,13 +113,15 @@
                     <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body bg-dark">
                             <div>
-                                <form action="">
+                                
+                                <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
                                     <p>Wysyłka newslettera raz w miesiącu - doskonała forma regularnych aktualizacji, zapowiedzi wydarzeń oraz podsumowań minionego miesiąca. To także sposób na utrzymanie kontaktu z odbiorcami bez nadmiernego przesyłania wiadomości.</p>
                                     <div class="formatuj-right">
+                                        <input type="hidden" name="plan_name" id="Plan_40320" value="40320"/>
                                         {% if newsletterPlan == 40320 %}
                                         <input type="submit" class="btn btn-secondary btn-sm" value="Aktywny plan" disabled/>
                                     {% else %}
-                                        <input type="submit" class="btn btn-success btn-sm" value="Ustaw plan"/>
+                                        <button type="submit" class="btn btn-success btn-sm" value="Ustaw plan">Ustaw plan</button>
                                     {% endif %}
                                     </div>
                                 </form>
@@ -136,13 +143,15 @@
                     <div id="flush-collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                         <div class="accordion-body bg-dark">
                             <div>
-                                <form action="">
+                                
+                                <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
                                     <p>Wysyłka newslettera co kwartał - idealne rozwiązanie dla podsumowania działalności firmy, raportowania kluczowych wyników i prezentowania przyszłych planów na kolejne kwartały. Wysyłka tak rzadka zapewnia, że informacje są starannie wyselekcjonowane i istotne dla odbiorców.</p>
                                     <div class="formatuj-right">
+                                        <input type="hidden" name="plan_name" id="Plan_100800" value="100800"/>
                                         {% if newsletterPlan == 100800 %}
                                             <input type="submit" class="btn btn-secondary btn-sm" value="Aktywny plan" disabled/>
                                         {% else %}
-                                            <input type="submit" class="btn btn-success btn-sm" value="Ustaw plan"/>
+                                            <button type="submit" class="btn btn-success btn-sm" value="Ustaw plan">Ustaw plan</button>
                                         {% endif %}
                                     </div>
                                 </form>

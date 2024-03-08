@@ -1228,6 +1228,10 @@ def remove_comment():
     if 'username' not in session:
         return redirect(url_for('index'))
     
+    if session['userperm']['commnets'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
     if request.method == 'POST':
         form_data = request.form.to_dict()
 
@@ -1259,6 +1263,10 @@ def remove_subscriber():
     if 'username' not in session:
         return redirect(url_for('index'))
     
+    if session['userperm']['subscribers'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
     if request.method == 'POST':
         form_data = request.form.to_dict()
         try: form_data['SubasID']
@@ -1277,6 +1285,21 @@ def remove_subscriber():
             return redirect(url_for('subscribers'))
     flash('Błąd usuwania Subskrybenta!', 'danger')
     return redirect(url_for('subscribers'))
+
+@app.route('/set-newsletter-plan', methods=['POST'])
+def set_plan():
+    """Usuwanie planu"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['newsletter'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        print(form_data)
 
 @app.route('/user')
 def users(router=True):
