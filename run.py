@@ -1230,12 +1230,19 @@ def remove_comment():
     
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
 
         try: form_data['comment_id']
         except KeyError: return redirect(url_for('index'))
         set_comm_id = int(form_data['comment_id'])
+
         print(set_comm_id)
+        msq.delete_row_from_database(
+                """
+                    DELETE FROM comments WHERE ID = %s;
+                """,
+                (set_comm_id,)
+            )
+
         if form_data['page'] == 'subs':
             return redirect(url_for('subscribers'))
         if form_data['page'] == 'blog':
