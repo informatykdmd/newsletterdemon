@@ -1093,7 +1093,7 @@ def save_post():
         if set_form_id == '9999999':
             zapytanie_sql = '''
                     INSERT INTO contents (
-                        TILTE, CONTENT_MAIN, HIGHLIGHTS, HEADER_FOTO, CONTENT_FOTO, BULLETS, TAGS, CATEGORY
+                        TITLE, CONTENT_MAIN, HIGHLIGHTS, HEADER_FOTO, CONTENT_FOTO, BULLETS, TAGS, CATEGORY
                         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
                     '''
             dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA)
