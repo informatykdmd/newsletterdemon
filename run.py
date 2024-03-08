@@ -1231,10 +1231,13 @@ def remove_comment():
         try: form_data['PostID']
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
-    if form_data['page'] == 'subs':
-        return redirect(url_for('subscriber'))
-    if form_data['page'] == 'blog':
-        return redirect(url_for('blog'))
+
+        if form_data['page'] == 'subs':
+            return redirect(url_for('subscriber'))
+        if form_data['page'] == 'blog':
+            return redirect(url_for('blog'))
+        
+    return redirect(url_for('index'))
 
 @app.route('/remove-subscriber', methods=['POST'])
 def remove_subscriber():
@@ -1245,9 +1248,10 @@ def remove_subscriber():
     
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        try: form_data['PostID']
+        try: form_data['SubasID']
         except KeyError: return redirect(url_for('index'))
-        set_post_id = int(form_data['PostID'])
+        set_subs_id = int(form_data['SubasID'])
+        print(set_subs_id)
 
     return redirect(url_for('subscriber'))
 
