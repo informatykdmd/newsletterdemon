@@ -1140,7 +1140,7 @@ def save_post():
                             CONTENT_FOTO = %s, 
                             BULLETS = %s, 
                             TAGS = %s,
-                            CATEGORY = %s,
+                            CATEGORY = %s
                         WHERE ID = %s;
                     '''
                 dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
@@ -1154,7 +1154,7 @@ def save_post():
                             CONTENT_FOTO = %s, 
                             BULLETS = %s, 
                             TAGS = %s,
-                            CATEGORY = %s,
+                            CATEGORY = %s
                         WHERE ID = %s;
                     '''
                 dane = (TYTUL, WSTEP, AKAPIT, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
@@ -1168,7 +1168,7 @@ def save_post():
  
                             BULLETS = %s, 
                             TAGS = %s,
-                            CATEGORY = %s,
+                            CATEGORY = %s
                         WHERE ID = %s;
                     '''
                 dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
@@ -1182,7 +1182,7 @@ def save_post():
  
                             BULLETS = %s, 
                             TAGS = %s,
-                            CATEGORY = %s,
+                            CATEGORY = %s
                         WHERE ID = %s;
                     '''
                 dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
