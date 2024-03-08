@@ -1201,7 +1201,7 @@ def remove_post():
         set_form_id = None
         print(form_data)
     
-    return render_template("home.html", userperm=session['userperm'])
+    return redirect(url_for('index'))
 
 @app.route('/remove-comment')
 def remove_comment():
