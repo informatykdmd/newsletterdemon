@@ -1327,10 +1327,10 @@ def set_sender():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         print(form_data)
-        SENDER_EMAIL = int(form_data['sender_email'])
-        SENDER_URL = int(form_data['sender_url'])
+        SENDER_EMAIL = form_data['sender_email']
+        SENDER_URL = form_data['sender_url']
         SENDER_PORT = int(form_data['sender_port'])
-        SENDER_PASSWORD = int(form_data['sender_password'])
+        SENDER_PASSWORD = form_data['sender_password']
 
 
             # 'smtp_config': {
