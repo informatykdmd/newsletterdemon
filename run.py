@@ -1026,8 +1026,8 @@ def save_post():
         TAGI = form_data[f'tagsFieldData_{set_form_id}']
         KATEGORIA = form_data[f'category_{set_form_id}']
         AUTHOR_LOGIN = form_data[f'UserName_{set_form_id}']
-        MAIN_FOTO = upload_path + filename_main
-        CONTENT_FOTO = upload_path + filename_content
+        MAIN_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_main
+        CONTENT_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_content
 
 
         
@@ -1101,7 +1101,7 @@ def save_post():
                 # Przykładowe dane
                 ID_NEW_POST_CONTENT = msq.connect_to_database(
                     '''
-                        SELECT * FROM contents;
+                        SELECT * FROM contents DESC;
                     ''')
                 print(ID_NEW_POST_CONTENT)
             else:
