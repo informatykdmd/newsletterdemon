@@ -2071,7 +2071,7 @@ def subscribers(router=True):
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    subscribers_all = subsDataDB
+    subscribers_all = generator_subsDataDB()
 
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     total = len(subscribers_all)
