@@ -958,14 +958,7 @@ def save_new_user():
 @app.route('/save-blog-post', methods=['GET', 'POST'])
 def save_post():
     """Strona zapisywania edytowanego posta."""
-    # print(blog(False))
-    
-    try:
-        posts, username, userperm, pagination = blog(False)
-    except Exception as e:
-        flash(f"Błąd! {e}", "error")
-        return redirect(url_for('blog'))
-    
+       
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
         return redirect(url_for('index'))
@@ -987,12 +980,11 @@ def save_post():
                     break
                 except ValueError:
                     set_form_id = None
-        print(form_data)
-        print(set_form_id)
+
         # Sprawdzenie czy udało się ustalić id posta
         if not set_form_id:
             flash('Ustalenie id posta okazało się niemożliwe', 'danger')
-            return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
+            return redirect(url_for('blog'))
         
         # Przygotowanie ścieżki do zapisu plików
         upload_path = '/var/www/html/appdmddomy/public/'+ generator_settingsDB()['blog-pic-path']
@@ -1099,7 +1091,6 @@ def save_post():
                 f"""'{users_data_dict[AUTHOR_LOGIN]['name']}'"""
                 )[0][0]
         
-        
             zapytanie_sql = '''
                     INSERT INTO contents (
                         TITLE, CONTENT_MAIN, HIGHLIGHTS, HEADER_FOTO, CONTENT_FOTO, BULLETS, TAGS, CATEGORY
@@ -1150,7 +1141,6 @@ def save_post():
                         SET TITLE = %s, 
                             CONTENT_MAIN = %s, 
                             HIGHLIGHTS = %s, 
- 
                             CONTENT_FOTO = %s, 
                             BULLETS = %s, 
                             TAGS = %s,
@@ -1165,7 +1155,6 @@ def save_post():
                             CONTENT_MAIN = %s, 
                             HIGHLIGHTS = %s, 
                             HEADER_FOTO = %s, 
- 
                             BULLETS = %s, 
                             TAGS = %s,
                             CATEGORY = %s
@@ -1178,16 +1167,12 @@ def save_post():
                         SET TITLE = %s, 
                             CONTENT_MAIN = %s, 
                             HIGHLIGHTS = %s, 
-
- 
                             BULLETS = %s, 
                             TAGS = %s,
                             CATEGORY = %s
                         WHERE ID = %s;
                     '''
                 dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
-            print('form_data')
-            print(form_data)
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash('Dane zostały zapisane poprawnie!', 'success')
                 return redirect(url_for('blog'))
@@ -1195,9 +1180,8 @@ def save_post():
             flash('Dane zostały zapisane poprawnie!', 'success')
             print('Dane zostały zapisane poprawnie!')
             
-
             return redirect(url_for('blog'))
-    
+    flash('Błąd!', 'danger')
     return redirect(url_for('index'))
 
 @app.route('/remove-post')
@@ -1210,6 +1194,12 @@ def remove_post():
     if session['userperm']['blog'] == 0:
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        set_form_id = None
+        print(form_data)
     
     return render_template("home.html", userperm=session['userperm'])
 
