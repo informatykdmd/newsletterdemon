@@ -978,7 +978,6 @@ def save_post():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         set_form_id = None
-        # print(form_data)
         # Znajdź id posta
         for key in form_data.keys():
             if '_' in key:
@@ -988,35 +987,27 @@ def save_post():
                     break
                 except ValueError:
                     set_form_id = None
-        
-
+        print(form_data)
+        print(set_form_id)
         # Sprawdzenie czy udało się ustalić id posta
         if not set_form_id:
             flash('Ustalenie id posta okazało się niemożliwe', 'danger')
             return render_template("blog_management.html", posts=posts, username=username, userperm=userperm, pagination=pagination)
         
         # Przygotowanie ścieżki do zapisu plików
-
         upload_path = '/var/www/html/appdmddomy/public/'+ generator_settingsDB()['blog-pic-path']
 
         # Obsługa Main Foto
         main_foto = request.files.get(f'mainFoto_{set_form_id}')
-        if main_foto and allowed_file(main_foto.filename):
+        if main_foto and allowed_file(main_foto.filename) and set_form_id == '9999999':
             filename_main = str(int(time.time())) + secure_filename(main_foto.filename)
             main_foto.save(upload_path + filename_main)
 
         # Obsługa Content Foto
         content_foto = request.files.get(f'contentFoto_{set_form_id}')
-        if content_foto and allowed_file(content_foto.filename):
+        if content_foto and allowed_file(content_foto.filename) and set_form_id == '9999999':
             filename_content = str(int(time.time())) + secure_filename(content_foto.filename)
             content_foto.save(upload_path + filename_content)
-
-        # {
-        #     'title_9999999': 't', 'introduction_9999999': 'w', 'Highlight_9999999': 'h', 
-        #     'dynamicField9999999': 'a1', 'dynamicTagsField9999999': 't1', 'category_9999999': 'k', 
-        #     'tagsFieldData_9999999': 't1, t2', 'dynamicFieldData_9999999': 'a1#splx#a2', 
-        #     'UserName_9999999': 'michal'
-        # }
 
         # dane podstawowe
         TYTUL = form_data[f'title_{set_form_id}']
@@ -1026,11 +1017,32 @@ def save_post():
         TAGI = form_data[f'tagsFieldData_{set_form_id}']
         KATEGORIA = form_data[f'category_{set_form_id}']
         AUTHOR_LOGIN = form_data[f'UserName_{set_form_id}']
-        MAIN_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_main
-        CONTENT_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_content
 
+        if set_form_id == '9999999':
+            MAIN_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_main
+            CONTENT_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_content
 
-        
+        update_main_foto = False
+        update_content_foto = False
+        if set_form_id != '9999999' and main_foto:
+            MAIN_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_main
+            update_main_foto = True
+        if set_form_id != '9999999' and content_foto:
+            CONTENT_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_content
+            update_content_foto = True
+
+        # Obsługa Content Foto
+        main_foto = request.files.get(f'mainFoto_{set_form_id}')
+        if main_foto and allowed_file(main_foto.filename) and update_main_foto:
+            filename_main = str(int(time.time())) + secure_filename(main_foto.filename)
+            main_foto.save(upload_path + filename_main)
+
+        # Obsługa Content Foto
+        content_foto = request.files.get(f'contentFoto_{set_form_id}')
+        if content_foto and allowed_file(content_foto.filename) and update_content_foto:
+            filename_content = str(int(time.time())) + secure_filename(content_foto.filename)
+            content_foto.save(upload_path + filename_content)
+
         # wymagane dane
         cala_tabela_authors = msq.connect_to_database(
             '''
@@ -1074,22 +1086,6 @@ def save_post():
             f"""'{users_data_dict[AUTHOR_LOGIN]['name']}'"""
             )[0][0]
         
-        print(ID_AUTHOR)
-
-
-            # 'id': take_data_where_ID('ID', 'contents', 'ID', id_content)[0][0],
-            # 'title': take_data_where_ID('TITLE', 'contents', 'ID', id_content)[0][0],
-            # 'introduction': take_data_where_ID('CONTENT_MAIN', 'contents', 'ID', id_content)[0][0],
-            # 'highlight': take_data_where_ID('HIGHLIGHTS', 'contents', 'ID', id_content)[0][0],
-            # 'mainFoto': take_data_where_ID('HEADER_FOTO', 'contents', 'ID', id_content)[0][0],
-            # 'contentFoto': take_data_where_ID('CONTENT_FOTO', 'contents', 'ID', id_content)[0][0],
-            # 'additionalList': take_data_where_ID('BULLETS', 'contents', 'ID', id_content)[0][0],
-            # 'tags': take_data_where_ID('TAGS', 'contents', 'ID', id_content)[0][0],
-            # 'category': take_data_where_ID('CATEGORY', 'contents', 'ID', id_content)[0][0],
-            # 'data': take_data_where_ID('DATE_TIME', 'contents', 'ID', id_content)[0][0],
-            # 'author': take_data_where_ID('NAME_AUTHOR', 'authors', 'ID', id_author)[0][0],
-            
-
         if set_form_id == '9999999':
             zapytanie_sql = '''
                     INSERT INTO contents (
@@ -1099,11 +1095,14 @@ def save_post():
             dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA)
             if msq.insert_to_database(zapytanie_sql, dane):
                 # Przykładowe dane
-                ID_NEW_POST_CONTENT = msq.connect_to_database(
-                    '''
-                        SELECT * FROM contents ORDER BY ID DESC;
-                    ''')[0][0]
-                print(ID_NEW_POST_CONTENT)
+                try:
+                    ID_NEW_POST_CONTENT = msq.connect_to_database(
+                        '''
+                            SELECT * FROM contents ORDER BY ID DESC;
+                        ''')[0][0]
+                except Exception as err:
+                    flash(f'Błąd podczas tworzenia nowego posta! \n {err}', 'danger')
+                    return redirect(url_for('blog'))
             else:
                 flash(f'Błąd podczas tworzenia nowego posta', 'danger')
                 return redirect(url_for('blog'))
@@ -1118,7 +1117,66 @@ def save_post():
                 flash(f'Błąd podczas tworzenia nowego posta', 'danger')
                 return redirect(url_for('blog'))
         else:
-            new_post = False
+            if update_main_foto and update_content_foto:
+                zapytanie_sql = '''
+                        UPDATE contents 
+                        SET TITLE = %s, 
+                            CONTENT_MAIN = %s, 
+                            HIGHLIGHTS = %s, 
+                            HEADER_FOTO = %s, 
+                            CONTENT_FOTO = %s, 
+                            BULLETS = %s, 
+                            TAGS = %s,
+                            CATEGORY = %s,
+                        WHERE ID = %s;
+                    '''
+                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
+            if not update_main_foto and update_content_foto:
+                zapytanie_sql = '''
+                        UPDATE contents 
+                        SET TITLE = %s, 
+                            CONTENT_MAIN = %s, 
+                            HIGHLIGHTS = %s, 
+ 
+                            CONTENT_FOTO = %s, 
+                            BULLETS = %s, 
+                            TAGS = %s,
+                            CATEGORY = %s,
+                        WHERE ID = %s;
+                    '''
+                dane = (TYTUL, WSTEP, AKAPIT, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
+            if update_main_foto and not update_content_foto:
+                zapytanie_sql = '''
+                        UPDATE contents 
+                        SET TITLE = %s, 
+                            CONTENT_MAIN = %s, 
+                            HIGHLIGHTS = %s, 
+                            HEADER_FOTO = %s, 
+ 
+                            BULLETS = %s, 
+                            TAGS = %s,
+                            CATEGORY = %s,
+                        WHERE ID = %s;
+                    '''
+                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
+            if not update_main_foto and not update_content_foto:
+                zapytanie_sql = '''
+                        UPDATE contents 
+                        SET TITLE = %s, 
+                            CONTENT_MAIN = %s, 
+                            HIGHLIGHTS = %s, 
+
+ 
+                            BULLETS = %s, 
+                            TAGS = %s,
+                            CATEGORY = %s,
+                        WHERE ID = %s;
+                    '''
+                dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
+            
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash('Dane zostały zapisane poprawnie!', 'success')
+                return redirect(url_for('blog'))
         
             flash('Dane zostały zapisane poprawnie!', 'success')
             print('Dane zostały zapisane poprawnie!')
