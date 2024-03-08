@@ -1244,8 +1244,10 @@ def remove_comment():
             )
 
         if form_data['page'] == 'subs':
+            flash("Wpis został usunięty.", "success")
             return redirect(url_for('subscribers'))
         if form_data['page'] == 'blog':
+            flash("Wpis został usunięty.", "success")
             return redirect(url_for('blog'))
         
     return redirect(url_for('index'))
