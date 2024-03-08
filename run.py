@@ -176,7 +176,7 @@ def generator_subsDataDB():
 
 def generator_daneDBList():
     daneList = []
-    took_allPost = take_data_table('*', 'blog_posts')
+    took_allPost = msq.connect_to_database(f'SELECT * FROM blog_posts ORDER BY ID DESC;') # take_data_table('*', 'blog_posts')
     for post in took_allPost:
         id = post[0]
         id_content = post[1]
@@ -1216,7 +1216,6 @@ def remove_post():
             )
         flash("Wpis został usunięty.", "success")
         return redirect(url_for('blog'))
-        print(form_data)
     
     return redirect(url_for('index'))
 
