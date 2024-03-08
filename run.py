@@ -1198,7 +1198,23 @@ def remove_post():
     # Obsługa formularza POST
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        set_form_id = None
+        try: form_data['PostID']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        if msq.delete_row_from_database(
+                """
+                    DELETE FROM blog_posts WHERE ID = %s;
+                """,
+                (set_post_id)
+            ) and \
+            msq.delete_row_from_database(
+                """
+                    DELETE FROM contents WHERE ID = %s;
+                """,
+                (set_post_id)
+            ):
+            flash("Wpis został usunięty.", "success")
+            return redirect(url_for('blog'))
         print(form_data)
     
     return redirect(url_for('index'))
