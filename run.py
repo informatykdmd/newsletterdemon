@@ -1143,7 +1143,7 @@ def save_post():
                             CATEGORY = %s,
                         WHERE ID = %s;
                     '''
-                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, set_form_id)
+                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
             if not update_main_foto and update_content_foto:
                 zapytanie_sql = '''
                         UPDATE contents 
@@ -1157,7 +1157,7 @@ def save_post():
                             CATEGORY = %s,
                         WHERE ID = %s;
                     '''
-                dane = (TYTUL, WSTEP, AKAPIT, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, set_form_id)
+                dane = (TYTUL, WSTEP, AKAPIT, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
             if update_main_foto and not update_content_foto:
                 zapytanie_sql = '''
                         UPDATE contents 
@@ -1171,7 +1171,7 @@ def save_post():
                             CATEGORY = %s,
                         WHERE ID = %s;
                     '''
-                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, PUNKTY, TAGI, KATEGORIA, set_form_id)
+                dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
             if not update_main_foto and not update_content_foto:
                 zapytanie_sql = '''
                         UPDATE contents 
@@ -1185,7 +1185,7 @@ def save_post():
                             CATEGORY = %s,
                         WHERE ID = %s;
                     '''
-                dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, set_form_id)
+                dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
             print('form_data')
             print(form_data)
             if msq.insert_to_database(zapytanie_sql, dane):
