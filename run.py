@@ -1046,8 +1046,9 @@ def save_post():
         users_data_dict = {}
         for user in users_data:
             users_data_dict[user['username']] = user
-        print(users_data_dict)
+        # print(users_data_dict)
         print(users_data_dict[AUTHOR_LOGIN]['name'])
+        print(author_data)
         print([a['NAME_AUTHOR'] for a in author_data.values()])
         if users_data_dict[AUTHOR_LOGIN]['name'] not in [a['NAME_AUTHOR'] for a in author_data.values()]:
             # dodaj nowego uathora i pobierz jego id
