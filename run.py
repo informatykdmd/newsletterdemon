@@ -1302,7 +1302,7 @@ def set_plan():
         print(form_data)
         PLAN_NAME = int(form_data['plan_name'])
         zapytanie_sql = '''
-                UPDATE newsletter_settings 
+                UPDATE newsletter_setting 
                 SET time_interval_minutes = %s
                 WHERE ID = %s;
             '''
