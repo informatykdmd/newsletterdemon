@@ -1002,21 +1002,21 @@ def save_post():
         # Obsługa Main Foto
         main_foto = request.files.get(f'mainFoto_{set_form_id}')
         if main_foto and allowed_file(main_foto.filename):
-            filename = str(int(time.time())) + secure_filename(main_foto.filename)
-            main_foto.save(upload_path + filename)
+            filename_main = str(int(time.time())) + secure_filename(main_foto.filename)
+            main_foto.save(upload_path + filename_main)
 
         # Obsługa Content Foto
         content_foto = request.files.get(f'contentFoto_{set_form_id}')
         if content_foto and allowed_file(content_foto.filename):
-            filename = str(int(time.time())) + secure_filename(content_foto.filename)
-            content_foto.save(upload_path + filename)
+            filename_content = str(int(time.time())) + secure_filename(content_foto.filename)
+            content_foto.save(upload_path + filename_content)
 
-        {
-            'title_9999999': 't', 'introduction_9999999': 'w', 'Highlight_9999999': 'h', 
-            'dynamicField9999999': 'a1', 'dynamicTagsField9999999': 't1', 'category_9999999': 'k', 
-            'tagsFieldData_9999999': 't1, t2', 'dynamicFieldData_9999999': 'a1#splx#a2', 
-            'UserName_9999999': 'michal'
-        }
+        # {
+        #     'title_9999999': 't', 'introduction_9999999': 'w', 'Highlight_9999999': 'h', 
+        #     'dynamicField9999999': 'a1', 'dynamicTagsField9999999': 't1', 'category_9999999': 'k', 
+        #     'tagsFieldData_9999999': 't1, t2', 'dynamicFieldData_9999999': 'a1#splx#a2', 
+        #     'UserName_9999999': 'michal'
+        # }
 
         # dane podstawowe
         TYTUL = form_data[f'title_{set_form_id}']
@@ -1026,13 +1026,17 @@ def save_post():
         TAGI = form_data[f'tagsFieldData_{set_form_id}']
         KATEGORIA = form_data[f'category_{set_form_id}']
         AUTHOR_LOGIN = form_data[f'UserName_{set_form_id}']
+        MAIN_FOTO = upload_path + filename_main
+        CONTENT_FOTO = upload_path + filename_content
 
+
+        
         # wymagane dane
         cala_tabela_authors = msq.connect_to_database(
             '''
                 SELECT * FROM authors; 
             ''')
-        print(cala_tabela_authors)
+        
         author_data = {}
         for autor in cala_tabela_authors:
             author_data[autor[2]] = {
@@ -1047,13 +1051,9 @@ def save_post():
         users_data_dict = {}
         for user in users_data:
             users_data_dict[user['username']] = user
-        # print(users_data_dict)
-        print(users_data_dict[AUTHOR_LOGIN]['name'])
-        print(author_data)
-        print([a['NAME_AUTHOR'] for a in author_data.values()])
+        
         if users_data_dict[AUTHOR_LOGIN]['name'] not in [a['NAME_AUTHOR'] for a in author_data.values()]:
             # dodaj nowego uathora i pobierz jego id
-
             msq.insert_to_database(
                 """
                 INSERT INTO authors (AVATAR_AUTHOR, NAME_AUTHOR, ABOUT_AUTHOR, FACEBOOK, TWITER_X, INSTAGRAM) 
@@ -1067,88 +1067,64 @@ def save_post():
                     users_data_dict[AUTHOR_LOGIN]['twiter'],
                     users_data_dict[AUTHOR_LOGIN]['instagram']
                 )
-
             )
             
-            ID_NEW_AUTHOR = take_data_where_ID(
-                'ID', 'authors', 'NAME_AUTHOR', 
-                f"""'{users_data_dict[AUTHOR_LOGIN]['name']}'"""
-                )[0][0]
-            
-            print(ID_NEW_AUTHOR)
-
-
-
+        ID_AUTHOR = take_data_where_ID(
+            'ID', 'authors', 'NAME_AUTHOR', 
+            f"""'{users_data_dict[AUTHOR_LOGIN]['name']}'"""
+            )[0][0]
         
+        print(ID_AUTHOR)
 
+
+            # 'id': take_data_where_ID('ID', 'contents', 'ID', id_content)[0][0],
+            # 'title': take_data_where_ID('TITLE', 'contents', 'ID', id_content)[0][0],
+            # 'introduction': take_data_where_ID('CONTENT_MAIN', 'contents', 'ID', id_content)[0][0],
+            # 'highlight': take_data_where_ID('HIGHLIGHTS', 'contents', 'ID', id_content)[0][0],
+            # 'mainFoto': take_data_where_ID('HEADER_FOTO', 'contents', 'ID', id_content)[0][0],
+            # 'contentFoto': take_data_where_ID('CONTENT_FOTO', 'contents', 'ID', id_content)[0][0],
+            # 'additionalList': take_data_where_ID('BULLETS', 'contents', 'ID', id_content)[0][0],
+            # 'tags': take_data_where_ID('TAGS', 'contents', 'ID', id_content)[0][0],
+            # 'category': take_data_where_ID('CATEGORY', 'contents', 'ID', id_content)[0][0],
+            # 'data': take_data_where_ID('DATE_TIME', 'contents', 'ID', id_content)[0][0],
+            # 'author': take_data_where_ID('NAME_AUTHOR', 'authors', 'ID', id_author)[0][0],
+            
 
         if set_form_id == '9999999':
-            # zapytanie_sql = '''
-            #         INSERT INTO admins 
-            #             (ADMIN_NAME, LOGIN, PASSWORD_HASH, SALT, EMAIL_ADMIN, ABOUT_ADMIN, DATE_TIME, ADMIN_PHONE, ADMIN_FACEBOOK, 
-            #             ADMIN_INSTAGRAM, ADMIN_TWITTER, ADMIN_LINKEDIN, ADMIN_ROLE, ADMIN_STATUS, ADMIN_AVATAR, PERM_USERS, PERM_BRANDS, 
-            #             PERM_BLOG, PERM_SUBS, PERM_COMMENTS, PERM_TEAM, PERM_PERMISSIONS, PERM_NEWSLETTER, PERM_SETTINGS, 
-            #             BRANDS_DOMY, BRANDS_BUDOWNICTWO, BRANDS_ELITEHOME, BRANDS_INSTALACJE, BRANDS_INWESTYCJE, BRANDS_DEVELOPMENT) 
-            #             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-            #         '''
-            dane = (
-                # NAME, LOGIN, PASSWORD_HASH, SALT, EMAIL, ABOUT, DATE_TIME, 
-                # PHONE, FACEBOOK, INSTAGRAM, TWITTER, LINKEDIN, ROLE, ADMIN_STATUS,
-                # ADMIN_AVATAR, PERM_USERS, PERM_BRANDS, PERM_BLOG, PERM_SUBS, PERM_COMMENTS,
-                # PERM_TEAM, PERM_PERMISSIONS,  PERM_NEWSLETTER, PERM_SETTINGS,
-                # BRANDS_DOMY, BRANDS_BUDOWNICTWO, BRANDS_ELITEHOME, BRANDS_INSTALACJE, 
-                # BRANDS_INWESTYCJE, BRANDS_DEVELOPMENT
-                )
-            # if msq.insert_to_database(zapytanie_sql, dane):
-                # # Przykładowe dane
-                # subject = "Czas się aktywować – Witaj w DMD!"
-                # html_body = f"""
-                #         <html><body>
-                #         <h1>Szanowny {NAME}, witamy w firmie DMD!</h1>
-                #         <p>Ta wiadomość została wygenerowana automatycznie i zawiera ważne informacje dotyczące Twojego dostępu do systemów informatycznych firmy DMD.</p>
-                #         <p>Jesteśmy przekonani, że Twoje doświadczenie i zaangażowanie wniosą znaczący wkład w nasz zespół. Poniżej znajdziesz dane dostępowe, które umożliwią Ci logowanie do naszego systemu.</p>
-                #         <p><strong>Dane do logowania:</strong></p>
-                #         <ul>
-                #             <li>Login: {LOGIN}</li>
-                #             <li>Hasło: {TEXT_PASSWORD}</li>
-                #         </ul>
-                #         <p>Zachęcamy do zmiany hasła przy pierwszym logowaniu w celu zapewnienia bezpieczeństwa danych. Jeśli nie planujesz w najbliższym czasie korzystać z systemu, możesz zignorować tę wiadomość.</p>
-                #         <p>W razie pytań lub potrzeby wsparcia, nasz zespół IT jest do Twojej dyspozycji. Skontaktuj się z nami wysyłając wiadomość na adres: support@dmd.com</p>
-                #         <p>Życzymy Ci owocnej współpracy i sukcesów w realizacji powierzonych zadań.</p>
-                #         <p>Z wyrazami szacunku,<br/>Zespół DMD</p>
-                #         </body></html>
-                #         """
-                # to_email = EMAIL
-                # mails.send_html_email(subject, html_body, to_email)
-                # flash('Dane zostały zapisane poprawnie!', 'success')
-                # return redirect(url_for('blog'))
+            zapytanie_sql = '''
+                    INSERT INTO contents (
+                        TILTE, CONTENT_MAIN, HIGHLIGHTS, HEADER_FOTO, CONTENT_FOTO, BULLETS, TAGS, CATEGORY
+                        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+            dane = (TYTUL, WSTEP, AKAPIT, MAIN_FOTO, CONTENT_FOTO, PUNKTY, TAGI, KATEGORIA)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                # Przykładowe dane
+                ID_NEW_POST_CONTENT = msq.connect_to_database(
+                    '''
+                        SELECT ID FROM contents DESC; 
+                    ''')[0][0]
+                print(ID_NEW_POST_CONTENT)
+            else:
+                flash(f'Błąd podczas tworzenia nowego posta', 'danger')
+                return redirect(url_for('blog'))
+            if msq.insert_to_database(
+                    '''
+                        INSERT INTO blog_posts (CONTENT_ID, AUTHOR_ID) VALUES(%s, %s);
+                    ''', 
+                    (ID_NEW_POST_CONTENT, ID_AUTHOR)):
+                flash('Dane zostały zapisane poprawnie!', 'success')
+                return redirect(url_for('blog'))
+            else:
+                flash(f'Błąd podczas tworzenia nowego posta', 'danger')
+                return redirect(url_for('blog'))
         else:
             new_post = False
         
-        flash('Dane zostały zapisane poprawnie!', 'success')
-        print('Dane zostały zapisane poprawnie!')
-        print(form_data)
+            flash('Dane zostały zapisane poprawnie!', 'success')
+            print('Dane zostały zapisane poprawnie!')
+            print(form_data)
 
-        settingsDB = generator_settingsDB()
-        domy = settingsDB['domy']
-        budownictwo = settingsDB['budownictwo']
-        development = settingsDB['development']
-        elitehome = settingsDB['elitehome']
-        inwestycje = settingsDB['inwestycje']
-        instalacje = settingsDB['instalacje']
-
-        return render_template(
-                            "blog_management.html", 
-                            posts=posts, 
-                            username=username, 
-                            userperm=userperm, 
-                            pagination=pagination,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje)
+            return redirect(url_for('blog'))
     
     return redirect(url_for('index'))
 
