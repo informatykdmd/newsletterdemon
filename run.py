@@ -1251,8 +1251,18 @@ def remove_subscriber():
         try: form_data['SubasID']
         except KeyError: return redirect(url_for('index'))
         set_subs_id = int(form_data['SubasID'])
-        print(set_subs_id)
-
+        zapytanie_sql = '''
+                UPDATE newsletter 
+                SET CLIENT_EMAIL = %s, 
+                    ACTIVE = %s, 
+                    USER_HASH = %s
+                WHERE ID = %s;
+            '''
+        dane = ('john@doe.removed.user', 404, 'REMOVED404', set_subs_id)
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash('Subskryber został usunięty!', 'success')
+            return redirect(url_for('subscribers'))
+    flash('Błąd usuwania Subskrybenta!', 'danger')
     return redirect(url_for('subscribers'))
 
 @app.route('/user')
