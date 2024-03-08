@@ -1205,13 +1205,13 @@ def remove_post():
                 """
                     DELETE FROM blog_posts WHERE ID = %s;
                 """,
-                (set_post_id)
+                (set_post_id,)
             ) and \
             msq.delete_row_from_database(
                 """
                     DELETE FROM contents WHERE ID = %s;
                 """,
-                (set_post_id)
+                (set_post_id,)
             ):
             flash("Wpis został usunięty.", "success")
             return redirect(url_for('blog'))
