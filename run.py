@@ -1101,8 +1101,8 @@ def save_post():
                 # Przykładowe dane
                 ID_NEW_POST_CONTENT = msq.connect_to_database(
                     '''
-                        SELECT ID FROM contents DESC; 
-                    ''')[0][0]
+                        SELECT ID FROM contents DESC;
+                    ''')
                 print(ID_NEW_POST_CONTENT)
             else:
                 flash(f'Błąd podczas tworzenia nowego posta', 'danger')
