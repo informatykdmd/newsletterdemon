@@ -1332,6 +1332,7 @@ def set_sender():
         SENDER_PORT = int(form_data['sender_port'])
         SENDER_PASSWORD = form_data['sender_password']
 
+        
 
             # 'smtp_config': {
             #     'smtp_server': take_data_newsletterSettingDB('config_smtp_server'),
@@ -1339,7 +1340,7 @@ def set_sender():
             #     'smtp_username': take_data_newsletterSettingDB('config_smtp_username'),
             #     'smtp_password': take_data_newsletterSettingDB('config_smtp_password')
         zapytanie_sql = '''
-                UPDATE newsletter_setting, 
+                UPDATE newsletter_setting 
                 SET config_smtp_server = %s,
                     config_smtp_port = %,
                     config_smtp_username = %,
