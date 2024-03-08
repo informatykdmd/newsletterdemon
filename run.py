@@ -1184,7 +1184,7 @@ def save_post():
     flash('Błąd!', 'danger')
     return redirect(url_for('index'))
 
-@app.route('/remove-post')
+@app.route('/remove-post', methods=['POST'])
 def remove_post():
     """Usuwanie bloga"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
