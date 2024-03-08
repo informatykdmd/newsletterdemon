@@ -1308,8 +1308,8 @@ def set_plan():
             '''
         dane = (PLAN_NAME, 1)
         if msq.insert_to_database(zapytanie_sql, dane):
-            flash('Subskryber został usunięty!', 'success')
-            return redirect(url_for('subscribers'))
+            flash('Plan został aktywowany!', 'success')
+            return redirect(url_for('newsletter'))
 
     return redirect(url_for('newsletter'))
 @app.route('/user')
