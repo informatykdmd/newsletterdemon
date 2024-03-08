@@ -57,12 +57,12 @@
                                 </div>
                                 <div class="column-ender">
                                     
-                                    <form id="removePost_{{subs_id}}" action="{{ url_for('remove_post') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć subskrybenta?');">
+                                    <form method="POST" id="subs_{{subs_id}}" action="{{ url_for('remove_subscriber') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć subskrybenta?');">
                                         {% if userperm['commnets'] == 1 and subs_data['comments']|length > 0 %}
                                             <a data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}"><i class="bi bi-chat-left-text" style="color: rgb(217, 217, 217) !important;"></i></a>
                                         {% endif %}
                                         <a href="mailto:{{subs_data['name']}}"><i class="bi bi-envelope-at" style="color: rgb(89, 176, 90) !important;"></i></a>
-                                        <input type="hidden" name="UserName_{{subs_id}}" id="UserName_{{subs_id}}" value="{{username}}"/>
+                                        <input type="hidden" name="SubasID" id="UserName_{{subs_id}}" value="{{subs_id}}"/>
                                         <button type="submit" class="custom-icon-button"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></button>
                                     </form>
                                 </div>

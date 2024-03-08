@@ -1219,14 +1219,37 @@ def remove_post():
     
     return redirect(url_for('index'))
 
-@app.route('/remove-comment')
+@app.route('/remove-comment', methods=['POST'])
 def remove_comment():
     """Usuwanie komentarza"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
         return redirect(url_for('index'))
     
-    return render_template("home.html", userperm=session['userperm'])
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: form_data['PostID']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+    if form_data['page'] == 'subs':
+        return redirect(url_for('subscriber'))
+    if form_data['page'] == 'blog':
+        return redirect(url_for('blog'))
+
+@app.route('/remove-subscriber', methods=['POST'])
+def remove_subscriber():
+    """Usuwanie subscribera"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: form_data['PostID']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+
+    return redirect(url_for('subscriber'))
 
 @app.route('/user')
 def users(router=True):
