@@ -1300,6 +1300,16 @@ def set_plan():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         print(form_data)
+        PLAN_NAME = int(form_data['plan_name'])
+        zapytanie_sql = '''
+                UPDATE newsletter_settings 
+                SET time_interval_minutes = %s
+                WHERE ID = %s;
+            '''
+        dane = (PLAN_NAME, 1)
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash('Subskryber został usunięty!', 'success')
+            return redirect(url_for('subscribers'))
 
     return redirect(url_for('newsletter'))
 @app.route('/user')
@@ -1371,7 +1381,10 @@ def newsletter():
     newsletterPlan = newsletterSettingDB['time_interval_minutes']
     smtpSettingsDict = newsletterSettingDB['smtp_config']
     # Sortuj subsDataDB według klucza 'id' w malejącej kolejności
-    sorted_subs = sorted(subsDataDB, key=lambda x: x['id'], reverse=True)
+    sorted_subs = sorted(
+                        generator_subsDataDB(), 
+                        key=lambda x: x['id'], 
+                        reverse=True)
 
     sortedListSubs = []
     # Dodaj najwyższe sześć pozycji do sortedListSubs
