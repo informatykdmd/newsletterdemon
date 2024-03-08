@@ -1101,7 +1101,7 @@ def save_post():
                 # Przykładowe dane
                 ID_NEW_POST_CONTENT = msq.connect_to_database(
                     '''
-                        SELECT * FROM contents DESC;
+                        SELECT * FROM contents ORDER BY ID DESC;
                     ''')
                 print(ID_NEW_POST_CONTENT)
             else:
