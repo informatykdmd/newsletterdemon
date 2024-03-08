@@ -1048,6 +1048,7 @@ def save_post():
             users_data_dict[user['username']] = user
         print(users_data_dict)
         print(users_data_dict[AUTHOR_LOGIN]['name'])
+        print([a['NAME_AUTHOR'] for a in author_data.values()])
         if users_data_dict[AUTHOR_LOGIN]['name'] not in [a['NAME_AUTHOR'] for a in author_data.values()]:
             # dodaj nowego uathora i pobierz jego id
 
@@ -1067,9 +1068,12 @@ def save_post():
 
             )
             
-            ID_NOWEGO_AWORU = take_data_where_ID('ID', 'authors', 'NAME_AUTHOR', f"""'{users_data_dict[AUTHOR_LOGIN]['name']}'""")[0][0]
+            ID_NEW_AUTHOR = take_data_where_ID(
+                'ID', 'authors', 'NAME_AUTHOR', 
+                f"""'{users_data_dict[AUTHOR_LOGIN]['name']}'"""
+                )[0][0]
             
-            print(ID_NOWEGO_AWORU)
+            print(ID_NEW_AUTHOR)
 
 
 
