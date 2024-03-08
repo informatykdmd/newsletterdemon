@@ -1299,7 +1299,7 @@ def set_plan():
     
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
+        # print(form_data)
         PLAN_NAME = int(form_data['plan_name'])
         zapytanie_sql = '''
                 UPDATE newsletter_setting 
@@ -1312,6 +1312,93 @@ def set_plan():
             return redirect(url_for('newsletter'))
 
     return redirect(url_for('newsletter'))
+
+@app.route('/set-newsletter-sender', methods=['POST'])
+def set_sender():
+    """Usuwanie planu"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['newsletter'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        print(form_data)
+        SENDER_EMAIL = int(form_data['sender_email'])
+        SENDER_URL = int(form_data['sender_url'])
+        SENDER_PORT = int(form_data['sender_port'])
+        SENDER_PASSWORD = int(form_data['sender_password'])
+
+
+            # 'smtp_config': {
+            #     'smtp_server': take_data_newsletterSettingDB('config_smtp_server'),
+            #     'smtp_port': int(take_data_newsletterSettingDB('config_smtp_port')),
+            #     'smtp_username': take_data_newsletterSettingDB('config_smtp_username'),
+            #     'smtp_password': take_data_newsletterSettingDB('config_smtp_password')
+        zapytanie_sql = '''
+                UPDATE newsletter_setting, 
+                SET config_smtp_server = %s,
+                    config_smtp_port = %,
+                    config_smtp_username = %,
+                    config_smtp_password = %
+                WHERE ID = %s;
+            '''
+        dane = (SENDER_URL, SENDER_PORT, SENDER_EMAIL, SENDER_PASSWORD, 1)
+        
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash('Nadawca został ustawiony!', 'success')
+            return redirect(url_for('newsletter'))
+        
+    flash('Błąd! Nadawca nie został ustawiony!', 'danger')
+    return redirect(url_for('newsletter'))
+
+@app.route('/set-settings', methods=['POST'])
+def set_settings():
+    """Usuwanie planu"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['settings'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        print(form_data)
+        SENDER_EMAIL = int(form_data['sender_email'])
+        SENDER_URL = int(form_data['sender_url'])
+        SENDER_PORT = int(form_data['sender_port'])
+        SENDER_PASSWORD = int(form_data['sender_password'])
+        if SENDER_PASSWORD == '':
+            # 'time_interval_minutes': int(take_data_newsletterSettingDB('time_interval_minutes')),
+            # 'smtp_config': {
+            #     'smtp_server': take_data_newsletterSettingDB('config_smtp_server'),
+            #     'smtp_port': int(take_data_newsletterSettingDB('config_smtp_port')),
+            #     'smtp_username': take_data_newsletterSettingDB('config_smtp_username'),
+            #     'smtp_password': take_data_newsletterSettingDB('config_smtp_password')
+            zapytanie_sql = '''
+                    UPDATE newsletter_setting, 
+                    SET time_interval_minutes = %s
+                    WHERE ID = %s;
+                '''
+            dane = (1, 1)
+        else:
+            zapytanie_sql = '''
+                    UPDATE newsletter_setting 
+                    SET time_interval_minutes = %s
+                    WHERE ID = %s;
+                '''
+            dane = (None, None)
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash('Plan został aktywowany!', 'success')
+            return redirect(url_for('newsletter'))
+
+    return redirect(url_for('newsletter'))
+
 @app.route('/user')
 def users(router=True):
     """Strona z zarządzaniem użytkownikami."""
