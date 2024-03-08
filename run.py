@@ -1230,6 +1230,7 @@ def remove_comment():
     
     if request.method == 'POST':
         form_data = request.form.to_dict()
+        print(form_data)
         try: form_data['comment_id']
         except KeyError: return redirect(url_for('index'))
         set_comm_id = int(form_data['comment_id'])
