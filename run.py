@@ -1027,15 +1027,24 @@ def save_post():
         if main_foto and allowed_file(main_foto.filename) and update_main_foto:
             filename_main = str(int(time.time())) + secure_filename(main_foto.filename)
             main_foto.save(upload_path + filename_main)
+        else:
+            filename_main = None
 
         # Obsługa Content Foto        
         if content_foto and allowed_file(content_foto.filename) and update_content_foto:
             filename_content = str(int(time.time())) + secure_filename(content_foto.filename)
             content_foto.save(upload_path + filename_content)
+        else:
+            filename_content = None
         
-        if set_form_id != '9999999':
+        if set_form_id != '9999999' and update_main_foto and filename_main is not None:
             MAIN_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_main
+        else:
+            MAIN_FOTO = None
+        if set_form_id != '9999999' and update_content_foto and filename_content is not None:    
             CONTENT_FOTO = settingsDB['main-domain']+settingsDB['blog-pic-path'] + filename_content
+        else:
+            CONTENT_FOTO = None
 
         # dane podstawowe
         TYTUL = form_data[f'title_{set_form_id}']
