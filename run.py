@@ -1608,7 +1608,7 @@ def team_domy():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    curent_settings_team = generator_teamDB()
+
     users_atributes = {}
     assigned_dmddomy = []
     
@@ -1630,7 +1630,7 @@ def team_domy():
     employee_photo_dict = {}
 
     i_domy = 1 
-    for employees in curent_settings_team:
+    for employees in generator_teamDB():
         group = employees['EMPLOYEE_DEPARTMENT']
         department = str(group).replace('dmd ', '')
         employee = employees['EMPLOYEE_NAME']
@@ -1717,9 +1717,6 @@ def team_domy():
         else:
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_domy'))
-        
-        
-
         print('dane:', ready_exportDB)
         flash('Zespół został pomyślnie zmieniony.', 'success')
 
