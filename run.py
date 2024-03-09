@@ -1423,9 +1423,6 @@ def set_settings():
                     UPDATE admin_settings 
                     SET pagination = %s,
 
-                        admin_smtp_usernam = %s,
-                        admin_smtp_port = %s,
-                        admin_smtp_server = %s,
                         instalacje = %s,
                         inwestycje = %s,
                         elitehome = %s,
@@ -1440,10 +1437,6 @@ def set_settings():
                 '''
             dane = (
                         ADMIN_ITEMS, 
-
-                        ADMIN_EMAIL, 
-                        ADMIN_PORT, 
-                        ADMIN_SERVER, 
 
                         ADMIN_URL_INSTALACJE, 
                         ADMIN_URL_INWESTYCJE, 
