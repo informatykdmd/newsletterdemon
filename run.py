@@ -1722,7 +1722,7 @@ def team_domy():
 
         print('dane:', ready_exportDB)
         flash('Zespół został pomyślnie zmieniony.', 'success')
-        return redirect(url_for('team_domy'))
+
 
     settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
@@ -1758,7 +1758,7 @@ def team_elitehome():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    curent_settings_team = teamDB
+    curent_settings_team = generator_teamDB()
     users_atributes = {}
     
     assigned_dmdelitehome = []
