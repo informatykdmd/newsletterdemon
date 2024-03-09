@@ -1358,7 +1358,7 @@ def set_sender():
 
 @app.route('/set-settings', methods=['POST'])
 def set_settings():
-    """Usuwanie planu"""
+    """settings"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
         return redirect(url_for('index'))
@@ -1370,28 +1370,134 @@ def set_settings():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         print(form_data)
+        {
+            'main-domain': 'https://dmddomy.pl/', 
+            'blog-pic-path': 'images/blog/', 
+            'avatar-pic-path': 'images/team/', 
+            'item-on-page': '15', 
+            'admin-smtp-username': 'informatyk@dmdbudownictwo.pl', 
+            'admin-smtp-server': 'smtp.office365.com', 
+            'admin-smtp-port': '587', 
+            'admin-smtp-password': '', 
+            'url-domy': 'https://dmddomy.pl/', 
+            'url-budownictwo': 'https://dmddomy.pl/', 
+            'url-development': 'https://dmddomy.pl/', 
+            'url-elitehome': 'https://dmddomy.pl/', 
+            'url-inwestycje': 'https://dmddomy.pl/', 
+            'url-instalacje': 'https://dmddomy.pl/'
+        }
+        ADMIN_DOMAIN = form_data['main-domain']
+        ADMIN_BLOG = form_data['blog-pic-path']
+        ADMIN_AVATAR = form_data['avatar-pic-path']
+        ADMIN_ITEMS = form_data['item-on-page']
+        ADMIN_EMAIL = form_data['admin-smtp-username']
+        ADMIN_SERVER = form_data['admin-smtp-server']
+        ADMIN_PORT = form_data['admin-smtp-port']
+        ADMIN_URL_DOMY = form_data['url-domy']
+        ADMIN_URL_BUDOWNICTWO = form_data['url-budownictwo']
+        ADMIN_URL_DEVELOPMENT = form_data['url-development']
+        ADMIN_URL_ELITEHOME = form_data['url-elitehome']
+        ADMIN_URL_INWESTYCJE = form_data['url-inwestycje']
+        ADMIN_URL_INSTALACJE = form_data['url-instalacje']
 
-        # ADMIN_EMAIL = form_data['admin_email']
+        ADMIN_PASSWORD = form_data['admin-smtp-password']
+        if ADMIN_PASSWORD == '':
+            # admin_settings
+            # pagination
+            # admin_smtp_password
+            # admin_smtp_usernam
+            # admin_smtp_port
+            # admin_smtp_server
+            # instalacje
+            # inwestycje
+            # elitehome
+            # development
+            # budownictwo
+            # domy
+            # last_restart
+            # avatar_pic_path
+            # blog_pic_path
+            # main_domain
+            # ID
+            zapytanie_sql = '''
+                    UPDATE admin_settings 
+                    SET pagination = %s,
 
-        # ADMIN_PASSWORD = form_data['sender_password']
-        # if ADMIN_PASSWORD == '':
-        #     zapytanie_sql = '''
-        #             UPDATE newsletter_setting, 
-        #             SET time_interval_minutes = %s
-        #             WHERE ID = %s;
-        #         '''
-        #     dane = (1, 1)
-        # else:
-        #     zapytanie_sql = '''
-        #             UPDATE newsletter_setting 
-        #             SET time_interval_minutes = %s
-        #             WHERE ID = %s;
-        #         '''
-        #     dane = (None, None)
-        # if msq.insert_to_database(zapytanie_sql, dane):
-        #     flash('Plan został aktywowany!', 'success')
-        #     return redirect(url_for('settings'))
+                        admin_smtp_usernam = %s,
+                        admin_smtp_port = %s,
+                        admin_smtp_server = %s,
+                        instalacje = %s,
+                        inwestycje = %s,
+                        elitehome = %s,
+                        development = %s,
+                        budownictwo = %s,
+                        domy = %s,
 
+                        avatar_pic_path = %s,
+                        blog_pic_path = %s,
+                        main_domain = %s,
+                    WHERE ID = %s;
+                '''
+            dane = (
+                        ADMIN_ITEMS, 
+
+                        ADMIN_EMAIL, 
+                        ADMIN_PORT, 
+                        ADMIN_SERVER, 
+
+                        ADMIN_URL_INSTALACJE, 
+                        ADMIN_URL_INWESTYCJE, 
+                        ADMIN_URL_ELITEHOME,
+                        ADMIN_URL_DEVELOPMENT,
+                        ADMIN_URL_BUDOWNICTWO,
+                        ADMIN_URL_DOMY,
+
+                        ADMIN_AVATAR,
+                        ADMIN_BLOG, 
+                        ADMIN_DOMAIN, 1)
+        else:
+            zapytanie_sql = '''
+                    UPDATE admin_settings 
+                    SET pagination = %s,
+                        admin_smtp_password = %s,
+                        admin_smtp_usernam = %s,
+                        admin_smtp_port = %s,
+                        admin_smtp_server = %s,
+                        instalacje = %s,
+                        inwestycje = %s,
+                        elitehome = %s,
+                        development = %s,
+                        budownictwo = %s,
+                        domy = %s,
+
+                        avatar_pic_path = %s,
+                        blog_pic_path = %s,
+                        main_domain = %s,
+                    WHERE ID = %s;
+                '''
+            dane = (
+                        ADMIN_ITEMS, 
+
+                        ADMIN_PASSWORD,
+                        ADMIN_EMAIL, 
+                        ADMIN_PORT, 
+                        ADMIN_SERVER, 
+
+                        ADMIN_URL_INSTALACJE, 
+                        ADMIN_URL_INWESTYCJE, 
+                        ADMIN_URL_ELITEHOME,
+                        ADMIN_URL_DEVELOPMENT,
+                        ADMIN_URL_BUDOWNICTWO,
+                        ADMIN_URL_DOMY,
+
+                        ADMIN_AVATAR,
+                        ADMIN_BLOG, 
+                        ADMIN_DOMAIN, 1)
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash('Ustawienia zapisane!', 'success')
+            return redirect(url_for('settings'))
+        
+    flash('Błąd podczas zapisu ustawień!', 'danger')
     return redirect(url_for('settings'))
 
 @app.route('/user')
