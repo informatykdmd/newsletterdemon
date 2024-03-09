@@ -118,7 +118,7 @@ def generator_userDataDB():
                 'newsletter': data[23]
                 },
             'brands': {
-                'domy': data[24],
+                'domy': (data[24]),
                 'budownictwo': data[25],
                 'elitehome': data[26],
                 'inwestycje': data[27],
@@ -1731,6 +1731,17 @@ def team_domy():
     elitehome = settingsDB['elitehome']
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
+
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    userDataDB = generator_userDataDB()
+    for un in userDataDB: 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
 
     return render_template(
                             "team_management_domy.html", 
