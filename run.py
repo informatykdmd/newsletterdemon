@@ -1695,24 +1695,24 @@ def team_domy():
             )
 
             # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-            for  i, row in enumerate(ready_exportDB):
+            for i, row in enumerate(ready_exportDB):
                 zapytanie_sql = '''
                         INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
                     '''
                 dane = (
-                        row[i]['EMPLOYEE_PHOTO'], 
-                        row[i]['EMPLOYEE_NAME'], 
-                        row[i]['EMPLOYEE_ROLE'], 
-                        row[i]['EMPLOYEE_DEPARTMENT'], 
-                        row[i]['PHONE'], 
-                        row[i]['EMAIL'], 
-                        row[i]['FACEBOOK'], 
-                        row[i]['LINKEDIN'], 
-                        row[i]['STATUS'], 
+                        row['EMPLOYEE_PHOTO'], 
+                        row['EMPLOYEE_NAME'], 
+                        row['EMPLOYEE_ROLE'], 
+                        row['EMPLOYEE_DEPARTMENT'], 
+                        row['PHONE'], 
+                        row['EMAIL'], 
+                        row['FACEBOOK'], 
+                        row['LINKEDIN'], 
+                        row['STATUS'], 
                     )
                 if msq.insert_to_database(zapytanie_sql, dane):
-                    flash(f'Ustwiono {row[i]["EMPLOYEE_NAME"]}.', 'success')
+                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
             flash('Zespół został pomyślnie zmieniony.', 'success')
             return redirect(url_for('team_domy'))
