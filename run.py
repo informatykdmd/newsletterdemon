@@ -1714,8 +1714,6 @@ def team_domy():
                 if msq.insert_to_database(zapytanie_sql, dane):
                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
-            # flash('Zespół został pomyślnie zmieniony.', 'success')
-            # return redirect(url_for('team_domy'))
         else:
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_domy'))
@@ -1723,6 +1721,8 @@ def team_domy():
         
 
         print('dane:', ready_exportDB)
+        flash('Zespół został pomyślnie zmieniony.', 'success')
+        return redirect(url_for('team_domy'))
 
     settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
