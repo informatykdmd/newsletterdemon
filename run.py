@@ -1371,26 +1371,26 @@ def set_settings():
         form_data = request.form.to_dict()
         print(form_data)
 
-        ADMIN_EMAIL = form_data['admin_email']
+        # ADMIN_EMAIL = form_data['admin_email']
 
-        ADMIN_PASSWORD = form_data['sender_password']
-        if ADMIN_PASSWORD == '':
-            zapytanie_sql = '''
-                    UPDATE newsletter_setting, 
-                    SET time_interval_minutes = %s
-                    WHERE ID = %s;
-                '''
-            dane = (1, 1)
-        else:
-            zapytanie_sql = '''
-                    UPDATE newsletter_setting 
-                    SET time_interval_minutes = %s
-                    WHERE ID = %s;
-                '''
-            dane = (None, None)
-        if msq.insert_to_database(zapytanie_sql, dane):
-            flash('Plan został aktywowany!', 'success')
-            return redirect(url_for('settings'))
+        # ADMIN_PASSWORD = form_data['sender_password']
+        # if ADMIN_PASSWORD == '':
+        #     zapytanie_sql = '''
+        #             UPDATE newsletter_setting, 
+        #             SET time_interval_minutes = %s
+        #             WHERE ID = %s;
+        #         '''
+        #     dane = (1, 1)
+        # else:
+        #     zapytanie_sql = '''
+        #             UPDATE newsletter_setting 
+        #             SET time_interval_minutes = %s
+        #             WHERE ID = %s;
+        #         '''
+        #     dane = (None, None)
+        # if msq.insert_to_database(zapytanie_sql, dane):
+        #     flash('Plan został aktywowany!', 'success')
+        #     return redirect(url_for('settings'))
 
     return redirect(url_for('settings'))
 
