@@ -212,7 +212,7 @@ def generator_daneDBList():
     return daneList
 
 settingsDB = generator_settingsDB()
-app.config['PER_PAGE'] = generator_settingsDB['pagination']  # Określa liczbę elementów na stronie
+app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 newsletterSettingDB = generator_newsletterSettingDB()
 userDataDB = generator_userDataDB()
 teamDB = generator_teamDB()
