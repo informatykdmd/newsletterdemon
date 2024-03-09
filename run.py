@@ -1608,7 +1608,7 @@ def team_domy():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    curent_settings_team = teamDB
+    curent_settings_team = generator_teamDB()
     users_atributes = {}
     assigned_dmddomy = []
     
@@ -1714,8 +1714,8 @@ def team_domy():
                 if msq.insert_to_database(zapytanie_sql, dane):
                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
-            flash('Zespół został pomyślnie zmieniony.', 'success')
-            return redirect(url_for('team_domy'))
+            # flash('Zespół został pomyślnie zmieniony.', 'success')
+            # return redirect(url_for('team_domy'))
         else:
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_domy'))
