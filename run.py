@@ -1685,8 +1685,40 @@ def team_domy():
                 'STATUS': 1
             }
             ready_exportDB.append(set_row)
-        # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-        # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+        if len(ready_exportDB):
+            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+            msq.delete_row_from_database(
+                """
+                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+                """,
+                ('dmd domy', )
+            )
+
+            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+            zapytanie_sql = '''
+                    INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                '''
+            dane = (
+                    ready_exportDB[0]['EMPLOYEE_PHOTO'], 
+                    ready_exportDB[0]['EMPLOYEE_NAME'], 
+                    ready_exportDB[0]['EMPLOYEE_ROLE'], 
+                    ready_exportDB[0]['EMPLOYEE_DEPARTMENT'], 
+                    ready_exportDB[0]['PHONE'], 
+                    ready_exportDB[0]['EMAIL'], 
+                    ready_exportDB[0]['FACEBOOK'], 
+                    ready_exportDB[0]['LINKEDIN'], 
+                    ready_exportDB[0]['STATUS'], 
+
+                )
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash('Zespół został pomyślnie zmieniony.', 'success')
+                return redirect(url_for('team_domy'))
+        else:
+            flash('Błąd! Zespół nie został zmieniony.', 'danger')
+            return redirect(url_for('team_domy'))
+        
+        
 
         print('dane:', ready_exportDB)
 
