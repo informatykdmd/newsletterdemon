@@ -1612,7 +1612,7 @@ def team_domy():
     users_atributes = {}
     assigned_dmddomy = []
     
-    for usr_d in userDataDB:
+    for usr_d in generator_userDataDB():
         u_name = usr_d['name']
         u_login = usr_d['username']
         users_atributes[u_name] = usr_d
@@ -1651,7 +1651,7 @@ def team_domy():
         if assign not in collections['domy']['home'] + collections['domy']['team']:
             collections['domy']['available'].append(assign)
 
-            for row in userDataDB:
+            for row in generator_userDataDB():
                 if row['username'] == assign:
                     employee_photo = row['avatar']
                     try: employee_photo_dict[assign]
@@ -1735,8 +1735,7 @@ def team_domy():
     # update sesji userperm brands
     permTempDict = {}
     brands_data = {}
-    userDataDB = generator_userDataDB()
-    for un in userDataDB: 
+    for un in generator_userDataDB(): 
         permTempDict[un['username']] = un['uprawnienia']
         brands_data[un['username']] = un['brands']
 
