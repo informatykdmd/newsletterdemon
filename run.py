@@ -1695,25 +1695,27 @@ def team_domy():
             )
 
             # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-            zapytanie_sql = '''
-                    INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-                '''
-            dane = (
-                    ready_exportDB[0]['EMPLOYEE_PHOTO'], 
-                    ready_exportDB[0]['EMPLOYEE_NAME'], 
-                    ready_exportDB[0]['EMPLOYEE_ROLE'], 
-                    ready_exportDB[0]['EMPLOYEE_DEPARTMENT'], 
-                    ready_exportDB[0]['PHONE'], 
-                    ready_exportDB[0]['EMAIL'], 
-                    ready_exportDB[0]['FACEBOOK'], 
-                    ready_exportDB[0]['LINKEDIN'], 
-                    ready_exportDB[0]['STATUS'], 
+            for  i, row in enumerate(ready_exportDB):
+                zapytanie_sql = '''
+                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+                dane = (
+                        row[i]['EMPLOYEE_PHOTO'], 
+                        row[i]['EMPLOYEE_NAME'], 
+                        row[i]['EMPLOYEE_ROLE'], 
+                        row[i]['EMPLOYEE_DEPARTMENT'], 
+                        row[i]['PHONE'], 
+                        row[i]['EMAIL'], 
+                        row[i]['FACEBOOK'], 
+                        row[i]['LINKEDIN'], 
+                        row[i]['STATUS'], 
+                    )
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Ustwiono {row[i]["EMPLOYEE_NAME"]}.', 'success')
 
-                )
-            if msq.insert_to_database(zapytanie_sql, dane):
-                flash('Zespół został pomyślnie zmieniony.', 'success')
-                return redirect(url_for('team_domy'))
+            flash('Zespół został pomyślnie zmieniony.', 'success')
+            return redirect(url_for('team_domy'))
         else:
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_domy'))
