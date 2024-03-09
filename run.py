@@ -1435,7 +1435,7 @@ def set_settings():
 
                         avatar_pic_path = %s,
                         blog_pic_path = %s,
-                        main_domain = %s,
+                        main_domain = %s
                     WHERE ID = %s;
                 '''
             dane = (
@@ -1472,7 +1472,7 @@ def set_settings():
 
                         avatar_pic_path = %s,
                         blog_pic_path = %s,
-                        main_domain = %s,
+                        main_domain = %s
                     WHERE ID = %s;
                 '''
             dane = (
