@@ -72,26 +72,26 @@
 <div class="dropdown">
     <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
         {% if user_brands['domy'] == 0 %}
-            {% if user_brands['budownictwo'] == 0 %}
-                {% if user_brands['elitehome'] == 0 %}
-                    {% if user_brands['instalacje'] == 0 %}
-                        {% if user_brands['development'] == 0 %}
-                            {% if user_brands['inwestycje'] == 0 %}
-                                <script>window.href('/home');</script>
-                            {% else %}
-                                <script>window.href('/team-inwestycje');</script>
-                            {% endif %}
-                        {% else %}
-                            <script>window.href('/team-development');</script>
-                        {% endif %}
-                    {% else %}
-                        <script>window.href('/team-instalacje');</script>
-                    {% endif %}
-                {% else %}
-                    <script>window.href('/team-elitehome');</script>
-                {% endif %}
-            {% else %}
+            {% if user_brands['budownictwo'] == 1 %}
                 <script>window.href('/team-budownictwo');</script>
+            {% else %}
+                {% if user_brands['elitehome'] == 1 %}
+                    <script>window.href('/team-elitehome');</script>
+                {% else %}
+                    {% if user_brands['instalacje'] == 1 %}
+                        <script>window.href('/team-instalacje');</script>
+                    {% else %}
+                        {% if user_brands['development'] == 1 %}
+                            <script>window.href('/team-development');</script>
+                        {% else %}
+                            {% if user_brands['inwestycje'] == 1 %}
+                                <script>window.href('/team-inwestycje');</script>
+                            {% else %}
+                                <script>window.href('/home');</script>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
             {% endif %}
         {% else %}
             Domy
