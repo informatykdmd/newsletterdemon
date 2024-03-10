@@ -1667,7 +1667,7 @@ def team_domy():
             sequence.append(clear_data)
 
         users_atributesByLogin = {}
-        for usr_d in userDataDB:
+        for usr_d in generator_userDataDB():
             u_login = usr_d['username']
             users_atributesByLogin[u_login] = usr_d
         
@@ -1765,28 +1765,29 @@ def team_elitehome():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    curent_settings_team = generator_teamDB()
+
     users_atributes = {}
-    
     assigned_dmdelitehome = []
-    for usr_d in userDataDB:
+    
+    for usr_d in generator_userDataDB():
         u_name = usr_d['name']
         u_login = usr_d['username']
         users_atributes[u_name] = usr_d
-        
         if usr_d['brands']['elitehome'] == 1:
             assigned_dmdelitehome.append(u_login)
-        
+
     collections = {
             'elitehome': {
                 'home': [],
                 'team': [],
                 'available': []
             }
-    }
+        }
+
     employee_photo_dict = {}
-    i_elitehome = 1
-    for employees in curent_settings_team:
+
+    i_elitehome = 1 
+    for employees in generator_teamDB():
         group = employees['EMPLOYEE_DEPARTMENT']
         department = str(group).replace('dmd ', '')
         employee = employees['EMPLOYEE_NAME']
@@ -1795,19 +1796,19 @@ def team_elitehome():
         employee_photo = users_atributes[employee]['avatar']
         try: employee_photo_dict[employee_login]
         except KeyError: employee_photo_dict[employee_login] = employee_photo
-
+        
         if i_elitehome < 5 and department == "elitehome":
             collections[department]['home'].append(employee_login)
         elif i_elitehome >= 5 and department == "elitehome":
             collections[department]['team'].append(employee_login)
         if department == 'elitehome':
             i_elitehome += 1
-    
+        
     for assign in assigned_dmdelitehome:
         if assign not in collections['elitehome']['home'] + collections['elitehome']['team']:
             collections['elitehome']['available'].append(assign)
 
-            for row in userDataDB:
+            for row in generator_userDataDB():
                 if row['username'] == assign:
                     employee_photo = row['avatar']
                     try: employee_photo_dict[assign]
@@ -1823,7 +1824,7 @@ def team_elitehome():
             sequence.append(clear_data)
 
         users_atributesByLogin = {}
-        for usr_d in userDataDB:
+        for usr_d in generator_userDataDB():
             u_login = usr_d['username']
             users_atributesByLogin[u_login] = usr_d
         
@@ -1841,10 +1842,41 @@ def team_elitehome():
                 'STATUS': 1
             }
             ready_exportDB.append(set_row)
-        # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-        # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+        if len(ready_exportDB):
+            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+            msq.delete_row_from_database(
+                """
+                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+                """,
+                ('dmd elitehome', )
+            )
 
+            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+            for i, row in enumerate(ready_exportDB):
+                zapytanie_sql = '''
+                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+                dane = (
+                        row['EMPLOYEE_PHOTO'], 
+                        row['EMPLOYEE_NAME'], 
+                        row['EMPLOYEE_ROLE'], 
+                        row['EMPLOYEE_DEPARTMENT'], 
+                        row['PHONE'], 
+                        row['EMAIL'], 
+                        row['FACEBOOK'], 
+                        row['LINKEDIN'], 
+                        row['STATUS'], 
+                    )
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+
+        else:
+            flash('Błąd! Zespół nie został zmieniony.', 'danger')
+            return redirect(url_for('team_elitehome'))
         print('dane:', ready_exportDB)
+        flash('Zespół został pomyślnie zmieniony.', 'success')
+
 
     settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
@@ -1854,11 +1886,21 @@ def team_elitehome():
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
 
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
     return render_template(
-                            "team_management_elitehome.html",
-                            username=session['username'], 
+                            "team_management_elitehome.html", 
+                            username=session['username'],
                             userperm=session['userperm'], 
-                            user_brands=session['brands'],  
+                            user_brands=session['brands'], 
                             members=collections['elitehome'], 
                             photos_dict=employee_photo_dict,
                             domy=domy,
@@ -1880,12 +1922,11 @@ def team_budownictwo():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    curent_settings_team = teamDB
+
     users_atributes = {}
-
     assigned_dmdbudownictwo = []
-
-    for usr_d in userDataDB:
+    
+    for usr_d in generator_userDataDB():
         u_name = usr_d['name']
         u_login = usr_d['username']
         users_atributes[u_name] = usr_d
@@ -1893,16 +1934,17 @@ def team_budownictwo():
             assigned_dmdbudownictwo.append(u_login)
 
     collections = {
-        'budownictwo': {
-            'home': [],
-            'team': [],
-            'available': []
+            'budownictwo': {
+                'home': [],
+                'team': [],
+                'available': []
+            }
         }
-    }
 
     employee_photo_dict = {}
-    i_budownictwo = 1
-    for employees in curent_settings_team:
+
+    i_budownictwo = 1 
+    for employees in generator_teamDB():
         group = employees['EMPLOYEE_DEPARTMENT']
         department = str(group).replace('dmd ', '')
         employee = employees['EMPLOYEE_NAME']
@@ -1911,19 +1953,19 @@ def team_budownictwo():
         employee_photo = users_atributes[employee]['avatar']
         try: employee_photo_dict[employee_login]
         except KeyError: employee_photo_dict[employee_login] = employee_photo
-
+        
         if i_budownictwo < 5 and department == "budownictwo":
             collections[department]['home'].append(employee_login)
         elif i_budownictwo >= 5 and department == "budownictwo":
             collections[department]['team'].append(employee_login)
         if department == 'budownictwo':
             i_budownictwo += 1
-
+        
     for assign in assigned_dmdbudownictwo:
         if assign not in collections['budownictwo']['home'] + collections['budownictwo']['team']:
             collections['budownictwo']['available'].append(assign)
 
-            for row in userDataDB:
+            for row in generator_userDataDB():
                 if row['username'] == assign:
                     employee_photo = row['avatar']
                     try: employee_photo_dict[assign]
@@ -1939,7 +1981,7 @@ def team_budownictwo():
             sequence.append(clear_data)
 
         users_atributesByLogin = {}
-        for usr_d in userDataDB:
+        for usr_d in generator_userDataDB():
             u_login = usr_d['username']
             users_atributesByLogin[u_login] = usr_d
         
@@ -1957,10 +1999,41 @@ def team_budownictwo():
                 'STATUS': 1
             }
             ready_exportDB.append(set_row)
-        # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-        # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+        if len(ready_exportDB):
+            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+            msq.delete_row_from_database(
+                """
+                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+                """,
+                ('dmd budownictwo', )
+            )
 
+            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+            for i, row in enumerate(ready_exportDB):
+                zapytanie_sql = '''
+                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+                dane = (
+                        row['EMPLOYEE_PHOTO'], 
+                        row['EMPLOYEE_NAME'], 
+                        row['EMPLOYEE_ROLE'], 
+                        row['EMPLOYEE_DEPARTMENT'], 
+                        row['PHONE'], 
+                        row['EMAIL'], 
+                        row['FACEBOOK'], 
+                        row['LINKEDIN'], 
+                        row['STATUS'], 
+                    )
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+
+        else:
+            flash('Błąd! Zespół nie został zmieniony.', 'danger')
+            return redirect(url_for('team_budownictwo'))
         print('dane:', ready_exportDB)
+        flash('Zespół został pomyślnie zmieniony.', 'success')
+
 
     settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
@@ -1970,11 +2043,21 @@ def team_budownictwo():
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
 
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
     return render_template(
                             "team_management_budownictwo.html", 
                             username=session['username'],
                             userperm=session['userperm'], 
-                            user_brands=session['brands'],  
+                            user_brands=session['brands'], 
                             members=collections['budownictwo'], 
                             photos_dict=employee_photo_dict,
                             domy=domy,
@@ -1996,29 +2079,29 @@ def team_development():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    curent_settings_team = teamDB
+
     users_atributes = {}
     assigned_dmddevelopment = []
-    for usr_d in userDataDB:
+    
+    for usr_d in generator_userDataDB():
         u_name = usr_d['name']
         u_login = usr_d['username']
         users_atributes[u_name] = usr_d
-        
         if usr_d['brands']['development'] == 1:
             assigned_dmddevelopment.append(u_login)
 
-
     collections = {
-        'development': {
-            'home': [],
-            'team': [],
-            'available': []
+            'development': {
+                'home': [],
+                'team': [],
+                'available': []
+            }
         }
-    }
-    
+
     employee_photo_dict = {}
-    i_development = 1
-    for employees in curent_settings_team:
+
+    i_development = 1 
+    for employees in generator_teamDB():
         group = employees['EMPLOYEE_DEPARTMENT']
         department = str(group).replace('dmd ', '')
         employee = employees['EMPLOYEE_NAME']
@@ -2027,19 +2110,19 @@ def team_development():
         employee_photo = users_atributes[employee]['avatar']
         try: employee_photo_dict[employee_login]
         except KeyError: employee_photo_dict[employee_login] = employee_photo
-
+        
         if i_development < 5 and department == "development":
             collections[department]['home'].append(employee_login)
         elif i_development >= 5 and department == "development":
             collections[department]['team'].append(employee_login)
         if department == 'development':
             i_development += 1
-
+        
     for assign in assigned_dmddevelopment:
         if assign not in collections['development']['home'] + collections['development']['team']:
             collections['development']['available'].append(assign)
 
-            for row in userDataDB:
+            for row in generator_userDataDB():
                 if row['username'] == assign:
                     employee_photo = row['avatar']
                     try: employee_photo_dict[assign]
@@ -2055,7 +2138,7 @@ def team_development():
             sequence.append(clear_data)
 
         users_atributesByLogin = {}
-        for usr_d in userDataDB:
+        for usr_d in generator_userDataDB():
             u_login = usr_d['username']
             users_atributesByLogin[u_login] = usr_d
         
@@ -2073,10 +2156,41 @@ def team_development():
                 'STATUS': 1
             }
             ready_exportDB.append(set_row)
-        # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-        # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-        
+        if len(ready_exportDB):
+            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+            msq.delete_row_from_database(
+                """
+                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+                """,
+                ('dmd development', )
+            )
+
+            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+            for i, row in enumerate(ready_exportDB):
+                zapytanie_sql = '''
+                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+                dane = (
+                        row['EMPLOYEE_PHOTO'], 
+                        row['EMPLOYEE_NAME'], 
+                        row['EMPLOYEE_ROLE'], 
+                        row['EMPLOYEE_DEPARTMENT'], 
+                        row['PHONE'], 
+                        row['EMAIL'], 
+                        row['FACEBOOK'], 
+                        row['LINKEDIN'], 
+                        row['STATUS'], 
+                    )
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+
+        else:
+            flash('Błąd! Zespół nie został zmieniony.', 'danger')
+            return redirect(url_for('team_development'))
         print('dane:', ready_exportDB)
+        flash('Zespół został pomyślnie zmieniony.', 'success')
+
 
     settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
@@ -2086,11 +2200,21 @@ def team_development():
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
 
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
     return render_template(
                             "team_management_development.html", 
                             username=session['username'],
                             userperm=session['userperm'], 
-                            user_brands=session['brands'],  
+                            user_brands=session['brands'], 
                             members=collections['development'], 
                             photos_dict=employee_photo_dict,
                             domy=domy,
@@ -2101,9 +2225,10 @@ def team_development():
                             instalacje=instalacje
                             )
 
+
 @app.route('/team-inwestycje', methods=['GET', 'POST'])
-def team_investment():
-    """Strona zespołu."""
+def team_inwestycje():
+    """Strona zespołu inwestycje."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
         return redirect(url_for('index'))
@@ -2112,29 +2237,29 @@ def team_investment():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    curent_settings_team = teamDB
+
     users_atributes = {}
+    assigned_dmdinwestycje = []
     
-    assigned_dmdinvestment = []
-    for usr_d in userDataDB:
+    for usr_d in generator_userDataDB():
         u_name = usr_d['name']
         u_login = usr_d['username']
         users_atributes[u_name] = usr_d
-        
         if usr_d['brands']['inwestycje'] == 1:
-            assigned_dmdinvestment.append(u_login)
+            assigned_dmdinwestycje.append(u_login)
 
     collections = {
-        'inwestycje': {
-            'home': [],
-            'team': [],
-            'available': []
+            'inwestycje': {
+                'home': [],
+                'team': [],
+                'available': []
+            }
         }
-    }
 
     employee_photo_dict = {}
-    i_investment = 1
-    for employees in curent_settings_team:
+
+    i_inwestycje = 1 
+    for employees in generator_teamDB():
         group = employees['EMPLOYEE_DEPARTMENT']
         department = str(group).replace('dmd ', '')
         employee = employees['EMPLOYEE_NAME']
@@ -2143,20 +2268,19 @@ def team_investment():
         employee_photo = users_atributes[employee]['avatar']
         try: employee_photo_dict[employee_login]
         except KeyError: employee_photo_dict[employee_login] = employee_photo
-
-       
-        if i_investment < 5 and department == "investment":
+        
+        if i_inwestycje < 5 and department == "inwestycje":
             collections[department]['home'].append(employee_login)
-        elif i_investment >= 5 and department == "investment":
+        elif i_inwestycje >= 5 and department == "inwestycje":
             collections[department]['team'].append(employee_login)
-        if department == 'investment':
-            i_investment += 1
-    
-    for assign in assigned_dmdinvestment:
+        if department == 'inwestycje':
+            i_inwestycje += 1
+        
+    for assign in assigned_dmdinwestycje:
         if assign not in collections['inwestycje']['home'] + collections['inwestycje']['team']:
             collections['inwestycje']['available'].append(assign)
 
-            for row in userDataDB:
+            for row in generator_userDataDB():
                 if row['username'] == assign:
                     employee_photo = row['avatar']
                     try: employee_photo_dict[assign]
@@ -2172,7 +2296,7 @@ def team_investment():
             sequence.append(clear_data)
 
         users_atributesByLogin = {}
-        for usr_d in userDataDB:
+        for usr_d in generator_userDataDB():
             u_login = usr_d['username']
             users_atributesByLogin[u_login] = usr_d
         
@@ -2190,23 +2314,65 @@ def team_investment():
                 'STATUS': 1
             }
             ready_exportDB.append(set_row)
-        # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-        # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-        print('dane:', ready_exportDB)
+        if len(ready_exportDB):
+            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+            msq.delete_row_from_database(
+                """
+                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+                """,
+                ('dmd inwestycje', )
+            )
 
-    settingsDB = generator_settingsDB()    
+            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+            for i, row in enumerate(ready_exportDB):
+                zapytanie_sql = '''
+                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+                dane = (
+                        row['EMPLOYEE_PHOTO'], 
+                        row['EMPLOYEE_NAME'], 
+                        row['EMPLOYEE_ROLE'], 
+                        row['EMPLOYEE_DEPARTMENT'], 
+                        row['PHONE'], 
+                        row['EMAIL'], 
+                        row['FACEBOOK'], 
+                        row['LINKEDIN'], 
+                        row['STATUS'], 
+                    )
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+
+        else:
+            flash('Błąd! Zespół nie został zmieniony.', 'danger')
+            return redirect(url_for('team_inwestycje'))
+        print('dane:', ready_exportDB)
+        flash('Zespół został pomyślnie zmieniony.', 'success')
+
+
+    settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
     elitehome = settingsDB['elitehome']
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
-    
+
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
     return render_template(
                             "team_management_inwestycje.html", 
                             username=session['username'],
                             userperm=session['userperm'], 
-                            user_brands=session['brands'],  
+                            user_brands=session['brands'], 
                             members=collections['inwestycje'], 
                             photos_dict=employee_photo_dict,
                             domy=domy,
@@ -2228,29 +2394,29 @@ def team_instalacje():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    curent_settings_team = teamDB
+
     users_atributes = {}
     assigned_dmdinstalacje = []
-    for usr_d in userDataDB:
+    
+    for usr_d in generator_userDataDB():
         u_name = usr_d['name']
         u_login = usr_d['username']
         users_atributes[u_name] = usr_d
-        
         if usr_d['brands']['instalacje'] == 1:
             assigned_dmdinstalacje.append(u_login)
 
     collections = {
-        'instalacje': {
-            'home': [],
-            'team': [],
-            'available': []
+            'instalacje': {
+                'home': [],
+                'team': [],
+                'available': []
+            }
         }
-    }
 
     employee_photo_dict = {}
-    i_instalacje = 1
 
-    for employees in curent_settings_team:
+    i_instalacje = 1 
+    for employees in generator_teamDB():
         group = employees['EMPLOYEE_DEPARTMENT']
         department = str(group).replace('dmd ', '')
         employee = employees['EMPLOYEE_NAME']
@@ -2259,19 +2425,19 @@ def team_instalacje():
         employee_photo = users_atributes[employee]['avatar']
         try: employee_photo_dict[employee_login]
         except KeyError: employee_photo_dict[employee_login] = employee_photo
-
+        
         if i_instalacje < 5 and department == "instalacje":
             collections[department]['home'].append(employee_login)
         elif i_instalacje >= 5 and department == "instalacje":
             collections[department]['team'].append(employee_login)
         if department == 'instalacje':
             i_instalacje += 1
-
+        
     for assign in assigned_dmdinstalacje:
         if assign not in collections['instalacje']['home'] + collections['instalacje']['team']:
             collections['instalacje']['available'].append(assign)
 
-            for row in userDataDB:
+            for row in generator_userDataDB():
                 if row['username'] == assign:
                     employee_photo = row['avatar']
                     try: employee_photo_dict[assign]
@@ -2287,7 +2453,7 @@ def team_instalacje():
             sequence.append(clear_data)
 
         users_atributesByLogin = {}
-        for usr_d in userDataDB:
+        for usr_d in generator_userDataDB():
             u_login = usr_d['username']
             users_atributesByLogin[u_login] = usr_d
         
@@ -2305,22 +2471,65 @@ def team_instalacje():
                 'STATUS': 1
             }
             ready_exportDB.append(set_row)
-        # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-        # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-        print('dane:', ready_exportDB)
+        if len(ready_exportDB):
+            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+            msq.delete_row_from_database(
+                """
+                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+                """,
+                ('dmd instalacje', )
+            )
 
-    settingsDB = generator_settingsDB()    
+            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+            for i, row in enumerate(ready_exportDB):
+                zapytanie_sql = '''
+                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+                dane = (
+                        row['EMPLOYEE_PHOTO'], 
+                        row['EMPLOYEE_NAME'], 
+                        row['EMPLOYEE_ROLE'], 
+                        row['EMPLOYEE_DEPARTMENT'], 
+                        row['PHONE'], 
+                        row['EMAIL'], 
+                        row['FACEBOOK'], 
+                        row['LINKEDIN'], 
+                        row['STATUS'], 
+                    )
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+
+        else:
+            flash('Błąd! Zespół nie został zmieniony.', 'danger')
+            return redirect(url_for('team_instalacje'))
+        print('dane:', ready_exportDB)
+        flash('Zespół został pomyślnie zmieniony.', 'success')
+
+
+    settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
     development = settingsDB['development']
     elitehome = settingsDB['elitehome']
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
-    
+
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
     return render_template(
                             "team_management_instalacje.html", 
-                            userperm=session['userperm'],
-                            user_brands=session['brands'],
+                            username=session['username'],
+                            userperm=session['userperm'], 
+                            user_brands=session['brands'], 
                             members=collections['instalacje'], 
                             photos_dict=employee_photo_dict,
                             domy=domy,
