@@ -71,7 +71,21 @@
 <!-- dropdown -->
 <div class="dropdown">
     <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+        {% if user_brands['domy'] == 0 %}
+            {% if user_brands['budownictwo'] == 0 %}
+                {% if user_brands['elitehome'] == 0 %}
+                    {% if user_brands['instalacje'] == 0 %}
+                        {% if user_brands['development'] == 0 %}
+                            {% if user_brands['inwestycje'] == 0 %}
+                                <script>window.href('/home');</script>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
         Domy
+        
     </button>
     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
         {% if user_brands['domy'] == 1 %}
