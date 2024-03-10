@@ -74,20 +74,26 @@
         {% if user_brands['domy'] == 0 %}
             {% if user_brands['budownictwo'] == 1 %}
                 <script>window.href('/team-budownictwo');</script>
+                budownictwo
             {% else %}
                 {% if user_brands['elitehome'] == 1 %}
                     <script>window.href('/team-elitehome');</script>
+                    elitehome
                 {% else %}
                     {% if user_brands['instalacje'] == 1 %}
                         <script>window.href('/team-instalacje');</script>
+                        instalacje
                     {% else %}
                         {% if user_brands['development'] == 1 %}
                             <script>window.href('/team-development');</script>
+                            development
                         {% else %}
                             {% if user_brands['inwestycje'] == 1 %}
                                 <script>window.href('/team-inwestycje');</script>
+                                inwestycje
                             {% else %}
                                 <script>window.href('/home');</script>
+                                home
                             {% endif %}
                         {% endif %}
                     {% endif %}
