@@ -78,13 +78,25 @@
                         {% if user_brands['development'] == 0 %}
                             {% if user_brands['inwestycje'] == 0 %}
                                 <script>window.href('/home');</script>
+                            {% else %}
+                                <script>window.href('/team-inwestycje');</script>
                             {% endif %}
+                        {% else %}
+                            <script>window.href('/team-development');</script>
                         {% endif %}
+                    {% else %}
+                        <script>window.href('/team-instalacje');</script>
                     {% endif %}
+                {% else %}
+                    <script>window.href('/team-elitehome');</script>
                 {% endif %}
+            {% else %}
+                <script>window.href('/team-budownictwo');</script>
             {% endif %}
+        {% else %}
+            Domy
         {% endif %}
-        Domy
+
         
     </button>
     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
