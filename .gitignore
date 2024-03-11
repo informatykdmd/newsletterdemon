@@ -2,3 +2,4 @@
 /bin/config_utils.py
 /logs/errors.log
 temp.py
+gunicorn_config.py
