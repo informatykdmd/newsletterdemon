@@ -163,28 +163,28 @@
         </div>
         <div class="colapse-column-usual formatuj-left">
             <form action="{{ url_for('set_sender') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
-            <div class="formatuj-left">
-                <h5>Ustawienia Adresu Newslettera:</h5>
-            </div>
-            <div class="input-group input-group-sm mb-3">
-                <span class="input-group-text formatuj-inputs" id="inputGroup-sizing-sm"><i class="bi bi-envelope-at-fill"></i></span>
-                <input type="text" class="form-control formatuj-inputs" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Adres E-mail" name="sender_email" id="sender_email" value="{{smtpSettingsDict['smtp_username']}}" required>
-            </div>
-            <div class="input-group input-group-sm mb-3">
-                <span class="input-group-text formatuj-inputs" id="inputGroup-sizing-sm"><i class="bi bi-hdd-network"></i></span>
-                <input type="text" class="form-control formatuj-inputs" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Serwer SMTP" name="sender_url" id="sender_url" value="{{smtpSettingsDict['smtp_server']}}" required>
-                <input type="text" class="form-control formatuj-inputs" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Port" name="sender_port" id="sender_port" value="{{smtpSettingsDict['smtp_port']}}" required>
-            </div>
-            <div class="input-group input-group-sm mb-3">
-                <span class="input-group-text formatuj-inputs" id="inputGroup-sizing-sm"><i class="bi bi-file-earmark-lock2"></i></span>
-                <input type="password" class="form-control formatuj-inputs" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="sender_password" id="sender_password" placeholder="Hasło do E-maila" required>
-            </div>
-            <div>
-                <div class="formatuj-right">
-                    <button type="submit" class="btn btn-success btn-sm" value="Ustaw plan">Zapisz Nadawcę Newslettera</button>
+                <div class="formatuj-left">
+                    <h5>Ustawienia Adresu Newslettera:</h5>
                 </div>
-            </div>
-        </form>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text formatuj-inputs" id="inputGroup-sizing-sm"><i class="bi bi-envelope-at-fill"></i></span>
+                    <input type="text" class="form-control formatuj-inputs" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Adres E-mail" name="sender_email" id="sender_email" value="{{smtpSettingsDict['smtp_username']}}" required>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text formatuj-inputs" id="inputGroup-sizing-sm"><i class="bi bi-hdd-network"></i></span>
+                    <input type="text" class="form-control formatuj-inputs" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Serwer SMTP" name="sender_url" id="sender_url" value="{{smtpSettingsDict['smtp_server']}}" required>
+                    <input type="text" class="form-control formatuj-inputs" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Port" name="sender_port" id="sender_port" value="{{smtpSettingsDict['smtp_port']}}" required>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text formatuj-inputs" id="inputGroup-sizing-sm"><i class="bi bi-file-earmark-lock2"></i></span>
+                    <input type="password" class="form-control formatuj-inputs" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" name="sender_password" id="sender_password" placeholder="Hasło do E-maila" required>
+                </div>
+                <div>
+                    <div class="formatuj-right">
+                        <button type="submit" class="btn btn-success btn-sm" value="Ustaw plan">Zapisz Nadawcę Newslettera</button>
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="colapse-column-ender formatuj-left">
             <div class="formatuj-left">
