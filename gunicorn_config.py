@@ -1,7 +1,7 @@
 import multiprocessing
 
 # Podstawowe konfiguracje
-bind = "0.0.0.0:8000"  # Adres IP i port na którym Gunicorn będzie nasłuchiwał
+bind = "185.201.114.123:8000"  # Adres IP i port na którym Gunicorn będzie nasłuchiwał
 workers = multiprocessing.cpu_count() * 2 + 1  # Zalecana liczba procesów pracowniczych
 accesslog = "-"  # Logowanie dostępu; "-" oznacza stdout
 errorlog = "-"  # Logowanie błędów; "-" oznacza stderr
