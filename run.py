@@ -115,7 +115,8 @@ def generator_userDataDB():
                 'team': data[21],
                 'permissions': data[22],
                 'settings': data[30],
-                'newsletter': data[23]
+                'newsletter': data[23],
+                'esate': data[30] # kolejne uprawnienie wzz. dmd inwestycje
                 },
             'brands': {
                 'domy': (data[24]),
@@ -660,6 +661,8 @@ def update_permission():
     if perm_id == 8: perm_name = 'Zarządzanie Newsletterem'
     if perm_id == 9: perm_name = 'Zarządzanie Ustawieniami'
 
+    if perm_id == 16: perm_name = 'Zarządzanie Ogłoszeniami'
+
     if perm_id == 10: perm_name = 'Przynależność do DMD Domy'
     if perm_id == 11: perm_name = 'Przynależność do DMD Budownictwo'
     if perm_id == 12: perm_name = 'Przynależność do DMD EliteHome'
@@ -667,7 +670,7 @@ def update_permission():
     if perm_id == 14: perm_name = 'Przynależność do DMD Instalacje'
     if perm_id == 15: perm_name = 'Przynależność do DMD Development'
 
-    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9]:
+    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16]:
         if session['userperm']['permissions'] == 0:
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
             return redirect(url_for('users'))
@@ -740,6 +743,15 @@ def update_permission():
         if perm_id == 9: 
             'Zarządzanie Ustawieniami'
             zapytanie_sql = '''UPDATE admins SET PERM_SETTINGS = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        
+        if perm_id == 16: 
+            'Zarządzanie Ogłoszeniami'
+            zapytanie_sql = '''UPDATE admins SET PERM_ESTATE = %s WHERE ID = %s;'''
             if permission: onOff = 1
             else: onOff = 0
             dane = (onOff, user_id)
@@ -2540,6 +2552,52 @@ def team_instalacje():
                             instalacje=instalacje
                             )
 
+
+
+@app.route('/estate-ads-rent')
+def estateAdsRent():
+    """Strona zawierająca listę z ogłoszeniami nieruchomości."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    return render_template(
+                            "estate_management_rent.html",
+                            )     
+
+@app.route('/estate-ads-sell')
+def estateAdsSell():
+    """Strona zawierająca listę z ogłoszeniami nieruchomości."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    return render_template(
+                            "estate_management_sell.html",
+                            )     
+
+@app.route('/estate-ads-special')
+def estateAdsspecial():
+    """Strona zawierająca listę z ogłoszeniami nieruchomości."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    return render_template(
+                            "estate_management_special.html",
+                            )     
 
 @app.route('/subscriber')
 def subscribers(router=True):
