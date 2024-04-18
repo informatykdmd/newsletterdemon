@@ -13,6 +13,8 @@ import os
 import random
 import string
 import adminSmtpSender as mails
+from googletrans import Translator
+import json
 
 """
 Aplikacja "Admin Panel" stanowi kompleksowe narzędzie do 
@@ -211,6 +213,108 @@ def generator_daneDBList():
         }
         daneList.append(theme)
     return daneList
+
+def getLangText(text):
+    """Funkcja do tłumaczenia tekstu z polskiego na angielski"""
+    translator = Translator()
+    translation = translator.translate(str(text), dest='en')
+    return translation.text
+
+def format_date(date_input, pl=True):
+    ang_pol = {
+        'January': 'styczeń',
+        'February': 'luty',
+        'March': 'marzec',
+        'April': 'kwiecień',
+        'May': 'maj',
+        'June': 'czerwiec',
+        'July': 'lipiec',
+        'August': 'sierpień',
+        'September': 'wrzesień',
+        'October': 'październik',
+        'November': 'listopad',
+        'December': 'grudzień'
+    }
+    # Sprawdzenie czy data_input jest instancją stringa; jeśli nie, zakładamy, że to datetime
+    if isinstance(date_input, str):
+        date_object = datetime.datetime.strptime(date_input, '%Y-%m-%d %H:%M:%S')
+    else:
+        # Jeśli date_input jest już obiektem datetime, używamy go bezpośrednio
+        date_object = date_input
+
+    formatted_date = date_object.strftime('%d %B %Y')
+    if pl:
+        for en, pl in ang_pol.items():
+            formatted_date = formatted_date.replace(en, pl)
+
+    return formatted_date
+
+def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystkie'
+    took_rentOffer = take_data_table('*', 'OfertyNajmu')
+    
+    rentOffer = []
+    for data in took_rentOffer:
+        try: fotoList = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', data[8])[0][1:-1]
+        except IndexError: fotoList = []
+        
+        gps_json = {}
+        try:
+            if data[27] is not None: gps_json = json.loads(data[27])
+            else: raise ValueError("Dane są None, nie można przetworzyć JSON")
+        except json.JSONDecodeError: print("Błąd: Podane dane nie są poprawnym JSON-em")
+        except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
+        except TypeError as e: print(f"Błąd typu danych: {e}")
+        except Exception as e: print(f"Nieoczekiwany błąd: {e}")
+
+        opis_json = {}
+        try:
+            if data[2] is not None:
+                opis_json = json.loads(data[2])
+            else: raise ValueError("Dane są None, nie można przetworzyć JSON")
+        except json.JSONDecodeError: print("Błąd: Podane dane nie są poprawnym JSON-em")
+        except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
+        except TypeError as e: print(f"Błąd typu danych: {e}")
+        except Exception as e: print(f"Nieoczekiwany błąd: {e}")
+        
+            
+
+        theme = {
+            'ID': int(data[0]),
+            'Tytul': data[1] if lang=='pl' else getLangText(data[1]),
+            'Opis': opis_json,
+            'Cena': data[3],
+            'Kaucja': 0 if data[4] is None else data[4],
+            'Lokalizacja': data[5],
+            'LiczbaPokoi': 0 if data[6] is None else data[6],
+            'Metraz': 0 if data[7] is None else data[7],
+            'Zdjecia': [foto for foto in fotoList if foto is not None],
+            'DataPublikacjiOlx': format_date(data[9]),
+            'DataPublikacjiAllegro': format_date(data[10]),
+            'DataPublikacjiOtoDom': format_date(data[11]),
+            'DataPublikacjiMarketplace': format_date(data[12]),
+            'DataUtworzenia': format_date(data[13]),
+            'DataAktualizacji': format_date(data[14]),
+            'RodzajZabudowy': '' if data[15] is None else data[15],
+            'Czynsz': 0.00 if data[16] is None else data[16],
+            'Umeblowanie': '' if data[17] is None else data[17],
+            'LiczbaPieter': 0 if data[18] is None else data[18],
+            'PowierzchniaDzialki': 0.00 if data[19] is None else data[19],
+            'TechBudowy': '' if data[20] is None else data[20],
+            'FormaKuchni': '' if data[21] is None else data[21],
+            'TypDomu': data[22],
+            'StanWykonczenia': '' if data[23] is None else data[23],
+            'RokBudowy': 0 if data[24] is None else data[24],
+            'NumerKW': '' if data[25] is None else data[25],
+            'InformacjeDodatkowe': '' if data[26] is None else data[26],
+            'GPS': gps_json,
+            'TelefonKontaktowy': '' if data[28] is None else data[28],
+            'EmailKontaktowy': '' if data[29] is None else data[29]
+        }
+
+        rentOffer.append(theme)
+
+    return rentOffer
+
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
@@ -2564,10 +2668,37 @@ def estateAdsRent():
     if session['userperm']['estate'] == 0:
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
+    
+    # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
+    all_rents = generator_rentOffert()
 
+    # Ustawienia paginacji
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(all_rents)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
+    # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
+    ads_rent = all_rents[offset: offset + per_page]
+
+    settingsDB = generator_settingsDB()
+    domy = settingsDB['domy']
+    budownictwo = settingsDB['budownictwo']
+    development = settingsDB['development']
+    elitehome = settingsDB['elitehome']
+    inwestycje = settingsDB['inwestycje']
+    instalacje = settingsDB['instalacje']
     return render_template(
                             "estate_management_rent.html",
+                            ads_rent=ads_rent,
+                            userperm=session['userperm'],
+                            username=session['username'],
+                            pagination=pagination,
+                            domy=domy,
+                            budownictwo=budownictwo,
+                            development=development,
+                            elitehome=elitehome,
+                            inwestycje=inwestycje,
+                            instalacje=instalacje
                             )     
 
 @app.route('/estate-ads-sell')
