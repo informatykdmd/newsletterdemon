@@ -114,9 +114,9 @@ def generator_userDataDB():
                 'commnets': data[20],
                 'team': data[21],
                 'permissions': data[22],
-                'settings': data[30],
+                'settings': data[30], # kolejne uprawnienie
                 'newsletter': data[23],
-                'esate': data[30] # kolejne uprawnienie wzz. dmd inwestycje
+                'esate': data[31] # kolejne uprawnienie wzz. dmd inwestycje
                 },
             'brands': {
                 'domy': (data[24]),
@@ -2564,6 +2564,7 @@ def estateAdsRent():
     if session['userperm']['estate'] == 0:
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
+
 
     return render_template(
                             "estate_management_rent.html",
