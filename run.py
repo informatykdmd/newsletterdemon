@@ -116,7 +116,7 @@ def generator_userDataDB():
                 'permissions': data[22],
                 'settings': data[30], # kolejne uprawnienie
                 'newsletter': data[23],
-                'esate': data[31] # kolejne uprawnienie wzz. dmd inwestycje
+                'estate': data[31] # kolejne uprawnienie wzz. dmd inwestycje
                 },
             'brands': {
                 'domy': (data[24]),
