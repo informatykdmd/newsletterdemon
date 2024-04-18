@@ -157,6 +157,10 @@ body {
   .team_button_development {
     background-color: #003fb4 !important;
   }
+
+ .estate_button {
+    background-color: #5e6d73 !important;
+  }
 .team-heads {
     border-radius: 7px;
     font-size: 14pt;
@@ -620,3 +624,22 @@ color:#969696;
 .input-warning {
     border: 1px solid red !important; /* czerwona obramówka dla błędnych pól */
 }
+
+.horizontal-list {
+    list-style-type: none; /* Usuwa domyślne punktory */
+    margin: 0; /* Resetuje domyślny margines */
+    padding: 0; /* Resetuje domyślne paddingi */
+    display: flex; 
+    /* Włącza Flexbox */
+    flex-wrap: wrap;
+    flex-direction: row; /* Ustawia elementy listy poziomo */
+    align-items: center; /* Opcjonalnie, wyrównuje elementy listy do środka w pionie */
+  }
+  
+  .horizontal-list li {
+    margin-right: 20px; /* Dodaje odstęp między elementami listy; dostosuj według potrzeb */
+  }
+  
+  .horizontal-list li:last-child {
+    margin-right: 0; /* Usuwa margines z prawej strony ostatniego elementu listy */
+  }
