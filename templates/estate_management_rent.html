@@ -480,19 +480,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {% if post_data['Lokalizacja']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded p-2 m-1 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Lokalizacja</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-geo text-success"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['Lokalizacja']}} </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
+                                        
+
                                         {% if post_data['Metraz']!=0 %}
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded p-2 m-1 formatuj-hover">
@@ -664,7 +653,23 @@
                                         {% endif %}
                                     </div>
                                     <div class="row">
-
+                                        {% if post_data['Lokalizacja']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded p-2 m-1 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Lokalizacja</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-geo text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Lokalizacja']}} </span>
+                                                    {% if post_data['GPS']!={} %}
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['latitude']}} </span>
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['longitude']}} </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
                                         {% if post_data['InformacjeDodatkowe']!='' %}
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded p-2 m-1 formatuj-hover">
