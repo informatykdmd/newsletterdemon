@@ -538,7 +538,7 @@
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="mb-2">
-                                                    <span class="text-light fw-light">Czynsz</span>
+                                                    <span class="text-light fw-light">Liczba Pięter</span>
                                                 </div>
                                                 <div class="ms-3 formatuj-maly-font">
                                                     <i class="bi bi-cash text-success"></i>
@@ -569,6 +569,19 @@
                                                 <div class="ms-3 formatuj-maly-font">
                                                     <i class="bi bi-house-gear text-success"></i>
                                                     <span class="text-secondary fw-lighter">{{post_data['TechBudowy']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['Umeblowanie']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Umeblowanie</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-heart text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Umeblowanie']}}</span>
                                                 </div>
                                             </div>
                                         </div>
