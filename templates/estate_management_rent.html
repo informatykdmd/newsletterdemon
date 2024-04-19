@@ -31,7 +31,7 @@
                                 <div  class="col-xl-8 col-lg-6 col-sm-8">
                                     Tytuł
                                 </div>
-                                <div  class="d-none d-lg-block" style="max-width: 150px;">
+                                <div  class="d-none d-lg-block" style="max-width: 80px;">
                                     Cena
                                 </div>
                                 <div  class="d-none d-lg-block" style="max-width: 150px;">
@@ -208,14 +208,14 @@
                                         {{post_data['Tytul']}}
                                     </a>
                                 </div>
-                                <div  class="d-none d-lg-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div  class="d-none d-lg-block"  style="max-width: 80px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <span class="display-6 formatuj-maly-font">{{post_data['Cena']}} PLN</span>
                                     </a>
                                 </div>
                                 <div  class="d-none d-lg-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        <span class="display-6 formatuj-maly-font">{{post_data['Lokalizacja']}}</span>
+                                        <span class="display-6 formatuj-maly-font">{{post_data['Lokalizacja'][:12]}}</span>
                                     </a>
                                 </div>
                                 <div  class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
