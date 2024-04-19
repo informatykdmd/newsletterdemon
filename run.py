@@ -2709,6 +2709,11 @@ def estateAdsRent():
                             instalacje=instalacje
                             )     
 
+
+@app.route('/update-rent-offer-status')
+def update_rent_offer_status():
+    return
+
 @app.route('/estate-ads-sell')
 def estateAdsSell():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
