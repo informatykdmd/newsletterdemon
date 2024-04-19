@@ -265,7 +265,7 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
         except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
         except TypeError as e: print(f"Błąd typu danych: {e}")
         except Exception as e: print(f"Nieoczekiwany błąd: {e}")
-
+        
         opis_json = {}
         try:
             if data[2] is not None:
@@ -311,6 +311,11 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
             'EmailKontaktowy': '' if data[29] is None else data[29]
         }
 
+        try: mainFoto = theme['Zdjecia'][0]
+        except IndexError: mainFoto = ''
+        except KeyError: mainFoto = ''
+        theme['mainFoto']=mainFoto
+        
         rentOffer.append(theme)
 
     return rentOffer
@@ -2679,6 +2684,8 @@ def estateAdsRent():
 
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     ads_rent = all_rents[offset: offset + per_page]
+
+
 
     settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
