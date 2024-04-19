@@ -477,20 +477,26 @@
                                             <input type="hidden" name="id" value="{{post_id}}" />
                                             <input type="hidden" name="status" value="active" />
                                             <div class="row row-cols-auto ">
+                                                {% if post_data['StatusOferty'] == 1 %}
                                                 <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj</button>
+                                                </div>
+                                                {% else %}
+                                                <div class="col formatuj-padding">
+                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj</button>
+                                                </div>
+                                                {% endif %}
+                                                <div class="col formatuj-padding">
+                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na OLX</button>
                                                 </div>
                                                 <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Usuń z OLX</button>
                                                 </div>
                                                 <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
+                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na OTO DOM</button>
                                                 </div>
                                                 <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
-                                                </div>
-                                                <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
+                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Allegro Lokalnie</button>
                                                 </div>
                                             </div>
                                         </form>
