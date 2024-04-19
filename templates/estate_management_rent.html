@@ -472,7 +472,7 @@
                                             </ul>
                                         {% endif %}
                                     {% endfor %}
-                                    <p class="h3">{{post_data['Cena']}}</p>
+                                    <p class="h3"><i class="bi bi-database-fill-check text-warning"></i> {{post_data['Cena']}} PLN</p>
                                     <div>
                                         <form action="{{ url_for('update_rent_offer_status') }}" id="statusUser_{{post_id}}" method="POST" enctype="multipart/form-data">
                                             <input type="hidden" name="id" value="{{post_id}}" />
