@@ -487,7 +487,7 @@
                                                 </div>
                                                 {% endif %}
                                                 <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na OLX</button>
+                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Marketplace</button>
                                                 </div>
                                                 <div class="col formatuj-padding">
                                                     <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Usuń z OLX</button>
@@ -503,7 +503,8 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
-                                    <div class="row row-cols-2">
+                                    
+                                    <div class="row-cols-1 ">
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="mb-2">
@@ -515,6 +516,41 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        {% if post_data['Lokalizacja']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Lokalizacja</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-geo text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Lokalizacja']}} </span>
+                                                    {% if post_data['GPS']!={} %}
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['latitude']}} </span>
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['longitude']}} </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['InformacjeDodatkowe']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Informacje Dodatkowe </span>
+                                                    <i class="bi bi-info-lg text-success"></i>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-stack text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['InformacjeDodatkowe']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="row row-cols-2">
+                                        
                                         
 
                                         {% if post_data['Metraz']!=0 %}
@@ -700,40 +736,7 @@
                                         </div>
                                         {% endif %}
                                     </div>
-                                    <div class="row-cols-1 ">
-                                        {% if post_data['Lokalizacja']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Lokalizacja</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-geo text-success"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['Lokalizacja']}} </span>
-                                                    {% if post_data['GPS']!={} %}
-                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['latitude']}} </span>
-                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['longitude']}} </span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['InformacjeDodatkowe']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Informacje Dodatkowe </span>
-                                                    <i class="bi bi-info-lg text-success"></i>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-stack text-warning"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['InformacjeDodatkowe']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-
-                                    </div>
+                                    
                                 </div>
                                 
                                 
