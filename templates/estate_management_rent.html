@@ -23,8 +23,8 @@
 {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Zarządzanie Ogłoszeniami Najmu</a>{% endblock %}
 
 {% block tableHeader %}
-                        <div class="row ">
-                            <div class="klej formatuj-header">
+                        <div>
+                            <div class="row klej formatuj-header">
                                 <div class="column-id d-none d-lg-block">
                                     #
                                 </div>
@@ -198,8 +198,8 @@
                         {% for post_data in ads_rent %}
                             {% set post_id  = post_data['ID'] %}
                         <!-- linia contentu tabeli ciemna-->
-                        <div class="row">
-                            <div class="klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                        <div>
+                            <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
                                 <div class="column-id d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {{post_id}}
                                 </div>
