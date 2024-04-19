@@ -308,14 +308,15 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
             'InformacjeDodatkowe': '' if data[26] is None else data[26],
             'GPS': gps_json,
             'TelefonKontaktowy': '' if data[28] is None else data[28],
-            'EmailKontaktowy': '' if data[29] is None else data[29]
+            'EmailKontaktowy': '' if data[29] is None else data[29],
+            'StatusOferty': 0 if data[30] is None else data[30]
         }
 
         try: mainFoto = theme['Zdjecia'][0]
         except IndexError: mainFoto = ''
         except KeyError: mainFoto = ''
         theme['mainFoto']=mainFoto
-        
+
         rentOffer.append(theme)
 
     return rentOffer
