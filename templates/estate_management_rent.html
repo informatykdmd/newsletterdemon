@@ -25,25 +25,25 @@
 {% block tableHeader %}
                         <div class="container ">
                             <div class="klej formatuj-header">
-                                <div class="column-id d-sm-block">
+                                <div class="column-id d-none d-lg-block">
                                     #
                                 </div>
                                 <div  class="column-expand">
                                     Tytuł
                                 </div>
-                                <div  class="column-usual d-sm-block">
+                                <div  class="column-usual d-none d-lg-block">
                                     Cena
                                 </div>
-                                <div  class="column-usual d-sm-block">
+                                <div  class="column-usual d-none d-lg-block">
                                     Lokalizacja
                                 </div>
-                                <div  class="column-usual d-sm-block">
+                                <div  class="column-usual d-none d-lg-block">
                                     Status
                                 </div>
-                                <div  class="column-usuald-sm-block">
+                                <div  class="column-usuald-none d-lg-block">
                                     Operator
                                 </div>
-                                <div  class="column-usual d-sm-block">
+                                <div  class="column-usual d-none d-lg-block">
                                     Data publikacji
                                 </div>
                                 <div  class="column-ender">
@@ -200,7 +200,7 @@
                         <!-- linia contentu tabeli ciemna-->
                         <div class="row">
                             <div class="klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
-                                <div class="column-id d-sm-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="column-id d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {{post_id}}
                                 </div>
                                 <div  class="column-expand" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -208,17 +208,17 @@
                                         {{post_data['Tytul'][:25]}}
                                     </a>
                                 </div>
-                                <div  class="column-usual d-sm-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div  class="column-usual d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_data['Cena']}} PLN
                                     </a>
                                 </div>
-                                <div  class="column-usual d-sm-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div  class="column-usual d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_data['Lokalizacja']}}
                                     </a>
                                 </div>
-                                <div  class="column-usual d-sm-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div  class="column-usual d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {% if post_data['StatusOferty'] == 1 %}
                                             <p class="text-warning">Aktywna</p>
@@ -227,7 +227,7 @@
                                         {% endif %}
                                     </a>
                                 </div>
-                                <div  class="column-usual d-sm-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div  class="column-usual d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {% if post_data['EmailKontaktowy'] != '' %}
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <p class="text-secondary">{{post_data['EmailKontaktowy']}}</p>
