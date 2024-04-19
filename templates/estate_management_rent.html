@@ -25,25 +25,25 @@
 {% block tableHeader %}
                         <div>
                             <div class="row klej formatuj-header">
-                                <div class="column-id d-none d-lg-block">
+                                <div class="col d-none d-lg-block">
                                     #
                                 </div>
                                 <div  class="col-xl-6 col-lg-6 col-sm-8">
                                     Tytuł
                                 </div>
-                                <div  class="col-xl-2 col-sm-4 d-none d-lg-block">
+                                <div  class="col-xl-1 d-none d-lg-block">
                                     Cena
                                 </div>
-                                <div  class="col-xl-2 col-sm-4 d-none d-lg-block">
+                                <div  class="col-xl-2 d-none d-lg-block">
                                     Lokalizacja
                                 </div>
-                                <div  class="col-xl-2 col-sm-4 d-none d-lg-block">
+                                <div  class="col-xl-1 d-none d-lg-block">
                                     Status
                                 </div>
-                                <div  class="col-xl-2 col-sm-4 d-none d-lg-block">
+                                <div  class="col-xl-2 d-none d-lg-block">
                                     Operator
                                 </div>
-                                <div  class="col-xl-2 col-sm-2 d-none d-lg-block">
+                                <div  class="col-xl-2 d-none d-lg-block">
                                     Data publikacji
                                 </div>
                                 <div  class="col-lg-2 col-sm-4 text-end">
@@ -200,7 +200,7 @@
                         <!-- linia contentu tabeli ciemna-->
                         <div>
                             <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
-                                <div class="column-id d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="col d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {{post_id}}
                                 </div>
                                 <div  class="col-xl-6 col-sm-8" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -208,12 +208,12 @@
                                         {{post_data['Tytul']}}
                                     </a>
                                 </div>
-                                <div  class="col-xl-1 col-sm-4 d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div  class="col-xl-1 d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_data['Cena']}} PLN
                                     </a>
                                 </div>
-                                <div  class="col-xl-1 col-sm-4 d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div  class="col-xl-2 d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_data['Lokalizacja']}}
                                     </a>
@@ -227,7 +227,7 @@
                                         {% endif %}
                                     </a>
                                 </div>
-                                <div  class="col-xl-1 col-sm-4 d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div  class="col-xl-2 d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {% if post_data['EmailKontaktowy'] != '' %}
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <p class="text-secondary">{{post_data['EmailKontaktowy']}}</p>
@@ -238,7 +238,7 @@
                                     </a>
                                     {% endif %}
                                 </div>
-                                <div class="col-xl-1 col-sm-4 d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="col-xl-1 d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_data['DataUtworzenia']}}
                                     </a>
