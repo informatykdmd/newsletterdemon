@@ -643,3 +643,11 @@ color:#969696;
   .horizontal-list li:last-child {
     margin-right: 0; /* Usuwa margines z prawej strony ostatniego elementu listy */
   }
+
+  .formatuj-hover {
+    background-color: none;
+  }
+
+  .formatuj-hover:hover {
+    background-color: #33383b;
+  }
