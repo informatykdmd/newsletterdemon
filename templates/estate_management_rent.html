@@ -221,9 +221,9 @@
                                 <div  class="column-usual" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {% if post_data['StatusOferty'] == 1 %}
-                                            Aktywna
+                                            <p class="text-warning">Aktywna</p>
                                         {% else %}
-                                            Nieaktywna
+                                        <p class="text-secondary">Nieaktywna</p>
                                         {% endif %}
                                     </a>
                                 </div>
