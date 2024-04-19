@@ -56,14 +56,14 @@
                         <!-- OFFCANVANSE RIGHT ADD NEW POST -->
                         <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                             <div class="offcanvas-header">
-                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowego posta</h4>
+                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowego ogłoszenia</h4>
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
                                 <form method="POST" id="editPost_9999999" action="{{ url_for('save_post') }}" enctype="multipart/form-data" >
                                     <!-- Tytuł artykułu -->
                                     <div class="mb-3">
-                                    <label for="title_9999999" class="form-label">Tytuł artykułu</label>
+                                    <label for="title_9999999" class="form-label">Tytuł ogłoszenia</label>
                                     <input 
                                             type="text" 
                                             value=""
@@ -72,6 +72,12 @@
                                             id="title_9999999" 
                                             name="title_9999999" 
                                             required>
+                                    </div>
+                                    <!-- Tytuł artykułu -->
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Username" aria-label="Username">
+                                        <span class="input-group-text">@</span>
+                                        <input type="text" class="form-control" placeholder="Server" aria-label="Server">
                                     </div>
 
                                     <!-- Wstęp -->
