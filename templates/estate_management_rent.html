@@ -25,7 +25,7 @@
 {% block tableHeader %}
                         <div>
                             <div class="row klej formatuj-header">
-                                <div class="col d-none d-lg-block">
+                                <div class="d-none d-lg-block">
                                     #
                                 </div>
                                 <div  class="col-xl-6 col-lg-6 col-sm-8">
@@ -200,7 +200,7 @@
                         <!-- linia contentu tabeli ciemna-->
                         <div>
                             <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
-                                <div class="col d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="d-none d-lg-block" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {{post_id}}
                                 </div>
                                 <div  class="col-xl-6 col-sm-8" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
