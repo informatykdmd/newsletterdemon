@@ -310,16 +310,24 @@
 
                                     <!-- Opis -->
                                     <div class="mb-3">
-                                        <label for="additionalList9999999" class="form-label">Opis Nieruchomości</label>
+                                        <label for="DynamicznyOpis9999999" class="form-label">Opis Nieruchomości</label>
                                         <div id="list-container9999999" class="no-border">
                                             <!-- Tutaj będą dynamicznie dodawane elementy listy -->
                                         </div>
                                         <div class="formatuj-right formatuj-margin">
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="addListItem('9999999')">Dodaj pole</button>
+                                            <button type="button" class="btn btn-primary add-button" onclick="addCustomElement('9999999', 'p', 'Przykładowy akapit')">Dodaj akapit</button>
+                                            <button type="button" class="btn btn-primary add-button" onclick="addCustomElement('9999999', 'strong', 'Przykładowy akapit')">Dodaj akapit strong</button>
+                                            <button type="button" class="btn btn-secondary add-button" onclick="addCustomElement('9999999', 'h1', 'Nagłówek H1')">Dodaj H1</button>
+                                            <button type="button" class="btn btn-secondary add-button" onclick="addCustomElement('9999999', 'h2', 'Nagłówek H2')">Dodaj H2</button>
+                                            <button type="button" class="btn btn-secondary add-button" onclick="addCustomElement('9999999', 'h3', 'Nagłówek H3')">Dodaj H3</button>
+                                            <button type="button" class="btn btn-secondary add-button" onclick="addCustomElement('9999999', 'h1-strong', 'Nagłówek H1')">Dodaj H1-strong</button>
+                                            <button type="button" class="btn btn-secondary add-button" onclick="addCustomElement('9999999', 'h2-strong', 'Nagłówek H2')">Dodaj H2-strong</button>
+                                            <button type="button" class="btn btn-secondary add-button" onclick="addCustomElement('9999999', 'h3-strong', 'Nagłówek H3')">Dodaj H3-strong</button>
+                                            <button type="button" class="btn btn-success add-list-item-button" onclick="addCustomElement('9999999', 'li', 'Element listy')">Dodaj element listy</button>
                                         </div>
                                     </div>
                                     <script>
-                                        addListItem('9999999');
+                                        addCustomElement('9999999', 'p', '');
                                     </script>
 
                                     <!-- Main Foto -->

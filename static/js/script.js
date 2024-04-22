@@ -135,60 +135,6 @@ function joinListFields(id, sep, elementName="dynamicField",) {
     console.log(resultString);
     return resultString;
 }
-// funkcja prototypowa !! Nie działa dobrze
-// function prepareAndSubmitForm(postId, oldFotos=true) {
-//     let formIsValid = true;
-
-//     // Funkcja pomocnicza do zmiany koloru ramki wokół elementów formularza
-//     function toggleWarning(elementId, condition) {
-//         const element = document.getElementById(elementId);
-//         if (condition) {
-//             element.classList.add('input-warning');
-//             formIsValid = false; // Formularz jest niepoprawnie wypełniony
-//         } else {
-//             element.classList.remove('input-warning');
-//         }
-//     }
-
-//     // Sprawdzenie czy pola są wypełnione, zmiana logiki na wykorzystanie toggleWarning
-//     var title = document.getElementById('title_' + postId).value;
-//     toggleWarning('title_' + postId, !title);
-
-//     var introduction = document.getElementById('introduction_' + postId).value;
-//     toggleWarning('introduction_' + postId, !introduction);
-
-//     var highlight = document.getElementById('Highlight_' + postId).value;
-//     toggleWarning('Highlight_' + postId, !highlight);
-
-//     var tagsFieldData = joinListFields(postId, ', ', 'dynamicTagsField');
-//     toggleWarning('dynamicTagsField_' + postId, !tagsFieldData);
-
-//     var dynamicFieldData = joinListFields(postId, '#splx#', 'dynamicField');
-//     toggleWarning('dynamicField_' + postId, !dynamicFieldData);
-
-//     var category = document.getElementById('category_' + postId).value;
-//     toggleWarning('category_' + postId, !category);
-
-//     if (!oldFotos) {
-//         var mainFoto = document.getElementById('mainFoto_' + postId).value;
-//         toggleWarning('mainFoto_' + postId, !mainFoto);
-
-//         var contentFoto = document.getElementById('contentFoto_' + postId).value;
-//         toggleWarning('contentFoto_' + postId, !contentFoto);
-//     }
-
-//     if (!formIsValid) {
-//         return; // Zatrzymaj przesyłanie formularza, jeśli którykolwiek test nie przeszedł
-//     }
-
-//     // Pobierz dane za pomocą funkcji joinListFields i ustaw wartości ukrytych pól formularza
-//     document.getElementById('tagsFieldData_'+postId).value = tagsFieldData;
-//     document.getElementById('dynamicFieldData_'+postId).value = dynamicFieldData;
-
-//     // Znajdź formularz i wyślij go
-//     var form = document.getElementById('editPost_'+postId);
-//     form.submit();
-// }
 
 
 function prepareAndSubmitForm(postId, oldFotos=true) {
@@ -416,3 +362,77 @@ function pobierzIKonsolujKolejnosc(sekcjaId) {
     console.log(`Kolejność w sekcji ${sekcjaId}:`, kolejnosc);
 }
 
+function addCustomElement(id, elementType, elementContent) {
+    var container = document.getElementById('list-container' + id);
+    var buttonContainer = document.getElementById('button-container' + id) || createButtonContainer(id, container);
+    var newElement;
+    
+    if (elementType.includes('li')) {
+        newElement = document.createElement('input');
+        newElement.type = 'text';
+        newElement.className = 'form-control bg-dark custom-element';
+        newElement.setAttribute('data-type', elementType);
+        toggleButtons(false);
+    } else {
+        newElement = document.createElement('textarea');
+        newElement.rows = 4;
+        newElement.className = 'form-control bg-dark custom-element';
+        newElement.setAttribute('data-type', elementType);
+    }
+
+    newElement.value = elementContent || 'Dodaj treść...';
+    var elementWrapper = document.createElement('div');
+    elementWrapper.className = "element-wrapper";
+    elementWrapper.appendChild(newElement);
+
+    var removeButton = document.createElement('button');
+    removeButton.textContent = 'Usuń pozycję';
+    removeButton.className = 'btn btn-danger btn-sm';
+    removeButton.onclick = function() {
+        elementWrapper.remove();
+        if (!container.querySelector('[data-type^="li"]')) {
+            toggleButtons(true);
+            buttonContainer.remove();
+        }
+    };
+    elementWrapper.appendChild(removeButton);
+    container.insertBefore(elementWrapper, buttonContainer);
+
+    if (elementType.includes('li') && !document.querySelector('.end-list-button')) {
+        createListManagementButtons(buttonContainer);
+    }
+}
+
+function createButtonContainer(id, container) {
+    var buttonContainer = document.createElement('div');
+    buttonContainer.id = 'button-container' + id;
+    buttonContainer.className = 'button-container';
+    container.appendChild(buttonContainer);
+    return buttonContainer;
+}
+
+function createListManagementButtons(buttonContainer) {
+    var endListButton = document.createElement('button');
+    endListButton.textContent = 'Zakończ listę';
+    endListButton.className = 'btn btn-secondary btn-sm end-list-button';
+    endListButton.onclick = function() {
+        buttonContainer.remove();
+        toggleButtons(true);
+    };
+    buttonContainer.appendChild(endListButton);
+}
+
+function toggleButtons(show) {
+    var allButtons = document.querySelectorAll('.add-button');
+    var listButtons = document.querySelectorAll('.add-list-item-button'); // Wybiera przyciski dodające elementy listy
+
+    allButtons.forEach(button => {
+        if (button.classList.contains('add-list-item-button')) {
+            // Przyciski list są pokazywane tylko gdy lista jest aktywna (show === false)
+            button.style.display = show ? 'none' : 'inline-block';
+        } else {
+            // Wszystkie inne przyciski są ukrywane, gdy lista jest aktywna (show === false)
+            button.style.display = show ? 'inline-block' : 'none';
+        }
+    });
+}
