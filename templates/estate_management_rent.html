@@ -1058,9 +1058,9 @@
 
                 // Dodaj przycisk "X" do usuwania elementu
                 const closeButton = document.createElement('button');
-                closeButton.classList.add('btn-close');
+                closeButton.classList.add('btn-close', 'btn-close-white');
                 // closeButton.style.color = 'red';
-                closeButton.setAttribute('data-bs-theme', 'dark');
+                // closeButton.setAttribute('data-bs-theme', 'dark');
                 closeButton.setAttribute('aria-label', 'Close'); // Ustaw atrybut aria-label
                 closeButton.addEventListener('click', () => this.removeFile(index));
                 li.appendChild(closeButton);
