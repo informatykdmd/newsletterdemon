@@ -106,13 +106,18 @@
                                             placeholder="Link GPS" 
                                             aria-label="Link GPS" />
                                     </div>
+                                    <div id='GPS_9999999'></div>
                                     <div class="mb-3 text-end">
                                         <a href="" class="formatuj-maly-font">
                                         <a href="javascript:void(0);" onclick="openGoogleEarthAddress('Lokalizacja_9999999')" class="formatuj-maly-font">
-
                                             Otwórz mapę żeby pobrać link dla GPS
                                         </a>
                                     </div>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', () => {
+                                            extractAndDisplayCoords('LinkGPS_9999999', 'GPS_9999999');
+                                        });
+                                    </script>
                                     <div class="row g-2 mb-3">
                                         <div class="col-sm-2">
                                             <input 
@@ -1096,6 +1101,27 @@
         // Otwarcie nowego okna z Google Earth z wyszukanym adresem
         var newWindow = window.open(`https://earth.google.com/web/search/${formattedAddress}`, "DemoWindow", features);
     }
+
+    function extractAndDisplayCoords(link_id, gps_div_id) {
+        // Pobranie wartości z pola input
+        var url = document.getElementById(link_id).value.trim();
+
+        // Sprawdzenie, czy pole nie jest puste
+        if (url === "") {
+            alert("Proszę wpisać link GPS.");
+            return; // Przerywanie funkcji, jeśli pole jest puste
+        }
+
+        // Ekstrakcja szerokości i długości geograficznej
+        var coords = url.split('@')[1];
+        var lat = coords.split(',')[0];
+        var lon = coords.split(',')[1];
+
+        // Wyświetlenie wyników w elemencie div o id 'GPS_9999999'
+        var displayDiv = document.getElementById(gps_div_id);
+        displayDiv.innerHTML = "Szerokość: " + lat + "<br>Długość: " + lon;
+    }
+
 </script>
 {% endblock %}
 {% block footer %}
