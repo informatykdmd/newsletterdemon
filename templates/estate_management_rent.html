@@ -115,7 +115,10 @@
                                     </div>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', () => {
-                                            extractAndDisplayCoords('LinkGPS_9999999', 'GPS_9999999');
+                                            var inputElement = document.getElementById('LinkGPS_9999999');
+                                            inputElement.addEventListener('input', function() {
+                                                extractAndDisplayCoords('LinkGPS_9999999', 'GPS_9999999');
+                                            });
                                         });
                                     </script>
                                     <div class="row g-2 mb-3">
