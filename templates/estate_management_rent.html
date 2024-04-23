@@ -108,6 +108,8 @@
                                     </div>
                                     <div class="mb-3 text-end">
                                         <a href="" class="formatuj-maly-font">
+                                        <a href="javascript:void(0);" onclick="openGoogleEarthAddress('Lokalizacja_9999999')" class="formatuj-maly-font">
+
                                             Otwórz mapę żeby pobrać link dla GPS
                                         </a>
                                     </div>
@@ -1073,6 +1075,26 @@
         getFileExtension(filename) {
             return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
         }
+    }
+
+    function openGoogleEarthAddress(inputId) {
+        // Pobranie wartości z pola input o zadanym id
+        var address_str = document.getElementById(inputId).value.trim();
+
+        // Sprawdzenie, czy pole nie jest puste
+        if (address_str === "") {
+            alert("Proszę wpisać adres w odpowiednie pole.");
+            return; // Przerywanie funkcji, jeśli pole jest puste
+        }
+
+        // Zamiana spacji na plusy (+) w adresie
+        var formattedAddress = address_str.replace(/ /g, '+');
+
+        // Ustawienie cech okna, które zostanie otwarte
+        var features = "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=900,height=600";
+
+        // Otwarcie nowego okna z Google Earth z wyszukanym adresem
+        var newWindow = window.open(`https://earth.google.com/web/search/${formattedAddress}`, "DemoWindow", features);
     }
 </script>
 {% endblock %}
