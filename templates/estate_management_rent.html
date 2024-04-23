@@ -1013,8 +1013,6 @@
             this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
 
-                
-
                 if (file.type.startsWith('image/')) {
                     const img = document.createElement('img');
                     img.src = URL.createObjectURL(file);
@@ -1026,6 +1024,7 @@
                     alert('Plik ' + file.name + ' nie jest zdjęciem.');
                     return; // Don't add non-image files to the list
                 }
+
                 li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
                 if (file.size > 1048576) {
                     li.style.color = 'red';
@@ -1038,7 +1037,7 @@
                 // Dodaj przycisk "X" do usuwania elementu
                 const closeButton = document.createElement('button');
                 closeButton.innerText = 'X';
-                closeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'mx-2', 'text-end');
+                closeButton.classList.add('btn', 'btn-danger', 'btn-sm-1', 'mx-2', 'text-end');
                 closeButton.addEventListener('click', () => this.removeFile(index));
                 li.appendChild(closeButton);
             });
