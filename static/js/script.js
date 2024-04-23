@@ -393,7 +393,7 @@ function addCustomElement(id, elementType, elementContent) {
 
     var removeButton = document.createElement('button');
     removeButton.textContent = 'Usuń pozycję';
-    removeButton.className = 'btn btn-danger btn-sm mb-1';
+    removeButton.className = 'btn btn-outline-danger btn-sm mb-1';
     removeButton.onclick = function() {
         elementWrapper.remove();
         if (!container.querySelector('[data-type^="li"]')) {
@@ -420,7 +420,7 @@ function createButtonContainer(id, container) {
 function createListManagementButtons(buttonContainer) {
     var endListButton = document.createElement('button');
     endListButton.textContent = 'Zakończ listę';
-    endListButton.className = 'btn btn-secondary btn-sm end-list-button mb-1';
+    endListButton.className = 'btn btn-outline-secondary btn-sm end-list-button mb-1';
     endListButton.onclick = function() {
         buttonContainer.remove();
         toggleButtons(true);
