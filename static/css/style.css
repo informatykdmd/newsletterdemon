@@ -676,3 +676,8 @@ color:#969696;
 .formatuj-bg-dropbox-list {
     background-color: #33383b;
 }
+
+.drop-box-close-button{
+    max-height: 20px;
+    max-width: 20px;
+}
