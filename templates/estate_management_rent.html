@@ -1031,7 +1031,6 @@
             this.fileList.innerHTML = '';  // Clear existing list entries
             this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
-                li.setAttribute('data-bs-theme', "dark");
 
                 if (file.type.startsWith('image/')) {
                     const img = document.createElement('img');
@@ -1047,7 +1046,7 @@
                 }
 
                 li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
-                if (file.size > 2048576) {
+                if (file.size > 2097200) {
                     li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
                 } else if (file.size > 1048576) {
                     li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
@@ -1059,8 +1058,9 @@
 
                 // Dodaj przycisk "X" do usuwania elementu
                 const closeButton = document.createElement('button');
-                closeButton.classList.add('btn-close', 'btn-danger', 'btn-sm', 'mx-2');
-                closeButton.style.color = 'red';
+                closeButton.classList.add('btn-close');
+                // closeButton.style.color = 'red';
+                closeButton.setAttribute('data-bs-theme', 'dark');
                 closeButton.setAttribute('aria-label', 'Close'); // Ustaw atrybut aria-label
                 closeButton.addEventListener('click', () => this.removeFile(index));
                 li.appendChild(closeButton);
