@@ -1038,6 +1038,9 @@
                 const closeButton = document.createElement('button');
                 closeButton.innerText = 'X';
                 closeButton.classList.add('btn', 'btn-danger', 'btn-sm-1', 'mx-2', 'text-end');
+                closeButton.style.maxHeight = '30px';
+                closeButton.style.fontWeight = '800';
+                closeButton.style.fontSize = '13px';
                 closeButton.addEventListener('click', () => this.removeFile(index));
                 li.appendChild(closeButton);
             });
