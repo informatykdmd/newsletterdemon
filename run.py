@@ -2714,6 +2714,10 @@ def estateAdsRent():
 def update_rent_offer_status():
     return
 
+@app.route('/save-reant-offer', methods=["POST"]) 
+def save_reant_offer():
+    return
+
 @app.route('/estate-ads-sell')
 def estateAdsSell():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""

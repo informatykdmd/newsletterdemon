@@ -60,7 +60,7 @@
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_post') }}" enctype="multipart/form-data" >
+                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_reant_offer') }}" enctype="multipart/form-data" >
                                     <!-- Tytuł artykułu -->
                                     <div class="mb-3">
                                         <label for="title_9999999" class="form-label">Tytuł ogłoszenia</label>
@@ -330,27 +330,20 @@
                                         addCustomElement('9999999', 'p', '');
                                     </script>
 
-                                    <!-- Main Foto -->
-                                    <div class="mb-3">
-                                        <label for="mainFoto_9999999" class="form-label">Main Foto (1920x750)</label>
-                                        <div>
-                                            <img src="" style="max-height: 100px; max-width: 400px; border-radius: 10px; margin-bottom: 10px;" id="mainFotoPreview_9999999" />
-                                        </div>
-                                        <div>
-                                            <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="mainFoto_9999999" name="mainFoto_9999999" accept="image/*" onchange="previewImage(this, 'mainFotoPreview_9999999', 1920, 750, 3)">
-                                        </div>
+
+                                    <!-- tutaj będzie moduł dropboxa -->
+                                    <div id="9999999-drop-area" class="drop-area">
+                                        <h3>Przeciągnij zdjęcia tutaj</h3>
                                     </div>
 
-                                    <!-- Content Foto -->
                                     <div class="mb-3">
-                                        <label for="contentFoto_9999999" class="form-label">Content Foto (750x430)</label>
-                                        <div>
-                                            <img src="" style="max-height: 100px; max-width: 400px; border-radius: 10px; margin-bottom: 10px;" id="contentFotoPreview_9999999" />
-                                        </div>  
-                                        <div>
-                                            <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="contentFoto_9999999" name="contentFoto_9999999" accept="image/*" onchange="previewImage(this, 'contentFotoPreview_9999999', 750, 430, 3)">
-                                        </div>
+                                        <label for="9999999-fileList" class="form-label">Pliki do wysłania:</label>
+                                        <ul id="9999999-fileList" class="list-group"></ul>
                                     </div>
+                                    <script>
+                                        const myFotoDropBox = new FotoDropBox('9999999');
+                                    </script>
+                                    
 
                                     <!-- Ukryte pola formularza -->
                                     <input type="hidden" name="tagsFieldData_9999999" id="tagsFieldData_9999999" />

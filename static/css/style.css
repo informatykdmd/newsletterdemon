@@ -651,3 +651,24 @@ color:#969696;
   .formatuj-hover:hover {
     background-color: #33383b;
   }
+
+ .drop-area {
+    width: 300px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 20px;
+}
+
+.drop-area h3 {
+    color: #999;
+}
+
+.drop-area.highlight {
+    border-color: #666;
+    background-color: #f0f0f0;
+}
