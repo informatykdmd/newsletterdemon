@@ -681,3 +681,8 @@ color:#969696;
     max-height: 18px !important;
     max-width: 18px !important;
 }
+
+.btn-close.drop-box-close-button {
+    width: auto; 
+    height: auto;   
+}
