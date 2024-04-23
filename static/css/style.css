@@ -678,6 +678,6 @@ color:#969696;
 }
 
 .drop-box-close-button {
-    height: 20px !important;
-    width: 20px !important;
+    max-height: 18px !important;
+    max-width: 18px !important;
 }
