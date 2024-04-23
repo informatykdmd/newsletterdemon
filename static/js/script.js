@@ -370,7 +370,7 @@ function addCustomElement(id, elementType, elementContent) {
     if (elementType.includes('li')) {
         newElement = document.createElement('input');
         newElement.type = 'text';
-        newElement.className = 'form-control bg-dark custom-element';
+        newElement.className = 'form-control bg-dark custom-element mb-1';
         //style="color:#c2c2c2; border:#6a6a6a solid 1px;"
         newElement.style.color = '#c2c2c2';
         newElement.style.border = '#6a6a6a solid 1px';
@@ -379,20 +379,20 @@ function addCustomElement(id, elementType, elementContent) {
     } else {
         newElement = document.createElement('textarea');
         newElement.rows = 4;
-        newElement.className = 'form-control bg-dark custom-element';
+        newElement.className = 'form-control bg-dark custom-element mb-1';
         newElement.style.color = '#c2c2c2';
         newElement.style.border = '#6a6a6a solid 1px';
         newElement.setAttribute('data-type', elementType);
     }
 
-    newElement.value = elementContent || 'Dodaj treść...';
+    newElement.value = elementContent || '';
     var elementWrapper = document.createElement('div');
-    elementWrapper.className = "element-wrapper";
+    elementWrapper.className = "element-wrapper mb-1";
     elementWrapper.appendChild(newElement);
 
     var removeButton = document.createElement('button');
     removeButton.textContent = 'Usuń pozycję';
-    removeButton.className = 'btn btn-danger btn-sm';
+    removeButton.className = 'btn btn-danger btn-sm mb-1';
     removeButton.onclick = function() {
         elementWrapper.remove();
         if (!container.querySelector('[data-type^="li"]')) {
@@ -411,7 +411,7 @@ function addCustomElement(id, elementType, elementContent) {
 function createButtonContainer(id, container) {
     var buttonContainer = document.createElement('div');
     buttonContainer.id = 'button-container' + id;
-    buttonContainer.className = 'button-container';
+    buttonContainer.className = 'button-container mb-1';
     container.appendChild(buttonContainer);
     return buttonContainer;
 }
@@ -419,7 +419,7 @@ function createButtonContainer(id, container) {
 function createListManagementButtons(buttonContainer) {
     var endListButton = document.createElement('button');
     endListButton.textContent = 'Zakończ listę';
-    endListButton.className = 'btn btn-secondary btn-sm end-list-button';
+    endListButton.className = 'btn btn-secondary btn-sm end-list-button mb-1';
     endListButton.onclick = function() {
         buttonContainer.remove();
         toggleButtons(true);
