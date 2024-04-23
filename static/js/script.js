@@ -374,7 +374,7 @@ function addCustomElement(id, elementType, elementContent) {
         newElement.style.color = '#c2c2c2';
         newElement.style.border = '#6a6a6a solid 1px';
         newElement.setAttribute('data-type', elementType);
-        newElement.setAttribute('placeholder', elementType);
+        newElement.setAttribute('placeholder', `Dodaj treść dla atrybutu <${elementType}>`);
         toggleButtons(false);
     } else {
         newElement = document.createElement('textarea');
@@ -383,7 +383,10 @@ function addCustomElement(id, elementType, elementContent) {
         newElement.style.color = '#c2c2c2';
         newElement.style.border = '#6a6a6a solid 1px';
         newElement.setAttribute('data-type', elementType);
-        newElement.setAttribute('placeholder', elementType);
+        newElement.setAttribute('placeholder', `Dodaj treść dla atrybutu <${elementType}>`);
+
+        newLabelForNewElement = document.createElement('label');
+        newLabelForNewElement.for = "floatingTextarea";
     }
 
     newElement.value = elementContent || '';
