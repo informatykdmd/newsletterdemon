@@ -653,9 +653,9 @@ color:#969696;
   }
 
  .drop-area {
-    width: 300px;
+    width: 100%;
     height: 200px;
-    border: 2px dashed #ccc;
+    border: 2px dashed #7d7d7d;
     border-radius: 5px;
     display: flex;
     align-items: center;
@@ -665,10 +665,10 @@ color:#969696;
 }
 
 .drop-area h3 {
-    color: #999;
+    color: #6d6d6d;
 }
 
 .drop-area.highlight {
     border-color: #666;
-    background-color: #f0f0f0;
+    background-color: #33383b;
 }
