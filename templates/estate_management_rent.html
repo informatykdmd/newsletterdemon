@@ -1038,7 +1038,7 @@
                 // Dodaj przycisk "X" do usuwania elementu
                 const closeButton = document.createElement('button');
                 closeButton.innerText = 'X';
-                closeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'mx-2');
+                closeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'mx-2', 'text-end');
                 closeButton.addEventListener('click', () => this.removeFile(index));
                 li.appendChild(closeButton);
             });
