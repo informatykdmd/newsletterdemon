@@ -1013,12 +1013,7 @@
             this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
 
-                // Dodaj przycisk "X" do usuwania elementu
-                const closeButton = document.createElement('button');
-                closeButton.innerText = 'X';
-                closeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'mx-2');
-                closeButton.addEventListener('click', () => this.removeFile(index));
-                li.appendChild(closeButton);
+                
 
                 if (file.type.startsWith('image/')) {
                     const img = document.createElement('img');
@@ -1039,6 +1034,13 @@
                 }
                 li.classList.add('list-group-item');
                 this.fileList.appendChild(li);
+
+                // Dodaj przycisk "X" do usuwania elementu
+                const closeButton = document.createElement('button');
+                closeButton.innerText = 'X';
+                closeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'mx-2');
+                closeButton.addEventListener('click', () => this.removeFile(index));
+                li.appendChild(closeButton);
             });
         }
 
