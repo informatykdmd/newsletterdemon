@@ -106,7 +106,7 @@
                                             placeholder="Link GPS" 
                                             aria-label="Link GPS" />
                                     </div>
-                                    <div id='GPS_9999999'></div>
+                                    <div id='GPS_9999999' class="text-center formatuj-maly-font"></div>
                                     <div class="mb-3 text-end">
                                         <a href="" class="formatuj-maly-font">
                                         <a href="javascript:void(0);" onclick="openGoogleEarthAddress('Lokalizacja_9999999')" class="formatuj-maly-font">
@@ -1122,7 +1122,7 @@
 
         // Wyświetlenie wyników w elemencie div o id 'GPS_9999999'
         var displayDiv = document.getElementById(gps_div_id);
-        displayDiv.innerHTML = "Szerokość: " + lat + "<br>Długość: " + lon;
+        displayDiv.innerHTML = "GPS: " + lat + " <i class='bi bi-geo-alt-fill'></i>" + lon;
     }
 
 </script>
