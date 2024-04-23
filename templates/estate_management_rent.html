@@ -1010,8 +1010,16 @@
 
         displayFiles() {
             this.fileList.innerHTML = '';  // Clear existing list entries
-            this.accumulatedFiles.forEach(file => {
+            this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
+
+                // Dodaj przycisk "X" do usuwania elementu
+                const closeButton = document.createElement('button');
+                closeButton.innerText = 'X';
+                closeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'mx-2');
+                closeButton.addEventListener('click', () => this.removeFile(index));
+                li.appendChild(closeButton);
+
                 if (file.type.startsWith('image/')) {
                     const img = document.createElement('img');
                     img.src = URL.createObjectURL(file);
@@ -1032,6 +1040,11 @@
                 li.classList.add('list-group-item');
                 this.fileList.appendChild(li);
             });
+        }
+
+        removeFile(index) {
+            this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
+            this.displayFiles(); // Ponownie wyświetl listę plików bez usuniętego elementu
         }
 
         getFileExtension(filename) {
