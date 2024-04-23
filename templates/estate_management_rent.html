@@ -928,8 +928,116 @@
                             </nav>
                         </div>
 {% endblock %}
+{% block bottom_script %}
+<script>
+    class FotoDropBox {
+        constructor(formId) {
+            if (!this.checkDragAndDropSupport()) {
+                alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików.');
+                return;
+            }
+            this.dropArea = document.getElementById(`${formId}-drop-area`);
+            this.fileList = document.getElementById(`${formId}-fileList`);
+            this.accumulatedFiles = [];
 
+            this.initEventListeners();
+        }
+        checkDragAndDropSupport() {
+            const div = document.createElement('div');
+            return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+        }
 
+        initEventListeners() {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, (e) => this.preventDefaults(e), false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.highlight(), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.unhighlight(), false);
+            });
+
+            this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+        }
+
+        preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        highlight() {
+            this.dropArea.classList.add('highlight');
+        }
+
+        unhighlight() {
+            this.dropArea.classList.remove('highlight');
+        }
+
+        handleDrop(e) {
+            this.preventDefaults(e);
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            this.updateFileList(files);
+        }
+
+        updateFileList(newFiles) {
+            for (let file of newFiles) {
+                if (this.accumulatedFiles.length >= 10) {
+                    alert('Osiągnięto limit 10 plików.');
+                    break;
+                }
+                if (!this.isFileUnique(file)) {
+                    alert('Plik ' + file.name + ' jest już na liście.');
+                    continue;
+                }
+                this.accumulatedFiles.push(file);
+            }
+            this.displayFiles();
+        }
+
+        isFileUnique(newFile) {
+            return !this.accumulatedFiles.some(file => 
+                file.name === newFile.name &&
+                file.size === newFile.size &&
+                this.getFileExtension(file.name) === this.getFileExtension(newFile.name)
+            );
+        }
+
+        displayFiles() {
+            this.fileList.innerHTML = '';  // Clear existing list entries
+            this.accumulatedFiles.forEach(file => {
+                const li = document.createElement('li');
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.onload = () => { URL.revokeObjectURL(img.src); }; // Clean up after image is loaded
+                    img.style.height = '50px'; // Set the height of thumbnail
+                    img.style.marginRight = '10px';
+                    li.appendChild(img);
+                } else {
+                    alert('Plik ' + file.name + ' nie jest zdjęciem.');
+                    return; // Don't add non-image files to the list
+                }
+                li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
+                if (file.size > 1048576) {
+                    li.style.color = 'red';
+                } else {
+                    li.style.color = 'green';
+                }
+                li.classList.add('list-group-item');
+                this.fileList.appendChild(li);
+            });
+        }
+
+        getFileExtension(filename) {
+            return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+        }
+    }
+</script>
+{% endblock %}
 {% block footer %}
  To jest stopka panelu administracyjnego. All right reserved &copy; 2024 by DMD Panel Administratora.<br/>
 {% endblock %}
