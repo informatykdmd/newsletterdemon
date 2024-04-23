@@ -371,12 +371,17 @@ function addCustomElement(id, elementType, elementContent) {
         newElement = document.createElement('input');
         newElement.type = 'text';
         newElement.className = 'form-control bg-dark custom-element';
+        //style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+        newElement.style.color = '#c2c2c2';
+        newElement.style.border = '#6a6a6a solid 1px';
         newElement.setAttribute('data-type', elementType);
         toggleButtons(false);
     } else {
         newElement = document.createElement('textarea');
         newElement.rows = 4;
         newElement.className = 'form-control bg-dark custom-element';
+        newElement.style.color = '#c2c2c2';
+        newElement.style.border = '#6a6a6a solid 1px';
         newElement.setAttribute('data-type', elementType);
     }
 
