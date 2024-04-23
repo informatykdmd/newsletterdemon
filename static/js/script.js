@@ -371,10 +371,10 @@ function addCustomElement(id, elementType, elementContent) {
         newElement = document.createElement('input');
         newElement.type = 'text';
         newElement.className = 'form-control bg-dark custom-element mb-1';
-        //style="color:#c2c2c2; border:#6a6a6a solid 1px;"
         newElement.style.color = '#c2c2c2';
         newElement.style.border = '#6a6a6a solid 1px';
         newElement.setAttribute('data-type', elementType);
+        newElement.setAttribute('placeholder', elementType);
         toggleButtons(false);
     } else {
         newElement = document.createElement('textarea');
@@ -383,6 +383,7 @@ function addCustomElement(id, elementType, elementContent) {
         newElement.style.color = '#c2c2c2';
         newElement.style.border = '#6a6a6a solid 1px';
         newElement.setAttribute('data-type', elementType);
+        newElement.setAttribute('placeholder', elementType);
     }
 
     newElement.value = elementContent || '';
