@@ -357,7 +357,7 @@
 
                                     <div class="mb-3">
                                         <label for="9999999-fileList" class="form-label ms-5">Pliki do wysłania:</label>
-                                        <ul id="9999999-fileList" class="list-group ms-5 me-5" data-bs-theme="dark"></ul>
+                                        <ul id="9999999-fileList" class="list-group ms-5 me-5"></ul>
                                     </div>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', () => {
@@ -1031,6 +1031,7 @@
             this.fileList.innerHTML = '';  // Clear existing list entries
             this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
+                li.setAttribute('data-bs-theme', "dark");
 
                 if (file.type.startsWith('image/')) {
                     const img = document.createElement('img');
