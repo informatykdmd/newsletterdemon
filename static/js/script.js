@@ -384,9 +384,6 @@ function addCustomElement(id, elementType, elementContent) {
         newElement.style.border = '#6a6a6a solid 1px';
         newElement.setAttribute('data-type', elementType);
         newElement.setAttribute('placeholder', `Dodaj treść dla atrybutu <${elementType}>`);
-
-        newLabelForNewElement = document.createElement('label');
-        newLabelForNewElement.for = "floatingTextarea";
     }
 
     newElement.value = elementContent || '';
