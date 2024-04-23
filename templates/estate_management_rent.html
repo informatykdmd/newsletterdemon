@@ -1038,6 +1038,7 @@
                     img.onload = () => { URL.revokeObjectURL(img.src); }; // Clean up after image is loaded
                     img.style.height = '50px'; // Set the height of thumbnail
                     img.style.marginRight = '10px';
+                    img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark')
                     li.appendChild(img);
                 } else {
                     alert('Plik ' + file.name + ' nie jest zdjęciem.');
