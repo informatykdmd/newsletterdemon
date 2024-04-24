@@ -221,37 +221,6 @@ function joinToDynamicDescription(id, elementName="list-container") {
     return resultJsonList;
 }
 
-// function joinToDynamicDescription(id, elementName="list-container") {
-//     var inputElements = document.getElementsByName(elementName + id);
-//     var resultJsonList = [];
-
-//     // Iteruj przez wszystkie elementy input
-//     inputElements.forEach(element => {
-//         const dataType = element.getAttribute('data-type');
-        
-//         // Sprawdź czy pole to 'li' i odpowiednio przetwarzaj
-//         if (dataType === 'li') {
-//             // Jeśli już istnieje obiekt z kluczem 'li', dodaj do niego nową wartość
-//             let liObject = resultJsonList.find(item => item.hasOwnProperty('li'));
-//             if (liObject) {
-//                 liObject.li.push(element.value);
-//             } else {
-//                 // Jeśli nie ma jeszcze obiektu 'li', stwórz nowy
-//                 resultJsonList.push({li: [element.value]});
-//             }
-//         } else {
-//             // Dla pozostałych typów danych, twórz pojedyncze obiekty z kluczem i wartością
-//             let object = {};
-//             object[dataType] = element.value;
-//             resultJsonList.push(object);
-//         }
-//     });
-
-//     // Wyświetl wynik w konsoli
-//     console.log(resultJsonList);
-
-//     return resultJsonList;
-// }
 
 
 function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
@@ -261,6 +230,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var lokalizacja = document.getElementById('Lokalizacja_' + offerId).value;
     var cena = document.getElementById('Cena_' + offerId).value;
     var opis = joinToDynamicDescription(offerId, "list-container");
+    var opisJsonString = JSON.stringify(opis);
 
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
@@ -297,7 +267,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     formData.append('rodzajNieruchomosci', rodzajNieruchomosci);
     formData.append('lokalizacja', lokalizacja);
     formData.append('cena', cena);
-    formData.append('opis', opis);
+    formData.append('opis', opisJsonString);
 
     // Wysyłanie formularza za pomocą AJAX (fetch API)
     fetch('/save-rent-offer', {
