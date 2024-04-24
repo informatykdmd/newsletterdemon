@@ -999,7 +999,7 @@
                 this.dropArea.addEventListener(eventName, () => this.unhighlight(), false);
             });
 
-            this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+            this.dropArea.addEventListener('drop', (e) => this.handleDropImg(e), false);
         }
 
         preventDefaults(e) {
@@ -1020,6 +1020,20 @@
             let dt = e.dataTransfer;
             let files = dt.files;
             this.updateFileList(files);
+        }
+        
+        handleDropImg(event) {
+            event.preventDefault();
+            let files = event.dataTransfer.files; // Pobierz pliki z obiektu DataTransfer
+            let list = document.getElementById(formId + '-fileList');
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                let li = document.createElement('li');
+                li.textContent = file.name + " (" + (file.size / 1024).toFixed(1) + " KB)"; // Dodaj informacje o pliku
+                li.file = file; // Kluczowe: Przypisz obiekt File do elementu li
+                list.appendChild(li);
+            }
         }
 
         updateFileList(newFiles) {
