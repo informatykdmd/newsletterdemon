@@ -221,6 +221,12 @@ function joinToDynamicDescription(id, elementName="list-container") {
     return resultJsonList;
 }
 
+function blobUrlToFile(blobUrl, fileName) {
+    return fetch(blobUrl)
+        .then(response => response.blob())
+        .then(blob => new File([blob], fileName, { type: blob.type }));
+}
+
 
 
 function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
@@ -260,12 +266,14 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var formData = new FormData();
     zdjecia.forEach(file => {
         formData.append('photos[]', file);
+        console.log('Dodaję plik:', file.name);
     });
 
     // Wyświetl zawartość FormData przed wysłaniem
     for (var pair of formData.entries()) {
         console.log(pair[0]+ ', ' + pair[1]);
     }
+
 
     // Dodanie pozostałych danych do FormData
     formData.append('title', title);

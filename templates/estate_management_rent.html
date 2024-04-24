@@ -1033,6 +1033,12 @@
                     continue;
                 }
                 this.accumulatedFiles.push(file);
+                
+                 // Stwórz element LI i dodaj go do listy w interfejsie użytkownika
+                const li = document.createElement('li');
+                li.textContent = file.name; // Możesz tu dodać inne informacje o pliku
+                li.file = file; // Przypisujemy plik do elementu li
+                document.getElementById(this.offerId + '-fileList').appendChild(li);
             }
             this.displayFiles();
         }
