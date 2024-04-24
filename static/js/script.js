@@ -241,16 +241,24 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
     var zdjecia = [];
-    if (fotoList && fotoList.childNodes.length > 0) {
-        fotoList.childNodes.forEach(child => {
-            console.log(child.tagName); // Sprawdź, czy rzeczywiście dostajesz tagi LI
-            console.log(child.file);
-            if (child.tagName === 'LI' && child.file) {
-                console.log('Dodaję plik:', child.file.name); // Sprawdź, czy pliki są dodawane
-                zdjecia.push(child.file);
-            }
-        });
-    }
+
+    fotoList.childNodes.forEach(child => {
+        console.log(child.file);
+        if (child.file) {  // Sprawdź, czy element li ma przypisany plik
+            console.log('child.file', child.file);
+            zdjecia.push(child.file);
+        }
+    });
+    // if (fotoList && fotoList.childNodes.length > 0) {
+    //     fotoList.childNodes.forEach(child => {
+    //         console.log(child.tagName); // Sprawdź, czy rzeczywiście dostajesz tagi LI
+    //         console.log(child.file);
+    //         if (child.tagName === 'LI' && child.file) {
+    //             console.log('Dodaję plik:', child.file.name); // Sprawdź, czy pliki są dodawane
+    //             zdjecia.push(child.file);
+    //         }
+    //     });
+    // }
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     if (!oldFotos) {
