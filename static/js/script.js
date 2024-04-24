@@ -239,12 +239,23 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var opisJsonString = JSON.stringify(opis);
 
     // Pobieranie zdjęć z listy
+    // var fotoList = document.getElementById(offerId + '-fileList');
+    // var zdjecia = [];
+    // if (fotoList && fotoList.childNodes.length > 0) {
+    //     fotoList.childNodes.forEach(child => {
+    //         if (child.tagName === 'LI' && child.file) {
+    //             zdjecia.push(child.file); // Zakładam, że pliki są przypisane do elementów li jako .file
+    //         }
+    //     });
+    // }
     var fotoList = document.getElementById(offerId + '-fileList');
     var zdjecia = [];
     if (fotoList && fotoList.childNodes.length > 0) {
         fotoList.childNodes.forEach(child => {
+            console.log(child.tagName); // Sprawdź, czy rzeczywiście dostajesz tagi LI
             if (child.tagName === 'LI' && child.file) {
-                zdjecia.push(child.file); // Zakładam, że pliki są przypisane do elementów li jako .file
+                console.log('Dodaję plik:', child.file.name); // Sprawdź, czy pliki są dodawane
+                zdjecia.push(child.file);
             }
         });
     }
