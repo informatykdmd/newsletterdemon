@@ -262,6 +262,11 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
         formData.append('photos[]', file);
     });
 
+    // Wyświetl zawartość FormData przed wysłaniem
+    for (var pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]);
+    }
+
     // Dodanie pozostałych danych do FormData
     formData.append('title', title);
     formData.append('rodzajNieruchomosci', rodzajNieruchomosci);

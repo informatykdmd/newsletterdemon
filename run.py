@@ -2750,9 +2750,17 @@ def save_rent_offer():
     # if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, opis]):
     #     return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
+    # Wylistuj wszystkie przesłane pliki
+    print(request.files)
+    files_list = request.files.getlist('photos[]')  # Upewnij się, że klucz pasuje do tego w append
+    print('Odebrane pliki:', files_list)
+
+    for file in files_list:
+        print('Plik:', file.filename)  # Wydrukuj nazwy plików
+
     # Przetwarzanie przesłanych zdjęć
-    photos = request.files.getlist('photos[]')
-    print(photos)
+    # photos = request.files.getlist('photos[]')
+    # print(photos)
     # for photo in photos:
     #     # Zapisz każde zdjęcie na serwerze
     #     if photo:
