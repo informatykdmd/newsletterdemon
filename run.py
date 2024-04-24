@@ -2745,13 +2745,14 @@ def save_rent_offer():
     lokalizacja = request.form.get('lokalizacja')
     cena = request.form.get('cena')
     opis = request.form.get('opis')
-    print(title, opis)
+    print(title, opis, form_data)
     # # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     # if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, opis]):
     #     return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
-    # # Przetwarzanie przesłanych zdjęć
-    # photos = request.files.getlist('photos[]')
+    # Przetwarzanie przesłanych zdjęć
+    photos = request.files.getlist('photos[]')
+    print(photos)
     # for photo in photos:
     #     # Zapisz każde zdjęcie na serwerze
     #     if photo:
