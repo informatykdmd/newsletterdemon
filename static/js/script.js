@@ -264,7 +264,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     formData.append('opis', opis);
 
     // Wysyłanie formularza za pomocą AJAX (fetch API)
-    fetch('url_do_endpointa_serwera', {
+    fetch('/save-rent-offer', {
         method: 'POST',
         body: formData
     }).then(response => {
