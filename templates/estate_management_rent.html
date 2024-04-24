@@ -999,7 +999,7 @@
                 this.dropArea.addEventListener(eventName, () => this.unhighlight(), false);
             });
 
-            this.dropArea.addEventListener('drop', (e) => this.handleDropImg(e), false);
+            this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
         }
 
         preventDefaults(e) {
