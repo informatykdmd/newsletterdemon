@@ -177,6 +177,110 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     form.submit();
 }
 
+// Funkcja do złączania zawartości pól dynamicznego opisu oferty do json na podstawie atrybutu data-type
+// wszystkie elementy wygenerowane za pomocą funkcji addCustomElement mają atrybut data-type w którym jest zawarty rodzaj pola
+// funkcja rozrónia pola pomiedzy li i inne. pola li mają strukturę listy json gdzie kluczem jest "li" a wartością lista. 
+// inne pola ("p", "strong", "h1", "h2", "h3", "h1-strong", "h2-strong", "h3-strong") mają zawsze warotść string
+// [{"li": ["wartość1", "wartość2", "wartość3"]}, {"p": "wartość"}, itd...]
+// funkcja znajduje kontener wygenerowanych pół na podstawie nazwy i id a nastepnie iteruje przez niego i tworzy listę json
+// które zawierają obiekty gdzie klucze to data-type a wartości to: dla li - lista  wartości, dla innych - pojedyncze stringi.
+
+function joinToDynamicDescription(id, elementName="list-container") {
+    var inputElements = document.getElementsByName(elementName + id);
+    var resultJsonList = [];
+
+    // Iteruj przez wszystkie elementy input
+    inputElements.forEach(element => {
+        const dataType = element.getAttribute('data-type');
+        
+        // Sprawdź czy pole to 'li' i odpowiednio przetwarzaj
+        if (dataType === 'li') {
+            // Jeśli już istnieje obiekt z kluczem 'li', dodaj do niego nową wartość
+            let liObject = resultJsonList.find(item => item.hasOwnProperty('li'));
+            if (liObject) {
+                liObject.li.push(element.value);
+            } else {
+                // Jeśli nie ma jeszcze obiektu 'li', stwórz nowy
+                resultJsonList.push({li: [element.value]});
+            }
+        } else {
+            // Dla pozostałych typów danych, twórz pojedyncze obiekty z kluczem i wartością
+            let object = {};
+            object[dataType] = element.value;
+            resultJsonList.push(object);
+        }
+    });
+
+    // Wyświetl wynik w konsoli
+    console.log(resultJsonList);
+
+    return resultJsonList;
+}
+
+
+function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
+    // Pobieranie wartości z formularza
+    var title = document.getElementById('title_' + offerId).value;
+    var rodzajNieruchomosci = document.getElementById('RodzajNieruchomosci_' + offerId).value;
+    var lokalizacja = document.getElementById('Lokalizacja_' + offerId).value;
+    var cena = document.getElementById('Cena_' + offerId).value;
+    var opis = joinToDynamicDescription(offerId, "list-container");
+
+    // Pobieranie zdjęć z listy
+    var fotoList = document.getElementById(offerId + '-fileList');
+    var zdjecia = [];
+    if (fotoList && fotoList.childNodes.length > 0) {
+        fotoList.childNodes.forEach(child => {
+            if (child.tagName === 'LI' && child.file) {
+                zdjecia.push(child.file); // Zakładam, że pliki są przypisane do elementów li jako .file
+            }
+        });
+    }
+
+    // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
+    if (!oldFotos) {
+        if (!title || !rodzajNieruchomosci || !lokalizacja || !cena || zdjecia.length === 0 || !opis) {
+            alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
+            return;  // Zatrzymaj przesyłanie formularza
+        }
+    } else {
+        if (!title || !rodzajNieruchomosci || !lokalizacja || !cena || !opis) {
+            alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
+            return;  // Zatrzymaj przesyłanie formularza
+        }
+    }
+
+    // Dodawanie zdjęć jako FormData
+    var formData = new FormData();
+    zdjecia.forEach(file => {
+        formData.append('photos[]', file);
+    });
+
+    // Dodanie pozostałych danych do FormData
+    formData.append('title', title);
+    formData.append('rodzajNieruchomosci', rodzajNieruchomosci);
+    formData.append('lokalizacja', lokalizacja);
+    formData.append('cena', cena);
+    formData.append('opis', opis);
+
+    // Wysyłanie formularza za pomocą AJAX (fetch API)
+    fetch('url_do_endpointa_serwera', {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        if (response.ok) {
+            alert('Oferta została pomyślnie zapisana.');
+            return response.json();
+        } else {
+            throw new Error('Problem z serwerem');
+        }
+    }).then(data => {
+        console.log(data);
+    }).catch(error => {
+        alert('Wystąpił błąd: ' + error.message);
+    });
+}
+
 
 
 function newUserSubmitForm(logins_allowed, email_allowed, name_allowed) {

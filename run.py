@@ -2714,9 +2714,37 @@ def estateAdsRent():
 def update_rent_offer_status():
     return
 
-@app.route('/save-reant-offer', methods=["POST"]) 
-def save_reant_offer():
-    return
+@app.route('/save-rent-offer', methods=["POST"])
+def save_rent_offer():
+    # Odczytanie danych formularza
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        print(form_data)
+
+    title = request.form.get('title')
+    rodzaj_nieruchomosci = request.form.get('rodzajNieruchomosci')
+    lokalizacja = request.form.get('lokalizacja')
+    cena = request.form.get('cena')
+    opis = request.form.get('opis')
+    print(title, lokalizacja)
+    # # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
+    # if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, opis]):
+    #     return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
+
+    # # Przetwarzanie przesłanych zdjęć
+    # photos = request.files.getlist('photos[]')
+    # for photo in photos:
+    #     # Zapisz każde zdjęcie na serwerze
+    #     if photo:
+    #         filename = secure_filename(photo.filename)
+    #         photo.save(os.path.join('./', filename))
+    
+    # Tutaj można dodać logikę zapisu do bazy danych
+    # Przykładowo, zapisanie szczegółów oferty wynajmu w bazie danych
+
+    # Odpowiedź dla klienta
+    return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
+
 
 @app.route('/estate-ads-sell')
 def estateAdsSell():

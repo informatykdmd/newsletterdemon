@@ -60,7 +60,7 @@
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_reant_offer') }}" enctype="multipart/form-data" >
+                                <form method="POST" id="rentOffer_9999999" action="{{ url_for('save_reant_offer') }}" enctype="multipart/form-data" >
                                     <!-- Tytuł artykułu -->
                                     <div class="mb-3">
                                         <label for="title_9999999" class="form-label">Tytuł ogłoszenia</label>
@@ -106,9 +106,10 @@
                                             placeholder="Link GPS" 
                                             aria-label="Link GPS" />
                                     </div>
-                                    <div id='GPS_9999999' class="text-end formatuj-maly-font text-primary-emphasis "></div>
+                                    <div id='GPS_9999999' class="text-end formatuj-maly-font text-primary-emphasis ">
+                                        <!-- muszę wybrać z tego diva wygenerowane lat i lon -->
+                                    </div>
                                     <div class="mb-3 text-end">
-                                        <a href="" class="formatuj-maly-font">
                                         <a href="javascript:void(0);" onclick="openGoogleEarthAddress('Lokalizacja_9999999')" class="formatuj-maly-font">
                                             Otwórz mapę żeby pobrać link dla GPS
                                         </a>
@@ -320,7 +321,7 @@
 
                                     <!-- Opis -->
                                     <div class="mb-3">
-                                        <label for="DynamicznyOpis9999999" class="form-label">Opis Nieruchomości</label>
+                                        <label for="list-container9999999" class="form-label">Opis Nieruchomości</label>
                                         <div id="list-container9999999" class="no-border">
                                             <!-- Tutaj będą dynamicznie dodawane elementy listy -->
                                         </div>
@@ -381,7 +382,14 @@
                                     <input type="hidden" name="dynamicFieldData_9999999" id="dynamicFieldData_9999999" />
                                     <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}"/>
                                     <!-- Przycisk Zapisz artykuł -->
-                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitForm('9999999', false)">Dodaj ogłoszenie najmu</button>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-sm" 
+                                        style="max-height: 30px; font-size: 12px;" 
+                                        onclick="prepareAndSubmitRentOfferForm('9999999', true)"
+                                    >
+                                        Dodaj ogłoszenie najmu
+                                    </button>
                                 </form>
                             </div>
                         </div>
