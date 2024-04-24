@@ -186,10 +186,14 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
 // które zawierają obiekty gdzie klucze to data-type a wartości to: dla li - lista  wartości, dla innych - pojedyncze stringi.
 
 function joinToDynamicDescription(id, elementName="list-container") {
-    var inputElements = document.getElementsByName(elementName + id);
+    // Używamy querySelectorAll zamiast getElementsByName, dodajemy selektor 'input' i 'textarea'
+    // oraz inne elementy, które mogą zawierać dane
+    var container = document.getElementById(`${elementName}${id}`);
+    var inputElements = container.querySelectorAll('input, textarea');
+
     var resultJsonList = [];
 
-    // Iteruj przez wszystkie elementy input
+    // Iteruj przez wszystkie elementy input i textarea
     inputElements.forEach(element => {
         const dataType = element.getAttribute('data-type');
         
@@ -216,6 +220,38 @@ function joinToDynamicDescription(id, elementName="list-container") {
 
     return resultJsonList;
 }
+
+// function joinToDynamicDescription(id, elementName="list-container") {
+//     var inputElements = document.getElementsByName(elementName + id);
+//     var resultJsonList = [];
+
+//     // Iteruj przez wszystkie elementy input
+//     inputElements.forEach(element => {
+//         const dataType = element.getAttribute('data-type');
+        
+//         // Sprawdź czy pole to 'li' i odpowiednio przetwarzaj
+//         if (dataType === 'li') {
+//             // Jeśli już istnieje obiekt z kluczem 'li', dodaj do niego nową wartość
+//             let liObject = resultJsonList.find(item => item.hasOwnProperty('li'));
+//             if (liObject) {
+//                 liObject.li.push(element.value);
+//             } else {
+//                 // Jeśli nie ma jeszcze obiektu 'li', stwórz nowy
+//                 resultJsonList.push({li: [element.value]});
+//             }
+//         } else {
+//             // Dla pozostałych typów danych, twórz pojedyncze obiekty z kluczem i wartością
+//             let object = {};
+//             object[dataType] = element.value;
+//             resultJsonList.push(object);
+//         }
+//     });
+
+//     // Wyświetl wynik w konsoli
+//     console.log(resultJsonList);
+
+//     return resultJsonList;
+// }
 
 
 function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {

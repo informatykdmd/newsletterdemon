@@ -2720,6 +2720,13 @@ def save_rent_offer():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         print(form_data)
+    {
+        'title': 'Dzień Kobiet: święto siły i inspiracji!', 
+        'rodzajNieruchomosci': 'dom', 
+        'lokalizacja': 'warszawa bielany', 
+        'cena': '1', 
+        'opis': ''
+    }
 
     title = request.form.get('title')
     rodzaj_nieruchomosci = request.form.get('rodzajNieruchomosci')
