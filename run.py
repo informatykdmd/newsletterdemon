@@ -2719,21 +2719,33 @@ def save_rent_offer():
     # Odczytanie danych formularza
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
+        # print(form_data)
     {
         'title': 'Dzień Kobiet: święto siły i inspiracji!', 
         'rodzajNieruchomosci': 'dom', 
         'lokalizacja': 'warszawa bielany', 
         'cena': '1', 
-        'opis': ''
+        'opis': '[{"p":"tworzeniu "},{"strong":"tworzeniu "},{"h1":"tworzeniu "},{"h2":"tworzeniu "},{"h3":"tworzeniu "},{"h1-strong":"tworzeniu "},{"h2-strong":"tworzeniu "},{"h3-strong":"tworzeniu "},{"li":["tworzeniu ","tworzeniu ","tworzeniu "]},{"p":"tworzeniu "},{"h2":"tworzeniu "}]'
     }
+
+    # Pobierz JSON jako string z formularza
+    opis_json_string = request.form['opis']
+    
+    # Przekonwertuj string JSON na słownik Pythona
+    try:
+        opis_data = json.loads(opis_json_string)
+    except json.JSONDecodeError:
+        return jsonify({'error': 'Nieprawidłowy format JSON'}), 400
+
+    # Teraz opis_data jest słownikiem Pythona, który możesz używać w kodzie
+    print(opis_data)
 
     title = request.form.get('title')
     rodzaj_nieruchomosci = request.form.get('rodzajNieruchomosci')
     lokalizacja = request.form.get('lokalizacja')
     cena = request.form.get('cena')
     opis = request.form.get('opis')
-    print(title, lokalizacja)
+    print(title, opis)
     # # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     # if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, opis]):
     #     return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
