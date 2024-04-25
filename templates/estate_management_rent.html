@@ -1108,6 +1108,7 @@
                     img.src = URL.createObjectURL(file);
                     img.onload = () => { URL.revokeObjectURL(img.src); };
                     img.style.height = '50px';
+                    img.style.marginRight = '10px';
                     img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
                     li.appendChild(img);
                 } else {
@@ -1115,7 +1116,16 @@
                     return;  // Nie dodawaj plików, które nie są obrazami
                 }
 
-                li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`));
+                // li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`));
+                li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
+                if (file.size > 2097200) {
+                    li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
+                } else if (file.size > 1048576) {
+                    li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
+                } else {
+                    li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
+                }
+                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
                 this.fileList.appendChild(li);
 
                 const closeButton = document.createElement('button');
