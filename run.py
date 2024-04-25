@@ -2720,13 +2720,6 @@ def save_rent_offer():
     if request.method == 'POST':
         form_data = request.form.to_dict()
         # print(form_data)
-    {
-        'title': 'Dzień Kobiet: święto siły i inspiracji!', 
-        'rodzajNieruchomosci': 'dom', 
-        'lokalizacja': 'warszawa bielany', 
-        'cena': '1', 
-        'opis': '[{"p":"tworzeniu "},{"strong":"tworzeniu "},{"h1":"tworzeniu "},{"h2":"tworzeniu "},{"h3":"tworzeniu "},{"h1-strong":"tworzeniu "},{"h2-strong":"tworzeniu "},{"h3-strong":"tworzeniu "},{"li":["tworzeniu ","tworzeniu ","tworzeniu "]},{"p":"tworzeniu "},{"h2":"tworzeniu "}]'
-    }
 
     # Pobierz JSON jako string z formularza
     opis_json_string = request.form['opis']
@@ -2738,34 +2731,27 @@ def save_rent_offer():
         return jsonify({'error': 'Nieprawidłowy format JSON'}), 400
 
     # Teraz opis_data jest słownikiem Pythona, który możesz używać w kodzie
-    print(opis_data)
-
     title = request.form.get('title')
     rodzaj_nieruchomosci = request.form.get('rodzajNieruchomosci')
     lokalizacja = request.form.get('lokalizacja')
     cena = request.form.get('cena')
     opis = request.form.get('opis')
-    print(title, opis, form_data)
-    # # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
-    # if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, opis]):
-    #     return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
-    # Wylistuj wszystkie przesłane pliki
-    print(request.files)
-    files_list = request.files.getlist('photos[]')  # Upewnij się, że klucz pasuje do tego w append
-    print('Odebrane pliki:', files_list)
+    print(form_data)
 
-    for file in files_list:
-        print('Plik:', file.filename)  # Wydrukuj nazwy plików
+    # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
+    if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, opis]):
+        return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
     # Przetwarzanie przesłanych zdjęć
-    # photos = request.files.getlist('photos[]')
+    photos = request.files.getlist('photos[]')
     # print(photos)
-    # for photo in photos:
-    #     # Zapisz każde zdjęcie na serwerze
-    #     if photo:
-    #         filename = secure_filename(photo.filename)
-    #         photo.save(os.path.join('./', filename))
+    for photo in photos:
+        # Zapisz każde zdjęcie na serwerze
+        if photo:
+            filename = secure_filename(photo.filename)
+            print(filename)
+            # photo.save(os.path.join('./', filename))
     
     # Tutaj można dodać logikę zapisu do bazy danych
     # Przykładowo, zapisanie szczegółów oferty wynajmu w bazie danych
