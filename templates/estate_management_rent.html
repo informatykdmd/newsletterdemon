@@ -375,12 +375,7 @@
                                             const myFotoDropBox = new FotoDropBox('9999999');
                                         });
                                     </script>
-                                    
-
-                                    <!-- Ukryte pola formularza -->
-                                    <input type="hidden" name="tagsFieldData_9999999" id="tagsFieldData_9999999" />
-                                    <input type="hidden" name="dynamicFieldData_9999999" id="dynamicFieldData_9999999" />
-                                    <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}"/>
+ 
                                     <!-- Przycisk Zapisz artykuł -->
                                     <button 
                                         type="button" 
@@ -1059,44 +1054,6 @@
             );
         }
 
-        // displayFiles() {
-        //     this.fileList.innerHTML = '';  // Clear existing list entries
-        //     this.accumulatedFiles.forEach((file, index) => {
-        //         const li = document.createElement('li');
-
-        //         if (file.type.startsWith('image/')) {
-        //             const img = document.createElement('img');
-        //             img.src = URL.createObjectURL(file);
-        //             img.onload = () => { URL.revokeObjectURL(img.src); }; // Clean up after image is loaded
-        //             img.style.height = '50px'; // Set the height of thumbnail
-        //             img.style.marginRight = '10px';
-        //             img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark')
-        //             li.appendChild(img);
-        //         } else {
-        //             alert('Plik ' + file.name + ' nie jest zdjęciem.');
-        //             return; // Don't add non-image files to the list
-        //         }
-
-        //         li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
-        //         if (file.size > 2097200) {
-        //             li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
-        //         } else if (file.size > 1048576) {
-        //             li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
-        //         } else {
-        //             li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
-        //         }
-        //         li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
-        //         this.fileList.appendChild(li);
-
-        //         // Dodaj przycisk "X" do usuwania elementu
-        //         const closeButton = document.createElement('button');
-        //         closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
-        //         closeButton.setAttribute('aria-label', 'Close'); // Ustaw atrybut aria-label
-        //         closeButton.addEventListener('click', () => this.removeFile(index));
-        //         li.appendChild(closeButton);
-        //     });
-        // }
-        
         displayFiles() {
             this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
             this.accumulatedFiles.forEach((file, index) => {
@@ -1168,7 +1125,7 @@
         var newWindow = window.open(`https://earth.google.com/web/search/${formattedAddress}`, "DemoWindow", features);
     }
 
-    function extractAndDisplayCoords(link_id, gps_div_id) {
+    function extractAndDisplayCoords(link_id, gps_div_id, formID) {
         // Pobranie wartości z pola input
         var url = document.getElementById(link_id).value.trim();
 
@@ -1178,14 +1135,48 @@
             return; // Przerywanie funkcji, jeśli pole jest puste
         }
 
+        // Sprawdzenie, czy URL zawiera '@'
+        if (!url.includes('@')) {
+            alert("Podany link nie zawiera poprawnych danych GPS.");
+            return; // Przerywanie funkcji, jeśli URL jest niepoprawny
+        }
+
         // Ekstrakcja szerokości i długości geograficznej
         var coords = url.split('@')[1];
-        var lat = coords.split(',')[0];
-        var lon = coords.split(',')[1];
+        var parts = coords.split(',');
+        if (parts.length < 2) {
+            alert("Nieprawidłowy format danych GPS.");
+            return; // Przerywanie funkcji, jeśli dane są niepełne
+        }
+        var lat = parts[0];
+        var lon = parts[1];
+
+        // Sprawdzenie, czy wartości koordynatów można przekonwertować na liczby
+        if (isNaN(parseFloat(lat)) || isNaN(parseFloat(lon))) {
+            alert("Podane wartości nie są prawidłowymi koordynatami GPS.");
+            return; // Przerywanie funkcji, jeśli koordynaty nie są liczbami
+        }
 
         // Wyświetlenie wyników w elemencie div o id 'GPS_9999999'
         var displayDiv = document.getElementById(gps_div_id);
         displayDiv.innerHTML = "GPS: " + lat + " <i class='bi bi-geo-alt-fill'></i> " + lon;
+
+        // Tworzenie ukrytych pól input dla szerokości i długości geograficznej
+        var latInput = document.createElement('input');
+        latInput.type = 'hidden';
+        latInput.id = 'lat_' + formID;
+        latInput.name = 'lat_' + formID;
+        latInput.value = lat;
+
+        var lonInput = document.createElement('input');
+        lonInput.type = 'hidden';
+        lonInput.id = 'lon_' + formID;
+        lonInput.name = 'lon_' + formID;
+        lonInput.value = lon;
+
+        // Dodanie ukrytych inputów do tego samego elementu div, w którym są wyświetlane koordynaty
+        displayDiv.appendChild(latInput);
+        displayDiv.appendChild(lonInput);
     }
 
 </script>

@@ -221,12 +221,6 @@ function joinToDynamicDescription(id, elementName="list-container") {
     return resultJsonList;
 }
 
-// function blobUrlToFile(blobUrl, fileName) {
-//     return fetch(blobUrl)
-//         .then(response => response.blob())
-//         .then(blob => new File([blob], fileName, { type: blob.type }));
-// }
-
 
 
 function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
@@ -238,6 +232,24 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var opis = joinToDynamicDescription(offerId, "list-container");
     var opisJsonString = JSON.stringify(opis);
 
+    var lat = document.getElementById('lat_' + offerId).value;
+    var lon = document.getElementById('lon_' + offerId).value;
+    var rokBudowy = document.getElementById('RokBudowy_' + offerId).value;
+    var stan = document.getElementById('StanWykonczenia_' + offerId).value;
+    var nrKW = document.getElementById('NumerKW_' + offerId).value;
+    var czynsz = document.getElementById('Czynsz_' + offerId).value;
+    var kaucja = document.getElementById('Kaucja_' + offerId).value;
+    var metraz = document.getElementById('Metraz_' + offerId).value;
+    var powDzialki = document.getElementById('PowierzchniaDzialki_' + offerId).value;
+    var liczbaPieter = document.getElementById('LiczbaPieter_' + offerId).value;
+    var liczbaPokoi = document.getElementById('LiczbaPokoi_' + offerId).value;
+    var techBudowy = document.getElementById('TechnologiaBudowy_' + offerId).value;
+    var rodzajZabudowy = document.getElementById('RodzajZabudowy_' + offerId).value;
+    var umeblowanie = document.getElementById('Umeblowanie_' + offerId).value;
+    var kuchnia = document.getElementById('FormaKuchni_' + offerId).value;
+    var dodatkoweInfo = document.getElementById('InformacjeDodatkowe_' + offerId).value;
+    
+
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
     var zdjecia = [];
@@ -245,7 +257,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     fotoList.childNodes.forEach(child => {
         console.log(child.file);
         if (child.file) {  // Sprawdź, czy element li ma przypisany plik
-            console.log('child.file', child.file);
+            // console.log('child.file', child.file);
             zdjecia.push(child.file);
         }
     });
@@ -282,6 +294,24 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     formData.append('lokalizacja', lokalizacja);
     formData.append('cena', cena);
     formData.append('opis', opisJsonString);
+
+    formData.append('lat', lat);
+    formData.append('lon', lon);
+    formData.append('rokBudowy', rokBudowy);
+    formData.append('stan', stan);
+    formData.append('nrKW', nrKW);
+    formData.append('czynsz', czynsz);
+    formData.append('kaucja', kaucja);
+    formData.append('metraz', metraz);
+    formData.append('powDzialki', powDzialki);
+    formData.append('liczbaPieter', liczbaPieter);
+    formData.append('liczbaPokoi', liczbaPokoi);
+    formData.append('techBudowy', techBudowy);
+    formData.append('rodzajZabudowy', rodzajZabudowy);
+    formData.append('umeblowanie', umeblowanie);
+    formData.append('kuchnia', kuchnia);
+    formData.append('dodatkoweInfo', dodatkoweInfo);
+
 
     // Wysyłanie formularza za pomocą AJAX (fetch API)
     fetch('/save-rent-offer', {
