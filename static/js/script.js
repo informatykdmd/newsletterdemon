@@ -216,7 +216,7 @@ function joinToDynamicDescription(id, elementName="list-container") {
     });
 
     // Wyświetl wynik w konsoli
-    console.log(resultJsonList);
+    // console.log(resultJsonList);
 
     return resultJsonList;
 }
@@ -240,7 +240,6 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
         var lon = '';
     }
     
-
     var rokBudowy = document.getElementById('RokBudowy_' + offerId).value;
     var stan = document.getElementById('StanWykonczenia_' + offerId).value;
     var nrKW = document.getElementById('NumerKW_' + offerId).value;
@@ -262,7 +261,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var zdjecia = [];
 
     fotoList.childNodes.forEach(child => {
-        console.log(child.file);
+        // console.log(child.file);
         if (child.file) {  // Sprawdź, czy element li ma przypisany plik
             // console.log('child.file', child.file);
             zdjecia.push(child.file);
@@ -286,7 +285,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var formData = new FormData();
     zdjecia.forEach(file => {
         formData.append('photos[]', file);
-        console.log('Dodaję plik:', file.name);
+        // console.log('Dodaję plik:', file.name);
     });
 
     // Wyświetl zawartość FormData przed wysłaniem
