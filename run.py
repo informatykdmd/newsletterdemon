@@ -2762,7 +2762,7 @@ def save_rent_offer():
                 validOpis.append(test)
             if isinstance(val, list) and len(val)!=0:
                 clearLI = [a for a in val if a != ""]
-                new_li = {'li': clearLI}
+                new_li = {"li": clearLI}
                 validOpis.append(new_li)
     
     if len(validOpis)!=0: testOpisu = True
@@ -2772,16 +2772,17 @@ def save_rent_offer():
     if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, testOpisu]):
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
-    print(validOpis)
+    upload_path = '/var/www/html/appdmddomy/public/images/estate/'
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
     # print(photos)
     for photo in photos:
-        # Zapisz każde zdjęcie na serwerze
         if photo:
-            filename = secure_filename(photo.filename)
+            filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
             print(filename)
-            # photo.save(os.path.join('./', filename))
+            full_path = os.path.join(upload_path, filename)
+            photo.save(full_path)
+    
     
     # Tutaj można dodać logikę zapisu do bazy danych
     # Przykładowo, zapisanie szczegółów oferty wynajmu w bazie danych
