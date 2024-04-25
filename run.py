@@ -2735,7 +2735,7 @@ def save_rent_offer():
     rodzaj_nieruchomosci = request.form.get('rodzajNieruchomosci')
     lokalizacja = request.form.get('lokalizacja')
     cena = request.form.get('cena')
-    opis = request.form.get('opis')
+    opis = opis_data
     print(type(opis_data))
     print((opis_data))
     print(form_data)

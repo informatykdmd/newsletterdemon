@@ -232,8 +232,15 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var opis = joinToDynamicDescription(offerId, "list-container");
     var opisJsonString = JSON.stringify(opis);
 
-    var lat = document.getElementById('lat_' + offerId).value;
-    var lon = document.getElementById('lon_' + offerId).value;
+    try {
+        var lat = document.getElementById('lat_' + offerId).value;
+        var lon = document.getElementById('lon_' + offerId).value;
+    } catch {
+        var lat = '';
+        var lon = '';
+    }
+    
+
     var rokBudowy = document.getElementById('RokBudowy_' + offerId).value;
     var stan = document.getElementById('StanWykonczenia_' + offerId).value;
     var nrKW = document.getElementById('NumerKW_' + offerId).value;
