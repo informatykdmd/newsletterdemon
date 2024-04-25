@@ -2761,7 +2761,10 @@ def save_rent_offer():
             if isinstance(val, str) and val != "":
                 validOpis.append(test)
             if isinstance(val, list) and len(val)!=0:
-                validOpis.append(test)
+                clearLI = [a for a in val if a != ""]
+                new_li = {'li': clearLI}
+                validOpis.append(new_li)
+    
     if len(validOpis)!=0: testOpisu = True
     else: testOpisu = False
 
