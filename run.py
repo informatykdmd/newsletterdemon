@@ -2754,7 +2754,7 @@ def save_rent_offer():
     kuchnia = request.form.get('kuchnia')
     dodatkoweInfo = request.form.get('dodatkoweInfo')
 
-    testOpisu = False
+
     validOpis = []
     for test in opis:
         for val in test.values():
@@ -2762,7 +2762,7 @@ def save_rent_offer():
                 validOpis.append(test)
             if isinstance(val, list) and len(val)!=0:
                 validOpis.append(test)
-    if len(validOpis)!=0: testOpisu = False
+    if len(validOpis)!=0: testOpisu = True
     else: testOpisu = False
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
