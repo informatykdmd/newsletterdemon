@@ -2736,9 +2736,31 @@ def save_rent_offer():
     lokalizacja = request.form.get('lokalizacja')
     cena = request.form.get('cena')
     opis = request.form.get('opis')
-
+    print(type(opis_data))
+    print((opis_data))
     print(form_data)
-
+    {
+        'title': 'Dzień Kobiet: święto siły i inspiracji!', 
+        'rodzajNieruchomosci': 'dom', 
+        'lokalizacja': 'warszawa bielany', 
+        'cena': '3', 'opis': '[{"p":"p"}]', 
+        'lat': '52.2959786', 
+        'lon': '20.93725108', 
+        'rokBudowy': '', 
+        'stan': '', 
+        'nrKW': '', 
+        'czynsz': '', 
+        'kaucja': '', 
+        'metraz': '', 
+        'powDzialki': '', 
+        'liczbaPieter': '', 
+        'liczbaPokoi': '', 
+        'techBudowy': '', 
+        'rodzajZabudowy': '', 
+        'umeblowanie': '', 
+        'kuchnia': '', 
+        'dodatkoweInfo': ''
+    }
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, opis]):
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
