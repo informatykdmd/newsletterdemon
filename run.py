@@ -2736,35 +2736,40 @@ def save_rent_offer():
     lokalizacja = request.form.get('lokalizacja')
     cena = request.form.get('cena')
     opis = opis_data
-    print(type(opis_data))
-    print((opis_data))
-    print(form_data)
-    {
-        'title': 'Dzień Kobiet: święto siły i inspiracji!', 
-        'rodzajNieruchomosci': 'dom', 
-        'lokalizacja': 'warszawa bielany', 
-        'cena': '3', 'opis': '[{"p":"p"}]', 
-        'lat': '52.2959786', 
-        'lon': '20.93725108', 
-        'rokBudowy': '', 
-        'stan': '', 
-        'nrKW': '', 
-        'czynsz': '', 
-        'kaucja': '', 
-        'metraz': '', 
-        'powDzialki': '', 
-        'liczbaPieter': '', 
-        'liczbaPokoi': '', 
-        'techBudowy': '', 
-        'rodzajZabudowy': '', 
-        'umeblowanie': '', 
-        'kuchnia': '', 
-        'dodatkoweInfo': ''
-    }
+
+    lat = request.form.get('lat')
+    lon = request.form.get('lon')
+    rokBudowy = request.form.get('rokBudowy')
+    stan = request.form.get('stan')
+    nrKW = request.form.get('nrKW')
+    czynsz = request.form.get('czynsz')
+    kaucja = request.form.get('kaucja')
+    metraz = request.form.get('metraz')
+    powDzialki = request.form.get('powDzialki')
+    liczbaPieter = request.form.get('liczbaPieter')
+    liczbaPokoi = request.form.get('liczbaPokoi')
+    techBudowy = request.form.get('techBudowy')
+    rodzajZabudowy = request.form.get('rodzajZabudowy')
+    umeblowanie = request.form.get('umeblowanie')
+    kuchnia = request.form.get('kuchnia')
+    dodatkoweInfo = request.form.get('dodatkoweInfo')
+
+    testOpisu = False
+    validOpis = []
+    for test in opis:
+        for val in test.values():
+            if isinstance(val, str) and val != "":
+                validOpis.append(test)
+            if isinstance(val, list) and len(val)!=0:
+                validOpis.append(test)
+    if len(validOpis)!=0: testOpisu = False
+    else: testOpisu = False
+
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
-    if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, opis]):
+    if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, testOpisu]):
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
+    print(validOpis)
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
     # print(photos)

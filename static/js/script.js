@@ -261,9 +261,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var zdjecia = [];
 
     fotoList.childNodes.forEach(child => {
-        // console.log(child.file);
         if (child.file) {  // Sprawdź, czy element li ma przypisany plik
-            // console.log('child.file', child.file);
             zdjecia.push(child.file);
         }
     });
@@ -285,7 +283,6 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var formData = new FormData();
     zdjecia.forEach(file => {
         formData.append('photos[]', file);
-        // console.log('Dodaję plik:', file.name);
     });
 
     // Wyświetl zawartość FormData przed wysłaniem
