@@ -2834,12 +2834,15 @@ def save_rent_offer():
     else:
         flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
         return redirect(url_for('estateAdsRent'))
-
+    print(userName)
     try:
         userName_data = take_data_where_ID('*', 'admins', 'LOGIN', userName)[0]
+        print(userName_data)
         user_phone = userName_data[8]
         user_email = userName_data[5]
     except Exception as err:
+        print(f'Błąd podczas przypisania oferty do użytkownika! \n {err} \n Został inicjowany kontakt ogólny!', 'danger')
+
         flash(f'Błąd podczas przypisania oferty do użytkownika! \n {err} \n Został inicjowany kontakt ogólny!', 'danger')
         user_phone = ''
         user_email = ''
