@@ -339,7 +339,8 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
         }
     }).then(data => {
         console.log('data:', data);
-        if (data.seccess) {
+        console.log('data.seccess:', data.seccess);
+        if (data.seccess == true) {
             console.log('xxx:', data);
             var form = document.getElementById('rentOffer_' + offerId);
             form.reset();
