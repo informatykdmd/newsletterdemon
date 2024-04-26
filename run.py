@@ -2726,7 +2726,7 @@ def save_rent_offer():
     
     # Przekonwertuj string JSON na słownik Pythona
     try:
-        opis_data = json.loads(f'{opis_json_string}')
+        opis_data = json.loads(f'''{opis_json_string}''')
     except json.JSONDecodeError:
         return jsonify({'error': 'Nieprawidłowy format JSON'}), 400
 
