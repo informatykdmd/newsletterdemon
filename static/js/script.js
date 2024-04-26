@@ -184,6 +184,14 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
 // [{"li": ["wartość1", "wartość2", "wartość3"]}, {"p": "wartość"}, itd...]
 // funkcja znajduje kontener wygenerowanych pół na podstawie nazwy i id a nastepnie iteruje przez niego i tworzy listę json
 // które zawierają obiekty gdzie klucze to data-type a wartości to: dla li - lista  wartości, dla innych - pojedyncze stringi.
+function encodeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
 
 function joinToDynamicDescription(id, elementName="list-container") {
     // Używamy querySelectorAll zamiast getElementsByName, dodajemy selektor 'input' i 'textarea'
@@ -196,21 +204,21 @@ function joinToDynamicDescription(id, elementName="list-container") {
     // Iteruj przez wszystkie elementy input i textarea
     inputElements.forEach(element => {
         const dataType = element.getAttribute('data-type');
-        
+        const encodedValue = encodeHtml(element.value); // Koduj każdą wartość przed użyciem
         // Sprawdź czy pole to 'li' i odpowiednio przetwarzaj
         if (dataType === 'li') {
             // Jeśli już istnieje obiekt z kluczem 'li', dodaj do niego nową wartość
             let liObject = resultJsonList.find(item => item.hasOwnProperty('li'));
             if (liObject) {
-                liObject.li.push(element.value);
+                liObject.li.push(encodedValue);
             } else {
                 // Jeśli nie ma jeszcze obiektu 'li', stwórz nowy
-                resultJsonList.push({li: [element.value]});
+                resultJsonList.push({li: [encodedValue]});
             }
         } else {
             // Dla pozostałych typów danych, twórz pojedyncze obiekty z kluczem i wartością
             let object = {};
-            object[dataType] = element.value;
+            object[dataType] = encodedValue;
             resultJsonList.push(object);
         }
     });
