@@ -340,7 +340,11 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     }).then(data => {
         console.log('data:', data);
         if (data.seccess) {
+            var form = document.getElementById('rentOffer_' + offerId);
+            form.reset();
+
             window.location.href = '/estate-ads-rent';
+            
         }
     }).catch(error => {
         alert('Wystąpił błąd: ' + error.message);
