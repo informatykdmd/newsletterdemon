@@ -46,8 +46,10 @@ def generator_settingsDB():
     settings = {
         'pagination': int(take_data_settingsDB('pagination')),
         'main-domain': take_data_settingsDB('main_domain'),
+        'real-location-on-server': take_data_settingsDB('real_location_on_server'),
         'blog-pic-path': take_data_settingsDB('blog_pic_path'),
         'avatar-pic-path': take_data_settingsDB('avatar_pic_path'),
+        'estate-pic-offer': take_data_settingsDB('estate_pic_offer'),
         'last-restart': take_data_settingsDB('last_restart'),
         'domy': take_data_settingsDB('domy'),
         'budownictwo': take_data_settingsDB('budownictwo'),
@@ -2772,20 +2774,54 @@ def save_rent_offer():
     if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, testOpisu]):
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
-    upload_path = '/var/www/html/appdmddomy/public/images/estate/'
+    settingsDB = generator_settingsDB()
+    real_loc_on_server = settingsDB['real-location-on-server']
+    domain = settingsDB['main-domain']
+    estate_pic_path = settingsDB['estate-pic-offer']
+
+    'https://dmddomy.pl/images/estate/1713336102750.jpg'
+
+    upload_path = f'{real_loc_on_server}{estate_pic_path}'
+    mainDomain_URL = f'{domain}{estate_pic_path}'
+
+
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
-    # print(photos)
+    saved_photos =[]
     for photo in photos:
         if photo:
             filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
             print(filename)
             full_path = os.path.join(upload_path, filename)
-            photo.save(full_path)
-    
-    
-    # Tutaj można dodać logikę zapisu do bazy danych
-    # Przykładowo, zapisanie szczegółów oferty wynajmu w bazie danych
+            complete_URL_PIC = f'{mainDomain_URL}{filename}'
+            try:
+                photo.save(full_path)
+                saved_photos.append(complete_URL_PIC)
+            except Exception as e:
+                print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
+
+    # Obsługa zdjęć 
+    if len(saved_photos)>=1:
+        # dodaj zdjęcia do bazy i pobierz id galerii
+        gallery_id = None
+        dynamic_col_name = ''
+        dynamic_amount = ''
+        for i in range(len(saved_photos)):
+            dynamic_col_name += f'Zdjecie_{i + 1}, '
+            dynamic_amount += '%s, '
+        dynamic_col_name = dynamic_col_name[:-2]
+        dynamic_amount = dynamic_amount[:-2]
+        print(dynamic_amount)
+        zapytanie_sql = f'''INSERT INTO ZdjeciaOfert ({dynamic_col_name}) VALUES ({dynamic_amount});'''
+        dane = (a for a in saved_photos)
+        print('zapytanie_sql!\n')
+        print(zapytanie_sql)
+        print(dane)
+
+        # if msq.insert_to_database(zapytanie_sql, dane):
+        #     # Przykładowe dane
+        #     subject = "Czas się aktywować – Witaj w DMD!"
+
 
     # Odpowiedź dla klienta
     return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
