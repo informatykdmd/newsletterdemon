@@ -1501,7 +1501,9 @@ def set_settings():
         print(form_data)
         {
             'main-domain': 'https://dmddomy.pl/', 
+            'main-domain': 'https://dmddomy.pl/',
             'blog-pic-path': 'images/blog/', 
+            'avatar-pic-path': 'images/team/', 
             'avatar-pic-path': 'images/team/', 
             'item-on-page': '15', 
             'admin-smtp-username': 'informatyk@dmdbudownictwo.pl', 
@@ -1516,8 +1518,10 @@ def set_settings():
             'url-instalacje': 'https://dmddomy.pl/'
         }
         ADMIN_DOMAIN = form_data['main-domain']
+        ADMIN_REALLOC = form_data['real-loc-on-server']
         ADMIN_BLOG = form_data['blog-pic-path']
         ADMIN_AVATAR = form_data['avatar-pic-path']
+        ADMIN_ESTATE = form_data['estate-pic-path']
         ADMIN_ITEMS = form_data['item-on-page']
         ADMIN_EMAIL = form_data['admin-smtp-username']
         ADMIN_SERVER = form_data['admin-smtp-server']
@@ -1561,7 +1565,9 @@ def set_settings():
 
                         avatar_pic_path = %s,
                         blog_pic_path = %s,
-                        main_domain = %s
+                        main_domain = %s,
+                        real_location_on_server = %s,
+                        estate_pic_offer = %s
                     WHERE ID = %s;
                 '''
             dane = (
@@ -1576,7 +1582,9 @@ def set_settings():
 
                         ADMIN_AVATAR,
                         ADMIN_BLOG, 
-                        ADMIN_DOMAIN, 1)
+                        ADMIN_DOMAIN,
+                        ADMIN_REALLOC,
+                        ADMIN_ESTATE, 1)
         else:
             zapytanie_sql = '''
                     UPDATE admin_settings 
@@ -1594,27 +1602,31 @@ def set_settings():
 
                         avatar_pic_path = %s,
                         blog_pic_path = %s,
-                        main_domain = %s
+                        main_domain = %s,
+                        real_location_on_server = %s,
+                        estate_pic_offer = %s
                     WHERE ID = %s;
                 '''
             dane = (
-                        ADMIN_ITEMS, 
+                    ADMIN_ITEMS, 
 
-                        ADMIN_PASSWORD,
-                        ADMIN_EMAIL, 
-                        ADMIN_PORT, 
-                        ADMIN_SERVER, 
+                    ADMIN_PASSWORD,
+                    ADMIN_EMAIL, 
+                    ADMIN_PORT, 
+                    ADMIN_SERVER, 
 
-                        ADMIN_URL_INSTALACJE, 
-                        ADMIN_URL_INWESTYCJE, 
-                        ADMIN_URL_ELITEHOME,
-                        ADMIN_URL_DEVELOPMENT,
-                        ADMIN_URL_BUDOWNICTWO,
-                        ADMIN_URL_DOMY,
+                    ADMIN_URL_INSTALACJE, 
+                    ADMIN_URL_INWESTYCJE, 
+                    ADMIN_URL_ELITEHOME,
+                    ADMIN_URL_DEVELOPMENT,
+                    ADMIN_URL_BUDOWNICTWO,
+                    ADMIN_URL_DOMY,
 
-                        ADMIN_AVATAR,
-                        ADMIN_BLOG, 
-                        ADMIN_DOMAIN, 1)
+                    ADMIN_AVATAR,
+                    ADMIN_BLOG, 
+                    ADMIN_DOMAIN,
+                    ADMIN_REALLOC,
+                    ADMIN_ESTATE, 1)
         if msq.insert_to_database(zapytanie_sql, dane):
             flash('Ustawienia zapisane!', 'success')
             return redirect(url_for('settings'))
@@ -2822,7 +2834,7 @@ def save_rent_offer():
     for photo in photos:
         if photo:
             filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
-            print(filename)
+            # print(filename)
             full_path = os.path.join(upload_path, filename)
             complete_URL_PIC = f'{mainDomain_URL}{filename}'
             try:
@@ -2982,6 +2994,8 @@ def settings():
     domain = settingsDB['main-domain']
     blog = settingsDB['blog-pic-path']
     avatar = settingsDB['avatar-pic-path']
+    real_loc_on_server = settingsDB['real-location-on-server']
+    estate_pic_path = settingsDB['estate-pic-offer']
     
     
     restart = settingsDB['last-restart']
@@ -3001,6 +3015,8 @@ def settings():
                             domain=domain,
                             blog=blog,
                             avatar=avatar,
+                            real_loc_on_server=real_loc_on_server,
+                            estate_pic_path=estate_pic_path,
                             restart=restart,
                             domy=domy,
                             budownictwo=budownictwo,
