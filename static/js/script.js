@@ -254,6 +254,8 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var umeblowanie = document.getElementById('Umeblowanie_' + offerId).value;
     var kuchnia = document.getElementById('FormaKuchni_' + offerId).value;
     var dodatkoweInfo = document.getElementById('InformacjeDodatkowe_' + offerId).value;
+    var userName = document.getElementById('UserName_' + offerId).value;
+
     
 
     // Pobieranie zdjęć z listy
@@ -314,6 +316,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     formData.append('umeblowanie', umeblowanie);
     formData.append('kuchnia', kuchnia);
     formData.append('dodatkoweInfo', dodatkoweInfo);
+    formData.append('userName', userName);
 
 
     // Wysyłanie formularza za pomocą AJAX (fetch API)

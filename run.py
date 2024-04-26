@@ -2741,6 +2741,7 @@ def save_rent_offer():
 
     lat = request.form.get('lat')
     lon = request.form.get('lon')
+    GPS = {"latitude": lat, "longitude": lon }
     rokBudowy = request.form.get('rokBudowy')
     stan = request.form.get('stan')
     nrKW = request.form.get('nrKW')
@@ -2755,6 +2756,8 @@ def save_rent_offer():
     umeblowanie = request.form.get('umeblowanie')
     kuchnia = request.form.get('kuchnia')
     dodatkoweInfo = request.form.get('dodatkoweInfo')
+    userName = request.form.get('userName')
+
 
 
     validOpis = []
@@ -2799,11 +2802,11 @@ def save_rent_offer():
                 saved_photos.append(complete_URL_PIC)
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
-
+    
+    gallery_id = None
     # Obsługa zdjęć 
     if len(saved_photos)>=1:
         # dodaj zdjęcia do bazy i pobierz id galerii
-        gallery_id = None
         dynamic_col_name = ''
         dynamic_amount = ''
         for i in range(len(saved_photos)):
@@ -2826,12 +2829,43 @@ def save_rent_offer():
                 flash(f'Błąd podczas tworzenia galerii! \n {err}', 'danger')
                 return redirect(url_for('estateAdsRent'))
         else:
-            flash(f'Błąd podczas tworzenia zapisywania galerii w bazie!', 'danger')
+            flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
             return redirect(url_for('estateAdsRent'))
-        print(gallery_id)
+    else:
+        flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
+        return redirect(url_for('estateAdsRent'))
 
-    # Odpowiedź dla klienta
-    return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
+    try:
+        userName_data = take_data_where_ID('*', 'admins', 'LOGIN', userName)[0]
+        user_phone = userName_data[8]
+        user_email = userName_data[5]
+    except Exception as err:
+        flash(f'Błąd podczas przypisania oferty do użytkownika! \n {err} \n Został inicjowany kontakt ogólny!', 'danger')
+        user_phone = ''
+        user_email = ''
+
+    zapytanie_sql = f'''
+                INSERT INTO OfertyNajmu (Tytul, Opis, Cena, Kaucja, Lokalizacja, LiczbaPokoi, Metraz, Zdjecia, 
+                                        RodzajZabudowy, Czynsz, Umeblowanie, LiczbaPieter, PowierzchniaDzialki,
+                                        TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
+                                        InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
+    dane = tuple(
+                title, validOpis, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
+                rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
+                techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
+                dodatkoweInfo, GPS, user_phone, user_email, 1 )
+    
+    print('zapytanie sql!')
+    print(zapytanie_sql)
+    print(dane)
+    if msq.insert_to_database(zapytanie_sql, dane):
+        flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+        return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
+    else:
+        flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
+        return jsonify({'message': 'Błąd podczas zapisywania oferty w bazie!'}), 404
+   
 
 
 @app.route('/estate-ads-sell')
