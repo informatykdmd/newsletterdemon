@@ -2893,7 +2893,10 @@ def save_rent_offer():
 
     if msq.insert_to_database(zapytanie_sql, dane):
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
-        return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
+        return jsonify({
+            'message': 'Oferta wynajmu została zapisana pomyślnie!',
+            'success': True
+            }), 200
     else:
         flash(f'Błąd podczas zapisywania oferty w bazie!', 'danger')
         return jsonify({'error': 'Błąd podczas zapisywania oferty w bazie!'}), 400
