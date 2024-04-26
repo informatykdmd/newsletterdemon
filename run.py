@@ -2736,21 +2736,40 @@ def save_rent_offer():
     title = request.form.get('title')
     rodzaj_nieruchomosci = request.form.get('rodzajNieruchomosci')
     lokalizacja = request.form.get('lokalizacja')
-    cena = request.form.get('cena')
-    opis = opis_data
 
+    cena = request.form.get('cena')
+    try: cena = int(cena)
+    except ValueError: return jsonify({'error': 'Cena musi być liczbą'}), 400
+    opis = opis_data
     lat = request.form.get('lat')
     lon = request.form.get('lon')
-    GPS = {"latitude": lat, "longitude": lon }
+    if lat and lon:
+        GPS = {"latitude": lat, "longitude": lon }
+    else: GPS = ''
     rokBudowy = request.form.get('rokBudowy')
+    try: rokBudowy = int(rokBudowy)
+    except ValueError: rokBudowy = 0
+
     stan = request.form.get('stan')
     nrKW = request.form.get('nrKW')
     czynsz = request.form.get('czynsz')
+    try: czynsz = int(czynsz)
+    except ValueError: czynsz = 0
     kaucja = request.form.get('kaucja')
+    try: kaucja = int(kaucja)
+    except ValueError: kaucja = 0
     metraz = request.form.get('metraz')
+    try: metraz = int(metraz)
+    except ValueError: metraz = 0
     powDzialki = request.form.get('powDzialki')
+    try: powDzialki = int(powDzialki)
+    except ValueError: powDzialki = 0
     liczbaPieter = request.form.get('liczbaPieter')
+    try: liczbaPieter = int(liczbaPieter)
+    except ValueError: liczbaPieter = 0
     liczbaPokoi = request.form.get('liczbaPokoi')
+    try: liczbaPokoi = int(liczbaPokoi)
+    except ValueError: liczbaPokoi = 0
     techBudowy = request.form.get('techBudowy')
     rodzajZabudowy = request.form.get('rodzajZabudowy')
     umeblowanie = request.form.get('umeblowanie')
@@ -2853,7 +2872,7 @@ def save_rent_offer():
             title, str(validOpis), cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
             rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
             techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
-            dodatkoweInfo, str(GPS), user_phone, user_email, 1, )
+            dodatkoweInfo, str(GPS), user_phone, user_email, 1)
     
     print('zapytanie sql!')
     print(zapytanie_sql)
