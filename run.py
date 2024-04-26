@@ -2835,6 +2835,8 @@ def save_rent_offer():
         flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
         return redirect(url_for('estateAdsRent'))
     print(userName)
+    userName_data = take_data_where_ID('*', 'admins', 'LOGIN', userName)[0]
+    print(userName_data)
     try:
         userName_data = take_data_where_ID('*', 'admins', 'LOGIN', userName)[0]
         print(userName_data)
@@ -2854,10 +2856,10 @@ def save_rent_offer():
                                         InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
     dane = (
-            title, validOpis, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
+            title, str(validOpis), cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
             rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
             techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
-            dodatkoweInfo, GPS, user_phone, user_email, 1 )
+            dodatkoweInfo, str(GPS), user_phone, user_email, 1 )
     
     print('zapytanie sql!')
     print(zapytanie_sql)
