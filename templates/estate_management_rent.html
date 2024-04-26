@@ -636,36 +636,40 @@
                                     <h4 class="text-secondary">Opis</h4>
                                     {% for item in post_data['Opis'] %}
                                         {% for key, val in item.items() %}
-                                            {% if key=='p' %}
-                                                <p class='text-secondary'>{{val}}</p>
-                                            {% endif %}
-                                            {% if key=='strong' %}
-                                                <strong class='text-secondary'>{{val}}</strong>
-                                            {% endif %}
-                                            {% if key=='h1' %}
-                                                <h1 class='text-secondary'>{{val}}</h1>
-                                            {% endif %}
-                                            {% if key=='h1-strong' %}
-                                                <h1 class='text-secondary'><strong>{{val}}</strong></h1>
-                                            {% endif %}
-                                            {% if key=='h2' %}
-                                                <h2 class='text-secondary'>{{val}}</h2>
-                                            {% endif %}
-                                            {% if key=='h2-strong' %}
-                                                <h2 class='text-secondary'><strong>{{val}}</strong></h2>
-                                            {% endif %}
-                                            {% if key=='h3' %}
-                                                <h3 class='text-secondary'>{{val}}</h3>
-                                            {% endif %}
-                                            {% if key=='h3-strong' %}
-                                                <h3 class='text-secondary'><strong>{{val}}</strong></h3>
-                                            {% endif %}
                                             {% if key=='li' %}
                                                 <ul>
-                                                {% for li_item in val %}
-                                                    <li>{{li_item}}</li>
-                                                {% endfor %}
+                                                    {% for li_item in val %}
+                                                        <li>{{li_item|decode_html_entities_filter}}</li>
+                                                    {% endfor %}
                                                 </ul>
+                                            {% else %}
+                                                {% set decoded_val = val|decode_html_entities_filter %}
+                                                {% if key=='p' %}
+                                                    <p class='text-secondary'>{{decoded_val}}</p>
+                                                {% endif %}
+                                                {% if key=='strong' %}
+                                                    <strong class='text-secondary'>{{decoded_val}}</strong>
+                                                {% endif %}
+                                                {% if key=='h1' %}
+                                                    <h1 class='text-secondary'>{{decoded_val}}</h1>
+                                                {% endif %}
+                                                {% if key=='h1-strong' %}
+                                                    <h1 class='text-secondary'><strong>{{decoded_val}}</strong></h1>
+                                                {% endif %}
+                                                {% if key=='h2' %}
+                                                    <h2 class='text-secondary'>{{decoded_val}}</h2>
+                                                {% endif %}
+                                                {% if key=='h2-strong' %}
+                                                    <h2 class='text-secondary'><strong>{{decoded_val}}</strong></h2>
+                                                {% endif %}
+                                                {% if key=='h3' %}
+                                                    <h3 class='text-secondary'>{{decoded_val}}</h3>
+                                                {% endif %}
+                                                {% if key=='h3-strong' %}
+                                                    <h3 class='text-secondary'><strong>{{decoded_val}}</strong></h3>
+                                                {% endif %}
+                                            
+                                                
                                             {% endif %}
                                         {% endfor %}
                                     {% endfor %}

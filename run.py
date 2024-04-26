@@ -15,6 +15,8 @@ import string
 import adminSmtpSender as mails
 from googletrans import Translator
 import json
+import html
+
 
 """
 Aplikacja "Admin Panel" stanowi kompleksowe narzędzie do 
@@ -37,6 +39,9 @@ class LoginForm(FlaskForm):
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'webp'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def decode_html_entities(text):
+    return html.unescape(text)
 
 def take_data_settingsDB(key):
     dump_key = msq.connect_to_database(f'SELECT {key} FROM admin_settings;')[0][0]
@@ -2665,6 +2670,9 @@ def team_instalacje():
                             )
 
 
+@app.template_filter()
+def decode_html_entities_filter(text):
+    return html.unescape(text)
 
 @app.route('/estate-ads-rent')
 def estateAdsRent():
