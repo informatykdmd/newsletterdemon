@@ -2875,7 +2875,7 @@ def save_rent_offer():
 
     if msq.insert_to_database(zapytanie_sql, dane):
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
-        return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
+        return redirect(url_for('estateAdsRent'))
     else:
         flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
         return jsonify({'message': 'Błąd podczas zapisywania oferty w bazie!'}), 404
