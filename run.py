@@ -2811,17 +2811,24 @@ def save_rent_offer():
             dynamic_amount += '%s, '
         dynamic_col_name = dynamic_col_name[:-2]
         dynamic_amount = dynamic_amount[:-2]
-        print(dynamic_amount)
+
         zapytanie_sql = f'''INSERT INTO ZdjeciaOfert ({dynamic_col_name}) VALUES ({dynamic_amount});'''
         dane = tuple(a for a in saved_photos)
-        print('zapytanie_sql!\n')
-        print(zapytanie_sql)
-        print(str(dane))
 
-        # if msq.insert_to_database(zapytanie_sql, dane):
-        #     # Przykładowe dane
-        #     subject = "Czas się aktywować – Witaj w DMD!"
-
+        if msq.insert_to_database(zapytanie_sql, dane):
+            # Przykładowe dane
+            try:
+                gallery_id = msq.connect_to_database(
+                    '''
+                        SELECT * FROM ZdjeciaOfert ORDER BY ID DESC;
+                    ''')[0][0]
+            except Exception as err:
+                flash(f'Błąd podczas tworzenia galerii! \n {err}', 'danger')
+                return redirect(url_for('estateAdsRent'))
+        else:
+            flash(f'Błąd podczas tworzenia zapisywania galerii w bazie!', 'danger')
+            return redirect(url_for('estateAdsRent'))
+        print(gallery_id)
 
     # Odpowiedź dla klienta
     return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
