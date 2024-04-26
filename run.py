@@ -2719,9 +2719,7 @@ def update_rent_offer_status():
 @app.route('/save-rent-offer', methods=["POST"])
 def save_rent_offer():
     # Odczytanie danych formularza
-    if request.method == 'POST':
-        form_data = request.form.to_dict()
-        # print(form_data)
+    
 
     # Pobierz JSON jako string z formularza
     opis_json_string = request.form['opis']
@@ -2791,7 +2789,7 @@ def save_rent_offer():
     
     if len(validOpis)!=0: 
         testOpisu = True
-        opis_json = {'data': validOpis}
+        opis_json = {"data": validOpis}
     else: testOpisu = False
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
