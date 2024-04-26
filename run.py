@@ -2850,11 +2850,11 @@ def save_rent_offer():
                                         TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
                                         InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
-    dane = tuple(
-                title, validOpis, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
-                rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
-                techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
-                dodatkoweInfo, GPS, user_phone, user_email, 1 )
+    dane = (
+            title, validOpis, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
+            rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
+            techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
+            dodatkoweInfo, GPS, user_phone, user_email, 1 )
     
     print('zapytanie sql!')
     print(zapytanie_sql)
