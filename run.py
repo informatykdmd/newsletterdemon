@@ -2834,29 +2834,9 @@ def save_rent_offer():
     else:
         flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
         return redirect(url_for('estateAdsRent'))
-    
 
-
-    print([session['user_data']])
-    # userName_data = take_data_where_ID('*', 'admins', 'LOGIN', userName)
-    # print(userName_data)
-
-
-
-    try:
-        userName_data = take_data_where_ID('*', 'admins', 'LOGIN', userName)[0]
-        print(userName_data)
-        user_phone = userName_data[8]
-        user_email = userName_data[5]
-
-
-
-    except Exception as err:
-        print(f'Błąd podczas przypisania oferty do użytkownika! \n {err} \n Został inicjowany kontakt ogólny!', 'danger')
-
-        flash(f'Błąd podczas przypisania oferty do użytkownika! \n {err} \n Został inicjowany kontakt ogólny!', 'danger')
-        user_phone = ''
-        user_email = ''
+    user_phone = session['user_data']['phone']
+    user_email = session['user_data']['email']
 
     zapytanie_sql = f'''
                 INSERT INTO OfertyNajmu (Tytul, Opis, Cena, Kaucja, Lokalizacja, LiczbaPokoi, Metraz, Zdjecia, 
@@ -2873,6 +2853,7 @@ def save_rent_offer():
     print('zapytanie sql!')
     print(zapytanie_sql)
     print(dane)
+    
     if msq.insert_to_database(zapytanie_sql, dane):
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
         return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
