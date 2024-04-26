@@ -2843,17 +2843,22 @@ def save_rent_offer():
                                         RodzajZabudowy, Czynsz, Umeblowanie, LiczbaPieter, PowierzchniaDzialki,
                                         TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
                                         InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
+                VALUES (
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s);'''
     dane = (
             title, str(validOpis), cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
             rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
             techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
-            dodatkoweInfo, str(GPS), user_phone, user_email, 1 )
+            dodatkoweInfo, str(GPS), user_phone, user_email, 1, )
     
     print('zapytanie sql!')
     print(zapytanie_sql)
     print(dane)
-    
+
     if msq.insert_to_database(zapytanie_sql, dane):
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
         return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
