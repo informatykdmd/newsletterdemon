@@ -2813,7 +2813,8 @@ def save_rent_offer():
         dynamic_amount = dynamic_amount[:-2]
         print(dynamic_amount)
         zapytanie_sql = f'''INSERT INTO ZdjeciaOfert ({dynamic_col_name}) VALUES ({dynamic_amount});'''
-        dane = (a for a in saved_photos)
+        temp_dane = (a for a in saved_photos)
+        dane = tuple(dane)
         print('zapytanie_sql!\n')
         print(zapytanie_sql)
         print(str(dane))

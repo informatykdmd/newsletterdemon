@@ -268,12 +268,12 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     if (!oldFotos) {
-        if (!title || !rodzajNieruchomosci || !lokalizacja || !cena || zdjecia.length === 0 || !opis) {
+        if (!title || !rodzajNieruchomosci || !lokalizacja || !cena || zdjecia.length === 0 || !opisJsonString) {
             alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
             return;  // Zatrzymaj przesyłanie formularza
         }
     } else {
-        if (!title || !rodzajNieruchomosci || !lokalizacja || !cena || !opis) {
+        if (!title || !rodzajNieruchomosci || !lokalizacja || !cena || !opisJsonString) {
             alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
             return;  // Zatrzymaj przesyłanie formularza
         }
