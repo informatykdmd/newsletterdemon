@@ -2834,8 +2834,8 @@ def save_rent_offer():
     else:
         flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
         return redirect(url_for('estateAdsRent'))
-    print(userName)
-    userName_data = take_data_where_ID('*', 'admins', 'LOGIN', userName)[0]
+    print([userName])
+    userName_data = take_data_where_ID('*', 'admins', 'LOGIN', userName)
     print(userName_data)
     try:
         userName_data = take_data_where_ID('*', 'admins', 'LOGIN', userName)[0]
