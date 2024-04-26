@@ -344,9 +344,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             console.log('xxx:', data);
             var form = document.getElementById('rentOffer_' + offerId);
             form.reset();
-
-            window.location.href = '/estate-ads-rent';
-            
+            window.location.href = '/estate-ads-rent';            
         }
     }).catch(error => {
         alert('Wystąpił błąd: ' + error.message);
