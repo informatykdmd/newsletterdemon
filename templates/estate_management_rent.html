@@ -635,7 +635,7 @@
                                     <h5>{{post_data['Tytul']}}</h5>
                                     <h4 class="text-secondary">Opis</h4>
                                     {% for item in post_data['Opis'] %}
-                                        {% for key, val in item.itens() %}
+                                        {% for key, val in item.items() %}
                                             {% if key=='p' %}
                                                 <p class='text-secondary'>{{val}}</p>
                                             {% endif %}
