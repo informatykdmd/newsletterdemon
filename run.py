@@ -2789,7 +2789,9 @@ def save_rent_offer():
                 new_li = {"li": clearLI}
                 validOpis.append(new_li)
     
-    if len(validOpis)!=0: testOpisu = True
+    if len(validOpis)!=0: 
+        testOpisu = True
+        opis_json = {'data': validOpis}
     else: testOpisu = False
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
@@ -2864,7 +2866,7 @@ def save_rent_offer():
                                         InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
     dane = (
-            title, str(validOpis), cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
+            title, str(opis_json), cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
             rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
             techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
             dodatkoweInfo, str(GPS), user_phone, user_email, 1)
