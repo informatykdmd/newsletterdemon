@@ -2723,10 +2723,9 @@ def save_rent_offer():
 
     # Pobierz JSON jako string z formularza
     opis_json_string = request.form['opis']
-    opis_json_string_STR = str(opis_json_string).replace("'",'"')
     # Przekonwertuj string JSON na słownik Pythona
     try:
-        opis_data = json.loads(opis_json_string_STR)
+        opis_data = json.loads(opis_json_string)
     except json.JSONDecodeError:
         return jsonify({'error': 'Nieprawidłowy format JSON'}), 400
 
@@ -2743,7 +2742,6 @@ def save_rent_offer():
     lon = request.form.get('lon')
     if lat and lon:
         GPS = {"latitude": lat, "longitude": lon }
-        GPS_STR = str(GPS).replace("'",'"')
     else: GPS = ''
     rokBudowy = request.form.get('rokBudowy')
     try: rokBudowy = int(rokBudowy)
@@ -2791,6 +2789,7 @@ def save_rent_offer():
     if len(validOpis)!=0: 
         testOpisu = True
         opis_json = {"data": validOpis}
+        opis_json = str(opis_json)
     else: testOpisu = False
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
@@ -2868,7 +2867,7 @@ def save_rent_offer():
             title, str(opis_json), cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
             rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
             techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
-            dodatkoweInfo, GPS_STR, user_phone, user_email, 1)
+            dodatkoweInfo, str(GPS), user_phone, user_email, 1)
     
     print('zapytanie sql!')
     print(zapytanie_sql)
@@ -2878,7 +2877,7 @@ def save_rent_offer():
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
         return redirect(url_for('estateAdsRent'))
     else:
-        flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
+        flash(f'Błąd podczas zapisywania oferty w bazie!', 'danger')
         return jsonify({'message': 'Błąd podczas zapisywania oferty w bazie!'}), 404
    
 
