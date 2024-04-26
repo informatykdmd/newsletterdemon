@@ -263,7 +263,7 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
         try:
             if data[27] is not None: gps_json = json.loads(data[27])
             else: raise ValueError("Dane są None, nie można przetworzyć JSON")
-        except json.JSONDecodeError: print("Błąd: Podane dane nie są poprawnym JSON-em")
+        except json.JSONDecodeError: print("Błąd: Podane dane GPSu nie są poprawnym JSON-em")
         except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
         except TypeError as e: print(f"Błąd typu danych: {e}")
         except Exception as e: print(f"Nieoczekiwany błąd: {e}")
@@ -273,7 +273,7 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
             if data[2] is not None:
                 opis_json = json.loads(data[2])
             else: raise ValueError("Dane są None, nie można przetworzyć JSON")
-        except json.JSONDecodeError: print("Błąd: Podane dane nie są poprawnym JSON-em")
+        except json.JSONDecodeError: print("Błąd: Podane dane opisu nie są poprawnym JSON-em")
         except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
         except TypeError as e: print(f"Błąd typu danych: {e}")
         except Exception as e: print(f"Nieoczekiwany błąd: {e}")
