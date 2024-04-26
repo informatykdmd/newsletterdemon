@@ -2816,7 +2816,7 @@ def save_rent_offer():
         dane = (a for a in saved_photos)
         print('zapytanie_sql!\n')
         print(zapytanie_sql)
-        print(dane)
+        print(str(dane))
 
         # if msq.insert_to_database(zapytanie_sql, dane):
         #     # Przykładowe dane
