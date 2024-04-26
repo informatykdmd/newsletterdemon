@@ -332,7 +332,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     }).then(response => {
         if (response.ok) {
             // alert('Oferta została pomyślnie zapisana.');
-            console.log(response);
+            console.log('response: ', response);
             return response.json();
         } else {
             throw new Error('Problem z serwerem');
