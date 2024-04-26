@@ -634,46 +634,40 @@
                                 <div class="col-lg-4 col-sm-12">
                                     <h5>{{post_data['Tytul']}}</h5>
                                     <h4 class="text-secondary">Opis</h4>
-                                    {% for key, val in post_data['Opis'].items() %}
-                                        {% if key=='p' %}
-                                            <p class='text-secondary'>{{val}}</p>
-                                        {% endif %}
-                                        {% if key=='strong' %}
-                                            <strong class='text-secondary'>{{val}}</strong>
-                                        {% endif %}
-                                        {% if key=='h1' %}
-                                            <h1 class='text-secondary'>{{val}}</h1>
-                                        {% endif %}
-                                        {% if key=='h1-strong' %}
-                                            <h1 class='text-secondary'><strong>{{val}}</strong></h1>
-                                        {% endif %}
-                                        {% if key=='h2' %}
-                                            <h2 class='text-secondary'>{{val}}</h2>
-                                        {% endif %}
-                                        {% if key=='h2-strong' %}
-                                            <h2 class='text-secondary'><strong>{{val}}</strong></h2>
-                                        {% endif %}
-                                        {% if key=='h3' %}
-                                            <h3 class='text-secondary'>{{val}}</h3>
-                                        {% endif %}
-                                        {% if key=='h3-strong' %}
-                                            <h3 class='text-secondary'><strong>{{val}}</strong></h3>
-                                        {% endif %}
-                                        {% if key=='li' %}
-                                            <ul>
-                                            {% for li_item in val %}
-                                                <li>{{li_item}}</li>
-                                            {% endfor %}
-                                            </ul>
-                                        {% endif %}
-                                        {% if key=='li-horizonatal' %}
-                                            <!-- zadbaj o klasę listy poziomej np. class="horizontal-list" -->
-                                            <ul class="horizontal-list">
-                                            {% for li_item in val %}
-                                                <li>{{li_item}}</li>
-                                            {% endfor %}
-                                            </ul>
-                                        {% endif %}
+                                    {% for item in post_data['Opis'] %}
+                                        {% for key, val in item.itens() %}
+                                            {% if key=='p' %}
+                                                <p class='text-secondary'>{{val}}</p>
+                                            {% endif %}
+                                            {% if key=='strong' %}
+                                                <strong class='text-secondary'>{{val}}</strong>
+                                            {% endif %}
+                                            {% if key=='h1' %}
+                                                <h1 class='text-secondary'>{{val}}</h1>
+                                            {% endif %}
+                                            {% if key=='h1-strong' %}
+                                                <h1 class='text-secondary'><strong>{{val}}</strong></h1>
+                                            {% endif %}
+                                            {% if key=='h2' %}
+                                                <h2 class='text-secondary'>{{val}}</h2>
+                                            {% endif %}
+                                            {% if key=='h2-strong' %}
+                                                <h2 class='text-secondary'><strong>{{val}}</strong></h2>
+                                            {% endif %}
+                                            {% if key=='h3' %}
+                                                <h3 class='text-secondary'>{{val}}</h3>
+                                            {% endif %}
+                                            {% if key=='h3-strong' %}
+                                                <h3 class='text-secondary'><strong>{{val}}</strong></h3>
+                                            {% endif %}
+                                            {% if key=='li' %}
+                                                <ul>
+                                                {% for li_item in val %}
+                                                    <li>{{li_item}}</li>
+                                                {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        {% endfor %}
                                     {% endfor %}
                                     <p class="h3"><i class="bi bi-database-fill-check text-warning"></i> {{post_data['Cena']}} PLN</p>
                                     <div class="ms-2">
