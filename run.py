@@ -2740,7 +2740,6 @@ def update_rent_offer_status():
 def save_rent_offer():
     # Odczytanie danych formularza
     
-
     # Pobierz JSON jako string z formularza
     OPIS_JSON_STRing = request.form['opis']
     # Przekonwertuj string JSON na słownik Pythona
@@ -2794,8 +2793,6 @@ def save_rent_offer():
     kuchnia = request.form.get('kuchnia')
     dodatkoweInfo = request.form.get('dodatkoweInfo')
     userName = request.form.get('userName')
-
-
 
     validOpis = []
     for test in opis:
@@ -2896,10 +2893,10 @@ def save_rent_offer():
 
     if msq.insert_to_database(zapytanie_sql, dane):
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
-        return redirect(url_for('estateAdsRent'))
+        return jsonify({'message': 'Oferta wynajmu została zapisana pomyślnie!'}), 200
     else:
         flash(f'Błąd podczas zapisywania oferty w bazie!', 'danger')
-        return jsonify({'message': 'Błąd podczas zapisywania oferty w bazie!'}), 404
+        return jsonify({'error': 'Błąd podczas zapisywania oferty w bazie!'}), 400
    
 
 
