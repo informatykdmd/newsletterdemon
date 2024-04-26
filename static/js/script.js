@@ -338,7 +338,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             throw new Error('Problem z serwerem');
         }
     }).then(data => {
-        console.log(data);
+        console.log('data:', data);
     }).catch(error => {
         alert('Wystąpił błąd: ' + error.message);
     });
