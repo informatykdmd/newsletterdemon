@@ -2789,7 +2789,7 @@ def save_rent_offer():
     
     if len(validOpis)!=0: 
         testOpisu = True
-        opis_json = {"data": validOpis}
+        opis_json = validOpis
         OPIS_JSON_STR = str(opis_json).replace("'", '"')
     else: testOpisu = False
 
