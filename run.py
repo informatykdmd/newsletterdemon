@@ -290,10 +290,10 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
             'LiczbaPokoi': 0 if data[6] is None else data[6],
             'Metraz': 0 if data[7] is None else data[7],
             'Zdjecia': [foto for foto in fotoList if foto is not None],
-            'DataPublikacjiOlx': format_date(data[9]),
-            'DataPublikacjiAllegro': format_date(data[10]),
-            'DataPublikacjiOtoDom': format_date(data[11]),
-            'DataPublikacjiMarketplace': format_date(data[12]),
+            'DataPublikacjiOlx': None if data[9] is None else format_date(data[9]),
+            'DataPublikacjiAllegro': None if data[10] is None else format_date(data[10]),
+            'DataPublikacjiOtoDom': None if data[11] is None else format_date(data[11]),
+            'DataPublikacjiMarketplace': None if data[12] is None else format_date(data[12]),
             'DataUtworzenia': format_date(data[13]),
             'DataAktualizacji': format_date(data[14]),
             'RodzajZabudowy': '' if data[15] is None else data[15],
@@ -2862,12 +2862,7 @@ def save_rent_offer():
                                         RodzajZabudowy, Czynsz, Umeblowanie, LiczbaPieter, PowierzchniaDzialki,
                                         TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
                                         InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
-                VALUES (
-                    %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s, 
-                    %s, %s, %s, %s, %s, 
-                    %s, %s, %s, %s, %s, 
-                    %s, %s, %s, %s);'''
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
     dane = (
             title, str(validOpis), cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
             rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
