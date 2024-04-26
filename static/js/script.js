@@ -264,8 +264,6 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var dodatkoweInfo = document.getElementById('InformacjeDodatkowe_' + offerId).value;
     var userName = document.getElementById('UserName_' + offerId).value;
 
-    
-
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
     var zdjecia = [];
@@ -333,7 +331,8 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
         body: formData
     }).then(response => {
         if (response.ok) {
-            alert('Oferta została pomyślnie zapisana.');
+            // alert('Oferta została pomyślnie zapisana.');
+            console.log(response);
             return response.json();
         } else {
             throw new Error('Problem z serwerem');
