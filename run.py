@@ -2722,10 +2722,10 @@ def save_rent_offer():
     
 
     # Pobierz JSON jako string z formularza
-    opis_json_string = request.form['opis']
+    OPIS_JSON_STRing = request.form['opis']
     # Przekonwertuj string JSON na słownik Pythona
     try:
-        opis_data = json.loads(opis_json_string)
+        opis_data = json.loads(OPIS_JSON_STRing)
     except json.JSONDecodeError:
         return jsonify({'error': 'Nieprawidłowy format JSON'}), 400
 
@@ -2742,7 +2742,8 @@ def save_rent_offer():
     lon = request.form.get('lon')
     if lat and lon:
         GPS = {"latitude": lat, "longitude": lon }
-    else: GPS = ''
+        GPS_STRING = str(GPS).replace("'", '"')
+    else: GPS_STRING = ''
     rokBudowy = request.form.get('rokBudowy')
     try: rokBudowy = int(rokBudowy)
     except ValueError: rokBudowy = 0
@@ -2789,7 +2790,7 @@ def save_rent_offer():
     if len(validOpis)!=0: 
         testOpisu = True
         opis_json = {"data": validOpis}
-        opis_json = str(opis_json)
+        OPIS_JSON_STR = str(opis_json).replace("'", '"')
     else: testOpisu = False
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
@@ -2864,10 +2865,10 @@ def save_rent_offer():
                                         InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
     dane = (
-            title, str(opis_json), cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
+            title, OPIS_JSON_STR, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
             rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
             techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
-            dodatkoweInfo, str(GPS), user_phone, user_email, 1)
+            dodatkoweInfo, GPS_STRING, user_phone, user_email, 1)
     
     print('zapytanie sql!')
     print(zapytanie_sql)
