@@ -693,7 +693,7 @@ color:#969696;
 }
 /* Style bazowe dla linków */
 .fadeIn a {
-    opacity: 0;  /* Początkowa przezroczystość */
+    opacity: 0.3;  /* Początkowa przezroczystość */
     transform: translateY(3px); /* Początkowe przesunięcie */
     transition: opacity 0.5s ease, transform 0.5s ease; /* Gładkie przejścia dla przezroczystości i przesunięcia */
 }
