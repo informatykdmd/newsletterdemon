@@ -304,7 +304,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             return;  // Zatrzymaj przesyłanie formularza
         } 
         
-        if (!opisJsonString) {
+        if (opis.length === 0) {
             const elementopisJsonString = document.getElementById('list-container'+offerId);
 
             elementopisJsonString.classList.add('input-warning');
@@ -312,7 +312,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             return;  // Zatrzymaj przesyłanie formularza
         } 
     } else {
-        if (!opisJsonString) {
+        if (opis.length === 0) {
             const elementopisJsonString = document.getElementById('list-container'+offerId);
 
             elementopisJsonString.classList.add('input-warning');
