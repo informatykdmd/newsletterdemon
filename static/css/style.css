@@ -691,6 +691,18 @@ color:#969696;
 .fadeIn {
     animation: fadeInEffect 0.5s ease forwards;
 }
+/* Style bazowe dla linków */
+.fadeIn a {
+    opacity: 0;  /* Początkowa przezroczystość */
+    transform: translateY(3px); /* Początkowe przesunięcie */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Gładkie przejścia dla przezroczystości i przesunięcia */
+}
+
+/* Efekt fadeIn przy najechaniu */
+.fadeIn a:hover {
+    opacity: 1;
+    transform: translateY(0);
+}
 
 @keyframes fadeInEffect {
     from {
@@ -718,3 +730,5 @@ color:#969696;
         transform: translateY(-3px);
     }
 }
+
+
