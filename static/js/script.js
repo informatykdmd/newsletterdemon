@@ -304,18 +304,16 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             return;  // Zatrzymaj przesyłanie formularza
         } 
         
-        if (opisJsonString == '[{"p":""}]' || opisJsonString == "[{'p':''}]") {
-            console.log('opis', opis);
-            console.log('opisJsonString', opisJsonString);
-            const elementopisJsonString = document.getElementById('list-container-parrent'+offerId);
+        if (opis.length === 0 || opis[0].p === "") {
+            const elementopisJsonString = document.getElementById('list-container'+offerId);
 
             elementopisJsonString.classList.add('input-warning');
             formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
             return;  // Zatrzymaj przesyłanie formularza
         } 
     } else {
-        if (opisJsonString == '[{"p":""}]' || opisJsonString == "[{'p':''}]") {
-            const elementopisJsonString = document.getElementById('list-container-parrent'+offerId);
+        if (opis.length === 0 || opis[0].p === "") {
+            const elementopisJsonString = document.getElementById('list-container'+offerId);
 
             elementopisJsonString.classList.add('input-warning');
             formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
