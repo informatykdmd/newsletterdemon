@@ -232,6 +232,18 @@ function joinToDynamicDescription(id, elementName="list-container") {
 
 
 function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
+    let formIsValid = true;
+    // Funkcja pomocnicza do dodawania/usuwania klasy ostrzeżenia
+    function toggleWarning(elementId, condition) {
+        const element = document.getElementById(elementId);
+        if (condition) {
+            element.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+        } else {
+            element.classList.remove('input-warning');
+        }
+    }
+
     // Pobieranie wartości z formularza
     var title = document.getElementById('title_' + offerId).value;
     var rodzajNieruchomosci = document.getElementById('RodzajNieruchomosci_' + offerId).value;
@@ -274,17 +286,41 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
         }
     });
 
+
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     if (!oldFotos) {
-        if (!title || !rodzajNieruchomosci || !lokalizacja || !cena || zdjecia.length === 0 || !opisJsonString) {
-            alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
+        toggleWarning('title_' + offerId, !title);
+        toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
+        toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
+        toggleWarning('Cena_' + offerId, !cena);
+
+
+        if (zdjecia.length === 0) {
+            const element = document.getElementById(offerId+'-drop-area');
+
+            element.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+
             return;  // Zatrzymaj przesyłanie formularza
-        }
+        } 
+        
+        if (!opisJsonString) {
+            const element = document.getElementById(offerId+'-drop-area');
+
+            element.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+            return;  // Zatrzymaj przesyłanie formularza
+        } 
     } else {
-        if (!title || !rodzajNieruchomosci || !lokalizacja || !cena || !opisJsonString) {
-            alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
+        if (!opisJsonString) {
+            const element = document.getElementById(offerId+'-drop-area');
+
+            element.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+
+            // alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
             return;  // Zatrzymaj przesyłanie formularza
-        }
+        } 
     }
 
     // Dodawanie zdjęć jako FormData
@@ -294,9 +330,9 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     });
 
     // Wyświetl zawartość FormData przed wysłaniem
-    for (var pair of formData.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]);
-    }
+    // for (var pair of formData.entries()) {
+    //     console.log(pair[0]+ ', ' + pair[1]);
+    // }
 
 
     // Dodanie pozostałych danych do FormData
@@ -324,6 +360,12 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     formData.append('dodatkoweInfo', dodatkoweInfo);
     formData.append('userName', userName);
 
+    
+
+    // Jeżeli którykolwiek z testów nie przeszedł, nie wysyłaj formularza
+    if (!formIsValid) {
+        return;
+    }
 
     // Wysyłanie formularza za pomocą AJAX (fetch API)
     fetch('/save-rent-offer', {
@@ -338,10 +380,10 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             throw new Error('Problem z serwerem');
         }
     }).then(data => {
-        console.log('data:', data);
-        console.log('data.seccess:', data.success);
+        // console.log('data:', data);
+        // console.log('data.seccess:', data.success);
         if (data.success == true) {
-            console.log('xxx:', data);
+            // console.log('xxx:', data);
             var form = document.getElementById('rentOffer_' + offerId);
             form.reset();
             window.location.href = '/estate-ads-rent';            
