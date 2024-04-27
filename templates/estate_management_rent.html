@@ -85,6 +85,11 @@
                                             aria-label="Rodzaj Nieruchomości (dom, magazyn, biuro, mieszkanie, lokal usługowy, itp.)"
                                             id="RodzajNieruchomosci_9999999" 
                                             name="RodzajNieruchomosci_9999999" />
+                                        <div class="no-border formatuj-maly-font formatuj-right">
+                                            <a href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_9999999', 'dom');">dom</a>
+                                            <a href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_9999999', 'mieszkanie');">mieszkanie</a>
+                                            <a href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_9999999', 'pokój');">pokój</a>
+                                        </div>
                                     </div>
                                     <div class="input-group mb-0">
                                         <input 
@@ -1176,6 +1181,14 @@
         // Dodanie ukrytych inputów do tego samego elementu div, w którym są wyświetlane koordynaty
         displayDiv.appendChild(latInput);
         displayDiv.appendChild(lonInput);
+    }
+    function fillInput(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.value = value; // Przypisz wartość do elementu
+        } else {
+            console.error('Element o ID ' + elementId + ' nie istnieje.');
+        }
     }
 
 </script>
