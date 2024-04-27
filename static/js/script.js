@@ -296,26 +296,26 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
 
 
         if (zdjecia.length === 0) {
-            const element = document.getElementById(offerId+'-drop-area');
+            const elementzdjecia = document.getElementById(offerId+'-drop-area');
 
-            element.classList.add('input-warning');
+            elementzdjecia.classList.add('input-warning');
             formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
 
             return;  // Zatrzymaj przesyłanie formularza
         } 
         
         if (!opisJsonString) {
-            const element = document.getElementById(offerId+'-drop-area');
+            const elementopisJsonString = document.getElementById('list-container'+offerId);
 
-            element.classList.add('input-warning');
+            elementopisJsonString.classList.add('input-warning');
             formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
             return;  // Zatrzymaj przesyłanie formularza
         } 
     } else {
         if (!opisJsonString) {
-            const element = document.getElementById(offerId+'-drop-area');
+            const elementopisJsonString = document.getElementById('list-container'+offerId);
 
-            element.classList.add('input-warning');
+            elementopisJsonString.classList.add('input-warning');
             formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
 
             // alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
