@@ -16,6 +16,7 @@ import adminSmtpSender as mails
 from googletrans import Translator
 import json
 import html
+from jinja2 import Markup
 
 
 """
@@ -2686,6 +2687,13 @@ def team_instalacje():
 def decode_html_entities_filter(text):
     return html.unescape(text)
 
+@app.template_filter()
+def update_new_line_chars(text: str):
+    text = text.replace('\r\n', '<br>')  # najpierw standard Windows
+    text = text.replace('\n', '<br>')  # potem standard Unix/Linux
+    return Markup(html.unescape(text))
+
+
 @app.route('/estate-ads-rent')
 def estateAdsRent():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
@@ -2735,6 +2743,7 @@ def estateAdsRent():
 @app.route('/update-rent-offer-status')
 def update_rent_offer_status():
     return
+
 
 @app.route('/save-rent-offer', methods=["POST"])
 def save_rent_offer():

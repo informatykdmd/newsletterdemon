@@ -639,11 +639,11 @@
                                             {% if key=='li' %}
                                                 <ul>
                                                     {% for li_item in val %}
-                                                        <li>{{li_item|decode_html_entities_filter}}</li>
+                                                        <li>{{li_item|decode_html_entities_filter|update_new_line_char}}</li>
                                                     {% endfor %}
                                                 </ul>
                                             {% else %}
-                                                {% set decoded_val = val|decode_html_entities_filter %}
+                                                {% set decoded_val = val|decode_html_entities_filter|update_new_line_chars %}
                                                 {% if key=='p' %}
                                                     <p class='text-secondary'>{{decoded_val}}</p>
                                                 {% endif %}
