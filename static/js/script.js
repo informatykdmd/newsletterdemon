@@ -305,7 +305,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             return;  // Zatrzymaj przesyłanie formularza
         } 
         
-        if (opis.length === 0 || opis[0].p === "") {
+        if (opisJsonString === '[{"p":""}]' || opisJsonString === "[{'p':''}]") {
             const elementopisJsonString = document.getElementById('list-container'+offerId);
 
             elementopisJsonString.classList.add('input-warning');
@@ -313,7 +313,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             return;  // Zatrzymaj przesyłanie formularza
         } 
     } else {
-        if (opis.length === 0 || opis[0].p === "") {
+        if (opisJsonString === '[{"p":""}]' || opisJsonString === "[{'p':''}]") {
             const elementopisJsonString = document.getElementById('list-container'+offerId);
 
             elementopisJsonString.classList.add('input-warning');
