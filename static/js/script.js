@@ -251,7 +251,8 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var cena = document.getElementById('Cena_' + offerId).value;
     var opis = joinToDynamicDescription(offerId, "list-container");
     var opisJsonString = JSON.stringify(opis);
-
+    console.log('opis', opis);
+    console.log('opisJsonString', opisJsonString);
     try {
         var lat = document.getElementById('lat_' + offerId).value;
         var lon = document.getElementById('lon_' + offerId).value;
