@@ -639,7 +639,7 @@
                                             {% if key=='li' %}
                                                 <ul>
                                                     {% for li_item in val %}
-                                                        <li>{{li_item|decode_html_entities_filter|update_new_line_char}}</li>
+                                                        <li>{{li_item|decode_html_entities_filter|update_new_line_chars}}</li>
                                                     {% endfor %}
                                                 </ul>
                                             {% else %}
