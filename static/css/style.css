@@ -686,3 +686,35 @@ color:#969696;
     width: 12px; 
     height: 12px;   
 }
+
+/* FadeIn effect */
+.fadeIn {
+    animation: fadeInEffect 0.5s ease forwards;
+}
+
+@keyframes fadeInEffect {
+    from {
+        opacity: 0;
+        transform: translateY(3px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* FadeOut effect */
+.fadeOut {
+    animation: fadeOutEffect 0.5s ease forwards;
+}
+
+@keyframes fadeOutEffect {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-3px);
+    }
+}
