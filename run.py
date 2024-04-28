@@ -2739,6 +2739,46 @@ def estateAdsRent():
                             instalacje=instalacje
                             )     
 
+@app.route('/remove-rent-offer', methods=['POST'])
+def remove_rent_offer():
+    """Usuwanie ofertę najmu"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: form_data['PostID']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        # pobieram id galerii
+        try: id_galerry = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', set_post_id )[0][0]
+        except IndexError: 
+            flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
+            return redirect(url_for('estateAdsRent'))
+        
+        msq.delete_row_from_database(
+                """
+                    DELETE FROM OfertyNajmu WHERE ID = %s;
+                """,
+                (set_post_id,)
+            )
+        
+        msq.delete_row_from_database(
+                """
+                    DELETE FROM ZdejciaOfert WHERE ID = %s;
+                """,
+                (id_galerry,)
+            )
+        flash("Wpis został usunięty.", "success")
+        return redirect(url_for('estateAdsRent'))
+    
+    return redirect(url_for('index'))
 
 @app.route('/update-rent-offer-status')
 def update_rent_offer_status():
