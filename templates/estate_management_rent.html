@@ -1037,6 +1037,15 @@
             this.fileList = document.getElementById(`${formId}-fileList`);
             this.accumulatedFiles = [];
 
+            // v 2.0
+            this.fileInput = document.createElement('input');
+            this.fileInput.type = 'file';
+            this.fileInput.multiple = true; // jeśli chcesz obsługiwać wiele plików naraz
+            this.fileInput.style.display = 'none'; // ukryj element input
+            document.body.appendChild(this.fileInput); // dodaj input do DOM
+            this.dropArea.addEventListener('click', () => this.fileInput.click()); // po kliknięciu na dropArea, aktywuj input file
+            this.fileInput.addEventListener('change', (e) => this.handleFileInput(e)); // obsługa zdarzenia change
+            // v 2.0
             this.initEventListeners();
         }
         checkDragAndDropSupport() {
@@ -1093,6 +1102,13 @@
                 list.appendChild(li);
             }
         }
+
+        // Tuning po kliknieciu w dropbox tradycyjne okienko
+        handleFileInput(e) {
+            const files = e.target.files;
+            this.updateFileList(files);
+        }
+
 
         updateFileList(newFiles) {
             for (let file of newFiles) {
