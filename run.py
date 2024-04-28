@@ -2761,7 +2761,7 @@ def remove_rent_offer():
         except IndexError: 
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
             return redirect(url_for('estateAdsRent'))
-        
+        print(id_galerry)
         msq.delete_row_from_database(
                 """
                     DELETE FROM OfertyNajmu WHERE ID = %s;
