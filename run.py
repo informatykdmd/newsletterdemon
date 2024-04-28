@@ -16,7 +16,9 @@ import adminSmtpSender as mails
 from googletrans import Translator
 import json
 import html
-from jinja2 import Markup
+# from jinja2 import Markup
+from markupsafe import Markup
+
 
 
 """
