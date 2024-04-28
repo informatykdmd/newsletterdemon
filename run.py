@@ -2773,7 +2773,7 @@ def remove_rent_offer():
         
         msq.delete_row_from_database(
                 """
-                    DELETE FROM ZdejciaOfert WHERE ID = %s;
+                    DELETE FROM ZdjeciaOfert WHERE ID = %s;
                 """,
                 (id_galerry,)
             )
