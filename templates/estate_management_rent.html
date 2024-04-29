@@ -1296,6 +1296,11 @@
                 this.fileList.appendChild(li);
             });
         }
+        removeFileFromURL(index, url) {
+            // Możesz dodać logikę do usuwania obrazu z serwera lub z aktualnej listy zdjęć
+            this.existingImageUrls.splice(index, 1); // Usuń URL z listy
+            this.displayFiles(); // Odśwież wyświetlaną listę
+        }
 
         checkDragAndDropSupport() {
             const div = document.createElement('div');
