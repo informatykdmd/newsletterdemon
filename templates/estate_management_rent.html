@@ -994,13 +994,15 @@
                                                     //{% for key, val in item.items() %}
                                                         //{% if key=='li' %}
                                                             // {% for i_element in val %}
+                                                            document.addEventListener('DOMContentLoaded', () => {
                                                                 addCustomElement('{{post_id}}', '{{key}}', '{{i_element|decode_html_entities_filter}}');
+                                                            });
                                                             //{% endfor %}
                                                         //{% else %}
                                                             //{% set decoded_val = val|decode_html_entities_filter %}
-                                                            addCustomElement('{{post_id}}', '{{key}}', '{{decoded_val}}');
-                                                        
-                                                            
+                                                            document.addEventListener('DOMContentLoaded', () => {
+                                                                addCustomElement('{{post_id}}', '{{key}}', '{{decoded_val}}');
+                                                            });
                                                         //{% endif %}
                                                     //{% endfor %}
                                                 //{% endfor %}
