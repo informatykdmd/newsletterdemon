@@ -1258,8 +1258,23 @@
             this.loadExistingImages();
         }
 
+        // loadExistingImages() {
+        //     this.existingImageUrls.forEach(url => {
+        //         const li = document.createElement('li');
+        //         const img = document.createElement('img');
+        //         img.src = url;
+        //         img.style.height = '50px';
+        //         img.style.marginRight = '10px';
+        //         img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+        //         li.appendChild(img);
+        //         li.appendChild(document.createTextNode(url.slice(url.lastIndexOf('/') + 1))); // wyświetlanie nazwy pliku z URL
+        //         li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+        //         this.fileList.appendChild(li);
+        //     });
+        // }
+
         loadExistingImages() {
-            this.existingImageUrls.forEach(url => {
+            this.existingImageUrls.forEach((url, index) => {
                 const li = document.createElement('li');
                 const img = document.createElement('img');
                 img.src = url;
@@ -1267,7 +1282,16 @@
                 img.style.marginRight = '10px';
                 img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
                 li.appendChild(img);
-                li.appendChild(document.createTextNode(url.slice(url.lastIndexOf('/') + 1))); // wyświetlanie nazwy pliku z URL
+
+                const fileName = url.slice(url.lastIndexOf('/') + 1);
+                li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
+
+                const closeButton = document.createElement('button');
+                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+                closeButton.setAttribute('aria-label', 'Close');
+                closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
+                li.appendChild(closeButton);
+
                 li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
                 this.fileList.appendChild(li);
             });
