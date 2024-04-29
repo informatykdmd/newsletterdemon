@@ -1006,7 +1006,13 @@
                                             </div>
                                             <script>
                                                 document.addEventListener('DOMContentLoaded', () => {
-                                                    const myFotoDropBox = new FotoDropBox('{{post_id}}', ['https://dmddomy.pl/images/estate/1714382822_IMG_5820.jpg', 'https://dmddomy.pl/images/estate/1714382822_IMG_5821.jpg']);
+                                                    const myFotoDropBox = new FotoDropBox('{{post_id}}', 
+                                                    [
+                                                        //{% for foto in post_data['Zdjecia'] %}
+                                                        "{{foto}}", 
+                                                        //{% endfor %}
+                                                    ]
+                                                    );
                                                 });
                                             </script>
                                             <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/>
