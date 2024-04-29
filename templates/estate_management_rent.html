@@ -995,13 +995,13 @@
                                                         //{% if key=='li' %}
                                                             // {% for i_element in val %}
                                                             document.addEventListener('DOMContentLoaded', () => {
-                                                                addCustomElement('{{post_id}}', '{{key}}', '{{i_element|decode_html_entities_filter}}');
+                                                                addCustomElement('{{post_id}}', '{{key}}', `{{i_element|decode_html_entities_filter}}`);
                                                             });
                                                             //{% endfor %}
                                                         //{% else %}
-                                                            //{% set decoded_val = val|decode_html_entities_filter %}
+                                                            //{% set decoded_val_js = val|decode_html_entities_filter %}
                                                             document.addEventListener('DOMContentLoaded', () => {
-                                                                addCustomElement('{{post_id}}', '{{key}}', '{{decoded_val}}');
+                                                                addCustomElement('{{post_id}}', '{{key}}', `{{decoded_val_js}}`);
                                                             });
                                                         //{% endif %}
                                                     //{% endfor %}
