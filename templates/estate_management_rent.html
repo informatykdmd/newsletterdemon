@@ -484,7 +484,7 @@
                                     </div>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', () => {
-                                            const myFotoDropBox = new FotoDropBox('9999999');
+                                            const myFotoDropBox = new FotoDropBox('9999999', ['https://dmddomy.pl/images/estate/1714382822_IMG_5820.jpg', 'https://dmddomy.pl/images/estate/1714382822_IMG_5821.jpg']);
                                         });
                                     </script>
                                     <input type="hidden" name="UserName" id="UserName_9999999" value="{{username}}"/>
@@ -1362,7 +1362,7 @@
             this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
 
             this.loadExistingImages();  // Ponownie załaduj istniejące obrazy URL
-            
+
             this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
                 li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
