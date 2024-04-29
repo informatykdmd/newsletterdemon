@@ -484,7 +484,7 @@
                                     </div>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', () => {
-                                            const myFotoDropBox = new FotoDropBox('9999999', ['https://dmddomy.pl/images/estate/1714382822_IMG_5820.jpg', 'https://dmddomy.pl/images/estate/1714382822_IMG_5821.jpg']);
+                                            const myFotoDropBox = new FotoDropBox('9999999');
                                         });
                                     </script>
                                     <input type="hidden" name="UserName" id="UserName_9999999" value="{{username}}"/>
@@ -588,7 +588,7 @@
                                                 <label for="title_{{post_id}}" class="form-label">Tytuł ogłoszenia</label>
                                                 <input 
                                                         type="text" 
-                                                        value=""
+                                                        value="{{post_data['Tytul']}}"
                                                         class="form-control bg-dark formatuj-maly-font" 
                                                         style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                         id="title_{{post_id}}" 
@@ -600,7 +600,7 @@
                                             <div class="mb-3">
                                                 <input 
                                                     type="text" 
-                                                    value=""
+                                                    value="{{post_data['RodzajNieruchomosci']}}"
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                     placeholder="Rodzaj Nieruchomości (dom, magazyn, biuro, mieszkanie, lokal usługowy, itp.)" 
@@ -620,7 +620,7 @@
                                             <div class="input-group mb-0">
                                                 <input 
                                                     type="text" 
-                                                    value=""
+                                                    value="{{post_data['Lokalizacja']}}"
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                     id="Lokalizacja_{{post_id}}" 
@@ -669,6 +669,7 @@
                                                     <input 
                                                         type="number" 
                                                         class="form-control bg-dark formatuj-maly-font" 
+                                                        value="{{post_data['RokBudowy']}}"
                                                         style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                         id="RokBudowy_{{post_id}}" 
                                                         name="RokBudowy_{{post_id}}" 
@@ -687,6 +688,7 @@
                                                         style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                         id="StanWykonczenia_{{post_id}}" 
                                                         name="StanWykonczenia_{{post_id}}" 
+                                                        value="{{post_data['StanWykonczenia']}}"
                                                         placeholder="Stan Wykończenia" 
                                                         aria-label="Stan Wykończenia">
                                                     <div class="no-border formatuj-maly-font fadeIn">
@@ -701,7 +703,7 @@
                                                 <label for="NumerKW_{{post_id}}" class="form-label">Numer KW</label>
                                                 <input 
                                                     type="text" 
-                                                    value=""
+                                                    value="{{post_data['NumerKW']}}"
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                     id="NumerKW_{{post_id}}" 
@@ -716,7 +718,7 @@
                                                         <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
                                                         <input 
                                                             type="number" 
-                                                            value=""
+                                                            value="{{post_data['Cena']}}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="Cena_{{post_id}}" 
@@ -738,7 +740,7 @@
                                                         <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
                                                         <input 
                                                             type="number" 
-                                                            value=""
+                                                            value="{{post_data['Czynsz']}}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="Czynsz_{{post_id}}" 
@@ -760,7 +762,7 @@
                                                         <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
                                                         <input 
                                                             type="number" 
-                                                            value=""
+                                                            value="{{post_data['Kaucja']}}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="Kaucja_{{post_id}}" 
@@ -783,7 +785,7 @@
                                                     <div class="input-group">
                                                         <input 
                                                             type="number" 
-                                                            value=""
+                                                            value="{{post_data['Metraz']}}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="Metraz_{{post_id}}" 
@@ -809,7 +811,7 @@
                                                     <div class="input-group">
                                                         <input 
                                                             type="number" 
-                                                            value=""
+                                                            value="{{post_data['PowierzchniaDzialki']}}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="PowierzchniaDzialki_{{post_id}}" 
@@ -836,6 +838,7 @@
                                                 <div class="col-sm-2">
                                                     <input 
                                                         type="number" 
+                                                        value="{{post_data['LiczbaPieter']}}"
                                                         class="form-control bg-dark formatuj-maly-font" 
                                                         style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                         id="LiczbaPieter_{{post_id}}" 
@@ -849,6 +852,7 @@
                                                         class="form-control bg-dark formatuj-maly-font" 
                                                         style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                         id="LiczbaPokoi_{{post_id}}" 
+                                                        value="{{post_data['LiczbaPokoi']}}"
                                                         name="LiczbaPokoi_{{post_id}}" 
                                                         placeholder="Liczba Pokoi" 
                                                         aria-label="Liczba Pokoi"/>
@@ -857,7 +861,7 @@
                                             <div class="input-group mb-0">
                                                 <input 
                                                     type="text" 
-                                                    value=""
+                                                    value="{{post_data['TechnologiaBudowy']}}"
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                     id="TechnologiaBudowy_{{post_id}}" 
@@ -867,7 +871,7 @@
                                                 <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-house-gear"></i></span>
                                                 <input 
                                                     type="text" 
-                                                    value=""
+                                                    value="{{post_data['RodzajZabudowy']}}"
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                     id="RodzajZabudowy_{{post_id}}" 
@@ -897,7 +901,7 @@
                                             <div class="input-group mb-0">
                                                 <input 
                                                     type="text" 
-                                                    value=""
+                                                    value="{{post_data['Umeblowanie']}}"
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                     id="Umeblowanie_{{post_id}}" 
@@ -907,7 +911,7 @@
                                                 <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-house-heart"></i></span>
                                                 <input 
                                                     type="text" 
-                                                    value=""
+                                                    value="{{post_data['FormaKuchni']}}"
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                     id="FormaKuchni_{{post_id}}" 
@@ -942,7 +946,7 @@
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                     id="InformacjeDodatkowe_{{post_id}}" 
                                                     name="InformacjeDodatkowe_{{post_id}}" 
-                                                    rows="4" required></textarea>
+                                                    rows="4" required>{{post_data['InformacjeDodatkowe']}}</textarea>
                                             </div>
                                             <div class="no-border formatuj-maly-font fadeIn mb-3">
                                                 <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_{{post_id}}', 'Pierwszy właściciel. ');">Pierwszy właściciel</a>
@@ -1039,7 +1043,7 @@
                                                 style="max-height: 30px; font-size: 12px;" 
                                                 onclick="prepareAndSubmitRentOfferForm('{{post_id}}', false)"
                                             >
-                                                Dodaj ogłoszenie najmu
+                                                Zapisz ogłoszenie najmu
                                             </button>
                                         </form>
                                     </div>
