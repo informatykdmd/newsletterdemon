@@ -423,11 +423,11 @@
                                             rows="4" required></textarea>
                                     </div>
                                     <div class="no-border formatuj-maly-font fadeIn mb-3">
-                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Pierwszy właściciel');">Pierwszy właściciel</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Atrakcyjna lokalizacja');">Atrakcyjna lokalizacja</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Pierwszy właściciel. ');">Pierwszy właściciel</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Atrakcyjna lokalizacja. ');">Atrakcyjna lokalizacja</a>
                                         <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Okazja!');">Okazja!</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Możliwość negocjacji');">Możliwość negocjacji</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Media i monitoring w cenie najmu');">Media i monitoring w cenie najmu</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Możliwość negocjacji. ');">Możliwość negocjacji</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Media i monitoring w cenie najmu. ');">Media i monitoring w cenie najmu</a>
                                     </div>
 
                                     <!-- Opis --> 
@@ -1074,8 +1074,166 @@
 {% endblock %}
 {% block bottom_script %}
 <script>
+    // class FotoDropBox {
+    //     constructor(formId) {
+    //         if (!this.checkDragAndDropSupport()) {
+    //             alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików.');
+    //             return;
+    //         }
+    //         this.dropArea = document.getElementById(`${formId}-drop-area`);
+    //         this.fileList = document.getElementById(`${formId}-fileList`);
+    //         this.accumulatedFiles = [];
+
+    //         // v 2.0
+    //         this.fileInput = document.createElement('input');
+    //         this.fileInput.type = 'file';
+    //         this.fileInput.multiple = true; // jeśli chcesz obsługiwać wiele plików naraz
+    //         this.fileInput.style.display = 'none'; // ukryj element input
+    //         document.body.appendChild(this.fileInput); // dodaj input do DOM
+    //         this.dropArea.addEventListener('click', () => this.fileInput.click()); // po kliknięciu na dropArea, aktywuj input file
+    //         this.fileInput.addEventListener('change', (e) => this.handleFileInput(e)); // obsługa zdarzenia change
+    //         // v 2.0
+    //         this.initEventListeners();
+    //     }
+    //     checkDragAndDropSupport() {
+    //         const div = document.createElement('div');
+    //         return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+    //     }
+
+    //     initEventListeners() {
+    //         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    //             this.dropArea.addEventListener(eventName, (e) => this.preventDefaults(e), false);
+    //         });
+
+    //         ['dragenter', 'dragover'].forEach(eventName => {
+    //             this.dropArea.addEventListener(eventName, () => this.highlight(), false);
+    //         });
+
+    //         ['dragleave', 'drop'].forEach(eventName => {
+    //             this.dropArea.addEventListener(eventName, () => this.unhighlight(), false);
+    //         });
+
+    //         this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+    //     }
+
+    //     preventDefaults(e) {
+    //         e.preventDefault();
+    //         e.stopPropagation();
+    //     }
+
+    //     highlight() {
+    //         this.dropArea.classList.add('highlight');
+    //     }
+
+    //     unhighlight() {
+    //         this.dropArea.classList.remove('highlight');
+    //     }
+
+    //     handleDrop(e) {
+    //         this.preventDefaults(e);
+    //         let dt = e.dataTransfer;
+    //         let files = dt.files;
+    //         this.updateFileList(files);
+    //     }
+        
+    //     handleDropImg(event) {
+    //         event.preventDefault();
+    //         let files = event.dataTransfer.files; // Pobierz pliki z obiektu DataTransfer
+    //         let list = document.getElementById(formId + '-fileList');
+
+    //         for (let i = 0; i < files.length; i++) {
+    //             let file = files[i];
+    //             let li = document.createElement('li');
+    //             li.textContent = file.name + " (" + (file.size / 1024).toFixed(1) + " KB)"; // Dodaj informacje o pliku
+    //             li.file = file; // Kluczowe: Przypisz obiekt File do elementu li
+    //             list.appendChild(li);
+    //         }
+    //     }
+
+    //     // Tuning po kliknieciu w dropbox tradycyjne okienko
+    //     handleFileInput(e) {
+    //         const files = e.target.files;
+    //         this.updateFileList(files);
+    //     }
+
+
+    //     updateFileList(newFiles) {
+    //         for (let file of newFiles) {
+    //             if (this.accumulatedFiles.length >= 10) {
+    //                 alert('Osiągnięto limit 10 plików.');
+    //                 break;
+    //             }
+    //             if (!this.isFileUnique(file)) {
+    //                 alert('Plik ' + file.name + ' jest już na liście.');
+    //                 continue;
+    //             }
+    //             this.accumulatedFiles.push(file);
+    //         }
+    //         this.displayFiles();
+    //     }
+
+    //     isFileUnique(newFile) {
+    //         return !this.accumulatedFiles.some(file => 
+    //             file.name === newFile.name &&
+    //             file.size === newFile.size &&
+    //             this.getFileExtension(file.name) === this.getFileExtension(newFile.name)
+    //         );
+    //     }
+
+    //     displayFiles() {
+    //         this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
+    //         this.accumulatedFiles.forEach((file, index) => {
+    //             const li = document.createElement('li');
+    //             li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
+
+    //             if (file.type.startsWith('image/')) {
+    //                 const img = document.createElement('img');
+    //                 img.src = URL.createObjectURL(file);
+    //                 img.onload = () => { URL.revokeObjectURL(img.src); };
+    //                 img.style.height = '50px';
+    //                 img.style.marginRight = '10px';
+    //                 img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+    //                 li.appendChild(img);
+    //             } else {
+    //                 alert('Plik ' + file.name + ' nie jest zdjęciem.');
+    //                 return;  // Nie dodawaj plików, które nie są obrazami
+    //             }
+
+    //             // li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`));
+    //             li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
+    //             if (file.size > 2097200) {
+    //                 li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
+    //             } else if (file.size > 1048576) {
+    //                 li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
+    //             } else {
+    //                 li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
+    //             }
+    //             li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+    //             this.fileList.appendChild(li);
+
+    //             const closeButton = document.createElement('button');
+    //             closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+    //             closeButton.setAttribute('aria-label', 'Close');
+    //             closeButton.addEventListener('click', () => this.removeFile(index));
+    //             li.appendChild(closeButton);
+    //         });
+    //     }
+        
+
+
+    //     removeFile(index) {
+    //         this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
+    //         this.displayFiles(); // Ponownie wyświetl listę plików bez usuniętego elementu
+    //     }
+
+    //     getFileExtension(filename) {
+    //         return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+    //     }
+    // }
+
+
     class FotoDropBox {
-        constructor(formId) {
+        constructor(formId, existingImageUrls = []) {
             if (!this.checkDragAndDropSupport()) {
                 alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików.');
                 return;
@@ -1083,6 +1241,8 @@
             this.dropArea = document.getElementById(`${formId}-drop-area`);
             this.fileList = document.getElementById(`${formId}-fileList`);
             this.accumulatedFiles = [];
+
+            this.existingImageUrls = existingImageUrls;
 
             // v 2.0
             this.fileInput = document.createElement('input');
@@ -1094,7 +1254,25 @@
             this.fileInput.addEventListener('change', (e) => this.handleFileInput(e)); // obsługa zdarzenia change
             // v 2.0
             this.initEventListeners();
+
+            this.loadExistingImages();
         }
+
+        loadExistingImages() {
+            this.existingImageUrls.forEach(url => {
+                const li = document.createElement('li');
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.height = '50px';
+                img.style.marginRight = '10px';
+                img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                li.appendChild(img);
+                li.appendChild(document.createTextNode(url.slice(url.lastIndexOf('/') + 1))); // wyświetlanie nazwy pliku z URL
+                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+                this.fileList.appendChild(li);
+            });
+        }
+
         checkDragAndDropSupport() {
             const div = document.createElement('div');
             return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
@@ -1182,6 +1360,9 @@
 
         displayFiles() {
             this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
+
+            this.loadExistingImages();  // Ponownie załaduj istniejące obrazy URL
+            
             this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
                 li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu

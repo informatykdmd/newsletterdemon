@@ -230,7 +230,6 @@ function joinToDynamicDescription(id, elementName="list-container") {
 }
 
 
-
 function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     let formIsValid = true;
     // Funkcja pomocnicza do dodawania/usuwania klasy ostrzeżenia
@@ -288,40 +287,71 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
 
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
-    if (!oldFotos) {
-        toggleWarning('title_' + offerId, !title);
-        toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
-        toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
-        toggleWarning('Cena_' + offerId, !cena);
+    // if (!oldFotos) {
+    //     toggleWarning('title_' + offerId, !title);
+    //     toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
+    //     toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
+    //     toggleWarning('Cena_' + offerId, !cena);
 
 
-        if (zdjecia.length === 0) {
-            const elementzdjecia = document.getElementById(offerId+'-drop-area');
+    //     if (zdjecia.length === 0) {
+    //         const elementzdjecia = document.getElementById(offerId+'-drop-area');
 
-            elementzdjecia.classList.add('input-warning');
-            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+    //         elementzdjecia.classList.add('input-warning');
+    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
 
-            return;  // Zatrzymaj przesyłanie formularza
-        } 
+    //         return;  // Zatrzymaj przesyłanie formularza
+    //     } 
         
-        if (opis.length === 0 || opis[0].p === "") {
-            const elementopisJsonString = document.getElementById('list-container'+offerId);
+    //     if (opis.length === 0 || opis[0].p === "") {
+    //         const elementopisJsonString = document.getElementById('list-container'+offerId);
 
-            elementopisJsonString.classList.add('input-warning');
-            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
-            return;  // Zatrzymaj przesyłanie formularza
-        } 
-    } else {
-        if (opis.length === 0 || opis[0].p === "") {
-            const elementopisJsonString = document.getElementById('list-container'+offerId);
+    //         elementopisJsonString.classList.add('input-warning');
+    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+    //         return;  // Zatrzymaj przesyłanie formularza
+    //     } 
+    // } else {
+    //     toggleWarning('title_' + offerId, !title);
+    //     toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
+    //     toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
+    //     toggleWarning('Cena_' + offerId, !cena);
+    //     if (opis.length === 0 || opis[0].p === "") {
+    //         const elementopisJsonString = document.getElementById('list-container'+offerId);
 
-            elementopisJsonString.classList.add('input-warning');
-            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+    //         elementopisJsonString.classList.add('input-warning');
+    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
 
-            // alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
-            return;  // Zatrzymaj przesyłanie formularza
-        } 
-    }
+    //         // alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
+    //         return;  // Zatrzymaj przesyłanie formularza
+    //     } 
+    // }
+
+    // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
+    
+    toggleWarning('title_' + offerId, !title);
+    toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
+    toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
+    toggleWarning('Cena_' + offerId, !cena);
+
+
+    if (zdjecia.length === 0) {
+        const elementzdjecia = document.getElementById(offerId+'-drop-area');
+
+        elementzdjecia.classList.add('input-warning');
+        formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+
+        return;  // Zatrzymaj przesyłanie formularza
+    } 
+        
+
+
+    if (opis.length === 0 || opis[0].p === "") {
+        const elementopisJsonString = document.getElementById('list-container'+offerId);
+
+        elementopisJsonString.classList.add('input-warning');
+        formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+        return;  // Zatrzymaj przesyłanie formularza
+    } 
 
     // Dodawanie zdjęć jako FormData
     var formData = new FormData();
