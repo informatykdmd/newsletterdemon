@@ -925,91 +925,50 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            
 
-
-
-
-                                            <!-- <div class="input-group mb-0">
-                                                <input 
-                                                    type="text" 
-                                                    value="{{post_data['TechBudowy']}}"
-                                                    class="form-control bg-dark formatuj-maly-font" 
-                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                    id="TechnologiaBudowy_{{post_id}}" 
-                                                    name="TechnologiaBudowy_{{post_id}}" 
-                                                    required placeholder="Technologia Budowy" aria-label="Technologia Budowy"
-                                                >
-                                                <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-house-gear"></i></span>
-                                                <input 
-                                                    type="text" 
-                                                    value="{{post_data['RodzajZabudowy']}}"
-                                                    class="form-control bg-dark formatuj-maly-font" 
-                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                    id="RodzajZabudowy_{{post_id}}" 
-                                                    name="RodzajZabudowy_{{post_id}}" 
-                                                    placeholder="Rodzaj Zabudowy" aria-label="Rodzaj Zabudowy"
-                                                >
-                                            </div>
-                                            <div class="row mb-3">
-                                                <div class="col-6">
-                                                    <div class="no-border formatuj-maly-font fadeIn">
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TechnologiaBudowy_{{post_id}}', 'Technologia tradycyjna (murowana)');">murowana</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TechnologiaBudowy_{{post_id}}', 'Technologia szkieletowa (drewniana lub stalowa)');">szkieletowa</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TechnologiaBudowy_{{post_id}}', 'Technologia modułowa (prefabrykowana)');">prefabrykowana</a>
-                                                        
+                                            <div class="row row-cols-2 mb-3">
+                                                <div class="col-sm-6">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{post_data['Umeblowanie']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="Umeblowanie_{{post_id}}" 
+                                                            name="Umeblowanie_{{post_id}}" 
+                                                            required placeholder="Umeblowanie" aria-label="Umeblowanie"
+                                                        />
+                                                        <label for="Umeblowanie_{{post_id}}">Umeblowanie</label>
                                                     </div>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="no-border formatuj-maly-font fadeIn">
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_{{post_id}}', 'Zabudowa jednorodzinna');">jednorodzinna</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_{{post_id}}', 'Zabudowa wielorodzinna');">wielorodzinna</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_{{post_id}}', 'Zabudowa szeregowa');">szeregowa</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_{{post_id}}', 'Zabudowa bliźniacza');">bliźniacza</a>
-                                                        
-                                                    </div>
-                                                </div>
-                                            </div> -->
-                                            <div class="input-group mb-0">
-                                                <input 
-                                                    type="text" 
-                                                    value="{{post_data['Umeblowanie']}}"
-                                                    class="form-control bg-dark formatuj-maly-font" 
-                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                    id="Umeblowanie_{{post_id}}" 
-                                                    name="Umeblowanie_{{post_id}}" 
-                                                    required placeholder="Umeblowanie" aria-label="Umeblowanie"
-                                                >
-                                                <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-house-heart"></i></span>
-                                                <input 
-                                                    type="text" 
-                                                    value="{{post_data['FormaKuchni']}}"
-                                                    class="form-control bg-dark formatuj-maly-font" 
-                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                    id="FormaKuchni_{{post_id}}" 
-                                                    name="FormaKuchni_{{post_id}}" 
-                                                    placeholder="Forma Kuchni" aria-label="Forma Kuchni"
-                                                >
-                                            </div>
-                                            <div class="row mb-3">
-                                                <div class="col-6">
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Umeblowanie_{{post_id}}', 'W całości umeblowane');">W całości</a>
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Umeblowanie_{{post_id}}', 'Częściowo umeblowane');">Częściowo</a>
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Umeblowanie_{{post_id}}', 'Nie umeblowane');">Nie umeblowane</a>
-                                                        
                                                     </div>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-sm-6">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{post_data['FormaKuchni']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="FormaKuchni_{{post_id}}" 
+                                                            name="FormaKuchni_{{post_id}}" 
+                                                            placeholder="Forma Kuchni" aria-label="Forma Kuchni"
+                                                        />
+                                                        <label for="FormaKuchni_{{post_id}}">Forma Kuchni</label>
+                                                    </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_{{post_id}}', 'Otwarta');">Otwarta</a>
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_{{post_id}}', 'Studio');">Studio</a>
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_{{post_id}}', 'Zamknięta');">Zamknięta</a>
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_{{post_id}}', 'Widna');">Widna</a>
-                                                        
                                                     </div>
                                                 </div>
                                             </div>
-        
+
                                             <label class="form-label">Dodatkowe informacje</label>
                                             <div class="input-group mb-1">
                                                 <textarea 
