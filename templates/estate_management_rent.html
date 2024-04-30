@@ -813,25 +813,17 @@
                                             </div>
                                             <div class="row row-cols-2 mb-3">
                                                 <div class="col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <div class="form-floating mb-0">
-                                                                <input 
-                                                                    type="number" 
-                                                                    value="{{post_data['Metraz']}}"
-                                                                    class="form-control bg-dark formatuj-maly-font" 
-                                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                                    id="Metraz_{{post_id}}" 
-                                                                    name="Metraz_{{post_id}}" 
-                                                                    placeholder="Metraż" 
-                                                                    aria-label="Metraż" />
-                                                                <label for="Metraz_{{post_id}}">Metraż</label>
-                                                            </div>
-                                                            
-                                                        </div>
-                                                        <div class="col mw-10 bg-dark formatuj-maly-font" style="color:#c2c2c2;">
-                                                            m&sup2;
-                                                        </div>
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            value="{{post_data['Metraz']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="Metraz_{{post_id}}" 
+                                                            name="Metraz_{{post_id}}" 
+                                                            placeholder="Metraż" 
+                                                            aria-label="Metraż" />
+                                                        <label for="Metraz_{{post_id}}">Metraż w m&sup2;</label>
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_{{post_id}}', 50);">50 m&sup2;</a>
@@ -840,29 +832,19 @@
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_{{post_id}}', 250);">250 m&sup2;</a>
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_{{post_id}}', 500);">500 m&sup2;</a>
                                                     </div>
-                                                    
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    
-                                                    <div class="row">
-                                                        <div class="col-11">
-                                                            <div class="form-floating mb-0">
-                                                                <input 
-                                                                    type="number" 
-                                                                    value="{{post_data['PowierzchniaDzialki']}}"
-                                                                    class="form-control bg-dark formatuj-maly-font" 
-                                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                                    id="PowierzchniaDzialki_{{post_id}}" 
-                                                                    name="PowierzchniaDzialki_{{post_id}}" 
-                                                                    placeholder="Powierzchnia Działki" 
-                                                                    aria-label="Powierzchnia Działki" />
-                                                                <label for="PowierzchniaDzialki_{{post_id}}">Powierzchnia Działki</label>
-                                                            </div>
-                                                            
-                                                        </div>
-                                                        <div class="col mw-10 bg-dark formatuj-maly-font" style="color:#c2c2c2;">
-                                                            m&sup2;
-                                                        </div>
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            value="{{post_data['PowierzchniaDzialki']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="PowierzchniaDzialki_{{post_id}}" 
+                                                            name="PowierzchniaDzialki_{{post_id}}" 
+                                                            placeholder="Powierzchnia Działki" 
+                                                            aria-label="Powierzchnia Działki" />
+                                                        <label for="PowierzchniaDzialki_{{post_id}}">Powierzchnia Działki w m&sup2;</label>
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaDzialki_{{post_id}}', 500);">500 m&sup2;</a>
@@ -876,26 +858,33 @@
                                             <label class="form-label">Szczegóły budynku</label>
                                             <div class="row g-2 mb-3">
                                                 <div class="col-sm-2">
-                                                    <input 
-                                                        type="number" 
-                                                        value="{{post_data['LiczbaPieter']}}"
-                                                        class="form-control bg-dark formatuj-maly-font" 
-                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                        id="LiczbaPieter_{{post_id}}" 
-                                                        name="LiczbaPieter_{{post_id}}" 
-                                                        placeholder="Liczba Pięter" 
-                                                        aria-label="Liczba Pięter"/>
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            value="{{post_data['LiczbaPieter']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="LiczbaPieter_{{post_id}}" 
+                                                            name="LiczbaPieter_{{post_id}}" 
+                                                            placeholder="Liczba Pięter" 
+                                                            aria-label="Liczba Pięter"/>
+                                                        <label for="LiczbaPieter_{{post_id}}">Liczba Pięter</label>
+                                                    </div>
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <input 
-                                                        type="number" 
-                                                        class="form-control bg-dark formatuj-maly-font" 
-                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                        id="LiczbaPokoi_{{post_id}}" 
-                                                        value="{{post_data['LiczbaPokoi']}}"
-                                                        name="LiczbaPokoi_{{post_id}}" 
-                                                        placeholder="Liczba Pokoi" 
-                                                        aria-label="Liczba Pokoi"/>
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="LiczbaPokoi_{{post_id}}" 
+                                                            value="{{post_data['LiczbaPokoi']}}"
+                                                            name="LiczbaPokoi_{{post_id}}" 
+                                                            placeholder="Liczba Pokoi" 
+                                                            aria-label="Liczba Pokoi"/>
+                                                        <label for="LiczbaPokoi_{{post_id}}">Liczba Pokoi</label>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                             <div class="input-group mb-0">
