@@ -744,17 +744,22 @@
                                             <div class="row row-cols-3 mb-3">
                                                 <div class="col-sm-4">
                                                     <div class="input-group ">
-                                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
-                                                        <input 
-                                                            type="number" 
-                                                            value="{{post_data['Cena']}}"
-                                                            class="form-control bg-dark formatuj-maly-font" 
-                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                            id="Cena_{{post_id}}" 
-                                                            name="Cena_{{post_id}}" 
-                                                            placeholder="Cena" 
-                                                            aria-label="Cena" />
-                                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;">.00</span>
+                                                        <div class="form-floating mb-0"> 
+                                                            <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                                            
+                                                            <input 
+                                                                type="number" 
+                                                                value="{{post_data['Cena']}}"
+                                                                class="form-control bg-dark formatuj-maly-font" 
+                                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                                id="Cena_{{post_id}}" 
+                                                                name="Cena_{{post_id}}" 
+                                                                placeholder="Cena" 
+                                                                aria-label="Cena" />
+                                                            <label for="Cena_{{post_id}}">Cena</label>
+                                                            <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;">.00</span>
+
+                                                        </div>
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_{{post_id}}', 5000);">5000</a>
