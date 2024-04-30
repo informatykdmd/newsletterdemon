@@ -1789,7 +1789,7 @@
             const filesFromUrls = this.existingImageUrls.map(url => fetchImageAsFile(url));
             Promise.all(filesFromUrls).then(files => {
                 files.forEach((file, index) => {
-                    this.accumulatedFiles.push(file);
+                    // this.accumulatedFiles.push(file);
                     this.addFileToList(file, index);
                 });
 
