@@ -273,7 +273,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var umeblowanie = document.getElementById('Umeblowanie_' + offerId).value;
     var kuchnia = document.getElementById('FormaKuchni_' + offerId).value;
     var dodatkoweInfo = document.getElementById('InformacjeDodatkowe_' + offerId).value;
-    var offerIDbox = document.getElementById('OfferId_' + offerId).value;
+    var offerIDbox = document.getElementById('OfferID_' + offerId).value;
 
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
