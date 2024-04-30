@@ -1652,23 +1652,23 @@
                     const img = document.createElement('img');
                     img.src = URL.createObjectURL(file);
                     img.onload = () => { URL.revokeObjectURL(img.src); };
-                    img.style.height = '50px';
-                    img.style.marginRight = '10px';
-                    img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
-                    li.appendChild(img);
+                    // img.style.height = '50px';
+                    // img.style.marginRight = '10px';
+                    // img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                    // li.appendChild(img);
 
                     const fileName = file.name;
-                    li.appendChild(document.createTextNode(fileName));
-                    li.style.color = '#e6e6e6';
+                    // li.appendChild(document.createTextNode(fileName));
+                    // li.style.color = '#e6e6e6';
                     li.file = file;  // Kluczowe: Przypisz obiekt File do elementu li
 
-                    const closeButton = document.createElement('button');
-                    closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
-                    closeButton.setAttribute('aria-label', 'Close');
-                    closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
-                    li.appendChild(closeButton);
+                    // const closeButton = document.createElement('button');
+                    // closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+                    // closeButton.setAttribute('aria-label', 'Close');
+                    // closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
+                    // li.appendChild(closeButton);
 
-                    li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+                    // li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
                     this.fileList.appendChild(li);
                 }).catch(error => {
                     console.error('Error fetching image:', error);
