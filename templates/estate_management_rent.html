@@ -1723,7 +1723,6 @@
             });
 
             this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
-            this.displayFiles();
         }
 
         preventDefaults(e) {
@@ -1793,7 +1792,14 @@
         displayFiles() {
             this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
 
-            this.loadExistingImages();  // Ponownie załaduj istniejące obrazy URL
+            // this.loadExistingImages();  // Ponownie załaduj istniejące obrazy URL
+            this.existingImageUrls.forEach((url, index) => {
+
+                fetchImageAsFile(url).then(file => {
+                    this.accumulatedFiles.push(file);
+                });
+
+            });
 
             this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
