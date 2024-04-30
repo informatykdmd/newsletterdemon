@@ -1774,7 +1774,6 @@
 
         // Funkcja pomocnicza do dodawania plików do listy
         addFileToList(file, index) {
-            file.id = Math.random().toString(36).substring(7); // dodanie unikalnego identyfikatora
             const li = document.createElement('li');
             li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
 
@@ -1805,18 +1804,14 @@
             const closeButton = document.createElement('button');
             closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
             closeButton.setAttribute('aria-label', 'Close');
-            closeButton.addEventListener('click', () => this.removeFile(file.id));
+            closeButton.addEventListener('click', () => this.removeFile(index));
             li.appendChild(closeButton);
         }
 
-        removeFile(fileId) {
-            this.accumulatedFiles = this.accumulatedFiles.filter(file => file.id !== fileId);
-            this.displayFiles();
+        removeFile(index) {
+            this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
+            this.displayFiles(); // Ponownie wyświetl listę plików bez usuniętego elementu
         }
-        // removeFile(index) {
-        //     this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
-        //     this.displayFiles(); // Ponownie wyświetl listę plików bez usuniętego elementu
-        // }
 
         getFileExtension(filename) {
             return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
