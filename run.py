@@ -2843,7 +2843,16 @@ def save_rent_offer():
     umeblowanie = request.form.get('umeblowanie')
     kuchnia = request.form.get('kuchnia')
     dodatkoweInfo = request.form.get('dodatkoweInfo')
-    userName = request.form.get('userName')
+    offerID = request.form.get('offerID')
+    try: offerID_int = int(offerID)
+    except ValueError: return jsonify({'error': 'Błąd id oferty!'}), 400
+
+    if offerID_int == 9999999:
+        print('nowa oferta')
+    else:
+        print(f'oferta {offerID_int}')
+        flash(f'Edycja oferty {offerID_int}', 'danger')
+        return redirect(url_for('estateAdsRent'))
 
     validOpis = []
     for test in opis:
