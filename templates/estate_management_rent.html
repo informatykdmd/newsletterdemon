@@ -1655,7 +1655,7 @@
                     // img.style.height = '50px';
                     // img.style.marginRight = '10px';
                     // img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
-                    // li.appendChild(img);
+                    li.appendChild(img);
 
                     const fileName = file.name;
                     // li.appendChild(document.createTextNode(fileName));
@@ -1674,7 +1674,6 @@
                 }).catch(error => {
                     console.error('Error fetching image:', error);
                 });
-                this.displayFiles();
             });
         }
         // removeFileFromURL(index, url) {
