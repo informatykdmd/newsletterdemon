@@ -1623,7 +1623,8 @@
 
                 const fileName = url.slice(url.lastIndexOf('/') + 1);
                 li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
-
+                li.style.color = '#e6e6e6';
+                
                 const closeButton = document.createElement('button');
                 closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
                 closeButton.setAttribute('aria-label', 'Close');
