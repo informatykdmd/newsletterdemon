@@ -655,12 +655,18 @@
                                                         </a>
                                                     </div>
                                                     <script>
-                                                        document.addEventListener('DOMContentLoaded', () => {
+
                                                             var inputElement = document.getElementById('LinkGPS_{{post_id}}');
                                                             inputElement.addEventListener('input', function() {
                                                                 extractAndDisplayCoords('LinkGPS_{{post_id}}', 'GPS_{{post_id}}', '{{post_id}}');
                                                             });
-                                                        });
+
+                                                        //document.addEventListener('DOMContentLoaded', () => {
+                                                            //var inputElement = document.getElementById('LinkGPS_{{post_id}}');
+                                                            //inputElement.addEventListener('input', function() {
+                                                                //extractAndDisplayCoords('LinkGPS_{{post_id}}', 'GPS_{{post_id}}', '{{post_id}}');
+                                                            //});
+                                                        //});
                                                     </script>
                                                 </div>
                                             </div>
