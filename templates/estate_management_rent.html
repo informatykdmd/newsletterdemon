@@ -1616,7 +1616,6 @@
             this.initEventListeners();
 
             this.loadExistingImages();
-            this.displayFiles();
         }
 
         // loadExistingImages() {
@@ -1724,6 +1723,7 @@
             });
 
             this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+            this.displayFiles();
         }
 
         preventDefaults(e) {
