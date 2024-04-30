@@ -744,20 +744,20 @@
                                             <div class="row row-cols-3 mb-3">
                                                 <div class="col-sm-4">
                                                     
-                                                        <div class="form-floating mb-0"> 
+                                                    <div class="form-floating mb-0"> 
 
-                                                            <input 
-                                                                type="number" 
-                                                                value="{{post_data['Cena']}}"
-                                                                class="form-control bg-dark formatuj-maly-font" 
-                                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                                id="Cena_{{post_id}}" 
-                                                                name="Cena_{{post_id}}" 
-                                                                placeholder="Cena" 
-                                                                aria-label="Cena" />
-                                                            <label for="Cena_{{post_id}}">Cena</label>
+                                                        <input 
+                                                            type="number" 
+                                                            value="{{post_data['Cena']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="Cena_{{post_id}}" 
+                                                            name="Cena_{{post_id}}" 
+                                                            placeholder="Cena" 
+                                                            aria-label="Cena" />
+                                                        <label for="Cena_{{post_id}}">Cena</label>
 
-                                                        </div>
+                                                    </div>
                                                     
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_{{post_id}}', 5000);">5000</a>
@@ -768,8 +768,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <div class="input-group ">
-                                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                                    <div class="form-floating mb-0">
+                                                        
                                                         <input 
                                                             type="number" 
                                                             value="{{post_data['Czynsz']}}"
@@ -779,7 +779,7 @@
                                                             name="Czynsz_{{post_id}}" 
                                                             placeholder="Czynsz" 
                                                             aria-label="Czynsz" />
-                                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;">.00</span>
+                                                        <label for="Czynsz_{{post_id}}">Czynsz</label>
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 5000);">5000</a>
@@ -790,8 +790,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <div class="input-group ">
-                                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                                    <div class="form-floating mb-0">
                                                         <input 
                                                             type="number" 
                                                             value="{{post_data['Kaucja']}}"
@@ -801,7 +800,7 @@
                                                             name="Kaucja_{{post_id}}" 
                                                             placeholder="Kaucja" 
                                                             aria-label="Kaucja" />
-                                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;">.00</span>
+                                                        <label for="Kaucja_{{post_id}}">Kaucja</label>
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 5000);">5000</a>
@@ -814,21 +813,29 @@
                                             </div>
                                             <div class="row row-cols-2 mb-3">
                                                 <div class="col-sm-6">
-                                                    <div class="input-group">
-                                                        <input 
-                                                            type="number" 
-                                                            value="{{post_data['Metraz']}}"
-                                                            class="form-control bg-dark formatuj-maly-font" 
-                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                            id="Metraz_{{post_id}}" 
-                                                            name="Metraz_{{post_id}}" 
-                                                            placeholder="Metraż" 
-                                                            aria-label="Metraż" />
-                                                        <span 
-                                                            class="input-group-text bg-dark formatuj-maly-font" 
-                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;">
-                                                            m&sup2;
-                                                        </span>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-floating mb-0">
+                                                                <input 
+                                                                    type="number" 
+                                                                    value="{{post_data['Metraz']}}"
+                                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                                    id="Metraz_{{post_id}}" 
+                                                                    name="Metraz_{{post_id}}" 
+                                                                    placeholder="Metraż" 
+                                                                    aria-label="Metraż" />
+                                                                <label for="Metraz_{{post_id}}">Metraż</label>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col">
+                                                            <span 
+                                                                class="input-group-text bg-dark formatuj-maly-font" 
+                                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;">
+                                                                m&sup2;
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_{{post_id}}', 50);">50 m&sup2;</a>
@@ -840,21 +847,30 @@
                                                     
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <div class="input-group">
-                                                        <input 
-                                                            type="number" 
-                                                            value="{{post_data['PowierzchniaDzialki']}}"
-                                                            class="form-control bg-dark formatuj-maly-font" 
-                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                            id="PowierzchniaDzialki_{{post_id}}" 
-                                                            name="PowierzchniaDzialki_{{post_id}}" 
-                                                            placeholder="Powierzchnia Działki" 
-                                                            aria-label="Powierzchnia Działki" />
-                                                        <span 
-                                                            class="input-group-text bg-dark formatuj-maly-font" 
-                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;">
-                                                            m&sup2;
-                                                        </span>
+                                                    
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-floating mb-0">
+                                                                <input 
+                                                                    type="number" 
+                                                                    value="{{post_data['PowierzchniaDzialki']}}"
+                                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                                    id="PowierzchniaDzialki_{{post_id}}" 
+                                                                    name="PowierzchniaDzialki_{{post_id}}" 
+                                                                    placeholder="Powierzchnia Działki" 
+                                                                    aria-label="Powierzchnia Działki" />
+                                                                <label for="PowierzchniaDzialki_{{post_id}}">Powierzchnia Działki</label>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col">
+                                                            <span 
+                                                                class="input-group-text bg-dark formatuj-maly-font" 
+                                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;">
+                                                                m&sup2;
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaDzialki_{{post_id}}', 500);">500 m&sup2;</a>
