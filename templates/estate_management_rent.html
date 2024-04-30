@@ -1615,7 +1615,7 @@
             // v 2.0
             this.initEventListeners();
 
-            this.loadExistingImages();
+            // this.loadExistingImages();
         }
 
         
@@ -1736,96 +1736,108 @@
             );
         }
 
+        // displayFiles() {
+        //     this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
+        //     this.accumulatedFiles.forEach((file, index) => {
+        //         const li = document.createElement('li');
+        //         li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
+
+        //         if (file.type.startsWith('image/')) {
+        //             const img = document.createElement('img');
+        //             img.src = URL.createObjectURL(file);
+        //             img.onload = () => { URL.revokeObjectURL(img.src); };
+        //             img.style.height = '50px';
+        //             img.style.marginRight = '10px';
+        //             img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+        //             li.appendChild(img);
+        //         } else {
+        //             alert('Plik ' + file.name + ' nie jest zdjęciem.');
+        //             return;  // Nie dodawaj plików, które nie są obrazami
+        //         }
+
+        //         // li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`));
+        //         li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
+        //         if (file.size > 2097200) {
+        //             li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
+        //         } else if (file.size > 1048576) {
+        //             li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
+        //         } else {
+        //             li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
+        //         }
+        //         li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+        //         this.fileList.appendChild(li);
+
+        //         const closeButton = document.createElement('button');
+        //         closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+        //         closeButton.setAttribute('aria-label', 'Close');
+        //         closeButton.addEventListener('click', () => this.removeFile(index));
+        //         li.appendChild(closeButton);
+        //     });
+        // }
+        
         displayFiles() {
             this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
 
-            // this.loadExistingImages();  // Ponownie załaduj istniejące obrazy URL
+            // Funkcja asynchroniczna do pobierania obrazu jako pliku
             async function fetchImageAsFile(url) {
                 const response = await fetch(url);
                 const blob = await response.blob();
                 return new File([blob], url.split('/').pop(), { type: blob.type });
             }
-            this.existingImageUrls.forEach((url, index) => {
-                file = fetchImageAsFile(url);
-                this.accumulatedFiles.push(file);
 
-                const li = document.createElement('li');
-                li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
+            // Przetwarzanie istniejących URLi obrazów
+            const filesFromUrls = this.existingImageUrls.map(url => fetchImageAsFile(url));
+            Promise.all(filesFromUrls).then(files => {
+                files.forEach((file, index) => {
+                    this.accumulatedFiles.push(file);
+                    this.addFileToList(file, index);
+                });
 
-                if (file.type.startsWith('image/')) {
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(file);
-                    img.onload = () => { URL.revokeObjectURL(img.src); };
-                    img.style.height = '50px';
-                    img.style.marginRight = '10px';
-                    img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
-                    li.appendChild(img);
-                } else {
-                    alert('Plik ' + file.name + ' nie jest zdjęciem.');
-                    return;  // Nie dodawaj plików, które nie są obrazami
-                }
-
-                // li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`));
-                li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
-                if (file.size > 2097200) {
-                    li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
-                } else if (file.size > 1048576) {
-                    li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
-                } else {
-                    li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
-                }
-                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
-                this.fileList.appendChild(li);
-
-                const closeButton = document.createElement('button');
-                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
-                closeButton.setAttribute('aria-label', 'Close');
-                closeButton.addEventListener('click', () => this.removeFile(index));
-                li.appendChild(closeButton);
+                // Po załadowaniu wszystkich plików z URLi, możesz teraz kontynuować z nowymi plikami załadowanymi przez użytkownika
+                this.accumulatedFiles.forEach((file, index) => {
+                    this.addFileToList(file, index);
+                });
             });
 
-
-
-
-
-            this.accumulatedFiles.forEach((file, index) => {
-                const li = document.createElement('li');
-                li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
-
-                if (file.type.startsWith('image/')) {
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(file);
-                    img.onload = () => { URL.revokeObjectURL(img.src); };
-                    img.style.height = '50px';
-                    img.style.marginRight = '10px';
-                    img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
-                    li.appendChild(img);
-                } else {
-                    alert('Plik ' + file.name + ' nie jest zdjęciem.');
-                    return;  // Nie dodawaj plików, które nie są obrazami
-                }
-
-                // li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`));
-                li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
-                if (file.size > 2097200) {
-                    li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
-                } else if (file.size > 1048576) {
-                    li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
-                } else {
-                    li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
-                }
-                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
-                this.fileList.appendChild(li);
-
-                const closeButton = document.createElement('button');
-                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
-                closeButton.setAttribute('aria-label', 'Close');
-                closeButton.addEventListener('click', () => this.removeFile(index));
-                li.appendChild(closeButton);
-            });
+            // Resetowanie listy URLi
+            this.existingImageUrls = [];
         }
-        
 
+        // Funkcja pomocnicza do dodawania plików do listy
+        addFileToList(file, index) {
+            const li = document.createElement('li');
+            li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
+
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => { URL.revokeObjectURL(img.src); };
+                img.style.height = '50px';
+                img.style.marginRight = '10px';
+                img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                li.appendChild(img);
+            } else {
+                alert('Plik ' + file.name + ' nie jest zdjęciem.');
+                return;  // Nie dodawaj plików, które nie są obrazami
+            }
+
+            li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
+            if (file.size > 2097200) {
+                li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
+            } else if (file.size > 1048576) {
+                li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
+            } else {
+                li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
+            }
+            li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+            this.fileList.appendChild(li);
+
+            const closeButton = document.createElement('button');
+            closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+            closeButton.setAttribute('aria-label', 'Close');
+            closeButton.addEventListener('click', () => this.removeFile(index));
+            li.appendChild(closeButton);
+        }
 
         removeFile(index) {
             this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
