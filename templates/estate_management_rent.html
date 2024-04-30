@@ -1620,6 +1620,11 @@
 
         loadExistingImages() {
             this.existingImageUrls.forEach((url, index) => {
+
+                fetchImageAsFile(url).then(file => {
+                    this.accumulatedFiles.push(file);
+                });
+                
                 const li = document.createElement('li');
                 const img = document.createElement('img');
                 img.src = url;
