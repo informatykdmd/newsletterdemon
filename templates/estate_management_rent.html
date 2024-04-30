@@ -693,7 +693,7 @@
                                                         <input 
                                                             type="number" 
                                                             class="form-control bg-dark formatuj-maly-font" 
-                                                            value="{{post_data['RokBudowy']}}"
+                                                            value="{% if post_data['RokBudowy']!=0 %}{{post_data['RokBudowy']}}{% endif %}"
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="RokBudowy_{{post_id}}" 
                                                             name="RokBudowy_{{post_id}}" 
@@ -744,7 +744,7 @@
                                                     <div class="form-floating mb-0"> 
                                                         <input 
                                                             type="number" 
-                                                            value="{{post_data['Cena']}}"
+                                                            value="{% if post_data['Cena']!=0 %}{{post_data['Cena']}}{% endif %}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="Cena_{{post_id}}" 
@@ -766,7 +766,7 @@
                                                         
                                                         <input 
                                                             type="number" 
-                                                            value="{{post_data['Czynsz']}}"
+                                                            value="{% if post_data['Czynsz']!=0 %}{{post_data['Czynsz']}}{% endif %}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="Czynsz_{{post_id}}" 
@@ -787,7 +787,7 @@
                                                     <div class="form-floating mb-0">
                                                         <input 
                                                             type="number" 
-                                                            value="{{post_data['Kaucja']}}"
+                                                            value="{% if post_data['Kaucja']!=0 %}{{post_data['Kaucja']}}{% endif %}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="Kaucja_{{post_id}}" 
@@ -810,7 +810,7 @@
                                                     <div class="form-floating mb-0">
                                                         <input 
                                                             type="number" 
-                                                            value="{{post_data['Metraz']}}"
+                                                            value="{% if post_data['Metraz']!=0 %}{{post_data['Metraz']}}{% endif %}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="Metraz_{{post_id}}" 
@@ -831,7 +831,7 @@
                                                     <div class="form-floating mb-0">
                                                         <input 
                                                             type="number" 
-                                                            value="{{post_data['PowierzchniaDzialki']}}"
+                                                            value="{% if post_data['PowierzchniaDzialki']!=0 %}{{post_data['PowierzchniaDzialki']}}{% endif %}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="PowierzchniaDzialki_{{post_id}}" 
@@ -856,7 +856,7 @@
                                                     <div class="form-floating mb-0">
                                                         <input 
                                                             type="number" 
-                                                            value="{{post_data['LiczbaPieter']}}"
+                                                            value="{% if post_data['LiczbaPieter']!=0 %}{{post_data['LiczbaPieter']}}{% endif %}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="LiczbaPieter_{{post_id}}" 
@@ -873,7 +873,7 @@
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="LiczbaPokoi_{{post_id}}" 
-                                                            value="{{post_data['LiczbaPokoi']}}"
+                                                            value="{% if post_data['LiczbaPokoi']!=0 %}{{post_data['LiczbaPokoi']}}{% endif %}"
                                                             name="LiczbaPokoi_{{post_id}}" 
                                                             placeholder="Liczba Pokoi" 
                                                             aria-label="Liczba Pokoi"/>
