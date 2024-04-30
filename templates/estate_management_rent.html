@@ -584,7 +584,11 @@
                                     <div style="color:#6a6a6a;">
                                         <form method="POST" id="rentOffer_{{post_id}}" action="{{ url_for('save_rent_offer') }}" enctype="multipart/form-data" >
                                             <!-- Tytuł artykułu -->
-                                            <div class="mb-3">
+                                            <!-- <div class="form-floating mb-3">
+                                                <input type="text" name="avatar-pic-path" value="{{avatar}}" class="formatuj-inputs-setting form-control" id="floatingInput" placeholder="example.com">
+                                                <label for="floatingInput">Ścieżka do avatar</label>
+                                            </div> -->
+                                            <div class="form-floating mb-3">
                                                 <label for="title_{{post_id}}" class="form-label">Tytuł ogłoszenia</label>
                                                 <input 
                                                         type="text" 
@@ -667,12 +671,6 @@
                                                                 });
                                                             }
                                                         });
-                                                        //document.addEventListener('DOMContentLoaded', () => {
-                                                            //var inputElement = document.getElementById('LinkGPS_{{post_id}}');
-                                                            //inputElement.addEventListener('input', function() {
-                                                                //extractAndDisplayCoords('LinkGPS_{{post_id}}', 'GPS_{{post_id}}', '{{post_id}}');
-                                                            //});
-                                                        //});
                                                     </script>
                                                 </div>
                                             </div>
