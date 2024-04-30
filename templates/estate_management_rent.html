@@ -1615,50 +1615,35 @@
             // v 2.0
             this.initEventListeners();
 
-            
-            // Asynchroniczne ładowanie istniejących obrazów po utworzeniu instancji
             this.loadExistingImages();
         }
 
-        async loadExistingImages() {
-            for (let url of this.existingImageUrls) {
-                try {
-                    const file = await fetchImageAsFile(url);
-                    if (file) {
-                        this.accumulatedFiles.push(file);
-                    }
-                } catch (error) {
-                    console.error('Błąd podczas ładowania obrazu:', error);
-                }
-            }
-            this.existingImageUrls = []; // Wyczyść listę URLi po ich przetworzeniu
-            this.displayFiles(); // Odśwież wyświetlaną listę plików
+        
+
+        loadExistingImages() {
+            this.existingImageUrls.forEach((url, index) => {
+                const li = document.createElement('li');
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.height = '50px';
+                img.style.marginRight = '10px';
+                img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                li.appendChild(img);
+
+                const fileName = url.slice(url.lastIndexOf('/') + 1);
+                li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
+                li.style.color = '#e6e6e6';
+
+                const closeButton = document.createElement('button');
+                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+                closeButton.setAttribute('aria-label', 'Close');
+                closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
+                li.appendChild(closeButton);
+
+                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+                this.fileList.appendChild(li);
+            });
         }
-
-        // loadExistingImages() {
-        //     this.existingImageUrls.forEach((url, index) => {
-        //         const li = document.createElement('li');
-        //         const img = document.createElement('img');
-        //         img.src = url;
-        //         img.style.height = '50px';
-        //         img.style.marginRight = '10px';
-        //         img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
-        //         li.appendChild(img);
-
-        //         const fileName = url.slice(url.lastIndexOf('/') + 1);
-        //         li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
-        //         li.style.color = '#e6e6e6';
-
-        //         const closeButton = document.createElement('button');
-        //         closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
-        //         closeButton.setAttribute('aria-label', 'Close');
-        //         closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
-        //         li.appendChild(closeButton);
-
-        //         li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
-        //         this.fileList.appendChild(li);
-        //     });
-        // }
 
         removeFileFromURL(index, url) {
             // Możesz dodać logikę do usuwania obrazu z serwera lub z aktualnej listy zdjęć
