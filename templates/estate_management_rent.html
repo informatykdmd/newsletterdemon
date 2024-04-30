@@ -1615,95 +1615,56 @@
             // v 2.0
             this.initEventListeners();
 
+            
+            // Asynchroniczne ładowanie istniejących obrazów po utworzeniu instancji
             this.loadExistingImages();
         }
 
-        loadExistingImages() {
-            this.existingImageUrls.forEach((url, index) => {
-                const li = document.createElement('li');
-                const img = document.createElement('img');
-                img.src = url;
-                img.style.height = '50px';
-                img.style.marginRight = '10px';
-                img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
-                li.appendChild(img);
-
-                const fileName = url.slice(url.lastIndexOf('/') + 1);
-                li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
-                li.style.color = '#e6e6e6';
-
-                const closeButton = document.createElement('button');
-                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
-                closeButton.setAttribute('aria-label', 'Close');
-                closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
-                li.appendChild(closeButton);
-
-                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
-                this.fileList.appendChild(li);
-            });
-        }
-
-        updateExistingImages() {
-            this.existingImageUrls.forEach((url, index) => {
-
-                fetchImageAsFile(url).then(file => {
-                    this.accumulatedFiles.push(file);
-                });
-            
-
-            });
+        async loadExistingImages() {
+            for (let url of this.existingImageUrls) {
+                try {
+                    const file = await fetchImageAsFile(url);
+                    if (file) {
+                        this.accumulatedFiles.push(file);
+                    }
+                } catch (error) {
+                    console.error('Błąd podczas ładowania obrazu:', error);
+                }
+            }
+            this.existingImageUrls = []; // Wyczyść listę URLi po ich przetworzeniu
+            this.displayFiles(); // Odśwież wyświetlaną listę plików
         }
 
         // loadExistingImages() {
         //     this.existingImageUrls.forEach((url, index) => {
-        //         fetchImageAsFile(url).then(file => {
-        //             this.accumulatedFiles.push(file); // Dodaj plik do tablicy
-        //             // Tworzenie elementu listy z obrazem
-        //             const li = document.createElement('li');
-        //             const img = document.createElement('img');
-        //             img.src = URL.createObjectURL(file);
-        //             img.onload = () => { URL.revokeObjectURL(img.src); };
-        //             // img.style.height = '50px';
-        //             // img.style.marginRight = '10px';
-        //             // img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
-        //             li.appendChild(img);
+        //         const li = document.createElement('li');
+        //         const img = document.createElement('img');
+        //         img.src = url;
+        //         img.style.height = '50px';
+        //         img.style.marginRight = '10px';
+        //         img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+        //         li.appendChild(img);
 
-        //             const fileName = file.name;
-        //             // li.appendChild(document.createTextNode(fileName));
-        //             // li.style.color = '#e6e6e6';
-        //             li.file = file;  // Kluczowe: Przypisz obiekt File do elementu li
+        //         const fileName = url.slice(url.lastIndexOf('/') + 1);
+        //         li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
+        //         li.style.color = '#e6e6e6';
 
-        //             // const closeButton = document.createElement('button');
-        //             // closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
-        //             // closeButton.setAttribute('aria-label', 'Close');
-        //             // closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
-        //             // li.appendChild(closeButton);
+        //         const closeButton = document.createElement('button');
+        //         closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+        //         closeButton.setAttribute('aria-label', 'Close');
+        //         closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
+        //         li.appendChild(closeButton);
 
-        //             // li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
-        //             // this.fileList.appendChild(li);
-                    
-        //         }).catch(error => {
-        //             console.error('Error fetching image:', error);
-        //         });
+        //         li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+        //         this.fileList.appendChild(li);
         //     });
         // }
-
 
         removeFileFromURL(index, url) {
             // Możesz dodać logikę do usuwania obrazu z serwera lub z aktualnej listy zdjęć
             this.existingImageUrls.splice(index, 1); // Usuń URL z listy
             this.displayFiles(); // Odśwież wyświetlaną listę
         }
-
-        // removeFileFromURL(index, url) {
-        //     // Znajdź i usuń odpowiedni plik z tablicy
-        //     const fileIndex = this.accumulatedFiles.findIndex(file => file.name === url.split('/').pop());
-        //     if (fileIndex !== -1) {
-        //         this.accumulatedFiles.splice(fileIndex, 1);
-        //     }
-        //     this.existingImageUrls.splice(index, 1);
-        //     this.displayFiles();
-        // }
 
         checkDragAndDropSupport() {
             const div = document.createElement('div');
