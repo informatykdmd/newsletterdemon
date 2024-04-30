@@ -1586,11 +1586,11 @@
     //     }
     // }
     
-    async function fetchImageAsFile(url) {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        return new File([blob], url.split('/').pop(), { type: blob.type });
-    }
+    // async function fetchImageAsFile(url) {
+    //     const response = await fetch(url);
+    //     const blob = await response.blob();
+    //     return new File([blob], url.split('/').pop(), { type: blob.type });
+    // }
 
     class FotoDropBox {
         constructor(formId, existingImageUrls = []) {
@@ -1598,7 +1598,7 @@
                 alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików.');
                 return;
             }
-            this.displayFiles();
+
             this.dropArea = document.getElementById(`${formId}-drop-area`);
             this.fileList = document.getElementById(`${formId}-fileList`);
             this.accumulatedFiles = [];
@@ -1619,39 +1619,7 @@
             // this.loadExistingImages();
         }
 
-        
-
-        loadExistingImages() {
-            this.existingImageUrls.forEach((url, index) => {
-                const li = document.createElement('li');
-                const img = document.createElement('img');
-                img.src = url;
-                img.style.height = '50px';
-                img.style.marginRight = '10px';
-                img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
-                li.appendChild(img);
-
-                const fileName = url.slice(url.lastIndexOf('/') + 1);
-                li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
-                li.style.color = '#e6e6e6';
-
-                const closeButton = document.createElement('button');
-                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
-                closeButton.setAttribute('aria-label', 'Close');
-                closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
-                li.appendChild(closeButton);
-
-                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
-                this.fileList.appendChild(li);
-            });
-        }
-
-        removeFileFromURL(index, url) {
-            // Możesz dodać logikę do usuwania obrazu z serwera lub z aktualnej listy zdjęć
-            this.existingImageUrls.splice(index, 1); // Usuń URL z listy
-            this.displayFiles(); // Odśwież wyświetlaną listę
-        }
-
+  
         checkDragAndDropSupport() {
             const div = document.createElement('div');
             return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
@@ -1790,7 +1758,7 @@
             const filesFromUrls = this.existingImageUrls.map(url => fetchImageAsFile(url));
             Promise.all(filesFromUrls).then(files => {
                 files.forEach((file, index) => {
-                    // this.accumulatedFiles.push(file);
+                    this.accumulatedFiles.push(file);
                     this.addFileToList(file, index);
                 });
 
@@ -1806,6 +1774,7 @@
 
         // Funkcja pomocnicza do dodawania plików do listy
         addFileToList(file, index) {
+            file.id = Math.random().toString(36).substring(7); // dodanie unikalnego identyfikatora
             const li = document.createElement('li');
             li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
 
@@ -1836,14 +1805,18 @@
             const closeButton = document.createElement('button');
             closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
             closeButton.setAttribute('aria-label', 'Close');
-            closeButton.addEventListener('click', () => this.removeFile(index));
+            closeButton.addEventListener('click', () => this.removeFile(file.id));
             li.appendChild(closeButton);
         }
 
-        removeFile(index) {
-            this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
-            this.displayFiles(); // Ponownie wyświetl listę plików bez usuniętego elementu
+        removeFile(fileId) {
+            this.accumulatedFiles = this.accumulatedFiles.filter(file => file.id !== fileId);
+            this.displayFiles();
         }
+        // removeFile(index) {
+        //     this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
+        //     this.displayFiles(); // Ponownie wyświetl listę plików bez usuniętego elementu
+        // }
 
         getFileExtension(filename) {
             return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
