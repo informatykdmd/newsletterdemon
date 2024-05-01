@@ -285,50 +285,12 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
         if (child.file) {  // Sprawdź, czy element li ma przypisany plik
             zdjecia.push(child.file);
         } else {
-            oldFotos_list.push(child);
+            oldFotos_list.push(child.textContent);
         }
     });
     console.log('oldFotos_list', oldFotos_list);
 
-    // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
-    // if (!oldFotos) {
-    //     toggleWarning('title_' + offerId, !title);
-    //     toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
-    //     toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
-    //     toggleWarning('Cena_' + offerId, !cena);
-
-
-    //     if (zdjecia.length === 0) {
-    //         const elementzdjecia = document.getElementById(offerId+'-drop-area');
-
-    //         elementzdjecia.classList.add('input-warning');
-    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
-
-    //         return;  // Zatrzymaj przesyłanie formularza
-    //     } 
-        
-    //     if (opis.length === 0 || opis[0].p === "") {
-    //         const elementopisJsonString = document.getElementById('list-container'+offerId);
-
-    //         elementopisJsonString.classList.add('input-warning');
-    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
-    //         return;  // Zatrzymaj przesyłanie formularza
-    //     } 
-    // } else {
-    //     toggleWarning('title_' + offerId, !title);
-    //     toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
-    //     toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
-    //     toggleWarning('Cena_' + offerId, !cena);
-    //     if (opis.length === 0 || opis[0].p === "") {
-    //         const elementopisJsonString = document.getElementById('list-container'+offerId);
-
-    //         elementopisJsonString.classList.add('input-warning');
-    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
-
-    //         // alert('Wypełnij wszystkie wymagane pola przed zapisaniem oferty.');
-    //         return;  // Zatrzymaj przesyłanie formularza
-    //     } 
-    // }
+    
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     
@@ -347,7 +309,14 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             return;  // Zatrzymaj przesyłanie formularza
         }
     } else {
-        const elementzdjecia = document.getElementById(offerId+'-drop-area');
+        if (zdjecia.length === 0 && oldFotos_list.length === 0) {
+            const elementzdjecia = document.getElementById(offerId+'-drop-area');
+    
+            elementzdjecia.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+    
+            return;  // Zatrzymaj przesyłanie formularza
+        }
     }
     
         
@@ -366,6 +335,11 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     zdjecia.forEach(file => {
         formData.append('photos[]', file);
     });
+
+    // Dodawanie zdjęć jako FormData
+    // oldFotos_list.forEach(url => {
+    //     formData.append('oldPhotos[]', url);
+    // });
 
     // Dodanie pozostałych danych do FormData
     formData.append('title', title);
