@@ -279,13 +279,16 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     var fotoList = document.getElementById(offerId + '-fileList');
     console.log('fotoList: ', fotoList);
     var zdjecia = [];
+    var oldFotos_list = [];
 
     fotoList.childNodes.forEach(child => {
         if (child.file) {  // Sprawdź, czy element li ma przypisany plik
             zdjecia.push(child.file);
+        } else {
+            oldFotos_list.push(child);
         }
     });
-
+    console.log('oldFotos_list', oldFotos_list);
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     // if (!oldFotos) {
@@ -334,15 +337,19 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
     toggleWarning('Cena_' + offerId, !cena);
 
-
-    if (zdjecia.length === 0) {
+    if (!oldFotos) {
+        if (zdjecia.length === 0) {
+            const elementzdjecia = document.getElementById(offerId+'-drop-area');
+    
+            elementzdjecia.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+    
+            return;  // Zatrzymaj przesyłanie formularza
+        }
+    } else {
         const elementzdjecia = document.getElementById(offerId+'-drop-area');
-
-        elementzdjecia.classList.add('input-warning');
-        formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
-
-        return;  // Zatrzymaj przesyłanie formularza
-    } 
+    }
+    
         
 
 
