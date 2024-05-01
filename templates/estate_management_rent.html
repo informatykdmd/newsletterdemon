@@ -1736,6 +1736,7 @@
 
         displayFiles() {
             this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
+            this.loadExistingImages();
             this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
                 li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
