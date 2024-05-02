@@ -2976,8 +2976,10 @@ def save_rent_offer():
         if len(oldPhotos_plus_saved_photos)>=1 and len(oldPhotos_plus_saved_photos) <=10:
             # dodaj zdjęcia do bazy i pobierz id galerii
             dynamic_col_name = ''
-            for i in range(len(oldPhotos_plus_saved_photos)):
+            len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos)
+            for i in range(10):
                 dynamic_col_name += f'Zdjecie_{i + 1} = %s, '
+
             dynamic_col_name = dynamic_col_name[:-2]
 
             zapytanie_sql = f'''
@@ -2985,7 +2987,13 @@ def save_rent_offer():
                 SET {dynamic_col_name} 
                 WHERE ID = %s;
                 '''
-            dane = tuple(a for a in oldPhotos_plus_saved_photos + [gallery_id])
+            if 10 - len_oldPhotos_plus_saved_photos == 0:
+                dane = tuple(a for a in oldPhotos_plus_saved_photos + [gallery_id])
+            else:
+                for _ in  range(10 - len_oldPhotos_plus_saved_photos):
+                    oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos + ['']
+                dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
+                
             print(zapytanie_sql, dane)
         # pobrać zapisane zdjęcia z galerii
         # porównać wysłane zdjęcia z formularza ze zdjęciami w galerii
