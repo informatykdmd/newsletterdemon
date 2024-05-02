@@ -2971,12 +2971,17 @@ def save_rent_offer():
                         print(f"File {file_path} not found.")
                 except Exception as e:
                     print(f"Error removing file {file_path}: {e}")
-        
+
+        print(current_gallery_list)
+        print(saved_photos)
+
         oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
+        print(oldPhotos_plus_saved_photos)
+        
         if len(oldPhotos_plus_saved_photos)>=1 and len(oldPhotos_plus_saved_photos) <=10:
             # dodaj zdjęcia do bazy i pobierz id galerii
             dynamic_col_name = ''
-            len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos)
+            
             for i in range(10):
                 dynamic_col_name += f'Zdjecie_{i + 1} = %s, '
 
@@ -2987,14 +2992,18 @@ def save_rent_offer():
                 SET {dynamic_col_name} 
                 WHERE ID = %s;
                 '''
+            len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos)
+            print(len_oldPhotos_plus_saved_photos)
             if 10 - len_oldPhotos_plus_saved_photos == 0:
                 dane = tuple(a for a in oldPhotos_plus_saved_photos + [gallery_id])
             else:
                 for _ in  range(10 - len_oldPhotos_plus_saved_photos):
                     oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos + ['']
                 dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
-                
+
             print(zapytanie_sql, dane)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                print('update_galerii_udany')
         # pobrać zapisane zdjęcia z galerii
         # porównać wysłane zdjęcia z formularza ze zdjęciami w galerii
         # ustalić które pliki uzunąć z serwera
@@ -3038,7 +3047,7 @@ def save_rent_offer():
         # jeśli będzie jakikolwiek problem to zmienić status na "Utworzono" i wygenerować nowy rekord z danymi z
         # jeśli będzie to nowa oferta to usunąć poprzednią
         # sprawdzić czy użytkownik ma prawo do edycji tej oferty
-        flash(f'xxx', 'success')
+        flash(f'xxx', 'danger')
         return jsonify({
                 'message': 'xxx',
                 'success': True
