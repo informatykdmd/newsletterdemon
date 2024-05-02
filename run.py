@@ -3030,6 +3030,11 @@ def save_rent_offer():
         # jeśli będzie jakikolwiek problem to zmienić status na "Utworzono" i wygenerować nowy rekord z danymi z
         # jeśli będzie to nowa oferta to usunąć poprzednią
         # sprawdzić czy użytkownik ma prawo do edycji tej oferty
+        flash(f'xxx', 'success')
+        return jsonify({
+                'message': 'xxx',
+                'success': True
+                }), 200
    
 
 
