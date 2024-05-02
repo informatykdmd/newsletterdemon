@@ -2848,13 +2848,10 @@ def save_rent_offer():
     except ValueError: return jsonify({'error': 'Błąd id oferty!'}), 400
 
     if offerID_int == 9999999:
-        print('nowa oferta')
+        oldPhotos = []
     else:
-        print(f'oferta {offerID_int}')
         oldPhotos = request.form.getlist('oldPhotos[]')
-        print(f'oldPhotos: {oldPhotos}')
-        # flash(f'Edycja oferty {offerID_int}', 'danger')
-        # return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
+
 
     validOpis = []
     for test in opis:
@@ -2928,26 +2925,40 @@ def save_rent_offer():
                         ''')[0][0]
                 except Exception as err:
                     flash(f'Błąd podczas tworzenia galerii! \n {err}', 'danger')
-                    return redirect(url_for('estateAdsRent'))
+                    return jsonify({
+                        'message': f'Błąd podczas tworzenia galerii! \n {err}',
+                        'success': True
+                        }), 200
             else:
                 flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
-                return redirect(url_for('estateAdsRent'))
+                return jsonify({
+                    'message': 'Błąd podczas zapisywania galerii w bazie!',
+                    'success': True
+                    }), 200
         else:
             flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
-            return redirect(url_for('estateAdsRent'))
+            return jsonify({
+                    'message': 'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!',
+                    'success': True
+                    }), 200
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', offerID_int)[0][0]
         except IndexError: 
             flash(f"Nie udało się pobrać ID galerii!", "danger")
-            return redirect(url_for("estateGalery"))
-        print(gallery_id)
+            return jsonify({
+                    'message': 'Nie udało się pobrać ID galerii!',
+                    'success': True
+                    }), 200
             
         try: 
             current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', gallery_id)[0]
             current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
         except IndexError: 
             flash(f"Nie udało się pobrać galerii!", "danger")
-            return redirect(url_for("estateGalery"))
+            return jsonify({
+                    'message': 'Nie udało się pobrać galerii!',
+                    'success': True
+                    }), 200
 
         aktualne_linkURL_set = set()
         for linkUrl in current_gallery:
@@ -2972,11 +2983,8 @@ def save_rent_offer():
                 except Exception as e:
                     print(f"Error removing file {file_path}: {e}")
 
-        print(current_gallery_list)
-        print(saved_photos)
 
         oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
-        print(oldPhotos_plus_saved_photos)
         
         if len(oldPhotos_plus_saved_photos)>=1 and len(oldPhotos_plus_saved_photos) <=10:
             # dodaj zdjęcia do bazy i pobierz id galerii
@@ -2993,7 +3001,6 @@ def save_rent_offer():
                 WHERE ID = %s;
                 '''
             len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos)
-            print(len_oldPhotos_plus_saved_photos)
             if 10 - len_oldPhotos_plus_saved_photos == 0:
                 dane = tuple(a for a in oldPhotos_plus_saved_photos + [gallery_id])
             else:
@@ -3005,13 +3012,12 @@ def save_rent_offer():
             print(zapytanie_sql, dane)
             if msq.insert_to_database(zapytanie_sql, dane):
                 print('update_galerii_udany')
-        # pobrać zapisane zdjęcia z galerii
-        # porównać wysłane zdjęcia z formularza ze zdjęciami w galerii
-        # ustalić które pliki uzunąć z serwera
-        # stworzyć nową listę plików do galerii (stare zdjęcia - elentualne usuniete zdjęcia) + nowe zdjęcia
-        # zaktualizować tabelę ZdjeciaOfert wg. stworzonej listy
-
-
+            else:
+                flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
+                return jsonify({
+                        'message': 'xxx',
+                        'success': True
+                        }), 200
 
     user_phone = session['user_data']['phone']
     user_email = session['user_data']['email']
@@ -3023,36 +3029,46 @@ def save_rent_offer():
                                             TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
                                             InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
+        
         dane = (
                 title, OPIS_JSON_STR, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
                 rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
                 techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
                 dodatkoweInfo, GPS_STRING, user_phone, user_email, 1)
-        
-        # print('zapytanie sql!')
-        # print(zapytanie_sql)
-        # print(dane)
-
-        if msq.insert_to_database(zapytanie_sql, dane):
-            flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
-            return jsonify({
-                'message': 'Oferta wynajmu została zapisana pomyślnie!',
-                'success': True
-                }), 200
-        else:
-            flash(f'Błąd podczas zapisywania oferty w bazie!', 'danger')
-            return jsonify({'error': 'Błąd podczas zapisywania oferty w bazie!'}), 400
     else:
-        pass
-        # zaktualizować rekord  w tabeli OffertsNajmu o statusie "Edycja" i ID użytkownika edytującego
-        # jeśli będzie jakikolwiek problem to zmienić status na "Utworzono" i wygenerować nowy rekord z danymi z
-        # jeśli będzie to nowa oferta to usunąć poprzednią
-        # sprawdzić czy użytkownik ma prawo do edycji tej oferty
-        flash(f'xxx', 'danger')
+        zapytanie_sql = f'''
+                    UPDATE OfertyNajmu 
+                    SET 
+                        Tytul=%s, Opis=%s, Cena=%s, Kaucja=%s, Lokalizacja=%s, LiczbaPokoi=%s, Metraz=%s, Zdjecia=%s, 
+                        RodzajZabudowy=%s, Czynsz=%s, Umeblowanie=%s, LiczbaPieter=%s, PowierzchniaDzialki=%s,
+                        TechBudowy=%s, FormaKuchni=%s, TypDomu=%s, StanWykonczenia=%s, RokBudowy=%s, NumerKW=%s,
+                        InformacjeDodatkowe=%s, GPS=%s, TelefonKontaktowy=%s, EmailKontaktowy=%s, StatusOferty=%s
+                    WHERE ID = %s;'''
+        dane = (
+                title, OPIS_JSON_STR, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
+                rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
+                techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
+                dodatkoweInfo, GPS_STRING, user_phone, user_email, 1, offerID_int)
+    print(zapytanie_sql)
+    print(dane)
+    if msq.insert_to_database(zapytanie_sql, dane):
+        flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+        return jsonify({
+            'message': 'Oferta wynajmu została zapisana pomyślnie!',
+            'success': True
+            }), 200
+    else:
+        flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
         return jsonify({
                 'message': 'xxx',
                 'success': True
                 }), 200
+    
+        # zaktualizować rekord  w tabeli OffertsNajmu o statusie "Edycja" i ID użytkownika edytującego
+        # jeśli będzie jakikolwiek problem to zmienić status na "Utworzono" i wygenerować nowy rekord z danymi z
+        # jeśli będzie to nowa oferta to usunąć poprzednią
+        # sprawdzić czy użytkownik ma prawo do edycji tej oferty
+        
    
 
 
