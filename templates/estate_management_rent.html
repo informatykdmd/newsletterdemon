@@ -1439,6 +1439,7 @@
             this.dropArea = document.getElementById(`${formId}-drop-area`);
             this.fileList = document.getElementById(`${formId}-fileList`);
             this.accumulatedFiles = [];
+            this.accounter_accumulatedFiles = 0;
             // v 2.1
             this.existingImageUrls = existingImageUrls;
 
@@ -1458,6 +1459,7 @@
 
         loadExistingImages() {
             this.existingImageUrls.forEach((url, index) => {
+                this.accounter_accumulatedFiles += 1;
                 const li = document.createElement('li');
                 const img = document.createElement('img');
                 img.src = url;
@@ -1484,6 +1486,7 @@
         removeFileFromURL(index, url) {
             // Możesz dodać logikę do usuwania obrazu z serwera lub z aktualnej listy zdjęć
             this.existingImageUrls.splice(index, 1); // Usuń URL z listy
+            this.accounter_accumulatedFiles -= 1;
             this.displayFiles(); // Odśwież wyświetlaną listę
         }
   
@@ -1551,7 +1554,7 @@
 
         updateFileList(newFiles) {
             for (let file of newFiles) {
-                if (this.accumulatedFiles.length >= 10) {
+                if (this.accumulatedFiles.length >= 10 - this.accounter_accumulatedFiles) {
                     alert('Osiągnięto limit 10 plików.');
                     break;
                 }
