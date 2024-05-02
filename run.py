@@ -2962,8 +2962,7 @@ def save_rent_offer():
         for delIt in zdjeciaDoUsuniecia:
             complete_URL_PIC = f'{mainDomain_URL}{delIt}'
             if complete_URL_PIC in current_gallery_list:
-                index_zdecia = current_gallery_list.index(complete_URL_PIC)
-                current_gallery_list.remove(index_zdecia)
+                current_gallery_list.remove(complete_URL_PIC)
                 try:
                     file_path = upload_path + delIt
                     if os.path.exists(file_path):
