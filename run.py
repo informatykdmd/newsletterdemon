@@ -2812,7 +2812,7 @@ def remove_rent_offer():
     
     return redirect(url_for('index'))
 
-@app.route('/update-rent-offer-status')
+@app.route('/update-rent-offer-status', methods=['POST'])
 def update_rent_offer_status():
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
