@@ -2851,7 +2851,7 @@ def save_rent_offer():
         print('nowa oferta')
     else:
         print(f'oferta {offerID_int}')
-        oldPhotos = request.files.getlist('oldPhotos[]')
+        oldPhotos = request.form.getlist('oldPhotos[]')
         print(f'oldPhotos: {oldPhotos}')
         flash(f'Edycja oferty {offerID_int}', 'danger')
         return redirect(url_for('estateAdsRent'))

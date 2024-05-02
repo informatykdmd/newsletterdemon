@@ -1073,7 +1073,7 @@
                                                 type="button" 
                                                 class="btn btn-success btn-sm" 
                                                 style="max-height: 30px; font-size: 12px;" 
-                                                onclick="prepareAndSubmitRentOfferForm('{{post_id}}', false)"
+                                                onclick="prepareAndSubmitRentOfferForm('{{post_id}}', true)"
                                             >
                                                 Zapisz ogłoszenie najmu
                                             </button>
@@ -1429,7 +1429,7 @@
 {% endblock %}
 {% block bottom_script %}
 <script>
-    class FotoDropBox {
+    class FotoDropBox { // v 2.1
         constructor(formId, existingImageUrls = []) {
             if (!this.checkDragAndDropSupport()) {
                 alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików.');
@@ -1439,7 +1439,7 @@
             this.dropArea = document.getElementById(`${formId}-drop-area`);
             this.fileList = document.getElementById(`${formId}-fileList`);
             this.accumulatedFiles = [];
-
+            // v 2.1
             this.existingImageUrls = existingImageUrls;
 
             // v 2.0
@@ -1452,7 +1452,7 @@
             this.fileInput.addEventListener('change', (e) => this.handleFileInput(e)); // obsługa zdarzenia change
             // v 2.0
             this.initEventListeners();
-
+            // v 2.1
             this.loadExistingImages();
         }
 

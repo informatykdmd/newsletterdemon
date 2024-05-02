@@ -336,7 +336,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
         formData.append('photos[]', file);
     });
 
-    // Dodawanie zdjęć jako FormData
+    // Dodawanie istniejących nazw zdjęć jako FormData
     oldFotos_list.forEach(url => {
         formData.append('oldPhotos[]', url);
     });
