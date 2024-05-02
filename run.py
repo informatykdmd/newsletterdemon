@@ -2997,8 +2997,9 @@ def save_rent_offer():
             if 10 - len_oldPhotos_plus_saved_photos == 0:
                 dane = tuple(a for a in oldPhotos_plus_saved_photos + [gallery_id])
             else:
+                oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos
                 for _ in  range(10 - len_oldPhotos_plus_saved_photos):
-                    oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos + [None]
+                    oldPhotos_plus_saved_photos_plus_empyts += [None]
                 dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
 
             print(zapytanie_sql, dane)
