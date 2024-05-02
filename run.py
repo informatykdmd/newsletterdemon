@@ -2764,6 +2764,7 @@ def remove_rent_offer():
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
             return redirect(url_for('estateAdsRent'))
         print(id_galerry)
+        current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
         msq.delete_row_from_database(
                 """
                     DELETE FROM OfertyNajmu WHERE ID = %s;
@@ -2784,7 +2785,7 @@ def remove_rent_offer():
         upload_path = f'{real_loc_on_server}{estate_pic_path}'
         mainDomain_URL = f'{domain}{estate_pic_path}'
 
-        current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
+        
         current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
         print(current_gallery_list)
         for delIt in current_gallery_list:
