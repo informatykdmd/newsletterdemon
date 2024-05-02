@@ -1142,33 +1142,37 @@
                                     {% endfor %}
                                     <p class="h3"><i class="bi bi-database-fill-check text-warning"></i> {{post_data['Cena']}} PLN</p>
                                     <div class="ms-2">
-                                        <form action="{{ url_for('update_rent_offer_status') }}" id="statusUser_{{post_id}}" method="POST" enctype="multipart/form-data">
-                                            <input type="hidden" name="id" value="{{post_id}}" />
-                                            <input type="hidden" name="status" value="active" />
-                                            <div class="row row-cols-auto ">
-                                                {% if post_data['StatusOferty'] == 1 %}
+                                        <div class="row row-cols-auto ">
+                                            {% if post_data['StatusOferty'] == 1 %}
+                                            <form action="{{ url_for('update_rent_offer_status') }}" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                <input type="hidden" name="Status" value="0" />
                                                 <div class="col formatuj-padding">
                                                     <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj</button>
                                                 </div>
-                                                {% else %}
+                                            </form>
+                                            {% else %}
+                                            <form action="{{ url_for('update_rent_offer_status') }}" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                <input type="hidden" name="Status" value="1" />
                                                 <div class="col formatuj-padding">
                                                     <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj</button>
                                                 </div>
-                                                {% endif %}
-                                                <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Marketplace</button>
-                                                </div>
-                                                <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Usuń z OLX</button>
-                                                </div>
-                                                <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na OTO DOM</button>
-                                                </div>
-                                                <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Allegro Lokalnie</button>
-                                                </div>
+                                            </form>
+                                            {% endif %}
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Marketplace</button>
                                             </div>
-                                        </form>
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Usuń z OLX</button>
+                                            </div>
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na OTO DOM</button>
+                                            </div>
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Allegro Lokalnie</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-12">

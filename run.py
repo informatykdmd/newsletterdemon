@@ -2763,8 +2763,12 @@ def remove_rent_offer():
         except IndexError: 
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
             return redirect(url_for('estateAdsRent'))
-        print(id_galerry)
-        current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
+        
+        try: current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
+        except IndexError: 
+            flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
+            return redirect(url_for('estateAdsRent'))
+        
         msq.delete_row_from_database(
                 """
                     DELETE FROM OfertyNajmu WHERE ID = %s;
@@ -2787,15 +2791,15 @@ def remove_rent_offer():
 
         
         current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
-        print(current_gallery_list)
+        # print(current_gallery_list)
         for delIt in current_gallery_list:
             delIt_clear = str(delIt).replace(mainDomain_URL, '')
-            print(delIt)
-            print(delIt_clear)
+            # print(delIt)
+            # print(delIt_clear)
             if delIt in current_gallery_list:
                 try:
                     file_path = upload_path + delIt_clear
-                    print(file_path)
+                    # print(file_path)
                     if os.path.exists(file_path):
                         os.remove(file_path)
                     else:
@@ -2810,7 +2814,35 @@ def remove_rent_offer():
 
 @app.route('/update-rent-offer-status')
 def update_rent_offer_status():
-    return
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: 
+            form_data['PostID']
+            form_data['Status']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        set_post_status = int(form_data['Status'])
+        
+        zapytanie_sql = f'''
+                UPDATE OfertyNajmu
+                SET StatusOferty = %s
+                WHERE ID = %s;
+                '''
+        dane = (set_post_status, set_post_id)
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash("Status oferty został zmieniony.", "success")
+            return redirect(url_for('estateAdsRent'))
+    
+    return redirect(url_for('index'))
 
 
 @app.route('/save-rent-offer', methods=["POST"])
