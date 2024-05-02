@@ -2777,6 +2777,31 @@ def remove_rent_offer():
                 """,
                 (id_galerry,)
             )
+        
+        real_loc_on_server = settingsDB['real-location-on-server']
+        domain = settingsDB['main-domain']
+        estate_pic_path = settingsDB['estate-pic-offer']
+        upload_path = f'{real_loc_on_server}{estate_pic_path}'
+        mainDomain_URL = f'{domain}{estate_pic_path}'
+
+        current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
+        current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
+        print(current_gallery_list)
+        for delIt in current_gallery_list:
+            delIt_clear = str(delIt).replace(mainDomain_URL)
+            print(delIt)
+            print(delIt_clear)
+            if delIt in current_gallery_list:
+                try:
+                    file_path = upload_path + delIt_clear
+                    print(file_path)
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                    else:
+                        print(f"File {file_path} not found.")
+                except Exception as e:
+                    print(f"Error removing file {file_path}: {e}")
+
         flash("Wpis został usunięty.", "success")
         return redirect(url_for('estateAdsRent'))
     
@@ -2790,6 +2815,13 @@ def update_rent_offer_status():
 @app.route('/save-rent-offer', methods=["POST"])
 def save_rent_offer():
     # Odczytanie danych formularza
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
     
     # Pobierz JSON jako string z formularza
     OPIS_JSON_STRing = request.form['opis']
@@ -3049,8 +3081,7 @@ def save_rent_offer():
                 rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
                 techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
                 dodatkoweInfo, GPS_STRING, user_phone, user_email, 1, offerID_int)
-    print(zapytanie_sql)
-    print(dane)
+
     if msq.insert_to_database(zapytanie_sql, dane):
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
         return jsonify({
@@ -3063,14 +3094,6 @@ def save_rent_offer():
                 'message': 'xxx',
                 'success': True
                 }), 200
-    
-        # zaktualizować rekord  w tabeli OffertsNajmu o statusie "Edycja" i ID użytkownika edytującego
-        # jeśli będzie jakikolwiek problem to zmienić status na "Utworzono" i wygenerować nowy rekord z danymi z
-        # jeśli będzie to nowa oferta to usunąć poprzednią
-        # sprawdzić czy użytkownik ma prawo do edycji tej oferty
-        
-   
-
 
 @app.route('/estate-ads-sell')
 def estateAdsSell():
