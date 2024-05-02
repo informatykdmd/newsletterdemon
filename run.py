@@ -2789,7 +2789,7 @@ def remove_rent_offer():
         current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
         print(current_gallery_list)
         for delIt in current_gallery_list:
-            delIt_clear = str(delIt).replace(mainDomain_URL)
+            delIt_clear = str(delIt).replace(mainDomain_URL, '')
             print(delIt)
             print(delIt_clear)
             if delIt in current_gallery_list:
