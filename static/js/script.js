@@ -370,13 +370,14 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
         method: 'POST',
         body: formData
     }).then(response => {
-        console.log('response: ', response);
-
+        // console.log('response: ', response);
         if (response.ok) {
             // alert('Oferta została pomyślnie zapisana.');
             // console.log('response: ', response);
             return response.json();
         } else {
+            console.log('xxx:', data);
+
             throw new Error('Problem z serwerem');
         }
     }).then(data => {
