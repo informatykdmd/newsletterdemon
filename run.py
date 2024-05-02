@@ -2853,8 +2853,8 @@ def save_rent_offer():
         print(f'oferta {offerID_int}')
         oldPhotos = request.form.getlist('oldPhotos[]')
         print(f'oldPhotos: {oldPhotos}')
-        flash(f'Edycja oferty {offerID_int}', 'danger')
-        return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
+        # flash(f'Edycja oferty {offerID_int}', 'danger')
+        # return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
     validOpis = []
     for test in opis:
@@ -2936,7 +2936,65 @@ def save_rent_offer():
             flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
             return redirect(url_for('estateAdsRent'))
     else:
-        pass
+        try: gallery_id = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', offerID_int)[0][0]
+        except IndexError: 
+            flash(f"Nie udało się pobrać ID galerii!", "danger")
+            return redirect(url_for("estateGalery"))
+        print(gallery_id)
+            
+        try: 
+            current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', gallery_id)[0]
+            current_gallery_list = [p for p in current_gallery]
+        except IndexError: 
+            flash(f"Nie udało się pobrać galerii!", "danger")
+            return redirect(url_for("estateGalery"))
+
+        aktualne_linkURL_set = set()
+        for linkUrl in current_gallery:
+            nazwaZdjecia = str(linkUrl).split('/')[-1]
+            aktualne_linkURL_set.add(nazwaZdjecia)
+
+        przeslane_nazwyZdjec_set = set()
+        for nazwaZdjecia in oldPhotos:
+            przeslane_nazwyZdjec_set.add(nazwaZdjecia)
+
+        zdjeciaDoUsuniecia = aktualne_linkURL_set.difference(przeslane_nazwyZdjec_set)
+        for delIt in zdjeciaDoUsuniecia:
+            complete_URL_PIC = f'{mainDomain_URL}{delIt}'
+            if complete_URL_PIC in current_gallery_list:
+                index_zdecia = current_gallery_list.index(complete_URL_PIC)
+                current_gallery_list.remove(index_zdecia)
+                try:
+                    file_path = upload_path + delIt
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                    else:
+                        print(f"File {file_path} not found.")
+                except Exception as e:
+                    print(f"Error removing file {file_path}: {e}")
+        
+        oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
+        if len(oldPhotos_plus_saved_photos)>=1 and len(oldPhotos_plus_saved_photos) <=10:
+            # dodaj zdjęcia do bazy i pobierz id galerii
+            dynamic_col_name = ''
+            for i in range(len(oldPhotos_plus_saved_photos)):
+                dynamic_col_name += f'Zdjecie_{i + 1} = %s, '
+            dynamic_col_name = dynamic_col_name[:-2]
+
+            zapytanie_sql = f'''
+                UPDATE ZdjeciaOfert
+                SET {dynamic_col_name} 
+                WHERE ID = %s;
+                '''
+            dane = tuple(a for a in oldPhotos_plus_saved_photos + [gallery_id])
+            print(zapytanie_sql, dane)
+        # pobrać zapisane zdjęcia z galerii
+        # porównać wysłane zdjęcia z formularza ze zdjęciami w galerii
+        # ustalić które pliki uzunąć z serwera
+        # stworzyć nową listę plików do galerii (stare zdjęcia - elentualne usuniete zdjęcia) + nowe zdjęcia
+        # zaktualizować tabelę ZdjeciaOfert wg. stworzonej listy
+
+
 
     user_phone = session['user_data']['phone']
     user_email = session['user_data']['email']
@@ -2969,6 +3027,10 @@ def save_rent_offer():
             return jsonify({'error': 'Błąd podczas zapisywania oferty w bazie!'}), 400
     else:
         pass
+        # zaktualizować rekord  w tabeli OffertsNajmu o statusie "Edycja" i ID użytkownika edytującego
+        # jeśli będzie jakikolwiek problem to zmienić status na "Utworzono" i wygenerować nowy rekord z danymi z
+        # jeśli będzie to nowa oferta to usunąć poprzednią
+        # sprawdzić czy użytkownik ma prawo do edycji tej oferty
    
 
 

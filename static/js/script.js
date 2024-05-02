@@ -376,12 +376,12 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             // console.log('response: ', response);
             return response.json();
         } else {
-            console.log('xxx:', data);
+            // console.log('xxx:', data);
 
             throw new Error('Problem z serwerem');
         }
     }).then(data => {
-        console.log('data:', data);
+        // console.log('data:', data);
         // console.log('data.seccess:', data.success);
         if (data.success == true) {
             // console.log('xxx:', data);
