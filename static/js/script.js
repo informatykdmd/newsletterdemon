@@ -277,7 +277,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
 
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
-    console.log('fotoList: ', fotoList);
+    // console.log('fotoList: ', fotoList);
     var zdjecia = [];
     var oldFotos_list = [];
 
@@ -288,12 +288,9 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             oldFotos_list.push(child.textContent);
         }
     });
-    console.log('oldFotos_list', oldFotos_list);
-
-    
+    // console.log('oldFotos_list', oldFotos_list);
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
-    
     toggleWarning('title_' + offerId, !title);
     toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
     toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
@@ -319,9 +316,6 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
         }
     }
     
-        
-
-
     if (opis.length === 0 || opis[0].p === "") {
         const elementopisJsonString = document.getElementById('list-container'+offerId);
 
@@ -366,8 +360,6 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     formData.append('dodatkoweInfo', dodatkoweInfo);
     formData.append('offerID', offerIDbox);
 
-    
-
     // Jeżeli którykolwiek z testów nie przeszedł, nie wysyłaj formularza
     if (!formIsValid) {
         return;
@@ -386,13 +378,15 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             throw new Error('Problem z serwerem');
         }
     }).then(data => {
-        // console.log('data:', data);
+        console.log('data:', data);
         // console.log('data.seccess:', data.success);
         if (data.success == true) {
             // console.log('xxx:', data);
             var form = document.getElementById('rentOffer_' + offerId);
             form.reset();
             window.location.href = '/estate-ads-rent';            
+        } else if (data.error) {
+            
         }
     }).catch(error => {
         alert('Wystąpił błąd: ' + error.message);

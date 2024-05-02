@@ -2854,7 +2854,7 @@ def save_rent_offer():
         oldPhotos = request.form.getlist('oldPhotos[]')
         print(f'oldPhotos: {oldPhotos}')
         flash(f'Edycja oferty {offerID_int}', 'danger')
-        return redirect(url_for('estateAdsRent'))
+        return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
     validOpis = []
     for test in opis:
@@ -2901,67 +2901,74 @@ def save_rent_offer():
                 saved_photos.append(complete_URL_PIC)
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
-    
-    gallery_id = None
-    # Obsługa zdjęć 
-    if len(saved_photos)>=1:
-        # dodaj zdjęcia do bazy i pobierz id galerii
-        dynamic_col_name = ''
-        dynamic_amount = ''
-        for i in range(len(saved_photos)):
-            dynamic_col_name += f'Zdjecie_{i + 1}, '
-            dynamic_amount += '%s, '
-        dynamic_col_name = dynamic_col_name[:-2]
-        dynamic_amount = dynamic_amount[:-2]
 
-        zapytanie_sql = f'''INSERT INTO ZdjeciaOfert ({dynamic_col_name}) VALUES ({dynamic_amount});'''
-        dane = tuple(a for a in saved_photos)
 
-        if msq.insert_to_database(zapytanie_sql, dane):
-            # Przykładowe dane
-            try:
-                gallery_id = msq.connect_to_database(
-                    '''
-                        SELECT * FROM ZdjeciaOfert ORDER BY ID DESC;
-                    ''')[0][0]
-            except Exception as err:
-                flash(f'Błąd podczas tworzenia galerii! \n {err}', 'danger')
+    if offerID_int == 9999999:
+        gallery_id = None
+        # Obsługa zdjęć 
+        if len(saved_photos)>=1:
+            # dodaj zdjęcia do bazy i pobierz id galerii
+            dynamic_col_name = ''
+            dynamic_amount = ''
+            for i in range(len(saved_photos)):
+                dynamic_col_name += f'Zdjecie_{i + 1}, '
+                dynamic_amount += '%s, '
+            dynamic_col_name = dynamic_col_name[:-2]
+            dynamic_amount = dynamic_amount[:-2]
+
+            zapytanie_sql = f'''INSERT INTO ZdjeciaOfert ({dynamic_col_name}) VALUES ({dynamic_amount});'''
+            dane = tuple(a for a in saved_photos)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                # Przykładowe dane
+                try:
+                    gallery_id = msq.connect_to_database(
+                        '''
+                            SELECT * FROM ZdjeciaOfert ORDER BY ID DESC;
+                        ''')[0][0]
+                except Exception as err:
+                    flash(f'Błąd podczas tworzenia galerii! \n {err}', 'danger')
+                    return redirect(url_for('estateAdsRent'))
+            else:
+                flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
                 return redirect(url_for('estateAdsRent'))
         else:
-            flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
+            flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
             return redirect(url_for('estateAdsRent'))
     else:
-        flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
-        return redirect(url_for('estateAdsRent'))
+        pass
 
     user_phone = session['user_data']['phone']
     user_email = session['user_data']['email']
 
-    zapytanie_sql = f'''
-                INSERT INTO OfertyNajmu (Tytul, Opis, Cena, Kaucja, Lokalizacja, LiczbaPokoi, Metraz, Zdjecia, 
-                                        RodzajZabudowy, Czynsz, Umeblowanie, LiczbaPieter, PowierzchniaDzialki,
-                                        TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
-                                        InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
-    dane = (
-            title, OPIS_JSON_STR, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
-            rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
-            techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
-            dodatkoweInfo, GPS_STRING, user_phone, user_email, 1)
-    
-    print('zapytanie sql!')
-    print(zapytanie_sql)
-    print(dane)
+    if offerID_int == 9999999:
+        zapytanie_sql = f'''
+                    INSERT INTO OfertyNajmu (Tytul, Opis, Cena, Kaucja, Lokalizacja, LiczbaPokoi, Metraz, Zdjecia, 
+                                            RodzajZabudowy, Czynsz, Umeblowanie, LiczbaPieter, PowierzchniaDzialki,
+                                            TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
+                                            InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
+        dane = (
+                title, OPIS_JSON_STR, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
+                rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
+                techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
+                dodatkoweInfo, GPS_STRING, user_phone, user_email, 1)
+        
+        # print('zapytanie sql!')
+        # print(zapytanie_sql)
+        # print(dane)
 
-    if msq.insert_to_database(zapytanie_sql, dane):
-        flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
-        return jsonify({
-            'message': 'Oferta wynajmu została zapisana pomyślnie!',
-            'success': True
-            }), 200
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+            return jsonify({
+                'message': 'Oferta wynajmu została zapisana pomyślnie!',
+                'success': True
+                }), 200
+        else:
+            flash(f'Błąd podczas zapisywania oferty w bazie!', 'danger')
+            return jsonify({'error': 'Błąd podczas zapisywania oferty w bazie!'}), 400
     else:
-        flash(f'Błąd podczas zapisywania oferty w bazie!', 'danger')
-        return jsonify({'error': 'Błąd podczas zapisywania oferty w bazie!'}), 400
+        pass
    
 
 
