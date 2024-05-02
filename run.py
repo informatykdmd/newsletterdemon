@@ -2944,7 +2944,7 @@ def save_rent_offer():
             
         try: 
             current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', gallery_id)[0]
-            current_gallery_list = [p for p in current_gallery[1:-1]]
+            current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
         except IndexError: 
             flash(f"Nie udało się pobrać galerii!", "danger")
             return redirect(url_for("estateGalery"))
