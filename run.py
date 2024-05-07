@@ -336,7 +336,7 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
     
     rentOffer = []
     for data in took_rentOffer:
-        try: fotoList = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', data[8])[0][1:-1]
+        try: fotoList = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', data[10])[0][1:-1]
         except IndexError: fotoList = []
         
         gps_json = {}
