@@ -329,10 +329,10 @@
                                                     value=""
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                    id="PowierzchniaLokalu_9999999" 
-                                                    name="PowierzchniaLokalu_9999999" 
-                                                    placeholder="Powierzchnia Lokalu" 
-                                                    aria-label="Powierzchnia Lokalu" />
+                                                    id="PrzeznaczenieLokalu_9999999" 
+                                                    name="PrzeznaczenieLokalu_9999999" 
+                                                    placeholder="Przeznaczenie Lokalu" 
+                                                    aria-label="Przeznaczenie Lokalu" />
                                                 <span 
                                                     class="input-group-text bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;">
@@ -340,11 +340,11 @@
                                                 </span>
                                             </div>
                                             <div class="no-border formatuj-maly-font fadeIn">
-                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 50);">50 m&sup2;</a>
-                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 100);">100 m&sup2;</a>
-                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 250);">250 m&sup2;</a>
-                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 750);">750 m&sup2;</a>
-                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 1000);">1000 m&sup2;</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_9999999', 'Mieszkalny');">Mieszkalny </a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_9999999', 'Biuro');">Biuro</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_9999999', 'Usługowy');">Usługowy</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_9999999', 'Magazynowy');">Magazynowy</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_9999999', 'Produkcyjny');">Produkcyjny</a>
                                             </div>
                                         </div>
                                     </div>
@@ -676,7 +676,7 @@
                                             </div>
                                             <div class="row g-2 mb-3">
                                                 <div class="col-sm-4">
-                                                    <div class="form-floating mb-3">
+                                                    <div class="form-floating mb-1">
                                                         <input 
                                                             type="text" 
                                                             value="{{post_data['Rynek']}}"
@@ -695,7 +695,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm">
-                                                    <div class="form-floating mb-3">
+                                                    <div class="form-floating mb-1">
                                                         <input 
                                                             type="text" 
                                                             value="{{post_data['TypDomu']}}"
@@ -832,7 +832,7 @@
                                                     name="NumerKW_{{post_id}}" 
                                                     >
                                             </div>
-                                            <label class="form-label">Szczegóły wynajmu</label>
+                                            <label class="form-label">Szczegóły sprzedaży</label>
                                             <div class="row row-cols-3 mb-3">
                                                 <div class="col-sm-4">
                                                     <div class="form-floating mb-0"> 
@@ -855,49 +855,6 @@
                                                         <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_{{post_id}}', 25000);">25 000</a>
                                                     </div>
                                                 </div>
-                                                <!-- <div class="col-sm-4">
-                                                    <div class="form-floating mb-0">
-                                                        
-                                                        <input 
-                                                            type="number" 
-                                                            value="{% if post_data['Czynsz']!=0 %}{{post_data['Czynsz']}}{% endif %}"
-                                                            class="form-control bg-dark formatuj-maly-font" 
-                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                            id="Czynsz_{{post_id}}" 
-                                                            name="Czynsz_{{post_id}}" 
-                                                            placeholder="Czynsz" 
-                                                            aria-label="Czynsz" />
-                                                        <label for="Czynsz_{{post_id}}">Czynsz w PLN</label>
-                                                    </div>
-                                                    <div class="no-border formatuj-maly-font fadeIn">
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 5000);">5000</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 10000);">10 000</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 15000);">15 000</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 20000);">20 000</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 25000);">25 000</a>
-                                                    </div>
-                                                </div> -->
-                                                <!-- <div class="col-sm-4">
-                                                    <div class="form-floating mb-0">
-                                                        <input 
-                                                            type="number" 
-                                                            value="{% if post_data['Kaucja']!=0 %}{{post_data['Kaucja']}}{% endif %}"
-                                                            class="form-control bg-dark formatuj-maly-font" 
-                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                            id="Kaucja_{{post_id}}" 
-                                                            name="Kaucja_{{post_id}}" 
-                                                            placeholder="Kaucja" 
-                                                            aria-label="Kaucja" />
-                                                        <label for="Kaucja_{{post_id}}">Kaucja w PLN</label>
-                                                    </div>
-                                                    <div class="no-border formatuj-maly-font fadeIn">
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 5000);">5000</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 10000);">10 000</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 15000);">15 000</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 20000);">20 000</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 25000);">25 000</a>
-                                                    </div>
-                                                </div> -->
                                             </div>
                                             <div class="row row-cols-2 mb-3">
                                                 <div class="col-sm-6">
@@ -925,21 +882,21 @@
                                                     <div class="form-floating mb-0">
                                                         <input 
                                                             type="number" 
-                                                            value="{% if post_data['PowierzchniaLokalu']!=0 %}{{post_data['PowierzchniaLokalu']}}{% endif %}"
+                                                            value="{% if post_data['PrzeznaczenieLokalu']!='' %}{{post_data['PrzeznaczenieLokalu']}}{% endif %}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                            id="PowierzchniaLokalu_{{post_id}}" 
-                                                            name="PowierzchniaLokalu_{{post_id}}" 
-                                                            placeholder="Powierzchnia Lokalu" 
-                                                            aria-label="Powierzchnia Lokalu" />
-                                                        <label for="PowierzchniaLokalu_{{post_id}}">Powierzchnia Lokalu w m&sup2;</label>
+                                                            id="PrzeznaczenieLokalu_{{post_id}}" 
+                                                            name="PrzeznaczenieLokalu_{{post_id}}" 
+                                                            placeholder="Przeznaczenie Lokalu" 
+                                                            aria-label="Przeznaczenie Lokalu" />
+                                                        <label for="PrzeznaczenieLokalu_{{post_id}}">Przeznaczenie Lokalu</label>
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 50);">50 m&sup2;</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 100);">100 m&sup2;</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 250);">250 m&sup2;</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 750);">750 m&sup2;</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 1000);">1000 m&sup2;</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_{{post_id}}', 'Mieszkalny');">Mieszkalny </a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_{{post_id}}', 'Biuro');">Biuro</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_{{post_id}}', 'Usługowy');">Usługowy</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_{{post_id}}', 'Magazynowy');">Magazynowy</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('PrzeznaczenieLokalu_{{post_id}}', 'Produkcyjny');">Produkcyjny</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1036,28 +993,28 @@
                                             
 
                                             <div class="row row-cols-2 mb-3">
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-7">
                                                     <div class="form-floating mb-0">
                                                         <input 
                                                             type="text" 
-                                                            value="{{post_data['RodzajNieruchomosci']}}"
+                                                            value="{{post_data['Rodzaj']}}"
                                                             class="form-control bg-dark formatuj-maly-font" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                            id="RodzajNieruchomosci_{{post_id}}" 
-                                                            name="RodzajNieruchomosci_{{post_id}}" 
+                                                            id="Rodzaj_{{post_id}}" 
+                                                            name="Rodzaj_{{post_id}}" 
                                                             required placeholder="Rodzaj Nieruchomości" aria-label="Rodzaj Nieruchomości"
                                                         />
                                                         <label for="Umeblowanie_{{post_id}}">Rodzaj Nieruchomości</label>
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'wolnostojąca');">wolnostojąca </a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'szeregowa');">szeregowa</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'wielorodzinna');">wielorodzinna </a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'komercyjna');">komercyjna</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'rekreacyjna');">rekreacyjna</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'wolnostojąca');">wolnostojąca </a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'szeregowa');">szeregowa</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'wielorodzinna');">wielorodzinna </a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'komercyjna');">komercyjna</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'rekreacyjna');">rekreacyjna</a>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-8">
                                                     <div class="form-floating mb-0">
                                                         <input 
                                                             type="text" 
