@@ -341,7 +341,7 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
         
         gps_json = {}
         try:
-            if data[28] is not None: gps_json = json.loads(data[28])
+            if data[28] is not None: gps_json = json.loads(data[29])
             else: raise ValueError("Dane są None, nie można przetworzyć JSON")
         except json.JSONDecodeError: print("Błąd: Podane dane GPSu nie są poprawnym JSON-em")
         except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
@@ -371,28 +371,28 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
             'LiczbaPokoi': 0 if data[7] is None else data[7],#
             'Metraz': 0 if data[9] is None else data[9],#
             'Zdjecia': [foto for foto in fotoList if foto is not None],#
-            'DataPublikacjiOlx': None if data[10] is None else format_date(data[10]),#
-            'DataPublikacjiAllegro': None if data[11] is None else format_date(data[11]),#
-            'DataPublikacjiOtoDom': None if data[12] is None else format_date(data[12]),#
-            'DataPublikacjiMarketplace': None if data[13] is None else format_date(data[13]),#
-            'DataUtworzenia': format_date(data[14]),#
-            'DataAktualizacji': format_date(data[15]),#
-            'RodzajZabudowy': "" if data[16] is None else data[16],#
-            'Rynek': '' if data[17] is None else data[17],#
-            'LiczbaPieter': 0 if data[18] is None else data[18],#
-            'PrzeznaczenieLokalu': 0 if data[19] is None else data[19],#
-            'Poziom': 0 if data[20] is None else data[20],#
-            'TechBudowy': '' if data[21] is None else data[21],#
-            'FormaKuchni': '' if data[22] is None else data[22],#
-            'TypDomu': '' if data[23] is None else data[23],#
-            'StanWykonczenia': 0 if data[24] is None else data[24],#
-            'RokBudowy': 0 if data[25] is None else data[25],#
-            'NumerKW': '' if data[26] is None else data[26],#
-            'InformacjeDodatkowe': '' if data[27] is None else data[27],#
+            'DataPublikacjiOlx': None if data[11] is None else format_date(data[11]),#
+            'DataPublikacjiAllegro': None if data[12] is None else format_date(data[12]),#
+            'DataPublikacjiOtoDom': None if data[13] is None else format_date(data[13]),#
+            'DataPublikacjiMarketplace': None if data[14] is None else format_date(data[14]),#
+            'DataUtworzenia': format_date(data[15]),#
+            'DataAktualizacji': format_date(data[16]),#
+            'RodzajZabudowy': "" if data[17] is None else data[17],#
+            'Rynek': '' if data[18] is None else data[18],#
+            'LiczbaPieter': 0 if data[19] is None else data[19],#
+            'PrzeznaczenieLokalu': 0 if data[20] is None else data[20],#
+            'Poziom': 0 if data[21] is None else data[21],#
+            'TechBudowy': '' if data[22] is None else data[22],#
+            'FormaKuchni': '' if data[23] is None else data[23],#
+            'TypDomu': '' if data[24] is None else data[24],#
+            'StanWykonczenia': 0 if data[25] is None else data[25],#
+            'RokBudowy': 0 if data[26] is None else data[26],#
+            'NumerKW': '' if data[27] is None else data[27],#
+            'InformacjeDodatkowe': '' if data[28] is None else data[28],#
             'GPS': gps_json,#
-            'TelefonKontaktowy': '' if data[29] is None else data[29],#
-            'EmailKontaktowy': '' if data[30] is None else data[30],#
-            'StatusOferty': 0 if data[31] is None else data[31]#
+            'TelefonKontaktowy': '' if data[30] is None else data[30],#
+            'EmailKontaktowy': '' if data[31] is None else data[31],#
+            'StatusOferty': 0 if data[32] is None else data[32]#
         }
 
         try: mainFoto = theme['Zdjecia'][0]
