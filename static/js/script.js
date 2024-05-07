@@ -387,7 +387,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
             // console.log('xxx:', data);
             var form = document.getElementById('rentOffer_' + offerId);
             form.reset();
-            window.location.href = '/estate-ads-rent';            
+            window.location.href = '/estate-ads-rent';
         } else if (data.error) {
             
         }
@@ -396,6 +396,171 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     });
 }
 
+function prepareAndSubmitSellOfferForm(offerId, oldFotos=true) {
+    let formIsValid = true;
+    // Funkcja pomocnicza do dodawania/usuwania klasy ostrzeżenia
+    function toggleWarning(elementId, condition) {
+        const element = document.getElementById(elementId);
+        if (condition) {
+            element.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+        } else {
+            element.classList.remove('input-warning');
+        }
+    }
+
+    // Pobieranie wartości z formularza
+    var title = document.getElementById('title_' + offerId).value;
+    var rodzajNieruchomosci = document.getElementById('RodzajNieruchomosci_' + offerId).value;
+    var lokalizacja = document.getElementById('Lokalizacja_' + offerId).value;
+    var cena = document.getElementById('Cena_' + offerId).value;
+    var opis = joinToDynamicDescription(offerId, "list-container");
+    var opisJsonString = JSON.stringify(opis);
+
+    try {
+        var lat = document.getElementById('lat_' + offerId).value;
+        var lon = document.getElementById('lon_' + offerId).value;
+    } catch {
+        var lat = '';
+        var lon = '';
+    }
+    
+    var rokBudowy = document.getElementById('RokBudowy_' + offerId).value;
+    var stan = document.getElementById('StanWykonczenia_' + offerId).value;
+    var nrKW = document.getElementById('NumerKW_' + offerId).value;
+    var czynsz = document.getElementById('Czynsz_' + offerId).value;
+    var kaucja = document.getElementById('Kaucja_' + offerId).value;
+    var metraz = document.getElementById('Metraz_' + offerId).value;
+    var powDzialki = document.getElementById('PowierzchniaDzialki_' + offerId).value;
+    var liczbaPieter = document.getElementById('LiczbaPieter_' + offerId).value;
+    var liczbaPokoi = document.getElementById('LiczbaPokoi_' + offerId).value;
+    var techBudowy = document.getElementById('TechnologiaBudowy_' + offerId).value;
+    var rodzajZabudowy = document.getElementById('RodzajZabudowy_' + offerId).value;
+    var umeblowanie = document.getElementById('Umeblowanie_' + offerId).value;
+    var kuchnia = document.getElementById('FormaKuchni_' + offerId).value;
+    var dodatkoweInfo = document.getElementById('InformacjeDodatkowe_' + offerId).value;
+    var offerIDbox = document.getElementById('OfferID_' + offerId).value;
+
+    // Pobieranie zdjęć z listy
+    var fotoList = document.getElementById(offerId + '-fileList');
+    // console.log('fotoList: ', fotoList);
+    var zdjecia = [];
+    var oldFotos_list = [];
+
+    fotoList.childNodes.forEach(child => {
+        if (child.file) {  // Sprawdź, czy element li ma przypisany plik
+            zdjecia.push(child.file);
+        } else {
+            oldFotos_list.push(child.textContent);
+        }
+    });
+    // console.log('oldFotos_list', oldFotos_list);
+
+    // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
+    toggleWarning('title_' + offerId, !title);
+    toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
+    toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
+    toggleWarning('Cena_' + offerId, !cena);
+
+    if (!oldFotos) {
+        if (zdjecia.length === 0) {
+            const elementzdjecia = document.getElementById(offerId+'-drop-area');
+    
+            elementzdjecia.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+    
+            return;  // Zatrzymaj przesyłanie formularza
+        }
+    } else {
+        if (zdjecia.length === 0 && oldFotos_list.length === 0) {
+            const elementzdjecia = document.getElementById(offerId+'-drop-area');
+    
+            elementzdjecia.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+    
+            return;  // Zatrzymaj przesyłanie formularza
+        }
+    }
+    
+    if (opis.length === 0 || opis[0].p === "") {
+        const elementopisJsonString = document.getElementById('list-container'+offerId);
+
+        elementopisJsonString.classList.add('input-warning');
+        formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+        return;  // Zatrzymaj przesyłanie formularza
+    } 
+
+    // Dodawanie zdjęć jako FormData
+    var formData = new FormData();
+    zdjecia.forEach(file => {
+        formData.append('photos[]', file);
+    });
+
+    // Dodawanie istniejących nazw zdjęć jako FormData
+    oldFotos_list.forEach(url => {
+        formData.append('oldPhotos[]', url);
+    });
+
+    // Dodanie pozostałych danych do FormData
+    formData.append('title', title);
+    formData.append('rodzajNieruchomosci', rodzajNieruchomosci);
+    formData.append('lokalizacja', lokalizacja);
+    formData.append('cena', cena);
+    formData.append('opis', opisJsonString);
+
+    formData.append('lat', lat);
+    formData.append('lon', lon);
+    formData.append('rokBudowy', rokBudowy);
+    formData.append('stan', stan);
+    formData.append('nrKW', nrKW);
+    formData.append('czynsz', czynsz);
+    formData.append('kaucja', kaucja);
+    formData.append('metraz', metraz);
+    formData.append('powDzialki', powDzialki);
+    formData.append('liczbaPieter', liczbaPieter);
+    formData.append('liczbaPokoi', liczbaPokoi);
+    formData.append('techBudowy', techBudowy);
+    formData.append('rodzajZabudowy', rodzajZabudowy);
+    formData.append('umeblowanie', umeblowanie);
+    formData.append('kuchnia', kuchnia);
+    formData.append('dodatkoweInfo', dodatkoweInfo);
+    formData.append('offerID', offerIDbox);
+
+    // Jeżeli którykolwiek z testów nie przeszedł, nie wysyłaj formularza
+    if (!formIsValid) {
+        return;
+    }
+
+    // Wysyłanie formularza za pomocą AJAX (fetch API)
+    fetch('/save-sell-offer', {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        // console.log('response: ', response);
+        if (response.ok) {
+            // alert('Oferta została pomyślnie zapisana.');
+            // console.log('response: ', response);
+            return response.json();
+        } else {
+            // console.log('xxx:', data);
+
+            throw new Error('Problem z serwerem');
+        }
+    }).then(data => {
+        // console.log('data:', data);
+        // console.log('data.seccess:', data.success);
+        if (data.success == true) {
+            // console.log('xxx:', data);
+            var form = document.getElementById('rentOffer_' + offerId);
+            form.reset();
+            window.location.href = '/estate-ads-rent';            
+        } else if (data.error) {
+            
+        }
+    }).catch(error => {
+        alert('Wystąpił błąd: ' + error.message);
+    });
+}
 
 
 function newUserSubmitForm(logins_allowed, email_allowed, name_allowed) {

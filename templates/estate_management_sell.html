@@ -1,0 +1,1850 @@
+{% extends 'base.html' %}
+
+{% block title %}DMD Panel Administratora - Zarządzanie Ogłoszeniami{% endblock %}
+
+{% block addButton %}
+<!-- dropdown -->
+<div class="dropdown">
+    <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+        Oferta Sprzedaży
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+        <li><a class="dropdown-item" href="/estate-ads-rent">Oferta Najmu</a></li>
+        <li><a class="estate_button dropdown-item active" href="/estate-ads-sell">Oferta Sprzedaży</a></li>
+        <li><a class="dropdown-item" href="/estate-ads-special">Oferta Specjalna</a></li>
+    </ul>
+</div>
+<!-- dropdown END -->
+
+    <li style="margin-left: 15px;">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(14, 144, 14) !important;"></i></a>
+    </li>
+{% endblock %}
+{% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Zarządzanie Ogłoszeniami Sprzedaży</a>{% endblock %}
+
+{% block tableHeader %}
+                        <div>
+                            <div class="row klej formatuj-header">
+                                <div class="d-none d-lg-block" style="max-width: 30px;">
+                                    #
+                                </div>
+                                <div  class="col-xl-8 col-lg-6 col-sm-8">
+                                    Tytuł
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Cena
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 150px;">
+                                    Lokalizacja
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Status
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 250px;">
+                                    Operator
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 150px;">
+                                    Data publikacji
+                                </div>
+                                <div  class="text-end" style="max-width: 80px;">
+                                    <i class="bi bi-person-gear"></i> Akcja 
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}
+{% block tableContent%}
+                        <!-- OFFCANVANSE RIGHT ADD NEW POST -->
+                        <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowego ogłoszenia sprzedaży.</h4>
+                                <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <form method="POST" id="sellOffer_9999999" action="{{ url_for('save_sell_offer') }}" enctype="multipart/form-data" >
+                                    <!-- Tytuł artykułu -->
+                                    <div class="mb-3">
+                                        <label for="title_9999999" class="form-label">Tytuł ogłoszenia</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="title_9999999" 
+                                                name="title_9999999" 
+                                                required>
+                                    </div>
+                                    <!-- Informacje ogólne o nieruchomości -->
+                                    <label class="form-label">Informacje ogólne o nieruchomości</label>
+                                    <div class="mb-3">
+                                        <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            placeholder="Typ Nieruchomości (dom, magazyn, działka, mieszkanie, lokal usługowy, itp.)" 
+                                            aria-label="Typ Nieruchomości (dom, magazyn, działka, mieszkanie, lokal usługowy, itp.)"
+                                            id="TypNieruchomosci_9999999" 
+                                            name="TypNieruchomosci_9999999" />
+                                        <div class="no-border formatuj-maly-font fadeIn">
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'dom');">dom</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'mieszkanie');">mieszkanie</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'magazyn');">magazyn</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'działka');">działka</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'biuro');">biuro</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'lokal usługowy');">lokal usługowy</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'hala produkcyjna');">hala produkcyjna</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'hala z biurem');">hala z biurem</a>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-sm-2">
+                                            <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            placeholder="Rynek (wtórny, pierwotny)" 
+                                            aria-label="Rynek (wtórny, pierwotny)"
+                                            id="Rynek_9999999" 
+                                            name="Rynek_9999999" />
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rynek_9999999', 'wtórny');">wtórny</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rynek_9999999', 'pierwotny');">pierwotny</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm">
+                                            <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            placeholder="Typ Domu (dom, magazyn, działka, mieszkanie, lokal usługowy, itp.)" 
+                                            aria-label="Typ Domu (dom, magazyn, działka, mieszkanie, lokal usługowy, itp.)"
+                                            id="TypDomu_9999999" 
+                                            name="TypDomu_9999999" />
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypDomu_9999999', 'Willa');">Willa</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypDomu_9999999', 'Parterowy');">Parterowy</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypDomu_9999999', 'Piętrowy');">Piętrowy</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypDomu_9999999', 'Z Poddasze');">Z Poddaszem</a>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="input-group mb-0">
+                                        <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="Lokalizacja_9999999" 
+                                            name="Lokalizacja_9999999" 
+                                            required placeholder="Lokalizacja" aria-label="Lokalizacja" />
+                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-geo-alt-fill"></i></span>
+                                        <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="LinkGPS_9999999" 
+                                            name="LinkGPS_9999999" 
+                                            placeholder="Link GPS" 
+                                            aria-label="Link GPS" />
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-7 formatuj-maly-font fadeIn">
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_9999999', 'Stare Babice');">Stare Babice</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_9999999', 'Warszawa');">Warszawa</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_9999999', 'Izabelin');">Izabelin</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_9999999', 'Warszawa Bielany');">Warszawa Bielany</a>
+                                            <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_9999999', 'Warszawa Bemowo');">Warszawa Bemowo</a>
+                                        </div>
+                                        <div class="col col-5 formatuj-maly-font" >
+                                            <div id='GPS_9999999' class="text-end formatuj-maly-font text-primary-emphasis ">
+                                                <!-- muszę wybrać z tego diva wygenerowane lat i lon -->
+                                            </div>
+                                            <div class="mb-3 text-end">
+                                                <a href="javascript:void(0);" onclick="openGoogleEarthAddress('Lokalizacja_9999999')" class="formatuj-maly-font">
+                                                    Otwórz mapę żeby pobrać link dla GPS
+                                                </a>
+                                            </div>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', () => {
+                                                    var inputElement = document.getElementById('LinkGPS_9999999');
+                                                    inputElement.addEventListener('input', function() {
+                                                        extractAndDisplayCoords('LinkGPS_9999999', 'GPS_9999999', '9999999');
+                                                    });
+                                                });
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-sm-2">
+                                            <input 
+                                                type="number" 
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="RokBudowy_9999999" 
+                                                name="RokBudowy_9999999" 
+                                                placeholder="Rok Budowy" 
+                                                aria-label="Rok Budowy"/>
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RokBudowy_9999999', '1980');">1980</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RokBudowy_9999999', '2000');">2000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RokBudowy_9999999', '2020');">2020</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm">
+                                            <input 
+                                                type="text" 
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="StanWykonczenia_9999999" 
+                                                name="StanWykonczenia_9999999" 
+                                                placeholder="Stan Wykończenia" 
+                                                aria-label="Stan Wykończenia">
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('StanWykonczenia_9999999', 'Do remontu');">Do remontu</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('StanWykonczenia_9999999', 'Do odświeżenia');">Do odświeżenia</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('StanWykonczenia_9999999', 'Stan deweloperski');">Stan deweloperski</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('StanWykonczenia_9999999', 'Wykończony');">Wykończony</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('StanWykonczenia_9999999', 'Wysoki standard');">Wysoki standard</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('StanWykonczenia_9999999', 'Luksusowy');">Luksusowy</a>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="NumerKW_9999999" class="form-label">Numer KW</label>
+                                        <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="NumerKW_9999999" 
+                                            name="NumerKW_9999999" 
+                                            >
+                                    </div>
+                                    
+                                    <label class="form-label">Szczegóły wynajmu</label>
+                                    <div class="row mb-3">
+                                        <div class="col-sm-4">
+                                            <div class="input-group ">
+                                                <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                                <input 
+                                                    type="number" 
+                                                    value=""
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="Cena_9999999" 
+                                                    name="Cena_9999999" 
+                                                    placeholder="Cena" 
+                                                    aria-label="Cena" />
+                                                <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;">.00</span>
+                                            </div>
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 5000);">5000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 10000);">10 000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 15000);">15 000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 20000);">20 000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 25000);">25 000</a>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-sm-4">
+                                            <div class="input-group ">
+                                                <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                                <input 
+                                                    type="number" 
+                                                    value=""
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="Czynsz_9999999" 
+                                                    name="Czynsz_9999999" 
+                                                    placeholder="Czynsz" 
+                                                    aria-label="Czynsz" />
+                                                <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;">.00</span>
+                                            </div>
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_9999999', 5000);">5000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_9999999', 10000);">10 000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_9999999', 15000);">15 000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_9999999', 20000);">20 000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_9999999', 25000);">25 000</a>
+                                            </div>
+                                        </div> -->
+                                        <!-- <div class="col-sm-4">
+                                            <div class="input-group ">
+                                                <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                                <input 
+                                                    type="number" 
+                                                    value=""
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="Kaucja_9999999" 
+                                                    name="Kaucja_9999999" 
+                                                    placeholder="Kaucja" 
+                                                    aria-label="Kaucja" />
+                                                <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;">.00</span>
+                                            </div>
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_9999999', 5000);">5000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_9999999', 10000);">10 000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_9999999', 15000);">15 000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_9999999', 20000);">20 000</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_9999999', 25000);">25 000</a>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <div class="row row-cols-2 mb-3">
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                <input 
+                                                    type="number" 
+                                                    value=""
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="Metraz_9999999" 
+                                                    name="Metraz_9999999" 
+                                                    placeholder="Metraż" 
+                                                    aria-label="Metraż" />
+                                                <span 
+                                                    class="input-group-text bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;">
+                                                    m&sup2;
+                                                </span>
+                                            </div>
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_9999999', 50);">50 m&sup2;</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_9999999', 100);">100 m&sup2;</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_9999999', 150);">150 m&sup2;</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_9999999', 250);">250 m&sup2;</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_9999999', 500);">500 m&sup2;</a>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                <input 
+                                                    type="number" 
+                                                    value=""
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="PowierzchniaLokalu_9999999" 
+                                                    name="PowierzchniaLokalu_9999999" 
+                                                    placeholder="Powierzchnia Lokalu" 
+                                                    aria-label="Powierzchnia Lokalu" />
+                                                <span 
+                                                    class="input-group-text bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;">
+                                                    m&sup2;
+                                                </span>
+                                            </div>
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 50);">50 m&sup2;</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 100);">100 m&sup2;</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 250);">250 m&sup2;</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 750);">750 m&sup2;</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_9999999', 1000);">1000 m&sup2;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label class="form-label">Szczegóły budynku</label>
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-sm-2">
+                                            <input 
+                                                type="number" 
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="LiczbaPieter_9999999" 
+                                                name="LiczbaPieter_9999999" 
+                                                placeholder="Liczba Pięter" 
+                                                aria-label="Liczba Pięter"/>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input 
+                                                type="number" 
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="Poziom_9999999" 
+                                                name="Poziom_9999999" 
+                                                placeholder="Poziom" 
+                                                aria-label="Poziom"/>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input 
+                                                type="number" 
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="LiczbaPokoi_9999999" 
+                                                name="LiczbaPokoi_9999999" 
+                                                placeholder="Liczba Pokoi" 
+                                                aria-label="Liczba Pokoi"/>
+                                        </div>
+                                    </div>
+                                    <div class="input-group mb-0">
+                                        <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="TechnologiaBudowy_9999999" 
+                                            name="TechnologiaBudowy_9999999" 
+                                            required placeholder="Technologia Budowy" aria-label="Technologia Budowy"
+                                        >
+                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-house-gear"></i></span>
+                                        <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="RodzajZabudowy_9999999" 
+                                            name="RodzajZabudowy_9999999" 
+                                            placeholder="Rodzaj Zabudowy" aria-label="Rodzaj Zabudowy"
+                                        >
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TechnologiaBudowy_9999999', 'Technologia tradycyjna (murowana)');">murowana</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TechnologiaBudowy_9999999', 'Technologia szkieletowa (drewniana lub stalowa)');">szkieletowa</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TechnologiaBudowy_9999999', 'Technologia modułowa (prefabrykowana)');">prefabrykowana</a>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_9999999', 'Zabudowa jednorodzinna');">jednorodzinna</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_9999999', 'Zabudowa wielorodzinna');">wielorodzinna</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_9999999', 'Zabudowa szeregowa');">szeregowa</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_9999999', 'Zabudowa bliźniacza');">bliźniacza</a>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="input-group mb-0">
+                                        <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="RodzajNieruchomosci_9999999" 
+                                            name="RodzajNieruchomosci_9999999" 
+                                            required placeholder="Rodzaj Nieruchomości" aria-label="Rodzaj Nieruchomości"
+                                        />
+                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-house-heart"></i></span>
+                                        <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="FormaKuchni_9999999" 
+                                            name="FormaKuchni_9999999" 
+                                            placeholder="Forma Kuchni" aria-label="Forma Kuchni"
+                                        >
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'wolnostojąca');">wolnostojąca </a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'szeregowa');">szeregowa</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'wielorodzinna');">wielorodzinna </a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'komercyjna');">komercyjna</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypNieruchomosci_9999999', 'rekreacyjna');">rekreacyjna</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="no-border formatuj-maly-font fadeIn">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_9999999', 'Otwarta');">Otwarta</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_9999999', 'Studio');">Studio</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_9999999', 'Zamknięta');">Zamknięta</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_9999999', 'Widna');">Widna</a>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <label class="form-label">Dodatkowe informacje</label>
+                                    <div class="input-group mb-1">
+                                        <textarea 
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="InformacjeDodatkowe_9999999" 
+                                            name="InformacjeDodatkowe_9999999" 
+                                            rows="4" required></textarea>
+                                    </div>
+                                    <div class="no-border formatuj-maly-font fadeIn mb-3">
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Pierwszy właściciel. ');">Pierwszy właściciel</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Atrakcyjna lokalizacja. ');">Atrakcyjna lokalizacja</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Okazja!');">Okazja!</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Możliwość negocjacji. ');">Możliwość negocjacji</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Media i monitoring w cenie najmu. ');">Media i monitoring w cenie najmu</a>
+                                    </div>
+
+                                    <!-- Opis --> 
+                                    <div class="mb-3" id="list-container-parrent9999999">
+                                        <label for="list-container9999999" class="form-label">Opis Nieruchomości</label>
+                                        <!-- class="no-border" -->
+                                        <div id="list-container9999999" >
+                                            <!-- Tutaj będą dynamicznie dodawane elementy listy -->
+                                        </div>
+                                        <div class="formatuj-right formatuj-margin">
+                                            <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('9999999', 'p', '')">
+                                                <i class="bi bi-textarea-t"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('9999999', 'strong', '')">
+                                                <i class="bi bi-type-bold"></i><i class="bi bi-textarea-t"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('9999999', 'h1', '')">
+                                                <i class="bi bi-menu-app"></i>                                          
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('9999999', 'h2', '')">
+                                                <i class="bi bi-menu-button"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('9999999', 'h3', '')">
+                                                <i class="bi bi-menu-button-wide"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('9999999', 'h1-strong', '')">
+                                                <i class="bi bi-menu-app-fill"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('9999999', 'h2-strong', '')">
+                                                <i class="bi bi-menu-button-fill"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('9999999', 'h3-strong', '')">
+                                                <i class="bi bi-menu-button-wide-fill"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary add-list-item-button" onclick="addCustomElement('9999999', 'li', '')">
+                                                <i class="bi bi-card-text"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        addCustomElement('9999999', 'p', '');
+                                    </script>
+
+
+                                    <!-- moduł dropboxa -->
+                                    <label class="form-label">Zdjęcia Nieruchomości</label>
+                                    <div id="9999999-drop-area" class="drop-area">
+                                        <h3>Przeciągnij (max 10) zdjęcia tutaj</h3>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label ms-5">Pliki do wysłania:</label>
+                                        <ul id="9999999-fileList" class="list-group ms-5 me-5"></ul>
+                                    </div>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', () => {
+                                            const myFotoDropBox = new FotoDropBox('9999999');
+                                        });
+                                    </script>
+                                    <input type="hidden" name="OfferID" id="OfferID_9999999" value="9999999"/>
+                                    <!-- Przycisk Zapisz artykuł -->
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-sm" 
+                                        style="max-height: 30px; font-size: 12px;" 
+                                        onclick="prepareAndSubmitSellOfferForm('9999999', false)"
+                                    >
+                                        Dodaj ogłoszenie najmu
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+
+                        {% for post_data in ads_sell %}
+                            {% set post_id  = post_data['ID'] %}
+                        <!-- linia contentu tabeli ciemna-->
+                        <div>
+                            <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                <div class="d-none d-lg-block" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {{post_id}}
+                                </div>
+                                <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {% if post_data['StatusOferty'] == 1 %}
+                                        <span class="d-none d-md-block d-lg-none"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
+                                    {% else %}
+                                        <span class="d-none d-md-block d-lg-none"> <i class="bi bi-lightbulb-fill text-secondary"></i></span>
+                                    {% endif %}
+                                </div>
+                                <div  class="col-xl-8 col-md-8 col-sm-10" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {{post_data['Tytul']}}
+                                    </a>
+                                    
+                                </div>
+                                <div  class="d-none d-lg-block"  style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="display-6 formatuj-maly-font">{{post_data['Cena']}} PLN</span>
+                                    </a>
+                                </div>
+                                <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="display-6 formatuj-maly-font">{{post_data['Lokalizacja'][:12]}}</span>
+                                    </a>
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {% if post_data['StatusOferty'] == 1 %}
+                                            <span class="text-warning">Aktywna</span>
+                                        {% else %}
+                                        <span class="text-secondary">Nieaktywna</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {% if post_data['EmailKontaktowy'] != '' %}
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="text-secondary formatuj-maly-font">{{post_data['EmailKontaktowy']}}</span>
+                                    </a>
+                                    {% else %}
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="text-secondary">Brak</span>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="display-6 formatuj-maly-font">{{post_data['DataUtworzenia']}}</span>
+                                    </a>
+                                </div>
+                                <div class="text-end" style="max-width: 80px;">
+                                    
+                                    <form method="POST" id="remove_sell_offer_{{post_id}}" action="{{ url_for('remove_sell_offer') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć ofertę?');">
+
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
+
+                                        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling_{{post_id}}" aria-controls="offcanvasScrolling_{{post_id}}"><i class="bi bi-pencil" style="color: #7eb5cc !important;"></i></a>
+                                        <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/>
+                                        <input type="hidden" name="PostID" id="PostID_{{post_id}}" value="{{post_id}}"/>
+                                        <button type="submit" class="custom-icon-button"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></button>
+                                        <!-- <a href="#"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></a> -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- offcanvanse left -->
+                        <div class="offcanvas offcanvas-start bg-dark oc-width" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling_{{post_id}}" aria-labelledby="offcanvasScrollingLabel">
+                            <div class="offcanvas-header">
+                              <h4 class="offcanvas-title" id="offcanvasScrollingLabel">Edycja Ogłoszenia Najmu id: {{post_id}}</h4>
+                              <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body formatuj-maly-font">
+                                <div class="tylko-klej">
+                                    <div style="color:#6a6a6a;">
+                                        <form method="POST" id="sellOffer_{{post_id}}" action="{{ url_for('save_sell_offer') }}" enctype="multipart/form-data" >
+                                            <!-- Tytuł artykułu -->
+                                            <!-- <div class="form-floating mb-3">
+                                                <input type="text" name="avatar-pic-path" value="{{avatar}}" class="formatuj-inputs-setting form-control" id="floatingInput" placeholder="example.com">
+                                                <label for="floatingInput">Ścieżka do avatar</label>
+                                            </div> -->
+                                            <div class="form-floating mb-3">
+                                                
+                                                <input 
+                                                        type="text" 
+                                                        value="{{post_data['Tytul']}}"
+                                                        class="form-control bg-dark formatuj-maly-font" 
+                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                        id="title_{{post_id}}" 
+                                                        name="title_{{post_id}}" 
+                                                        required>
+                                                        <label for="title_{{post_id}}">Tytuł ogłoszenia</label>
+                                            </div>
+                                            <!-- Informacje ogólne o nieruchomości -->
+                                            <label class="form-label">Informacje ogólne o nieruchomości</label>
+                                            <div class="form-floating mb-3">
+                                                <input 
+                                                    type="text" 
+                                                    value="{{post_data['TypNieruchomosci']}}"
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    placeholder="Typ Nieruchomości (dom, magazyn, działka, mieszkanie, lokal usługowy, itp.)" 
+                                                    aria-label="Typ Nieruchomości (dom, magazyn, działka, mieszkanie, lokal usługowy, itp.)"
+                                                    id="TypNieruchomosci_{{post_id}}" 
+                                                    name="TypNieruchomosci_{{post_id}}" />
+                                                <label for="TypNieruchomosci_{{post_id}}">Typ Nieruchomości (dom, magazyn, działka, mieszkanie, lokal usługowy, itp.)</label>
+                                                <div class="no-border formatuj-maly-font fadeIn">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'dom');">dom</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'mieszkanie');">mieszkanie</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'magazyn');">magazyn</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'biuro');">biuro</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'lokal usługowy');">lokal usługowy</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'hala');">hala</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'hala z biurem');">hala z biurem</a>
+                                                </div>
+                                            </div>
+                                            <div class="row g-2 mb-3">
+                                                <div class="col-sm-2">
+                                                    <div class="form-floating mb-3">
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{post_data['Rynek']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            placeholder="Rynek (wtórny, pierwotny)" 
+                                                            aria-label="Rynek (wtórny, pierwotny)"
+                                                            id="Rynek_{{post_id}}" 
+                                                            name="Rynek_{{post_id}}" />
+                                                        <label for="TypNieruchomosci_{{post_id}}">Rynek (wtórny, pierwotny)</label>
+                                                    </div>
+                                                    
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rynek_{{post_id}}', 'wtórny');">wtórny</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rynek_{{post_id}}', 'pierwotny');">pierwotny</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm">
+                                                    <div class="form-floating mb-3">
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{post_data['TypDomu']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            placeholder="Typ Domu (Willa, Parterowy, Piętrowy, Z Poddaszem, itp.)" 
+                                                            aria-label="Typ Domu (Willa, Parterowy, Piętrowy, Z Poddaszem, itp.)"
+                                                            id="TypDomu_{{post_id}}" 
+                                                            name="TypDomu_{{post_id}}" />
+                                                        <label for="TypDomu_{{post_id}}">Typ Domu (Willa, Parterowy, Piętrowy, Z Poddaszem, itp.)</label>
+                                                    </div>
+                                                    
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypDomu_{{post_id}}', 'Willa');">Willa</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypDomu_{{post_id}}', 'Parterowy');">Parterowy</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypDomu_{{post_id}}', 'Piętrowy');">Piętrowy</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TypDomu_{{post_id}}', 'Z Poddasze');">Z Poddaszem</a>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-7">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{post_data['Lokalizacja']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="Lokalizacja_{{post_id}}" 
+                                                            name="Lokalizacja_{{post_id}}" 
+                                                            required placeholder="Lokalizacja" aria-label="Lokalizacja" />
+                                                        <label for="Lokalizacja_{{post_id}}">Lokalizacja</label>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-5">
+                                                    <div class="form-floating mb-0">    
+                                                        <input 
+                                                            type="text" 
+                                                            value="{% if post_data['GPS']!={} %}pseudoLinkGPSData@{{post_data['GPS']['latitude']}},{{post_data['GPS']['longitude']}},endOfPseudoLinkGpsData{% endif %}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="LinkGPS_{{post_id}}" 
+                                                            name="LinkGPS_{{post_id}}" 
+                                                            placeholder="Link GPS" 
+                                                            aria-label="Link GPS" />
+                                                        <label for="LinkGPS_{{post_id}}">LinkGPS</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-8 formatuj-maly-font fadeIn">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_{{post_id}}', 'Stare Babice');">Stare Babice</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_{{post_id}}', 'Warszawa');">Warszawa</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_{{post_id}}', 'Izabelin');">Izabelin</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_{{post_id}}', 'Warszawa Bielany');">Warszawa Bielany</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Lokalizacja_{{post_id}}', 'Warszawa Bemowo');">Warszawa Bemowo</a>
+                                                </div>
+                                                <div class="col col-4 formatuj-maly-font" >
+                                                    <div id='GPS_{{post_id}}' class="text-end formatuj-maly-font text-primary-emphasis ">
+                                                        <!-- muszę wybrać z tego diva wygenerowane lat i lon -->
+                                                    </div>
+                                                    <div class="mb-3 text-end">
+                                                        <a href="javascript:void(0);" onclick="openGoogleEarthAddress('Lokalizacja_{{post_id}}')" class="formatuj-maly-font">
+                                                            Otwórz mapę żeby pobrać link dla GPS
+                                                        </a>
+                                                    </div>
+                                                    <script>
+                                                        document.addEventListener('DOMContentLoaded', function() {
+                                                            var inputElement = document.getElementById('LinkGPS_{{post_id}}');
+                                                            if (inputElement.value.trim() !== '') {
+                                                                // Jeżeli wartość inputa jest różna od pustego stringa, wykonaj funkcję od razu
+                                                                extractAndDisplayCoords('LinkGPS_{{post_id}}', 'GPS_{{post_id}}', '{{post_id}}');
+                                                            } else {
+                                                                // Jeżeli wartość inputa jest pustym stringiem, ustaw nasłuchiwanie na zdarzenie 'input'
+                                                                inputElement.addEventListener('input', function() {
+                                                                    extractAndDisplayCoords('LinkGPS_{{post_id}}', 'GPS_{{post_id}}', '{{post_id}}');
+                                                                });
+                                                            }
+                                                        });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row g-2 mb-3">
+                                                <div class="col-sm-2">
+                                                    <div class="form-floating mb-0"> 
+                                                        <input 
+                                                            type="number" 
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            value="{% if post_data['RokBudowy']!=0 %}{{post_data['RokBudowy']}}{% endif %}"
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="RokBudowy_{{post_id}}" 
+                                                            name="RokBudowy_{{post_id}}" 
+                                                            placeholder="Rok Budowy" 
+                                                            aria-label="Rok Budowy"/>
+                                                        <label for="RokBudowy_{{post_id}}">Rok Budowy</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RokBudowy_{{post_id}}', '1980');">1980</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RokBudowy_{{post_id}}', '2000');">2000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RokBudowy_{{post_id}}', '2020');">2020</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm">
+                                                    <div class="form-floating mb-0"> 
+                                                        <input 
+                                                            type="text" 
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="StanWykonczenia_{{post_id}}" 
+                                                            name="StanWykonczenia_{{post_id}}" 
+                                                            value="{{post_data['StanWykonczenia']}}"
+                                                            placeholder="Stan Wykończenia" 
+                                                            aria-label="Stan Wykończenia">
+                                                        <label for="StanWykonczenia_{{post_id}}">Stan Wykończenia</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('StanWykonczenia_{{post_id}}', 'Wysoki standard');">Wysoki standard</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('StanWykonczenia_{{post_id}}', 'Deweloperski');">Deweloperski</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('StanWykonczenia_{{post_id}}', 'Pod Klucz');">Pod Klucz</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="NumerKW_{{post_id}}" class="form-label">Numer KW</label>
+                                                <input 
+                                                    type="text" 
+                                                    value="{{post_data['NumerKW']}}"
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="NumerKW_{{post_id}}" 
+                                                    name="NumerKW_{{post_id}}" 
+                                                    >
+                                            </div>
+                                            <label class="form-label">Szczegóły wynajmu</label>
+                                            <div class="row row-cols-3 mb-3">
+                                                <div class="col-sm-4">
+                                                    <div class="form-floating mb-0"> 
+                                                        <input 
+                                                            type="number" 
+                                                            value="{% if post_data['Cena']!=0 %}{{post_data['Cena']}}{% endif %}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="Cena_{{post_id}}" 
+                                                            name="Cena_{{post_id}}" 
+                                                            placeholder="Cena" 
+                                                            aria-label="Cena" />
+                                                        <label for="Cena_{{post_id}}">Cena w PLN</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_{{post_id}}', 5000);">5000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_{{post_id}}', 10000);">10 000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_{{post_id}}', 15000);">15 000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_{{post_id}}', 20000);">20 000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_{{post_id}}', 25000);">25 000</a>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-sm-4">
+                                                    <div class="form-floating mb-0">
+                                                        
+                                                        <input 
+                                                            type="number" 
+                                                            value="{% if post_data['Czynsz']!=0 %}{{post_data['Czynsz']}}{% endif %}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="Czynsz_{{post_id}}" 
+                                                            name="Czynsz_{{post_id}}" 
+                                                            placeholder="Czynsz" 
+                                                            aria-label="Czynsz" />
+                                                        <label for="Czynsz_{{post_id}}">Czynsz w PLN</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 5000);">5000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 10000);">10 000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 15000);">15 000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 20000);">20 000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Czynsz_{{post_id}}', 25000);">25 000</a>
+                                                    </div>
+                                                </div> -->
+                                                <!-- <div class="col-sm-4">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            value="{% if post_data['Kaucja']!=0 %}{{post_data['Kaucja']}}{% endif %}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="Kaucja_{{post_id}}" 
+                                                            name="Kaucja_{{post_id}}" 
+                                                            placeholder="Kaucja" 
+                                                            aria-label="Kaucja" />
+                                                        <label for="Kaucja_{{post_id}}">Kaucja w PLN</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 5000);">5000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 10000);">10 000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 15000);">15 000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 20000);">20 000</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Kaucja_{{post_id}}', 25000);">25 000</a>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                            <div class="row row-cols-2 mb-3">
+                                                <div class="col-sm-6">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            value="{% if post_data['Metraz']!=0 %}{{post_data['Metraz']}}{% endif %}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="Metraz_{{post_id}}" 
+                                                            name="Metraz_{{post_id}}" 
+                                                            placeholder="Metraż" 
+                                                            aria-label="Metraż" />
+                                                        <label for="Metraz_{{post_id}}">Metraż w m&sup2;</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_{{post_id}}', 50);">50 m&sup2;</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_{{post_id}}', 100);">100 m&sup2;</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_{{post_id}}', 150);">150 m&sup2;</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_{{post_id}}', 250);">250 m&sup2;</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Metraz_{{post_id}}', 500);">500 m&sup2;</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            value="{% if post_data['PowierzchniaLokalu']!=0 %}{{post_data['PowierzchniaLokalu']}}{% endif %}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="PowierzchniaLokalu_{{post_id}}" 
+                                                            name="PowierzchniaLokalu_{{post_id}}" 
+                                                            placeholder="Powierzchnia Lokalu" 
+                                                            aria-label="Powierzchnia Lokalu" />
+                                                        <label for="PowierzchniaLokalu_{{post_id}}">Powierzchnia Lokalu w m&sup2;</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 50);">50 m&sup2;</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 100);">100 m&sup2;</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 250);">250 m&sup2;</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 750);">750 m&sup2;</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('PowierzchniaLokalu_{{post_id}}', 1000);">1000 m&sup2;</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label class="form-label">Szczegóły budynku</label>
+                                            
+                                            <div class="row g-2 mb-3">
+                                                <div class="col-sm-2">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            value="{% if post_data['LiczbaPieter']!=0 %}{{post_data['LiczbaPieter']}}{% endif %}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="LiczbaPieter_{{post_id}}" 
+                                                            name="LiczbaPieter_{{post_id}}" 
+                                                            placeholder="Liczba Pięter" 
+                                                            aria-label="Liczba Pięter"/>
+                                                        <label for="LiczbaPieter_{{post_id}}">Liczba Pięter</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            value="{% if post_data['Poziom']!=0 %}{{post_data['Poziom']}}{% endif %}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="Poziom_{{post_id}}" 
+                                                            name="Poziom_{{post_id}}" 
+                                                            placeholder="Poziom" 
+                                                            aria-label="Poziom"/>
+                                                        <label for="Poziom_{{post_id}}">Poziom</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="number" 
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="LiczbaPokoi_{{post_id}}" 
+                                                            value="{% if post_data['LiczbaPokoi']!=0 %}{{post_data['LiczbaPokoi']}}{% endif %}"
+                                                            name="LiczbaPokoi_{{post_id}}" 
+                                                            placeholder="Liczba Pokoi" 
+                                                            aria-label="Liczba Pokoi"/>
+                                                        <label for="LiczbaPokoi_{{post_id}}">Liczba Pokoi</label>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row row-cols-2 mb-3">
+                                                <div class="col-sm-6">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{post_data['TechBudowy']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="TechnologiaBudowy_{{post_id}}" 
+                                                            name="TechnologiaBudowy_{{post_id}}" 
+                                                            required placeholder="Technologia Budowy" aria-label="Technologia Budowy"
+                                                        >
+                                                        <label for="TechnologiaBudowy_{{post_id}}">Technologia Budowy</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TechnologiaBudowy_{{post_id}}', 'Technologia tradycyjna (murowana)');">murowana</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TechnologiaBudowy_{{post_id}}', 'Technologia szkieletowa (drewniana lub stalowa)');">szkieletowa</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('TechnologiaBudowy_{{post_id}}', 'Technologia modułowa (prefabrykowana)');">prefabrykowana</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{post_data['RodzajZabudowy']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="RodzajZabudowy_{{post_id}}" 
+                                                            name="RodzajZabudowy_{{post_id}}" 
+                                                            placeholder="Rodzaj Zabudowy" aria-label="Rodzaj Zabudowy"
+                                                        >
+                                                        <label for="RodzajZabudowy_{{post_id}}">Rodzaj Zabudowy</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_{{post_id}}', 'Zabudowa jednorodzinna');">jednorodzinna</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_{{post_id}}', 'Zabudowa wielorodzinna');">wielorodzinna</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_{{post_id}}', 'Zabudowa szeregowa');">szeregowa</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajZabudowy_{{post_id}}', 'Zabudowa bliźniacza');">bliźniacza</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+
+                                            <div class="row row-cols-2 mb-3">
+                                                <div class="col-sm-6">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{post_data['RodzajNieruchomosci']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="RodzajNieruchomosci_{{post_id}}" 
+                                                            name="RodzajNieruchomosci_{{post_id}}" 
+                                                            required placeholder="Rodzaj Nieruchomości" aria-label="Rodzaj Nieruchomości"
+                                                        />
+                                                        <label for="Umeblowanie_{{post_id}}">Rodzaj Nieruchomości</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'wolnostojąca');">wolnostojąca </a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'szeregowa');">szeregowa</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'wielorodzinna');">wielorodzinna </a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'komercyjna');">komercyjna</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('RodzajNieruchomosci_{{post_id}}', 'rekreacyjna');">rekreacyjna</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-floating mb-0">
+                                                        <input 
+                                                            type="text" 
+                                                            value="{{post_data['FormaKuchni']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="FormaKuchni_{{post_id}}" 
+                                                            name="FormaKuchni_{{post_id}}" 
+                                                            placeholder="Forma Kuchni" aria-label="Forma Kuchni"
+                                                        />
+                                                        <label for="FormaKuchni_{{post_id}}">Forma Kuchni</label>
+                                                    </div>
+                                                    <div class="no-border formatuj-maly-font fadeIn">
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_{{post_id}}', 'Otwarta');">Otwarta</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_{{post_id}}', 'Studio');">Studio</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_{{post_id}}', 'Zamknięta');">Zamknięta</a>
+                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('FormaKuchni_{{post_id}}', 'Widna');">Widna</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <label class="form-label">Dodatkowe informacje</label>
+                                            <div class="input-group mb-1">
+                                                <textarea 
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="InformacjeDodatkowe_{{post_id}}" 
+                                                    name="InformacjeDodatkowe_{{post_id}}" 
+                                                    rows="4" required>{{post_data['InformacjeDodatkowe']}}</textarea>
+                                            </div>
+                                            <div class="no-border formatuj-maly-font fadeIn mb-3">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_{{post_id}}', 'Pierwszy właściciel. ');">Pierwszy właściciel</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_{{post_id}}', 'Atrakcyjna lokalizacja. ');">Atrakcyjna lokalizacja</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_{{post_id}}', 'Okazja!');">Okazja!</a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_{{post_id}}', 'Możliwość negocjacji. ');">Możliwość negocjacji</a>
+                                            </div>
+        
+                                            <!-- Opis --> 
+                                            <div class="mb-3" id="list-container-parrent{{post_id}}">
+                                                <label for="list-container{{post_id}}" class="form-label">Opis Nieruchomości</label>
+                                                <!-- class="no-border" -->
+                                                <div id="list-container{{post_id}}" >
+                                                    <!-- Tutaj będą dynamicznie dodawane elementy listy -->
+                                                </div>
+                                                <div class="formatuj-right formatuj-margin">
+                                                    <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('{{post_id}}', 'p', '')">
+                                                        <i class="bi bi-textarea-t"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('{{post_id}}', 'strong', '')">
+                                                        <i class="bi bi-type-bold"></i><i class="bi bi-textarea-t"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('{{post_id}}', 'h1', '')">
+                                                        <i class="bi bi-menu-app"></i>                                          
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('{{post_id}}', 'h2', '')">
+                                                        <i class="bi bi-menu-button"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('{{post_id}}', 'h3', '')">
+                                                        <i class="bi bi-menu-button-wide"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('{{post_id}}', 'h1-strong', '')">
+                                                        <i class="bi bi-menu-app-fill"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('{{post_id}}', 'h2-strong', '')">
+                                                        <i class="bi bi-menu-button-fill"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary add-button" onclick="addCustomElement('{{post_id}}', 'h3-strong', '')">
+                                                        <i class="bi bi-menu-button-wide-fill"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary add-list-item-button" onclick="addCustomElement('{{post_id}}', 'li', '')">
+                                                        <i class="bi bi-card-text"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <script>
+                                                //{% for item in post_data['Opis'] %}
+                                                    //{% for key, val in item.items() %}
+                                                        //{% if key=='li' %}
+                                                            // {% for i_element in val %}
+                                                            document.addEventListener('DOMContentLoaded', () => {
+                                                                addCustomElement('{{post_id}}', '{{key}}', `{{i_element|decode_html_entities_filter}}`);
+                                                            });
+                                                            //{% endfor %}
+                                                        //{% else %}
+                                                            //{% set decoded_val_js = val|decode_html_entities_filter %}
+                                                            document.addEventListener('DOMContentLoaded', () => {
+                                                                addCustomElement('{{post_id}}', '{{key}}', `{{decoded_val_js}}`);
+                                                            });
+                                                        //{% endif %}
+                                                    //{% endfor %}
+                                                //{% endfor %}
+                                                
+                                            </script>
+        
+        
+                                            <!-- moduł dropboxa -->
+                                            <label class="form-label">Zdjęcia Nieruchomości</label>
+                                            <div id="{{post_id}}-drop-area" class="drop-area">
+                                                <h3>Przeciągnij (max 10) zdjęcia tutaj</h3>
+                                            </div>
+        
+                                            <div class="mb-3">
+                                                <label class="form-label ms-5">Pliki do wysłania:</label>
+                                                <ul id="{{post_id}}-fileList" class="list-group ms-5 me-5"></ul>
+                                            </div>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', () => {
+                                                    const myFotoDropBox = new FotoDropBox('{{post_id}}', 
+                                                    [
+                                                        //{% for foto in post_data['Zdjecia'] %}
+                                                        "{{foto}}", 
+                                                        //{% endfor %}
+                                                    ]
+                                                    );
+                                                });
+                                            </script>
+                                            <!-- <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/> -->
+                                            <input type="hidden" name="OfferID" id="OfferID_{{post_id}}" value="{{post_id}}"/>
+
+                                            <!-- Przycisk Zapisz artykuł -->
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-success btn-sm" 
+                                                style="max-height: 30px; font-size: 12px;" 
+                                                onclick="prepareAndSubmitSellOfferForm('{{post_id}}', true)"
+                                            >
+                                                Zapisz ogłoszenie najmu
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <!-- collapse start -->
+
+                        <div class="sub-panel rogi collapse formatyj-maly-wiersz p-2" id="collapse_id_{{post_id}}">
+
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-12">
+                                    <img src="{{post_data['mainFoto']}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
+                                    <div class="row row-cols-4">
+                                        {% for foto in post_data['Zdjecia'][1:] %}
+                                        <div class="col mb-1">
+                                            <img src="{{foto}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark" >
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <h5>{{post_data['Tytul']}}</h5>
+                                    <h4 class="text-secondary">Opis</h4>
+                                    {% for item in post_data['Opis'] %}
+                                        {% for key, val in item.items() %}
+                                            {% if key=='li' %}
+                                                <ul>
+                                                    {% for li_item in val %}
+                                                        <li>{{li_item|decode_html_entities_filter|update_new_line_chars}}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% else %}
+                                                {% set decoded_val = val|decode_html_entities_filter|update_new_line_chars %}
+                                                {% if key=='p' %}
+                                                    <p class='text-secondary'>{{decoded_val}}</p>
+                                                {% endif %}
+                                                {% if key=='strong' %}
+                                                    <strong class='text-secondary'>{{decoded_val}}</strong>
+                                                {% endif %}
+                                                {% if key=='h1' %}
+                                                    <h1 class='text-secondary'>{{decoded_val}}</h1>
+                                                {% endif %}
+                                                {% if key=='h1-strong' %}
+                                                    <h1 class='text-secondary'><strong>{{decoded_val}}</strong></h1>
+                                                {% endif %}
+                                                {% if key=='h2' %}
+                                                    <h2 class='text-secondary'>{{decoded_val}}</h2>
+                                                {% endif %}
+                                                {% if key=='h2-strong' %}
+                                                    <h2 class='text-secondary'><strong>{{decoded_val}}</strong></h2>
+                                                {% endif %}
+                                                {% if key=='h3' %}
+                                                    <h3 class='text-secondary'>{{decoded_val}}</h3>
+                                                {% endif %}
+                                                {% if key=='h3-strong' %}
+                                                    <h3 class='text-secondary'><strong>{{decoded_val}}</strong></h3>
+                                                {% endif %}
+                                            
+                                                
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    <p class="h3"><i class="bi bi-database-fill-check text-warning"></i> {{post_data['Cena']}} PLN</p>
+                                    <div class="ms-2">
+                                        <div class="row row-cols-auto ">
+                                            
+                                            <form action="{{ url_for('update_sell_offer_status') }}" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                {% if post_data['StatusOferty'] == 1 %}
+                                                    <div class="col formatuj-padding">
+                                                        <input type="hidden" name="Status" value="0" />
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj</button>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col formatuj-padding">
+                                                        <input type="hidden" name="Status" value="1" />
+                                                        <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj</button>
+                                                    </div>
+                                                {% endif %}
+                                            </form>
+                                            
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Marketplace</button>
+                                            </div>
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Usuń z OLX</button>
+                                            </div>
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na OTO DOM</button>
+                                            </div>
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Allegro Lokalnie</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    
+                                    <div class="row-cols-1 ">
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Oferty</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-success"></i> 
+                                                    <span class="text-secondary fw-lighter">Oferta Sprzedaży</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if post_data['Lokalizacja']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Lokalizacja</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-geo text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Lokalizacja']}} </span>
+                                                    {% if post_data['GPS']!={} %}
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['latitude']}} </span>
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['longitude']}} </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['InformacjeDodatkowe']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Informacje Dodatkowe </span>
+                                                    <i class="bi bi-info-lg text-success"></i>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-stack text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['InformacjeDodatkowe']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="row row-cols-2">
+                                        
+                                        
+
+                                        {% if post_data['Metraz']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Metraż</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Metraz']}} m&sup2;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['LiczbaPokoi']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Liczba Pokoi</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPokoi']}} </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['RodzajNieruchomosci']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Nieruchomości</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-cash text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['RodzajNieruchomosci']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['PowierzchniaLokalu']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Powierzchnia Lokalu</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-cash text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['PowierzchniaLokalu']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['LiczbaPieter']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Liczba Pięter</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPieter']}} </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['Poziom']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Poziom</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-app-indicator text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Poziom']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['TechBudowy']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Technologia Budowy</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-gear text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['TechBudowy']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['TypDomu']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Umeblowanie</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-heart text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Umeblowanie']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['FormaKuchni']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Forma Kuchni</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-heart text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['FormaKuchni']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['TypDomu']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Nieruchomości </span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['TypDomu']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['StanWykonczenia']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Stan Wykończenia</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['StanWykonczenia']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['RokBudowy']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rok Budowy</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-calendar3 text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['RokBudowy']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['NumerKW']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Numer KW</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-journal-text text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['NumerKW']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['RodzajZabudowy']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Zabudowy</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-stack text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['RodzajZabudowy']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                </div>
+                                
+                                
+                            </div>
+
+                        </div>
+
+                        <!-- collapse end -->
+                        {% endfor %}
+                        <!-- Paginacja -->
+                        <span class="formatuj-maly-logout">{{ pagination.info }}</span>
+                        <div class="pagination formatuj-margin-top">
+                            <nav aria-label="Page navigation example">                            
+                                <ul class="pagination justify-content-center dark-mode">
+                                    <li class="page-item">{{ pagination.prev }}</li>
+                                    <li class="page-item">{{ pagination.links }}</li>
+                                    <li class="page-item">{{ pagination.next }}</li>
+                                </ul>
+                            </nav>
+                        </div>
+{% endblock %}
+{% block bottom_script %}
+<script>
+    class FotoDropBox { // v 2.1
+        constructor(formId, existingImageUrls = []) {
+            if (!this.checkDragAndDropSupport()) {
+                alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików.');
+                return;
+            }
+
+            this.dropArea = document.getElementById(`${formId}-drop-area`);
+            this.fileList = document.getElementById(`${formId}-fileList`);
+            this.accumulatedFiles = [];
+            this.accounter_accumulatedFiles = 0;
+            // v 2.1
+            this.existingImageUrls = existingImageUrls;
+
+            // v 2.0
+            this.fileInput = document.createElement('input');
+            this.fileInput.type = 'file';
+            this.fileInput.multiple = true; // jeśli chcesz obsługiwać wiele plików naraz
+            this.fileInput.style.display = 'none'; // ukryj element input
+            document.body.appendChild(this.fileInput); // dodaj input do DOM
+            this.dropArea.addEventListener('click', () => this.fileInput.click()); // po kliknięciu na dropArea, aktywuj input file
+            this.fileInput.addEventListener('change', (e) => this.handleFileInput(e)); // obsługa zdarzenia change
+            // v 2.0
+            this.initEventListeners();
+            // v 2.1
+            this.loadExistingImages();
+        }
+
+        loadExistingImages() {
+            this.existingImageUrls.forEach((url, index) => {
+                this.accounter_accumulatedFiles += 1;
+                const li = document.createElement('li');
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.height = '50px';
+                img.style.marginRight = '10px';
+                img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                li.appendChild(img);
+
+                const fileName = url.slice(url.lastIndexOf('/') + 1);
+                li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
+                li.style.color = '#fff';
+
+                const closeButton = document.createElement('button');
+                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+                closeButton.setAttribute('aria-label', 'Close');
+                closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
+                li.appendChild(closeButton);
+
+                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+                this.fileList.appendChild(li);
+            });
+        }
+
+        removeFileFromURL(index, url) {
+            // Możesz dodać logikę do usuwania obrazu z serwera lub z aktualnej listy zdjęć
+            this.existingImageUrls.splice(index, 1); // Usuń URL z listy
+            this.accounter_accumulatedFiles -= 1;
+            this.displayFiles(); // Odśwież wyświetlaną listę
+        }
+  
+        checkDragAndDropSupport() {
+            const div = document.createElement('div');
+            return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+        }
+
+        initEventListeners() {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, (e) => this.preventDefaults(e), false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.highlight(), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.unhighlight(), false);
+            });
+
+            this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+        }
+
+        preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        highlight() {
+            this.dropArea.classList.add('highlight');
+        }
+
+        unhighlight() {
+            this.dropArea.classList.remove('highlight');
+        }
+
+        handleDrop(e) {
+            this.preventDefaults(e);
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            this.updateFileList(files);
+        }
+        
+        handleDropImg(event) {
+            event.preventDefault();
+            let files = event.dataTransfer.files; // Pobierz pliki z obiektu DataTransfer
+            let list = document.getElementById(formId + '-fileList');
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                let li = document.createElement('li');
+                li.textContent = file.name + " (" + (file.size / 1024).toFixed(1) + " KB)"; // Dodaj informacje o pliku
+                li.file = file; // Kluczowe: Przypisz obiekt File do elementu li
+                list.appendChild(li);
+            }
+        }
+
+        // Tuning po kliknieciu w dropbox tradycyjne okienko
+        handleFileInput(e) {
+            const files = e.target.files;
+            this.updateFileList(files);
+        }
+
+
+        updateFileList(newFiles) {
+            for (let file of newFiles) {
+                if (this.accumulatedFiles.length >= 10 - this.accounter_accumulatedFiles) {
+                    alert('Osiągnięto limit 10 plików.');
+                    break;
+                }
+                if (!this.isFileUnique(file)) {
+                    alert('Plik ' + file.name + ' jest już na liście.');
+                    continue;
+                }
+                this.accumulatedFiles.push(file);
+            }
+            this.displayFiles();
+        }
+
+        isFileUnique(newFile) {
+            return !this.accumulatedFiles.some(file => 
+                file.name === newFile.name &&
+                file.size === newFile.size &&
+                this.getFileExtension(file.name) === this.getFileExtension(newFile.name)
+            );
+        }
+
+        displayFiles() {
+            this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
+            this.loadExistingImages();
+            this.accumulatedFiles.forEach((file, index) => {
+                const li = document.createElement('li');
+                li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
+
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.onload = () => { URL.revokeObjectURL(img.src); };
+                    img.style.height = '50px';
+                    img.style.marginRight = '10px';
+                    img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                    li.appendChild(img);
+                } else {
+                    alert('Plik ' + file.name + ' nie jest zdjęciem.');
+                    return;  // Nie dodawaj plików, które nie są obrazami
+                }
+
+                // li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`));
+                li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
+                if (file.size > 2097200) {
+                    li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
+                } else if (file.size > 1048576) {
+                    li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
+                } else {
+                    li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
+                }
+                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+                this.fileList.appendChild(li);
+
+                const closeButton = document.createElement('button');
+                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+                closeButton.setAttribute('aria-label', 'Close');
+                closeButton.addEventListener('click', () => this.removeFile(index));
+                li.appendChild(closeButton);
+            });
+        }
+        
+        removeFile(index) {
+            this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
+            this.displayFiles(); // Ponownie wyświetl listę plików bez usuniętego elementu
+        }
+
+        getFileExtension(filename) {
+            return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+        }
+    }
+
+    function openGoogleEarthAddress(inputId) {
+        // Pobranie wartości z pola input o zadanym id
+        var address_str = document.getElementById(inputId).value.trim();
+
+        // Sprawdzenie, czy pole nie jest puste
+        if (address_str === "") {
+            alert("Proszę wpisać adres w odpowiednie pole.");
+            return; // Przerywanie funkcji, jeśli pole jest puste
+        }
+
+        // Zamiana spacji na plusy (+) w adresie
+        var formattedAddress = address_str.replace(/ /g, '+');
+
+        // Ustawienie cech okna, które zostanie otwarte
+        var features = "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=900,height=600";
+
+        // Otwarcie nowego okna z Google Earth z wyszukanym adresem
+        var newWindow = window.open(`https://earth.google.com/web/search/${formattedAddress}`, "DemoWindow", features);
+    }
+
+    function extractAndDisplayCoords(link_id, gps_div_id, formID) {
+        // Pobranie wartości z pola input
+        var url = document.getElementById(link_id).value.trim();
+
+        // Sprawdzenie, czy pole nie jest puste
+        if (url === "") {
+            alert("Proszę wpisać link GPS.");
+            return; // Przerywanie funkcji, jeśli pole jest puste
+        }
+
+        // Sprawdzenie, czy URL zawiera '@'
+        if (!url.includes('@')) {
+            alert("Podany link nie zawiera poprawnych danych GPS.");
+            return; // Przerywanie funkcji, jeśli URL jest niepoprawny
+        }
+
+        // Ekstrakcja szerokości i długości geograficznej
+        var coords = url.split('@')[1];
+        var parts = coords.split(',');
+        if (parts.length < 2) {
+            alert("Nieprawidłowy format danych GPS.");
+            return; // Przerywanie funkcji, jeśli dane są niepełne
+        }
+        var lat = parts[0];
+        var lon = parts[1];
+
+        // Sprawdzenie, czy wartości koordynatów można przekonwertować na liczby
+        if (isNaN(parseFloat(lat)) || isNaN(parseFloat(lon))) {
+            alert("Podane wartości nie są prawidłowymi koordynatami GPS.");
+            return; // Przerywanie funkcji, jeśli koordynaty nie są liczbami
+        }
+
+        // Wyświetlenie wyników w elemencie div o id 'GPS_9999999'
+        var displayDiv = document.getElementById(gps_div_id);
+        displayDiv.innerHTML = "GPS: " + lat + " <i class='bi bi-geo-alt-fill'></i> " + lon;
+
+        // Tworzenie ukrytych pól input dla szerokości i długości geograficznej
+        var latInput = document.createElement('input');
+        latInput.type = 'hidden';
+        latInput.id = 'lat_' + formID;
+        latInput.name = 'lat_' + formID;
+        latInput.value = lat;
+
+        var lonInput = document.createElement('input');
+        lonInput.type = 'hidden';
+        lonInput.id = 'lon_' + formID;
+        lonInput.name = 'lon_' + formID;
+        lonInput.value = lon;
+
+        // Dodanie ukrytych inputów do tego samego elementu div, w którym są wyświetlane koordynaty
+        displayDiv.appendChild(latInput);
+        displayDiv.appendChild(lonInput);
+    }
+
+    function fillInput(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.value = value; // Przypisz wartość do elementu
+        } else {
+            console.error('Element o ID ' + elementId + ' nie istnieje.');
+        }
+    }
+
+    function sumWithInputValue(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            if (element.value === '') {
+                element.value = value; // Jeśli input jest pusty, wpisz wartość
+            } else {
+                // Sumuj wartość z obecną wartością, przekształcając stringi na liczby
+                element.value = Number(element.value) + Number(value);
+            }
+        } else {
+            console.error('Element o ID ' + elementId + ' nie istnieje.');
+        }
+    }
+
+    function appendValueWithNewline(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.value += value + '\n'; // Dodaj wartość i nową linię na końcu
+        } else {
+            console.error('Element o ID ' + elementId + ' nie istnieje.');
+        }
+    }
+
+</script>
+{% endblock %}
+{% block footer %}
+ To jest stopka panelu administracyjnego. All right reserved &copy; 2024 by DMD Panel Administratora.<br/>
+{% endblock %}

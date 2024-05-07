@@ -331,6 +331,78 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
 
     return rentOffer
 
+def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystkie'
+    took_rentOffer = take_data_table('*', 'OfertySprzedazy')
+    
+    rentOffer = []
+    for data in took_rentOffer:
+        try: fotoList = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', data[8])[0][1:-1]
+        except IndexError: fotoList = []
+        
+        gps_json = {}
+        try:
+            if data[28] is not None: gps_json = json.loads(data[28])
+            else: raise ValueError("Dane są None, nie można przetworzyć JSON")
+        except json.JSONDecodeError: print("Błąd: Podane dane GPSu nie są poprawnym JSON-em")
+        except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
+        except TypeError as e: print(f"Błąd typu danych: {e}")
+        except Exception as e: print(f"Nieoczekiwany błąd: {e}")
+        
+        opis_json = {}
+        try:
+            if data[4] is not None:
+                opis_json = json.loads(data[4])
+            else: raise ValueError("Dane są None, nie można przetworzyć JSON")
+        except json.JSONDecodeError: print("Błąd: Podane dane opisu nie są poprawnym JSON-em")
+        except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
+        except TypeError as e: print(f"Błąd typu danych: {e}")
+        except Exception as e: print(f"Nieoczekiwany błąd: {e}")
+        
+            
+
+        theme = {
+            'ID': int(data[0]),
+            'TypNieruchomosci': data[1] if lang=='pl' else getLangText(data[1]),#
+            'Tytul': data[2] if lang=='pl' else getLangText(data[2]), #
+            'Rodzaj': data[3] if lang=='pl' else getLangText(data[3]),#
+            'Opis': opis_json,#
+            'Cena': data[5],#
+            'Lokalizacja': "" if data[6] is None else data[6],#
+            'LiczbaPokoi': 0 if data[7] is None else data[7],#
+            'Metraz': 0 if data[9] is None else data[9],#
+            'Zdjecia': [foto for foto in fotoList if foto is not None],#
+            'DataPublikacjiOlx': None if data[10] is None else format_date(data[10]),#
+            'DataPublikacjiAllegro': None if data[11] is None else format_date(data[11]),#
+            'DataPublikacjiOtoDom': None if data[12] is None else format_date(data[12]),#
+            'DataPublikacjiMarketplace': None if data[13] is None else format_date(data[13]),#
+            'DataUtworzenia': format_date(data[14]),#
+            'DataAktualizacji': format_date(data[15]),#
+            'RodzajZabudowy': "" if data[16] is None else data[16],#
+            'Rynek': '' if data[17] is None else data[17],#
+            'LiczbaPieter': 0 if data[18] is None else data[18],#
+            'PrzeznaczenieLokalu': 0 if data[19] is None else data[19],#
+            'Poziom': 0 if data[20] is None else data[20],#
+            'TechBudowy': '' if data[21] is None else data[21],#
+            'FormaKuchni': '' if data[22] is None else data[22],#
+            'TypDomu': '' if data[23] is None else data[23],#
+            'StanWykonczenia': 0 if data[24] is None else data[24],#
+            'RokBudowy': 0 if data[25] is None else data[25],#
+            'NumerKW': '' if data[26] is None else data[26],#
+            'InformacjeDodatkowe': '' if data[27] is None else data[27],#
+            'GPS': gps_json,#
+            'TelefonKontaktowy': '' if data[29] is None else data[29],#
+            'EmailKontaktowy': '' if data[30] is None else data[30],#
+            'StatusOferty': 0 if data[31] is None else data[31]#
+        }
+
+        try: mainFoto = theme['Zdjecia'][0]
+        except IndexError: mainFoto = ''
+        except KeyError: mainFoto = ''
+        theme['mainFoto']=mainFoto
+
+        rentOffer.append(theme)
+
+    return rentOffer
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
@@ -3074,7 +3146,7 @@ def save_rent_offer():
                     oldPhotos_plus_saved_photos_plus_empyts += [None]
                 dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
 
-            print(zapytanie_sql, dane)
+            # print(zapytanie_sql, dane)
             if msq.insert_to_database(zapytanie_sql, dane):
                 print('update_galerii_udany')
             else:
@@ -3138,10 +3210,428 @@ def estateAdsSell():
     if session['userperm']['estate'] == 0:
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
+    
+    # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
+    all_sell = generator_sellOffert()
 
+    # Ustawienia paginacji
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(all_sell)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
+    ads_sell = all_sell[offset: offset + per_page]
+
+
+
+    settingsDB = generator_settingsDB()
+    domy = settingsDB['domy']
+    budownictwo = settingsDB['budownictwo']
+    development = settingsDB['development']
+    elitehome = settingsDB['elitehome']
+    inwestycje = settingsDB['inwestycje']
+    instalacje = settingsDB['instalacje']
     return render_template(
                             "estate_management_sell.html",
+                            ads_sell=ads_sell,
+                            userperm=session['userperm'],
+                            username=session['username'],
+                            pagination=pagination,
+                            domy=domy,
+                            budownictwo=budownictwo,
+                            development=development,
+                            elitehome=elitehome,
+                            inwestycje=inwestycje,
+                            instalacje=instalacje
                             )     
+
+@app.route('/remove-sell-offer', methods=['POST'])
+def remove_sell_offer():
+    """Usuwanie ofertę najmu"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: form_data['PostID']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        # pobieram id galerii
+        try: id_galerry = take_data_where_ID('Zdjecia', 'OfertySprzedazy', 'ID', set_post_id )[0][0]
+        except IndexError: 
+            flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
+            return redirect(url_for('estateAdsSell'))
+        
+        try: current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
+        except IndexError: 
+            flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
+            return redirect(url_for('estateAdsSell'))
+        
+        msq.delete_row_from_database(
+                """
+                    DELETE FROM OfertySprzedazy WHERE ID = %s;
+                """,
+                (set_post_id,)
+            )
+        
+        msq.delete_row_from_database(
+                """
+                    DELETE FROM ZdjeciaOfert WHERE ID = %s;
+                """,
+                (id_galerry,)
+            )
+        
+        real_loc_on_server = settingsDB['real-location-on-server']
+        domain = settingsDB['main-domain']
+        estate_pic_path = settingsDB['estate-pic-offer']
+        upload_path = f'{real_loc_on_server}{estate_pic_path}'
+        mainDomain_URL = f'{domain}{estate_pic_path}'
+
+        
+        current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
+        # print(current_gallery_list)
+        for delIt in current_gallery_list:
+            delIt_clear = str(delIt).replace(mainDomain_URL, '')
+            # print(delIt)
+            # print(delIt_clear)
+            if delIt in current_gallery_list:
+                try:
+                    file_path = upload_path + delIt_clear
+                    # print(file_path)
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                    else:
+                        print(f"File {file_path} not found.")
+                except Exception as e:
+                    print(f"Error removing file {file_path}: {e}")
+
+        flash("Wpis został usunięty.", "success")
+        return redirect(url_for('estateAdsRent'))
+    
+    return redirect(url_for('index'))
+
+@app.route('/update-sell-offer-status', methods=['POST'])
+def update_sell_offer_status():
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: 
+            form_data['PostID']
+            form_data['Status']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        set_post_status = int(form_data['Status'])
+        
+        zapytanie_sql = f'''
+                UPDATE OfertySprzedazy
+                SET StatusOferty = %s
+                WHERE ID = %s;
+                '''
+        dane = (set_post_status, set_post_id)
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash("Status oferty został zmieniony.", "success")
+            return redirect(url_for('estateAdsSell'))
+    
+    return redirect(url_for('index'))
+
+
+@app.route('/save-sell-offer', methods=["POST"])
+def save_sell_offer():
+    # Odczytanie danych formularza
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Pobierz JSON jako string z formularza
+    OPIS_JSON_STRing = request.form['opis']
+    # Przekonwertuj string JSON na słownik Pythona
+    try:
+        opis_data = json.loads(OPIS_JSON_STRing)
+    except json.JSONDecodeError:
+        return jsonify({'error': 'Nieprawidłowy format JSON'}), 400
+
+    # Teraz opis_data jest słownikiem Pythona, który możesz używać w kodzie
+    title = request.form.get('title')
+    rodzaj_nieruchomosci = request.form.get('rodzajNieruchomosci')
+    lokalizacja = request.form.get('lokalizacja')
+
+    cena = request.form.get('cena')
+    try: cena = int(cena)
+    except ValueError: return jsonify({'error': 'Cena musi być liczbą'}), 400
+    opis = opis_data
+    lat = request.form.get('lat')
+    lon = request.form.get('lon')
+    if lat and lon:
+        GPS = {"latitude": lat, "longitude": lon }
+        GPS_STRING = str(GPS).replace("'", '"')
+    else: GPS_STRING = ''
+    rokBudowy = request.form.get('rokBudowy')
+    try: rokBudowy = int(rokBudowy)
+    except ValueError: rokBudowy = 0
+
+    stan = request.form.get('stan')
+    nrKW = request.form.get('nrKW')
+    czynsz = request.form.get('czynsz')
+    try: czynsz = int(czynsz)
+    except ValueError: czynsz = 0
+    kaucja = request.form.get('kaucja')
+    try: kaucja = int(kaucja)
+    except ValueError: kaucja = 0
+    metraz = request.form.get('metraz')
+    try: metraz = int(metraz)
+    except ValueError: metraz = 0
+    powDzialki = request.form.get('powDzialki')
+    try: powDzialki = int(powDzialki)
+    except ValueError: powDzialki = 0
+    liczbaPieter = request.form.get('liczbaPieter')
+    try: liczbaPieter = int(liczbaPieter)
+    except ValueError: liczbaPieter = 0
+    liczbaPokoi = request.form.get('liczbaPokoi')
+    try: liczbaPokoi = int(liczbaPokoi)
+    except ValueError: liczbaPokoi = 0
+    techBudowy = request.form.get('techBudowy')
+    rodzajZabudowy = request.form.get('rodzajZabudowy')
+    umeblowanie = request.form.get('umeblowanie')
+    kuchnia = request.form.get('kuchnia')
+    dodatkoweInfo = request.form.get('dodatkoweInfo')
+    offerID = request.form.get('offerID')
+    try: offerID_int = int(offerID)
+    except ValueError: return jsonify({'error': 'Błąd id oferty!'}), 400
+
+    if offerID_int == 9999999:
+        oldPhotos = []
+    else:
+        oldPhotos = request.form.getlist('oldPhotos[]')
+
+
+    validOpis = []
+    for test in opis:
+        for val in test.values():
+            if isinstance(val, str) and val != "":
+                validOpis.append(test)
+            if isinstance(val, list) and len(val)!=0:
+                clearLI = [a for a in val if a != ""]
+                new_li = {"li": clearLI}
+                validOpis.append(new_li)
+    
+    if len(validOpis)!=0: 
+        testOpisu = True
+        opis_json = validOpis
+        OPIS_JSON_STR = str(opis_json).replace("'", '"')
+    else: testOpisu = False
+
+    # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
+    if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, testOpisu]):
+        return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
+
+    settingsDB = generator_settingsDB()
+    real_loc_on_server = settingsDB['real-location-on-server']
+    domain = settingsDB['main-domain']
+    estate_pic_path = settingsDB['estate-pic-offer']
+
+    'https://dmddomy.pl/images/estate/1713336102750.jpg'
+
+    upload_path = f'{real_loc_on_server}{estate_pic_path}'
+    mainDomain_URL = f'{domain}{estate_pic_path}'
+
+
+    # Przetwarzanie przesłanych zdjęć
+    photos = request.files.getlist('photos[]')
+    saved_photos =[]
+    for photo in photos:
+        if photo:
+            filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
+            # print(filename)
+            full_path = os.path.join(upload_path, filename)
+            complete_URL_PIC = f'{mainDomain_URL}{filename}'
+            try:
+                photo.save(full_path)
+                saved_photos.append(complete_URL_PIC)
+            except Exception as e:
+                print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
+
+
+    if offerID_int == 9999999:
+        gallery_id = None
+        # Obsługa zdjęć 
+        if len(saved_photos)>=1:
+            # dodaj zdjęcia do bazy i pobierz id galerii
+            dynamic_col_name = ''
+            dynamic_amount = ''
+            for i in range(len(saved_photos)):
+                dynamic_col_name += f'Zdjecie_{i + 1}, '
+                dynamic_amount += '%s, '
+            dynamic_col_name = dynamic_col_name[:-2]
+            dynamic_amount = dynamic_amount[:-2]
+
+            zapytanie_sql = f'''INSERT INTO ZdjeciaOfert ({dynamic_col_name}) VALUES ({dynamic_amount});'''
+            dane = tuple(a for a in saved_photos)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                # Przykładowe dane
+                try:
+                    gallery_id = msq.connect_to_database(
+                        '''
+                            SELECT * FROM ZdjeciaOfert ORDER BY ID DESC;
+                        ''')[0][0]
+                except Exception as err:
+                    flash(f'Błąd podczas tworzenia galerii! \n {err}', 'danger')
+                    return jsonify({
+                        'message': f'Błąd podczas tworzenia galerii! \n {err}',
+                        'success': True
+                        }), 200
+            else:
+                flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
+                return jsonify({
+                    'message': 'Błąd podczas zapisywania galerii w bazie!',
+                    'success': True
+                    }), 200
+        else:
+            flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
+            return jsonify({
+                    'message': 'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!',
+                    'success': True
+                    }), 200
+    else:
+        try: gallery_id = take_data_where_ID('Zdjecia', 'OfertySprzedazy', 'ID', offerID_int)[0][0]
+        except IndexError: 
+            flash(f"Nie udało się pobrać ID galerii!", "danger")
+            return jsonify({
+                    'message': 'Nie udało się pobrać ID galerii!',
+                    'success': True
+                    }), 200
+            
+        try: 
+            current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', gallery_id)[0]
+            current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
+        except IndexError: 
+            flash(f"Nie udało się pobrać galerii!", "danger")
+            return jsonify({
+                    'message': 'Nie udało się pobrać galerii!',
+                    'success': True
+                    }), 200
+
+        aktualne_linkURL_set = set()
+        for linkUrl in current_gallery:
+            nazwaZdjecia = str(linkUrl).split('/')[-1]
+            aktualne_linkURL_set.add(nazwaZdjecia)
+
+        przeslane_nazwyZdjec_set = set()
+        for nazwaZdjecia in oldPhotos:
+            przeslane_nazwyZdjec_set.add(nazwaZdjecia)
+
+        zdjeciaDoUsuniecia = aktualne_linkURL_set.difference(przeslane_nazwyZdjec_set)
+        for delIt in zdjeciaDoUsuniecia:
+            complete_URL_PIC = f'{mainDomain_URL}{delIt}'
+            if complete_URL_PIC in current_gallery_list:
+                current_gallery_list.remove(complete_URL_PIC)
+                try:
+                    file_path = upload_path + delIt
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                    else:
+                        print(f"File {file_path} not found.")
+                except Exception as e:
+                    print(f"Error removing file {file_path}: {e}")
+
+
+        oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
+        
+        if len(oldPhotos_plus_saved_photos)>=1 and len(oldPhotos_plus_saved_photos) <=10:
+            # dodaj zdjęcia do bazy i pobierz id galerii
+            dynamic_col_name = ''
+            
+            for i in range(10):
+                dynamic_col_name += f'Zdjecie_{i + 1} = %s, '
+
+            dynamic_col_name = dynamic_col_name[:-2]
+
+            zapytanie_sql = f'''
+                UPDATE ZdjeciaOfert
+                SET {dynamic_col_name} 
+                WHERE ID = %s;
+                '''
+            len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos)
+            if 10 - len_oldPhotos_plus_saved_photos == 0:
+                dane = tuple(a for a in oldPhotos_plus_saved_photos + [gallery_id])
+            else:
+                oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos
+                for _ in  range(10 - len_oldPhotos_plus_saved_photos):
+                    oldPhotos_plus_saved_photos_plus_empyts += [None]
+                dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
+
+            # print(zapytanie_sql, dane)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                print('update_galerii_udany')
+            else:
+                flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
+                return jsonify({
+                        'message': 'xxx',
+                        'success': True
+                        }), 200
+
+    user_phone = session['user_data']['phone']
+    user_email = session['user_data']['email']
+
+    if offerID_int == 9999999:
+        zapytanie_sql = f'''
+                    INSERT INTO OfertySprzedazy (Tytul, Opis, Cena, Kaucja, Lokalizacja, LiczbaPokoi, Metraz, Zdjecia, 
+                                            RodzajZabudowy, Czynsz, Umeblowanie, LiczbaPieter, PowierzchniaDzialki,
+                                            TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
+                                            InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
+        
+        dane = (
+                title, OPIS_JSON_STR, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
+                rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
+                techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
+                dodatkoweInfo, GPS_STRING, user_phone, user_email, 1)
+    else:
+        zapytanie_sql = f'''
+                    UPDATE OfertySprzedazy 
+                    SET 
+                        Tytul=%s, Opis=%s, Cena=%s, Kaucja=%s, Lokalizacja=%s, LiczbaPokoi=%s, Metraz=%s, Zdjecia=%s, 
+                        RodzajZabudowy=%s, Czynsz=%s, Umeblowanie=%s, LiczbaPieter=%s, PowierzchniaDzialki=%s,
+                        TechBudowy=%s, FormaKuchni=%s, TypDomu=%s, StanWykonczenia=%s, RokBudowy=%s, NumerKW=%s,
+                        InformacjeDodatkowe=%s, GPS=%s, TelefonKontaktowy=%s, EmailKontaktowy=%s, StatusOferty=%s
+                    WHERE ID = %s;'''
+        dane = (
+                title, OPIS_JSON_STR, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
+                rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
+                techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
+                dodatkoweInfo, GPS_STRING, user_phone, user_email, 1, offerID_int)
+
+    if msq.insert_to_database(zapytanie_sql, dane):
+        flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+        return jsonify({
+            'message': 'Oferta wynajmu została zapisana pomyślnie!',
+            'success': True
+            }), 200
+    else:
+        flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+        return jsonify({
+                'message': 'xxx',
+                'success': True
+                }), 200
+  
 
 @app.route('/estate-ads-special')
 def estateAdsspecial():
