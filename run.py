@@ -380,7 +380,7 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
             'RodzajZabudowy': "" if data[16] is None else data[16],#
             'Rynek': '' if data[17] is None else data[17],#
             'LiczbaPieter': 0 if data[18] is None else data[18],#
-            'PrzeznaczenieLokalu': 0 if data[19] is None else data[19],#
+            'PrzeznaczenieLokalu': "" if data[19] is None else data[19],#
             'Poziom': 0 if data[20] is None else data[20],#
             'TechBudowy': '' if data[21] is None else data[21],#
             'FormaKuchni': '' if data[22] is None else data[22],#
