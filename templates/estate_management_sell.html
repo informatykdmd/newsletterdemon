@@ -676,7 +676,7 @@
                                             </div>
                                             <div class="row g-2 mb-3">
                                                 <div class="col-sm-4">
-                                                    <div class="form-floating mb-1">
+                                                    <div class="form-floating mb-0">
                                                         <input 
                                                             type="text" 
                                                             value="{{post_data['Rynek']}}"
@@ -695,7 +695,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm">
-                                                    <div class="form-floating mb-1">
+                                                    <div class="form-floating mb-0">
                                                         <input 
                                                             type="text" 
                                                             value="{{post_data['TypDomu']}}"
@@ -993,7 +993,7 @@
                                             
 
                                             <div class="row row-cols-2 mb-3">
-                                                <div class="col-sm-7">
+                                                <div class="col-sm-6">
                                                     <div class="form-floating mb-0">
                                                         <input 
                                                             type="text" 
@@ -1008,13 +1008,11 @@
                                                     </div>
                                                     <div class="no-border formatuj-maly-font fadeIn">
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'wolnostojąca');">wolnostojąca </a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'szeregowa');">szeregowa</a>
-                                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'wielorodzinna');">wielorodzinna </a>
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'komercyjna');">komercyjna</a>
                                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('Rodzaj_{{post_id}}', 'rekreacyjna');">rekreacyjna</a>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-8">
+                                                <div class="col-sm-6">
                                                     <div class="form-floating mb-0">
                                                         <input 
                                                             type="text" 
@@ -1317,45 +1315,6 @@
                                             </div>
                                         </div>
                                         {% endif %}
-                                        {% if post_data['RodzajNieruchomosci']!=0 %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Rodzaj Nieruchomości</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-cash text-warning"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['RodzajNieruchomosci']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['PowierzchniaLokalu']!=0 %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Powierzchnia Lokalu</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-cash text-success"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['PowierzchniaLokalu']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['LiczbaPieter']!=0 %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Liczba Pięter</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-house-check text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPieter']}} </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
                                         {% if post_data['Poziom']!=0 %}
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
@@ -1369,6 +1328,48 @@
                                             </div>
                                         </div>
                                         {% endif %}
+                                        
+                                        {% if post_data['LiczbaPieter']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Liczba Pięter</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPieter']}} </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['Rodzaj']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Nieruchomości</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-cash text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Rodzaj']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['PrzeznaczenieLokalu']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Przeznaczenie Lokalu</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-cash text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['PrzeznaczenieLokalu']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        
                                         {% if post_data['TechBudowy']!='' %}
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
@@ -1386,11 +1387,11 @@
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="mb-2">
-                                                    <span class="text-light fw-light">Umeblowanie</span>
+                                                    <span class="text-light fw-light">Typ Domu</span>
                                                 </div>
                                                 <div class="ms-3 formatuj-maly-font">
                                                     <i class="bi bi-house-heart text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['Umeblowanie']}}</span>
+                                                    <span class="text-secondary fw-lighter">{{post_data['TypDomu']}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1408,15 +1409,15 @@
                                             </div>
                                         </div>
                                         {% endif %}
-                                        {% if post_data['TypDomu']!='' %}
+                                        {% if post_data['TypNieruchomosci']!='' %}
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="mb-2">
-                                                    <span class="text-light fw-light">Rodzaj Nieruchomości </span>
+                                                    <span class="text-light fw-light">Typ Nieruchomości </span>
                                                 </div>
                                                 <div class="ms-3 formatuj-maly-font">
                                                     <i class="bi bi-house text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['TypDomu']}}</span>
+                                                    <span class="text-secondary fw-lighter">{{post_data['TypNieruchomosci']}}</span>
                                                 </div>
                                             </div>
                                         </div>
