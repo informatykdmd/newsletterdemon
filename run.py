@@ -3635,8 +3635,24 @@ def save_sell_offer():
                 'message': 'xxx',
                 'success': True
                 }), 200
-  
 
+
+@app.route('/set-as-specOffer', methods=['POST'])
+def set_as_specOffer():
+    """Strona zawierająca listę z ogłoszeniami nieruchomości."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        print(request.form)
+        
+    redirectGoal = 'estateAdsSell'
+    return redirect(url_for(redirectGoal))
 @app.route('/estate-ads-special')
 def estateAdsspecial():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""

@@ -1171,6 +1171,21 @@
                                                     </div>
                                                 {% endif %}
                                             </form>
+                                            <form action="{{ url_for('set_as_specOffer') }}" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                {% if post_data['StatusOferty'] == 1 %}
+                                                    <div class="col me-1 mb-1">
+                                                        <input type="hidden" name="Status" value="0" />
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj</button>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col me-1 mb-1">
+                                                        <input type="hidden" name="Status" value="1" />
+                                                        <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj</button>
+                                                    </div>
+                                                {% endif %}
+                                            </form>
                                             
                                             <div class="col formatuj-padding">
                                                 <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Marketplace</button>
