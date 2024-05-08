@@ -448,6 +448,39 @@ function prepareAndSubmitSellOfferForm(offerId, oldFotos=true) {
     var zdjecia = [];
     var oldFotos_list = [];
 
+
+
+
+    console.log("Title:", title);
+    console.log("Typ Nieruchomości:", typNieruchomosci);
+    console.log("Rynek:", rynek);
+    console.log("Lokalizacja:", lokalizacja);
+    console.log("Cena:", cena);
+    console.log("Opis:", opis);
+    console.log("Opis JSON String:", opisJsonString);
+    console.log("Latitude:", lat);
+    console.log("Longitude:", lon);
+    console.log("Rok Budowy:", rokBudowy);
+    console.log("Stan Wykończenia:", stan);
+    console.log("Numer KW:", nrKW);
+    console.log("Typ Domu:", typDomu);
+    console.log("Przeznaczenie Lokalu:", przeznaczenieLokalu);
+    console.log("Metraż:", metraz);
+    console.log("Poziom:", poziom);
+    console.log("Liczba Pięter:", liczbaPieter);
+    console.log("Liczba Pokoi:", liczbaPokoi);
+    console.log("Technologia Budowy:", techBudowy);
+    console.log("Rodzaj Zabudowy:", rodzajZabudowy);
+    console.log("Rodzaj Nieruchomości:", rodzajNieruchomosci);
+    console.log("Forma Kuchni:", kuchnia);
+    console.log("Informacje Dodatkowe:", dodatkoweInfo);
+    console.log("ID Oferty:", offerIDbox);
+
+    // Dodatkowo dla listy zdjęć
+    console.log("Lista zdjęć:", fotoList);
+
+
+
     fotoList.childNodes.forEach(child => {
         if (child.file) {  // Sprawdź, czy element li ma przypisany plik
             zdjecia.push(child.file);
