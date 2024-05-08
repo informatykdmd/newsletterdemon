@@ -1147,12 +1147,12 @@
                                             <form action="{{ url_for('update_rent_offer_status') }}" method="POST" enctype="multipart/form-data">
                                                 <input type="hidden" name="PostID" value="{{post_id}}" />
                                                 {% if post_data['StatusOferty'] == 1 %}
-                                                    <div class="col formatuj-padding">
+                                                    <div class="col me-1 mb-1">
                                                         <input type="hidden" name="Status" value="0" />
                                                         <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj</button>
                                                     </div>
                                                 {% else %}
-                                                    <div class="col formatuj-padding">
+                                                    <div class="col me-1 mb-1">
                                                         <input type="hidden" name="Status" value="1" />
                                                         <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj</button>
                                                     </div>
