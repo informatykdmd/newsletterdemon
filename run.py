@@ -404,6 +404,82 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
 
     return sellOffer
 
+def generator_specialOffert(lang='pl', status='aktywna'): # status='aktywna', 'nieaktywna', 'wszystkie'
+    took_specOffer = take_data_table('*', 'OfertySpecjalne')
+    
+    specOffer = []
+    for data in took_specOffer:
+        try: fotoList = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', data[7])[0][1:-1]
+        except IndexError: fotoList = []
+
+        gps_json = {}
+        try:
+            if data[29] is not None:
+                gps_json = json.loads(data[29])
+                {"latitude": 52.229676, "longitude": 21.012229}
+                "https://earth.google.com/web/@52.25242614,20.83096693,100.96310044a,116.2153688d,35y,0h,0t,0r/data=OgMKATA" # nowrmal
+                "https://earth.google.com/web/@52.25250876,20.83139622,102.83373871a,0d,60y,333.15344169h,86.56713379t,0r" # 3D
+            else: raise ValueError("Dane są None, nie można przetworzyć JSON")
+        except json.JSONDecodeError: print("Błąd: Podane dane nie są poprawnym JSON-em")
+        except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
+        except TypeError as e: print(f"Błąd typu danych: {e}")
+        except Exception as e: print(f"Nieoczekiwany błąd: {e}")
+
+            
+        opis_json = {}
+        try:
+            if data[2] is not None: opis_json = json.loads(data[2])
+            else: raise ValueError("Dane są None, nie można przetworzyć JSON")
+        except json.JSONDecodeError: print("Błąd: Podane dane nie są poprawnym JSON-em")
+        except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
+        except TypeError as e: print(f"Błąd typu danych: {e}")
+        except Exception as e: print(f"Nieoczekiwany błąd: {e}")
+
+        theme = {
+            'ID': int(data[0]),
+            'Tytul': data[1] if lang=='pl' else getLangText(data[1]),
+            'Opis': opis_json,
+            'Cena': data[3],
+            'Lokalizacja': data[4],
+            'LiczbaPokoi': '' if data[5] is None else data[5],
+            'Metraz': '' if data[6] is None else data[6],
+            'Zdjecia': [foto for foto in fotoList if foto is not None],
+            'Status': data[8], #ENUM('aktywna', 'nieaktywna'): Używam typu ENUM do określenia statusu oferty. To sprawia, że tylko wartości 'aktywna' i 'nieaktywna' są dozwolone w tej kolumnie.
+            'Rodzaj': data[9] if lang=='pl' else getLangText(data[8]),
+            'DataRozpoczecia': format_date(data[10]),
+            'DataZakonczenia': format_date(data[11]),
+            'DataUtworzenia': format_date(data[12]),
+            'DataAktualizacji': format_date(data[13]),
+            'Kaucja': 0.00 if data[14] is None else data[14],
+            'Czynsz': 0.00 if data[15] is None else data[15],
+            'Umeblowanie': '' if data[16] is None else data[16],
+            'LiczbaPieter': 0 if data[17] is None else data[17],
+            'PowierzchniaDzialki': 0.00 if data[18] is None else data[18],
+            'TechBudowy': '' if data[19] is None else data[19],
+            'FormaKuchni': '' if data[20] is None else data[20],
+            'TypDomu': '' if data[21] is None else data[21],
+            'StanWykonczenia': '' if data[22] is None else data[22],
+            'RokBudowy': 0 if data[23] is None else data[23],
+            'NumerKW': '' if data[24] is None else data[24],
+            'InformacjeDodatkowe': '' if data[25] is None else data[25],
+            'Rynek': '' if data[26] is None else data[26],
+            'PrzeznaczenieLokalu': '' if data[27] is None else data[27],
+            'Poziom': 'None' if data[28] is None else data[28],
+            'GPS': gps_json,
+            'TelefonKontaktowy': '' if data[30] is None else data[30],
+            'EmailKontaktowy': '' if data[31] is None else data[31],
+            'IdRodzica': 0 if data[32] is None else data[32],
+            'RodzajRodzica': '' if data[33] is None else data[33]
+            
+        }
+
+        if status == 'aktywna' or status == 'nieaktywna':
+            if data[8] == status:
+                specOffer.append(theme)
+        if status == 'wszystkie':
+            specOffer.append(theme)
+    return specOffer
+
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 newsletterSettingDB = generator_newsletterSettingDB()
@@ -2790,7 +2866,14 @@ def estateAdsRent():
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     ads_rent = all_rents[offset: offset + per_page]
 
-
+    specOfferIfno = generator_specialOffert()
+    if len(specOfferIfno) == 1:
+        if specOfferIfno[0]['RodzajRodzica'] == 'r':
+            specOfferID = specOfferIfno[0]['IdRodzica']
+        else:
+            specOfferID = 'None'
+    else:
+        specOfferID = 'None'
 
     settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
@@ -2802,6 +2885,7 @@ def estateAdsRent():
     return render_template(
                             "estate_management_rent.html",
                             ads_rent=ads_rent,
+                            specOfferID=specOfferID,
                             userperm=session['userperm'],
                             username=session['username'],
                             pagination=pagination,
@@ -3222,6 +3306,14 @@ def estateAdsSell():
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     ads_sell = all_sell[offset: offset + per_page]
 
+    specOfferIfno = generator_specialOffert()
+    if len(specOfferIfno) == 1:
+        if specOfferIfno[0]['RodzajRodzica'] == 's':
+            specOfferID = specOfferIfno[0]['IdRodzica']
+        else:
+            specOfferID = 'None'
+    else:
+        specOfferID = 'None'
 
 
     settingsDB = generator_settingsDB()
@@ -3234,6 +3326,7 @@ def estateAdsSell():
     return render_template(
                             "estate_management_sell.html",
                             ads_sell=ads_sell,
+                            specOfferID=specOfferID,
                             userperm=session['userperm'],
                             username=session['username'],
                             pagination=pagination,
@@ -3649,10 +3742,22 @@ def set_as_specOffer():
         return redirect(url_for('index'))
     
     if request.method == 'POST':
+        postID = request.form.get('PostID')
+        redirectGoal = request.form.get('redirectGoal')
+        status = request.form.get('Status')
+        if status == '1':
+
+            zapytanie_sql = '''UPDATE estates SET isSpecialOffer = %s WHERE id = %s'''
+            dane = ('1', postID)
+        elif status == '0':
+            zapytanie_sql = '''DELETE FROM specialoffers WHERE estateId = %s'''
+            dane = (postID, )
         print(request.form)
 
-    redirectGoal = 'estateAdsSell'
-    return redirect(url_for(redirectGoal))
+
+        return redirect(url_for(redirectGoal))
+    return redirect(url_for('index'))
+    
 
 @app.route('/estate-ads-special')
 def estateAdsspecial():
