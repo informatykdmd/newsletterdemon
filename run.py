@@ -3307,6 +3307,7 @@ def estateAdsSell():
     ads_sell = all_sell[offset: offset + per_page]
 
     specOfferIfno = generator_specialOffert()
+    print(specOfferIfno)
     if len(specOfferIfno) == 1:
         if specOfferIfno[0]['RodzajRodzica'] == 's':
             specOfferID = specOfferIfno[0]['IdRodzica']
