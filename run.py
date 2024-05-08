@@ -3370,7 +3370,8 @@ def save_sell_offer():
 
     # Teraz opis_data jest słownikiem Pythona, który możesz używać w kodzie
     title = request.form.get('title')
-    rodzaj_nieruchomosci = request.form.get('rodzajNieruchomosci')
+    typ_nieruchomosci = request.form.get('typNieruchomosci')
+    rynek = request.form.get('rynek')
     lokalizacja = request.form.get('lokalizacja')
 
     cena = request.form.get('cena')
@@ -3389,18 +3390,16 @@ def save_sell_offer():
 
     stan = request.form.get('stan')
     nrKW = request.form.get('nrKW')
-    czynsz = request.form.get('czynsz')
-    try: czynsz = int(czynsz)
-    except ValueError: czynsz = 0
-    kaucja = request.form.get('kaucja')
-    try: kaucja = int(kaucja)
-    except ValueError: kaucja = 0
+    typDomu = request.form.get('typDomu')
+
+    przeznaczenieLokalu = request.form.get('przeznaczenieLokalu')
+
     metraz = request.form.get('metraz')
     try: metraz = int(metraz)
     except ValueError: metraz = 0
-    powDzialki = request.form.get('powDzialki')
-    try: powDzialki = int(powDzialki)
-    except ValueError: powDzialki = 0
+    poziom = request.form.get('poziom')
+    try: poziom = int(poziom)
+    except ValueError: poziom = None
     liczbaPieter = request.form.get('liczbaPieter')
     try: liczbaPieter = int(liczbaPieter)
     except ValueError: liczbaPieter = 0
@@ -3409,7 +3408,7 @@ def save_sell_offer():
     except ValueError: liczbaPokoi = 0
     techBudowy = request.form.get('techBudowy')
     rodzajZabudowy = request.form.get('rodzajZabudowy')
-    umeblowanie = request.form.get('umeblowanie')
+    rodzajNieruchomosci = request.form.get('rodzajNieruchomosci')
     kuchnia = request.form.get('kuchnia')
     dodatkoweInfo = request.form.get('dodatkoweInfo')
     offerID = request.form.get('offerID')
@@ -3439,7 +3438,7 @@ def save_sell_offer():
     else: testOpisu = False
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
-    if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, testOpisu]):
+    if not all([title, typ_nieruchomosci, lokalizacja, cena, testOpisu]):
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
     settingsDB = generator_settingsDB()
@@ -3593,30 +3592,35 @@ def save_sell_offer():
 
     if offerID_int == 9999999:
         zapytanie_sql = f'''
-                    INSERT INTO OfertySprzedazy (Tytul, Opis, Cena, Kaucja, Lokalizacja, LiczbaPokoi, Metraz, Zdjecia, 
-                                            RodzajZabudowy, Czynsz, Umeblowanie, LiczbaPieter, PowierzchniaDzialki,
-                                            TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
-                                            InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);'''
+                    INSERT INTO OfertySprzedazy 
+                            (TypNieruchomosci, Tytul, Rodzaj, Opis, Cena, Lokalizacja, LiczbaPokoi, Metraz, Zdjecia,
+                            RodzajZabudowy, Rynek, LiczbaPieter, PrzeznaczenieLokalu, Poziom,
+                            TechBudowy, FormaKuchni, TypDomu, StanWykonczenia, RokBudowy, NumerKW,
+                            InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
         
         dane = (
-                title, OPIS_JSON_STR, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
-                rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
-                techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
+                typ_nieruchomosci, title, rodzajNieruchomosci, OPIS_JSON_STR, cena, lokalizacja, liczbaPokoi, metraz, gallery_id,
+                rodzajZabudowy, rynek, liczbaPieter, przeznaczenieLokalu, poziom, 
+                techBudowy, kuchnia, typDomu, stan, rokBudowy, nrKW,
                 dodatkoweInfo, GPS_STRING, user_phone, user_email, 1)
     else:
         zapytanie_sql = f'''
                     UPDATE OfertySprzedazy 
                     SET 
-                        Tytul=%s, Opis=%s, Cena=%s, Kaucja=%s, Lokalizacja=%s, LiczbaPokoi=%s, Metraz=%s, Zdjecia=%s, 
-                        RodzajZabudowy=%s, Czynsz=%s, Umeblowanie=%s, LiczbaPieter=%s, PowierzchniaDzialki=%s,
-                        TechBudowy=%s, FormaKuchni=%s, TypDomu=%s, StanWykonczenia=%s, RokBudowy=%s, NumerKW=%s,
-                        InformacjeDodatkowe=%s, GPS=%s, TelefonKontaktowy=%s, EmailKontaktowy=%s, StatusOferty=%s
+                        TypNieruchomosci = %s, Tytul = %s, Rodzaj = %s, Opis = %s, Cena = %s, 
+                        Lokalizacja = %s, LiczbaPokoi = %s, Metraz = %s, Zdjecia = %s, RodzajZabudowy = %s, 
+                        Rynek = %s, LiczbaPieter = %s, PrzeznaczenieLokalu = %s, Poziom = %s, TechBudowy = %s, 
+                        FormaKuchni = %s, TypDomu = %s, StanWykonczenia = %s, RokBudowy = %s, NumerKW = %s,
+                        InformacjeDodatkowe = %s, GPS = %s, TelefonKontaktowy = %s, EmailKontaktowy = %s, 
+                        StatusOferty = %s
                     WHERE ID = %s;'''
         dane = (
-                title, OPIS_JSON_STR, cena, kaucja, lokalizacja, liczbaPokoi, metraz, gallery_id,
-                rodzajZabudowy, czynsz, umeblowanie, liczbaPieter, powDzialki,
-                techBudowy, kuchnia, rodzaj_nieruchomosci, stan, rokBudowy, nrKW,
+                typ_nieruchomosci, title, rodzajNieruchomosci, OPIS_JSON_STR, cena, 
+                lokalizacja, liczbaPokoi, metraz, gallery_id, rodzajZabudowy, 
+                rynek, liczbaPieter, przeznaczenieLokalu, poziom, techBudowy, 
+                kuchnia, typDomu, stan, rokBudowy, nrKW,
                 dodatkoweInfo, GPS_STRING, user_phone, user_email, 1, offerID_int)
 
     if msq.insert_to_database(zapytanie_sql, dane):

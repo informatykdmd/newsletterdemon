@@ -411,7 +411,8 @@ function prepareAndSubmitSellOfferForm(offerId, oldFotos=true) {
 
     // Pobieranie wartości z formularza
     var title = document.getElementById('title_' + offerId).value;
-    var rodzajNieruchomosci = document.getElementById('RodzajNieruchomosci_' + offerId).value;
+    var typNieruchomosci = document.getElementById('TypNieruchomosci_' + offerId).value;
+    var rynek = document.getElementById('Rynek_' + offerId).value;
     var lokalizacja = document.getElementById('Lokalizacja_' + offerId).value;
     var cena = document.getElementById('Cena_' + offerId).value;
     var opis = joinToDynamicDescription(offerId, "list-container");
@@ -428,15 +429,15 @@ function prepareAndSubmitSellOfferForm(offerId, oldFotos=true) {
     var rokBudowy = document.getElementById('RokBudowy_' + offerId).value;
     var stan = document.getElementById('StanWykonczenia_' + offerId).value;
     var nrKW = document.getElementById('NumerKW_' + offerId).value;
-    var czynsz = document.getElementById('Czynsz_' + offerId).value;
-    var kaucja = document.getElementById('Kaucja_' + offerId).value;
+    var typDomu = document.getElementById('TypDomu_' + offerId).value;
+    var przeznaczenieLokalu = document.getElementById('PrzeznaczenieLokalu_' + offerId).value;
     var metraz = document.getElementById('Metraz_' + offerId).value;
-    var powDzialki = document.getElementById('PowierzchniaDzialki_' + offerId).value;
+    var poziom = document.getElementById('Poziom_' + offerId).value;
     var liczbaPieter = document.getElementById('LiczbaPieter_' + offerId).value;
     var liczbaPokoi = document.getElementById('LiczbaPokoi_' + offerId).value;
     var techBudowy = document.getElementById('TechnologiaBudowy_' + offerId).value;
     var rodzajZabudowy = document.getElementById('RodzajZabudowy_' + offerId).value;
-    var umeblowanie = document.getElementById('Umeblowanie_' + offerId).value;
+    var rodzajNieruchomosci = document.getElementById('RodzajNieruchomosci_' + offerId).value;
     var kuchnia = document.getElementById('FormaKuchni_' + offerId).value;
     var dodatkoweInfo = document.getElementById('InformacjeDodatkowe_' + offerId).value;
     var offerIDbox = document.getElementById('OfferID_' + offerId).value;
@@ -458,7 +459,8 @@ function prepareAndSubmitSellOfferForm(offerId, oldFotos=true) {
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     toggleWarning('title_' + offerId, !title);
-    toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
+    toggleWarning('TypNieruchomosci_' + offerId, !typNieruchomosci);
+    toggleWarning('Rynek_' + offerId, !rynek);
     toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
     toggleWarning('Cena_' + offerId, !cena);
 
@@ -503,25 +505,27 @@ function prepareAndSubmitSellOfferForm(offerId, oldFotos=true) {
 
     // Dodanie pozostałych danych do FormData
     formData.append('title', title);
-    formData.append('rodzajNieruchomosci', rodzajNieruchomosci);
+    formData.append('typNieruchomosci', typNieruchomosci);
+    formData.append('rynek', rynek);
     formData.append('lokalizacja', lokalizacja);
     formData.append('cena', cena);
     formData.append('opis', opisJsonString);
+    
 
     formData.append('lat', lat);
     formData.append('lon', lon);
     formData.append('rokBudowy', rokBudowy);
     formData.append('stan', stan);
     formData.append('nrKW', nrKW);
-    formData.append('czynsz', czynsz);
-    formData.append('kaucja', kaucja);
+    formData.append('typDomu', typDomu);
+    formData.append('przeznaczenieLokalu', przeznaczenieLokalu);
     formData.append('metraz', metraz);
-    formData.append('powDzialki', powDzialki);
+    formData.append('poziom', poziom);
     formData.append('liczbaPieter', liczbaPieter);
     formData.append('liczbaPokoi', liczbaPokoi);
     formData.append('techBudowy', techBudowy);
     formData.append('rodzajZabudowy', rodzajZabudowy);
-    formData.append('umeblowanie', umeblowanie);
+    formData.append('rodzajNieruchomosci', rodzajNieruchomosci);
     formData.append('kuchnia', kuchnia);
     formData.append('dodatkoweInfo', dodatkoweInfo);
     formData.append('offerID', offerIDbox);
