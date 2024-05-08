@@ -332,10 +332,10 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
     return rentOffer
 
 def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystkie'
-    took_rentOffer = take_data_table('*', 'OfertySprzedazy')
-    print(took_rentOffer)
-    rentOffer = []
-    for data in took_rentOffer:
+    took_sellOffer = take_data_table('*', 'OfertySprzedazy')
+    # print(took_rentOffer)
+    sellOffer = []
+    for data in took_sellOffer:
         try: fotoList = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', data[9])[0][1:-1]
         except IndexError: fotoList = []
         
@@ -400,9 +400,9 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
         except KeyError: mainFoto = ''
         theme['mainFoto']=mainFoto
 
-        rentOffer.append(theme)
+        sellOffer.append(theme)
 
-    return rentOffer
+    return sellOffer
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
@@ -3650,9 +3650,10 @@ def set_as_specOffer():
     
     if request.method == 'POST':
         print(request.form)
-        
+
     redirectGoal = 'estateAdsSell'
     return redirect(url_for(redirectGoal))
+
 @app.route('/estate-ads-special')
 def estateAdsspecial():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
