@@ -3312,7 +3312,7 @@ def remove_sell_offer():
                     print(f"Error removing file {file_path}: {e}")
 
         flash("Wpis został usunięty.", "success")
-        return redirect(url_for('estateAdsRent'))
+        return redirect(url_for('estateAdsSell'))
     
     return redirect(url_for('index'))
 
