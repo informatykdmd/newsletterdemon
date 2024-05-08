@@ -555,9 +555,9 @@ function prepareAndSubmitSellOfferForm(offerId, oldFotos=true) {
         // console.log('data.seccess:', data.success);
         if (data.success == true) {
             // console.log('xxx:', data);
-            var form = document.getElementById('rentOffer_' + offerId);
+            var form = document.getElementById('sellOffer_' + offerId);
             form.reset();
-            window.location.href = '/estate-ads-rent';            
+            window.location.href = '/estate-ads-sell';            
         } else if (data.error) {
             
         }
