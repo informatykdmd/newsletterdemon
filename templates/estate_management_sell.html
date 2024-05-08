@@ -1175,7 +1175,7 @@
                                                 <input type="hidden" name="PostID" value="{{post_id}}" />
                                                 <input type="hidden" name="redirectGoal" value="estateAdsSell" />
                                                 {% if post_data['StatusOferty'] == 1 %}
-                                                    {% if {{specOfferID}} == {{post_id}} %}
+                                                    {% if specOfferID == post_id %}
                                                         <div class="col me-1 mb-1">
                                                             <input type="hidden" name="Status" value="1" />
                                                             <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Oferta specjalna</button>
