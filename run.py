@@ -3746,7 +3746,11 @@ def set_as_specOffer():
         redirectGoal = request.form.get('redirectGoal')
         status = request.form.get('Status')
         if status == '1':
+            if redirectGoal == 'estateAdsRent':
+                pass
 
+            if redirectGoal == 'estateAdsSell':
+                pass
             zapytanie_sql = '''UPDATE estates SET isSpecialOffer = %s WHERE id = %s'''
             dane = ('1', postID)
         elif status == '0':
