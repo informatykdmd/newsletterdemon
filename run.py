@@ -95,7 +95,11 @@ def take_data_where_ID(key, table, id_name, ID):
     return dump_key
 
 def take_data_where_ID_AND_somethig(key, table, id_name, ID, nameSomething, valSomething):
-    dump_key = msq.connect_to_database(f'SELECT {key} FROM {table} WHERE {id_name} = {ID} AND {nameSomething} = "{valSomething}";')
+    if isinstance(ID, str):
+        ID = f"'{ID}'"
+    if isinstance(valSomething, str):
+        valSomething = f"'{valSomething}'"
+    dump_key = msq.connect_to_database(f'SELECT {key} FROM {table} WHERE {id_name} = {ID} AND {nameSomething} = {valSomething};')
     return dump_key
 
 def take_data_table(key, table):
