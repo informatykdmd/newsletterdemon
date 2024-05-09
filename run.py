@@ -630,10 +630,9 @@ def addSpecOffer(offerID, parent, status='aktywna'):
                     #     val = f'{val}'
                     col_names += f'{key}, '
                     placeHolder += f'%s, '
-                    if val=='' or val==0:
-                        val=None
+                    if val!='' or val!=0:
                     
-                    data_values.append(val)
+                        data_values.append(val)
             if col_names != '':
                 col_names = col_names[:-2]
                 placeHolder = placeHolder[:-2]
