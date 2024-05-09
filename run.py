@@ -602,7 +602,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
     specChecked = checkSpecOffer(offerID, parent)
     specID = specChecked[0]
     specStatus = specChecked[1]
-    print(specChecked)
+
     if specID == None and specStatus == None:
         if parent == 'r':
             generator = generator_rentOffert_raw()
@@ -632,7 +632,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
                     placeHolder += f'%s, '
                     if val=='' or val==0:
                         val=None
-                    if key == 'Opis': print(val)
+                    
                     data_values.append(val)
             if col_names != '':
                 col_names = col_names[:-2]
@@ -646,7 +646,8 @@ def addSpecOffer(offerID, parent, status='aktywna'):
                 dane = tuple(a for a in data_values)
                 print(zapytanie_sql)
                 print(dane)
-        return True
+                return msq.insert_to_database(zapytanie_sql, dane)
+        return False
     else:
         return False
     
