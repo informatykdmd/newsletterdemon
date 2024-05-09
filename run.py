@@ -626,7 +626,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
             if key!='ID' and key!='DataPublikacjiOlx' and key!='DataPublikacjiAllegro'\
                 and key!='DataPublikacjiOtoDom' and key!='DataPublikacjiMarketplace'\
                     and key!='DataUtworzenia' and key!='DataAktualizacji' and key!='StatusOferty'\
-                        and key!='Rodzaj' and val!='' and val!=0:
+                        and key!='TypNieruchomosci'and key!='Rodzaj' and val!='' and val!=0:
                 col_names += f'{key}, '
                 placeHolder += f'%s, '
                 data_values.append(val)
@@ -3950,7 +3950,7 @@ def set_as_specOffer():
         if redirectGoal == 'estateAdsSell':
             parent = 's'
 
-        if status == '1':            
+        if status == '1':
             zapytanie_sql = '''UPDATE estates SET isSpecialOffer = %s WHERE id = %s'''
             dane = ('1', postID)
         elif status == '0':
