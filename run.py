@@ -455,7 +455,49 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
         sellOffer.append(theme)
 
     return sellOffer
+def generator_sellOffert_raw(): # surowe dane
+    took_sellOffer = take_data_table('*', 'OfertySprzedazy')
+    sellOffer = []
+    for data in took_sellOffer:
+        
+        theme = {
+            'ID': int(data[0]),
+            'TypNieruchomosci': data[1],#
+            'Tytul': data[2], #
+            'Rodzaj': data[3],#
+            'Opis': data[4],#
+            'Cena': data[5],#
+            'Lokalizacja': data[6],#
+            'LiczbaPokoi': data[7],#
+            'Metraz': data[8],#
+            'Zdjecia': data[9],#
+            'DataPublikacjiOlx': data[10],#
+            'DataPublikacjiAllegro': data[11],#
+            'DataPublikacjiOtoDom': data[12],#
+            'DataPublikacjiMarketplace': data[13],#
+            'DataUtworzenia': data[14],#
+            'DataAktualizacji': data[15],#
+            'RodzajZabudowy': data[16],#
+            'Rynek': data[17],#
+            'LiczbaPieter': data[18],#
+            'PrzeznaczenieLokalu': data[19],#
+            'Poziom': data[20],#
+            'TechBudowy': data[21],#
+            'FormaKuchni': data[22],#
+            'TypDomu': data[23],#
+            'StanWykonczenia': data[24],#
+            'RokBudowy': data[25],#
+            'NumerKW': data[26],#
+            'InformacjeDodatkowe': data[27],#
+            'GPS': data[28],#
+            'TelefonKontaktowy': data[29],#
+            'EmailKontaktowy': data[30],#
+            'StatusOferty': data[31]#
+        }
 
+        sellOffer.append(theme)
+
+    return sellOffer
 def generator_specialOffert(lang='pl', status='aktywna'): # status='aktywna', 'nieaktywna', 'wszystkie'
     took_specOffer = take_data_table('*', 'OfertySpecjalne')
     
@@ -566,7 +608,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
             generator = generator_rentOffert_raw()
             rodzaj = 'wynajem'
         if parent == 's':
-            generator = generator_sellOffert()
+            generator = generator_sellOffert_raw()
             rodzaj = 'sprzedaz'
         # print(generator)
         data_parent = None
@@ -588,6 +630,9 @@ def addSpecOffer(offerID, parent, status='aktywna'):
                     #     val = f'{val}'
                     col_names += f'{key}, '
                     placeHolder += f'%s, '
+                    if val=='' or val==0:
+                        val=None
+                    if key == 'Opis': print(val)
                     data_values.append(val)
             if col_names != '':
                 col_names = col_names[:-2]
