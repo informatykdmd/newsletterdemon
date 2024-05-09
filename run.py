@@ -3125,6 +3125,7 @@ def remove_rent_offer():
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
             return redirect(url_for('estateAdsRent'))
         
+        removeSpecOffer(set_post_id, 'r')
         msq.delete_row_from_database(
                 """
                     DELETE FROM OfertyNajmu WHERE ID = %s;
@@ -3187,7 +3188,8 @@ def update_rent_offer_status():
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
         set_post_status = int(form_data['Status'])
-        
+        if set_post_status == 0:
+            removeSpecOffer(set_post_id, 'r')
         zapytanie_sql = f'''
                 UPDATE OfertyNajmu
                 SET StatusOferty = %s
@@ -3566,6 +3568,7 @@ def remove_sell_offer():
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
             return redirect(url_for('estateAdsSell'))
         
+        removeSpecOffer(set_post_id, 's')
         msq.delete_row_from_database(
                 """
                     DELETE FROM OfertySprzedazy WHERE ID = %s;
@@ -3628,7 +3631,8 @@ def update_sell_offer_status():
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
         set_post_status = int(form_data['Status'])
-        
+        if set_post_status == 0:
+            removeSpecOffer(set_post_id, 's')
         zapytanie_sql = f'''
                 UPDATE OfertySprzedazy
                 SET StatusOferty = %s
@@ -3947,26 +3951,21 @@ def set_as_specOffer():
         status = request.form.get('Status')
 
         if redirectGoal == 'estateAdsRent':
-                parent = 'r'
+            parent = 'r'
         if redirectGoal == 'estateAdsSell':
             parent = 's'
-
+        
+        if status == '0':
+            if removeSpecOffer(postID, parent):
+                flash('Zmiany zotały zastosowane z sukcesem!', 'success')
+            else:
+                flash('Błąd! Zmiany nie zotały zastosowane!', 'danger')
+        
         if status == '1':
-            zapytanie_sql = '''UPDATE estates SET isSpecialOffer = %s WHERE id = %s'''
-            dane = ('1', postID)
-        elif status == '0':
-            if redirectGoal == 'estateAdsRent':
-                pass
-
-            if redirectGoal == 'estateAdsSell':
-                pass
-            zapytanie_sql = '''DELETE FROM specialoffers WHERE estateId = %s'''
-            dane = (postID, )
-
-        print(request.form)
-       
-        print(addSpecOffer(postID, parent))
-        flash(checkSpecOffer(int(postID), parent), 'danger')
+            if addSpecOffer(postID, parent):
+                flash('Zmiany zotały zastosowane z sukcesem!', 'success')
+            else:
+                flash('Błąd! Zmiany nie zotały zastosowane!', 'danger')
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index'))
