@@ -488,23 +488,76 @@ def generator_specialOffert(lang='pl', status='aktywna'): # status='aktywna', 'n
             specOffer.append(theme)
     return specOffer
 
+def checkSpecOffer(offerID, parent):
+    offerID = int(offerID)
+    result = take_data_where_ID_AND_somethig('ID, Status', 'OfertySpecjalne', 'IdRodzica', offerID, 'RodzajRodzica', parent)
+    if len(result) == 0:
+        return (None, None)
+    else:
+        ID = result[0][0]
+        STATUS = result[0][1]
+        return (ID, STATUS)
+
 def removeSpecOffer(offerID, parent):
-    zapytanie_sql = f'''DELETE FROM OfertySpecjalne WHERE IdRodzica = %s AND RodzajRodzica = %s;'''
-    dane = (offerID, parent)
-    try: 
+    offerID = int(offerID)
+    specChecked = checkSpecOffer(offerID, parent)
+    specID = specChecked[0]
+    specStatus = specChecked[1]
+    if specID != None or specStatus != None:
+        zapytanie_sql = f'''DELETE FROM OfertySpecjalne WHERE IdRodzica = %s AND RodzajRodzica = %s;'''
+        dane = (offerID, parent)
         msq.delete_row_from_database(zapytanie_sql, dane)
         return True
-    except:
+    else:
         return False
 
-def addSpecOffer(offerID, parent):
-    zapytanie_sql = f'''DELETE FROM OfertySpecjalne WHERE IdRodzica = %s AND RodzajRodzica = %s;'''
-    dane = (offerID, parent)
-    try: 
-        msq.delete_row_from_database(zapytanie_sql, dane)
+def addSpecOffer(offerID, parent, status='aktywna'):
+    offerID = int(offerID)
+    specChecked = checkSpecOffer(offerID, parent)
+    specID = specChecked[0]
+    specStatus = specChecked[1]
+    if specID == None and specStatus == None:
+        if parent == 'r':
+            generator = generator_rentOffert()
+            rodzaj = 'wynajem'
+        if parent == 's':
+            generator = generator_sellOffert()
+            rodzaj = 'sprzedaz'
+
+        data_parent = None
+        for offerS in generator:
+            if offerS['ID'] == offerID and offerS['StatusOferty'] == 1:
+                data_parent = offerS
+                break
+
+        col_names = ''
+        placeHolder = ''
+        data_values = []
+        if isinstance(data_parent, dict):
+            for key, val in data_parent.values():
+                if key!='ID' and key!='DataPublikacjiOlx' and key!='DataPublikacjiAllegro'\
+                    and key!='DataPublikacjiOtoDom' and key!='DataPublikacjiMarketplace'\
+                        and key!='DataUtworzenia' and key!='DataAktualizacji' and key!='StatusOferty'\
+                            and key!='Rodzaj':
+                    col_names += f'{key}, '
+                    placeHolder += f'%s, '
+                    data_values.append(val)
+            if col_names != '':
+                col_names = col_names[:-2]
+                placeHolder = placeHolder[:-2]
+
+                zapytanie_sql = f'''
+                    INSERT INTO OfertySpecjalne ({col_names}, Status, DataRozpoczecia, IdRodzica, RodzajRodzica)
+                    VALUES ({placeHolder}, %s, %s, %s, %s);
+                '''
+                data_values += [status, rodzaj, datetime.datetime.now(), offerID, parent]
+                dane = tuple(a for a in data_values)
+                print(zapytanie_sql)
+                print(dane)
         return True
-    except:
+    else:
         return False
+    
 def activeSpecOffer(offerID, parent):
     zapytanie_sql = '''
                     UPDATE OfertySpecjalne 
@@ -522,15 +575,7 @@ def deActiveSpecOffer(offerID, parent):
         return True
     except:
         return False
-def checkSpecOffer(offerID, parent):
-    result = take_data_where_ID_AND_somethig('ID, Status', 'OfertySpecjalne', 'IdRodzica', offerID, 'RodzajRodzica', parent)
-    print(result)
-    if len(result) == 0:
-        return ('Empty', None)
-    else:
-        ID = result[0][0]
-        STATUS = result[0][1]
-        return (STATUS, ID)
+
 
 
 settingsDB = generator_settingsDB()
@@ -3817,8 +3862,8 @@ def set_as_specOffer():
             dane = (postID, )
 
         print(request.form)
-        print(checkSpecOffer(int(postID), parent))
-
+       
+        print(addSpecOffer(postID, parent, status='aktywna'))
         flash(checkSpecOffer(int(postID), parent), 'danger')
 
         return redirect(url_for(redirectGoal))
