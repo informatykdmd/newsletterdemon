@@ -94,6 +94,10 @@ def take_data_where_ID(key, table, id_name, ID):
     dump_key = msq.connect_to_database(f'SELECT {key} FROM {table} WHERE {id_name} = {ID};')
     return dump_key
 
+def take_data_where_ID_AND_somethig(key, table, id_name, ID, nameSomething, valSomething):
+    dump_key = msq.connect_to_database(f'SELECT {key} FROM {table} WHERE {id_name} = {ID} AND {nameSomething} = {valSomething};')
+    return dump_key
+
 def take_data_table(key, table):
     dump_key = msq.connect_to_database(f'SELECT {key} FROM {table};')
     return dump_key
@@ -479,6 +483,50 @@ def generator_specialOffert(lang='pl', status='aktywna'): # status='aktywna', 'n
         if status == 'wszystkie':
             specOffer.append(theme)
     return specOffer
+
+def removeSpecOffer(offerID, parent):
+    zapytanie_sql = f'''DELETE FROM OfertySpecjalne WHERE IdRodzica = %s AND RodzajRodzica = %s;'''
+    dane = (offerID, parent)
+    try: 
+        msq.delete_row_from_database(zapytanie_sql, dane)
+        return True
+    except:
+        return False
+
+def addSpecOffer(offerID, parent):
+    zapytanie_sql = f'''DELETE FROM OfertySpecjalne WHERE IdRodzica = %s AND RodzajRodzica = %s;'''
+    dane = (offerID, parent)
+    try: 
+        msq.delete_row_from_database(zapytanie_sql, dane)
+        return True
+    except:
+        return False
+def activeSpecOffer(offerID, parent):
+    zapytanie_sql = '''
+                    UPDATE OfertySpecjalne 
+                    SET Status = %s
+                    WHERE IdRodzica = %s AND RodzajRodzica = %s;
+                '''
+    dane = ("aktywna", offerID, parent)
+    return msq.insert_to_database(zapytanie_sql, dane)
+
+def deActiveSpecOffer(offerID, parent):
+    zapytanie_sql = f'''DELETE FROM OfertySpecjalne WHERE IdRodzica = %s AND RodzajRodzica = %s;'''
+    dane = (offerID, parent)
+    try: 
+        msq.delete_row_from_database(zapytanie_sql, dane)
+        return True
+    except:
+        return False
+def checkSpecOffer(offerID, parent):
+    result = take_data_where_ID_AND_somethig('ID, Status', 'OfertySpecjalne', 'IdRodzica', offerID, 'RodzajRodzica', parent)
+    if len(result) == 0:
+        return ('Empty', None)
+    else:
+        ID = result[0][0]
+        STATUS = result[0][1]
+        return (STATUS, ID)
+
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
@@ -3745,19 +3793,28 @@ def set_as_specOffer():
         postID = request.form.get('PostID')
         redirectGoal = request.form.get('redirectGoal')
         status = request.form.get('Status')
-        if status == '1':
+
+        if redirectGoal == 'estateAdsRent':
+                parent = 'r'
+        if redirectGoal == 'estateAdsSell':
+            parent = 's'
+
+        if status == '1':            
+            zapytanie_sql = '''UPDATE estates SET isSpecialOffer = %s WHERE id = %s'''
+            dane = ('1', postID)
+        elif status == '0':
             if redirectGoal == 'estateAdsRent':
                 pass
 
             if redirectGoal == 'estateAdsSell':
                 pass
-            zapytanie_sql = '''UPDATE estates SET isSpecialOffer = %s WHERE id = %s'''
-            dane = ('1', postID)
-        elif status == '0':
             zapytanie_sql = '''DELETE FROM specialoffers WHERE estateId = %s'''
             dane = (postID, )
-        print(request.form)
 
+        print(request.form)
+        print(checkSpecOffer(postID, parent))
+
+        flash(checkSpecOffer(postID, parent))
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index'))
