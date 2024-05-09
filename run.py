@@ -524,7 +524,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
         if parent == 's':
             generator = generator_sellOffert()
             rodzaj = 'sprzedaz'
-        print(generator)
+        # print(generator)
         data_parent = None
         for offerS in generator:
             if offerS['ID'] == offerID and offerS['StatusOferty'] == 1:
