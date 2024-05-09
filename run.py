@@ -3863,7 +3863,7 @@ def set_as_specOffer():
 
         print(request.form)
        
-        print(addSpecOffer(postID, parent, status='aktywna'))
+        print(addSpecOffer(postID, parent))
         flash(checkSpecOffer(int(postID), parent), 'danger')
 
         return redirect(url_for(redirectGoal))
