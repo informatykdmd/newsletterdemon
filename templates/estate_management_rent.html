@@ -537,6 +537,9 @@
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {% if post_data['StatusOferty'] == 1 %}
                                             <span class="text-warning">Aktywna</span>
+                                            {% if specOfferID == post_id %}
+                                                <span class="text-info fs-5 ">•</span>
+                                            {% endif %}
                                         {% else %}
                                         <span class="text-secondary">Nieaktywna</span>
                                         {% endif %}
