@@ -602,50 +602,50 @@ def addSpecOffer(offerID, parent, status='aktywna'):
     specChecked = checkSpecOffer(offerID, parent)
     specID = specChecked[0]
     specStatus = specChecked[1]
+    if specID != None and specStatus != None:
+        removeSpecOffer(offerID, parent)
+    
+    if parent == 'r':
+        generator = generator_rentOffert_raw()
+        rodzaj = 'wynajem'
+    if parent == 's':
+        generator = generator_sellOffert_raw()
+        rodzaj = 'sprzedaz'
+    # print(generator)
+    data_parent = None
+    for offerS in generator:
+        if offerS['ID'] == offerID and offerS['StatusOferty'] == 1:
+            data_parent = offerS
+            break
 
-    if specID == None and specStatus == None:
-        if parent == 'r':
-            generator = generator_rentOffert_raw()
-            rodzaj = 'wynajem'
-        if parent == 's':
-            generator = generator_sellOffert_raw()
-            rodzaj = 'sprzedaz'
-        # print(generator)
-        data_parent = None
-        for offerS in generator:
-            if offerS['ID'] == offerID and offerS['StatusOferty'] == 1:
-                data_parent = offerS
-                break
+    col_names = ''
+    placeHolder = ''
+    data_values = []
+    if isinstance(data_parent, dict):
+        for key, val in data_parent.items():
+            if key!='ID' and key!='DataPublikacjiOlx' and key!='DataPublikacjiAllegro'\
+                and key!='DataPublikacjiOtoDom' and key!='DataPublikacjiMarketplace'\
+                    and key!='DataUtworzenia' and key!='DataAktualizacji' and key!='StatusOferty'\
+                        and key!='Rodzaj' and val!='' and val!=0:
 
-        col_names = ''
-        placeHolder = ''
-        data_values = []
-        if isinstance(data_parent, dict):
-            for key, val in data_parent.items():
-                if key!='ID' and key!='DataPublikacjiOlx' and key!='DataPublikacjiAllegro'\
-                    and key!='DataPublikacjiOtoDom' and key!='DataPublikacjiMarketplace'\
-                        and key!='DataUtworzenia' and key!='DataAktualizacji' and key!='StatusOferty'\
-                            and key!='Rodzaj' and val!='' and val!=0:
+                col_names += f'{key}, '
+                placeHolder += f'%s, '
+                data_values.append(val)
+        if col_names != '':
+            col_names = col_names[:-2]
+            placeHolder = placeHolder[:-2]
 
-                    col_names += f'{key}, '
-                    placeHolder += f'%s, '
-                    data_values.append(val)
-            if col_names != '':
-                col_names = col_names[:-2]
-                placeHolder = placeHolder[:-2]
+            zapytanie_sql = f'''
+                INSERT INTO OfertySpecjalne ({col_names}, Status, Rodzaj, IdRodzica, RodzajRodzica)
+                VALUES ({placeHolder}, %s, %s, %s, %s);
+            '''
+            data_values += [status, rodzaj, offerID, parent]
+            dane = tuple(a for a in data_values)
+            print(zapytanie_sql)
+            print(dane)
+            return msq.insert_to_database(zapytanie_sql, dane)
+    return False
 
-                zapytanie_sql = f'''
-                    INSERT INTO OfertySpecjalne ({col_names}, Status, Rodzaj, IdRodzica, RodzajRodzica)
-                    VALUES ({placeHolder}, %s, %s, %s, %s);
-                '''
-                data_values += [status, rodzaj, offerID, parent]
-                dane = tuple(a for a in data_values)
-                print(zapytanie_sql)
-                print(dane)
-                return msq.insert_to_database(zapytanie_sql, dane)
-        return False
-    else:
-        return False
     
 def activeSpecOffer(offerID, parent):
     zapytanie_sql = '''
