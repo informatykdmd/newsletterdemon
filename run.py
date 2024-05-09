@@ -635,7 +635,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
                 placeHolder = placeHolder[:-2]
 
                 zapytanie_sql = f'''
-                    INSERT INTO OfertySpecjalne ({col_names}, Status, IdRodzica, RodzajRodzica)
+                    INSERT INTO OfertySpecjalne ({col_names}, Status, Rodzaj, IdRodzica, RodzajRodzica)
                     VALUES ({placeHolder}, %s, %s, %s);
                 '''
                 data_values += [status, rodzaj, offerID, parent]
