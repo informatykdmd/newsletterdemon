@@ -625,14 +625,11 @@ def addSpecOffer(offerID, parent, status='aktywna'):
                 if key!='ID' and key!='DataPublikacjiOlx' and key!='DataPublikacjiAllegro'\
                     and key!='DataPublikacjiOtoDom' and key!='DataPublikacjiMarketplace'\
                         and key!='DataUtworzenia' and key!='DataAktualizacji' and key!='StatusOferty'\
-                            and key!='Rodzaj':
-                    # if key=='Opis' or key=='GPS':
-                    #     val = f'{val}'
+                            and key!='Rodzaj' and val!='' and val!=0:
+
                     col_names += f'{key}, '
                     placeHolder += f'%s, '
-                    if val!='' or val!=0:
-                    
-                        data_values.append(val)
+                    data_values.append(val)
             if col_names != '':
                 col_names = col_names[:-2]
                 placeHolder = placeHolder[:-2]
