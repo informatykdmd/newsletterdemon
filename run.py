@@ -535,7 +535,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
         placeHolder = ''
         data_values = []
         if isinstance(data_parent, dict):
-            for key, val in data_parent.values():
+            for key, val in data_parent.items():
                 if key!='ID' and key!='DataPublikacjiOlx' and key!='DataPublikacjiAllegro'\
                     and key!='DataPublikacjiOtoDom' and key!='DataPublikacjiMarketplace'\
                         and key!='DataUtworzenia' and key!='DataAktualizacji' and key!='StatusOferty'\
