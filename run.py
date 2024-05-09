@@ -604,7 +604,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
     specStatus = specChecked[1]
     if specID != None and specStatus != None:
         removeSpecOffer(offerID, parent)
-    
+    deActiveSpecOffer_ALL()
     if parent == 'r':
         generator = generator_rentOffert_raw()
         rodzaj = 'wynajem'
@@ -627,7 +627,6 @@ def addSpecOffer(offerID, parent, status='aktywna'):
                 and key!='DataPublikacjiOtoDom' and key!='DataPublikacjiMarketplace'\
                     and key!='DataUtworzenia' and key!='DataAktualizacji' and key!='StatusOferty'\
                         and key!='Rodzaj' and val!='' and val!=0:
-
                 col_names += f'{key}, '
                 placeHolder += f'%s, '
                 data_values.append(val)
@@ -641,13 +640,17 @@ def addSpecOffer(offerID, parent, status='aktywna'):
             '''
             data_values += [status, rodzaj, offerID, parent]
             dane = tuple(a for a in data_values)
-            print(zapytanie_sql)
-            print(dane)
             return msq.insert_to_database(zapytanie_sql, dane)
     return False
 
     
 def activeSpecOffer(offerID, parent):
+    offerID = int(offerID)
+    specChecked = checkSpecOffer(offerID, parent)
+    specID = specChecked[0]
+    specStatus = specChecked[1]
+    if specID != None and specStatus != None:
+        pass
     zapytanie_sql = '''
                     UPDATE OfertySpecjalne 
                     SET Status = %s
@@ -664,6 +667,15 @@ def deActiveSpecOffer(offerID, parent):
         return True
     except:
         return False
+
+def deActiveSpecOffer_ALL():
+    zapytanie_sql = '''
+                    UPDATE OfertySpecjalne 
+                    SET Status = %s
+                    WHERE Status = %s;
+                '''
+    dane = ("nieaktywna", "aktywna")
+    return msq.insert_to_database(zapytanie_sql, dane)
 
 
 
