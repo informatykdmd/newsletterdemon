@@ -373,7 +373,7 @@ def generator_rentOffert_raw(): # surowe dane
             'RokBudowy': data[24],
             'NumerKW': data[25],
             'InformacjeDodatkowe': data[26],
-            'GPS': data[26],
+            'GPS': data[27],
             'TelefonKontaktowy': data[28],
             'EmailKontaktowy': data[29],
             'StatusOferty': data[30]
