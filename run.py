@@ -516,6 +516,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
     specChecked = checkSpecOffer(offerID, parent)
     specID = specChecked[0]
     specStatus = specChecked[1]
+    print(specChecked)
     if specID == None and specStatus == None:
         if parent == 'r':
             generator = generator_rentOffert()
@@ -523,7 +524,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
         if parent == 's':
             generator = generator_sellOffert()
             rodzaj = 'sprzedaz'
-
+        print(generator)
         data_parent = None
         for offerS in generator:
             if offerS['ID'] == offerID and offerS['StatusOferty'] == 1:
