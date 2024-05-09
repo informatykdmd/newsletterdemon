@@ -339,6 +339,50 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
 
     return rentOffer
 
+def generator_rentOffert_raw(): # surowe dane
+    took_rentOffer = take_data_table('*', 'OfertyNajmu')
+    
+    rentOffer = []
+    for data in took_rentOffer:
+
+        theme = {
+            'ID': int(data[0]),
+            'Tytul': data[1],
+            'Opis': data[2],
+            'Cena': data[3],
+            'Kaucja': data[4],
+            'Lokalizacja': data[5],
+            'LiczbaPokoi': data[6],
+            'Metraz': data[7],
+            'Zdjecia': data[8],
+            'DataPublikacjiOlx': data[9],
+            'DataPublikacjiAllegro': data[10],
+            'DataPublikacjiOtoDom': data[11],
+            'DataPublikacjiMarketplace': data[12],
+            'DataUtworzenia': data[13],
+            'DataAktualizacji': data[14],
+            'RodzajZabudowy': data[15],
+            'Czynsz': data[16],
+            'Umeblowanie': data[17],
+            'LiczbaPieter': data[18],
+            'PowierzchniaDzialki': data[19],
+            'TechBudowy': data[20],
+            'FormaKuchni': data[21],
+            'TypDomu': data[22],
+            'StanWykonczenia': data[23],
+            'RokBudowy': data[24],
+            'NumerKW': data[25],
+            'InformacjeDodatkowe': data[26],
+            'GPS': data[26],
+            'TelefonKontaktowy': data[28],
+            'EmailKontaktowy': data[29],
+            'StatusOferty': data[30]
+        }
+
+        rentOffer.append(theme)
+
+    return rentOffer
+
 def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystkie'
     took_sellOffer = take_data_table('*', 'OfertySprzedazy')
     # print(took_rentOffer)
@@ -519,7 +563,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
     print(specChecked)
     if specID == None and specStatus == None:
         if parent == 'r':
-            generator = generator_rentOffert()
+            generator = generator_rentOffert_raw()
             rodzaj = 'wynajem'
         if parent == 's':
             generator = generator_sellOffert()
@@ -539,7 +583,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
                 if key!='ID' and key!='DataPublikacjiOlx' and key!='DataPublikacjiAllegro'\
                     and key!='DataPublikacjiOtoDom' and key!='DataPublikacjiMarketplace'\
                         and key!='DataUtworzenia' and key!='DataAktualizacji' and key!='StatusOferty'\
-                            and key!='Rodzaj' and key!='mainFoto':
+                            and key!='Rodzaj':
                     if key=='Opis' or key=='GPS':
                         val = f'{val}'
                     col_names += f'{key}, '
