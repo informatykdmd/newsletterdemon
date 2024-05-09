@@ -539,7 +539,9 @@ def addSpecOffer(offerID, parent, status='aktywna'):
                 if key!='ID' and key!='DataPublikacjiOlx' and key!='DataPublikacjiAllegro'\
                     and key!='DataPublikacjiOtoDom' and key!='DataPublikacjiMarketplace'\
                         and key!='DataUtworzenia' and key!='DataAktualizacji' and key!='StatusOferty'\
-                            and key!='Rodzaj':
+                            and key!='Rodzaj' and key!='mainFoto':
+                    if key=='Opis':
+                        val = f"""{val}"""
                     col_names += f'{key}, '
                     placeHolder += f'%s, '
                     data_values.append(val)
