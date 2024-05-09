@@ -520,6 +520,7 @@ def deActiveSpecOffer(offerID, parent):
         return False
 def checkSpecOffer(offerID, parent):
     result = take_data_where_ID_AND_somethig('ID, Status', 'OfertySpecjalne', 'IdRodzica', offerID, 'RodzajRodzica', parent)
+    print(result)
     if len(result) == 0:
         return ('Empty', None)
     else:
@@ -3812,9 +3813,9 @@ def set_as_specOffer():
             dane = (postID, )
 
         print(request.form)
-        print(checkSpecOffer(postID, parent))
+        print(checkSpecOffer(int(postID), parent))
 
-        flash(checkSpecOffer(postID, parent))
+        flash(checkSpecOffer(int(postID), parent), 'danger')
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index'))
