@@ -636,7 +636,7 @@ def addSpecOffer(offerID, parent, status='aktywna'):
 
                 zapytanie_sql = f'''
                     INSERT INTO OfertySpecjalne ({col_names}, Status, Rodzaj, IdRodzica, RodzajRodzica)
-                    VALUES ({placeHolder}, %s, %s, %s);
+                    VALUES ({placeHolder}, %s, %s, %s, %s);
                 '''
                 data_values += [status, rodzaj, offerID, parent]
                 dane = tuple(a for a in data_values)
