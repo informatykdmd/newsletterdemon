@@ -85,7 +85,7 @@
                                         {% if post_data['Status'] == 'aktywna' %}
                                             <span class="text-info">Aktywna</span>
                                         {% else %}
-                                            <span class="text-secondary">Nieaktywna</span>
+                                            <span class="text-secondary">{% if post_data['Status'] != None %}{{post_data['DataZakonczenia']}}{% else %}Brak daty zakonczenia{% endif %}</span>
                                         {% endif %}
                                     </a>
                                 </div>
