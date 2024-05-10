@@ -680,6 +680,9 @@
                                                             if (inputElement.value.trim() !== '') {
                                                                 // Jeżeli wartość inputa jest różna od pustego stringa, wykonaj funkcję od razu
                                                                 extractAndDisplayCoords('LinkGPS_{{post_id}}', 'GPS_{{post_id}}', '{{post_id}}');
+                                                                inputElement.addEventListener('input', function() {
+                                                                    extractAndDisplayCoords('LinkGPS_{{post_id}}', 'GPS_{{post_id}}', '{{post_id}}');
+                                                                });
                                                             } else {
                                                                 // Jeżeli wartość inputa jest pustym stringiem, ustaw nasłuchiwanie na zdarzenie 'input'
                                                                 inputElement.addEventListener('input', function() {
