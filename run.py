@@ -3481,7 +3481,7 @@ def save_rent_offer():
 
     if msq.insert_to_database(zapytanie_sql, dane):
         if offerID_int != 9999999 and checkSpecOffer(offerID_int, 'r') == 'aktywna':
-            addSpecOffer(offerID, 's',)
+            addSpecOffer(offerID, 's')
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
         return jsonify({
             'message': 'Oferta wynajmu została zapisana pomyślnie!',
@@ -3930,7 +3930,7 @@ def save_sell_offer():
 
     if msq.insert_to_database(zapytanie_sql, dane):
         if offerID_int != 9999999 and checkSpecOffer(offerID_int, 's') == 'aktywna':
-            addSpecOffer(offerID, 's',)
+            addSpecOffer(offerID, 's')
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
         return jsonify({
             'message': 'Oferta wynajmu została zapisana pomyślnie!',
