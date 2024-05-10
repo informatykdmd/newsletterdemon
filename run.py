@@ -563,9 +563,13 @@ def generator_specialOffert(lang='pl', status='aktywna'): # status='aktywna', 'n
             'TelefonKontaktowy': '' if data[30] is None else data[30],
             'EmailKontaktowy': '' if data[31] is None else data[31],
             'IdRodzica': 0 if data[32] is None else data[32],
-            'RodzajRodzica': '' if data[33] is None else data[33]
-            
+            'RodzajRodzica': '' if data[33] is None else data[33]  
         }
+        
+        try: mainFoto = theme['Zdjecia'][0]
+        except IndexError: mainFoto = ''
+        except KeyError: mainFoto = ''
+        theme['mainFoto']=mainFoto
 
         if status == 'aktywna' or status == 'nieaktywna':
             if data[8] == status:
@@ -3993,7 +3997,7 @@ def estateAdsspecial():
         return redirect(url_for('index'))
     
     # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
-    all_spec = generator_specialOffert()
+    all_spec = generator_specialOffert(status='wszystkie') # status='aktywna', 'nieaktywna', 'wszystkie'
 
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
