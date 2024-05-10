@@ -651,23 +651,29 @@ def activeSpecOffer(offerID, parent):
     specID = specChecked[0]
     specStatus = specChecked[1]
     if specID != None and specStatus != None:
-        pass
-    zapytanie_sql = '''
-                    UPDATE OfertySpecjalne 
-                    SET Status = %s
-                    WHERE IdRodzica = %s AND RodzajRodzica = %s;
-                '''
-    dane = ("aktywna", offerID, parent)
-    return msq.insert_to_database(zapytanie_sql, dane)
+        zapytanie_sql = '''
+                        UPDATE OfertySpecjalne 
+                        SET Status = %s
+                        WHERE IdRodzica = %s AND RodzajRodzica = %s;
+                    '''
+        dane = ("aktywna", offerID, parent)
+        return msq.insert_to_database(zapytanie_sql, dane)
+    return False
 
 def deActiveSpecOffer(offerID, parent):
-    zapytanie_sql = f'''DELETE FROM OfertySpecjalne WHERE IdRodzica = %s AND RodzajRodzica = %s;'''
-    dane = (offerID, parent)
-    try: 
-        msq.delete_row_from_database(zapytanie_sql, dane)
-        return True
-    except:
-        return False
+    offerID = int(offerID)
+    specChecked = checkSpecOffer(offerID, parent)
+    specID = specChecked[0]
+    specStatus = specChecked[1]
+    if specID != None and specStatus != None:
+        zapytanie_sql = '''
+                        UPDATE OfertySpecjalne 
+                        SET Status = %s
+                        WHERE IdRodzica = %s AND RodzajRodzica = %s;
+                    '''
+        dane = ("nieaktywna", offerID, parent)
+        return msq.insert_to_database(zapytanie_sql, dane)
+    return False
 
 def deActiveSpecOffer_ALL():
     zapytanie_sql = '''
@@ -3474,6 +3480,8 @@ def save_rent_offer():
                 dodatkoweInfo, GPS_STRING, user_phone, user_email, 1, offerID_int)
 
     if msq.insert_to_database(zapytanie_sql, dane):
+        if offerID_int != 9999999 and checkSpecOffer(offerID_int, 'r') == 'aktywna':
+            addSpecOffer(offerID, 's',)
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
         return jsonify({
             'message': 'Oferta wynajmu została zapisana pomyślnie!',
@@ -3921,6 +3929,8 @@ def save_sell_offer():
                 dodatkoweInfo, GPS_STRING, user_phone, user_email, 1, offerID_int)
 
     if msq.insert_to_database(zapytanie_sql, dane):
+        if offerID_int != 9999999 and checkSpecOffer(offerID_int, 's') == 'aktywna':
+            addSpecOffer(offerID, 's',)
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
         return jsonify({
             'message': 'Oferta wynajmu została zapisana pomyślnie!',
