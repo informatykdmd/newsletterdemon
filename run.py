@@ -589,7 +589,7 @@ def removeSpecOffer(offerID, parent):
     specChecked = checkSpecOffer(offerID, parent)
     specID = specChecked[0]
     specStatus = specChecked[1]
-    if specID != None or specStatus != None:
+    if specID != None and specStatus != None:
         zapytanie_sql = f'''DELETE FROM OfertySpecjalne WHERE IdRodzica = %s AND RodzajRodzica = %s;'''
         dane = (offerID, parent)
         msq.delete_row_from_database(zapytanie_sql, dane)
