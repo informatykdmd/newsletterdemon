@@ -682,10 +682,10 @@ def deActiveSpecOffer(offerID, parent):
 def deActiveSpecOffer_ALL():
     zapytanie_sql = '''
                     UPDATE OfertySpecjalne 
-                    SET Status = %s
+                    SET Status = %s, DataZakonczenia = %s
                     WHERE Status = %s;
                 '''
-    dane = ("nieaktywna", "aktywna")
+    dane = ("nieaktywna", datetime.datetime.now(), "aktywna")
     return msq.insert_to_database(zapytanie_sql, dane)
 
 
