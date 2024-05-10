@@ -85,7 +85,7 @@
                                         {% if post_data['Status'] == 'aktywna' %}
                                             <span class="text-info">Aktywna</span>
                                         {% else %}
-                                            <span class="text-secondary">{% if post_data['Status'] != None %}{{post_data['DataZakonczenia']}}{% else %}Brak daty zakonczenia{% endif %}</span>
+                                            <span class="text-secondary fs-1">{% if post_data['Status'] != None %}{{post_data['DataZakonczenia']}}{% else %}Brak daty zakonczenia{% endif %}</span>
                                         {% endif %}
                                     </a>
                                 </div>
@@ -110,11 +110,8 @@
                                 </div>
                             </div>
                         </div>
-                        
-                       
                         <!-- collapse start -->
                         <div class="sub-panel rogi collapse formatyj-maly-wiersz p-2" id="collapse_id_{{post_id}}">
-
                             <div class="row">
                                 <div class="col-lg-4 col-sm-12">
                                     <img src="{{post_data['mainFoto']}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
@@ -163,8 +160,6 @@
                                                 {% if key=='h3-strong' %}
                                                     <h3 class='text-secondary'><strong>{{decoded_val}}</strong></h3>
                                                 {% endif %}
-                                            
-                                                
                                             {% endif %}
                                         {% endfor %}
                                     {% endfor %}
@@ -180,10 +175,10 @@
                                                 </div>
                                                 <div class="ms-3 formatuj-maly-font">
                                                     <i class="bi bi-house-check text-success"></i> 
-                                                    {% if post_data['Rodzaj'] == 'Wynajem' %}
-                                                    <span class="text-secondary fw-lighter">Oferta Wynajmu</span>
+                                                    {% if post_data['Rodzaj'] == 'wynajem' %}
+                                                        <span class="text-secondary fw-lighter">Oferta Wynajmu</span>
                                                     {% else %}
-                                                    <span class="text-secondary fw-lighter">Oferta Sprzedaży</span>
+                                                        <span class="text-secondary fw-lighter">Oferta Sprzedaży</span>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -394,28 +389,10 @@
                                             </div>
                                         </div>
                                         {% endif %}
-                                        {% if post_data['RodzajZabudowy']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Rodzaj Zabudowy</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-stack text-warning"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['RodzajZabudowy']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
                                     </div>
-                                    
-                                </div>
-                                
-                                
+                                </div> 
                             </div>
-
                         </div>
-
                         <!-- collapse end -->
                         {% endfor %}
                         <!-- Paginacja -->
