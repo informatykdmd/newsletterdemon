@@ -3991,9 +3991,41 @@ def estateAdsspecial():
     if session['userperm']['estate'] == 0:
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
+    
+    # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
+    all_spec = generator_specialOffert()
 
+    # Ustawienia paginacji
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(all_spec)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
+    ads_spec = all_spec[offset: offset + per_page]
+
+
+    
+
+
+    settingsDB = generator_settingsDB()
+    domy = settingsDB['domy']
+    budownictwo = settingsDB['budownictwo']
+    development = settingsDB['development']
+    elitehome = settingsDB['elitehome']
+    inwestycje = settingsDB['inwestycje']
+    instalacje = settingsDB['instalacje']
     return render_template(
                             "estate_management_special.html",
+                            ads_spec=ads_spec,
+                            userperm=session['userperm'],
+                            username=session['username'],
+                            pagination=pagination,
+                            domy=domy,
+                            budownictwo=budownictwo,
+                            development=development,
+                            elitehome=elitehome,
+                            inwestycje=inwestycje,
+                            instalacje=instalacje
                             )     
 
 @app.route('/subscriber')

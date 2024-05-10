@@ -1,0 +1,491 @@
+{% extends 'base.html' %}
+
+{% block title %}DMD Panel Administratora - Zarządzanie Ogłoszeniami{% endblock %}
+
+{% block addButton %}
+<!-- dropdown -->
+<div class="dropdown">
+    <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+        Oferta Specjalna
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+        <li><a class="dropdown-item" href="/estate-ads-rent">Oferta Najmu</a></li>
+        <li><a class="dropdown-item" href="/estate-ads-sell">Oferta Sprzedaży</a></li>
+        <li><a class="estate_button dropdown-item active" href="/estate-ads-special">Oferta Specjalna</a></li>
+    </ul>
+</div>
+<!-- dropdown END -->
+{% endblock %}
+{% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Przegląd Oferty Specjalnej</a>{% endblock %}
+
+{% block tableHeader %}
+                        <div>
+                            <div class="row klej formatuj-header">
+                                <div class="d-none d-lg-block" style="max-width: 30px;">
+                                    #
+                                </div>
+                                <div  class="col-xl-8 col-lg-6 col-sm-8">
+                                    Tytuł
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Cena
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 150px;">
+                                    Lokalizacja
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Status
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 250px;">
+                                    Operator
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 150px;">
+                                    Data publikacji
+                                </div>
+                                <div  class="text-end" style="max-width: 80px;">
+                                    <i class="bi bi-person-gear"></i> Akcja 
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}
+{% block tableContent%}
+                        {% for post_data in ads_spec %}
+                            {% set post_id  = post_data['ID'] %}
+                        <!-- linia contentu tabeli ciemna-->
+                        <div>
+                            <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                <div class="d-none d-lg-block" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {{post_id}}
+                                </div>
+                                <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {% if post_data['StatusOferty'] == 1 %}
+                                        <span class="d-none d-md-block d-lg-none"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
+                                    {% else %}
+                                        <span class="d-none d-md-block d-lg-none"> <i class="bi bi-lightbulb-fill text-secondary"></i></span>
+                                    {% endif %}
+                                </div>
+                                <div  class="col-xl-8 col-md-8 col-sm-10" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {{post_data['Tytul']}}
+                                    </a>
+                                    
+                                </div>
+                                <div  class="d-none d-lg-block"  style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="display-6 formatuj-maly-font">{{post_data['Cena']}} PLN</span>
+                                    </a>
+                                </div>
+                                <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="display-6 formatuj-maly-font">{{post_data['Lokalizacja'][:12]}}</span>
+                                    </a>
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {% if post_data['StatusOferty'] == 1 %}
+                                            <span class="text-warning">Aktywna</span>
+                                        {% else %}
+                                            <span class="text-secondary">Nieaktywna</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {% if post_data['EmailKontaktowy'] != '' %}
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="text-secondary formatuj-maly-font">{{post_data['EmailKontaktowy']}}</span>
+                                    </a>
+                                    {% else %}
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="text-secondary">Brak</span>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="display-6 formatuj-maly-font">{{post_data['DataUtworzenia']}}</span>
+                                    </a>
+                                </div>
+                                <div class="text-end" style="max-width: 80px;">
+                                    
+                                    <form method="POST" id="remove_rent_offer_{{post_id}}" action="{{ url_for('remove_rent_offer') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć ofertę?');">
+
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
+
+                                        
+                                        <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/>
+                                        <input type="hidden" name="PostID" id="PostID_{{post_id}}" value="{{post_id}}"/>
+                                        <button type="submit" class="custom-icon-button"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></button>
+                                        <!-- <a href="#"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></a> -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                       
+                        <!-- collapse start -->
+                        <div class="sub-panel rogi collapse formatyj-maly-wiersz p-2" id="collapse_id_{{post_id}}">
+
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-12">
+                                    <img src="{{post_data['mainFoto']}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
+                                    <div class="row row-cols-4">
+                                        {% for foto in post_data['Zdjecia'][1:] %}
+                                        <div class="col mb-1">
+                                            <img src="{{foto}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark" >
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <h5>{{post_data['Tytul']}}</h5>
+                                    <h4 class="text-secondary">Opis</h4>
+                                    {% for item in post_data['Opis'] %}
+                                        {% for key, val in item.items() %}
+                                            {% if key=='li' %}
+                                                <ul>
+                                                    {% for li_item in val %}
+                                                        <li>{{li_item|decode_html_entities_filter|update_new_line_chars}}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% else %}
+                                                {% set decoded_val = val|decode_html_entities_filter|update_new_line_chars %}
+                                                {% if key=='p' %}
+                                                    <p class='text-secondary'>{{decoded_val}}</p>
+                                                {% endif %}
+                                                {% if key=='strong' %}
+                                                    <strong class='text-secondary'>{{decoded_val}}</strong>
+                                                {% endif %}
+                                                {% if key=='h1' %}
+                                                    <h1 class='text-secondary'>{{decoded_val}}</h1>
+                                                {% endif %}
+                                                {% if key=='h1-strong' %}
+                                                    <h1 class='text-secondary'><strong>{{decoded_val}}</strong></h1>
+                                                {% endif %}
+                                                {% if key=='h2' %}
+                                                    <h2 class='text-secondary'>{{decoded_val}}</h2>
+                                                {% endif %}
+                                                {% if key=='h2-strong' %}
+                                                    <h2 class='text-secondary'><strong>{{decoded_val}}</strong></h2>
+                                                {% endif %}
+                                                {% if key=='h3' %}
+                                                    <h3 class='text-secondary'>{{decoded_val}}</h3>
+                                                {% endif %}
+                                                {% if key=='h3-strong' %}
+                                                    <h3 class='text-secondary'><strong>{{decoded_val}}</strong></h3>
+                                                {% endif %}
+                                            
+                                                
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    <p class="h3"><i class="bi bi-database-fill-check text-warning"></i> {{post_data['Cena']}} PLN</p>
+                                    <div class="ms-2">
+                                        <div class="row row-cols-auto ">
+                                            
+                                            <form action="{{ url_for('update_rent_offer_status') }}" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                {% if post_data['StatusOferty'] == 1 %}
+                                                    <div class="col me-1 mb-1">
+                                                        <input type="hidden" name="Status" value="0" />
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj</button>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col me-1 mb-1">
+                                                        <input type="hidden" name="Status" value="1" />
+                                                        <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj</button>
+                                                    </div>
+                                                {% endif %}
+                                            </form>
+                                            <form action="{{ url_for('set_as_specOffer') }}" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                {% if post_data['StatusOferty'] == 1 %}
+                                                    {% if specOfferID == post_id %}
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Oferta specjalna</button>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="1" />
+                                                            <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Oferta specjalna</button>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </form>
+                                            
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Marketplace</button>
+                                            </div>
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Usuń z OLX</button>
+                                            </div>
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na OTO DOM</button>
+                                            </div>
+                                            <div class="col formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Allegro Lokalnie</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    
+                                    <div class="row-cols-1 ">
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Oferty</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-success"></i> 
+                                                    <span class="text-secondary fw-lighter">Oferta Wynajmu</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if post_data['Lokalizacja']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Lokalizacja</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-geo text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Lokalizacja']}} </span>
+                                                    {% if post_data['GPS']!={} %}
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['latitude']}} </span>
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['longitude']}} </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['InformacjeDodatkowe']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Informacje Dodatkowe </span>
+                                                    <i class="bi bi-info-lg text-success"></i>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-stack text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['InformacjeDodatkowe']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="row row-cols-2">
+                                        
+                                        
+
+                                        {% if post_data['Metraz']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Metraż</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-app-indicator text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Metraz']}} m&sup2;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['LiczbaPokoi']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Liczba Pokoi</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPokoi']}} </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['Kaucja']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Kaucja</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-cash text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Kaucja']}} PLN</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['Czynsz']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Czynsz</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-cash text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Czynsz']}} PLN</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['LiczbaPieter']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Liczba Pięter</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPieter']}} </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['PowierzchniaDzialki']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Powierzchnia Dzialki</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-app-indicator text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['PowierzchniaDzialki']}} m&sup2;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['TechBudowy']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Technologia Budowy</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-gear text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['TechBudowy']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['Umeblowanie']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Umeblowanie</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-heart text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Umeblowanie']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['FormaKuchni']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Forma Kuchni</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-heart text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['FormaKuchni']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['TypDomu']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Nieruchomości </span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['TypDomu']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['StanWykonczenia']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Stan Wykończenia</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['StanWykonczenia']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['RokBudowy']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rok Budowy</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-calendar3 text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['RokBudowy']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['NumerKW']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Numer KW</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-journal-text text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['NumerKW']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['RodzajZabudowy']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Zabudowy</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-stack text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['RodzajZabudowy']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                </div>
+                                
+                                
+                            </div>
+
+                        </div>
+
+                        <!-- collapse end -->
+                        {% endfor %}
+                        <!-- Paginacja -->
+                        <span class="formatuj-maly-logout">{{ pagination.info }}</span>
+                        <div class="pagination formatuj-margin-top">
+                            <nav aria-label="Page navigation example">                            
+                                <ul class="pagination justify-content-center dark-mode">
+                                    <li class="page-item">{{ pagination.prev }}</li>
+                                    <li class="page-item">{{ pagination.links }}</li>
+                                    <li class="page-item">{{ pagination.next }}</li>
+                                </ul>
+                            </nav>
+                        </div>
+{% endblock %}
+
+{% block footer %}
+ To jest stopka panelu administracyjnego. All right reserved &copy; 2024 by DMD Panel Administratora.<br/>
+{% endblock %}
