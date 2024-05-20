@@ -697,6 +697,15 @@ def restart_pm2_tasks():
         print("Output:", e.stdout.decode())
         print("Errors:", e.stderr.decode())
         return False
+def restart_pm2_tasks_signal():
+    try:
+        # Utworzenie pliku sygnału
+        with open('/tmp/restart_pm2.signal', 'w') as f:
+            f.write('restart')
+        return True
+    except Exception as e:
+        print(f"Błąd podczas restartu tasków PM2: {e}")
+        return False
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
@@ -4029,7 +4038,7 @@ def subscribers(router=True):
 @app.route('/restart', methods=['POST'])
 def restart():
     try:
-        if restart_pm2_tasks():
+        if restart_pm2_tasks_signal():
             zapytanie_sql = f'''
                     UPDATE admin_settings 
                     SET 
