@@ -688,7 +688,7 @@ def deActiveSpecOffer_ALL():
 
 def restart_pm2_tasks():
     try:
-        result = subprocess.run(['pm2', 'restart', 'all'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(['/usr/local/bin/pm2', 'restart', 'all'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print("Output:", result.stdout.decode())
         print("Errors:", result.stderr.decode())
         return True
