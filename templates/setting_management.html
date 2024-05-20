@@ -61,7 +61,7 @@
                         <!-- <input type="submit" class="btn btn-success btn-sm" value="Zapisz Ustawienia"/> -->
                     </div>
                     <div class="formatuj-left formatuj-margin">                    
-                        <input type="submit" class="btn btn-danger btn-sm" value="Restaruj Aplikację"/>
+                        <input type="submit" class="btn btn-danger btn-sm" id="restartButton" value="Restaruj Aplikację"/>
                         <p class="jasny formatuj-padding" style="margin-top: 25px; max-width: 150px; color: #beddff">Ostatni restart aplikacji: {{restart}}</p>
                     </div>
 
@@ -119,6 +119,33 @@
         </div>
     </form>
 </div>
+<script>
+    document.getElementById('restartButton').addEventListener('click', function(event) {
+        event.preventDefault();  // Zapobiega domyślnemu zachowaniu przycisku submit
+
+        fetch('/restart', {
+            method: 'POST',  // Zakładając, że używasz metody POST do restartu
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Błąd w odpowiedzi sieciowej.');
+            }
+        })
+        .then(data => {
+            console.log(data.message);  // Zakładając, że endpoint zwraca jakąś wiadomość
+            alert('Aplikacja została zrestartowana.');
+        })
+        .catch(error => {
+            console.error('Wystąpił błąd:', error);
+            alert('Nie udało się zrestartować aplikacji.');
+        });
+    });
+</script>
 {% endblock %}
 
 

@@ -18,6 +18,7 @@ import json
 import html
 # from jinja2 import Markup
 from markupsafe import Markup
+import subprocess
 
 
 
@@ -685,6 +686,15 @@ def deActiveSpecOffer_ALL():
     dane = ("nieaktywna", datetime.datetime.now(), "aktywna")
     return msq.insert_to_database(zapytanie_sql, dane)
 
+def restart_pm2_tasks():
+    try:
+        result = subprocess.run(['pm2', 'restart', 'all'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("Output:", result.stdout.decode())
+        print("Errors:", result.stderr.decode())
+    except subprocess.CalledProcessError as e:
+        print(f"Błąd podczas restartu tasków PM2: {e}")
+        print("Output:", e.stdout.decode())
+        print("Errors:", e.stderr.decode())
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
@@ -4014,6 +4024,13 @@ def subscribers(router=True):
     else:
         return subs, session['username'], pagination
 
+@app.route('/restart', methods=['POST'])
+def restart():
+    try:
+        restart_pm2_tasks()  # Twoja funkcja do restartu PM2
+        return jsonify({"message": "Aplikacja została zrestartowana"}), 200
+    except Exception as e:
+        return jsonify({"message": "Błąd podczas restartu aplikacji"}), 500
 
 @app.route('/setting')
 def settings():
