@@ -138,7 +138,8 @@
         })
         .then(data => {
             console.log(data.message);  // Zakładając, że endpoint zwraca jakąś wiadomość
-            alert('Aplikacja została zrestartowana.');
+            // alert('Aplikacja została zrestartowana.');
+            window.location.href = '/setting'; 
         })
         .catch(error => {
             console.error('Wystąpił błąd:', error);

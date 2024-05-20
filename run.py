@@ -4038,12 +4038,16 @@ def restart():
             dane = (datetime.datetime.now(), 1)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                flash("Aplikacja została zrestartowana", 'success')
                 return jsonify({"message": "Aplikacja została zrestartowana"}), 200
             else:
+                flash("Błąd podczas restartu aplikacji!", 'danger')
                 return jsonify({"message": f"Błąd podczas restartu aplikacji!"}), 500
         else:
+            flash("Błąd podczas restartu aplikacji!", 'danger')
             return jsonify({"message": f"Błąd podczas restartu aplikacji!"}), 500
     except Exception as e:
+        flash(f"Błąd podczas restartu aplikacji: {e}", 'danger')
         return jsonify({"message": f"Błąd podczas restartu aplikacji: {e}"}), 500
 
 @app.route('/setting')
