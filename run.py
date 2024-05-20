@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request, current_app
+from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request
 from flask_wtf import FlaskForm
 from flask_paginate import Pagination, get_page_args
 from wtforms import StringField, PasswordField, SubmitField
@@ -293,8 +293,6 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
         except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
         except TypeError as e: print(f"Błąd typu danych: {e}")
         except Exception as e: print(f"Nieoczekiwany błąd: {e}")
-        
-            
 
         theme = {
             'ID': int(data[0]),
@@ -648,7 +646,6 @@ def addSpecOffer(offerID, parent, status='aktywna'):
             return msq.insert_to_database(zapytanie_sql, dane)
     return False
 
-    
 def activeSpecOffer(offerID, parent):
     offerID = int(offerID)
     specChecked = checkSpecOffer(offerID, parent)
@@ -687,7 +684,6 @@ def deActiveSpecOffer_ALL():
                 '''
     dane = ("nieaktywna", datetime.datetime.now(), "aktywna")
     return msq.insert_to_database(zapytanie_sql, dane)
-
 
 
 settingsDB = generator_settingsDB()
@@ -1822,13 +1818,6 @@ def set_sender():
         SENDER_PORT = int(form_data['sender_port'])
         SENDER_PASSWORD = form_data['sender_password']
 
-        
-
-            # 'smtp_config': {
-            #     'smtp_server': take_data_newsletterSettingDB('config_smtp_server'),
-            #     'smtp_port': int(take_data_newsletterSettingDB('config_smtp_port')),
-            #     'smtp_username': take_data_newsletterSettingDB('config_smtp_username'),
-            #     'smtp_password': take_data_newsletterSettingDB('config_smtp_password')
         zapytanie_sql = """
                 UPDATE newsletter_setting 
                 SET config_smtp_server = %s,
@@ -1859,25 +1848,7 @@ def set_settings():
     
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
-        {
-            'main-domain': 'https://dmddomy.pl/', 
-            'main-domain': 'https://dmddomy.pl/',
-            'blog-pic-path': 'images/blog/', 
-            'avatar-pic-path': 'images/team/', 
-            'avatar-pic-path': 'images/team/', 
-            'item-on-page': '15', 
-            'admin-smtp-username': 'informatyk@dmdbudownictwo.pl', 
-            'admin-smtp-server': 'smtp.office365.com', 
-            'admin-smtp-port': '587', 
-            'admin-smtp-password': '', 
-            'url-domy': 'https://dmddomy.pl/', 
-            'url-budownictwo': 'https://dmddomy.pl/', 
-            'url-development': 'https://dmddomy.pl/', 
-            'url-elitehome': 'https://dmddomy.pl/', 
-            'url-inwestycje': 'https://dmddomy.pl/', 
-            'url-instalacje': 'https://dmddomy.pl/'
-        }
+       
         ADMIN_DOMAIN = form_data['main-domain']
         ADMIN_REALLOC = form_data['real-loc-on-server']
         ADMIN_BLOG = form_data['blog-pic-path']
@@ -1896,23 +1867,7 @@ def set_settings():
 
         ADMIN_PASSWORD = form_data['admin-smtp-password']
         if ADMIN_PASSWORD == '':
-            # admin_settings
-            # pagination
-            # admin_smtp_password
-            # admin_smtp_usernam
-            # admin_smtp_port
-            # admin_smtp_server
-            # instalacje
-            # inwestycje
-            # elitehome
-            # development
-            # budownictwo
-            # domy
-            # last_restart
-            # avatar_pic_path
-            # blog_pic_path
-            # main_domain
-            # ID
+            
             zapytanie_sql = '''
                     UPDATE admin_settings 
                     SET pagination = %s,
@@ -2896,7 +2851,6 @@ def team_instalacje():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-
     users_atributes = {}
     assigned_dmdinstalacje = []
     
@@ -3042,7 +2996,6 @@ def team_instalacje():
                             instalacje=instalacje
                             )
 
-
 @app.template_filter()
 def decode_html_entities_filter(text):
     return html.unescape(text)
@@ -3052,7 +3005,6 @@ def update_new_line_chars(text: str):
     text = text.replace('\r\n', '<br>')  # najpierw standard Windows
     text = text.replace('\n', '<br>')  # potem standard Unix/Linux
     return Markup(html.unescape(text))
-
 
 @app.route('/estate-ads-rent')
 def estateAdsRent():
@@ -3212,7 +3164,6 @@ def update_rent_offer_status():
     
     return redirect(url_for('index'))
 
-
 @app.route('/save-rent-offer', methods=["POST"])
 def save_rent_offer():
     # Odczytanie danych formularza
@@ -3311,11 +3262,8 @@ def save_rent_offer():
     domain = settingsDB['main-domain']
     estate_pic_path = settingsDB['estate-pic-offer']
 
-    'https://dmddomy.pl/images/estate/1713336102750.jpg'
-
     upload_path = f'{real_loc_on_server}{estate_pic_path}'
     mainDomain_URL = f'{domain}{estate_pic_path}'
-
 
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
@@ -3331,7 +3279,6 @@ def save_rent_offer():
                 saved_photos.append(complete_URL_PIC)
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
-
 
     if offerID_int == 9999999:
         gallery_id = None
@@ -3416,7 +3363,6 @@ def save_rent_offer():
                 except Exception as e:
                     print(f"Error removing file {file_path}: {e}")
 
-
         oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
         
         if len(oldPhotos_plus_saved_photos)>=1 and len(oldPhotos_plus_saved_photos) <=10:
@@ -3494,7 +3440,7 @@ def save_rent_offer():
     else:
         flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
         return jsonify({
-                'message': 'xxx',
+                'message': 'Bład zapisu! Oferta wynajmu nie została zapisana!',
                 'success': True
                 }), 200
 
@@ -3755,8 +3701,6 @@ def save_sell_offer():
     domain = settingsDB['main-domain']
     estate_pic_path = settingsDB['estate-pic-offer']
 
-    'https://dmddomy.pl/images/estate/1713336102750.jpg'
-
     upload_path = f'{real_loc_on_server}{estate_pic_path}'
     mainDomain_URL = f'{domain}{estate_pic_path}'
 
@@ -3775,7 +3719,6 @@ def save_sell_offer():
                 saved_photos.append(complete_URL_PIC)
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
-
 
     if offerID_int == 9999999:
         gallery_id = None
@@ -3908,7 +3851,6 @@ def save_sell_offer():
                             InformacjeDodatkowe, GPS, TelefonKontaktowy, EmailKontaktowy, StatusOferty)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                     '''
-        
         dane = (
                 typ_nieruchomosci, title, rodzajNieruchomosci, OPIS_JSON_STR, cena, lokalizacja, liczbaPokoi, metraz, gallery_id,
                 rodzajZabudowy, rynek, liczbaPieter, przeznaczenieLokalu, poziom, 
@@ -3943,7 +3885,7 @@ def save_sell_offer():
     else:
         flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
         return jsonify({
-                'message': 'xxx',
+                'message': 'Bład zapisu! Oferta wynajmu nie została zapisana!',
                 'success': True
                 }), 200
 
@@ -4006,10 +3948,6 @@ def estateAdsspecial():
 
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     ads_spec = all_spec[offset: offset + per_page]
-
-
-    
-
 
     settingsDB = generator_settingsDB()
     domy = settingsDB['domy']
@@ -4096,7 +4034,6 @@ def settings():
     real_loc_on_server = settingsDB['real-location-on-server']
     estate_pic_path = settingsDB['estate-pic-offer']
     
-    
     restart = settingsDB['last-restart']
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
@@ -4125,8 +4062,6 @@ def settings():
                             instalacje=instalacje,
                             smtpAdmin=smtpAdmin
                             )
-
-
 
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
