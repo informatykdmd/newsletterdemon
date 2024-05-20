@@ -691,10 +691,12 @@ def restart_pm2_tasks():
         result = subprocess.run(['pm2', 'restart', 'all'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print("Output:", result.stdout.decode())
         print("Errors:", result.stderr.decode())
+        return True
     except subprocess.CalledProcessError as e:
         print(f"Błąd podczas restartu tasków PM2: {e}")
         print("Output:", e.stdout.decode())
         print("Errors:", e.stderr.decode())
+        return False
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
@@ -4027,10 +4029,22 @@ def subscribers(router=True):
 @app.route('/restart', methods=['POST'])
 def restart():
     try:
-        restart_pm2_tasks()  # Twoja funkcja do restartu PM2
-        return jsonify({"message": "Aplikacja została zrestartowana"}), 200
+        if restart_pm2_tasks():
+            zapytanie_sql = f'''
+                    UPDATE admin_settings 
+                    SET 
+                        last_restart = %s
+                    WHERE ID = %s;'''
+            dane = (datetime.datetime.now(), 1)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({"message": "Aplikacja została zrestartowana"}), 200
+            else:
+                return jsonify({"message": f"Błąd podczas restartu aplikacji!"}), 500
+        else:
+            return jsonify({"message": f"Błąd podczas restartu aplikacji!"}), 500
     except Exception as e:
-        return jsonify({"message": "Błąd podczas restartu aplikacji"}), 500
+        return jsonify({"message": f"Błąd podczas restartu aplikacji: {e}"}), 500
 
 @app.route('/setting')
 def settings():
