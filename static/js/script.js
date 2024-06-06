@@ -831,3 +831,24 @@ function toggleButtons(show) {
     });
 }
 
+function checkboxControl(formId, main_id, checkboxList) {
+    const form = document.getElementById('form_' + formId);
+    const mainCheckbox = form.querySelector('#' + main_id);
+    const checkboxElements = checkboxList.map(id => form.querySelector('#' + id));
+
+    mainCheckbox.addEventListener('change', function() {
+        checkboxElements.forEach(checkbox => {
+            checkbox.disabled = mainCheckbox.checked;
+        });
+    });
+
+    checkboxElements.forEach((checkbox, index) => {
+        checkbox.addEventListener('change', function() {
+            checkboxElements.forEach((otherCheckbox, otherIndex) => {
+                if (index !== otherIndex) {
+                    otherCheckbox.checked = false;
+                }
+            });
+        });
+    });
+}
