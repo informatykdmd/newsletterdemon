@@ -1289,118 +1289,152 @@
                                                     
                                                     
                                                     {% elif post_data['lento']['status'] == 2 %}
-                                                    <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent" />
-                                                        <div class="col me-1 mb-1">
-                                                            <input type="hidden" name="Status" value="0" />
-                                                            <input type="hidden" name="task_kind" value="Publikuj" />
-                                                            <p>Status: Error</p>
-                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                Publikuj ponownie na Lento
-                                                            </button>
+                                                    <div>
+                                                        <p>Status: Error</p>
+                                                    </div>
+                                                    <div class="row row-cols-auto ">
+                                                        <div class="col">
+                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                                <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                                <div class="col me-1 mb-1">
+                                                                    <input type="hidden" name="Status" value="0" />
+                                                                    <input type="hidden" name="task_kind" value="Publikuj" />
+                                                                    
+                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                        Publikuj ponownie na Lento
+                                                                    </button>
+                                                                </div>
+                                                            </form>
                                                         </div>
-                                                    </form>
-                                                    {% elif post_data['lento']['status'] == 3 %}
-                                                    <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent" />
-                                                        <div class="col me-1 mb-1">
-                                                            <input type="hidden" name="Status" value="0" />
-                                                            <input type="hidden" name="task_kind" value="Publikuj" />
-                                                            <p>Status: Usunięto</p>
-                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                Publikuj ponownie na Lento
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                    {% elif post_data['lento']['status'] == 4 %}
+                                                    </div>
+
                                                     
-                                                        <div class="col me-1 mb-1">
-                                                            <input type="hidden" name="Status" value="0" />
-                                                            <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                    {% elif post_data['lento']['status'] == 3 %}
+                                                    <div>
+                                                        <p>Status: Usunięto</p>
+                                                    </div>
+                                                    <div class="row row-cols-auto ">
+                                                        <div class="col">
+                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                                <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                                <div class="col me-1 mb-1">
+                                                                    <input type="hidden" name="Status" value="0" />
+                                                                    <input type="hidden" name="task_kind" value="Publikuj" />
+                                                                    
+                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                        Publikuj ponownie na Lento
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {% elif post_data['lento']['status'] == 4 %}
+                                                    <div>
+                                                        <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                    </div>
+                                                    <div class="row row-cols-auto ">
+                                                        <div class="col">
                                                             
                                                         </div>
+                                                    </div>
                                                     
                                                     {% elif post_data['lento']['status'] == 5 %}
-                                                    
-                                                        <div class="col me-1 mb-1">
-                                                            <input type="hidden" name="Status" value="0" />
-                                                            <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                    <div>
+                                                        <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                    </div>
+                                                    <div class="row row-cols-auto ">
+                                                        <div class="col">
                                                             
                                                         </div>
+                                                    </div>
+                                                        
                                                     
                                                     {% elif post_data['lento']['status'] == 6 %}
-                                                        <div class="col me-1 mb-1">
-                                                            <input type="hidden" name="Status" value="0" />
-                                                            <p>Status: Trwa proces usuwania ogłoszenia</p>
-
-                                                        </div>
-                                                    {% elif post_data['lento']['status'] == None %}
-                                                    <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent" />
-                                                        <div class="col me-1 mb-1">
-                                                            <input type="hidden" name="Status" value="0" />
-                                                            <input type="hidden" name="task_kind" value="Publikuj" />
-                                                            <label for="bez_promowania">Bez Promowania:</label>
-                                                            <input type="checkbox" id="bez_promowania" name="bez_promowania" value="1"><br>
-
-                                                            <label for="promowanie_lokalne_14_dni">Promowanie Lokalne na 14 dni:</label>
-                                                            <input type="checkbox" id="promowanie_lokalne_14_dni" name="promowanie_lokalne_14_dni" value="1"><br>
-
-                                                            <label for="promowanie_lokalne_30_dni">Promowanie Lokalne na 30 dni:</label>
-                                                            <input type="checkbox" id="promowanie_lokalne_30_dni" name="promowanie_lokalne_30_dni" value="1"><br>
-
-                                                            <label for="promowanie_regionalne_14_dni">Promowanie Regionalne na 14 dni:</label>
-                                                            <input type="checkbox" id="promowanie_regionalne_14_dni" name="promowanie_regionalne_14_dni" value="1"><br>
-
-                                                            <label for="promowanie_regionalne_30_dni">Promowanie Regionalne na 30 dni:</label>
-                                                            <input type="checkbox" id="promowanie_regionalne_30_dni" name="promowanie_regionalne_30_dni" value="1"><br>
-
-                                                            <label for="promowanie_ogolnopolskie_14_dni">Promowanie Ogólnopolskie na 14 dni:</label>
-                                                            <input type="checkbox" id="promowanie_ogolnopolskie_14_dni" name="promowanie_ogolnopolskie_14_dni" value="1"><br>
-
-                                                            <label for="promowanie_ogolnopolskie_30_dni">Promowanie Ogólnopolskie na 30 dni:</label>
-                                                            <input type="checkbox" id="promowanie_ogolnopolskie_30_dni" name="promowanie_ogolnopolskie_30_dni" value="1"><br>
-
-                                                            <label for="top_ogloszenie_7_dni">Top Ogłoszenie na 7 dni:</label>
-                                                            <input type="checkbox" id="top_ogloszenie_7_dni" name="top_ogloszenie_7_dni" value="1"><br>
-
-                                                            <label for="top_ogloszenie_14_dni">Top Ogłoszenie na 14 dni:</label>
-                                                            <input type="checkbox" id="top_ogloszenie_14_dni" name="top_ogloszenie_14_dni" value="1"><br>
-
-                                                            <label for="etykieta_pilne_7_dni">Etykieta Pilne na 7 dni:</label>
-                                                            <input type="checkbox" id="etykieta_pilne_7_dni" name="etykieta_pilne_7_dni" value="1"><br>
-
-                                                            <label for="etykieta_pilne_14_dni">Etykieta Pilne na 14 dni:</label>
-                                                            <input type="checkbox" id="etykieta_pilne_14_dni" name="etykieta_pilne_14_dni" value="1"><br>
-
-                                                            <label for="codzienne_odswiezenie_7_dni">Codzienne Odświeżenie na 7 dni:</label>
-                                                            <input type="checkbox" id="codzienne_odswiezenie_7_dni" name="codzienne_odswiezenie_7_dni" value="1"><br>
-
-                                                            <label for="codzienne_odswiezenie_14_dni">Codzienne Odświeżenie na 14 dni:</label>
-                                                            <input type="checkbox" id="codzienne_odswiezenie_14_dni" name="codzienne_odswiezenie_14_dni" value="1"><br>
-
-                                                            <label for="wyswietlanie_na_stronie_glownej_14_dni">Wyświetlanie na Stronie Głównej na 14 dni:</label>
-                                                            <input type="checkbox" id="wyswietlanie_na_stronie_glownej_14_dni" name="wyswietlanie_na_stronie_glownej_14_dni" value="1"><br>
-
-                                                            <label for="wyswietlanie_na_stronie_glownej_30_dni">Wyświetlanie na Stronie Głównej na 30 dni:</label>
-                                                            <input type="checkbox" id="wyswietlanie_na_stronie_glownej_30_dni" name="wyswietlanie_na_stronie_glownej_30_dni" value="1"><br>
-
-                                                            <label for="super_oferta_7_dni">Super Oferta na 7 dni:</label>
-                                                            <input type="checkbox" id="super_oferta_7_dni" name="super_oferta_7_dni" value="1"><br>
-
-                                                            <label for="super_oferta_14_dni">Super Oferta na 14 dni:</label>
-                                                            <input type="checkbox" id="super_oferta_14_dni" name="super_oferta_14_dni" value="1"><br>
-
+                                                    <div>
+                                                        <p>Status: Trwa proces usuwania ogłoszenia</p>
+                                                    </div>
+                                                    <div class="row row-cols-auto ">
+                                                        <div class="col">
                                                             
-                                                            <p>Status: Pierwsza publikacja na Lento</p>
-                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                Publikuj na Lento
-                                                            </button>
                                                         </div>
-                                                    </form>
+                                                    </div>
+                                                        
+                                                    {% elif post_data['lento']['status'] == None %}
+                                                    <div>
+                                                        <p>Status: Pierwsza publikacja na Lento</p>
+                                                    </div>
+                                                    <div class="row row-cols-auto ">
+                                                        <div class="col">
+                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                                <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                                <div class="col me-1 mb-1">
+                                                                    <input type="hidden" name="Status" value="0" />
+                                                                    <input type="hidden" name="task_kind" value="Publikuj" />
+                                                                    <label for="bez_promowania">Bez Promowania:</label>
+                                                                    <input type="checkbox" id="bez_promowania" name="bez_promowania" value="1"><br>
+        
+                                                                    <label for="promowanie_lokalne_14_dni">Promowanie Lokalne na 14 dni:</label>
+                                                                    <input type="checkbox" id="promowanie_lokalne_14_dni" name="promowanie_lokalne_14_dni" value="1"><br>
+        
+                                                                    <label for="promowanie_lokalne_30_dni">Promowanie Lokalne na 30 dni:</label>
+                                                                    <input type="checkbox" id="promowanie_lokalne_30_dni" name="promowanie_lokalne_30_dni" value="1"><br>
+        
+                                                                    <label for="promowanie_regionalne_14_dni">Promowanie Regionalne na 14 dni:</label>
+                                                                    <input type="checkbox" id="promowanie_regionalne_14_dni" name="promowanie_regionalne_14_dni" value="1"><br>
+        
+                                                                    <label for="promowanie_regionalne_30_dni">Promowanie Regionalne na 30 dni:</label>
+                                                                    <input type="checkbox" id="promowanie_regionalne_30_dni" name="promowanie_regionalne_30_dni" value="1"><br>
+        
+                                                                    <label for="promowanie_ogolnopolskie_14_dni">Promowanie Ogólnopolskie na 14 dni:</label>
+                                                                    <input type="checkbox" id="promowanie_ogolnopolskie_14_dni" name="promowanie_ogolnopolskie_14_dni" value="1"><br>
+        
+                                                                    <label for="promowanie_ogolnopolskie_30_dni">Promowanie Ogólnopolskie na 30 dni:</label>
+                                                                    <input type="checkbox" id="promowanie_ogolnopolskie_30_dni" name="promowanie_ogolnopolskie_30_dni" value="1"><br>
+        
+                                                                    <label for="top_ogloszenie_7_dni">Top Ogłoszenie na 7 dni:</label>
+                                                                    <input type="checkbox" id="top_ogloszenie_7_dni" name="top_ogloszenie_7_dni" value="1"><br>
+        
+                                                                    <label for="top_ogloszenie_14_dni">Top Ogłoszenie na 14 dni:</label>
+                                                                    <input type="checkbox" id="top_ogloszenie_14_dni" name="top_ogloszenie_14_dni" value="1"><br>
+        
+                                                                    <label for="etykieta_pilne_7_dni">Etykieta Pilne na 7 dni:</label>
+                                                                    <input type="checkbox" id="etykieta_pilne_7_dni" name="etykieta_pilne_7_dni" value="1"><br>
+        
+                                                                    <label for="etykieta_pilne_14_dni">Etykieta Pilne na 14 dni:</label>
+                                                                    <input type="checkbox" id="etykieta_pilne_14_dni" name="etykieta_pilne_14_dni" value="1"><br>
+        
+                                                                    <label for="codzienne_odswiezenie_7_dni">Codzienne Odświeżenie na 7 dni:</label>
+                                                                    <input type="checkbox" id="codzienne_odswiezenie_7_dni" name="codzienne_odswiezenie_7_dni" value="1"><br>
+        
+                                                                    <label for="codzienne_odswiezenie_14_dni">Codzienne Odświeżenie na 14 dni:</label>
+                                                                    <input type="checkbox" id="codzienne_odswiezenie_14_dni" name="codzienne_odswiezenie_14_dni" value="1"><br>
+        
+                                                                    <label for="wyswietlanie_na_stronie_glownej_14_dni">Wyświetlanie na Stronie Głównej na 14 dni:</label>
+                                                                    <input type="checkbox" id="wyswietlanie_na_stronie_glownej_14_dni" name="wyswietlanie_na_stronie_glownej_14_dni" value="1"><br>
+        
+                                                                    <label for="wyswietlanie_na_stronie_glownej_30_dni">Wyświetlanie na Stronie Głównej na 30 dni:</label>
+                                                                    <input type="checkbox" id="wyswietlanie_na_stronie_glownej_30_dni" name="wyswietlanie_na_stronie_glownej_30_dni" value="1"><br>
+        
+                                                                    <label for="super_oferta_7_dni">Super Oferta na 7 dni:</label>
+                                                                    <input type="checkbox" id="super_oferta_7_dni" name="super_oferta_7_dni" value="1"><br>
+        
+                                                                    <label for="super_oferta_14_dni">Super Oferta na 14 dni:</label>
+                                                                    <input type="checkbox" id="super_oferta_14_dni" name="super_oferta_14_dni" value="1"><br>
+        
+                                                                    
+                                                                    
+                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                        Publikuj na Lento
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    
                                                     {% endif %}
                                                 {% endif %}
                                             </form>
