@@ -844,7 +844,26 @@ function toggleButtons(show) {
 
 // }
 
-function checkboxControlDisable(formId, main_id, checkboxList) {
+// function checkboxControlDisable(formId, main_id, checkboxList) {
+//     const form = document.getElementById('form_' + formId);
+//     const mainCheckbox = form.querySelector('#' + main_id);
+//     const checkboxElements = checkboxList.map(id => form.querySelector('#' + id));
+
+//     // Funkcja aktualizująca stan checkboxów na podstawie stanu mainCheckbox
+//     function updateCheckboxState() {
+//         checkboxElements.forEach(checkbox => {
+//             checkbox.disabled = mainCheckbox.checked;
+//         });
+//     }
+
+//     // Dodanie event listenera dla mainCheckbox
+//     mainCheckbox.addEventListener('change', updateCheckboxState);
+
+//     // Inicjalizacja stanu checkboxów na podstawie aktualnego stanu mainCheckbox
+//     updateCheckboxState();
+// }
+
+function checkboxControlDisableOrHide(formId, main_id, checkboxList, action='disable') {
     const form = document.getElementById('form_' + formId);
     const mainCheckbox = form.querySelector('#' + main_id);
     const checkboxElements = checkboxList.map(id => form.querySelector('#' + id));
@@ -852,7 +871,11 @@ function checkboxControlDisable(formId, main_id, checkboxList) {
     // Funkcja aktualizująca stan checkboxów na podstawie stanu mainCheckbox
     function updateCheckboxState() {
         checkboxElements.forEach(checkbox => {
-            checkbox.disabled = mainCheckbox.checked;
+            if (action === 'disable') {
+                checkbox.disabled = mainCheckbox.checked;
+            } else if (action === 'hide') {
+                checkbox.style.display = mainCheckbox.checked ? 'none' : '';
+            }
         });
     }
 
