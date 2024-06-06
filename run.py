@@ -3985,6 +3985,8 @@ def public_on_lento():
 
         if task_kind == 'Publikuj':
             print(request.form)
+            if 'codzienne_odswiezenie_7_dni' in request.form:
+                print('jest')
         if task_kind == 'Wstrzymaj':
             pass
         if task_kind == 'Wznow':
