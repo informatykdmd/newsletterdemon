@@ -831,39 +831,8 @@ function toggleButtons(show) {
     });
 }
 
-// function checkboxControlDisable(formId, main_id, checkboxList) {
-//     const form = document.getElementById('form_' + formId);
-//     const mainCheckbox = form.querySelector('#' + main_id);
-//     const checkboxElements = checkboxList.map(id => form.querySelector('#' + id));
 
-//     mainCheckbox.addEventListener('change', function() {
-//         checkboxElements.forEach(checkbox => {
-//             checkbox.disabled = mainCheckbox.checked;
-//         });
-//     });
-
-// }
-
-// function checkboxControlDisable(formId, main_id, checkboxList) {
-//     const form = document.getElementById('form_' + formId);
-//     const mainCheckbox = form.querySelector('#' + main_id);
-//     const checkboxElements = checkboxList.map(id => form.querySelector('#' + id));
-
-//     // Funkcja aktualizująca stan checkboxów na podstawie stanu mainCheckbox
-//     function updateCheckboxState() {
-//         checkboxElements.forEach(checkbox => {
-//             checkbox.disabled = mainCheckbox.checked;
-//         });
-//     }
-
-//     // Dodanie event listenera dla mainCheckbox
-//     mainCheckbox.addEventListener('change', updateCheckboxState);
-
-//     // Inicjalizacja stanu checkboxów na podstawie aktualnego stanu mainCheckbox
-//     updateCheckboxState();
-// }
-
-function checkboxControlDisableOrHide(formId, main_id, checkboxList, action='disable') {
+function checkboxControlDisable(formId, main_id, checkboxList) {
     const form = document.getElementById('form_' + formId);
     const mainCheckbox = form.querySelector('#' + main_id);
     const checkboxElements = checkboxList.map(id => form.querySelector('#' + id));
@@ -871,11 +840,7 @@ function checkboxControlDisableOrHide(formId, main_id, checkboxList, action='dis
     // Funkcja aktualizująca stan checkboxów na podstawie stanu mainCheckbox
     function updateCheckboxState() {
         checkboxElements.forEach(checkbox => {
-            if (action === 'disable') {
-                checkbox.disabled = mainCheckbox.checked;
-            } else if (action === 'hide') {
-                checkbox.style.display = mainCheckbox.checked ? 'none' : '';
-            }
+            checkbox.disabled = mainCheckbox.checked;
         });
     }
 
@@ -885,6 +850,30 @@ function checkboxControlDisableOrHide(formId, main_id, checkboxList, action='dis
     // Inicjalizacja stanu checkboxów na podstawie aktualnego stanu mainCheckbox
     updateCheckboxState();
 }
+
+// wersja beta z ukrywaniem
+// function checkboxControlDisableOrHide(formId, main_id, checkboxList, action='disable') {
+//     const form = document.getElementById('form_' + formId);
+//     const mainCheckbox = form.querySelector('#' + main_id);
+//     const checkboxElements = checkboxList.map(id => form.querySelector('#' + id));
+
+//     // Funkcja aktualizująca stan checkboxów na podstawie stanu mainCheckbox
+//     function updateCheckboxState() {
+//         checkboxElements.forEach(checkbox => {
+//             if (action === 'disable') {
+//                 checkbox.disabled = mainCheckbox.checked;
+//             } else if (action === 'hide') {
+//                 checkbox.style.display = mainCheckbox.checked ? 'none' : '';
+//             }
+//         });
+//     }
+
+//     // Dodanie event listenera dla mainCheckbox
+//     mainCheckbox.addEventListener('change', updateCheckboxState);
+
+//     // Inicjalizacja stanu checkboxów na podstawie aktualnego stanu mainCheckbox
+//     updateCheckboxState();
+// }
 
 function checkboxControlOffOther(formId, main_id, checkboxList) {
     const form = document.getElementById('form_' + formId);
