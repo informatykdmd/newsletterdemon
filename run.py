@@ -3978,6 +3978,7 @@ def public_on_lento():
     
     if request.method == 'POST':
         lento_id = request.form.get('lento_id')
+        postID = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
         redirectGoal = request.form.get('redirectGoal')
         status = request.form.get('Status')
@@ -3985,8 +3986,41 @@ def public_on_lento():
 
         if task_kind == 'Publikuj':
             print(request.form)
-            if 'codzienne_odswiezenie_7_dni' in request.form:
-                print('jest')
+            picked_rent_offer = {}
+            for rentOffer in generator_rentOffert():
+                if str(rentOffer['ID']) == str(postID):
+                    picked_rent_offer = rentOffer
+            print(picked_rent_offer)
+            if 'promowanie_lokalne_14_dni' in request.form: promowanie_lokalne_14_dni = 1
+            else: promowanie_lokalne_14_dni = 0
+            if 'promowanie_lokalne_30_dni' in request.form: promowanie_lokalne_30_dni = 1
+            else: promowanie_lokalne_30_dni = 0
+
+            if 'promowanie_regionalne_14_dni' in request.form: promowanie_regionalne_14_dni = 1
+            else: promowanie_regionalne_14_dni = 0
+            if 'promowanie_regionalne_30_dni' in request.form: promowanie_regionalne_30_dni = 1
+            else: promowanie_regionalne_30_dni = 0
+
+            if 'promowanie_ogolnopolskie_14_dni' in request.form: promowanie_ogolnopolskie_14_dni = 1
+            else: promowanie_ogolnopolskie_14_dni = 0
+            if 'promowanie_ogolnopolskie_30_dni' in request.form: promowanie_ogolnopolskie_30_dni = 1
+            else: promowanie_ogolnopolskie_30_dni = 0
+
+            if 'top_ogloszenie_7_dni' in request.form: top_ogloszenie_7_dni = 1
+            else: top_ogloszenie_7_dni = 0
+            if 'top_ogloszenie_14_dni' in request.form: top_ogloszenie_14_dni = 1
+            else: top_ogloszenie_14_dni = 0
+
+            if 'etykieta_pilne_7_dni' in request.form: etykieta_pilne_7_dni = 1
+            else: etykieta_pilne_7_dni = 0
+            if 'etykieta_pilne_14_dni' in request.form: etykieta_pilne_14_dni = 1
+            else: etykieta_pilne_14_dni = 0
+
+            if 'codzienne_odswiezenie_7_dni' in request.form: codzienne_odswiezenie_7_dni = 1
+            else: codzienne_odswiezenie_7_dni = 0
+            if 'codzienne_odswiezenie_14_dni' in request.form: codzienne_odswiezenie_14_dni = 1
+            else: codzienne_odswiezenie_14_dni = 0
+
         if task_kind == 'Wstrzymaj':
             pass
         if task_kind == 'Wznow':
