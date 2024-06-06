@@ -1210,7 +1210,7 @@
                                                 {% if post_data['StatusOferty'] == 1 %}
                                                     {% if post_data['lento']['status'] == 0 %}
                                                     <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="post_data['lento']['id']" />
+                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
                                                         <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                         <div class="col me-1 mb-1">
                                                             <input type="hidden" name="Status" value="0" />
@@ -1224,7 +1224,7 @@
                                                     </form>
                                                     {% elif post_data['lento']['status'] == 1 %}
                                                     <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="post_data['lento']['id']" />
+                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
                                                     
                                                         <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                         <div class="col me-1 mb-1">
@@ -1237,7 +1237,7 @@
                                                         </div>
                                                     </form>
                                                     <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="post_data['lento']['id']" />
+                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
                                                         
                                                         <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                         <div class="col me-1 mb-1">
@@ -1249,7 +1249,7 @@
                                                         </div>
                                                     </form>
                                                     <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="post_data['lento']['id']" />
+                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
                                                         <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                         <div class="col me-1 mb-1">
                                                             <input type="hidden" name="Status" value="0" />
@@ -1261,7 +1261,7 @@
                                                     </form>
                                                     {% elif post_data['lento']['status'] == 2 %}
                                                     <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="post_data['lento']['id']" />
+                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
                                                         <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                         <div class="col me-1 mb-1">
                                                             <input type="hidden" name="Status" value="0" />
@@ -1274,7 +1274,7 @@
                                                     </form>
                                                     {% elif post_data['lento']['status'] == 3 %}
                                                     <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="post_data['lento']['id']" />
+                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
                                                         <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                         <div class="col me-1 mb-1">
                                                             <input type="hidden" name="Status" value="0" />
@@ -1309,7 +1309,7 @@
                                                         </div>
                                                     {% elif post_data['lento']['status'] == None %}
                                                     <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="lento_id" value="post_data['lento']['id']" />
+                                                        <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
                                                         <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                         <div class="col me-1 mb-1">
                                                             <input type="hidden" name="Status" value="0" />
@@ -1365,7 +1365,7 @@
                                                             <label for="super_oferta_14_dni">Super Oferta na 14 dni:</label>
                                                             <input type="checkbox" id="super_oferta_14_dni" name="super_oferta_14_dni" value="1"><br>
 
-                                                            <input type="submit" value="Zapisz">
+                                                            
                                                             <p>Status: Pierwsza publikacja na Lento</p>
                                                             <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
                                                                 Publikuj na Lento
