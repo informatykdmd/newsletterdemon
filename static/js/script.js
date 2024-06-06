@@ -831,7 +831,7 @@ function toggleButtons(show) {
     });
 }
 
-function checkboxControl(formId, main_id, checkboxList) {
+function checkboxControlDisable(formId, main_id, checkboxList) {
     const form = document.getElementById('form_' + formId);
     const mainCheckbox = form.querySelector('#' + main_id);
     const checkboxElements = checkboxList.map(id => form.querySelector('#' + id));
@@ -842,13 +842,31 @@ function checkboxControl(formId, main_id, checkboxList) {
         });
     });
 
+}
+
+function checkboxControlOffOther(formId, main_id, checkboxList) {
+    const form = document.getElementById('form_' + formId);
+    const mainCheckbox = form.querySelector('#' + main_id);
+    const checkboxElements = checkboxList.map(id => form.querySelector('#' + id));
+
+    mainCheckbox.addEventListener('change', function() {
+        if (mainCheckbox.checked) {
+            checkboxElements.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    });
+
     checkboxElements.forEach((checkbox, index) => {
         checkbox.addEventListener('change', function() {
-            checkboxElements.forEach((otherCheckbox, otherIndex) => {
-                if (index !== otherIndex) {
-                    otherCheckbox.checked = false;
-                }
-            });
+            if (checkbox.checked) {
+                mainCheckbox.checked = false;
+                checkboxElements.forEach((otherCheckbox, otherIndex) => {
+                    if (index !== otherIndex) {
+                        otherCheckbox.checked = false;
+                    }
+                });
+            }
         });
     });
 }

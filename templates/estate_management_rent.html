@@ -1442,10 +1442,11 @@
                                                         </div>
                                                     </div>
                                                     <script>
-                                                        checkboxControl(
+                                                        checkboxControlDisable(
                                                             '{{post_id}}', 
                                                             'bez_promowania_{{post_id}}', 
-                                                                ['promowanie_lokalne_14_dni_{{post_id}}', 
+                                                            [
+                                                                'promowanie_lokalne_14_dni_{{post_id}}', 
                                                                 'promowanie_lokalne_30_dni_{{post_id}}', 
                                                                 'promowanie_regionalne_14_dni_{{post_id}}', 
                                                                 'promowanie_regionalne_30_dni_{{post_id}}', 
@@ -1461,6 +1462,13 @@
                                                                 'wyswietlanie_na_stronie_glownej_30_dni_{{post_id}}',
                                                                 'super_oferta_7_dni_{{post_id}}', 
                                                                 'super_oferta_14_dni_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            '{{post_id}}', 
+                                                            'promowanie_lokalne_14_dni_{{post_id}}', 
+                                                            [
+                                                                'promowanie_lokalne_30_dni_{{post_id}}'
                                                             ]
                                                         );
                                                     </script>
