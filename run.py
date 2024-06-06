@@ -3989,7 +3989,7 @@ def public_on_lento():
             pass
         if task_kind == 'Wznow':
             pass
-        if task_kind == 'Edytuj':
+        if task_kind == 'Aktualizuj':
             pass
         if task_kind == 'Usun':
             pass
