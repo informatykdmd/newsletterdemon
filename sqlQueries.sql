@@ -33,4 +33,37 @@ INSERT  INTO teams(name) VALUES('Zespół A'),('Zespół B');
 -- zapytanie pobierające autorów
 SELECT u.* FROM users AS u JOIN posts AS p ON u.id=p.author_id GROUP BY u.id ORDER BY COUNT(*)
 
+-- tabela lento.pl
+CREATE TABLE ogloszenia_lento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rodzaj_ogloszenia VARCHAR(255),
+    typ_ogloszenia VARCHAR(255),
+    tytul_ogloszenia VARCHAR(255),
+    kategoria_ogloszenia VARCHAR(255),
+    opis_ogloszenia TEXT,
+    id_galerii INT,
+    miejscowosc VARCHAR(255),
+    osoba_kontaktowa VARCHAR(255),
+    nr_telefonu VARCHAR(20),
+    status INT,
+    data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
+ALTER TABLE ogloszenia_lento
+ADD COLUMN bez_promowania INT DEFAULT 0 AFTER nr_telefonu,
+ADD COLUMN promowanie_lokalne_14_dni INT DEFAULT 0 AFTER bez_promowania,
+ADD COLUMN promowanie_lokalne_30_dni INT DEFAULT 0 AFTER promowanie_lokalne_14_dni,
+ADD COLUMN promowanie_regionalne_14_dni INT DEFAULT 0 AFTER promowanie_lokalne_30_dni,
+ADD COLUMN promowanie_regionalne_30_dni INT DEFAULT 0 AFTER promowanie_regionalne_14_dni,
+ADD COLUMN promowanie_ogolnopolskie_14_dni INT DEFAULT 0 AFTER promowanie_regionalne_30_dni,
+ADD COLUMN promowanie_ogolnopolskie_30_dni INT DEFAULT 0 AFTER promowanie_ogolnopolskie_14_dni,
+ADD COLUMN top_ogloszenie_7_dni INT DEFAULT 0 AFTER promowanie_ogolnopolskie_30_dni,
+ADD COLUMN top_ogloszenie_14_dni INT DEFAULT 0 AFTER top_ogloszenie_7_dni,
+ADD COLUMN etykieta_pilne_7_dni INT DEFAULT 0 AFTER top_ogloszenie_14_dni,
+ADD COLUMN etykieta_pilne_14_dni INT DEFAULT 0 AFTER etykieta_pilne_7_dni,
+ADD COLUMN codzienne_odswiezenie_7_dni INT DEFAULT 0 AFTER etykieta_pilne_14_dni,
+ADD COLUMN codzienne_odswiezenie_14_dni INT DEFAULT 0 AFTER codzienne_odswiezenie_7_dni,
+ADD COLUMN wyswietlanie_na_stronie_glownej_14_dni INT DEFAULT 0 AFTER codzienne_odswiezenie_14_dni,
+ADD COLUMN wyswietlanie_na_stronie_glownej_30_dni INT DEFAULT 0 AFTER wyswietlanie_na_stronie_glownej_14_dni,
+ADD COLUMN super_oferta_7_dni INT DEFAULT 0 AFTER wyswietlanie_na_stronie_glownej_30_dni,
+ADD COLUMN super_oferta_14_dni INT DEFAULT 0 AFTER super_oferta_7_dni;

@@ -268,6 +268,11 @@ def format_date(date_input, pl=True):
 
     return formatted_date
 
+def checkLentoStatus(kind, id):
+    try:
+        return msq.connect_to_database(f'SELECT id, status FROM ogloszenia_lento WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
+    except IndexError:
+        return (None, None)
 def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystkie'
     took_rentOffer = take_data_table('*', 'OfertyNajmu')
     
@@ -3041,13 +3046,22 @@ def estateAdsRent():
     # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
     all_rents = generator_rentOffert()
 
+    new_all_rents = []
+    for item in all_rents:
+        if 'lento' not in item:
+            item['lento'] = {}
+        lentoIDstatus = checkLentoStatus(kind="r", id=item['ID'])
+        item['lento']['id'] = lentoIDstatus[0]
+        item['lento']['status'] = lentoIDstatus[1]
+        new_all_rents.append(item)
+
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-    total = len(all_rents)
+    total = len(new_all_rents)
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
-    ads_rent = all_rents[offset: offset + per_page]
+    ads_rent = new_all_rents[offset: offset + per_page]
 
     specOfferIfno = generator_specialOffert()
     if len(specOfferIfno) == 1:
@@ -3065,6 +3079,9 @@ def estateAdsRent():
     elitehome = settingsDB['elitehome']
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
+
+    lentoOffer = 1
+
     return render_template(
                             "estate_management_rent.html",
                             ads_rent=ads_rent,
@@ -3077,7 +3094,8 @@ def estateAdsRent():
                             development=development,
                             elitehome=elitehome,
                             inwestycje=inwestycje,
-                            instalacje=instalacje
+                            instalacje=instalacje,
+                            lentoOffer=lentoOffer
                             )     
 
 @app.route('/remove-rent-offer', methods=['POST'])
@@ -3946,7 +3964,55 @@ def set_as_specOffer():
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index'))
+
+@app.route('/public-on-lento', methods=['POST'])
+def public_on_lento():
+    """Strona zawierająca listę z ogłoszeniami nieruchomości."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
     
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        lento_id = request.form.get('lento_id')
+        task_kind = request.form.get('task_kind')
+        redirectGoal = request.form.get('redirectGoal')
+        status = request.form.get('Status')
+        print(request.form)
+
+        if task_kind == 'Publikuj':
+            pass
+        if task_kind == 'Wstrzymaj':
+            pass
+        if task_kind == 'Wznow':
+            pass
+        if task_kind == 'Edytuj':
+            pass
+        if task_kind == 'Usun':
+            pass
+        
+        # if redirectGoal == 'estateAdsRent':
+        #     parent = 'r'
+        # if redirectGoal == 'estateAdsSell':
+        #     parent = 's'
+        
+        # if status == '0':
+        #     if removeSpecOffer(postID, parent):
+        #         flash('Zmiany zotały zastosowane z sukcesem!', 'success')
+        #     else:
+        #         flash('Błąd! Zmiany nie zotały zastosowane!', 'danger')
+        
+        # if status == '1':
+        #     if addSpecOffer(postID, parent):
+        #         flash('Zmiany zotały zastosowane z sukcesem!', 'success')
+        #     else:
+        #         flash('Błąd! Zmiany nie zotały zastosowane!', 'danger')
+
+        return redirect(url_for(redirectGoal))
+    return redirect(url_for('index')) 
 
 @app.route('/estate-ads-special')
 def estateAdsspecial():

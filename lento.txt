@@ -1,0 +1,5 @@
+id ogloszenia f6
+https://www.lento.pl/dodaj-ogloszenie.html?step=status&adToken=13771739:add:4da3b0f8db0ce8318f7b92a2
+
+edycja ogłoszenia
+https://www.lento.pl/edycja.html?adid=13771739
