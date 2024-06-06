@@ -3981,10 +3981,10 @@ def public_on_lento():
         task_kind = request.form.get('task_kind')
         redirectGoal = request.form.get('redirectGoal')
         status = request.form.get('Status')
-        print(request.form)
+        
 
         if task_kind == 'Publikuj':
-            pass
+            print(request.form)
         if task_kind == 'Wstrzymaj':
             pass
         if task_kind == 'Wznow':

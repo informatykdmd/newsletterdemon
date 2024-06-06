@@ -1369,10 +1369,12 @@
                                                     </div>
                                                         
                                                     {% elif post_data['lento']['status'] == None %}
-                                                    <div>
+                                                    <div class="mb-2">
+                                                        <h5>LENTO.PL</h5>
+                                                        <hr/>
                                                         <p>Status: Pierwsza publikacja na Lento</p>
                                                     </div>
-                                                    <div class="row row-cols-auto ">
+                                                    <div class="row row-cols-auto mb-3">
                                                         <div class="col">
                                                             <form action="{{ url_for('public_on_lento') }}" id="form_{{post_id}}" method="POST" enctype="multipart/form-data">
                                                                 <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
@@ -1583,10 +1585,6 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
-
-                                                                    
-                                                                    
                                                                     <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
                                                                         Publikuj na Lento
                                                                     </button>
