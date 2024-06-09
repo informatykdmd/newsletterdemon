@@ -4193,33 +4193,31 @@ def public_on_lento():
                 elif str(picked_rent_offer['RodzajZabudowy']).lower().count('szeregowiec') > 0: typ_domu = 'szeregowiec'
                 else: typ_domu = 'inny'
 
-                zapytanie_sql = f'''
-                        INSERT INTO ogloszenia_lento 
-                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
-                             
-                            numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
-                            opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                            bez_promowania, 
-                            promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
-                            promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
-                            promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
-                            top_ogloszenie_7_dni, top_ogloszenie_14_dni,
-                            etykieta_pilne_7_dni, etykieta_pilne_14_dni,
-                            codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
-                            wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
-                            super_oferta_7_dni, super_oferta_14_dni,
-                            status)
-                        VALUES 
-                            (%s, %s, %s, %s, %s,
-                             %s, %s, %s, %s, %s,
-                             %s, %s, %s, %s, %s,
-                             %s, %s, %s, %s, %s, 
-                             %s, %s, %s, %s, %s, 
-                             %s, %s, %s, %s, %s, 
-                             %s, %s, %s, %s);
-                        '''
+                zapytanie_sql = '''
+                    INSERT INTO ogloszenia_lento 
+                        (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
+                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
+                        opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
+                        bez_promowania, 
+                        promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
+                        promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
+                        promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
+                        top_ogloszenie_7_dni, top_ogloszenie_14_dni,
+                        etykieta_pilne_7_dni, etykieta_pilne_14_dni,
+                        codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
+                        wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
+                        super_oferta_7_dni, super_oferta_14_dni,
+                        status)
+                    VALUES 
+                        (%s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, 
+                        %s, %s, %s, %s, %s, 
+                        %s, %s, %s, %s, %s, 
+                        %s, %s, %s, %s);
+                '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
-                        zabudowa,  
                         numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
@@ -4233,6 +4231,7 @@ def public_on_lento():
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
 
+
             if kategoria_ogloszenia == 'mieszkanie':
                 if picked_rent_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
                 elif picked_rent_offer['LiczbaPokoi'] > 4:liczba_pokoi = 5
@@ -4245,48 +4244,38 @@ def public_on_lento():
                 if str(picked_rent_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
                 elif str(picked_rent_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
                 else: forma_kuchni = 'brak'
-                if str(picked_rent_offer['RodzajZabudowy']).lower().count('wolnostojący') > 0: typ_domu = 'wolnostojący'
-                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('bliźniak') > 0: typ_domu = 'bliźniak'
-                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('gospodarstwo') > 0: typ_domu = 'gospodarstwo'
-                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('kamienica') > 0: typ_domu = 'kamienica'
-                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('letniskowy') > 0: typ_domu = 'letniskowy'
-                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('rezydencja') > 0: typ_domu = 'rezydencja'
-                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('siedlisko') > 0: typ_domu = 'siedlisko'
-                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('szeregowiec') > 0: typ_domu = 'szeregowiec'
-                else: typ_domu = 'inny'
                 
-                zapytanie_sql = f'''
-                        INSERT INTO ogloszenia_lento 
-                           (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, liczba_pieter, 
-                            zabudowa, tech_budowy,
-                            forma_kuchni, liczba_pokoi, powierzchnia, 
-                            opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                            
-                            bez_promowania, 
-                            promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
-                            promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
-                            promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
-                            top_ogloszenie_7_dni, top_ogloszenie_14_dni,
-                            etykieta_pilne_7_dni, etykieta_pilne_14_dni,
-                            codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
-                            wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
-                            super_oferta_7_dni, super_oferta_14_dni,
-                            status)
-                        VALUES 
-                            (%s, %s, %s, %s, %s,
-                             %s, %s, %s, %s, %s,
-                             %s, %s, %s, %s, %s, %s,
-                             %s, %s, %s, %s,
-                             %s, %s, %s, %s,
-                             %s, %s, %s, %s,
-                             %s, %s, %s, %s,
-                             %s, %s);
+                
+                zapytanie_sql = '''
+                    INSERT INTO ogloszenia_lento 
+                        (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, liczba_pieter, 
+                        zabudowa, tech_budowy,
+                        forma_kuchni, liczba_pokoi, powierzchnia, 
+                        opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
+                        bez_promowania, 
+                        promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
+                        promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
+                        promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
+                        top_ogloszenie_7_dni, top_ogloszenie_14_dni,
+                        etykieta_pilne_7_dni, etykieta_pilne_14_dni,
+                        codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
+                        wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
+                        super_oferta_7_dni, super_oferta_14_dni,
+                        status)
+                    VALUES 
+                        (%s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s,
+                        %s, %s, %s, %s,
+                        %s, %s, %s, %s,
+                        %s, %s, %s, %s,
+                        %s, %s);
                 '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, liczba_pieter, 
                         zabudowa, tech_budowy,
                         forma_kuchni, liczba_pokoi, powierzchnia, 
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-
                         bez_promowania, 
                         promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
                         promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
@@ -4297,38 +4286,35 @@ def public_on_lento():
                         wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
+
                 
 
             if kategoria_ogloszenia == 'biura_lokale':
-                zapytanie_sql = f'''
-                        INSERT INTO ogloszenia_lento 
-                           (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
-                             
-                            powierzchnia, przeznaczenie_lokalu,
-                            opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                            
-                            bez_promowania, 
-                            promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
-                            promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
-                            promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
-                            top_ogloszenie_7_dni, top_ogloszenie_14_dni,
-                            etykieta_pilne_7_dni, etykieta_pilne_14_dni,
-                            codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
-                            wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
-                            super_oferta_7_dni, super_oferta_14_dni,
-                            status)
-                        VALUES 
-                           (%s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s);
-                '''
-                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
-                             
+                zapytanie_sql = '''
+                    INSERT INTO ogloszenia_lento 
+                        (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
                         powierzchnia, przeznaczenie_lokalu,
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                        
+                        bez_promowania, 
+                        promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
+                        promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
+                        promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
+                        top_ogloszenie_7_dni, top_ogloszenie_14_dni,
+                        etykieta_pilne_7_dni, etykieta_pilne_14_dni,
+                        codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
+                        wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
+                        super_oferta_7_dni, super_oferta_14_dni,
+                        status)
+                    VALUES 
+                        (%s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s);
+                '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
+                        powierzchnia, przeznaczenie_lokalu,
+                        opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
                         promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
                         promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
@@ -4339,38 +4325,35 @@ def public_on_lento():
                         wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
+
 
             if kategoria_ogloszenia == 'dzialka':
 
-                zapytanie_sql = f'''
-                        INSERT INTO ogloszenia_lento 
-                           (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
-                             
-                            powierzchnia, rodzaj_dzialki,
-                            opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                            
-                            bez_promowania, 
-                            promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
-                            promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
-                            promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
-                            top_ogloszenie_7_dni, top_ogloszenie_14_dni,
-                            etykieta_pilne_7_dni, etykieta_pilne_14_dni,
-                            codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
-                            wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
-                            super_oferta_7_dni, super_oferta_14_dni,
-                            status)
-                        VALUES 
-                           (%s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s);
-                '''
-                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
-                             
+                zapytanie_sql = '''
+                    INSERT INTO ogloszenia_lento 
+                        (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
                         powierzchnia, rodzaj_dzialki,
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                        
+                        bez_promowania, 
+                        promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
+                        promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
+                        promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
+                        top_ogloszenie_7_dni, top_ogloszenie_14_dni,
+                        etykieta_pilne_7_dni, etykieta_pilne_14_dni,
+                        codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
+                        wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
+                        super_oferta_7_dni, super_oferta_14_dni,
+                        status)
+                    VALUES 
+                        (%s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s);
+                '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
+                        powierzchnia, rodzaj_dzialki,
+                        opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
                         promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
                         promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
@@ -4381,39 +4364,36 @@ def public_on_lento():
                         wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
+
                 
                 
 
             if kategoria_ogloszenia == 'inne_nieruchomosci':
-                zapytanie_sql = f'''
-                        INSERT INTO ogloszenia_lento 
-                           (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
-                             
-                            powierzchnia, 
-                            opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                            
-                            bez_promowania, 
-                            promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
-                            promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
-                            promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
-                            top_ogloszenie_7_dni, top_ogloszenie_14_dni,
-                            etykieta_pilne_7_dni, etykieta_pilne_14_dni,
-                            codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
-                            wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
-                            super_oferta_7_dni, super_oferta_14_dni,
-                            status)
-                        VALUES 
-                           (%s, %s, %s, %s, %s, 
-                            %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s);
-                '''
-                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
-                             
+                zapytanie_sql = '''
+                    INSERT INTO ogloszenia_lento 
+                        (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
                         powierzchnia, 
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                        
+                        bez_promowania, 
+                        promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
+                        promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
+                        promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
+                        top_ogloszenie_7_dni, top_ogloszenie_14_dni,
+                        etykieta_pilne_7_dni, etykieta_pilne_14_dni,
+                        codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
+                        wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
+                        super_oferta_7_dni, super_oferta_14_dni,
+                        status)
+                    VALUES 
+                        (%s, %s, %s, %s, %s, 
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s);
+                '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
+                        powierzchnia, 
+                        opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
                         promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
                         promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
@@ -4424,6 +4404,7 @@ def public_on_lento():
                         wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
+
             print('zapytanie')
             print(zapytanie_sql)
             print('dane')
