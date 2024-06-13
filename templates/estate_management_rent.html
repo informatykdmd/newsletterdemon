@@ -1236,8 +1236,9 @@
                                                     
                                                     {% elif post_data['lento']['status'] == 1 %}
                                                     <div class="mb-2 mt-2">
+                                                        
                                                         <h5>LENTO.PL</h5>
-                                                        <p>Status: Opublikowano (pozostało 10 dni)</p>
+                                                        <p>Status: Opublikowano (pozostało {{post_data['lento']['zostalo_dni']}} dni)</p>
                                                     </div>
                                                     <div class="row row-cols-auto "> 
                                                         <div class="col">
