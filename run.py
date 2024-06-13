@@ -4063,7 +4063,7 @@ def public_on_lento():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis[:-1] + picked_rent_offer['InformacjeDodatkowe']
+            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_rent_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_rent_offer['InformacjeDodatkowe']
             opis_ogloszenia = prepared_opis
 
@@ -4237,9 +4237,9 @@ def public_on_lento():
                 elif picked_rent_offer['LiczbaPokoi'] > 4:liczba_pokoi = 5
                 else:liczba_pokoi = picked_rent_offer['LiczbaPokoi']
 
-                tech_budowy = picked_rent_offer['TechBudowy']
-                if picked_rent_offer['LiczbaPieter'] == 0:liczba_pieter = 1
-                elif picked_rent_offer['LiczbaPieter'] > 6:liczba_pieter = 'wierzowiec'
+                
+                if picked_rent_offer['LiczbaPieter'] == 0:liczba_pieter = 'parterowy'
+                elif picked_rent_offer['LiczbaPieter'] > 7 and picked_rent_offer['LiczbaPieter'] != 0:liczba_pieter = 'wierzowiec'
                 else:liczba_pieter = picked_rent_offer['LiczbaPieter']
                 if str(picked_rent_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
                 elif str(picked_rent_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
@@ -4249,7 +4249,7 @@ def public_on_lento():
                 zapytanie_sql = '''
                     INSERT INTO ogloszenia_lento 
                         (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, liczba_pieter, 
-                        zabudowa, tech_budowy,
+                        zabudowa, 
                         forma_kuchni, liczba_pokoi, powierzchnia, 
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
@@ -4268,11 +4268,11 @@ def public_on_lento():
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, %s);
+                        %s, %s, %s);
                 '''
-                34
-                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, liczba_pieter, 
-                        zabudowa, tech_budowy,
+                33
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, str(liczba_pieter), 
+                        zabudowa, 
                         forma_kuchni, liczba_pokoi, powierzchnia, 
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
