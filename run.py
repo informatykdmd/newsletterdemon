@@ -3055,10 +3055,17 @@ def estateAdsRent():
         item['lento']['id'] = lentoIDstatus[0]
         item['lento']['status'] = lentoIDstatus[1]
         item['lento']['data_aktualizacji'] = lentoIDstatus[2]
-        print(item['lento']['data_aktualizacji'])
-        print(type(item['lento']['data_aktualizacji']))
-        # daysLeft = datetime.datetime(item['lento']['data_aktualizacji']) - 30
-        # item['lento']['zostalo_dni'] = daysLeft
+
+        # print(item['lento']['data_aktualizacji'])
+        # print(type(item['lento']['data_aktualizacji']))
+
+        start_date = item['lento']['data_aktualizacji']
+        # Oblicz datę końca promocji
+        end_date = start_date + datetime.timedelta(days=30)
+        # Oblicz liczbę dni pozostałych do końca promocji
+        days_left = (end_date - datetime.datetime.now()).days
+
+        item['lento']['zostalo_dni'] = days_left
 
         item['lento']['error_message'] = lentoIDstatus[3]
         
