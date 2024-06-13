@@ -3056,7 +3056,6 @@ def estateAdsRent():
         item['lento']['status'] = lentoIDstatus[1]
         item['lento']['data_aktualizacji'] = lentoIDstatus[2]
 
-        # print(item['lento']['data_aktualizacji'])
         # print(type(item['lento']['data_aktualizacji']))
 
         start_date = item['lento']['data_aktualizacji']
@@ -3066,6 +3065,7 @@ def estateAdsRent():
         days_left = (end_date - datetime.datetime.now()).days
 
         item['lento']['zostalo_dni'] = days_left
+        print(item['lento']['zostalo_dni'])
 
         item['lento']['error_message'] = lentoIDstatus[3]
         
