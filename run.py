@@ -4422,10 +4422,10 @@ def public_on_lento():
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
 
-            print('zapytanie')
-            print(zapytanie_sql)
-            print('dane')
-            print(dane)
+            # print('zapytanie')
+            # print(zapytanie_sql)
+            # print('dane')
+            # print(dane)
 
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
@@ -4433,7 +4433,24 @@ def public_on_lento():
                 flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
 
         if task_kind == 'Wstrzymaj':
-            pass
+            zapytanie_sql = '''
+                UPDATE ogloszenia_lento
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, 7, lento_id)
+
+            # print('zapytanie')
+            # print(zapytanie_sql)
+            # print('dane')
+            # print(dane)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
         if task_kind == 'Wznow':
             pass
         if task_kind == 'Aktualizuj':
