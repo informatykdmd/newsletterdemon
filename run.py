@@ -4442,17 +4442,25 @@ def public_on_lento():
                 '''
             dane = (0, 7, lento_id)
 
-            # print('zapytanie')
-            # print(zapytanie_sql)
-            # print('dane')
-            # print(dane)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+
+        if task_kind == 'Wznow':
+            zapytanie_sql = '''
+                UPDATE ogloszenia_lento
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, 8, lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
             else:
                 flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
-        if task_kind == 'Wznow':
-            pass
         if task_kind == 'Aktualizuj':
             pass
         if task_kind == 'Usun':
