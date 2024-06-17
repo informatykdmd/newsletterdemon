@@ -4006,7 +4006,7 @@ def public_on_lento():
             rodzaj_ogloszenia = 's'
 
         if task_kind == 'Publikuj':
-            print(request.form)
+            # print(request.form)
 
             if 'bez_promowania' in request.form: bez_promowania = 1
             else: bez_promowania = 0
@@ -4055,11 +4055,10 @@ def public_on_lento():
             for rentOffer in generator_rentOffert():
                 if str(rentOffer['ID']) == str(id_ogloszenia):
                     picked_rent_offer = rentOffer
-            print(picked_rent_offer)
+            # print(picked_rent_offer)
 
             tytul_ogloszenia = picked_rent_offer['Tytul']
             powierzchnia = picked_rent_offer['Metraz']
-            sprzedaz = 'Bez pośredników'
             cena = picked_rent_offer['Cena']
             numer_kw = picked_rent_offer['NumerKW']
             miejscowosc = picked_rent_offer['Lokalizacja'] 
@@ -4078,7 +4077,7 @@ def public_on_lento():
                         prepared_opis += f'{val}\n'
                     if isinstance(val, list):
                         for v_val in val:
-                            prepared_opis += f'{val}\n'
+                            prepared_opis += f'{v_val}\n'
             if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_rent_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_rent_offer['InformacjeDodatkowe']
             opis_ogloszenia = prepared_opis
@@ -4141,55 +4140,26 @@ def public_on_lento():
                 elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('usługowa') > 0: rodzaj_dzialki = 'usługowa'
                 elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('leśna') > 0: rodzaj_dzialki = 'leśna'
                 else: rodzaj_dzialki = 'inwestycyjna'
-            """
-            'ID': int(data[0]),
-            'Tytul': data[1] if lang=='pl' else getLangText(data[1]),
-            'Opis': opis_json,
-            'Cena': data[3],
-            'Kaucja': 0 if data[4] is None else data[4],
-            'Lokalizacja': data[5],
-            'LiczbaPokoi': 0 if data[6] is None else data[6],
-            'Metraz': 0 if data[7] is None else data[7],
-            'Zdjecia': [foto for foto in fotoList if foto is not None],
-            'DataPublikacjiOlx': None if data[9] is None else format_date(data[9]),
-            'DataPublikacjiAllegro': None if data[10] is None else format_date(data[10]),
-            'DataPublikacjiOtoDom': None if data[11] is None else format_date(data[11]),
-            'DataPublikacjiMarketplace': None if data[12] is None else format_date(data[12]),
-            'DataUtworzenia': format_date(data[13]),
-            'DataAktualizacji': format_date(data[14]),
-            'RodzajZabudowy': '' if data[15] is None else data[15],
-            'Czynsz': 0.00 if data[16] is None else data[16],
-            'Umeblowanie': '' if data[17] is None else data[17],
-            'LiczbaPieter': 0 if data[18] is None else data[18],
-            'PowierzchniaDzialki': 0.00 if data[19] is None else data[19],
-            'TechBudowy': '' if data[20] is None else data[20],
-            'FormaKuchni': '' if data[21] is None else data[21],
-            'TypDomu': data[22],
-            'StanWykonczenia': '' if data[23] is None else data[23],
-            'RokBudowy': 0 if data[24] is None else data[24],
-            'NumerKW': '' if data[25] is None else data[25],
-            'InformacjeDodatkowe': '' if data[26] is None else data[26],
-            'GPS': gps_json,
-            'TelefonKontaktowy': '' if data[28] is None else data[28],
-            'EmailKontaktowy': '' if data[29] is None else data[29],
-            'StatusOferty': 0 if data[30] is None else data[30]
 
-            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, liczba_pieter, pietro,
-                            zabudowa, przeznaczenie_lokalu, rodzaj_dzialki, 
-                            numer_kw, dodtkowe_info, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
-                            opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                            id_zadania, 
-                            id_ogloszenia_na_lento, 
-                            bez_promowania, 
-                            promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
-                            promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
-                            promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
-                            top_ogloszenie_7_dni, top_ogloszenie_14_dni,
-                            etykieta_pilne_7_dni, etykieta_pilne_14_dni,
-                            codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
-                            wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
-                            super_oferta_7_dni, super_oferta_14_dni,
-                            status)
+            """
+            (
+                rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, liczba_pieter, pietro,
+                zabudowa, przeznaczenie_lokalu, rodzaj_dzialki, 
+                numer_kw, dodtkowe_info, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
+                opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
+                id_zadania, 
+                id_ogloszenia_na_lento, 
+                bez_promowania, 
+                promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
+                promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
+                promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
+                top_ogloszenie_7_dni, top_ogloszenie_14_dni,
+                etykieta_pilne_7_dni, etykieta_pilne_14_dni,
+                codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
+                wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
+                super_oferta_7_dni, super_oferta_14_dni,
+                status
+            )
             """
             if kategoria_ogloszenia == 'dom':
                 if picked_rent_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
@@ -4247,7 +4217,6 @@ def public_on_lento():
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
 
-
             if kategoria_ogloszenia == 'mieszkanie':
                 if picked_rent_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
                 elif picked_rent_offer['LiczbaPokoi'] > 4:liczba_pokoi = 5
@@ -4260,7 +4229,6 @@ def public_on_lento():
                 if str(picked_rent_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
                 elif str(picked_rent_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
                 else: forma_kuchni = 'brak'
-                
                 
                 zapytanie_sql = '''
                     INSERT INTO ogloszenia_lento 
@@ -4302,8 +4270,6 @@ def public_on_lento():
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
 
-                
-
             if kategoria_ogloszenia == 'biura_lokale':
                 zapytanie_sql = '''
                     INSERT INTO ogloszenia_lento 
@@ -4342,9 +4308,7 @@ def public_on_lento():
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
 
-
             if kategoria_ogloszenia == 'dzialka':
-
                 zapytanie_sql = '''
                     INSERT INTO ogloszenia_lento 
                         (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
@@ -4381,9 +4345,6 @@ def public_on_lento():
                         wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
-
-                
-                
 
             if kategoria_ogloszenia == 'inne_nieruchomosci':
                 zapytanie_sql = '''
@@ -4422,11 +4383,6 @@ def public_on_lento():
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
 
-            # print('zapytanie')
-            # print(zapytanie_sql)
-            # print('dane')
-            # print(dane)
-
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
             else:
@@ -4461,10 +4417,358 @@ def public_on_lento():
                 flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
             else:
                 flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+
         if task_kind == 'Aktualizuj':
-            pass
+            picked_rent_offer = {}
+            for rentOffer in generator_rentOffert():
+                if str(rentOffer['ID']) == str(id_ogloszenia):
+                    picked_rent_offer = rentOffer
+
+            tytul_ogloszenia = picked_rent_offer['Tytul']
+            powierzchnia = picked_rent_offer['Metraz']
+            cena = picked_rent_offer['Cena']
+            numer_kw = picked_rent_offer['NumerKW']
+            miejscowosc = picked_rent_offer['Lokalizacja'] 
+            osoba_kontaktowa = session['user_data']['name']
+            nr_telefonu = picked_rent_offer['TelefonKontaktowy']
+
+            zdjecia_string = ''
+            for foto_link in picked_rent_offer['Zdjecia']:
+                zdjecia_string += f'{foto_link}-@-'
+            if zdjecia_string != '':zdjecia_string = zdjecia_string[:-3]
+
+            prepared_opis = ''
+            for item in picked_rent_offer['Opis']:
+                for val in item.values():
+                    if isinstance(val, str):
+                        prepared_opis += f'{val}\n'
+                    if isinstance(val, list):
+                        for v_val in val:
+                            prepared_opis += f'{v_val}\n'
+            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_rent_offer['InformacjeDodatkowe']
+            else: prepared_opis = picked_rent_offer['InformacjeDodatkowe']
+            opis_ogloszenia = prepared_opis
+
+            if str(picked_rent_offer['TypDomu']).lower().count('dom') > 0\
+                or str(picked_rent_offer['TypDomu']).lower().count('willa') > 0\
+                    or str(picked_rent_offer['TypDomu']).lower().count('bliźniak') > 0\
+                or str(picked_rent_offer['TypDomu']).lower().count('segment') > 0:
+                # kategoria na lento dla dom
+                kategoria_ogloszenia = 'dom'
+
+            elif str(picked_rent_offer['TypDomu']).lower().count('mieszkanie') > 0\
+                or str(picked_rent_offer['TypDomu']).lower().count('kawalerka') > 0\
+                    or str(picked_rent_offer['TypDomu']).lower().count('apartament') > 0\
+                        or str(picked_rent_offer['TypDomu']).lower().count('blok') > 0\
+                    or str(picked_rent_offer['TypDomu']).lower().count('kamienica') > 0\
+                or str(picked_rent_offer['TypDomu']).lower().count('loft') > 0:
+                # kategoria na lento dla mieszkanie
+                kategoria_ogloszenia = 'mieszkanie'
+
+            elif str(picked_rent_offer['TypDomu']).lower().count('biur') > 0\
+                or str(picked_rent_offer['TypDomu']).lower().count('hal') > 0\
+                    or str(picked_rent_offer['TypDomu']).lower().count('usługi') > 0\
+                    or str(picked_rent_offer['TypDomu']).lower().count('lokal') > 0\
+                or str(picked_rent_offer['TypDomu']).lower().count('produkcja') > 0:
+                # kategoria na lento dla biura_lokale
+                kategoria_ogloszenia = 'biura_lokale'
+
+            elif str(picked_rent_offer['TypDomu']).lower().count('działka') > 0\
+                or str(picked_rent_offer['TypDomu']).lower().count('plac') > 0\
+                    or str(picked_rent_offer['TypDomu']).lower().count('teren') > 0:
+                # kategoria na lento dla dzialka
+                kategoria_ogloszenia = 'dzialka'
+            else:
+                # kategoria na lento dla inne_nieruchomosci
+                kategoria_ogloszenia = 'inne_nieruchomosci'
+
+            if kategoria_ogloszenia == 'mieszkanie':
+                if str(picked_rent_offer['RodzajZabudowy']).lower().count('apartamentowiec') > 0: zabudowa = 'apartamentowiec'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('blok') > 0: zabudowa = 'blok'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('kamienica') > 0: zabudowa = 'kamienica'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('dom') > 0: zabudowa = 'dom'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('loft') > 0: zabudowa = 'loft'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('plomba') > 0: zabudowa = 'plomba'
+                else: zabudowa = 'inne'
+
+            if kategoria_ogloszenia == 'biura_lokale':
+                if str(picked_rent_offer['InformacjeDodatkowe']).lower().count('biurowe') > 0: przeznaczenie_lokalu = 'biurowe'
+                elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('handel i usługi') > 0: przeznaczenie_lokalu = 'handel i usługi'
+                elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: przeznaczenie_lokalu = 'produkcja i przemysł'
+                else: przeznaczenie_lokalu = 'inne_przeznaczenie'
+
+            if kategoria_ogloszenia == 'dzialka':
+                if str(picked_rent_offer['InformacjeDodatkowe']).lower().count('budowlana') > 0: rodzaj_dzialki = 'budowlana'
+                elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('inwestycyjna') > 0: rodzaj_dzialki = 'inwestycyjna'
+                elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('ogródek działkowy') > 0: rodzaj_dzialki = 'ogródek działkowy'
+                elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('przemysłowa') > 0: rodzaj_dzialki = 'przemysłowa'
+                elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('rekreacyjna') > 0: rodzaj_dzialki = 'rekreacyjna'
+                elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('siedliskowa') > 0: rodzaj_dzialki = 'siedliskowa'
+                elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('usługowa') > 0: rodzaj_dzialki = 'usługowa'
+                elif str(picked_rent_offer['InformacjeDodatkowe']).lower().count('leśna') > 0: rodzaj_dzialki = 'leśna'
+                else: rodzaj_dzialki = 'inwestycyjna'
+            
+            if kategoria_ogloszenia == 'dom':
+                if picked_rent_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
+                elif picked_rent_offer['LiczbaPokoi'] > 4:liczba_pokoi = 5
+                else:liczba_pokoi = picked_rent_offer['LiczbaPokoi']
+                pow_dzialki = picked_rent_offer['PowierzchniaDzialki']
+                if str(picked_rent_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
+                elif str(picked_rent_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
+                else: forma_kuchni = 'brak'
+                if str(picked_rent_offer['RodzajZabudowy']).lower().count('wolnostojący') > 0: typ_domu = 'wolnostojący'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('bliźniak') > 0: typ_domu = 'bliźniak'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('gospodarstwo') > 0: typ_domu = 'gospodarstwo'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('kamienica') > 0: typ_domu = 'kamienica'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('letniskowy') > 0: typ_domu = 'letniskowy'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('rezydencja') > 0: typ_domu = 'rezydencja'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('siedlisko') > 0: typ_domu = 'siedlisko'
+                elif str(picked_rent_offer['RodzajZabudowy']).lower().count('szeregowiec') > 0: typ_domu = 'szeregowiec'
+                else: typ_domu = 'inny'
+
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_lento
+                    SET 
+                        numer_kw = %s, 
+                        typ_domu = %s, 
+                        pow_dzialki = %s,
+                        forma_kuchni = %s,
+                        liczba_pokoi = %s,
+                        tytul_ogloszenia = %s,   
+                        powierzchnia = %s, 
+                        opis_ogloszenia = %s, 
+                        cena = %s, 
+                        zdjecia_string = %s, 
+                        miejscowosc = %s, 
+                        osoba_kontaktowa = %s, 
+                        nr_telefonu = %s,
+                        status = %s,
+                        active_task=%s
+                    WHERE id = %s;
+                '''
+                dane = (
+                        numer_kw, typ_domu, pow_dzialki, forma_kuchni, liczba_pokoi,
+                        tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
+                        zdjecia_string, miejscowosc, osoba_kontaktowa,
+                        osoba_kontaktowa, nr_telefonu, 
+                        5, 0,
+                    lento_id)
+
+            if kategoria_ogloszenia == 'mieszkanie':
+                if picked_rent_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
+                elif picked_rent_offer['LiczbaPokoi'] > 4:liczba_pokoi = 5
+                else:liczba_pokoi = picked_rent_offer['LiczbaPokoi']
+
+                if picked_rent_offer['LiczbaPieter'] == 0:liczba_pieter = 'parterowy'
+                elif picked_rent_offer['LiczbaPieter'] > 7 and picked_rent_offer['LiczbaPieter'] != 0:liczba_pieter = 'wierzowiec'
+                else:liczba_pieter = picked_rent_offer['LiczbaPieter']
+                if str(picked_rent_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
+                elif str(picked_rent_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
+                else: forma_kuchni = 'brak'
+
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_lento
+                    SET 
+                        liczba_pieter = %s,
+                        zabudowa = %s,
+                        forma_kuchni = %s,
+                        liczba_pokoi = %s,
+                        tytul_ogloszenia = %s,   
+                        powierzchnia = %s, 
+                        opis_ogloszenia = %s, 
+                        cena = %s, 
+                        zdjecia_string = %s, 
+                        miejscowosc = %s, 
+                        osoba_kontaktowa = %s, 
+                        nr_telefonu = %s,
+                        status = %s,
+                        active_task=%s
+                    WHERE id = %s;
+                '''
+                dane = (
+                        liczba_pieter, zabudowa, forma_kuchni, liczba_pokoi,
+                        tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
+                        zdjecia_string, miejscowosc, osoba_kontaktowa,
+                        osoba_kontaktowa, nr_telefonu, 
+                        5, 0,
+                    lento_id)
+
+            if kategoria_ogloszenia == 'biura_lokale':
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_lento
+                    SET 
+                        przeznaczenie_lokalu = %s,
+                        tytul_ogloszenia = %s,   
+                        powierzchnia = %s, 
+                        opis_ogloszenia = %s, 
+                        cena = %s, 
+                        zdjecia_string = %s, 
+                        miejscowosc = %s, 
+                        osoba_kontaktowa = %s, 
+                        nr_telefonu = %s,
+                        status = %s,
+                        active_task=%s
+                    WHERE id = %s;
+                '''
+                dane = (
+                        przeznaczenie_lokalu,
+                        tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
+                        zdjecia_string, miejscowosc, osoba_kontaktowa,
+                        osoba_kontaktowa, nr_telefonu, 
+                        5, 0,
+                    lento_id)
+
+
+            if kategoria_ogloszenia == 'dzialka':
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_lento
+                    SET 
+                        rodzaj_dzialki = %s,
+                        tytul_ogloszenia = %s,   
+                        powierzchnia = %s, 
+                        opis_ogloszenia = %s, 
+                        cena = %s, 
+                        zdjecia_string = %s, 
+                        miejscowosc = %s, 
+                        osoba_kontaktowa = %s, 
+                        nr_telefonu = %s,
+                        status = %s,
+                        active_task=%s
+                    WHERE id = %s;
+                '''
+                dane = (
+                        rodzaj_dzialki,
+                        tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
+                        zdjecia_string, miejscowosc, osoba_kontaktowa,
+                        osoba_kontaktowa, nr_telefonu, 
+                        5, 0,
+                    lento_id)
+
+            if kategoria_ogloszenia == 'inne_nieruchomosci':
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_lento
+                    SET 
+                        tytul_ogloszenia = %s,   
+                        powierzchnia = %s, 
+                        opis_ogloszenia = %s, 
+                        cena = %s, 
+                        zdjecia_string = %s, 
+                        miejscowosc = %s, 
+                        osoba_kontaktowa = %s, 
+                        nr_telefonu = %s,
+                        status = %s,
+                        active_task=%s
+                    WHERE id = %s;
+                '''
+                dane = (tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
+                        zdjecia_string, miejscowosc, osoba_kontaktowa,
+                        osoba_kontaktowa, nr_telefonu, 5, 0,
+                        lento_id)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+
+        if task_kind == 'Promuj':
+            if 'bez_promowania' in request.form: bez_promowania = 1
+            else: bez_promowania = 0
+
+            if 'promowanie_lokalne_14_dni' in request.form: promowanie_lokalne_14_dni = 1
+            else: promowanie_lokalne_14_dni = 0
+            if 'promowanie_lokalne_30_dni' in request.form: promowanie_lokalne_30_dni = 1
+            else: promowanie_lokalne_30_dni = 0
+
+            if 'promowanie_regionalne_14_dni' in request.form: promowanie_regionalne_14_dni = 1
+            else: promowanie_regionalne_14_dni = 0
+            if 'promowanie_regionalne_30_dni' in request.form: promowanie_regionalne_30_dni = 1
+            else: promowanie_regionalne_30_dni = 0
+
+            if 'promowanie_ogolnopolskie_14_dni' in request.form: promowanie_ogolnopolskie_14_dni = 1
+            else: promowanie_ogolnopolskie_14_dni = 0
+            if 'promowanie_ogolnopolskie_30_dni' in request.form: promowanie_ogolnopolskie_30_dni = 1
+            else: promowanie_ogolnopolskie_30_dni = 0
+
+            if 'top_ogloszenie_7_dni' in request.form: top_ogloszenie_7_dni = 1
+            else: top_ogloszenie_7_dni = 0
+            if 'top_ogloszenie_14_dni' in request.form: top_ogloszenie_14_dni = 1
+            else: top_ogloszenie_14_dni = 0
+
+            if 'etykieta_pilne_7_dni' in request.form: etykieta_pilne_7_dni = 1
+            else: etykieta_pilne_7_dni = 0
+            if 'etykieta_pilne_14_dni' in request.form: etykieta_pilne_14_dni = 1
+            else: etykieta_pilne_14_dni = 0
+
+            if 'codzienne_odswiezenie_7_dni' in request.form: codzienne_odswiezenie_7_dni = 1
+            else: codzienne_odswiezenie_7_dni = 0
+            if 'codzienne_odswiezenie_14_dni' in request.form: codzienne_odswiezenie_14_dni = 1
+            else: codzienne_odswiezenie_14_dni = 0
+
+            if 'wyswietlanie_na_stronie_glownej_14_dni' in request.form: wyswietlanie_na_stronie_glownej_14_dni = 1
+            else: wyswietlanie_na_stronie_glownej_14_dni = 0
+            if 'wyswietlanie_na_stronie_glownej_30_dni' in request.form: wyswietlanie_na_stronie_glownej_30_dni = 1
+            else: wyswietlanie_na_stronie_glownej_30_dni = 0
+
+            if 'super_oferta_7_dni' in request.form: super_oferta_7_dni = 1
+            else: super_oferta_7_dni = 0
+            if 'super_oferta_14_dni' in request.form: super_oferta_14_dni = 1
+            else: super_oferta_14_dni = 0
+
+            zapytanie_sql = '''
+                UPDATE ogloszenia_lento
+                SET 
+                    bez_promowania = %s, 
+                    promowanie_lokalne_14_dni = %s, 
+                    promowanie_lokalne_30_dni = %s, 
+                    promowanie_regionalne_14_dni = %s, 
+                    promowanie_regionalne_30_dni = %s,
+                    promowanie_ogolnopolskie_14_dni = %s, 
+                    promowanie_ogolnopolskie_30_dni = %s,
+                    top_ogloszenie_7_dni = %s, 
+                    top_ogloszenie_14_dni = %s,
+                    etykieta_pilne_7_dni = %s, 
+                    etykieta_pilne_14_dni = %s,
+                    codzienne_odswiezenie_7_dni = %s, 
+                    codzienne_odswiezenie_14_dni = %s,
+                    wyswietlanie_na_stronie_glownej_14_dni = %s, 
+                    wyswietlanie_na_stronie_glownej_30_dni = %s,
+                    super_oferta_7_dni, super_oferta_14_dni = %s,
+
+                    status = %s,
+                    active_task=%s
+                WHERE id = %s;
+            '''
+            dane = (bez_promowania, 
+                    promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
+                    promowanie_regionalne_14_dni, promowanie_regionalne_30_dni,
+                    promowanie_ogolnopolskie_14_dni, promowanie_ogolnopolskie_30_dni,
+                    top_ogloszenie_7_dni, top_ogloszenie_14_dni,
+                    etykieta_pilne_7_dni, etykieta_pilne_14_dni,
+                    codzienne_odswiezenie_7_dni, codzienne_odswiezenie_14_dni,
+                    wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
+                    super_oferta_7_dni, super_oferta_14_dni,
+                    5, 0,
+                    lento_id)
+
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+        else:
+            flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+
         if task_kind == 'Usun':
-            pass
+            zapytanie_sql = '''
+                UPDATE ogloszenia_lento
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, 6, lento_id)
+            
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
