@@ -4751,10 +4751,10 @@ def public_on_lento():
                     5, 0,
                     lento_id)
 
-        if msq.insert_to_database(zapytanie_sql, dane):
-            flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
-        else:
-            flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
 
         if task_kind == 'Ponow':
             zapytanie_sql = '''
