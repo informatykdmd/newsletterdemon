@@ -4760,7 +4760,7 @@ def public_on_lento():
             zapytanie_sql = '''
                 UPDATE ogloszenia_lento
                     SET 
-                        active_task=%s,
+                        active_task=%s
                     WHERE id = %s;
                 '''
             dane = (0, lento_id)
