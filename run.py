@@ -4549,7 +4549,7 @@ def public_on_lento():
                 dane = (
                         numer_kw, typ_domu, pow_dzialki, forma_kuchni, liczba_pokoi,
                         tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
-                        zdjecia_string, miejscowosc, osoba_kontaktowa,
+                        zdjecia_string, miejscowosc, 
                         osoba_kontaktowa, nr_telefonu, 
                         5, 0,
                     lento_id)
@@ -4589,7 +4589,7 @@ def public_on_lento():
                         liczba_pieter, zabudowa, forma_kuchni, liczba_pokoi,
                         tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
                         zdjecia_string, miejscowosc, osoba_kontaktowa,
-                        osoba_kontaktowa, nr_telefonu, 
+                        nr_telefonu, 
                         5, 0,
                     lento_id)
 
@@ -4613,7 +4613,7 @@ def public_on_lento():
                 dane = (
                         przeznaczenie_lokalu,
                         tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
-                        zdjecia_string, miejscowosc, osoba_kontaktowa,
+                        zdjecia_string, miejscowosc, 
                         osoba_kontaktowa, nr_telefonu, 
                         5, 0,
                     lento_id)
@@ -4639,7 +4639,7 @@ def public_on_lento():
                 dane = (
                         rodzaj_dzialki,
                         tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
-                        zdjecia_string, miejscowosc, osoba_kontaktowa,
+                        zdjecia_string, miejscowosc, 
                         osoba_kontaktowa, nr_telefonu, 
                         5, 0,
                     lento_id)
@@ -4661,8 +4661,9 @@ def public_on_lento():
                     WHERE id = %s;
                 '''
                 dane = (tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
-                        zdjecia_string, miejscowosc, osoba_kontaktowa,
-                        osoba_kontaktowa, nr_telefonu, 5, 0,
+                        zdjecia_string, miejscowosc, 
+                        osoba_kontaktowa, nr_telefonu, 
+                        5, 0,
                         lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
