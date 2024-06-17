@@ -3056,18 +3056,17 @@ def estateAdsRent():
         item['lento']['status'] = lentoIDstatus[1]
         item['lento']['data_aktualizacji'] = lentoIDstatus[2]
 
-        # print(type(item['lento']['data_aktualizacji']))
+        if item['lento']['status'] is not None:
+            start_date = item['lento']['data_aktualizacji']
+            # Oblicz datę końca promocji
+            end_date = start_date + datetime.timedelta(days=90)
+            # Oblicz liczbę dni pozostałych do końca promocji
+            days_left = (end_date - datetime.datetime.now()).days
 
-        start_date = item['lento']['data_aktualizacji']
-        # Oblicz datę końca promocji
-        end_date = start_date + datetime.timedelta(days=90)
-        # Oblicz liczbę dni pozostałych do końca promocji
-        days_left = (end_date - datetime.datetime.now()).days
+            item['lento']['zostalo_dni'] = days_left
+            # print(item['lento']['zostalo_dni'])
 
-        item['lento']['zostalo_dni'] = days_left
-        # print(item['lento']['zostalo_dni'])
-
-        item['lento']['error_message'] = lentoIDstatus[3]
+            item['lento']['error_message'] = lentoIDstatus[3]
         
         new_all_rents.append(item)
 
