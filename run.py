@@ -4079,7 +4079,25 @@ def public_on_lento():
                             prepared_opis += f'{v_val}\n'
             if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_rent_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_rent_offer['InformacjeDodatkowe']
-            opis_ogloszenia = prepared_opis
+
+            extra_opis = ''
+            if picked_rent_offer['RodzajZabudowy'] != '':
+                extra_opis += f"Rodzaj Zabudowy:\n{picked_rent_offer['RodzajZabudowy']}\n\n"
+            if picked_rent_offer['Czynsz'] != 0:
+                extra_opis += f"Czynsz:\n{picked_rent_offer['Czynsz']} zł.\n\n"
+            if picked_rent_offer['Umeblowanie'] != "":
+                extra_opis += f"Umeblowanie:\n{picked_rent_offer['Umeblowanie']}\n\n"
+            if picked_rent_offer['TechBudowy'] != "":
+                extra_opis += f"Technologia Budowy:\n{picked_rent_offer['TechBudowy']}\n\n"
+            if picked_rent_offer['StanWykonczenia'] != "":
+                extra_opis += f"Stan Wykończenia:\n{picked_rent_offer['StanWykonczenia']}\n\n"
+            if picked_rent_offer['RokBudowy'] != 0:
+                extra_opis += f"Rok Budowy:\n{picked_rent_offer['RokBudowy']} r.\n\n"
+            if picked_rent_offer['NumerKW'] != "":
+                extra_opis += f"Numer KW:\n{picked_rent_offer['NumerKW']}\n\n"
+            extra_opis = extra_opis[:-2]
+            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            
 
             if str(picked_rent_offer['TypDomu']).lower().count('dom') > 0\
                 or str(picked_rent_offer['TypDomu']).lower().count('willa') > 0\
@@ -4446,7 +4464,24 @@ def public_on_lento():
                             prepared_opis += f'{v_val}\n'
             if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_rent_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_rent_offer['InformacjeDodatkowe']
-            opis_ogloszenia = prepared_opis
+            
+            extra_opis = ''
+            if picked_rent_offer['RodzajZabudowy'] != '':
+                extra_opis += f"Rodzaj Zabudowy:\n{picked_rent_offer['RodzajZabudowy']}\n\n"
+            if picked_rent_offer['Czynsz'] != 0:
+                extra_opis += f"Czynsz:\n{picked_rent_offer['Czynsz']} zł.\n\n"
+            if picked_rent_offer['Umeblowanie'] != "":
+                extra_opis += f"Umeblowanie:\n{picked_rent_offer['Umeblowanie']}\n\n"
+            if picked_rent_offer['TechBudowy'] != "":
+                extra_opis += f"Technologia Budowy:\n{picked_rent_offer['TechBudowy']}\n\n"
+            if picked_rent_offer['StanWykonczenia'] != "":
+                extra_opis += f"Stan Wykończenia:\n{picked_rent_offer['StanWykonczenia']}\n\n"
+            if picked_rent_offer['RokBudowy'] != 0:
+                extra_opis += f"Rok Budowy:\n{picked_rent_offer['RokBudowy']} r.\n\n"
+            if picked_rent_offer['NumerKW'] != "":
+                extra_opis += f"Numer KW:\n{picked_rent_offer['NumerKW']}\n\n"
+            extra_opis = extra_opis[:-2]
+            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
 
             if str(picked_rent_offer['TypDomu']).lower().count('dom') > 0\
                 or str(picked_rent_offer['TypDomu']).lower().count('willa') > 0\
@@ -4466,7 +4501,7 @@ def public_on_lento():
 
             elif str(picked_rent_offer['TypDomu']).lower().count('biur') > 0\
                 or str(picked_rent_offer['TypDomu']).lower().count('hal') > 0\
-                    or str(picked_rent_offer['TypDomu']).lower().count('usługi') > 0\
+                    or str(picked_rent_offer['TypDomu']).lower().count('usług') > 0\
                     or str(picked_rent_offer['TypDomu']).lower().count('lokal') > 0\
                 or str(picked_rent_offer['TypDomu']).lower().count('produkcja') > 0:
                 # kategoria na lento dla biura_lokale
