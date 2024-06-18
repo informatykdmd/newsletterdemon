@@ -4474,22 +4474,22 @@ def public_on_lento():
             if 'super_oferta_14_dni' in request.form: super_oferta_14_dni = 1
             else: super_oferta_14_dni = 0
 
-            picked_rent_offer = {}
+            picked_sell_offer = {}
             for sellOffer in generator_sellOffert():
                 if str(sellOffer['ID']) == str(id_ogloszenia):
                     picked_sell_offer = sellOffer
             # print(picked_rent_offer)
 
-            tytul_ogloszenia = picked_rent_offer['Tytul']
-            powierzchnia = picked_rent_offer['Metraz']
-            cena = picked_rent_offer['Cena']
-            numer_kw = picked_rent_offer['NumerKW']
-            miejscowosc = picked_rent_offer['Lokalizacja'] 
+            tytul_ogloszenia = picked_sell_offer['Tytul']
+            powierzchnia = picked_sell_offer['Metraz']
+            cena = picked_sell_offer['Cena']
+            numer_kw = picked_sell_offer['NumerKW']
+            miejscowosc = picked_sell_offer['Lokalizacja'] 
             osoba_kontaktowa = session['user_data']['name']
-            nr_telefonu = picked_rent_offer['TelefonKontaktowy']
+            nr_telefonu = picked_sell_offer['TelefonKontaktowy']
 
             zdjecia_string = ''
-            for foto_link in picked_rent_offer['Zdjecia']:
+            for foto_link in picked_sell_offer['Zdjecia']:
                 zdjecia_string += f'{foto_link}-@-'
             if zdjecia_string != '':zdjecia_string = zdjecia_string[:-3]
 
