@@ -4639,7 +4639,7 @@ def public_on_lento():
                 if picked_sell_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
                 elif picked_sell_offer['LiczbaPokoi'] > 4:liczba_pokoi = 5
                 else:liczba_pokoi = picked_sell_offer['LiczbaPokoi']
-                pow_dzialki = picked_sell_offer['PowierzchniaDzialki']
+                
                 if str(picked_sell_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
                 elif str(picked_sell_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
                 else: forma_kuchni = 'brak'
@@ -4661,7 +4661,7 @@ def public_on_lento():
                 zapytanie_sql = '''
                     INSERT INTO ogloszenia_lento 
                         (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
-                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, dodtkowe_info,
+                        numer_kw, forma_kuchni, typ_domu,  liczba_pokoi, powierzchnia, dodtkowe_info,
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
                         promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
@@ -4679,11 +4679,11 @@ def public_on_lento():
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, %s, %s);
+                        %s, %s, %s, %s);
                 '''
                 35
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
-                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, dodtkowe_info,
+                        numer_kw, forma_kuchni, typ_domu, liczba_pokoi, powierzchnia, dodtkowe_info,
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
                         promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
