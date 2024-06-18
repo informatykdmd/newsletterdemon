@@ -4806,7 +4806,7 @@ def public_on_lento():
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, %s);
+                        %s, %s, %s, %s, %s);
                 '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
                         powierzchnia, 
