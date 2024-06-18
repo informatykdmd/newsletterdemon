@@ -4507,8 +4507,7 @@ def public_on_lento():
             extra_opis = ''
             if picked_sell_offer['RodzajZabudowy'] != '':
                 extra_opis += f"Rodzaj Zabudowy:\n{picked_sell_offer['RodzajZabudowy']}\n\n"
-            if picked_sell_offer['Czynsz'] != 0:
-                extra_opis += f"Czynsz:\n{picked_sell_offer['Czynsz']} zł.\n\n"
+            
             if picked_sell_offer['Umeblowanie'] != "":
                 extra_opis += f"Umeblowanie:\n{picked_sell_offer['Umeblowanie']}\n\n"
             if picked_sell_offer['TechBudowy'] != "":
@@ -5162,8 +5161,7 @@ def public_on_lento():
             extra_opis = ''
             if picked_sell_offer['RodzajZabudowy'] != '':
                 extra_opis += f"Rodzaj Zabudowy:\n{picked_sell_offer['RodzajZabudowy']}\n\n"
-            if picked_sell_offer['Czynsz'] != 0:
-                extra_opis += f"Czynsz:\n{picked_sell_offer['Czynsz']} zł.\n\n"
+            
             if picked_sell_offer['Umeblowanie'] != "":
                 extra_opis += f"Umeblowanie:\n{picked_sell_offer['Umeblowanie']}\n\n"
             if picked_sell_offer['TechBudowy'] != "":
