@@ -5220,33 +5220,33 @@ def public_on_lento():
             extra_opis = extra_opis[:-2]
             opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
 
-            if str(picked_sell_offer['TypDomu']).lower().count('dom') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('willa') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('bliźniak') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('segment') > 0:
+            if str(picked_sell_offer['TypNieruchomosci']).lower().count('dom') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('willa') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('bliźniak') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('segment') > 0:
                 # kategoria na lento dla dom
                 kategoria_ogloszenia = 'dom'
 
-            elif str(picked_sell_offer['TypDomu']).lower().count('mieszkanie') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('kawalerka') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('apartament') > 0\
-                        or str(picked_sell_offer['TypDomu']).lower().count('blok') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('kamienica') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('loft') > 0:
+            elif str(picked_sell_offer['TypNieruchomosci']).lower().count('mieszkanie') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('kawalerka') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('apartament') > 0\
+                        or str(picked_sell_offer['TypNieruchomosci']).lower().count('blok') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('kamienica') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('loft') > 0:
                 # kategoria na lento dla mieszkanie
                 kategoria_ogloszenia = 'mieszkanie'
 
-            elif str(picked_sell_offer['TypDomu']).lower().count('biur') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('hal') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('usług') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('lokal') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('produkcja') > 0:
+            elif str(picked_sell_offer['TypNieruchomosci']).lower().count('biur') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('hal') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('usług') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('lokal') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('produkcja') > 0:
                 # kategoria na lento dla biura_lokale
                 kategoria_ogloszenia = 'biura_lokale'
 
-            elif str(picked_sell_offer['TypDomu']).lower().count('działka') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('plac') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('teren') > 0:
+            elif str(picked_sell_offer['TypNieruchomosci']).lower().count('działka') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('plac') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('teren') > 0:
                 # kategoria na lento dla dzialka
                 kategoria_ogloszenia = 'dzialka'
             else:
@@ -5283,7 +5283,7 @@ def public_on_lento():
                 if picked_sell_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
                 elif picked_sell_offer['LiczbaPokoi'] > 4:liczba_pokoi = 5
                 else:liczba_pokoi = picked_sell_offer['LiczbaPokoi']
-                pow_dzialki = picked_sell_offer['PowierzchniaDzialki']
+                
                 if str(picked_sell_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
                 elif str(picked_sell_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
                 else: forma_kuchni = 'brak'
@@ -5308,7 +5308,6 @@ def public_on_lento():
                     SET 
                         numer_kw = %s, 
                         typ_domu = %s, 
-                        pow_dzialki = %s,
                         forma_kuchni = %s,
                         liczba_pokoi = %s,
                         tytul_ogloszenia = %s,   
@@ -5325,7 +5324,7 @@ def public_on_lento():
                     WHERE id = %s;
                 '''
                 dane = (
-                        numer_kw, typ_domu, pow_dzialki, forma_kuchni, liczba_pokoi,
+                        numer_kw, typ_domu, forma_kuchni, liczba_pokoi,
                         tytul_ogloszenia, powierzchnia, dodtkowe_info, opis_ogloszenia, cena, 
                         zdjecia_string, miejscowosc, 
                         osoba_kontaktowa, nr_telefonu, 
