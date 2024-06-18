@@ -4403,12 +4403,13 @@ def public_on_lento():
                         super_oferta_7_dni, super_oferta_14_dni,
                         status)
                     VALUES 
-                        (%s, %s, %s, %s, %s, 
+                        (%s, %s, %s, %s, %s, %s, 
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, %s);
+                        %s, %s, %s, %s, %s);
                 '''
+                29
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,  
                         powierzchnia, 
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
