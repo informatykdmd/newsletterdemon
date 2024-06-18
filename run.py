@@ -4658,10 +4658,12 @@ def public_on_lento():
                 else: rynek = None
                 dodtkowe_info = rynek
 
+                pow_dzialki = powierzchnia * 4
+
                 zapytanie_sql = '''
                     INSERT INTO ogloszenia_lento 
                         (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
-                        numer_kw, forma_kuchni, typ_domu,  liczba_pokoi, powierzchnia, dodtkowe_info,
+                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, dodtkowe_info,
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
                         promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
@@ -4679,7 +4681,7 @@ def public_on_lento():
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, %s);
+                        %s, %s, %s, %s, %s);
                 '''
                 35
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
@@ -5300,8 +5302,9 @@ def public_on_lento():
                 if str(picked_sell_offer['Rynek']).lower().count('wtórny') > 0: rynek = 'wtorny'
                 elif str(picked_sell_offer['Rynek']).lower().count('pierwotny') > 0: rynek = 'pierwotny'
                 else: rynek = None
-
                 dodtkowe_info = rynek
+
+                pow_dzialki = powierzchnia * 4
 
                 zapytanie_sql = '''
                     UPDATE ogloszenia_lento
@@ -5312,6 +5315,7 @@ def public_on_lento():
                         liczba_pokoi = %s,
                         tytul_ogloszenia = %s,   
                         powierzchnia = %s, 
+                        pow_dzialki = %s,
                         dodtkowe_info = %s, 
                         opis_ogloszenia = %s, 
                         cena = %s, 
@@ -5325,7 +5329,7 @@ def public_on_lento():
                 '''
                 dane = (
                         numer_kw, typ_domu, forma_kuchni, liczba_pokoi,
-                        tytul_ogloszenia, powierzchnia, dodtkowe_info, opis_ogloszenia, cena, 
+                        tytul_ogloszenia, powierzchnia, pow_dzialki, dodtkowe_info, opis_ogloszenia, cena, 
                         zdjecia_string, miejscowosc, 
                         osoba_kontaktowa, nr_telefonu, 
                         5, 0,
