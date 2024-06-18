@@ -4521,34 +4521,68 @@ def public_on_lento():
             extra_opis = extra_opis[:-2]
             opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
             
+            """
+            'ID': int(data[0]),
+            'TypNieruchomosci': data[1] if lang=='pl' else getLangText(data[1]),#
+            'Tytul': data[2] if lang=='pl' else getLangText(data[2]), #
+            'Rodzaj': data[3] if lang=='pl' else getLangText(data[3]),#
+            'Opis': opis_json,#
+            'Cena': data[5],#
+            'Lokalizacja': "" if data[6] is None else data[6],#
+            'LiczbaPokoi': 0 if data[7] is None else data[7],#
+            'Metraz': 0 if data[8] is None else data[8],#
+            'Zdjecia': [foto for foto in fotoList if foto is not None],#
+            'DataPublikacjiOlx': None if data[10] is None else format_date(data[10]),#
+            'DataPublikacjiAllegro': None if data[11] is None else format_date(data[11]),#
+            'DataPublikacjiOtoDom': None if data[12] is None else format_date(data[12]),#
+            'DataPublikacjiMarketplace': None if data[13] is None else format_date(data[13]),#
+            'DataUtworzenia': format_date(data[14]),#
+            'DataAktualizacji': format_date(data[15]),#
+            'RodzajZabudowy': "" if data[16] is None else data[16],#
+            'Rynek': '' if data[17] is None else data[17],#
+            'LiczbaPieter': 0 if data[18] is None else data[18],#
+            'PrzeznaczenieLokalu': "" if data[19] is None else data[19],#
+            'Poziom': 'None' if data[20] is None else data[20],#
+            'TechBudowy': '' if data[21] is None else data[21],#
+            'FormaKuchni': '' if data[22] is None else data[22],#
+            'TypDomu': '' if data[23] is None else data[23],#
+            'StanWykonczenia': "" if data[24] is None else data[24],#
+            'RokBudowy': 0 if data[25] is None else data[25],#
+            'NumerKW': '' if data[26] is None else data[26],#
+            'InformacjeDodatkowe': '' if data[27] is None else data[27],#
+            'GPS': gps_json,#
+            'TelefonKontaktowy': '' if data[29] is None else data[29],#
+            'EmailKontaktowy': '' if data[30] is None else data[30],#
+            'StatusOferty': 0 if data[31] is None else data[31]#
+            """
 
-            if str(picked_sell_offer['TypDomu']).lower().count('dom') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('willa') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('bliźniak') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('segment') > 0:
+            if str(picked_sell_offer['TypNieruchomosci']).lower().count('dom') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('willa') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('bliźniak') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('segment') > 0:
                 # kategoria na lento dla dom
                 kategoria_ogloszenia = 'dom'
 
-            elif str(picked_sell_offer['TypDomu']).lower().count('mieszkanie') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('kawalerka') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('apartament') > 0\
-                        or str(picked_sell_offer['TypDomu']).lower().count('blok') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('kamienica') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('loft') > 0:
+            elif str(picked_sell_offer['TypNieruchomosci']).lower().count('mieszkanie') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('kawalerka') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('apartament') > 0\
+                        or str(picked_sell_offer['TypNieruchomosci']).lower().count('blok') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('kamienica') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('loft') > 0:
                 # kategoria na lento dla mieszkanie
                 kategoria_ogloszenia = 'mieszkanie'
 
-            elif str(picked_sell_offer['TypDomu']).lower().count('biur') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('hal') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('usługi') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('lokal') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('produkcja') > 0:
+            elif str(picked_sell_offer['TypNieruchomosci']).lower().count('biur') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('hal') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('usługi') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('lokal') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('produkcja') > 0:
                 # kategoria na lento dla biura_lokale
                 kategoria_ogloszenia = 'biura_lokale'
 
-            elif str(picked_sell_offer['TypDomu']).lower().count('działka') > 0\
-                or str(picked_sell_offer['TypDomu']).lower().count('plac') > 0\
-                    or str(picked_sell_offer['TypDomu']).lower().count('teren') > 0:
+            elif str(picked_sell_offer['TypNieruchomosci']).lower().count('działka') > 0\
+                or str(picked_sell_offer['TypNieruchomosci']).lower().count('plac') > 0\
+                    or str(picked_sell_offer['TypNieruchomosci']).lower().count('teren') > 0:
                 # kategoria na lento dla dzialka
                 kategoria_ogloszenia = 'dzialka'
             else:
@@ -4619,10 +4653,15 @@ def public_on_lento():
                 elif str(picked_sell_offer['RodzajZabudowy']).lower().count('szeregowiec') > 0: typ_domu = 'szeregowiec'
                 else: typ_domu = 'inny'
 
+                if str(picked_sell_offer['Rynek']).lower().count('wtórny') > 0: rynek = 'wtorny'
+                elif str(picked_sell_offer['Rynek']).lower().count('pierwotny') > 0: rynek = 'pierwotny'
+                else: rynek = None
+                dodtkowe_info = rynek
+
                 zapytanie_sql = '''
                     INSERT INTO ogloszenia_lento 
                         (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
-                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
+                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, dodtkowe_info,
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
                         promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
@@ -4640,11 +4679,11 @@ def public_on_lento():
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, %s);
+                        %s, %s, %s, %s, %s);
                 '''
-                34
+                35
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
-                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
+                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, dodtkowe_info,
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
                         promowanie_lokalne_14_dni, promowanie_lokalne_30_dni, 
@@ -4669,11 +4708,16 @@ def public_on_lento():
                 if str(picked_sell_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
                 elif str(picked_sell_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
                 else: forma_kuchni = 'brak'
+
+                if str(picked_sell_offer['Rynek']).lower().count('wtórny') > 0: rynek = 'wtorny'
+                elif str(picked_sell_offer['Rynek']).lower().count('pierwotny') > 0: rynek = 'pierwotny'
+                else: rynek = None
+                dodtkowe_info = rynek
                 
                 zapytanie_sql = '''
                     INSERT INTO ogloszenia_lento 
                         (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, liczba_pieter, 
-                        zabudowa, 
+                        zabudowa, dodtkowe_info,
                         forma_kuchni, liczba_pokoi, powierzchnia, 
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
@@ -4692,11 +4736,11 @@ def public_on_lento():
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
-                        %s, %s, %s);
+                        %s, %s, %s, %s);
                 '''
-                33
+                34
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, str(liczba_pieter), 
-                        zabudowa, 
+                        zabudowa, dodtkowe_info,
                         forma_kuchni, liczba_pokoi, powierzchnia, 
                         opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
                         bez_promowania, 
@@ -5253,6 +5297,12 @@ def public_on_lento():
                 elif str(picked_sell_offer['RodzajZabudowy']).lower().count('szeregowiec') > 0: typ_domu = 'szeregowiec'
                 else: typ_domu = 'inny'
 
+                if str(picked_sell_offer['Rynek']).lower().count('wtórny') > 0: rynek = 'wtorny'
+                elif str(picked_sell_offer['Rynek']).lower().count('pierwotny') > 0: rynek = 'pierwotny'
+                else: rynek = None
+
+                dodtkowe_info = rynek
+
                 zapytanie_sql = '''
                     UPDATE ogloszenia_lento
                     SET 
@@ -5263,6 +5313,7 @@ def public_on_lento():
                         liczba_pokoi = %s,
                         tytul_ogloszenia = %s,   
                         powierzchnia = %s, 
+                        dodtkowe_info = %s, 
                         opis_ogloszenia = %s, 
                         cena = %s, 
                         zdjecia_string = %s, 
@@ -5275,7 +5326,7 @@ def public_on_lento():
                 '''
                 dane = (
                         numer_kw, typ_domu, pow_dzialki, forma_kuchni, liczba_pokoi,
-                        tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
+                        tytul_ogloszenia, powierzchnia, dodtkowe_info, opis_ogloszenia, cena, 
                         zdjecia_string, miejscowosc, 
                         osoba_kontaktowa, nr_telefonu, 
                         5, 0,
@@ -5293,6 +5344,12 @@ def public_on_lento():
                 elif str(picked_sell_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
                 else: forma_kuchni = 'brak'
 
+                if str(picked_sell_offer['Rynek']).lower().count('wtórny') > 0: rynek = 'wtorny'
+                elif str(picked_sell_offer['Rynek']).lower().count('pierwotny') > 0: rynek = 'pierwotny'
+                else: rynek = None
+
+                dodtkowe_info = rynek
+
                 zapytanie_sql = '''
                     UPDATE ogloszenia_lento
                     SET 
@@ -5302,6 +5359,7 @@ def public_on_lento():
                         liczba_pokoi = %s,
                         tytul_ogloszenia = %s,   
                         powierzchnia = %s, 
+                        dodtkowe_info = %s, 
                         opis_ogloszenia = %s, 
                         cena = %s, 
                         zdjecia_string = %s, 
@@ -5314,7 +5372,7 @@ def public_on_lento():
                 '''
                 dane = (
                         liczba_pieter, zabudowa, forma_kuchni, liczba_pokoi,
-                        tytul_ogloszenia, powierzchnia, opis_ogloszenia, cena, 
+                        tytul_ogloszenia, powierzchnia, dodtkowe_info, opis_ogloszenia, cena, 
                         zdjecia_string, miejscowosc, osoba_kontaktowa,
                         nr_telefonu, 
                         5, 0,
