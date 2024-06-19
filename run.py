@@ -3055,6 +3055,8 @@ def estateAdsRent():
         item['lento']['id'] = lentoIDstatus[0]
         item['lento']['status'] = lentoIDstatus[1]
         item['lento']['data_aktualizacji'] = lentoIDstatus[2]
+        item['lento']['errors'] = lentoIDstatus[3]
+
 
         if item['lento']['status'] is not None:
             start_date = item['lento']['data_aktualizacji']
@@ -3520,6 +3522,7 @@ def estateAdsSell():
         item['lento']['id'] = lentoIDstatus[0]
         item['lento']['status'] = lentoIDstatus[1]
         item['lento']['data_aktualizacji'] = lentoIDstatus[2]
+        item['lento']['errors'] = lentoIDstatus[3]
 
         if item['lento']['status'] is not None:
             start_date = item['lento']['data_aktualizacji']
@@ -4869,8 +4872,8 @@ def public_on_lento():
                         wyswietlanie_na_stronie_glownej_14_dni, wyswietlanie_na_stronie_glownej_30_dni,
                         super_oferta_7_dni, super_oferta_14_dni,
                         4)
-            print(zapytanie_sql)
-            print(dane)
+            # print(zapytanie_sql)
+            # print(dane)
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
             else:
