@@ -5599,7 +5599,7 @@ def public_on_lento():
             else:
                 flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
         
-        if task_kind == 'Ponow':
+        if task_kind == 'Ponow_zadanie':
             oldStatus = takeLentoResumeStatus(lento_id)
             zapytanie_sql = '''
                 UPDATE ogloszenia_lento
