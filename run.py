@@ -274,6 +274,12 @@ def checkLentoStatus(kind, id):
     except IndexError:
         return (None, None, None, None, None)
     
+def takeLentoResumeStatus(lento_id):
+    try:
+        return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_lento WHERE id="{lento_id}";')[0][0]
+    except IndexError:
+        return None
+    
 def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystkie'
     took_rentOffer = take_data_table('*', 'OfertyNajmu')
     
@@ -5576,6 +5582,22 @@ def public_on_lento():
                 '''
             dane = (0, 6, lento_id)
             
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+        
+        if task_kind == 'Ponow':
+            oldStatus = takeLentoResumeStatus(lento_id)
+            zapytanie_sql = '''
+                UPDATE ogloszenia_lento
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, oldStatus, lento_id)
+
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
             else:
