@@ -3213,6 +3213,12 @@ def update_rent_offer_status():
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
         set_post_status = int(form_data['Status'])
+
+        statusNaLento = checkLentoStatus('r', set_post_id)
+        if statusNaLento[0] != None:
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ugłoszenie z Lento.pl", "danger")
+            return redirect(url_for('estateAdsRent'))
+        
         if set_post_status == 0:
             removeSpecOffer(set_post_id, 'r')
         zapytanie_sql = f'''
@@ -3677,6 +3683,12 @@ def update_sell_offer_status():
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
         set_post_status = int(form_data['Status'])
+
+        statusNaLento = checkLentoStatus('s', set_post_id)
+        if statusNaLento[0] != None:
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ugłoszenie z Lento.pl", "danger")
+            return redirect(url_for('estateAdsRent'))
+        
         if set_post_status == 0:
             removeSpecOffer(set_post_id, 's')
         zapytanie_sql = f'''
