@@ -270,9 +270,9 @@ def format_date(date_input, pl=True):
 
 def checkLentoStatus(kind, id):
     try:
-        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors FROM ogloszenia_lento WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
+        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors FROM ogloszenia_lento WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
     except IndexError:
-        return (None, None, None, None)
+        return (None, None, None, None, None)
     
 def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystkie'
     took_rentOffer = take_data_table('*', 'OfertyNajmu')
@@ -3056,6 +3056,7 @@ def estateAdsRent():
         item['lento']['status'] = lentoIDstatus[1]
         item['lento']['data_aktualizacji'] = lentoIDstatus[2]
         item['lento']['errors'] = lentoIDstatus[3]
+        item['lento']['action_before_errors'] = lentoIDstatus[4]
 
 
         if item['lento']['status'] is not None:
@@ -3523,6 +3524,7 @@ def estateAdsSell():
         item['lento']['status'] = lentoIDstatus[1]
         item['lento']['data_aktualizacji'] = lentoIDstatus[2]
         item['lento']['errors'] = lentoIDstatus[3]
+        item['lento']['action_before_errors'] = lentoIDstatus[4]
 
         if item['lento']['status'] is not None:
             start_date = item['lento']['data_aktualizacji']
