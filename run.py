@@ -4448,9 +4448,9 @@ def public_on_lento():
                         4)
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta wynajmu została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta wynajmu nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Publikuj' and rodzaj_ogloszenia == 's':
             # print(request.form)
@@ -4895,9 +4895,9 @@ def public_on_lento():
             # print(zapytanie_sql)
             # print(dane)
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta sprzedaży została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta wynajmu nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Wstrzymaj':
             zapytanie_sql = '''
@@ -4910,9 +4910,9 @@ def public_on_lento():
             dane = (0, 7, lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Wznow':
             zapytanie_sql = '''
@@ -4925,9 +4925,9 @@ def public_on_lento():
             dane = (0, 8, lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 'r':
             picked_rent_offer = {}
@@ -5195,9 +5195,9 @@ def public_on_lento():
                         lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 's':
             picked_sell_offer = {}
@@ -5478,9 +5478,9 @@ def public_on_lento():
                         lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Promuj':
             if 'bez_promowania' in request.form: bez_promowania = 1
@@ -5563,9 +5563,9 @@ def public_on_lento():
                     lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 2 minuta.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Ponow':
             zapytanie_sql = '''
@@ -5577,9 +5577,9 @@ def public_on_lento():
             dane = (0, lento_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Odswiez':
             flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
@@ -5595,9 +5595,9 @@ def public_on_lento():
             dane = (0, 6, lento_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         
         if task_kind == 'Ponow_zadanie':
             oldStatus = takeLentoResumeStatus(lento_id)
@@ -5611,9 +5611,9 @@ def public_on_lento():
             dane = (0, oldStatus, lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
             else:
-                flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
