@@ -1260,676 +1260,7 @@
                                                 <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Allegro Lokalnie</button>
                                             </div> -->
                                         </div>
-                                        <div> 
-                                                
-                                                
-                                                {% if post_data['StatusOferty'] == 1 %}
-                                                    {% if post_data['lento']['status'] == 0 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Wstrzymany</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto "> 
-                                                        
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Wznow" />
-        
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Wznów ponownie na Lento
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Usun" />
-                                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Usuń na zawsze z Lento
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    {% elif post_data['lento']['status'] == 1 %}
-                                                    <div class="mb-2 mt-2">
-                                                        
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Opublikowano (pozostało {{post_data['lento']['zostalo_dni']}} dni)</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto "> 
-                                                        <div class="col">
-                                                            
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                            
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Wstrzymaj" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Wstrzymaj na Lento
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    
-                                                    
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Aktualizuj" />
-                                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Aktualizuj na Lento
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        
-                                                        
-                                                        <!-- <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Promuj" />
-                                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Zmień promowanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div> -->
-
-
-                                                        
-                                                    </div>
-                                                    
-                                                    
-                                                    
-                                                    {% elif post_data['lento']['status'] == 2 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Error</p>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            {{post_data['lento']['errors']}}
-                                                        </div>
-                                                    </div>
-                                                    <div class="row row-cols-auto ">
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Ponow_zadanie" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Ponów zadanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-
-                                                    
-                                                    {% elif post_data['lento']['status'] == 3 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Usunięto</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto ">
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Publikuj" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Publikuj ponownie na Lento
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    {% elif post_data['lento']['status'] == 4 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto ">
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Odswiez" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Odświeżenie statusu
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Ponow" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Ponów zadanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    {% elif post_data['lento']['status'] == 5 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces aktualizacji ogłoszenia</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto ">
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Odswiez" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Odświeżenie statusu
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Ponow" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Ponów zadanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                        
-                                                    
-                                                    {% elif post_data['lento']['status'] == 6 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces usuwania ogłoszenia</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto ">
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Odswiez" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Odświeżenie statusu
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Ponow" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Ponów zadanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-
-                                                    {% elif post_data['lento']['status'] == 7 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces wstrzymywania ogłoszenia</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto ">
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Odswiez" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Odświeżenie statusu
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Ponow" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Ponów zadanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-
-                                                    {% elif post_data['lento']['status'] == 8 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces wznawiania ogłoszenia</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto ">
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Odswiez" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Odświeżenie statusu
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Ponow" />
-                                                                    
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Ponów zadanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                        
-                                                    {% elif post_data['lento']['status'] == None %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        
-                                                        <p>Status: Pierwsza publikacja na Lento</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto mb-3">
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" id="form_{{post_id}}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Publikuj" />
-
-                                                                    <!-- block -->
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="bez_promowania_{{post_id}}" name="bez_promowania" value="1" checked>
-                                                                                <label class="form-check-label" for="bez_promowania_{{post_id}}">Bez Promowania</label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Lokalne
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="promowanie_lokalne_14_dni_{{post_id}}" name="promowanie_lokalne_14_dni" value="1">
-                                                                                        <label class="form-check-label" for="promowanie_lokalne_14_dni_{{post_id}}">na 14 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="promowanie_lokalne_30_dni_{{post_id}}" name="promowanie_lokalne_30_dni" value="1">
-                                                                                        <label class="form-check-label" for="promowanie_lokalne_30_dni_{{post_id}}">na 30 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Regionalne
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="promowanie_regionalne_14_dni_{{post_id}}" name="promowanie_regionalne_14_dni" value="1">
-                                                                                        <label class="form-check-label" for="promowanie_regionalne_14_dni_{{post_id}}">na 14 dni</label>
-                                                                                    </div>
-
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="promowanie_regionalne_30_dni_{{post_id}}" name="promowanie_regionalne_30_dni" value="1">
-                                                                                        <label class="form-check-label" for="promowanie_regionalne_30_dni_{{post_id}}">na 30 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Ogólnopolskie
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="promowanie_ogolnopolskie_14_dni_{{post_id}}" name="promowanie_ogolnopolskie_14_dni" value="1">
-                                                                                        <label class="form-check-label" for="promowanie_ogolnopolskie_14_dni_{{post_id}}">na 14 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="promowanie_ogolnopolskie_30_dni_{{post_id}}" name="promowanie_ogolnopolskie_30_dni" value="1">
-                                                                                        <label class="form-check-label" for="promowanie_ogolnopolskie_30_dni_{{post_id}}">na 30 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Top Ogłoszenie
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="top_ogloszenie_7_dni_{{post_id}}" name="top_ogloszenie_7_dni" value="1">
-                                                                                        <label class="form-check-label" for="top_ogloszenie_7_dni_{{post_id}}">na 7 dni</label>
-                                                                                    </div>
-
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="top_ogloszenie_14_dni_{{post_id}}" name="top_ogloszenie_14_dni" value="1">
-                                                                                        <label class="form-check-label" for="top_ogloszenie_14_dni_{{post_id}}">na 14 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Etykieta Pilne
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="etykieta_pilne_7_dni_{{post_id}}" name="etykieta_pilne_7_dni" value="1">
-                                                                                        <label class="form-check-label" for="etykieta_pilne_7_dni_{{post_id}}">na 7 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="etykieta_pilne_14_dni_{{post_id}}" name="etykieta_pilne_14_dni" value="1">
-                                                                                        <label class="form-check-label" for="etykieta_pilne_14_dni_{{post_id}}">na 14 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Codzienne Odświeżenie
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="codzienne_odswiezenie_7_dni_{{post_id}}" name="codzienne_odswiezenie_7_dni" value="1">
-                                                                                        <label class="form-check-label" for="codzienne_odswiezenie_7_dni_{{post_id}}">na 7 dni</label>
-                                                                                    </div>
-
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="codzienne_odswiezenie_14_dni_{{post_id}}" name="codzienne_odswiezenie_14_dni" value="1">
-                                                                                        <label class="form-check-label" for="codzienne_odswiezenie_14_dni_{{post_id}}">na 14 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Strona Główna
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="wyswietlanie_na_stronie_glownej_14_dni_{{post_id}}" name="wyswietlanie_na_stronie_glownej_14_dni" value="1">
-                                                                                        <label class="form-check-label" for="wyswietlanie_na_stronie_glownej_14_dni_{{post_id}}">na 14 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="wyswietlanie_na_stronie_glownej_30_dni_{{post_id}}" name="wyswietlanie_na_stronie_glownej_30_dni" value="1">
-                                                                                        <label class="form-check-label" for="wyswietlanie_na_stronie_glownej_30_dni_{{post_id}}">na 30 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Super Oferta
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="super_oferta_7_dni_{{post_id}}" name="super_oferta_7_dni" value="1">
-                                                                                        <label class="form-check-label" for="super_oferta_7_dni_{{post_id}}">na 7 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="super_oferta_14_dni_{{post_id}}" name="super_oferta_14_dni" value="1">
-                                                                                        <label class="form-check-label" for="super_oferta_14_dni_{{post_id}}">na 14 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Publikuj na Lento
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    <script>
-                                                        document.addEventListener('DOMContentLoaded', function(){
-                                                                checkboxControlDisable(
-                                                                '{{post_id}}', 
-                                                                'bez_promowania_{{post_id}}', 
-                                                                [
-                                                                    'promowanie_lokalne_14_dni_{{post_id}}', 
-                                                                    'promowanie_lokalne_30_dni_{{post_id}}', 
-                                                                    'promowanie_regionalne_14_dni_{{post_id}}', 
-                                                                    'promowanie_regionalne_30_dni_{{post_id}}', 
-                                                                    'promowanie_ogolnopolskie_14_dni_{{post_id}}', 
-                                                                    'promowanie_ogolnopolskie_30_dni_{{post_id}}', 
-                                                                    'top_ogloszenie_7_dni_{{post_id}}', 
-                                                                    'top_ogloszenie_14_dni_{{post_id}}', 
-                                                                    'etykieta_pilne_7_dni_{{post_id}}', 
-                                                                    'etykieta_pilne_14_dni_{{post_id}}', 
-                                                                    'codzienne_odswiezenie_7_dni_{{post_id}}', 
-                                                                    'codzienne_odswiezenie_14_dni_{{post_id}}', 
-                                                                    'wyswietlanie_na_stronie_glownej_14_dni_{{post_id}}',
-                                                                    'wyswietlanie_na_stronie_glownej_30_dni_{{post_id}}',
-                                                                    'super_oferta_7_dni_{{post_id}}', 
-                                                                    'super_oferta_14_dni_{{post_id}}'
-                                                                ]
-                                                            );
-                                                            checkboxControlOffOther(
-                                                                '{{post_id}}', 
-                                                                'promowanie_lokalne_14_dni_{{post_id}}', 
-                                                                [
-                                                                    'promowanie_lokalne_30_dni_{{post_id}}',
-                                                                    'promowanie_regionalne_14_dni_{{post_id}}', 
-                                                                    'promowanie_regionalne_30_dni_{{post_id}}',
-                                                                    'promowanie_ogolnopolskie_14_dni_{{post_id}}',
-                                                                    'promowanie_ogolnopolskie_30_dni_{{post_id}}',
-                                                                    'bez_promowania_{{post_id}}'
-                                                                ]
-                                                            );
-                                                            checkboxControlOffOther(
-                                                                '{{post_id}}', 
-                                                                'promowanie_regionalne_14_dni_{{post_id}}', 
-                                                                [
-                                                                    'promowanie_lokalne_30_dni_{{post_id}}',
-                                                                    'promowanie_lokalne_14_dni_{{post_id}}',  
-                                                                    'promowanie_regionalne_30_dni_{{post_id}}',
-                                                                    'promowanie_ogolnopolskie_14_dni_{{post_id}}',
-                                                                    'promowanie_ogolnopolskie_30_dni_{{post_id}}',
-                                                                    'bez_promowania_{{post_id}}'
-                                                                ]
-                                                            );
-                                                            checkboxControlOffOther(
-                                                                '{{post_id}}', 
-                                                                'promowanie_ogolnopolskie_14_dni_{{post_id}}', 
-                                                                [
-                                                                    'promowanie_lokalne_30_dni_{{post_id}}',
-                                                                    'promowanie_lokalne_14_dni_{{post_id}}', 
-                                                                    'promowanie_regionalne_14_dni_{{post_id}}',  
-                                                                    'promowanie_regionalne_30_dni_{{post_id}}',
-                                                                    'promowanie_ogolnopolskie_30_dni_{{post_id}}',
-                                                                    'bez_promowania_{{post_id}}'
-                                                                ]
-                                                            );
-                                                            checkboxControlOffOther(
-                                                                '{{post_id}}', 
-                                                                'top_ogloszenie_7_dni_{{post_id}}', 
-                                                                [
-                                                                    'top_ogloszenie_14_dni_{{post_id}}',
-                                                                    'bez_promowania_{{post_id}}'
-                                                                ]
-                                                            );
-                                                            checkboxControlOffOther(
-                                                                '{{post_id}}', 
-                                                                'etykieta_pilne_7_dni_{{post_id}}', 
-                                                                [
-                                                                    'etykieta_pilne_14_dni_{{post_id}}',
-                                                                    'bez_promowania_{{post_id}}'
-                                                                ]
-                                                            );
-                                                            checkboxControlOffOther(
-                                                                '{{post_id}}', 
-                                                                'codzienne_odswiezenie_7_dni_{{post_id}}', 
-                                                                [
-                                                                    'codzienne_odswiezenie_14_dni_{{post_id}}',
-                                                                    'bez_promowania_{{post_id}}'
-                                                                ]
-                                                            );
-                                                            checkboxControlOffOther(
-                                                                '{{post_id}}', 
-                                                                'wyswietlanie_na_stronie_glownej_14_dni_{{post_id}}', 
-                                                                [
-                                                                    'wyswietlanie_na_stronie_glownej_30_dni_{{post_id}}',
-                                                                    'bez_promowania_{{post_id}}'
-                                                                ]
-                                                            );
-                                                            checkboxControlOffOther(
-                                                                '{{post_id}}', 
-                                                                'super_oferta_7_dni_{{post_id}}', 
-                                                                [
-                                                                    'super_oferta_14_dni_{{post_id}}',
-                                                                    'bez_promowania_{{post_id}}'
-                                                                ]
-                                                            );
-                                                        });
-                                                        
-                                                    </script>
-                                                    
-                                                    {% endif %}
-                                                {% endif %}
-                                            </form>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
@@ -2174,7 +1505,697 @@
                                 
                                 
                             </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-12">
+                                    Allegro
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    OLX
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    OtoDom
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-12">
+                                        <div> 
+                                                    
+                                                    
+                                            {% if post_data['StatusOferty'] == 1 %}
+                                                {% if post_data['lento']['status'] == 0 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>LENTO.PL</h5>
+                                                    <p>Status: Wstrzymany</p>
+                                                </div>
+                                                <div class="row row-cols-auto "> 
+                                                    
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Wznow" />
 
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Wznów ponownie na Lento
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Usun" />
+                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Usuń na zawsze z Lento
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                
+                                                {% elif post_data['lento']['status'] == 1 %}
+                                                <div class="mb-2 mt-2">
+                                                    
+                                                    <h5>LENTO.PL</h5>
+                                                    <p>Status: Opublikowano (pozostało {{post_data['lento']['zostalo_dni']}} dni)</p>
+                                                </div>
+                                                <div class="row row-cols-auto "> 
+                                                    <div class="col">
+                                                        
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                        
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Wstrzymaj" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Wstrzymaj na Lento
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                
+                                                
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Aktualizuj" />
+                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Aktualizuj na Lento
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    
+                                                    
+                                                    <!-- <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Promuj" />
+                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Zmień promowanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div> -->
+
+
+                                                    
+                                                </div>
+                                                
+                                                
+                                                
+                                                {% elif post_data['lento']['status'] == 2 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>LENTO.PL</h5>
+                                                    <p>Status: Error</p>
+                                                    <div class="alert alert-danger" role="alert">
+                                                        {{post_data['lento']['errors']}}
+                                                    </div>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow_zadanie" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                                
+                                                {% elif post_data['lento']['status'] == 3 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>LENTO.PL</h5>
+                                                    <p>Status: Usunięto</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Publikuj" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Publikuj ponownie na Lento
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                
+                                                {% elif post_data['lento']['status'] == 4 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>LENTO.PL</h5>
+                                                    <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                
+                                                {% elif post_data['lento']['status'] == 5 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>LENTO.PL</h5>
+                                                    <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                    
+                                                
+                                                {% elif post_data['lento']['status'] == 6 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>LENTO.PL</h5>
+                                                    <p>Status: Trwa proces usuwania ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                                {% elif post_data['lento']['status'] == 7 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>LENTO.PL</h5>
+                                                    <p>Status: Trwa proces wstrzymywania ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                                {% elif post_data['lento']['status'] == 8 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>LENTO.PL</h5>
+                                                    <p>Status: Trwa proces wznawiania ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                    
+                                                {% elif post_data['lento']['status'] == None %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>LENTO.PL</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Lento</p>
+                                                </div>
+                                                <div class="row row-cols-auto mb-3">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" id="form_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Publikuj" />
+
+                                                                <!-- block -->
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-check form-switch">
+                                                                            <input class="form-check-input" type="checkbox" role="switch" id="bez_promowania_{{post_id}}" name="bez_promowania" value="1" checked>
+                                                                            <label class="form-check-label" for="bez_promowania_{{post_id}}">Bez Promowania</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Lokalne
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="promowanie_lokalne_14_dni_{{post_id}}" name="promowanie_lokalne_14_dni" value="1">
+                                                                                    <label class="form-check-label" for="promowanie_lokalne_14_dni_{{post_id}}">na 14 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="promowanie_lokalne_30_dni_{{post_id}}" name="promowanie_lokalne_30_dni" value="1">
+                                                                                    <label class="form-check-label" for="promowanie_lokalne_30_dni_{{post_id}}">na 30 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Regionalne
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="promowanie_regionalne_14_dni_{{post_id}}" name="promowanie_regionalne_14_dni" value="1">
+                                                                                    <label class="form-check-label" for="promowanie_regionalne_14_dni_{{post_id}}">na 14 dni</label>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="promowanie_regionalne_30_dni_{{post_id}}" name="promowanie_regionalne_30_dni" value="1">
+                                                                                    <label class="form-check-label" for="promowanie_regionalne_30_dni_{{post_id}}">na 30 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Ogólnopolskie
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="promowanie_ogolnopolskie_14_dni_{{post_id}}" name="promowanie_ogolnopolskie_14_dni" value="1">
+                                                                                    <label class="form-check-label" for="promowanie_ogolnopolskie_14_dni_{{post_id}}">na 14 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="promowanie_ogolnopolskie_30_dni_{{post_id}}" name="promowanie_ogolnopolskie_30_dni" value="1">
+                                                                                    <label class="form-check-label" for="promowanie_ogolnopolskie_30_dni_{{post_id}}">na 30 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Top Ogłoszenie
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="top_ogloszenie_7_dni_{{post_id}}" name="top_ogloszenie_7_dni" value="1">
+                                                                                    <label class="form-check-label" for="top_ogloszenie_7_dni_{{post_id}}">na 7 dni</label>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="top_ogloszenie_14_dni_{{post_id}}" name="top_ogloszenie_14_dni" value="1">
+                                                                                    <label class="form-check-label" for="top_ogloszenie_14_dni_{{post_id}}">na 14 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Etykieta Pilne
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="etykieta_pilne_7_dni_{{post_id}}" name="etykieta_pilne_7_dni" value="1">
+                                                                                    <label class="form-check-label" for="etykieta_pilne_7_dni_{{post_id}}">na 7 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="etykieta_pilne_14_dni_{{post_id}}" name="etykieta_pilne_14_dni" value="1">
+                                                                                    <label class="form-check-label" for="etykieta_pilne_14_dni_{{post_id}}">na 14 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Codzienne Odświeżenie
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="codzienne_odswiezenie_7_dni_{{post_id}}" name="codzienne_odswiezenie_7_dni" value="1">
+                                                                                    <label class="form-check-label" for="codzienne_odswiezenie_7_dni_{{post_id}}">na 7 dni</label>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="codzienne_odswiezenie_14_dni_{{post_id}}" name="codzienne_odswiezenie_14_dni" value="1">
+                                                                                    <label class="form-check-label" for="codzienne_odswiezenie_14_dni_{{post_id}}">na 14 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Strona Główna
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="wyswietlanie_na_stronie_glownej_14_dni_{{post_id}}" name="wyswietlanie_na_stronie_glownej_14_dni" value="1">
+                                                                                    <label class="form-check-label" for="wyswietlanie_na_stronie_glownej_14_dni_{{post_id}}">na 14 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="wyswietlanie_na_stronie_glownej_30_dni_{{post_id}}" name="wyswietlanie_na_stronie_glownej_30_dni" value="1">
+                                                                                    <label class="form-check-label" for="wyswietlanie_na_stronie_glownej_30_dni_{{post_id}}">na 30 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Super Oferta
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="super_oferta_7_dni_{{post_id}}" name="super_oferta_7_dni" value="1">
+                                                                                    <label class="form-check-label" for="super_oferta_7_dni_{{post_id}}">na 7 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="super_oferta_14_dni_{{post_id}}" name="super_oferta_14_dni" value="1">
+                                                                                    <label class="form-check-label" for="super_oferta_14_dni_{{post_id}}">na 14 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Publikuj na Lento
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                    document.addEventListener('DOMContentLoaded', function(){
+                                                            checkboxControlDisable(
+                                                            '{{post_id}}', 
+                                                            'bez_promowania_{{post_id}}', 
+                                                            [
+                                                                'promowanie_lokalne_14_dni_{{post_id}}', 
+                                                                'promowanie_lokalne_30_dni_{{post_id}}', 
+                                                                'promowanie_regionalne_14_dni_{{post_id}}', 
+                                                                'promowanie_regionalne_30_dni_{{post_id}}', 
+                                                                'promowanie_ogolnopolskie_14_dni_{{post_id}}', 
+                                                                'promowanie_ogolnopolskie_30_dni_{{post_id}}', 
+                                                                'top_ogloszenie_7_dni_{{post_id}}', 
+                                                                'top_ogloszenie_14_dni_{{post_id}}', 
+                                                                'etykieta_pilne_7_dni_{{post_id}}', 
+                                                                'etykieta_pilne_14_dni_{{post_id}}', 
+                                                                'codzienne_odswiezenie_7_dni_{{post_id}}', 
+                                                                'codzienne_odswiezenie_14_dni_{{post_id}}', 
+                                                                'wyswietlanie_na_stronie_glownej_14_dni_{{post_id}}',
+                                                                'wyswietlanie_na_stronie_glownej_30_dni_{{post_id}}',
+                                                                'super_oferta_7_dni_{{post_id}}', 
+                                                                'super_oferta_14_dni_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            '{{post_id}}', 
+                                                            'promowanie_lokalne_14_dni_{{post_id}}', 
+                                                            [
+                                                                'promowanie_lokalne_30_dni_{{post_id}}',
+                                                                'promowanie_regionalne_14_dni_{{post_id}}', 
+                                                                'promowanie_regionalne_30_dni_{{post_id}}',
+                                                                'promowanie_ogolnopolskie_14_dni_{{post_id}}',
+                                                                'promowanie_ogolnopolskie_30_dni_{{post_id}}',
+                                                                'bez_promowania_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            '{{post_id}}', 
+                                                            'promowanie_regionalne_14_dni_{{post_id}}', 
+                                                            [
+                                                                'promowanie_lokalne_30_dni_{{post_id}}',
+                                                                'promowanie_lokalne_14_dni_{{post_id}}',  
+                                                                'promowanie_regionalne_30_dni_{{post_id}}',
+                                                                'promowanie_ogolnopolskie_14_dni_{{post_id}}',
+                                                                'promowanie_ogolnopolskie_30_dni_{{post_id}}',
+                                                                'bez_promowania_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            '{{post_id}}', 
+                                                            'promowanie_ogolnopolskie_14_dni_{{post_id}}', 
+                                                            [
+                                                                'promowanie_lokalne_30_dni_{{post_id}}',
+                                                                'promowanie_lokalne_14_dni_{{post_id}}', 
+                                                                'promowanie_regionalne_14_dni_{{post_id}}',  
+                                                                'promowanie_regionalne_30_dni_{{post_id}}',
+                                                                'promowanie_ogolnopolskie_30_dni_{{post_id}}',
+                                                                'bez_promowania_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            '{{post_id}}', 
+                                                            'top_ogloszenie_7_dni_{{post_id}}', 
+                                                            [
+                                                                'top_ogloszenie_14_dni_{{post_id}}',
+                                                                'bez_promowania_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            '{{post_id}}', 
+                                                            'etykieta_pilne_7_dni_{{post_id}}', 
+                                                            [
+                                                                'etykieta_pilne_14_dni_{{post_id}}',
+                                                                'bez_promowania_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            '{{post_id}}', 
+                                                            'codzienne_odswiezenie_7_dni_{{post_id}}', 
+                                                            [
+                                                                'codzienne_odswiezenie_14_dni_{{post_id}}',
+                                                                'bez_promowania_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            '{{post_id}}', 
+                                                            'wyswietlanie_na_stronie_glownej_14_dni_{{post_id}}', 
+                                                            [
+                                                                'wyswietlanie_na_stronie_glownej_30_dni_{{post_id}}',
+                                                                'bez_promowania_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            '{{post_id}}', 
+                                                            'super_oferta_7_dni_{{post_id}}', 
+                                                            [
+                                                                'super_oferta_14_dni_{{post_id}}',
+                                                                'bez_promowania_{{post_id}}'
+                                                            ]
+                                                        );
+                                                    });
+                                                    
+                                                </script>
+                                                
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    Facebook Marketplace
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    Adresowo
+                                </div>
+                            </div>
                         </div>
 
                         <!-- collapse end -->
