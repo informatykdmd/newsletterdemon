@@ -5715,7 +5715,13 @@ def public_on_facebook():
             osoba_kontaktowa = session['user_data']['name']
             nr_telefonu = picked_offer['TelefonKontaktowy']
 
-            stan = request.form.get('Stan')
+
+            if 'stan_nowy' in request.form: stan = 1
+            elif 'stan_uzywany_jak_nowy' in request.form: stan = 2
+            elif 'stan_uzywany_dobry' in request.form: stan = 3
+            elif 'stan_uzywany_przecietny' in request.form: stan = 4
+            else: stan = 1
+
 
             zdjecia_string = ''
             for foto_link in picked_offer['Zdjecia']:
