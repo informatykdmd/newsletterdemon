@@ -67,3 +67,30 @@ ADD COLUMN wyswietlanie_na_stronie_glownej_14_dni INT DEFAULT 0 AFTER codzienne_
 ADD COLUMN wyswietlanie_na_stronie_glownej_30_dni INT DEFAULT 0 AFTER wyswietlanie_na_stronie_glownej_14_dni,
 ADD COLUMN super_oferta_7_dni INT DEFAULT 0 AFTER wyswietlanie_na_stronie_glownej_30_dni,
 ADD COLUMN super_oferta_14_dni INT DEFAULT 0 AFTER super_oferta_7_dni;
+
+
+-- tabela facebook
+CREATE TABLE ogloszenia_facebook (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rodzaj_ogloszenia VARCHAR(255),
+    id_ogloszenia INT,
+    tytul_ogloszenia TEXT,
+    opis_ogloszenia TEXT,
+    cena INT,
+    stan INT,
+    promuj_po_opublikowaniu INT,
+    zdjecia_string TEXT,
+    osoba_kontaktowa VARCHAR(255),
+    nr_telefonu VARCHAR(20),
+    id_zadania INT,
+    id_ogloszenia_na_facebook INT,
+    status INT,
+    active_task INT,
+    errors TEXT,
+    data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    action_before_errors INT
+);
+
+ALTER TABLE ogloszenia_facebook
+ADD COLUMN lokalizacja TEXT AFTER stan,
+ADD COLUMN znaczniki TEXT AFTER lokalizacja;

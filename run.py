@@ -279,7 +279,19 @@ def takeLentoResumeStatus(lento_id):
         return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_lento WHERE id="{lento_id}";')[0][0]
     except IndexError:
         return None
+
+def checkFacebookStatus(kind, id):
+    try:
+        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors FROM ogloszenia_facebook WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
+    except IndexError:
+        return (None, None, None, None, None)
     
+def takeFacebookResumeStatus(facebook_id):
+    try:
+        return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_facebook WHERE id="{facebook_id}";')[0][0]
+    except IndexError:
+        return None
+
 def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystkie'
     took_rentOffer = take_data_table('*', 'OfertyNajmu')
     
@@ -3076,6 +3088,29 @@ def estateAdsRent():
             # print(item['lento']['zostalo_dni'])
 
             item['lento']['error_message'] = lentoIDstatus[3]
+
+        
+        if 'facebook' not in item:
+            item['facebook'] = {}
+        facebookIDstatus = checkFacebookStatus(kind="r", id=item['ID'])
+        item['facebook']['id'] = facebookIDstatus[0]
+        item['facebook']['status'] = facebookIDstatus[1]
+        item['facebook']['data_aktualizacji'] = facebookIDstatus[2]
+        item['facebook']['errors'] = facebookIDstatus[3]
+        item['facebook']['action_before_errors'] = facebookIDstatus[4]
+
+
+        if item['facebook']['status'] is not None:
+            start_date = item['facebook']['data_aktualizacji']
+            # Oblicz datę końca promocji
+            end_date = start_date + datetime.timedelta(days=90)
+            # Oblicz liczbę dni pozostałych do końca promocji
+            days_left = (end_date - datetime.datetime.now()).days
+
+            item['facebook']['zostalo_dni'] = days_left
+
+
+            item['facebook']['error_message'] = facebookIDstatus[3]
         
         new_all_rents.append(item)
 
@@ -3550,6 +3585,28 @@ def estateAdsSell():
 
             item['lento']['error_message'] = lentoIDstatus[3]
         
+
+        if 'facebook' not in item:
+            item['facebook'] = {}
+        facebookIDstatus = checkFacebookStatus(kind="s", id=item['ID'])
+        item['facebook']['id'] = facebookIDstatus[0]
+        item['facebook']['status'] = facebookIDstatus[1]
+        item['facebook']['data_aktualizacji'] = facebookIDstatus[2]
+        item['facebook']['errors'] = facebookIDstatus[3]
+        item['facebook']['action_before_errors'] = facebookIDstatus[4]
+
+        if item['facebook']['status'] is not None:
+            start_date = item['facebook']['data_aktualizacji']
+            # Oblicz datę końca promocji
+            end_date = start_date + datetime.timedelta(days=90)
+            # Oblicz liczbę dni pozostałych do końca promocji
+            days_left = (end_date - datetime.datetime.now()).days
+
+            item['facebook']['zostalo_dni'] = days_left
+
+            item['facebook']['error_message'] = facebookIDstatus[3]
+
+
         new_all_sell.append(item)
 
     # Ustawienia paginacji
@@ -5618,6 +5675,193 @@ def public_on_lento():
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
 
+@app.route('/public-on-facebook', methods=['POST'])
+def public_on_facebook():
+
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        facebook_id = request.form.get('facebook_id')
+        id_ogloszenia = request.form.get('PostID')
+        task_kind = request.form.get('task_kind')
+        redirectGoal = request.form.get('redirectGoal')
+        
+        
+        rodzaj_ogloszenia = None
+        if redirectGoal == 'estateAdsRent':
+            rodzaj_ogloszenia = 'r'
+        if redirectGoal == 'estateAdsSell':
+            rodzaj_ogloszenia = 's'
+
+        if task_kind == 'Publikuj':
+            picked_offer = {}
+            if rodzaj_ogloszenia == 'r':
+                for rentOffer in generator_rentOffert():
+                    if str(rentOffer['ID']) == str(id_ogloszenia):
+                        picked_offer = rentOffer
+            elif rodzaj_ogloszenia == 's':
+                for sellOffer in generator_sellOffert():
+                    if str(sellOffer['ID']) == str(id_ogloszenia):
+                        picked_offer = sellOffer
+
+            tytul_ogloszenia = picked_offer['Tytul']
+            cena = picked_offer['Cena']
+            lokalizacja = picked_offer['Lokalizacja'] 
+            osoba_kontaktowa = session['user_data']['name']
+            nr_telefonu = picked_offer['TelefonKontaktowy']
+
+            stan = request.form.get('Stan')
+
+            zdjecia_string = ''
+            for foto_link in picked_offer['Zdjecia']:
+                zdjecia_string += f'{foto_link}-@-'
+            if zdjecia_string != '':zdjecia_string = zdjecia_string[:-3]
+
+            prepared_opis = ''
+            for item in picked_offer['Opis']:
+                for val in item.values():
+                    if isinstance(val, str):
+                        prepared_opis += f'{val}\n'
+                    if isinstance(val, list):
+                        for v_val in val:
+                            prepared_opis += f'{v_val}\n'
+            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            else: prepared_opis = picked_offer['InformacjeDodatkowe']
+
+            extra_opis = ''
+            if picked_offer['Metraz'] != '':
+                extra_opis += f"Powierzchnia:\n{picked_offer['Metraz']}\n\n"
+            if picked_offer['RodzajZabudowy'] != '':
+                extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
+            if picked_offer['TechBudowy'] != "":
+                extra_opis += f"Technologia Budowy:\n{picked_offer['TechBudowy']}\n\n"
+            if picked_offer['StanWykonczenia'] != "":
+                extra_opis += f"Stan Wykończenia:\n{picked_offer['StanWykonczenia']}\n\n"
+            if picked_offer['RokBudowy'] != 0:
+                extra_opis += f"Rok Budowy:\n{picked_offer['RokBudowy']} r.\n\n"
+            if picked_offer['NumerKW'] != "":
+                extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
+            if rodzaj_ogloszenia == 'r':
+                if picked_offer['Czynsz'] != 0:
+                    extra_opis += f"Czynsz:\n{picked_offer['Czynsz']} zł.\n\n"
+                if picked_offer['Umeblowanie'] != "":
+                    extra_opis += f"Umeblowanie:\n{picked_offer['Umeblowanie']}\n\n"
+
+            
+            extra_opis = extra_opis[:-2]
+            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+
+            znaczniki_list = ['Nieruchomości', 'Bez pośredników']
+            allowed_znaczniki = [
+                'Kaucja', 'Metraz', 'Czynsz', 'Umeblowanie', 
+                'PowierzchniaDzialki', 'TechBudowy', 'FormaKuchni', 
+                'TypDomu', 'StanWykonczenia', 'Rynek', 
+                'LiczbaPieter', 'PrzeznaczenieLokalu'
+            ]
+            if rodzaj_ogloszenia == 'r':
+                add_znacznik = f"Wynajem"
+                znaczniki_list.append(add_znacznik)
+            elif rodzaj_ogloszenia == 's':
+                add_znacznik = f"Sprzedaż"
+                znaczniki_list.append(add_znacznik)
+
+            for znacznik in picked_offer.keys():
+                if znacznik in allowed_znaczniki:
+                    if znacznik == 'Kaucja' and picked_offer['Kaucja'] !=0:
+                        add_znacznik = f"Kaucja {picked_offer['Kaucja']} zł"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'Metraz' and picked_offer['Metraz'] !=0:
+                        add_znacznik = f"{picked_offer['Metraz']} m²"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'Czynsz' and picked_offer['Czynsz'] !=0:
+                        add_znacznik = f"Czynsz {picked_offer['Czynsz']} zł"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'Umeblowanie' and picked_offer['Umeblowanie'] !='':
+                        add_znacznik = f"{picked_offer['Umeblowanie']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'PowierzchniaDzialki' and picked_offer['PowierzchniaDzialki'] !=0:
+                        add_znacznik = f"Działka {picked_offer['PowierzchniaDzialki']} m²"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'TechBudowy' and picked_offer['TechBudowy'] !='':
+                        add_znacznik = f"Technologia {picked_offer['TechBudowy']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'FormaKuchni' and picked_offer['FormaKuchni'] !='':
+                        add_znacznik = f"Kuchnia {picked_offer['FormaKuchni']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'TypDomu' and picked_offer['TypDomu'] !='':
+                        add_znacznik = f"{picked_offer['TypDomu']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'StanWykonczenia' and picked_offer['StanWykonczenia'] !='':
+                        add_znacznik = f"{picked_offer['StanWykonczenia']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'Rynek' and picked_offer['Rynek'] !='':
+                        add_znacznik = f"Rynek {picked_offer['Rynek']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'LiczbaPieter' and picked_offer['LiczbaPieter'] !=0:
+                        add_znacznik = f"Pięter {picked_offer['LiczbaPieter']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'PrzeznaczenieLokalu' and picked_offer['PrzeznaczenieLokalu'] !='':
+                        add_znacznik = f"Przeznaczenie na {picked_offer['PrzeznaczenieLokalu']}"
+                        znaczniki_list.append(add_znacznik)
+
+            znaczniki_string = ''
+            for znacznik_item in znaczniki_list:
+                znaczniki_string += f'{znacznik_item}-@-'
+            if znaczniki_string != '':znaczniki_string = znaczniki_string[:-3]   
+            znaczniki = znaczniki_string
+
+            if 'promuj_po_opublikowaniu' in request.form: promuj_po_opublikowaniu = 1
+            else: promuj_po_opublikowaniu = 0
+
+            id_ogloszenia_na_facebook = int(f'{int(time.time()) / 750}{id_ogloszenia}')
+
+            zapytanie_sql = '''
+                    INSERT INTO ogloszenia_facebook 
+                        (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia,
+                        opis_ogloszenia, cena, stan, lokalizacja, znaczniki,
+                        promuj_po_opublikowaniu, zdjecia_string, id_ogloszenia_na_facebook,
+                        status)
+                    VALUES 
+                        (%s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s);
+                '''
+            dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia,
+                    opis_ogloszenia, cena, stan, lokalizacja, znaczniki,
+                    promuj_po_opublikowaniu, zdjecia_string, id_ogloszenia_na_facebook,
+                    4)
+            print(dane)
+            flash(f'{dane}', 'success')
+
+            # if msq.insert_to_database(zapytanie_sql, dane):
+            #     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
+            # else:
+            #     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+
+        if task_kind == 'Aktualizuj':
+            pass
+        if task_kind == 'Wstrzymaj':
+            pass
+        if task_kind == 'Wznow':
+            pass
+        if task_kind == 'Usun':
+            pass
+        if task_kind == 'Promuj':
+            pass
+        if task_kind == 'Ponow_zadanie':
+            pass
+        if task_kind == 'Odswiez':
+            pass
+        if task_kind == 'Ponow':
+            pass
+        
+        return redirect(url_for(redirectGoal))
+    return redirect(url_for('index')) 
 @app.route('/estate-ads-special')
 def estateAdsspecial():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
