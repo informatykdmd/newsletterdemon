@@ -5844,10 +5844,10 @@ def public_on_facebook():
             print(dane)
             flash(f'{dane}', 'success')
 
-            # if msq.insert_to_database(zapytanie_sql, dane):
-            #     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
-            # else:
-            #     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
 
         if task_kind == 'Aktualizuj':
