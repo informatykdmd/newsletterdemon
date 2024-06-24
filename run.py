@@ -5832,20 +5832,23 @@ def public_on_facebook():
                         (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia,
                         opis_ogloszenia, cena, stan, lokalizacja, znaczniki,
                         promuj_po_opublikowaniu, zdjecia_string, id_ogloszenia_na_facebook,
+                        osoba_kontaktowa, nr_telefonu,
                         status)
                     VALUES 
                         (%s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, %s, %s, %s);
+                        %s, %s, %s, %s, %s, %s,
+                        %s, %s);
                 '''
             dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia,
                     opis_ogloszenia, cena, stan, lokalizacja, znaczniki,
                     promuj_po_opublikowaniu, zdjecia_string, id_ogloszenia_na_facebook,
+                    osoba_kontaktowa, nr_telefonu,
                     4)
-            print(dane)
-            flash(f'{dane}', 'success')
+            # print(dane)
+            # flash(f'{dane}', 'success')
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
