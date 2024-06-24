@@ -5817,8 +5817,9 @@ def public_on_facebook():
 
             if 'promuj_po_opublikowaniu' in request.form: promuj_po_opublikowaniu = 1
             else: promuj_po_opublikowaniu = 0
-
-            id_ogloszenia_na_facebook = int(f'{int(time.time()) / 750}{id_ogloszenia}')
+            
+            time_truck = int(time.time()) / 750
+            id_ogloszenia_na_facebook = int(f'{time_truck}{id_ogloszenia}')
 
             zapytanie_sql = '''
                     INSERT INTO ogloszenia_facebook 
