@@ -2204,7 +2204,485 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
-                                    Facebook Marketplace
+                                    <div>
+  
+                                        <!-- 
+                                        0 Wstrzymany
+                                        1 Opublikowano
+                                        2 Error
+                                        3 Usunięto
+                                        4 Trwa proces tworzenia nowego ogłoszenia
+                                        5 Trwa proces aktualizacji ogłoszenia
+                                        6 Trwa proces usuwania ogłoszenia
+                                        None 
+                                        -->
+                                        {% if post_data['StatusOferty'] == 1 %}
+                                            {% if post_data['facebook']['status'] == 0 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    <p>Status: Wstrzymany</p>
+                                                </div>
+                                                <div class="row row-cols-auto "> 
+                                                    
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Wznow" />
+
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Wznów ponownie na Facebook
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Usun" />
+                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Usuń na zawsze z Facebook
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                        
+                                            {% elif post_data['facebook']['status'] == 1 %}
+                                                <div class="mb-2 mt-2">
+                                                                
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    <p>Status: Opublikowano (pozostało {{post_data['lento']['zostalo_dni']}} dni)</p>
+                                                </div>
+                                                <div class="row row-cols-auto "> 
+                                                    <div class="col">
+                                                        
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Wstrzymaj" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Wstrzymaj na Facebook
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                
+                                                
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Aktualizuj" />
+                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Aktualizuj na Facebook
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    
+                                                    
+                                                    <!-- <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Promuj" />
+                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Zmień promowanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div> -->
+
+                                                </div>
+                                                {% elif post_data['facebook']['status'] == 2 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    <p>Status: Error</p>
+                                                    <div class="alert alert-danger" role="alert">
+                                                        {{post_data['facebook']['errors']}}
+                                                    </div>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow_zadanie" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            
+                                            {% elif post_data['facebook']['status'] == 3 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    <p>Status: Usunięto</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Publikuj" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Publikuj ponownie na Lento
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            
+                                            {% elif post_data['facebook']['status'] == 4 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        
+                                                    </div>
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            
+                                            {% elif post_data['facebook']['status'] == 5 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        
+                                                    </div>
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                
+                                            
+                                            {% elif post_data['facebook']['status'] == 6 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    <p>Status: Trwa proces usuwania ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        
+                                                    </div>
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            {% elif post_data['facebook']['status'] == 7 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    <p>Status: Trwa proces wstrzymywania ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        
+                                                    </div>
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            {% elif post_data['facebook']['status'] == 8 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    <p>Status: Trwa proces wznawiania ogłoszenia</p>
+                                                </div>
+                                                <div class="row row-cols-auto ">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Odswiez" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Odświeżenie statusu
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                        
+                                                    </div>
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Ponow" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                
+                                            {% elif post_data['facebook']['status'] == None %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK MARKETPLACE</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Lento</p>
+                                                </div>
+                                                <div class="row row-cols-auto mb-3">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" id="form_facebook_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Publikuj" />
+
+                                                                <!-- block -->
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-check form-switch">
+                                                                            <input class="form-check-input" type="checkbox" role="switch" id="promuj_po_opublikowaniu_{{post_id}}" name="promuj_po_opublikowaniu" value="0">
+                                                                            <label class="form-check-label" for="promuj_po_opublikowaniu_{{post_id}}">Promuj po opublikowaniu</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Stan Nieruchomości
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_nowy_{{post_id}}" name="stan_nowy" value="1" checked>
+                                                                                    <label class="form-check-label" for="stan_nowy_{{post_id}}">Nowy</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_jak_nowy_{{post_id}}" name="stan_uzywany_jak_nowy" value="1">
+                                                                                    <label class="form-check-label" for="stan_uzywany_jak_nowy_{{post_id}}">Używany jak nowy</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_dobry_{{post_id}}" name="stan_uzywany_dobry" value="1">
+                                                                                    <label class="form-check-label" for="stan_uzywany_dobry_{{post_id}}">Używany w dobrym stanie</label>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_przecietny_{{post_id}}" name="stan_uzywany_przecietny" value="1">
+                                                                                    <label class="form-check-label" for="stan_uzywany_przecietny_{{post_id}}">Używany w przeciętnym stanie</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Publikuj na Facebooku
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                    document.addEventListener('DOMContentLoaded', function(){
+                                                        checkboxControlOffOther(
+                                                            'facebook_{{post_id}}', 
+                                                            'stan_nowy_{{post_id}}', 
+                                                            [
+                                                                'stan_uzywany_jak_nowy_{{post_id}}',
+                                                                'stan_uzywany_dobry_{{post_id}}', 
+                                                                'stan_uzywany_przecietny_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'facebook_{{post_id}}', 
+                                                            'stan_uzywany_jak_nowy_{{post_id}}', 
+                                                            [
+                                                                'stan_nowy_{{post_id}}',
+                                                                'stan_uzywany_dobry_{{post_id}}', 
+                                                                'stan_uzywany_przecietny_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'facebook_{{post_id}}', 
+                                                            'stan_uzywany_dobry_{{post_id}}', 
+                                                            [
+                                                                'stan_uzywany_jak_nowy_{{post_id}}',
+                                                                'stan_nowy_{{post_id}}', 
+                                                                'stan_uzywany_przecietny_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'facebook_{{post_id}}', 
+                                                            'stan_uzywany_przecietny_{{post_id}}', 
+                                                            [
+                                                                'stan_uzywany_jak_nowy_{{post_id}}',
+                                                                'stan_uzywany_dobry_{{post_id}}', 
+                                                                'stan_nowy_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        
+                                                    });
+                                                    
+                                                </script>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
                                     Adresowo
