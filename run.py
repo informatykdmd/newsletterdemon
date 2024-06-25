@@ -3254,6 +3254,11 @@ def update_rent_offer_status():
             flash("Status oferty nie został zmieniony. Usuń na zawsze ugłoszenie z Lento.pl", "danger")
             return redirect(url_for('estateAdsRent'))
         
+        statusNaFacebooku = checkFacebookStatus('r', set_post_id)
+        if statusNaFacebooku[0] != None:
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Facebooka", "danger")
+            return redirect(url_for('estateAdsRent'))
+        
         if set_post_status == 0:
             removeSpecOffer(set_post_id, 'r')
         zapytanie_sql = f'''
@@ -3743,8 +3748,13 @@ def update_sell_offer_status():
 
         statusNaLento = checkLentoStatus('s', set_post_id)
         if statusNaLento[0] != None:
-            flash("Status oferty nie został zmieniony. Usuń na zawsze ugłoszenie z Lento.pl", "danger")
-            return redirect(url_for('estateAdsRent'))
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Lento.pl", "danger")
+            return redirect(url_for('estateAdsSell'))
+        
+        statusNaFacebooku = checkFacebookStatus('s', set_post_id)
+        if statusNaFacebooku[0] != None:
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Facebooka", "danger")
+            return redirect(url_for('estateAdsSell'))
         
         if set_post_status == 0:
             removeSpecOffer(set_post_id, 's')
