@@ -5671,19 +5671,20 @@ def public_on_lento():
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
             else:
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
         if task_kind == 'Anuluj_zadanie':
             oldStatus = takeLentoResumeStatus(lento_id)
             if oldStatus == 4:
                 zapytanie_sql = '''
-                    DELETE FROM ogloszenia_facebook
+                    DELETE FROM ogloszenia_lento
                         
-                    WHERE id_zadania = %s;
+                    WHERE id = %s;
                     '''
                 dane = (lento_id,)
             
             if oldStatus == 5 or oldStatus == 6 or oldStatus == 7:
                 zapytanie_sql = '''
-                    UPDATE ogloszenia_facebook
+                    UPDATE ogloszenia_lento
                         SET 
                             active_task=%s,
                             status=%s
@@ -5694,7 +5695,7 @@ def public_on_lento():
 
             if oldStatus == 8:
                 zapytanie_sql = '''
-                    UPDATE ogloszenia_facebook
+                    UPDATE ogloszenia_lento
                         SET 
                             active_task=%s,
                             status=%s
@@ -6107,7 +6108,7 @@ def public_on_facebook():
                 zapytanie_sql = '''
                     DELETE FROM ogloszenia_facebook
                         
-                    WHERE id_zadania = %s;
+                    WHERE id = %s;
                     '''
                 dane = (facebook_id,)
             
