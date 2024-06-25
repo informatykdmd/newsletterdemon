@@ -6013,11 +6013,37 @@ def public_on_facebook():
             else:
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
-                
+
         if task_kind == 'Wznow':
-            pass
+            zapytanie_sql = '''
+                UPDATE ogloszenia_facebook
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, 8, facebook_id)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+
         if task_kind == 'Usun':
-            pass
+            zapytanie_sql = '''
+                UPDATE ogloszenia_facebook
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, 6, facebook_id)
+            
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         if task_kind == 'Promuj':
             pass
         if task_kind == 'Ponow_zadanie':
