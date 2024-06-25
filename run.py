@@ -5988,8 +5988,8 @@ def public_on_facebook():
             '''
             dane = (tytul_ogloszenia, opis_ogloszenia, cena, lokalizacja, znaczniki, zdjecia_string,
                     5, 0, facebook_id)
-            print(dane)
-            flash(f'{dane}', 'success')
+            # print(dane)
+            # flash(f'{dane}', 'success')
 
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
@@ -6070,7 +6070,7 @@ def public_on_facebook():
         if task_kind == 'Odswiez':
              flash(f'Oferta została odświeżona pomyślnie!', 'success')
 
-             
+
         if task_kind == 'Ponow':
             zapytanie_sql = '''
                 UPDATE ogloszenia_facebook
