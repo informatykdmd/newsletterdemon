@@ -5999,7 +5999,21 @@ def public_on_facebook():
 
 
         if task_kind == 'Wstrzymaj':
-            pass
+            zapytanie_sql = '''
+                UPDATE ogloszenia_facebook
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, 7, facebook_id)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+                
         if task_kind == 'Wznow':
             pass
         if task_kind == 'Usun':
