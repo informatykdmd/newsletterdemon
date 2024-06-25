@@ -5671,6 +5671,41 @@ def public_on_lento():
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
             else:
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+        if task_kind == 'Anuluj_zadanie':
+            oldStatus = takeLentoResumeStatus(lento_id)
+            if oldStatus == 4:
+                zapytanie_sql = '''
+                    DELETE FROM ogloszenia_facebook
+                        
+                    WHERE id_zadania = %s;
+                    '''
+                dane = (lento_id,)
+            
+            if oldStatus == 5 or oldStatus == 6 or oldStatus == 7:
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_facebook
+                        SET 
+                            active_task=%s,
+                            status=%s
+                        WHERE id = %s;
+                    '''
+                dane = (0, 1, lento_id)
+
+
+            if oldStatus == 8:
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_facebook
+                        SET 
+                            active_task=%s,
+                            status=%s
+                        WHERE id = %s;
+                    '''
+                dane = (0, 0, lento_id)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Zadanie zostało anulowane!', 'success')
+            else:
+                flash(f'Bład zapisu! Zadanie nie zostało anulowane!', 'danger')
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
@@ -6065,7 +6100,43 @@ def public_on_facebook():
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+        
+        if task_kind == 'Anuluj_zadanie':
+            oldStatus = takeFacebookResumeStatus(facebook_id)
+            if oldStatus == 4:
+                zapytanie_sql = '''
+                    DELETE FROM ogloszenia_facebook
+                        
+                    WHERE id_zadania = %s;
+                    '''
+                dane = (facebook_id,)
+            
+            if oldStatus == 5 or oldStatus == 6 or oldStatus == 7:
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_facebook
+                        SET 
+                            active_task=%s,
+                            status=%s
+                        WHERE id = %s;
+                    '''
+                dane = (0, 1, facebook_id)
 
+
+            if oldStatus == 8:
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_facebook
+                        SET 
+                            active_task=%s,
+                            status=%s
+                        WHERE id = %s;
+                    '''
+                dane = (0, 0, facebook_id)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Zadanie zostało anulowane!', 'success')
+            else:
+                flash(f'Bład zapisu! Zadanie nie zostało anulowane!', 'danger')
+        
 
         if task_kind == 'Odswiez':
              flash(f'Oferta została odświeżona pomyślnie!', 'success')

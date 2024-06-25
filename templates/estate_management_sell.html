@@ -1649,6 +1649,21 @@
                                                             </div>
                                                         </form>
                                                     </div>
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Anuluj_zadanie" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Anuluj zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
 
                                                 
@@ -2334,6 +2349,21 @@
                                                                 
                                                                 <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
                                                                     Ponów zadanie
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="facebook_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Anuluj_zadanie" />
+                                                                
+                                                                <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Anuluj zadanie
                                                                 </button>
                                                             </div>
                                                         </form>
