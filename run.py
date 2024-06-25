@@ -5620,7 +5620,7 @@ def public_on_lento():
                     lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 2 minuta.', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 2 minuty.', 'success')
             else:
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
@@ -5634,12 +5634,12 @@ def public_on_lento():
             dane = (0, lento_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Odswiez':
-            flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+            flash(f'Oferta została odświeżona pomyślnie!', 'success')
 
         if task_kind == 'Usun':
             zapytanie_sql = '''
@@ -5741,7 +5741,7 @@ def public_on_facebook():
 
             extra_opis = ''
             if picked_offer['Metraz'] != '':
-                extra_opis += f"Powierzchnia:\n{picked_offer['Metraz']}\n\n"
+                extra_opis += f"Powierzchnia:\n{picked_offer['Metraz']} m²\n\n"
             if picked_offer['RodzajZabudowy'] != '':
                 extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
             if picked_offer['TechBudowy'] != "":
@@ -5890,7 +5890,7 @@ def public_on_facebook():
 
             extra_opis = ''
             if picked_offer['Metraz'] != '':
-                extra_opis += f"Powierzchnia:\n{picked_offer['Metraz']}\n\n"
+                extra_opis += f"Powierzchnia:\n{picked_offer['Metraz']} m²\n\n"
             if picked_offer['RodzajZabudowy'] != '':
                 extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
             if picked_offer['TechBudowy'] != "":
@@ -6044,14 +6044,46 @@ def public_on_facebook():
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+
         if task_kind == 'Promuj':
             pass
+
+
         if task_kind == 'Ponow_zadanie':
-            pass
+            oldStatus = takeFacebookResumeStatus(facebook_id)
+            zapytanie_sql = '''
+                UPDATE ogloszenia_facebook
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, oldStatus, facebook_id)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+
         if task_kind == 'Odswiez':
-            pass
+             flash(f'Oferta została odświeżona pomyślnie!', 'success')
+
+             
         if task_kind == 'Ponow':
-            pass
+            zapytanie_sql = '''
+                UPDATE ogloszenia_facebook
+                    SET 
+                        active_task=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, facebook_id)
+            
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
