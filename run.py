@@ -3251,7 +3251,7 @@ def update_rent_offer_status():
 
         statusNaLento = checkLentoStatus('r', set_post_id)
         if statusNaLento[0] != None:
-            flash("Status oferty nie został zmieniony. Usuń na zawsze ugłoszenie z Lento.pl", "danger")
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Lento.pl", "danger")
             return redirect(url_for('estateAdsRent'))
         
         statusNaFacebooku = checkFacebookStatus('r', set_post_id)
