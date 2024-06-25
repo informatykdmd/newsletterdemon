@@ -5758,7 +5758,8 @@ def public_on_facebook():
                 if picked_offer['Umeblowanie'] != "":
                     extra_opis += f"Umeblowanie:\n{picked_offer['Umeblowanie']}\n\n"
 
-            
+            extra_opis += f"Skontaktuj się telefonicznie!\n{osoba_kontaktowa}\n{nr_telefonu}\n\n"
+
             extra_opis = extra_opis[:-2]
             opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
 
@@ -5854,7 +5855,149 @@ def public_on_facebook():
 
 
         if task_kind == 'Aktualizuj':
-            pass
+            picked_offer = {}
+            if rodzaj_ogloszenia == 'r':
+                for rentOffer in generator_rentOffert():
+                    if str(rentOffer['ID']) == str(id_ogloszenia):
+                        picked_offer = rentOffer
+            elif rodzaj_ogloszenia == 's':
+                for sellOffer in generator_sellOffert():
+                    if str(sellOffer['ID']) == str(id_ogloszenia):
+                        picked_offer = sellOffer
+
+            tytul_ogloszenia = picked_offer['Tytul']
+            cena = picked_offer['Cena']
+            lokalizacja = picked_offer['Lokalizacja'] 
+            osoba_kontaktowa = session['user_data']['name']
+            nr_telefonu = picked_offer['TelefonKontaktowy']
+
+
+            zdjecia_string = ''
+            for foto_link in picked_offer['Zdjecia']:
+                zdjecia_string += f'{foto_link}-@-'
+            if zdjecia_string != '':zdjecia_string = zdjecia_string[:-3]
+
+            prepared_opis = ''
+            for item in picked_offer['Opis']:
+                for val in item.values():
+                    if isinstance(val, str):
+                        prepared_opis += f'{val}\n'
+                    if isinstance(val, list):
+                        for v_val in val:
+                            prepared_opis += f'{v_val}\n'
+            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            else: prepared_opis = picked_offer['InformacjeDodatkowe']
+
+            extra_opis = ''
+            if picked_offer['Metraz'] != '':
+                extra_opis += f"Powierzchnia:\n{picked_offer['Metraz']}\n\n"
+            if picked_offer['RodzajZabudowy'] != '':
+                extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
+            if picked_offer['TechBudowy'] != "":
+                extra_opis += f"Technologia Budowy:\n{picked_offer['TechBudowy']}\n\n"
+            if picked_offer['StanWykonczenia'] != "":
+                extra_opis += f"Stan Wykończenia:\n{picked_offer['StanWykonczenia']}\n\n"
+            if picked_offer['RokBudowy'] != 0:
+                extra_opis += f"Rok Budowy:\n{picked_offer['RokBudowy']} r.\n\n"
+            if picked_offer['NumerKW'] != "":
+                extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
+            if rodzaj_ogloszenia == 'r':
+                if picked_offer['Czynsz'] != 0:
+                    extra_opis += f"Czynsz:\n{picked_offer['Czynsz']} zł.\n\n"
+                if picked_offer['Umeblowanie'] != "":
+                    extra_opis += f"Umeblowanie:\n{picked_offer['Umeblowanie']}\n\n"
+
+            extra_opis += f"Skontaktuj się telefonicznie!\n{osoba_kontaktowa}\n{nr_telefonu}\n\n"
+            
+            extra_opis = extra_opis[:-2]
+            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+
+            znaczniki_list = ['Nieruchomości', 'Bez pośredników']
+            allowed_znaczniki = [
+                'Kaucja', 'Metraz', 'Czynsz', 'Umeblowanie', 
+                'PowierzchniaDzialki', 'TechBudowy', 'FormaKuchni', 
+                'TypDomu', 'StanWykonczenia', 'Rynek', 
+                'LiczbaPieter', 'PrzeznaczenieLokalu'
+            ]
+            if rodzaj_ogloszenia == 'r':
+                add_znacznik = f"Wynajem"
+                znaczniki_list.append(add_znacznik)
+            elif rodzaj_ogloszenia == 's':
+                add_znacznik = f"Sprzedaż"
+                znaczniki_list.append(add_znacznik)
+
+            for znacznik in picked_offer.keys():
+                if znacznik in allowed_znaczniki:
+                    if znacznik == 'Kaucja' and picked_offer['Kaucja'] !=0:
+                        add_znacznik = f"Kaucja {picked_offer['Kaucja']} zł"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'Metraz' and picked_offer['Metraz'] !=0:
+                        add_znacznik = f"{picked_offer['Metraz']} m²"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'Czynsz' and picked_offer['Czynsz'] !=0:
+                        add_znacznik = f"Czynsz {picked_offer['Czynsz']} zł"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'Umeblowanie' and picked_offer['Umeblowanie'] !='':
+                        add_znacznik = f"{picked_offer['Umeblowanie']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'PowierzchniaDzialki' and picked_offer['PowierzchniaDzialki'] !=0:
+                        add_znacznik = f"Działka {picked_offer['PowierzchniaDzialki']} m²"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'TechBudowy' and picked_offer['TechBudowy'] !='':
+                        add_znacznik = f"Technologia {picked_offer['TechBudowy']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'FormaKuchni' and picked_offer['FormaKuchni'] !='':
+                        add_znacznik = f"Kuchnia {picked_offer['FormaKuchni']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'TypDomu' and picked_offer['TypDomu'] !='':
+                        add_znacznik = f"{picked_offer['TypDomu']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'StanWykonczenia' and picked_offer['StanWykonczenia'] !='':
+                        add_znacznik = f"{picked_offer['StanWykonczenia']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'Rynek' and picked_offer['Rynek'] !='':
+                        add_znacznik = f"Rynek {picked_offer['Rynek']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'LiczbaPieter' and picked_offer['LiczbaPieter'] !=0:
+                        add_znacznik = f"Pięter {picked_offer['LiczbaPieter']}"
+                        znaczniki_list.append(add_znacznik)
+                    if znacznik == 'PrzeznaczenieLokalu' and picked_offer['PrzeznaczenieLokalu'] !='':
+                        add_znacznik = f"Przeznaczenie na {picked_offer['PrzeznaczenieLokalu']}"
+                        znaczniki_list.append(add_znacznik)
+
+            znaczniki_string = ''
+            for znacznik_item in znaczniki_list:
+                znaczniki_string += f'{znacznik_item}-@-'
+            if znaczniki_string != '':znaczniki_string = znaczniki_string[:-3]   
+            znaczniki = znaczniki_string
+
+
+            zapytanie_sql = '''
+                UPDATE ogloszenia_facebook
+                SET 
+                    tytul_ogloszenia = %s, 
+                    opis_ogloszenia = %s,
+                    cena = %s,
+                    lokalizacja = %s,
+                    znaczniki = %s,
+                    zdjecia_string = %s,
+
+                    status = %s,
+                    active_task=%s
+                WHERE id = %s;
+            '''
+            dane = (tytul_ogloszenia, opis_ogloszenia, cena, lokalizacja, znaczniki, zdjecia_string,
+                    5, 0, facebook_id)
+            print(dane)
+            flash(f'{dane}', 'success')
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+
+
         if task_kind == 'Wstrzymaj':
             pass
         if task_kind == 'Wznow':
