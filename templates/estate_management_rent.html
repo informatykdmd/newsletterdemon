@@ -3225,6 +3225,7 @@
         // Reset location selection
         $(document).on('click', '[id^="changeLocation_"]', function() {
             let select_id = this.id.split('_')[2];
+            console.log(`Reset location for select_id: ${select_id}`);
             $('#locationString_' + select_id).text('Wybierz lokalizację:');
             $('#wojewodztwo_adresowo_' + select_id).val('').show();
             $('#powiat_adresowo_' + select_id).hide().val('');
@@ -3235,6 +3236,7 @@
             fetchOptions('loaded', select_id);
         });
     });
+
 
     // function fetchOptions(level, select_id, wojewodztwo = '', powiat = '', gmina = '', miejscowosc = '', dzielnica = '') {
     //     console.log(`Fetching options for level: ${level}, select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, miejscowosc: ${miejscowosc}, dzielnica: ${dzielnica}`);
@@ -3408,6 +3410,7 @@
     //         fetchOptions('loaded', select_id);
     //     });
     // });
+
 </script>
 {% endblock %}
 {% block footer %}
