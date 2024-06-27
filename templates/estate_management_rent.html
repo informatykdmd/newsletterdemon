@@ -2708,7 +2708,40 @@
                                     
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
-                                    Adresowo
+                                    <div>
+                                        <div class="mb-2 mt-2">
+                                            <h5>FACEBOOK MARKETPLACE</h5>
+                                            
+                                            <p>Status: Pierwsza publikacja na Lento</p>
+                                        </div>
+                                        <div class="mb-2 mt-2">
+                                            <select id="wojewodztwo_adresowo_{{post_id}}" name="wojewodztwo">
+                                                <option value="">Wybierz województwo</option>
+                                                <!-- Województwa options will be dynamically added here -->
+                                            </select>
+                                            
+                                            <select id="powiat_adresowo_{{post_id}}" name="powiat" style="display: none;">
+                                                <option value="">Wybierz powiat</option>
+                                                <!-- Powiaty options will be dynamically added here -->
+                                            </select>
+                                            
+                                            <select id="gmina_adresowo_{{post_id}}" name="gmina" style="display: none;">
+                                                <option value="">Wybierz gminę</option>
+                                                <!-- Gminy options will be dynamically added here -->
+                                            </select>
+                                            
+                                            <select id="miejscowosc_adresowo_{{post_id}}" name="miejscowosc" style="display: none;">
+                                                <option value="">Wybierz miejscowość</option>
+                                                <!-- Miejscowości options will be dynamically added here -->
+                                            </select>
+                                            
+                                            <select id="dzielnica_adresowo_{{post_id}}" name="dzielnica" style="display: none;">
+                                                <option value="">Wybierz dzielnicę</option>
+                                                <!-- Dzielnice options will be dynamically added here -->
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
                                 </div>
                             </div>
 
@@ -3031,6 +3064,85 @@
             console.error('Element o ID ' + elementId + ' nie istnieje.');
         }
     }
+
+    function fetchOptions(level, select_id, wojewodztwo = '', powiat = '', gmina = '', miejscowosc = '') {
+        $.ajax({
+            url: '/get-region-data',
+            method: 'GET',
+            data: {
+                level: level,
+                wojewodztwo: wojewodztwo,
+                powiat: powiat,
+                gmina: gmina,
+                miejscowosc: miejscowosc
+            },
+            success: function(response) {
+                if (level === 'wojewodztwo') {
+                    updateSelectOptions('powiat_adresowo_' + select_id, response);
+                    $('#powiat_adresowo_' + select_id).show();
+                } else if (level === 'powiat') {
+                    updateSelectOptions('gmina_adresowo_' + select_id, response);
+                    $('#gmina_adresowo_' + select_id).show();
+                } else if (level === 'gmina') {
+                    updateSelectOptions('miejscowosc_adresowo_' + select_id, response);
+                    $('#miejscowosc_adresowo_' + select_id).show();
+                } else if (level === 'miejscowosc') {
+                    updateSelectOptions('dzielnica_adresowo_' + select_id, response);
+                    $('#dzielnica_adresowo_' + select_id).show();
+                }
+            }
+        });
+    }
+
+    function updateSelectOptions(selectId, options) {
+        let select = document.getElementById(selectId);
+        select.innerHTML = '<option value="">Wybierz</option>';
+        options.forEach(option => {
+            let opt = document.createElement('option');
+            opt.value = option;
+            opt.innerHTML = option;
+            select.appendChild(opt);
+        });
+    }
+
+    // Event listeners
+    $(document).on('change', '[id^="wojewodztwo_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let value = this.value;
+        if (value) {
+            fetchOptions('wojewodztwo', select_id, value);
+        }
+    });
+
+    $(document).on('change', '[id^="powiat_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+        let value = this.value;
+        if (value) {
+            fetchOptions('powiat', select_id, wojewodztwo, value);
+        }
+    });
+
+    $(document).on('change', '[id^="gmina_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+        let powiat = $('#powiat_adresowo_' + select_id).val();
+        let value = this.value;
+        if (value) {
+            fetchOptions('gmina', select_id, wojewodztwo, powiat, value);
+        }
+    });
+
+    $(document).on('change', '[id^="miejscowosc_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+        let powiat = $('#powiat_adresowo_' + select_id).val();
+        let gmina = $('#gmina_adresowo_' + select_id).val();
+        let value = this.value;
+        if (value) {
+            fetchOptions('miejscowosc', select_id, wojewodztwo, powiat, gmina, value);
+        }
+    });
 
 </script>
 {% endblock %}

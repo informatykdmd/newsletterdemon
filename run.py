@@ -19,7 +19,7 @@ import html
 # from jinja2 import Markup
 from markupsafe import Markup
 import subprocess
-
+import regions
 
 
 """
@@ -6169,6 +6169,69 @@ def public_on_facebook():
         
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
+
+@app.route('/get-region-data', methods=['GET'])
+def get_region_data():
+    level = request.args.get('level')
+    wojewodztwo = request.args.get('wojewodztwo')
+    powiat = request.args.get('powiat')
+    gmina = request.args.get('gmina')
+    miejscowosc = request.args.get('miejscowosc')
+    
+    if level == 'wojewodztwo':
+        powiaty = regions.getRegionData(wojewodztwo=wojewodztwo)
+        return jsonify(powiaty)
+    elif level == 'powiat':
+        gminy = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat)
+        return jsonify(gminy)
+    elif level == 'gmina':
+        miejscowosci = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina)
+        return jsonify(miejscowosci)
+    elif level == 'miejscowosc':
+        dzielnice = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc)
+        return jsonify(dzielnice)
+
+    return jsonify([])
+
+@app.route('/public-on-adresowo', methods=['POST'])
+def public_on_adresowo():
+
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+
+        adresowo_id = request.form.get('adresowo_id')
+        id_ogloszenia = request.form.get('PostID')
+        task_kind = request.form.get('task_kind')
+        redirectGoal = request.form.get('redirectGoal')
+        
+        
+        rodzaj_ogloszenia = None
+        if redirectGoal == 'estateAdsRent':
+            rodzaj_ogloszenia = 'r'
+        if redirectGoal == 'estateAdsSell':
+            rodzaj_ogloszenia = 's'
+
+        if task_kind == 'Publikuj':
+            picked_offer = {}
+            if rodzaj_ogloszenia == 'r':
+                for rentOffer in generator_rentOffert():
+                    if str(rentOffer['ID']) == str(id_ogloszenia):
+                        picked_offer = rentOffer
+            elif rodzaj_ogloszenia == 's':
+                for sellOffer in generator_sellOffert():
+                    if str(sellOffer['ID']) == str(id_ogloszenia):
+                        picked_offer = sellOffer
+            
+
+        return redirect(url_for(redirectGoal))
+    return redirect(url_for('index')) 
+
 @app.route('/estate-ads-special')
 def estateAdsspecial():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
