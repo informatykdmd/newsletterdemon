@@ -3221,7 +3221,7 @@
         });
 
         // Reset location selection
-        $(document).on('click', '[id^="changeLocation__adresowo_"]', function() {
+        $(document).on('click', '[id^="changeLocation_adresowo_"]', function() {
             let select_id = this.id.split('_')[2];
             console.log(`Reset location for select_id: ${select_id}`);
             $('#locationString_adresowo_' + select_id).text('Wybierz lokalizację:');
