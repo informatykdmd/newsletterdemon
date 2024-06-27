@@ -6170,6 +6170,34 @@ def public_on_facebook():
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
 
+# @app.route('/get-region-data', methods=['GET'])
+# def get_region_data():
+#     level = request.args.get('level')
+#     wojewodztwo = request.args.get('wojewodztwo')
+#     powiat = request.args.get('powiat')
+#     gmina = request.args.get('gmina')
+#     miejscowosc = request.args.get('miejscowosc')
+
+#     print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}")
+    
+#     if level == 'loaded':
+#         wojewodztwa = regions.getRegionData()['list']
+#         return jsonify(wojewodztwa)
+#     elif level == 'wojewodztwo':
+#         powiaty = regions.getRegionData(wojewodztwo=wojewodztwo)
+#         return jsonify(powiaty)
+#     elif level == 'powiat':
+#         gminy = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat)
+#         return jsonify(gminy)
+#     elif level == 'gmina':
+#         miejscowosci = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina)
+#         return jsonify(miejscowosci)
+#     elif level == 'miejscowosc':
+#         dzielnice = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc)
+#         return jsonify(dzielnice)
+
+#     return jsonify([])
+
 @app.route('/get-region-data', methods=['GET'])
 def get_region_data():
     level = request.args.get('level')
@@ -6179,25 +6207,9 @@ def get_region_data():
     miejscowosc = request.args.get('miejscowosc')
 
     print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}")
-    
-    if level == 'loaded':
-        wojewodztwa = regions.getRegionData()
-        return jsonify(wojewodztwa)
-    elif level == 'wojewodztwo':
-        powiaty = regions.getRegionData(wojewodztwo=wojewodztwo)
-        return jsonify(powiaty)
-    elif level == 'powiat':
-        gminy = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat)
-        return jsonify(gminy)
-    elif level == 'gmina':
-        miejscowosci = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina)
-        return jsonify(miejscowosci)
-    elif level == 'miejscowosc':
-        dzielnice = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc)
-        return jsonify(dzielnice)
 
-    return jsonify([])
-
+    response = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc)
+    return jsonify(response)
 
 @app.route('/public-on-adresowo', methods=['POST'])
 def public_on_adresowo():

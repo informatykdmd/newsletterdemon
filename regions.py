@@ -47,7 +47,18 @@ def getRegionData(
     if inp_wojewodztwo in wojewodztwa_dict_reverse:
         choice_wojewodztwo = wojewodztwa_dict_reverse[inp_wojewodztwo]
     else:
-        return wojewodztwa_list
+        return {
+                'wariant': 0,
+                'lista_wyboru': 'wojewodztwo',
+                'wojewodztwo': wojewodztwo,
+                'powiat': powiat,
+                'gmina': gmina,
+                'miejscowosc': miejscowosc,
+                'dzielnica': dzielnica,
+                'list': wojewodztwa_list,
+                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+            }
+
 
     for key, val in powiaty_dict.items():
         if key.startswith(choice_wojewodztwo):
@@ -57,7 +68,17 @@ def getRegionData(
     if inp_powiat in powiaty_list:
         choice_powiat = powiaty_dict_reverse[inp_powiat]
     else:
-        return powiaty_list
+        return {
+                'wariant': 1,
+                'lista_wyboru': 'powiat',
+                'wojewodztwo': wojewodztwo,
+                'powiat': powiat,
+                'gmina': gmina,
+                'miejscowosc': miejscowosc,
+                'dzielnica': dzielnica,
+                'list': powiaty_list,
+                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+            }
 
     for key, val in gminy_dict.items():
         if key.startswith(choice_powiat):
@@ -68,7 +89,17 @@ def getRegionData(
         if inp_gmina in gminy_list:
             choice_gmina = gminy_dict_reverse[inp_gmina][:-1]
         else:
-            return gminy_list
+            return {
+                'wariant': 2,
+                'lista_wyboru': 'gmina',
+                'wojewodztwo': wojewodztwo,
+                'powiat': powiat,
+                'gmina': gmina,
+                'miejscowosc': miejscowosc,
+                'dzielnica': dzielnica,
+                'list': gminy_list,
+                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+            } 
 
         for key, val in obreby_ewidencyjne_dict.items():
             val_check = False
@@ -78,10 +109,31 @@ def getRegionData(
                 miejscowosci_list.append(val.capitalize())
         
         if not str(miejscowosc) in miejscowosci_list:
-            return miejscowosci_list
+            return {
+                'wariant': 3,
+                'lista_wyboru': 'miejscowosc',
+                'wojewodztwo': wojewodztwo,
+                'powiat': powiat,
+                'gmina': gmina,
+                'miejscowosc': miejscowosc,
+                'dzielnica': dzielnica,
+                'list': miejscowosci_list,
+                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+            } 
+        
         
         dzielnica='Brak'
-        return f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+        return {
+                'wariant': 4,
+                'lista_wyboru': 'ready',
+                'wojewodztwo': wojewodztwo,
+                'powiat': powiat,
+                'gmina': gmina,
+                'miejscowosc': miejscowosc,
+                'dzielnica': dzielnica,
+                'list': [],
+                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+            } 
     
     elif len(gminy_list) == 0:
         return powiaty_list
@@ -100,14 +152,44 @@ def getRegionData(
             gmina=f'{gminy_list[0]} miasto'
             miejscowosc=gminy_list[0]
             dzielnica='Nieokreślona'
-            return f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+            return {
+                'wariant': 5,
+                'lista_wyboru': 'ready',
+                'wojewodztwo': wojewodztwo,
+                'powiat': powiat,
+                'gmina': gmina,
+                'miejscowosc': miejscowosc,
+                'dzielnica': dzielnica,
+                'list': [],
+                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+            } 
         
         if not str(dzielnica) in dzielnice_list:
-            return dzielnice_list
+            return {
+                'wariant': 6,
+                'lista_wyboru': 'dzielnica',
+                'wojewodztwo': wojewodztwo,
+                'powiat': powiat,
+                'gmina': gmina,
+                'miejscowosc': miejscowosc,
+                'dzielnica': dzielnica,
+                'list': dzielnice_list,
+                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+            }  
 
     gmina=f'{gminy_list[0]} miasto'
     miejscowosc=gminy_list[0]
-    return f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+    return {
+        'wariant': 7,
+        'lista_wyboru': 'ready',
+        'wojewodztwo': wojewodztwo,
+        'powiat': powiat,
+        'gmina': gmina,
+        'miejscowosc': miejscowosc,
+        'dzielnica': dzielnica,
+        'list': [],
+        'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+    } 
 
 if __name__ == "__main__":
     print(

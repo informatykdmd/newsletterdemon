@@ -3074,26 +3074,51 @@
             },
             success: function(response) {
                 console.log(`Received response for level: ${level}`, response);
-                if (level === 'loaded') {
-                    updateSelectOptions('wojewodztwo_adresowo_' + select_id, response);
-                } else if (level === 'wojewodztwo') {
-                    updateSelectOptions('powiat_adresowo_' + select_id, response);
+                const { wariant, lista_wyboru, list } = response;
+                updateSelectOptions(select_id, list, lista_wyboru);
+
+                if (wariant === 0) {
+                    $('#powiat_adresowo_' + select_id).hide();
+                    $('#gmina_adresowo_' + select_id).hide();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                } else if (wariant === 1) {
                     $('#powiat_adresowo_' + select_id).show();
-                } else if (level === 'powiat') {
-                    updateSelectOptions('gmina_adresowo_' + select_id, response);
+                    $('#gmina_adresowo_' + select_id).hide();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                } else if (wariant === 2) {
+                    $('#powiat_adresowo_' + select_id).show();
                     $('#gmina_adresowo_' + select_id).show();
-                } else if (level === 'gmina') {
-                    updateSelectOptions('miejscowosc_adresowo_' + select_id, response);
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                } else if (wariant === 3) {
+                    $('#powiat_adresowo_' + select_id).show();
+                    $('#gmina_adresowo_' + select_id).show();
                     $('#miejscowosc_adresowo_' + select_id).show();
-                } else if (level === 'miejscowosc') {
-                    updateSelectOptions('dzielnica_adresowo_' + select_id, response);
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                } else if (wariant === 4) {
+                    $('#powiat_adresowo_' + select_id).show();
+                    $('#gmina_adresowo_' + select_id).show();
+                    $('#miejscowosc_adresowo_' + select_id).show();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                } else if (wariant === 6) {
+                    $('#powiat_adresowo_' + select_id).show();
+                    $('#gmina_adresowo_' + select_id).show();
+                    $('#miejscowosc_adresowo_' + select_id).show();
+                    $('#dzielnica_adresowo_' + select_id).show();
+                } else {
+                    $('#powiat_adresowo_' + select_id).show();
+                    $('#gmina_adresowo_' + select_id).show();
+                    $('#miejscowosc_adresowo_' + select_id).show();
                     $('#dzielnica_adresowo_' + select_id).show();
                 }
             }
         });
     }
 
-    function updateSelectOptions(selectId, options) {
+    function updateSelectOptions(select_id, options, lista_wyboru) {
+        const selectId = `${lista_wyboru}_adresowo_${select_id}`;
         console.log(`Updating options for selectId: ${selectId} with options:`, options);
         let select = document.getElementById(selectId);
         select.innerHTML = '<option value="">Wybierz</option>';
@@ -3144,7 +3169,7 @@
         let value = this.value;
         console.log(`Miejscowosc changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, value: ${value}`);
         if (value) {
-            fetchOptions('dzielnica', select_id, wojewodztwo, powiat, gmina, value);
+            fetchOptions('miejscowosc', select_id, wojewodztwo, powiat, gmina, value);
         }
     });
 
