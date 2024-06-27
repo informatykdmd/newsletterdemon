@@ -3190,6 +3190,19 @@
         }
     });
 
+    $(document).on('change', '[id^="dzielnica_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+        let powiat = $('#powiat_adresowo_' + select_id).val();
+        let gmina = $('#gmina_adresowo_' + select_id).val();
+        let miejscowosc = $('#miejscowosc_adresowo_' + select_id).val();
+        let value = this.value;
+        console.log(`Dzielnica changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, miejscowosc: ${miejscowosc}, value: ${value}`);
+        if (value) {
+            fetchOptions('dzielnica', select_id, wojewodztwo, powiat, gmina, miejscowosc, value);
+        }
+    });
+
     // Initial load of wojewodztwa
     $(document).ready(function() {
         $('[id^="wojewodztwo_adresowo_"]').each(function() {
@@ -3210,7 +3223,6 @@
             fetchOptions('loaded', select_id);
         });
     });
-
 </script>
 {% endblock %}
 {% block footer %}
