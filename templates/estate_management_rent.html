@@ -2715,28 +2715,28 @@
                                             <p>Status: Pierwsza publikacja na Adresowo</p>
                                         </div>
                                         <div class="mb-2 mt-2">
-                                            <div id="locationString">Wybierz lokalizację:</div>
-                                            <select id="wojewodztwo_adresowo_0" name="wojewodztwo">
+                                            <div id="locationString_{{post_id}}">Wybierz lokalizację:</div>
+                                            <select id="wojewodztwo_adresowo_{{post_id}}" name="wojewodztwo">
                                                 <option value="">Wybierz województwo</option>
                                             </select>
                                             
-                                            <select id="powiat_adresowo_0" name="powiat" style="display: none;">
+                                            <select id="powiat_adresowo_{{post_id}}" name="powiat" style="display: none;">
                                                 <option value="">Wybierz powiat</option>
                                             </select>
                                             
-                                            <select id="gmina_adresowo_0" name="gmina" style="display: none;">
+                                            <select id="gmina_adresowo_{{post_id}}" name="gmina" style="display: none;">
                                                 <option value="">Wybierz gminę</option>
                                             </select>
                                             
-                                            <select id="miejscowosc_adresowo_0" name="miejscowosc" style="display: none;">
+                                            <select id="miejscowosc_adresowo_{{post_id}}" name="miejscowosc" style="display: none;">
                                                 <option value="">Wybierz miejscowość</option>
                                             </select>
                                             
-                                            <select id="dzielnica_adresowo_0" name="dzielnica" style="display: none;">
+                                            <select id="dzielnica_adresowo_{{post_id}}" name="dzielnica" style="display: none;">
                                                 <option value="">Wybierz dzielnicę</option>
                                             </select>
                                             
-                                            <button id="changeLocation" style="display: none;">Zmień</button>
+                                            <button id="changeLocation_{{post_id}}" style="display: none;">Zmień</button>
                                         </div>
                                         
                                     </div>
@@ -3088,7 +3088,7 @@
                 if (miejscowosc) locationString += `${miejscowosc}/`;
                 if (dzielnica) locationString += `${dzielnica}/`;
 
-                $('#locationString').text(locationString);
+                $('#locationString_' + select_id).text(locationString);
 
                 if (wariant === 0) {
                     $('#powiat_adresowo_' + select_id).hide();
@@ -3116,16 +3116,12 @@
                     $('#miejscowosc_adresowo_' + select_id).show();
                     $('#dzielnica_adresowo_' + select_id).show();
                 } else if (wariant === 7) {
-                    $('#powiat_adresowo_' + select_id).show();
-                    $('#gmina_adresowo_' + select_id).show();
-                    $('#miejscowosc_adresowo_' + select_id).show();
-                    $('#dzielnica_adresowo_' + select_id).show();
-                    $('#wojewodztwo_adresowo_0').hide();
-                    $('#powiat_adresowo_0').hide();
-                    $('#gmina_adresowo_0').hide();
-                    $('#miejscowosc_adresowo_0').hide();
-                    $('#dzielnica_adresowo_0').hide();
-                    $('#changeLocation').show();
+                    $('#wojewodztwo_adresowo_' + select_id).hide();
+                    $('#powiat_adresowo_' + select_id).hide();
+                    $('#gmina_adresowo_' + select_id).hide();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                    $('#changeLocation_' + select_id).show();
                 }
             }
         });
@@ -3196,18 +3192,22 @@
 
     // Initial load of wojewodztwa
     $(document).ready(function() {
-        fetchOptions('loaded', 0);
+        $('[id^="wojewodztwo_adresowo_"]').each(function() {
+            let select_id = this.id.split('_')[2];
+            fetchOptions('loaded', select_id);
+        });
 
         // Reset location selection
-        $('#changeLocation').click(function() {
-            $('#locationString').text('Wybierz lokalizację:');
-            $('#wojewodztwo_adresowo_0').val('').show();
-            $('#powiat_adresowo_0').hide().val('');
-            $('#gmina_adresowo_0').hide().val('');
-            $('#miejscowosc_adresowo_0').hide().val('');
-            $('#dzielnica_adresowo_0').hide().val('');
+        $(document).on('click', '[id^="changeLocation_"]', function() {
+            let select_id = this.id.split('_')[1];
+            $('#locationString_' + select_id).text('Wybierz lokalizację:');
+            $('#wojewodztwo_adresowo_' + select_id).val('').show();
+            $('#powiat_adresowo_' + select_id).hide().val('');
+            $('#gmina_adresowo_' + select_id).hide().val('');
+            $('#miejscowosc_adresowo_' + select_id).hide().val('');
+            $('#dzielnica_adresowo_' + select_id).hide().val('');
             $(this).hide();
-            fetchOptions('loaded', 0);
+            fetchOptions('loaded', select_id);
         });
     });
 
