@@ -3074,8 +3074,11 @@
             },
             success: function(response) {
                 console.log(`Received response for level: ${level}`, response);
-                if (level === 'wojewodztwo') {
+                if (level === 'loaded') {
                     updateSelectOptions('wojewodztwo_adresowo_' + select_id, response);
+                } else if (level === 'wojewodztwo') {
+                    updateSelectOptions('powiat_adresowo_' + select_id, response);
+                    $('#powiat_adresowo_' + select_id).show();
                 } else if (level === 'powiat') {
                     updateSelectOptions('gmina_adresowo_' + select_id, response);
                     $('#gmina_adresowo_' + select_id).show();
@@ -3141,7 +3144,7 @@
         let value = this.value;
         console.log(`Miejscowosc changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, value: ${value}`);
         if (value) {
-            fetchOptions('miejscowosc', select_id, wojewodztwo, powiat, gmina, value);
+            fetchOptions('dzielnica', select_id, wojewodztwo, powiat, gmina, value);
         }
     });
 

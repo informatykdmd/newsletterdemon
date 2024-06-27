@@ -6198,6 +6198,7 @@ def get_region_data():
 
     return jsonify([])
 
+
 @app.route('/public-on-adresowo', methods=['POST'])
 def public_on_adresowo():
 
