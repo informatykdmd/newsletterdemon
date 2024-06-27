@@ -2715,25 +2715,28 @@
                                             <p>Status: Pierwsza publikacja na Adresowo</p>
                                         </div>
                                         <div class="mb-2 mt-2">
-                                            <select id="wojewodztwo_adresowo_{{post_id}}" name="wojewodztwo">
+                                            <div id="locationString">Wybierz lokalizację:</div>
+                                            <select id="wojewodztwo_adresowo_0" name="wojewodztwo">
                                                 <option value="">Wybierz województwo</option>
                                             </select>
                                             
-                                            <select id="powiat_adresowo_{{post_id}}" name="powiat" style="display: none;">
+                                            <select id="powiat_adresowo_0" name="powiat" style="display: none;">
                                                 <option value="">Wybierz powiat</option>
                                             </select>
                                             
-                                            <select id="gmina_adresowo_{{post_id}}" name="gmina" style="display: none;">
+                                            <select id="gmina_adresowo_0" name="gmina" style="display: none;">
                                                 <option value="">Wybierz gminę</option>
                                             </select>
                                             
-                                            <select id="miejscowosc_adresowo_{{post_id}}" name="miejscowosc" style="display: none;">
+                                            <select id="miejscowosc_adresowo_0" name="miejscowosc" style="display: none;">
                                                 <option value="">Wybierz miejscowość</option>
                                             </select>
                                             
-                                            <select id="dzielnica_adresowo_{{post_id}}" name="dzielnica" style="display: none;">
+                                            <select id="dzielnica_adresowo_0" name="dzielnica" style="display: none;">
                                                 <option value="">Wybierz dzielnicę</option>
                                             </select>
+                                            
+                                            <button id="changeLocation" style="display: none;">Zmień</button>
                                         </div>
                                         
                                     </div>
@@ -3074,18 +3077,18 @@
             },
             success: function(response) {
                 console.log(`Received response for level: ${level}`, response);
-                const { wariant, lista_wyboru, list, wojewodztwo, powiat, gmina, miejscowosc, dzielnica } = response;
+                const { wariant, lista_wyboru, list, wojewodztwo, powiat, gmina, miejscowosc, dzielnica, string } = response;
 
-                if (wariant === 7) {
-                    // If all data is already known, update all select elements accordingly
-                    updateSelectOptions(select_id, list, 'wojewodztwo', wojewodztwo);
-                    updateSelectOptions(select_id, list, 'powiat', powiat);
-                    updateSelectOptions(select_id, list, 'gmina', gmina);
-                    updateSelectOptions(select_id, list, 'miejscowosc', miejscowosc);
-                    updateSelectOptions(select_id, list, 'dzielnica', dzielnica);
-                } else {
-                    updateSelectOptions(select_id, list, lista_wyboru);
-                }
+                updateSelectOptions(select_id, list, lista_wyboru);
+
+                let locationString = '';
+                if (wojewodztwo) locationString += `${wojewodztwo}/`;
+                if (powiat) locationString += `${powiat}/`;
+                if (gmina) locationString += `${gmina}/`;
+                if (miejscowosc) locationString += `${miejscowosc}/`;
+                if (dzielnica) locationString += `${dzielnica}/`;
+
+                $('#locationString').text(locationString);
 
                 if (wariant === 0) {
                     $('#powiat_adresowo_' + select_id).hide();
@@ -3107,11 +3110,6 @@
                     $('#gmina_adresowo_' + select_id).show();
                     $('#miejscowosc_adresowo_' + select_id).show();
                     $('#dzielnica_adresowo_' + select_id).hide();
-                } else if (wariant === 4) {
-                    $('#powiat_adresowo_' + select_id).show();
-                    $('#gmina_adresowo_' + select_id).show();
-                    $('#miejscowosc_adresowo_' + select_id).show();
-                    $('#dzielnica_adresowo_' + select_id).hide();
                 } else if (wariant === 6) {
                     $('#powiat_adresowo_' + select_id).show();
                     $('#gmina_adresowo_' + select_id).show();
@@ -3122,6 +3120,12 @@
                     $('#gmina_adresowo_' + select_id).show();
                     $('#miejscowosc_adresowo_' + select_id).show();
                     $('#dzielnica_adresowo_' + select_id).show();
+                    $('#wojewodztwo_adresowo_0').hide();
+                    $('#powiat_adresowo_0').hide();
+                    $('#gmina_adresowo_0').hide();
+                    $('#miejscowosc_adresowo_0').hide();
+                    $('#dzielnica_adresowo_0').hide();
+                    $('#changeLocation').show();
                 }
             }
         });
@@ -3131,6 +3135,10 @@
         const selectId = `${lista_wyboru}_adresowo_${select_id}`;
         console.log(`Updating options for selectId: ${selectId} with options:`, options);
         let select = document.getElementById(selectId);
+        if (select === null) {
+            console.error(`Select element with id ${selectId} not found`);
+            return;
+        }
         select.innerHTML = '<option value="">Wybierz</option>';
         options.forEach(option => {
             let opt = document.createElement('option');
@@ -3186,11 +3194,20 @@
         }
     });
 
-    // Inicjalne załadowanie województw
+    // Initial load of wojewodztwa
     $(document).ready(function() {
-        $('[id^="wojewodztwo_adresowo_"]').each(function() {
-            let select_id = this.id.split('_')[2];
-            fetchOptions('loaded', select_id);
+        fetchOptions('loaded', 0);
+
+        // Reset location selection
+        $('#changeLocation').click(function() {
+            $('#locationString').text('Wybierz lokalizację:');
+            $('#wojewodztwo_adresowo_0').val('').show();
+            $('#powiat_adresowo_0').hide().val('');
+            $('#gmina_adresowo_0').hide().val('');
+            $('#miejscowosc_adresowo_0').hide().val('');
+            $('#dzielnica_adresowo_0').hide().val('');
+            $(this).hide();
+            fetchOptions('loaded', 0);
         });
     });
 
