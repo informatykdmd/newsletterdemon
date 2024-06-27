@@ -3063,7 +3063,7 @@
         }
     }
 
-    function fetchOptions(level, select_id, wojewodztwo = '', powiat = '', gmina = '', miejscowosc = '') {
+    function fetchOptions(level, select_id, wojewodztwo = '', powiat = '', gmina = '', miejscowosc = '', dzielnica='') {
         console.log(`Fetching options for level: ${level}, select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, miejscowosc: ${miejscowosc}`);
         $.ajax({
             url: '/get-region-data',
@@ -3073,7 +3073,8 @@
                 wojewodztwo: wojewodztwo,
                 powiat: powiat,
                 gmina: gmina,
-                miejscowosc: miejscowosc
+                miejscowosc: miejscowosc,
+                dzielnica: dzielnica
             },
             success: function(response) {
                 console.log(`Received response for level: ${level}`, response);
@@ -3087,7 +3088,10 @@
                     $('#dzielnica_adresowo_' + select_id).hide();
                     $('#changeLocation_' + select_id).show();
                     $('#locationString_' + select_id).text(string);
-                } else {
+                } else if (lista_wyboru === 'dzielnica') { 
+                    $('#gmina_adresowo_' + select_id).hide();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                }else {
                     updateSelectOptions(select_id, list, lista_wyboru);
                     let locationString = '';
                     if (wojewodztwo) locationString += `${wojewodztwo}/`;
