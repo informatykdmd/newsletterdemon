@@ -6177,6 +6177,8 @@ def get_region_data():
     powiat = request.args.get('powiat')
     gmina = request.args.get('gmina')
     miejscowosc = request.args.get('miejscowosc')
+
+    print(level, wojewodztwo, powiat, gmina, miejscowosc)
     
     if level == 'wojewodztwo':
         powiaty = regions.getRegionData(wojewodztwo=wojewodztwo)

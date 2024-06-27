@@ -109,12 +109,13 @@ def getRegionData(
     miejscowosc=gminy_list[0]
     return f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
 
-print(
-    getRegionData(
-        wojewodztwo='mazowieckie',
-        powiat='Warszawa',
-        # gmina='Nowe Miasto',
-        # miejscowosc='Karolinowo',
-        # dzielnica='Śródmieście',
+if __name__ == "__main__":
+    print(
+        getRegionData(
+            wojewodztwo='mazowieckie',
+            powiat='Warszawa',
+            # gmina='Nowe Miasto',
+            # miejscowosc='Karolinowo',
+            # dzielnica='Śródmieście',
+            )
         )
-    )
