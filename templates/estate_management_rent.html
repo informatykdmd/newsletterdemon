@@ -2710,7 +2710,7 @@
                                 <div class="col-lg-4 col-sm-12">
                                     <div>
                                         <div class="mb-2 mt-2">
-                                            <h5>FACEBOOK MARKETPLACE</h5>
+                                            <h5>FACEBOOK ADRESOWO</h5>
                                             
                                             <p>Status: Pierwsza publikacja na Lento</p>
                                         </div>
@@ -2742,6 +2742,46 @@
                                         </div>
                                         
                                     </div>
+                                    <script>
+                                        // Event listeners
+                                        $(document).on('change', '[id^="wojewodztwo_adresowo_{{post_id}}"]', function() {
+                                            let select_id = this.id.split('_')[2];
+                                            let value = this.value;
+                                            if (value) {
+                                                fetchOptions('wojewodztwo', select_id, value);
+                                            }
+                                        });
+
+                                        $(document).on('change', '[id^="powiat_adresowo_{{post_id}}"]', function() {
+                                            let select_id = this.id.split('_')[2];
+                                            let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+                                            let value = this.value;
+                                            if (value) {
+                                                fetchOptions('powiat', select_id, wojewodztwo, value);
+                                            }
+                                        });
+
+                                        $(document).on('change', '[id^="gmina_adresowo_{{post_id}}"]', function() {
+                                            let select_id = this.id.split('_')[2];
+                                            let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+                                            let powiat = $('#powiat_adresowo_' + select_id).val();
+                                            let value = this.value;
+                                            if (value) {
+                                                fetchOptions('gmina', select_id, wojewodztwo, powiat, value);
+                                            }
+                                        });
+
+                                        $(document).on('change', '[id^="miejscowosc_adresowo_{{post_id}}"]', function() {
+                                            let select_id = this.id.split('_')[2];
+                                            let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+                                            let powiat = $('#powiat_adresowo_' + select_id).val();
+                                            let gmina = $('#gmina_adresowo_' + select_id).val();
+                                            let value = this.value;
+                                            if (value) {
+                                                fetchOptions('miejscowosc', select_id, wojewodztwo, powiat, gmina, value);
+                                            }
+                                        });
+                                    </script>
                                 </div>
                             </div>
 
@@ -3105,44 +3145,7 @@
         });
     }
 
-    // Event listeners
-    $(document).on('change', '[id^="wojewodztwo_adresowo_"]', function() {
-        let select_id = this.id.split('_')[2];
-        let value = this.value;
-        if (value) {
-            fetchOptions('wojewodztwo', select_id, value);
-        }
-    });
-
-    $(document).on('change', '[id^="powiat_adresowo_"]', function() {
-        let select_id = this.id.split('_')[2];
-        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
-        let value = this.value;
-        if (value) {
-            fetchOptions('powiat', select_id, wojewodztwo, value);
-        }
-    });
-
-    $(document).on('change', '[id^="gmina_adresowo_"]', function() {
-        let select_id = this.id.split('_')[2];
-        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
-        let powiat = $('#powiat_adresowo_' + select_id).val();
-        let value = this.value;
-        if (value) {
-            fetchOptions('gmina', select_id, wojewodztwo, powiat, value);
-        }
-    });
-
-    $(document).on('change', '[id^="miejscowosc_adresowo_"]', function() {
-        let select_id = this.id.split('_')[2];
-        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
-        let powiat = $('#powiat_adresowo_' + select_id).val();
-        let gmina = $('#gmina_adresowo_' + select_id).val();
-        let value = this.value;
-        if (value) {
-            fetchOptions('miejscowosc', select_id, wojewodztwo, powiat, gmina, value);
-        }
-    });
+    
 
 </script>
 {% endblock %}
