@@ -3088,18 +3088,16 @@
                     $('#dzielnica_adresowo_' + select_id).hide();
                     $('#changeLocation_' + select_id).show();
                     $('#locationString_' + select_id).text(string);
-                    return;
                 } else {
                     updateSelectOptions(select_id, list, lista_wyboru);
+                    let locationString = '';
+                    if (wojewodztwo) locationString += `${wojewodztwo}/`;
+                    if (powiat) locationString += `${powiat}/`;
+                    if (gmina) locationString += `${gmina}/`;
+                    if (miejscowosc) locationString += `${miejscowosc}/`;
+                    if (dzielnica) locationString += `${dzielnica}/`;
+                    $('#locationString_' + select_id).text(locationString);
                 }
-
-                let locationString = '';
-                if (wojewodztwo) locationString += `${wojewodztwo}/`;
-                if (powiat) locationString += `${powiat}/`;
-                if (gmina) locationString += `${gmina}/`;
-                if (miejscowosc) locationString += `${miejscowosc}/`;
-                if (dzielnica) locationString += `${dzielnica}/`;
-                $('#locationString_' + select_id).text(locationString);
 
                 if (wariant === 0) {
                     $('#powiat_adresowo_' + select_id).hide();
@@ -3232,7 +3230,7 @@
             $('#gmina_adresowo_' + select_id).hide().val('');
             $('#miejscowosc_adresowo_' + select_id).hide().val('');
             $('#dzielnica_adresowo_' + select_id).hide().val('');
-            $(this).hide();
+            $('#changeLocation_' + select_id).hide();
             fetchOptions('loaded', select_id);
         });
     });
