@@ -6209,6 +6209,7 @@ def get_region_data():
     print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}")
 
     response = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc)
+    print(response)
     return jsonify(response)
 
 @app.route('/public-on-adresowo', methods=['POST'])
