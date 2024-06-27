@@ -136,7 +136,17 @@ def getRegionData(
             } 
     
     elif len(gminy_list) == 0:
-        return powiaty_list
+        return {
+                'wariant': 404,
+                'lista_wyboru': 'ready',
+                'wojewodztwo': wojewodztwo,
+                'powiat': powiat,
+                'gmina': gmina,
+                'miejscowosc': miejscowosc,
+                'dzielnica': dzielnica,
+                'list': powiaty_list,
+                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+            }  
     else:
         for key, val in jednostki_ewidencyjne_dict.items():
             if key.startswith(choice_powiat):
@@ -165,6 +175,8 @@ def getRegionData(
             } 
         
         if not str(dzielnica) in dzielnice_list:
+            gmina=f'{gminy_list[0]} miasto'
+            miejscowosc=gminy_list[0]
             return {
                 'wariant': 6,
                 'lista_wyboru': 'dzielnica',
