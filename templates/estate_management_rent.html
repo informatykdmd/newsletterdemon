@@ -3074,8 +3074,18 @@
             },
             success: function(response) {
                 console.log(`Received response for level: ${level}`, response);
-                const { wariant, lista_wyboru, list } = response;
-                updateSelectOptions(select_id, list, lista_wyboru);
+                const { wariant, lista_wyboru, list, wojewodztwo, powiat, gmina, miejscowosc, dzielnica } = response;
+
+                if (wariant === 7) {
+                    // If all data is already known, update all select elements accordingly
+                    updateSelectOptions(select_id, list, 'wojewodztwo', wojewodztwo);
+                    updateSelectOptions(select_id, list, 'powiat', powiat);
+                    updateSelectOptions(select_id, list, 'gmina', gmina);
+                    updateSelectOptions(select_id, list, 'miejscowosc', miejscowosc);
+                    updateSelectOptions(select_id, list, 'dzielnica', dzielnica);
+                } else {
+                    updateSelectOptions(select_id, list, lista_wyboru);
+                }
 
                 if (wariant === 0) {
                     $('#powiat_adresowo_' + select_id).hide();
@@ -3107,7 +3117,7 @@
                     $('#gmina_adresowo_' + select_id).show();
                     $('#miejscowosc_adresowo_' + select_id).show();
                     $('#dzielnica_adresowo_' + select_id).show();
-                } else {
+                } else if (wariant === 7) {
                     $('#powiat_adresowo_' + select_id).show();
                     $('#gmina_adresowo_' + select_id).show();
                     $('#miejscowosc_adresowo_' + select_id).show();
@@ -3117,7 +3127,7 @@
         });
     }
 
-    function updateSelectOptions(select_id, options, lista_wyboru) {
+    function updateSelectOptions(select_id, options, lista_wyboru, selectedValue = null) {
         const selectId = `${lista_wyboru}_adresowo_${select_id}`;
         console.log(`Updating options for selectId: ${selectId} with options:`, options);
         let select = document.getElementById(selectId);
@@ -3126,6 +3136,9 @@
             let opt = document.createElement('option');
             opt.value = option;
             opt.innerHTML = option;
+            if (option === selectedValue) {
+                opt.selected = true;
+            }
             select.appendChild(opt);
         });
     }
@@ -3180,6 +3193,7 @@
             fetchOptions('loaded', select_id);
         });
     });
+
 
 </script>
 {% endblock %}
