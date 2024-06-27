@@ -3149,7 +3149,7 @@
     $(document).ready(function() {
         $('[id^="wojewodztwo_adresowo_"]').each(function() {
             let select_id = this.id.split('_')[2];
-            fetchOptions('wojewodztwo', select_id);
+            fetchOptions('loaded', select_id);
         });
     });
 

@@ -6180,7 +6180,10 @@ def get_region_data():
 
     print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}")
     
-    if level == 'wojewodztwo':
+    if level == 'loaded':
+        wojewodztwa = regions.getRegionData()
+        return jsonify(wojewodztwa)
+    elif level == 'wojewodztwo':
         powiaty = regions.getRegionData(wojewodztwo=wojewodztwo)
         return jsonify(powiaty)
     elif level == 'powiat':
@@ -6193,7 +6196,7 @@ def get_region_data():
         dzielnice = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc)
         return jsonify(dzielnice)
 
-    return jsonify(regions.getRegionData())
+    return jsonify([])
 
 @app.route('/public-on-adresowo', methods=['POST'])
 def public_on_adresowo():
