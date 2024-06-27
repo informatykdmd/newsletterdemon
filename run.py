@@ -6205,10 +6205,11 @@ def get_region_data():
     powiat = request.args.get('powiat')
     gmina = request.args.get('gmina')
     miejscowosc = request.args.get('miejscowosc')
+    dzielnica = request.args.get('dzielnica')
 
-    print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}")
+    print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}, Dzielnica: {dzielnica}")
 
-    response = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc)
+    response = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc, dzielnica=dzielnica)
     print(response)
     return jsonify(response)
 
