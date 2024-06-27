@@ -2715,7 +2715,7 @@
                                             <p>Status: Pierwsza publikacja na Adresowo</p>
                                         </div>
                                         <div class="mb-2 mt-2">
-                                            <div id="locationString_{{post_id}}">Wybierz lokalizację:</div>
+                                            <div id="locationString_adresowo_{{post_id}}">Wybierz lokalizację:</div>
                                             <select id="wojewodztwo_adresowo_{{post_id}}" name="wojewodztwo">
                                                 <option value="">Wybierz województwo</option>
                                             </select>
@@ -2736,7 +2736,7 @@
                                                 <option value="">Wybierz dzielnicę</option>
                                             </select>
                                             
-                                            <button id="changeLocation_{{post_id}}" style="display: none;">Zmień</button>
+                                            <button id="changeLocation__adresowo_{{post_id}}" style="display: none;">Zmień</button>
                                         </div>
                                         
                                     </div>
@@ -3086,8 +3086,8 @@
                     $('#gmina_adresowo_' + select_id).hide();
                     $('#miejscowosc_adresowo_' + select_id).hide();
                     $('#dzielnica_adresowo_' + select_id).hide();
-                    $('#changeLocation_' + select_id).show();
-                    $('#locationString_' + select_id).text(string);
+                    $('#changeLocation_adresowo_' + select_id).show();
+                    $('#locationString_adresowo_' + select_id).text(string);
                 } else {
                     updateSelectOptions(select_id, list, lista_wyboru);
                     let locationString = '';
@@ -3096,7 +3096,7 @@
                     if (gmina) locationString += `${gmina}/`;
                     if (miejscowosc) locationString += `${miejscowosc}/`;
                     if (dzielnica) locationString += `${dzielnica}/`;
-                    $('#locationString_' + select_id).text(locationString);
+                    $('#locationString_adresowo_' + select_id).text(locationString);
                 }
 
                 if (wariant === 0) {
@@ -3130,8 +3130,8 @@
                     $('#gmina_adresowo_' + select_id).hide();
                     $('#miejscowosc_adresowo_' + select_id).hide();
                     $('#dzielnica_adresowo_' + select_id).hide();
-                    $('#changeLocation_' + select_id).show();
-                    $('#locationString_' + select_id).text(string);
+                    $('#changeLocation_adresowo_' + select_id).show();
+                    $('#locationString_adresowo_' + select_id).text(string);
                 }
             }
         });
@@ -3221,16 +3221,16 @@
         });
 
         // Reset location selection
-        $(document).on('click', '[id^="changeLocation_"]', function() {
+        $(document).on('click', '[id^="changeLocation__adresowo_"]', function() {
             let select_id = this.id.split('_')[2];
             console.log(`Reset location for select_id: ${select_id}`);
-            $('#locationString_' + select_id).text('Wybierz lokalizację:');
+            $('#locationString_adresowo_' + select_id).text('Wybierz lokalizację:');
             $('#wojewodztwo_adresowo_' + select_id).val('').show();
             $('#powiat_adresowo_' + select_id).hide().val('');
             $('#gmina_adresowo_' + select_id).hide().val('');
             $('#miejscowosc_adresowo_' + select_id).hide().val('');
             $('#dzielnica_adresowo_' + select_id).hide().val('');
-            $('#changeLocation_' + select_id).hide();
+            $('#changeLocation_adresowo_' + select_id).hide();
             fetchOptions('loaded', select_id);
         });
     });
