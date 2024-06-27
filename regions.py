@@ -138,7 +138,7 @@ def getRegionData(
     elif len(gminy_list) == 0:
         return {
                 'wariant': 404,
-                'lista_wyboru': 'ready',
+                'lista_wyboru': 'powiat',
                 'wojewodztwo': wojewodztwo,
                 'powiat': powiat,
                 'gmina': gmina,

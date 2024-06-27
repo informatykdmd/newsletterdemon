@@ -3076,8 +3076,8 @@
                 console.log(`Received response for level: ${level}`, response);
                 const { wariant, lista_wyboru, list, wojewodztwo, powiat, gmina, miejscowosc, dzielnica } = response;
 
-                if (wariant === 7) {
-                    // If all data is already known, update all select elements accordingly
+                if (wariant === 7 || wariant === 4 || wariant === 5) {
+                    // Update all select elements with known data
                     updateSelectOptions(select_id, list, 'wojewodztwo', wojewodztwo);
                     updateSelectOptions(select_id, list, 'powiat', powiat);
                     updateSelectOptions(select_id, list, 'gmina', gmina);
@@ -3131,6 +3131,10 @@
         const selectId = `${lista_wyboru}_adresowo_${select_id}`;
         console.log(`Updating options for selectId: ${selectId} with options:`, options);
         let select = document.getElementById(selectId);
+        if (select === null) {
+            console.error(`Select element with id ${selectId} not found`);
+            return;
+        }
         select.innerHTML = '<option value="">Wybierz</option>';
         options.forEach(option => {
             let opt = document.createElement('option');
@@ -3193,6 +3197,7 @@
             fetchOptions('loaded', select_id);
         });
     });
+
 
 
 </script>
