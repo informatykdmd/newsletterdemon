@@ -2810,7 +2810,7 @@
                                                 </div>
 
                                                 <div class="row row-cols-auto mb-3">
-                                                    <div class="col">
+                                                    <div class="col-12">
                                                         <form action="{{ url_for('public_on_adresowo') }}" style="display: none;" id="formfirst_adresowo_{{post_id}}" method="POST" enctype="multipart/form-data">
                                                             <input type="hidden" name="adresow_id" value="{{post_data['facebook']['id']}}" />
                                                             <input type="hidden" name="redirectGoal" value="estateAdsRent" />
@@ -2822,17 +2822,17 @@
                                                                 <input type="hidden" name="task_kind" value="Publikuj" />
 
                                                                 <!-- block -->
-                                                                <div class="form-control mb-3">
-                                                                    <input 
-                                                                        type="text" 
-                                                                        value=""
-                                                                        class="form-control bg-dark formatuj-maly-font" 
-                                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                                        placeholder="Podaj ulicę" 
-                                                                        aria-label="Podaj ulicę"
-                                                                        id="ulica_{{post_id}}" 
-                                                                        name="ulica" />
-                                                                </div>
+                                                                
+                                                                <input 
+                                                                    type="text" 
+                                                                    value=""
+                                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                                    placeholder="Podaj ulicę" 
+                                                                    aria-label="Podaj ulicę"
+                                                                    id="ulica_{{post_id}}" 
+                                                                    name="ulica" />
+                                                                
 
                                                                 <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
                                                                     Publikuj na Adresowo
