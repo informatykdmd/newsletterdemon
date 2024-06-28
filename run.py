@@ -6243,7 +6243,7 @@ def get_region_data():
     # print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}, Dzielnica: {dzielnica}")
 
     response = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc, dzielnica=dzielnica)
-    print(response)
+    # print(response)
     return jsonify(response)
 
 @app.route('/public-on-adresowo', methods=['POST'])
@@ -6257,7 +6257,7 @@ def public_on_adresowo():
         return redirect(url_for('index'))
     
     if request.method == 'POST':
-
+        print(request.form)
         adresowo_id = request.form.get('adresowo_id')
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
