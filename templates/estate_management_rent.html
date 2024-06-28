@@ -3234,7 +3234,9 @@
                     $('#changeLocation_adresowo_' + select_id).show();
                     $('#form_first_adresowo_' + select_id).show();
                     $('#locationString_adresowo_' + select_id).text(string);
+                    console.log('Updating hidden input:', '#region_first_adresowo_' + select_id, 'with value:', string);
                     $('#region_first_adresowo_' + select_id).val(string);
+
                 } else {
                     updateSelectOptions(select_id, list, lista_wyboru);
                     let locationString = '';
