@@ -2715,28 +2715,35 @@
                                             <p>Status: Pierwsza publikacja na Adresowo</p>
                                         </div>
                                         <div class="mb-2 mt-2">
-                                            <div id="locationString_adresowo_{{post_id}}">Wybierz lokalizację:</div>
-                                            <select id="wojewodztwo_adresowo_{{post_id}}" name="wojewodztwo">
+                                            <div class="row">
+                                                <div id="locationString_adresowo_{{post_id}}">
+                                                    Wybierz lokalizację:
+                                                </div>
+                                                <div class="col">
+                                                    <button class="btn btn-outline-info btn-sm-7" id="changeLocation_adresowo_{{post_id}}" style="display: none;">Zmień</button>
+                                                </div>
+                                            </div>                                                
+                                            <select class="form-select" id="wojewodztwo_adresowo_{{post_id}}" name="wojewodztwo">
                                                 <option value="">Wybierz województwo</option>
                                             </select>
                                             
-                                            <select id="powiat_adresowo_{{post_id}}" name="powiat" style="display: none;">
+                                            <select class="form-select" id="powiat_adresowo_{{post_id}}" name="powiat" style="display: none;">
                                                 <option value="">Wybierz powiat</option>
                                             </select>
                                             
-                                            <select id="gmina_adresowo_{{post_id}}" name="gmina" style="display: none;">
+                                            <select class="form-select" id="gmina_adresowo_{{post_id}}" name="gmina" style="display: none;">
                                                 <option value="">Wybierz gminę</option>
                                             </select>
                                             
-                                            <select id="miejscowosc_adresowo_{{post_id}}" name="miejscowosc" style="display: none;">
+                                            <select class="form-select" id="miejscowosc_adresowo_{{post_id}}" name="miejscowosc" style="display: none;">
                                                 <option value="">Wybierz miejscowość</option>
                                             </select>
                                             
-                                            <select id="dzielnica_adresowo_{{post_id}}" name="dzielnica" style="display: none;">
+                                            <select class="form-select" id="dzielnica_adresowo_{{post_id}}" name="dzielnica" style="display: none;">
                                                 <option value="">Wybierz dzielnicę</option>
                                             </select>
                                             
-                                            <button id="changeLocation_adresowo_{{post_id}}" style="display: none;">Zmień</button>
+                                            
                                         </div>
                                         
                                     </div>
