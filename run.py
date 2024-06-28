@@ -292,6 +292,18 @@ def takeFacebookResumeStatus(facebook_id):
     except IndexError:
         return None
 
+def checkAdresowoStatus(kind, id):
+    try:
+        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors FROM ogloszenia_adresowo WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
+    except IndexError:
+        return (None, None, None, None, None)
+
+def takeAdresowoResumeStatus(adresowo_id):
+    try:
+        return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_adresowo WHERE id="{adresowo_id}";')[0][0]
+    except IndexError:
+        return None
+
 def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystkie'
     took_rentOffer = take_data_table('*', 'OfertyNajmu')
     
@@ -3111,6 +3123,27 @@ def estateAdsRent():
 
 
             item['facebook']['error_message'] = facebookIDstatus[3]
+
+        if 'adresowo' not in item:
+            item['adresowo'] = {}
+        adresowoIDstatus = checkAdresowoStatus(kind="r", id=item['ID'])
+        item['adresowo']['id'] = adresowoIDstatus[0]
+        item['adresowo']['status'] = adresowoIDstatus[1]
+        item['adresowo']['data_aktualizacji'] = adresowoIDstatus[2]
+        item['adresowo']['errors'] = adresowoIDstatus[3]
+        item['adresowo']['action_before_errors'] = adresowoIDstatus[4]
+
+
+        if item['adresowo']['status'] is not None:
+            start_date = item['adresowo']['data_aktualizacji']
+            # Oblicz datę końca promocji
+            end_date = start_date + datetime.timedelta(days=90)
+            # Oblicz liczbę dni pozostałych do końca promocji
+            days_left = (end_date - datetime.datetime.now()).days
+
+            item['adresowo']['zostalo_dni'] = days_left
+
+            item['adresowo']['error_message'] = facebookIDstatus[3]
         
         new_all_rents.append(item)
 
@@ -6207,7 +6240,7 @@ def get_region_data():
     miejscowosc = request.args.get('miejscowosc')
     dzielnica = request.args.get('dzielnica')
 
-    print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}, Dzielnica: {dzielnica}")
+    # print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}, Dzielnica: {dzielnica}")
 
     response = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc, dzielnica=dzielnica)
     print(response)
@@ -6229,6 +6262,10 @@ def public_on_adresowo():
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
         redirectGoal = request.form.get('redirectGoal')
+        if 'region' in request.form:
+            region = request.form.get('region')
+        else:
+            region = None
         
         
         rodzaj_ogloszenia = None
@@ -6238,6 +6275,10 @@ def public_on_adresowo():
             rodzaj_ogloszenia = 's'
 
         if task_kind == 'Publikuj':
+            if not region:
+                flash('Wybierz region!', 'danger')
+                return redirect(url_for(redirectGoal))
+
             picked_offer = {}
             if rodzaj_ogloszenia == 'r':
                 for rentOffer in generator_rentOffert():

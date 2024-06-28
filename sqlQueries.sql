@@ -94,3 +94,37 @@ CREATE TABLE ogloszenia_facebook (
 ALTER TABLE ogloszenia_facebook
 ADD COLUMN lokalizacja TEXT AFTER stan,
 ADD COLUMN znaczniki TEXT AFTER lokalizacja;
+
+-- tabela adresowo
+CREATE TABLE ogloszenia_adresowo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rodzaj_ogloszenia VARCHAR(255),
+    id_ogloszenia INT,
+    tytul_ogloszenia TEXT,
+    kategoria_ogloszenia TEXT,
+    region TEXT,
+    cena INT,
+    umeblowanie TEXT,
+    opis_ogloszenia TEXT,
+    liczba_pieter INT,
+    liczba_pokoi INT,
+    poziom TEXT,
+    ulica TEXT,
+    winda TEXT,
+    powierzchnia INT,
+    pow_dzialki INT,
+    rok_budowy INT,
+    stan INT,
+    typ_budynku TEXT,
+    forma_wlasnosci TEXT,
+    zdjecia_string TEXT,
+    osoba_kontaktowa VARCHAR(255),
+    nr_telefonu VARCHAR(20),
+    id_zadania INT,
+    id_ogloszenia_na_adresowo TEXT,
+    status INT,
+    active_task INT,
+    errors TEXT,
+    data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    action_before_errors INT
+);

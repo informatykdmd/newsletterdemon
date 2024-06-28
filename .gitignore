@@ -3,3 +3,4 @@
 /logs/errors.log
 temp.py
 gunicorn_config.py
+sqlQueries.sql

@@ -2321,7 +2321,7 @@
                                                     </div> -->
 
                                                 </div>
-                                                {% elif post_data['facebook']['status'] == 2 %}
+                                            {% elif post_data['facebook']['status'] == 2 %}
                                                 <div class="mb-2 mt-2">
                                                     <h5>FACEBOOK MARKETPLACE</h5>
                                                     <p>Status: Error</p>
@@ -2709,114 +2709,181 @@
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
                                     <div>
-                                        <div class="mb-2 mt-2">
-                                            <h5>ADRESOWO</h5>
-                                            
-                                            <p>Status: Pierwsza publikacja na Adresowo</p>
-                                        </div>
-                                        <div class="mb-2 mt-2">
-                                            <div class="row mb-2 mt-2">
-                                                <div class="text-body-secondary">Wybierz lokalizację:</div>
-                                                <div class="col-10 text-warning fw-light font-monospace" id="locationString_adresowo_{{post_id}}"></div>
-                                                <div class="col-2">
-                                                    <button class="btn btn-outline-warning btn-sm" id="changeLocation_adresowo_{{post_id}}" style="display: none; max-height: 25px; font-size: 10px;">Zmień</button>
+                                        <!-- 
+                                        0 Wstrzymany
+                                        1 Opublikowano
+                                        2 Error
+                                        3 Usunięto
+                                        4 Trwa proces tworzenia nowego ogłoszenia
+                                        5 Trwa proces aktualizacji ogłoszenia
+                                        6 Trwa proces usuwania ogłoszenia
+                                        None 
+                                        -->
+                                        {% if post_data['StatusOferty'] == 1 %}
+                                            {% if post_data['adresowo']['status'] == 0 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
                                                 </div>
-                                            </div>                                                
-                                            <select class="form-select dark-mode mb-2 mt-2" style="max-height: 30px; font-size: 12px;" id="wojewodztwo_adresowo_{{post_id}}" name="wojewodztwo">
-                                                <option value="">Wybierz województwo</option>
-                                            </select>
-                                            
-                                            <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="powiat_adresowo_{{post_id}}" name="powiat">
-                                                <option value="">Wybierz powiat</option>
-                                            </select>
-                                            
-                                            <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="gmina_adresowo_{{post_id}}" name="gmina">
-                                                <option value="">Wybierz gminę</option>
-                                            </select>
-                                            
-                                            <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="miejscowosc_adresowo_{{post_id}}" name="miejscowosc">
-                                                <option value="">Wybierz miejscowość</option>
-                                            </select>
-                                            
-                                            <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="dzielnica_adresowo_{{post_id}}" name="dzielnica" >
-                                                <option value="">Wybierz dzielnicę</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="row row-cols-auto mb-3">
-                                            <div class="col">
-                                                <form action="{{ url_for('public_on_adresowo') }}" style="display: none;" id="form_first_adresowo_{{post_id}}" method="POST" enctype="multipart/form-data">
-                                                    <input type="hidden" name="adresow_id" value="{{post_data['facebook']['id']}}" />
-                                                    <input type="hidden" name="redirectGoal" value="estateAdsRent" />
-                                                    <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                    <input type="hidden" name="region" value="" />
-                                                    <div class="col me-1 mb-1">
-                                                        
-                                                        <input type="hidden" name="Status" value="0" />
-                                                        <input type="hidden" name="task_kind" value="Publikuj" />
-
-                                                        <!-- block -->
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <div class="form-check form-switch">
-                                                                    <input class="form-check-input" type="checkbox" role="switch" id="promuj_po_opublikowaniu_{{post_id}}" name="promuj_po_opublikowaniu" value="0">
-                                                                    <label class="form-check-label" for="promuj_po_opublikowaniu_{{post_id}}">Promuj po opublikowaniu</label>
-                                                                </div>
-                                                            </div>
+                                            {% elif post_data['adresowo']['status'] == 1 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 2 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 3 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 4 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 5 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 6 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 7 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 8 %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == None %}
+                                                <div class="mb-2 mt-2">
+                                                    <h5>ADRESOWO</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                </div>
+                                                <div class="mb-2 mt-2">
+                                                    <div class="row mb-2 mt-2">
+                                                        <div class="text-body-secondary">Wybierz lokalizację:</div>
+                                                        <div class="col-10 text-warning fw-light font-monospace" id="locationString_adresowo_{{post_id}}"></div>
+                                                        <div class="col-2">
+                                                            <button class="btn btn-outline-warning btn-sm" id="changeLocation_adresowo_{{post_id}}" style="display: none; max-height: 25px; font-size: 10px;">Zmień</button>
                                                         </div>
+                                                    </div>                                                
+                                                    <select class="form-select dark-mode mb-2 mt-2" style="max-height: 30px; font-size: 12px;" id="wojewodztwo_adresowo_{{post_id}}" name="wojewodztwo">
+                                                        <option value="">Wybierz województwo</option>
+                                                    </select>
+                                                    
+                                                    <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="powiat_adresowo_{{post_id}}" name="powiat">
+                                                        <option value="">Wybierz powiat</option>
+                                                    </select>
+                                                    
+                                                    <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="gmina_adresowo_{{post_id}}" name="gmina">
+                                                        <option value="">Wybierz gminę</option>
+                                                    </select>
+                                                    
+                                                    <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="miejscowosc_adresowo_{{post_id}}" name="miejscowosc">
+                                                        <option value="">Wybierz miejscowość</option>
+                                                    </select>
+                                                    
+                                                    <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="dzielnica_adresowo_{{post_id}}" name="dzielnica" >
+                                                        <option value="">Wybierz dzielnicę</option>
+                                                    </select>
+                                                </div>
 
-                                                        <div class="row">
-                                                            <div class="col">
+                                                <div class="row row-cols-auto mb-3">
+                                                    <div class="col">
+                                                        <form action="{{ url_for('public_on_adresowo') }}" style="display: none;" id="form_first_adresowo_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="adresow_id" value="{{post_data['facebook']['id']}}" />
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <input type="hidden" id="region_first_adresowo_{{post_id}}" name="region" value="" />
+                                                            <div class="col me-1 mb-1">
+                                                                
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Publikuj" />
+
                                                                 <!-- block -->
                                                                 <div class="row">
                                                                     <div class="col">
-                                                                        Stan Nieruchomości
+                                                                        <div class="form-check form-switch">
+                                                                            <input class="form-check-input" type="checkbox" role="switch" id="promuj_po_opublikowaniu_{{post_id}}" name="promuj_po_opublikowaniu" value="0">
+                                                                            <label class="form-check-label" for="promuj_po_opublikowaniu_{{post_id}}">Promuj po opublikowaniu</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Stan Nieruchomości
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_nowy_{{post_id}}" name="stan_nowy" value="1" checked>
+                                                                                    <label class="form-check-label" for="stan_nowy_{{post_id}}">Nowy</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_jak_nowy_{{post_id}}" name="stan_uzywany_jak_nowy" value="1">
+                                                                                    <label class="form-check-label" for="stan_uzywany_jak_nowy_{{post_id}}">Używany jak nowy</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col">
-                                                                        <div class="form-check form-switch">
-                                                                            <input class="form-check-input" type="checkbox" role="switch" id="stan_nowy_{{post_id}}" name="stan_nowy" value="1" checked>
-                                                                            <label class="form-check-label" for="stan_nowy_{{post_id}}">Nowy</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col">
-                                                                        <div class="form-check form-switch">
-                                                                            <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_jak_nowy_{{post_id}}" name="stan_uzywany_jak_nowy" value="1">
-                                                                            <label class="form-check-label" for="stan_uzywany_jak_nowy_{{post_id}}">Używany jak nowy</label>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_dobry_{{post_id}}" name="stan_uzywany_dobry" value="1">
+                                                                                    <label class="form-check-label" for="stan_uzywany_dobry_{{post_id}}">Używany w dobrym stanie</label>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_przecietny_{{post_id}}" name="stan_uzywany_przecietny" value="1">
+                                                                                    <label class="form-check-label" for="stan_uzywany_przecietny_{{post_id}}">Używany w przeciętnym stanie</label>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <div class="form-check form-switch">
-                                                                            <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_dobry_{{post_id}}" name="stan_uzywany_dobry" value="1">
-                                                                            <label class="form-check-label" for="stan_uzywany_dobry_{{post_id}}">Używany w dobrym stanie</label>
-                                                                        </div>
 
-                                                                    </div>
-                                                                    <div class="col">
-                                                                        <div class="form-check form-switch">
-                                                                            <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_przecietny_{{post_id}}" name="stan_uzywany_przecietny" value="1">
-                                                                            <label class="form-check-label" for="stan_uzywany_przecietny_{{post_id}}">Używany w przeciętnym stanie</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Publikuj na Facebooku
+                                                                </button>
                                                             </div>
-                                                        </div>
-
-                                                        <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                            Publikuj na Facebooku
-                                                        </button>
+                                                        </form>
                                                     </div>
-                                                </form>
-                                            </div>
-                                        </div>
-
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -3167,6 +3234,7 @@
                     $('#changeLocation_adresowo_' + select_id).show();
                     $('#form_first_adresowo_' + select_id).show();
                     $('#locationString_adresowo_' + select_id).text(string);
+                    $('#region_first_adresowo_' + select_id).val(string);
                 } else {
                     updateSelectOptions(select_id, list, lista_wyboru);
                     let locationString = '';
