@@ -2811,72 +2811,33 @@
 
                                                 <div class="row row-cols-auto mb-3">
                                                     <div class="col">
-                                                        <form action="{{ url_for('public_on_adresowo') }}" style="display: none;" id="form_first_adresowo_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                        <form action="{{ url_for('public_on_adresowo') }}" style="display: none;" id="formfirst_adresowo_{{post_id}}" method="POST" enctype="multipart/form-data">
                                                             <input type="hidden" name="adresow_id" value="{{post_data['facebook']['id']}}" />
                                                             <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                             <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                            <input type="hidden" id="region_first_adresowo_{{post_id}}" name="region" value="" />
+                                                            <input type="hidden" id="regionfirst_adresowo_{{post_id}}" name="region" value="" />
                                                             <div class="col me-1 mb-1">
                                                                 
                                                                 <input type="hidden" name="Status" value="0" />
                                                                 <input type="hidden" name="task_kind" value="Publikuj" />
 
                                                                 <!-- block -->
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <div class="form-check form-switch">
-                                                                            <input class="form-check-input" type="checkbox" role="switch" id="promuj_po_opublikowaniu_{{post_id}}" name="promuj_po_opublikowaniu" value="0">
-                                                                            <label class="form-check-label" for="promuj_po_opublikowaniu_{{post_id}}">Promuj po opublikowaniu</label>
-                                                                        </div>
-                                                                    </div>
+                                                                <div class="form-floating mb-0">
+                                                                    <input 
+                                                                        type="text" 
+                                                                        value=""
+                                                                        class="form-control bg-dark formatuj-maly-font" 
+                                                                        style="color:#c2c2c2; border:#96947b solid 1px;"
+                                                                        id="ulica_{{post_id}}" 
+                                                                        name="ulica"
+                                                                        placeholder="Podaj ulicę" aria-label="Podaj ulicę"
+                                                                        required
+                                                                    >
+                                                                    <label for="ulica_{{post_id}}">Podaj ulicę</label>
                                                                 </div>
 
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <!-- block -->
-                                                                        <div class="row">
-                                                                            <div class="col">
-                                                                                Stan Nieruchomości
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col">
-                                                                                <div class="form-check form-switch">
-                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_nowy_{{post_id}}" name="stan_nowy" value="1" checked>
-                                                                                    <label class="form-check-label" for="stan_nowy_{{post_id}}">Nowy</label>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <div class="form-check form-switch">
-                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_jak_nowy_{{post_id}}" name="stan_uzywany_jak_nowy" value="1">
-                                                                                    <label class="form-check-label" for="stan_uzywany_jak_nowy_{{post_id}}">Używany jak nowy</label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col">
-                                                                        <div class="row">
-                                                                            <div class="col">
-                                                                                <div class="form-check form-switch">
-                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_dobry_{{post_id}}" name="stan_uzywany_dobry" value="1">
-                                                                                    <label class="form-check-label" for="stan_uzywany_dobry_{{post_id}}">Używany w dobrym stanie</label>
-                                                                                </div>
-
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <div class="form-check form-switch">
-                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="stan_uzywany_przecietny_{{post_id}}" name="stan_uzywany_przecietny" value="1">
-                                                                                    <label class="form-check-label" for="stan_uzywany_przecietny_{{post_id}}">Używany w przeciętnym stanie</label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                    Publikuj na Facebooku
+                                                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Publikuj na Adresowo
                                                                 </button>
                                                             </div>
                                                         </form>
@@ -3232,10 +3193,17 @@
                     $('#miejscowosc_adresowo_' + select_id).hide();
                     $('#dzielnica_adresowo_' + select_id).hide();
                     $('#changeLocation_adresowo_' + select_id).show();
-                    $('#form_first_adresowo_' + select_id).show();
+                    $('#formfirst_adresowo_' + select_id).show();
                     $('#locationString_adresowo_' + select_id).text(string);
-                    console.log('Updating hidden input:', '#region_first_adresowo_' + select_id, 'with value:', string);
-                    $('#region_first_adresowo_' + select_id).val(string);
+                    // console.log('Updating hidden input:', '#region_first_adresowo_' + select_id, 'with value:', string);
+
+                    // Check if the hidden input element exists before updating its value
+                    var hiddenInput = $('#regionfirst_adresowo_' + select_id);
+                    if (hiddenInput.length) {
+                        hiddenInput.val(string);
+                    } else {
+                        console.error('Hidden input element not found:', '#regionfirst_adresowo_' + select_id);
+                    }
 
                 } else {
                     updateSelectOptions(select_id, list, lista_wyboru);
@@ -3380,7 +3348,8 @@
             $('#miejscowosc_adresowo_' + select_id).hide().val('');
             $('#dzielnica_adresowo_' + select_id).hide().val('');
             $('#changeLocation_adresowo_' + select_id).hide();
-            $('#form_first_adresowo_' + select_id).hide();
+            $('#formfirst_adresowo_' + select_id).hide();
+            $('#regionfirst_adresowo_' + select_id).val('');
             fetchOptions('loaded', select_id);
         });
     });
