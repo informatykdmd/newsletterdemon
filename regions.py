@@ -56,7 +56,7 @@ def getRegionData(
                 'miejscowosc': miejscowosc,
                 'dzielnica': dzielnica,
                 'list': wojewodztwa_list,
-                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+                'string':f'{wojewodztwo} / {powiat} / {gmina} / {miejscowosc} / {dzielnica} /'
             }
 
 
@@ -77,7 +77,7 @@ def getRegionData(
                 'miejscowosc': miejscowosc,
                 'dzielnica': dzielnica,
                 'list': powiaty_list,
-                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+                'string':f'{wojewodztwo} / {powiat} / {gmina} / {miejscowosc} / {dzielnica} /'
             }
 
     for key, val in gminy_dict.items():
@@ -98,7 +98,7 @@ def getRegionData(
                 'miejscowosc': miejscowosc,
                 'dzielnica': dzielnica,
                 'list': gminy_list,
-                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+                'string':f'{wojewodztwo} / {powiat} / {gmina} / {miejscowosc} / {dzielnica} /'
             } 
 
         for key, val in obreby_ewidencyjne_dict.items():
@@ -118,7 +118,7 @@ def getRegionData(
                 'miejscowosc': miejscowosc,
                 'dzielnica': dzielnica,
                 'list': miejscowosci_list,
-                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+                'string':f'{wojewodztwo} / {powiat} / {gmina} / {miejscowosc} / {dzielnica} /'
             } 
         
         
@@ -132,7 +132,7 @@ def getRegionData(
                 'miejscowosc': miejscowosc,
                 'dzielnica': dzielnica,
                 'list': [],
-                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+                'string':f'{wojewodztwo} / {powiat} / {gmina} / {miejscowosc} / {dzielnica} /'
             } 
     
     elif len(gminy_list) == 0:
@@ -145,7 +145,7 @@ def getRegionData(
                 'miejscowosc': miejscowosc,
                 'dzielnica': dzielnica,
                 'list': powiaty_list,
-                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+                'string':f'{wojewodztwo} / {powiat} / {gmina} / {miejscowosc} / {dzielnica} /'
             }  
     else:
         for key, val in jednostki_ewidencyjne_dict.items():
@@ -171,7 +171,7 @@ def getRegionData(
                 'miejscowosc': miejscowosc,
                 'dzielnica': dzielnica,
                 'list': [],
-                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+                'string':f'{wojewodztwo} / {powiat} / {gmina} / {miejscowosc} / {dzielnica} /'
             } 
         
         if not str(dzielnica) in dzielnice_list:
@@ -186,7 +186,7 @@ def getRegionData(
                 'miejscowosc': miejscowosc,
                 'dzielnica': dzielnica,
                 'list': dzielnice_list,
-                'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+                'string':f'{wojewodztwo} / {powiat} / {gmina} / {miejscowosc} / {dzielnica} /'
             }  
 
     gmina=f'{gminy_list[0]} miasto'
@@ -200,7 +200,7 @@ def getRegionData(
         'miejscowosc': miejscowosc,
         'dzielnica': dzielnica,
         'list': [],
-        'string':f'{wojewodztwo}/{powiat}/{gmina}/{miejscowosc}/{dzielnica}'
+        'string':f'{wojewodztwo} / {powiat} / {gmina} / {miejscowosc} / {dzielnica} /'
     } 
 
 if __name__ == "__main__":
