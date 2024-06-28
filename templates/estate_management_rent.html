@@ -3151,7 +3151,7 @@
             console.error(`Select element with id ${selectId} not found`);
             return;
         }
-        select.innerHTML = '<option value="">Wybierz</option>';
+        select.innerHTML = `<option value="">Wybierz ${lista_wyboru}</option>`;
         options.forEach(option => {
             let opt = document.createElement('option');
             opt.value = option;
