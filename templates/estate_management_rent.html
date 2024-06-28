@@ -3097,11 +3097,11 @@
                 } else {
                     updateSelectOptions(select_id, list, lista_wyboru);
                     let locationString = '';
-                    if (wojewodztwo) locationString += `${wojewodztwo}/`;
-                    if (powiat) locationString += `${powiat}/`;
-                    if (gmina) locationString += `${gmina}/`;
-                    if (miejscowosc) locationString += `${miejscowosc}/`;
-                    if (dzielnica) locationString += `${dzielnica}/`;
+                    if (wojewodztwo) locationString += `${wojewodztwo} / `;
+                    if (powiat) locationString += `${powiat} / `;
+                    if (gmina) locationString += `${gmina} / `;
+                    if (miejscowosc) locationString += `${miejscowosc} / `;
+                    if (dzielnica) locationString += `${dzielnica} /`;
                     $('#locationString_adresowo_' + select_id).text(locationString);
                 }
 
