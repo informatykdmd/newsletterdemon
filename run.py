@@ -4200,8 +4200,7 @@ def public_on_lento():
             for rentOffer in generator_rentOffert():
                 if str(rentOffer['ID']) == str(id_ogloszenia):
                     picked_rent_offer = rentOffer
-            # print(picked_rent_offer)
-
+            
             tytul_ogloszenia = picked_rent_offer['Tytul']
             powierzchnia = picked_rent_offer['Metraz']
             cena = picked_rent_offer['Cena']
@@ -4644,41 +4643,6 @@ def public_on_lento():
             extra_opis = extra_opis[:-2]
             opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
             
-            """
-            'ID': int(data[0]),
-            'TypNieruchomosci': data[1] if lang=='pl' else getLangText(data[1]),#
-            'Tytul': data[2] if lang=='pl' else getLangText(data[2]), #
-            'Rodzaj': data[3] if lang=='pl' else getLangText(data[3]),#
-            'Opis': opis_json,#
-            'Cena': data[5],#
-            'Lokalizacja': "" if data[6] is None else data[6],#
-            'LiczbaPokoi': 0 if data[7] is None else data[7],#
-            'Metraz': 0 if data[8] is None else data[8],#
-            'Zdjecia': [foto for foto in fotoList if foto is not None],#
-            'DataPublikacjiOlx': None if data[10] is None else format_date(data[10]),#
-            'DataPublikacjiAllegro': None if data[11] is None else format_date(data[11]),#
-            'DataPublikacjiOtoDom': None if data[12] is None else format_date(data[12]),#
-            'DataPublikacjiMarketplace': None if data[13] is None else format_date(data[13]),#
-            'DataUtworzenia': format_date(data[14]),#
-            'DataAktualizacji': format_date(data[15]),#
-            'RodzajZabudowy': "" if data[16] is None else data[16],#
-            'Rynek': '' if data[17] is None else data[17],#
-            'LiczbaPieter': 0 if data[18] is None else data[18],#
-            'PrzeznaczenieLokalu': "" if data[19] is None else data[19],#
-            'Poziom': 'None' if data[20] is None else data[20],#
-            'TechBudowy': '' if data[21] is None else data[21],#
-            'FormaKuchni': '' if data[22] is None else data[22],#
-            'TypDomu': '' if data[23] is None else data[23],#
-            'StanWykonczenia': "" if data[24] is None else data[24],#
-            'RokBudowy': 0 if data[25] is None else data[25],#
-            'NumerKW': '' if data[26] is None else data[26],#
-            'InformacjeDodatkowe': '' if data[27] is None else data[27],#
-            'GPS': gps_json,#
-            'TelefonKontaktowy': '' if data[29] is None else data[29],#
-            'EmailKontaktowy': '' if data[30] is None else data[30],#
-            'StatusOferty': 0 if data[31] is None else data[31]#
-            """
-
             if str(picked_sell_offer['TypNieruchomosci']).lower().count('dom') > 0\
                 or str(picked_sell_offer['TypNieruchomosci']).lower().count('willa') > 0\
                     or str(picked_sell_offer['TypNieruchomosci']).lower().count('bliźniak') > 0\
@@ -6203,33 +6167,6 @@ def public_on_facebook():
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
 
-# @app.route('/get-region-data', methods=['GET'])
-# def get_region_data():
-#     level = request.args.get('level')
-#     wojewodztwo = request.args.get('wojewodztwo')
-#     powiat = request.args.get('powiat')
-#     gmina = request.args.get('gmina')
-#     miejscowosc = request.args.get('miejscowosc')
-
-#     print(f"Level: {level}, Wojewodztwo: {wojewodztwo}, Powiat: {powiat}, Gmina: {gmina}, Miejscowosc: {miejscowosc}")
-    
-#     if level == 'loaded':
-#         wojewodztwa = regions.getRegionData()['list']
-#         return jsonify(wojewodztwa)
-#     elif level == 'wojewodztwo':
-#         powiaty = regions.getRegionData(wojewodztwo=wojewodztwo)
-#         return jsonify(powiaty)
-#     elif level == 'powiat':
-#         gminy = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat)
-#         return jsonify(gminy)
-#     elif level == 'gmina':
-#         miejscowosci = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina)
-#         return jsonify(miejscowosci)
-#     elif level == 'miejscowosc':
-#         dzielnice = regions.getRegionData(wojewodztwo=wojewodztwo, powiat=powiat, gmina=gmina, miejscowosc=miejscowosc)
-#         return jsonify(dzielnice)
-
-#     return jsonify([])
 
 @app.route('/get-region-data', methods=['GET'])
 def get_region_data():
@@ -6263,9 +6200,22 @@ def public_on_adresowo():
         task_kind = request.form.get('task_kind')
         redirectGoal = request.form.get('redirectGoal')
         if 'region' in request.form:
-            region = request.form.get('region')
+            get_region = request.form.get('region')
+            if get_region!='' and get_region.count('/')>4:
+                region = get_region
+            else:
+                region = None  
         else:
             region = None
+
+        if 'ulica' in request.form:
+            get_ulica = request.form.get('ulica')
+            if get_ulica!='':
+                ulica = get_ulica
+            else:
+                ulica = None 
+        else:
+            ulica = 'Nieokreślona'
         
         
         rodzaj_ogloszenia = None
@@ -6274,22 +6224,263 @@ def public_on_adresowo():
         if redirectGoal == 'estateAdsSell':
             rodzaj_ogloszenia = 's'
 
-        if task_kind == 'Publikuj':
+        if task_kind == 'Publikuj' and rodzaj_ogloszenia == 'r':
             if not region:
                 flash('Wybierz region!', 'danger')
                 return redirect(url_for(redirectGoal))
 
-            picked_offer = {}
-            if rodzaj_ogloszenia == 'r':
-                for rentOffer in generator_rentOffert():
-                    if str(rentOffer['ID']) == str(id_ogloszenia):
-                        picked_offer = rentOffer
-            elif rodzaj_ogloszenia == 's':
-                for sellOffer in generator_sellOffert():
-                    if str(sellOffer['ID']) == str(id_ogloszenia):
-                        picked_offer = sellOffer
+            picked_offer = {}            
+            for offer in generator_rentOffert():
+                if str(offer['ID']) == str(id_ogloszenia):
+                    picked_offer = offer
             
+            tytul_ogloszenia = picked_offer['Tytul']
+            powierzchnia = picked_offer['Metraz']
+            cena = picked_offer['Cena']
+            numer_kw = picked_offer['NumerKW']
+            miejscowosc = picked_offer['Lokalizacja'] 
+            osoba_kontaktowa = session['user_data']['name']
+            nr_telefonu = picked_offer['TelefonKontaktowy']
 
+            zdjecia_string = ''
+            for foto_link in picked_offer['Zdjecia']:
+                zdjecia_string += f'{foto_link}-@-'
+            if zdjecia_string != '':zdjecia_string = zdjecia_string[:-3]
+
+            prepared_opis = ''
+            for item in picked_offer['Opis']:
+                for val in item.values():
+                    if isinstance(val, str):
+                        prepared_opis += f'{val}\n'
+                    if isinstance(val, list):
+                        for v_val in val:
+                            prepared_opis += f'{v_val}\n'
+            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            else: prepared_opis = picked_offer['InformacjeDodatkowe']
+
+            extra_opis = ''
+            if picked_offer['RodzajZabudowy'] != '':
+                extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
+            if picked_offer['Czynsz'] != 0:
+                extra_opis += f"Czynsz:\n{picked_offer['Czynsz']} zł.\n\n"
+            if picked_offer['Umeblowanie'] != "":
+                extra_opis += f"Umeblowanie:\n{picked_offer['Umeblowanie']}\n\n"
+            if picked_offer['TechBudowy'] != "":
+                extra_opis += f"Technologia Budowy:\n{picked_offer['TechBudowy']}\n\n"
+            if picked_offer['StanWykonczenia'] != "":
+                extra_opis += f"Stan Wykończenia:\n{picked_offer['StanWykonczenia']}\n\n"
+            if picked_offer['RokBudowy'] != 0:
+                extra_opis += f"Rok Budowy:\n{picked_offer['RokBudowy']} r.\n\n"
+            if picked_offer['NumerKW'] != "":
+                extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
+            extra_opis = extra_opis[:-2]
+            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+
+            if str(picked_offer['TypDomu']).lower().count('dom') > 0\
+                or str(picked_offer['TypDomu']).lower().count('willa') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('bliźniak') > 0\
+                or str(picked_offer['TypDomu']).lower().count('segment') > 0:
+                # kategoria na adresowo dla dom
+                kategoria_ogloszenia = 'dom'
+
+            elif str(picked_offer['TypDomu']).lower().count('mieszkanie') > 0\
+                or str(picked_offer['TypDomu']).lower().count('kawalerka') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('apartament') > 0\
+                        or str(picked_offer['TypDomu']).lower().count('blok') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('kamienica') > 0\
+                or str(picked_offer['TypDomu']).lower().count('loft') > 0:
+                # kategoria na adresowo dla mieszkanie
+                kategoria_ogloszenia = 'mieszkanie'
+            
+            elif str(picked_offer['TypDomu']).lower().count('działka') > 0\
+                or str(picked_offer['TypDomu']).lower().count('plac') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('teren') > 0:
+                # kategoria na adresowo dla dzialka
+                kategoria_ogloszenia = 'dzialka'
+
+            elif str(picked_offer['TypDomu']).lower().count('biur') > 0\
+                or str(picked_offer['TypDomu']).lower().count('hal') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('usługi') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('lokal') > 0\
+                or str(picked_offer['TypDomu']).lower().count('produkcja') > 0:
+                # kategoria na adresowo dla komercyjne
+                kategoria_ogloszenia = 'komercyjne'
+
+            else:
+                flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
+                return redirect(url_for(redirectGoal))
+            
+            if kategoria_ogloszenia == 'dom':
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
+                elif picked_offer['LiczbaPokoi'] > 4:liczba_pokoi = 5
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+                pow_dzialki = picked_offer['PowierzchniaDzialki']
+                if str(picked_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
+                elif str(picked_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
+                else: forma_kuchni = 'brak'
+                if str(picked_offer['RodzajZabudowy']).lower().count('wolnostojący') > 0: typ_domu = 'wolnostojący'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('bliźniak') > 0: typ_domu = 'bliźniak'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('gospodarstwo') > 0: typ_domu = 'gospodarstwo'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: typ_domu = 'kamienica'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('letniskowy') > 0: typ_domu = 'letniskowy'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('rezydencja') > 0: typ_domu = 'rezydencja'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('siedlisko') > 0: typ_domu = 'siedlisko'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('szeregowiec') > 0: typ_domu = 'szeregowiec'
+                else: typ_domu = 'inny'
+
+                if str(picked_offer['RodzajZabudowy']).lower().count('apartamentowiec') > 0: zabudowa = 'apartamentowiec'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('blok') > 0: zabudowa = 'blok'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: zabudowa = 'kamienica'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('dom') > 0: zabudowa = 'dom'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('loft') > 0: zabudowa = 'loft'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('plomba') > 0: zabudowa = 'plomba'
+                else: zabudowa = 'inne'
+                # region, ulica, powierzchnia, pow_dzialki, rok_budowy, l_pieter, typ_budynku, stan
+                zapytanie_sql = '''
+                    INSERT INTO ogloszenia_adresowo 
+                        (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
+                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
+                        opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
+                        
+                        status)
+                    VALUES 
+                        (%s, %s, %s, %s, %s, %s,
+                        %s, %s, %s, %s, %s, %s,
+                   
+                        %s, %s, %s, %s);
+                '''
+                34
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
+                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
+                        opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
+                        4)
+                
+            """
+            'ID': int(data[0]),
+            'Tytul': data[1] if lang=='pl' else getLangText(data[1]),
+            'Opis': opis_json,
+            'Cena': data[3],
+            'Kaucja': 0 if data[4] is None else data[4],
+            'Lokalizacja': data[5],
+            'LiczbaPokoi': 0 if data[6] is None else data[6],
+            'Metraz': 0 if data[7] is None else data[7],
+            'Zdjecia': [foto for foto in fotoList if foto is not None],
+            'DataPublikacjiOlx': None if data[9] is None else format_date(data[9]),
+            'DataPublikacjiAllegro': None if data[10] is None else format_date(data[10]),
+            'DataPublikacjiOtoDom': None if data[11] is None else format_date(data[11]),
+            'DataPublikacjiMarketplace': None if data[12] is None else format_date(data[12]),
+            'DataUtworzenia': format_date(data[13]),
+            'DataAktualizacji': format_date(data[14]),
+            'RodzajZabudowy': '' if data[15] is None else data[15],
+            'Czynsz': 0.00 if data[16] is None else data[16],
+            'Umeblowanie': '' if data[17] is None else data[17],
+            'LiczbaPieter': 0 if data[18] is None else data[18],
+            'PowierzchniaDzialki': 0.00 if data[19] is None else data[19],
+            'TechBudowy': '' if data[20] is None else data[20],
+            'FormaKuchni': '' if data[21] is None else data[21],
+            'TypDomu': data[22],
+            'StanWykonczenia': '' if data[23] is None else data[23],
+            'RokBudowy': 0 if data[24] is None else data[24],
+            'NumerKW': '' if data[25] is None else data[25],
+            'InformacjeDodatkowe': '' if data[26] is None else data[26],
+            'GPS': gps_json,
+            'TelefonKontaktowy': '' if data[28] is None else data[28],
+            'EmailKontaktowy': '' if data[29] is None else data[29],
+            'StatusOferty': 0 if data[30] is None else data[30]
+            """
+            if kategoria_ogloszenia == 'mieszkanie':
+                powierzchnia = picked_offer['Metraz']
+                rok_budowy = picked_offer['RokBudowy']
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
+                elif picked_offer['LiczbaPokoi'] > 20:liczba_pokoi = 20
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
+                elif picked_offer['LiczbaPokoi'] > 20:liczba_pokoi = 20
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                poziom = 'parter'
+                 
+                if picked_offer['LiczbaPieter'] == 0:liczba_pieter = 1
+                elif picked_offer['LiczbaPieter'] > 40:liczba_pieter = 40
+                else:liczba_pieter = picked_offer['LiczbaPieter']
+                
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('winda') > 0: winda = 'Z windą'
+                else: winda = 'Bez windy'
+
+                if str(picked_offer['Umeblowanie']).lower().count('w całości') > 0: umeblowanie = 'W pełni'
+                elif str(picked_offer['Umeblowanie']).lower().count('częściowo') > 0: umeblowanie = 'Częściowo'
+                else: umeblowanie = 'Nieumeblowane'
+
+                if str(picked_offer['StanWykonczenia']).lower().count('pod Klucz') > 0: stan = 'Do zamieszkania'
+                elif str(picked_offer['StanWykonczenia']).lower().count('wysoki standard') > 0: stan = 'Wysoki standard'
+                else: stan = 'Do odświeżenia'
+
+                if str(picked_offer['RodzajZabudowy']).lower().count('blok') > 0: typ_budynku = 'Blok'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('płyta') > 0: typ_budynku = 'Blok z płyty'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: typ_budynku = 'Kamienica'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('apartamentowiec') > 0: typ_budynku = 'Apartamentowiec'
+                else: typ_budynku = 'Dom wielorodzinny'
+
+                if str(picked_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'Z aneksem kuchennym'
+                elif str(picked_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'Z osobną kuchnią'
+                else: forma_kuchni = 'brak'
+
+                # region, ulica, cena, powierzchnia, rok_budowy, l_poki, l_pieter, winda, umeblowanie, typ_budynku, stan
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_adresowo
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            umeblowanie, opis_ogloszenia, liczba_pieter, liczba_pokoi, poziom, ulica,
+                            winda, powierzchnia, rok_budowy, stan, typ_budynku, zdjecia_string, 
+                            osoba_kontaktowa, nr_telefonu, 
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, %s, %s,
+                            %s, %s, %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        umeblowanie, opis_ogloszenia, liczba_pieter, liczba_pokoi, poziom, ulica,
+                        winda, powierzchnia, rok_budowy, stan, typ_budynku, zdjecia_string, 
+                        osoba_kontaktowa, nr_telefonu, 
+                        4)
+                print(dane)
+                flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+            if kategoria_ogloszenia == 'dzialka':
+                # region, ulica, typ_budynku, powierzchnia
+                pass
+            if kategoria_ogloszenia == 'komercyjne':
+                # region, ulica, typ_budynku, powierzchnia
+                pass
+
+        if task_kind == 'Publikuj' and rodzaj_ogloszenia == 's':
+            if not region:
+                flash('Wybierz region!', 'danger')
+                return redirect(url_for(redirectGoal))
+
+            picked_offer = {}            
+            for offer in generator_sellOffert():
+                if str(offer['ID']) == str(id_ogloszenia):
+                    picked_offer = offer
+
+            if kategoria_ogloszenia == 'dom':
+                # region, ulica, powierzchnia, pow_dzialki, rok_budowy, l_pieter, typ_budynku, stan, forma_wlasnoci
+                pass
+            if kategoria_ogloszenia == 'mieszkanie':
+                # region, ulica, cena, powierzchnia, rok_budowy, l_poki, l_pieter, winda, umenlowanie, typ_budynku, stan
+                pass
+            if kategoria_ogloszenia == 'dzialka':
+                # region, ulica, typ_budynku, powierzchnia
+                pass
+            if kategoria_ogloszenia == 'komercyjne':
+                # region, ulica, typ_budynku, powierzchnia
+                pass
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
 
