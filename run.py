@@ -6213,7 +6213,7 @@ def public_on_adresowo():
             if get_ulica!='':
                 ulica = get_ulica
             else:
-                ulica = None 
+                ulica = 'Nieokreślona' 
         else:
             ulica = 'Nieokreślona'
         
