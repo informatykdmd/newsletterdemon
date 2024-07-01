@@ -6311,49 +6311,60 @@ def public_on_adresowo():
                 return redirect(url_for(redirectGoal))
             
             if kategoria_ogloszenia == 'dom':
-                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
-                elif picked_offer['LiczbaPokoi'] > 4:liczba_pokoi = 5
-                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+                powierzchnia = picked_offer['Metraz']
                 pow_dzialki = picked_offer['PowierzchniaDzialki']
-                if str(picked_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'anex'
-                elif str(picked_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'oddzielna'
-                else: forma_kuchni = 'brak'
-                if str(picked_offer['RodzajZabudowy']).lower().count('wolnostojący') > 0: typ_domu = 'wolnostojący'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('bliźniak') > 0: typ_domu = 'bliźniak'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('gospodarstwo') > 0: typ_domu = 'gospodarstwo'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: typ_domu = 'kamienica'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('letniskowy') > 0: typ_domu = 'letniskowy'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('rezydencja') > 0: typ_domu = 'rezydencja'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('siedlisko') > 0: typ_domu = 'siedlisko'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('szeregowiec') > 0: typ_domu = 'szeregowiec'
-                else: typ_domu = 'inny'
+                rok_budowy = picked_offer['RokBudowy']
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
+                elif picked_offer['LiczbaPokoi'] > 20:liczba_pokoi = 20
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
 
-                if str(picked_offer['RodzajZabudowy']).lower().count('apartamentowiec') > 0: zabudowa = 'apartamentowiec'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('blok') > 0: zabudowa = 'blok'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: zabudowa = 'kamienica'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('dom') > 0: zabudowa = 'dom'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('loft') > 0: zabudowa = 'loft'
-                elif str(picked_offer['RodzajZabudowy']).lower().count('plomba') > 0: zabudowa = 'plomba'
-                else: zabudowa = 'inne'
-                # region, ulica, powierzchnia, pow_dzialki, rok_budowy, l_pieter, typ_budynku, stan
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = 1
+                elif picked_offer['LiczbaPokoi'] > 20:liczba_pokoi = 20
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                if picked_offer['LiczbaPieter'] == 0:liczba_pieter = 1
+                elif picked_offer['LiczbaPieter'] > 40:liczba_pieter = 40
+                else:liczba_pieter = picked_offer['LiczbaPieter']
+                
+
+                if str(picked_offer['Umeblowanie']).lower().count('w całości') > 0: umeblowanie = 'W pełni'
+                elif str(picked_offer['Umeblowanie']).lower().count('częściowo') > 0: umeblowanie = 'Częściowo'
+                else: umeblowanie = 'Nieumeblowane'
+
+                if str(picked_offer['StanWykonczenia']).lower().count('pod Klucz') > 0: stan = 'Do zamieszkania'
+                elif str(picked_offer['StanWykonczenia']).lower().count('wysoki standard') > 0: stan = 'Wysoki standard'
+                else: stan = 'Do odświeżenia'
+
+                if str(picked_offer['RodzajZabudowy']).lower().count('blok') > 0: typ_budynku = 'Blok'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('płyta') > 0: typ_budynku = 'Blok z płyty'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: typ_budynku = 'Kamienica'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('apartamentowiec') > 0: typ_budynku = 'Apartamentowiec'
+                else: typ_budynku = 'Dom wielorodzinny'
+
                 zapytanie_sql = '''
-                    INSERT INTO ogloszenia_adresowo 
-                        (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
-                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
-                        opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
-                        
-                        status)
-                    VALUES 
-                        (%s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, %s, %s, %s,
-                   
-                        %s, %s, %s, %s);
-                '''
-                34
-                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia,
-                        numer_kw, forma_kuchni, typ_domu, pow_dzialki, liczba_pokoi, powierzchnia, 
-                        opis_ogloszenia, cena, zdjecia_string, miejscowosc, osoba_kontaktowa, nr_telefonu,
+                        INSERT INTO ogloszenia_adresowo
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            umeblowanie, opis_ogloszenia, liczba_pieter, pow_dzialki, ulica, powierzchnia, 
+                            rok_budowy, stan, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, 
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, %s, %s, 
+                            %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        umeblowanie, opis_ogloszenia, liczba_pieter, liczba_pokoi, poziom, ulica,
+                        winda, powierzchnia, rok_budowy, stan, typ_budynku, zdjecia_string, 
+                        osoba_kontaktowa, nr_telefonu, pow_dzialki,
                         4)
+                print(dane)
+                flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
                 
             """
             'ID': int(data[0]),
@@ -6422,9 +6433,6 @@ def public_on_adresowo():
                 elif str(picked_offer['RodzajZabudowy']).lower().count('apartamentowiec') > 0: typ_budynku = 'Apartamentowiec'
                 else: typ_budynku = 'Dom wielorodzinny'
 
-                if str(picked_offer['FormaKuchni']).lower().count('anex') > 0: forma_kuchni = 'Z aneksem kuchennym'
-                elif str(picked_offer['FormaKuchni']).lower().count('oddzielna') > 0: forma_kuchni = 'Z osobną kuchnią'
-                else: forma_kuchni = 'brak'
 
                 # region, ulica, cena, powierzchnia, rok_budowy, l_poki, l_pieter, winda, umeblowanie, typ_budynku, stan
                 zapytanie_sql = '''
