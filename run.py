@@ -6357,8 +6357,8 @@ def public_on_adresowo():
                         umeblowanie, opis_ogloszenia, liczba_pieter, pow_dzialki, ulica, powierzchnia, 
                         rok_budowy, stan, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu,
                         4)
-                print(dane)
-                flash(f'{dane}', 'success')
+                # print(dane)
+                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
@@ -6452,8 +6452,8 @@ def public_on_adresowo():
                         winda, powierzchnia, rok_budowy, stan, typ_budynku, zdjecia_string, 
                         osoba_kontaktowa, nr_telefonu, 
                         4)
-                print(dane)
-                flash(f'{dane}', 'success')
+                # print(dane)
+                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
@@ -6461,7 +6461,42 @@ def public_on_adresowo():
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
             if kategoria_ogloszenia == 'dzialka':
                 # region, ulica, typ_budynku, powierzchnia
-                pass
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('budowlana') > 0: rodzaj_dzialki = 'Budowlana'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('inwestycyjna') > 0: rodzaj_dzialki = 'Inwestycyjna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rolna') > 0: rodzaj_dzialki = 'Rolna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rolno-budowlana') > 0: rodzaj_dzialki = 'Rolno-budowlana'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rekreacyjna') > 0: rodzaj_dzialki = 'Rekreacyjna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('siedliskowa') > 0: rodzaj_dzialki = 'Siedliskowa'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('usługowa') > 0: rodzaj_dzialki = 'Usługowa'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('leśna') > 0: rodzaj_dzialki = 'Leśna'
+                else: rodzaj_dzialki = 'Inna'
+
+                powierzchnia = picked_offer['Metraz']
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_adresowo
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, ulica, powierzchnia, rodzaj_dzialki, zdjecia_string, osoba_kontaktowa, 
+                            nr_telefonu, 
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, %s, %s,
+                            %s,
+                            %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, ulica, powierzchnia, rodzaj_dzialki, zdjecia_string, osoba_kontaktowa, 
+                        nr_telefonu, 
+                        4)
+                print(dane)
+                flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
             if kategoria_ogloszenia == 'komercyjne':
                 # region, ulica, typ_budynku, powierzchnia
                 pass
