@@ -6356,7 +6356,6 @@ def public_on_adresowo():
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                         umeblowanie, opis_ogloszenia, liczba_pieter, pow_dzialki, ulica, powierzchnia, 
                         rok_budowy, stan, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu,
-                        osoba_kontaktowa, nr_telefonu, pow_dzialki,
                         4)
                 print(dane)
                 flash(f'{dane}', 'success')
