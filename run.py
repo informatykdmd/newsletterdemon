@@ -6302,6 +6302,7 @@ def public_on_adresowo():
                 or str(picked_offer['TypDomu']).lower().count('hal') > 0\
                     or str(picked_offer['TypDomu']).lower().count('usługi') > 0\
                     or str(picked_offer['TypDomu']).lower().count('lokal') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('magazyn') > 0\
                 or str(picked_offer['TypDomu']).lower().count('produkcja') > 0:
                 # kategoria na adresowo dla komercyjne
                 kategoria_ogloszenia = 'komercyjne'
