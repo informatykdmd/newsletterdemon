@@ -3143,7 +3143,7 @@ def estateAdsRent():
         if item['adresowo']['status'] is not None:
             start_date = item['adresowo']['data_aktualizacji']
             # Oblicz datę końca promocji
-            end_date = start_date + datetime.timedelta(days=90)
+            end_date = start_date + datetime.timedelta(days=30)
             # Oblicz liczbę dni pozostałych do końca promocji
             days_left = (end_date - datetime.datetime.now()).days
 
@@ -3650,6 +3650,26 @@ def estateAdsSell():
 
             item['facebook']['error_message'] = facebookIDstatus[3]
 
+        if 'adresowo' not in item:
+            item['adresowo'] = {}
+        adresowoIDstatus = checkAdresowoStatus(kind="s", id=item['ID'])
+        item['adresowo']['id'] = adresowoIDstatus[0]
+        item['adresowo']['status'] = adresowoIDstatus[1]
+        item['adresowo']['data_aktualizacji'] = adresowoIDstatus[2]
+        item['adresowo']['errors'] = adresowoIDstatus[3]
+        item['adresowo']['action_before_errors'] = adresowoIDstatus[4]
+
+
+        if item['adresowo']['status'] is not None:
+            start_date = item['adresowo']['data_aktualizacji']
+            # Oblicz datę końca promocji
+            end_date = start_date + datetime.timedelta(days=30)
+            # Oblicz liczbę dni pozostałych do końca promocji
+            days_left = (end_date - datetime.datetime.now()).days
+
+            item['adresowo']['zostalo_dni'] = days_left
+
+            item['adresowo']['error_message'] = facebookIDstatus[3]
 
         new_all_sell.append(item)
 
