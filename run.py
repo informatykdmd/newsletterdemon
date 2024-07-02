@@ -6732,10 +6732,10 @@ def public_on_adresowo():
                 elif str(picked_offer['RodzajZabudowy']).lower().count('apartamentowiec') > 0: typ_budynku = 'Apartamentowiec'
                 else: typ_budynku = 'Dom wielorodzinny'
 
-                if str(picked_offer['InformacjeDodatkowe']).lower().count('spółdzielcze własnościowe') > 0: forma_wlaskosci = 'Spółdzielcze własnościowe'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('pełna własność') > 0: forma_wlaskosci = 'Pełna własność'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('udział') > 0: forma_wlaskosci = 'Udział'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('tbs') > 0: forma_wlaskosci = 'TBS'
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('spółdzielcze własnościowe') > 0: forma_wlasnosci = 'Spółdzielcze własnościowe'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('pełna własność') > 0: forma_wlasnosci = 'Pełna własność'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('udział') > 0: forma_wlasnosci = 'Udział'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('tbs') > 0: forma_wlasnosci = 'TBS'
                 else: 
                     flash('Nie rozpoznano formy własności, która jest wymagana w kategorii mieszkanie na sprzedaż! Wpisz formę własności (spółdzielcze własnościowe, pełna własność, udział, tbs) w polu informacje dodatkowe!', 'danger')
                     return redirect(url_for(redirectGoal))
@@ -6744,7 +6744,7 @@ def public_on_adresowo():
                         INSERT INTO ogloszenia_adresowo
                             (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                             opis_ogloszenia, liczba_pokoi, poziom, liczba_pieter, ulica, powierzchnia, 
-                            rok_budowy, winda, stan, typ_budynku, forma_wlaskosci, zdjecia_string, 
+                            rok_budowy, winda, stan, typ_budynku, forma_wlasnosci, zdjecia_string, 
                             osoba_kontaktowa, nr_telefonu, 
                             status)
                         VALUES 
@@ -6756,7 +6756,7 @@ def public_on_adresowo():
                     '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                         opis_ogloszenia, liczba_pokoi, poziom, liczba_pieter, ulica, powierzchnia, 
-                        rok_budowy, winda, stan, typ_budynku, forma_wlaskosci, zdjecia_string, 
+                        rok_budowy, winda, stan, typ_budynku, forma_wlasnosci, zdjecia_string, 
                         osoba_kontaktowa, nr_telefonu, 
                         4)
                 if msq.insert_to_database(zapytanie_sql, dane):
@@ -7360,16 +7360,16 @@ def public_on_adresowo():
                 elif str(picked_offer['RodzajZabudowy']).lower().count('apartamentowiec') > 0: typ_budynku = 'Apartamentowiec'
                 else: typ_budynku = 'Dom wielorodzinny'
 
-                if str(picked_offer['InformacjeDodatkowe']).lower().count('spółdzielcze własnościowe') > 0: forma_wlaskosci = 'Spółdzielcze własnościowe'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('pełna własność') > 0: forma_wlaskosci = 'Pełna własność'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('udział') > 0: forma_wlaskosci = 'Udział'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('tbs') > 0: forma_wlaskosci = 'TBS'
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('spółdzielcze własnościowe') > 0: forma_wlasnosci = 'Spółdzielcze własnościowe'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('pełna własność') > 0: forma_wlasnosci = 'Pełna własność'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('udział') > 0: forma_wlasnosci = 'Udział'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('tbs') > 0: forma_wlasnosci = 'TBS'
                 else: 
                     flash('Nie rozpoznano formy własności, która jest wymagana w kategorii mieszkanie na sprzedaż! Wpisz formę własności (spółdzielcze własnościowe, pełna własność, udział, tbs) w polu informacje dodatkowe!', 'danger')
                     return redirect(url_for(redirectGoal))
                 
                 # tytul_ogloszenia powierzchnia cena nr_telefonu zdjecia_string opis_ogloszenia
-                # rok_budowy liczba_pokoi poziom liczba_pieter winda stan typ_budynku forma_wlaskosci
+                # rok_budowy liczba_pokoi poziom liczba_pieter winda stan typ_budynku forma_wlasnosci
 
                 zapytanie_sql = '''
                     UPDATE ogloszenia_adresowo
@@ -7386,7 +7386,7 @@ def public_on_adresowo():
                         rok_budowy = %s, 
                         stan = %s, 
                         typ_budynku = %s,
-                        forma_wlaskosci = %s,
+                        forma_wlasnosci = %s,
                         osoba_kontaktowa = %s, 
                         nr_telefonu = %s,
                         status = %s,
@@ -7394,7 +7394,7 @@ def public_on_adresowo():
                     WHERE id = %s;
                 '''
                 dane = (liczba_pokoi, poziom, liczba_pieter, winda, tytul_ogloszenia, powierzchnia, 
-                        opis_ogloszenia, cena, zdjecia_string, rok_budowy, stan, typ_budynku, forma_wlaskosci,
+                        opis_ogloszenia, cena, zdjecia_string, rok_budowy, stan, typ_budynku, forma_wlasnosci,
                         osoba_kontaktowa, nr_telefonu,
                         5, 0,
                     adresowo_id)
