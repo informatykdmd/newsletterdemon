@@ -7170,10 +7170,7 @@ def public_on_adresowo():
             extra_opis = ''
             if picked_offer['RodzajZabudowy'] != '':
                 extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
-            if picked_offer['Czynsz'] != 0:
-                extra_opis += f"Czynsz:\n{picked_offer['Czynsz']} zł.\n\n"
-            if picked_offer['Umeblowanie'] != "":
-                extra_opis += f"Umeblowanie:\n{picked_offer['Umeblowanie']}\n\n"
+           
             if picked_offer['TechBudowy'] != "":
                 extra_opis += f"Technologia Budowy:\n{picked_offer['TechBudowy']}\n\n"
             if picked_offer['StanWykonczenia'] != "":
