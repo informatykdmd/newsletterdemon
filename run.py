@@ -6222,7 +6222,7 @@ def public_on_adresowo():
         return redirect(url_for('index'))
     
     if request.method == 'POST':
-        # print(request.form)
+        print(request.form)
         adresowo_id = request.form.get('adresowo_id')
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
