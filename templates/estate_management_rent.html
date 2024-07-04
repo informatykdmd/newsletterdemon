@@ -2820,7 +2820,7 @@
                                                 <div class="collapse" style="max-width: 400px;" id="collapse_id_adresowo_{{post_id}}">
                                                     <div class="mb-2 mt-2">
                                                         <div class="row mb-2 mt-2">
-                                                            <div class="text-body-secondary">Zmień lokalizację: <p class="text-warning fw-light">{{post_data['adresowo']['region']}}</p></div>
+                                                            <div class="text-body-secondary">Zmień lokalizację: <p class="text-warning fw-light" id="oldlocation_adresowo_{{post_id}}">{{post_data['adresowo']['region']}}</p></div>
                                                             <div class="col-10 text-warning fw-light font-monospace" id="locationString_adresowo_{{post_id}}"></div>
                                                             <div class="col-2 text-end">
                                                                 <button class="btn btn-outline-warning btn-sm" id="changeLocation_adresowo_{{post_id}}" style="display: none; max-height: 25px; font-size: 10px;">Zmień</button>
@@ -3570,6 +3570,8 @@
                     $('#changeLocation_adresowo_' + select_id).show();
                     $('#formfirst_adresowo_' + select_id).show();
                     $('#locationString_adresowo_' + select_id).text(string);
+                    $('#oldlocation_adresowo_' + select_id).hide();
+
                     // console.log('Updating hidden input:', '#region_first_adresowo_' + select_id, 'with value:', string);
 
                     // Check if the hidden input element exists before updating its value
