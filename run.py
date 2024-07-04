@@ -7221,6 +7221,8 @@ def public_on_adresowo():
                             5, 0,
                         adresowo_id)
 
+                print(zapytanie_sql, dane)
+
                 if msq.insert_to_database(zapytanie_sql, dane):
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
