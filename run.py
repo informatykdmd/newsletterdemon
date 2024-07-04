@@ -6493,7 +6493,9 @@ def public_on_adresowo():
                 # region, ulica, typ_budynku, powierzchnia
                 if str(picked_offer['InformacjeDodatkowe']).lower().count('biurowe') > 0: przeznaczenie_lokalu = 'Biuro'
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('handel i usługi') > 0: przeznaczenie_lokalu = 'Lokal'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: przeznaczenie_lokalu = 'Magazyn'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: przeznaczenie_lokalu = 'Hala'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('hala') > 0\
+                      or str(picked_offer['InformacjeDodatkowe']).lower().count('magazyn') > 0: przeznaczenie_lokalu = 'Hala'
                 else: przeznaczenie_lokalu = 'Pozostała nieruchomość'
 
                 powierzchnia = picked_offer['Metraz']
@@ -6606,40 +6608,6 @@ def public_on_adresowo():
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
 
-            """
-            'ID': int(data[0]),
-            'TypNieruchomosci': data[1] if lang=='pl' else getLangText(data[1]),#
-            'Tytul': data[2] if lang=='pl' else getLangText(data[2]), #
-            'Rodzaj': data[3] if lang=='pl' else getLangText(data[3]),#
-            'Opis': opis_json,#
-            'Cena': data[5],#
-            'Lokalizacja': "" if data[6] is None else data[6],#
-            'LiczbaPokoi': 0 if data[7] is None else data[7],#
-            'Metraz': 0 if data[8] is None else data[8],#
-            'Zdjecia': [foto for foto in fotoList if foto is not None],#
-            'DataPublikacjiOlx': None if data[10] is None else format_date(data[10]),#
-            'DataPublikacjiAllegro': None if data[11] is None else format_date(data[11]),#
-            'DataPublikacjiOtoDom': None if data[12] is None else format_date(data[12]),#
-            'DataPublikacjiMarketplace': None if data[13] is None else format_date(data[13]),#
-            'DataUtworzenia': format_date(data[14]),#
-            'DataAktualizacji': format_date(data[15]),#
-            'RodzajZabudowy': "" if data[16] is None else data[16],#
-            'Rynek': '' if data[17] is None else data[17],#
-            'LiczbaPieter': 0 if data[18] is None else data[18],#
-            'PrzeznaczenieLokalu': "" if data[19] is None else data[19],#
-            'Poziom': 'None' if data[20] is None else data[20],#
-            'TechBudowy': '' if data[21] is None else data[21],#
-            'FormaKuchni': '' if data[22] is None else data[22],#
-            'TypDomu': '' if data[23] is None else data[23],#
-            'StanWykonczenia': "" if data[24] is None else data[24],#
-            'RokBudowy': 0 if data[25] is None else data[25],#
-            'NumerKW': '' if data[26] is None else data[26],#
-            'InformacjeDodatkowe': '' if data[27] is None else data[27],#
-            'GPS': gps_json,#
-            'TelefonKontaktowy': '' if data[29] is None else data[29],#
-            'EmailKontaktowy': '' if data[30] is None else data[30],#
-            'StatusOferty': 0 if data[31] is None else data[31]#
-            """
             if kategoria_ogloszenia == 'dom':
                 # region, ulica, powierzchnia, pow_dzialki, rok_budowy, l_pieter, typ_budynku, stan
                 powierzchnia = picked_offer['Metraz']
@@ -6806,7 +6774,9 @@ def public_on_adresowo():
                 # region, ulica, typ_budynku, powierzchnia
                 if str(picked_offer['InformacjeDodatkowe']).lower().count('biurowe') > 0: przeznaczenie_lokalu = 'Biuro'
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('handel i usługi') > 0: przeznaczenie_lokalu = 'Lokal'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: przeznaczenie_lokalu = 'Magazyn'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: przeznaczenie_lokalu = 'Hala'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('hala') > 0\
+                      or str(picked_offer['InformacjeDodatkowe']).lower().count('magazyn') > 0: przeznaczenie_lokalu = 'Hala'
                 else: przeznaczenie_lokalu = 'Pozostała nieruchomość'
 
                 powierzchnia = picked_offer['Metraz']
@@ -7104,7 +7074,9 @@ def public_on_adresowo():
                 # region, ulica, typ_budynku, powierzchnia
                 if str(picked_offer['InformacjeDodatkowe']).lower().count('biurowe') > 0: przeznaczenie_lokalu = 'Biuro'
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('handel i usługi') > 0: przeznaczenie_lokalu = 'Lokal'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: przeznaczenie_lokalu = 'Magazyn'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: przeznaczenie_lokalu = 'Hala'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('hala') > 0\
+                      or str(picked_offer['InformacjeDodatkowe']).lower().count('magazyn') > 0: przeznaczenie_lokalu = 'Hala'
                 else: przeznaczenie_lokalu = 'Pozostała nieruchomość'
 
                 powierzchnia = picked_offer['Metraz']
@@ -7217,40 +7189,6 @@ def public_on_adresowo():
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
 
-            """
-            'ID': int(data[0]),
-            'TypNieruchomosci': data[1] if lang=='pl' else getLangText(data[1]),#
-            'Tytul': data[2] if lang=='pl' else getLangText(data[2]), #
-            'Rodzaj': data[3] if lang=='pl' else getLangText(data[3]),#
-            'Opis': opis_json,#
-            'Cena': data[5],#
-            'Lokalizacja': "" if data[6] is None else data[6],#
-            'LiczbaPokoi': 0 if data[7] is None else data[7],#
-            'Metraz': 0 if data[8] is None else data[8],#
-            'Zdjecia': [foto for foto in fotoList if foto is not None],#
-            'DataPublikacjiOlx': None if data[10] is None else format_date(data[10]),#
-            'DataPublikacjiAllegro': None if data[11] is None else format_date(data[11]),#
-            'DataPublikacjiOtoDom': None if data[12] is None else format_date(data[12]),#
-            'DataPublikacjiMarketplace': None if data[13] is None else format_date(data[13]),#
-            'DataUtworzenia': format_date(data[14]),#
-            'DataAktualizacji': format_date(data[15]),#
-            'RodzajZabudowy': "" if data[16] is None else data[16],#
-            'Rynek': '' if data[17] is None else data[17],#
-            'LiczbaPieter': 0 if data[18] is None else data[18],#
-            'PrzeznaczenieLokalu': "" if data[19] is None else data[19],#
-            'Poziom': 'None' if data[20] is None else data[20],#
-            'TechBudowy': '' if data[21] is None else data[21],#
-            'FormaKuchni': '' if data[22] is None else data[22],#
-            'TypDomu': '' if data[23] is None else data[23],#
-            'StanWykonczenia': "" if data[24] is None else data[24],#
-            'RokBudowy': 0 if data[25] is None else data[25],#
-            'NumerKW': '' if data[26] is None else data[26],#
-            'InformacjeDodatkowe': '' if data[27] is None else data[27],#
-            'GPS': gps_json,#
-            'TelefonKontaktowy': '' if data[29] is None else data[29],#
-            'EmailKontaktowy': '' if data[30] is None else data[30],#
-            'StatusOferty': 0 if data[31] is None else data[31]#
-            """
             if kategoria_ogloszenia == 'dom':
                 # region, ulica, powierzchnia, pow_dzialki, rok_budowy, l_pieter, typ_budynku, stan
                 powierzchnia = picked_offer['Metraz']
@@ -7448,7 +7386,9 @@ def public_on_adresowo():
                 # region, ulica, typ_budynku, powierzchnia
                 if str(picked_offer['InformacjeDodatkowe']).lower().count('biurowe') > 0: przeznaczenie_lokalu = 'Biuro'
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('handel i usługi') > 0: przeznaczenie_lokalu = 'Lokal'
-                elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: przeznaczenie_lokalu = 'Magazyn'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: przeznaczenie_lokalu = 'Hala'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('hala') > 0\
+                      or str(picked_offer['InformacjeDodatkowe']).lower().count('magazyn') > 0: przeznaczenie_lokalu = 'Hala'
                 else: przeznaczenie_lokalu = 'Pozostała nieruchomość'
 
                 powierzchnia = picked_offer['Metraz']
