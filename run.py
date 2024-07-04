@@ -6924,33 +6924,63 @@ def public_on_adresowo():
 
                 # tytul_ogloszenia powierzchnia cena nr_telefonu zdjecia_string opis_ogloszenia
                 # pow_dzialki rok_budowy liczba_pokoi liczba_pieter umeblowanie stan typ_budynku
-
-                zapytanie_sql = '''
-                    UPDATE ogloszenia_adresowo
-                    SET 
-                        umeblowanie = %s,
-                        liczba_pokoi = %s,
-                        liczba_pieter = %s,
-                        pow_dzialki = %s,
-                        tytul_ogloszenia = %s,   
-                        powierzchnia = %s, 
-                        opis_ogloszenia = %s, 
-                        cena = %s, 
-                        zdjecia_string = %s, 
-                        rok_budowy = %s, 
-                        stan = %s, 
-                        typ_budynku = %s,
-                        osoba_kontaktowa = %s, 
-                        nr_telefonu = %s,
-                        status = %s,
-                        active_task=%s
-                    WHERE id = %s;
-                '''
-                dane = (umeblowanie, liczba_pokoi, liczba_pieter, pow_dzialki, tytul_ogloszenia, powierzchnia, 
-                        opis_ogloszenia, cena, zdjecia_string, rok_budowy, stan, typ_budynku,
-                        osoba_kontaktowa, nr_telefonu,
-                        5, 0,
-                    adresowo_id)
+                if region:
+                    zapytanie_sql = '''
+                        UPDATE ogloszenia_adresowo
+                        SET 
+                            region = %s,
+                            ulica = %s,
+                            umeblowanie = %s,
+                            liczba_pokoi = %s,
+                            liczba_pieter = %s,
+                            pow_dzialki = %s,
+                            tytul_ogloszenia = %s,   
+                            powierzchnia = %s, 
+                            opis_ogloszenia = %s, 
+                            cena = %s, 
+                            zdjecia_string = %s, 
+                            rok_budowy = %s, 
+                            stan = %s, 
+                            typ_budynku = %s,
+                            osoba_kontaktowa = %s, 
+                            nr_telefonu = %s,
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                    dane = (region, ulica, umeblowanie, liczba_pokoi, liczba_pieter, pow_dzialki, tytul_ogloszenia, powierzchnia, 
+                            opis_ogloszenia, cena, zdjecia_string, rok_budowy, stan, typ_budynku,
+                            osoba_kontaktowa, nr_telefonu,
+                            5, 0,
+                        adresowo_id)
+                else:
+                    zapytanie_sql = '''
+                        UPDATE ogloszenia_adresowo
+                        SET 
+                            ulica = %s,
+                            umeblowanie = %s,
+                            liczba_pokoi = %s,
+                            liczba_pieter = %s,
+                            pow_dzialki = %s,
+                            tytul_ogloszenia = %s,   
+                            powierzchnia = %s, 
+                            opis_ogloszenia = %s, 
+                            cena = %s, 
+                            zdjecia_string = %s, 
+                            rok_budowy = %s, 
+                            stan = %s, 
+                            typ_budynku = %s,
+                            osoba_kontaktowa = %s, 
+                            nr_telefonu = %s,
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                    dane = (ulica, umeblowanie, liczba_pokoi, liczba_pieter, pow_dzialki, tytul_ogloszenia, powierzchnia, 
+                            opis_ogloszenia, cena, zdjecia_string, rok_budowy, stan, typ_budynku,
+                            osoba_kontaktowa, nr_telefonu,
+                            5, 0,
+                        adresowo_id)
                 # print(dane)
                 # flash(f'{dane}', 'success')
 
@@ -6995,33 +7025,65 @@ def public_on_adresowo():
 
                 # tytul_ogloszenia powierzchnia cena nr_telefonu zdjecia_string opis_ogloszenia
                 # rok_budowy liczba_pokoi poziom liczba_pieter winda umeblowanie stan typ_budynku
-                zapytanie_sql = '''
-                    UPDATE ogloszenia_adresowo
-                    SET 
-                        umeblowanie = %s,
-                        liczba_pokoi = %s,
-                        liczba_pieter = %s,
-                        poziom = %s,
-                        winda = %s,
-                        tytul_ogloszenia = %s,   
-                        powierzchnia = %s, 
-                        opis_ogloszenia = %s, 
-                        cena = %s, 
-                        zdjecia_string = %s, 
-                        rok_budowy = %s, 
-                        stan = %s, 
-                        typ_budynku = %s,
-                        osoba_kontaktowa = %s, 
-                        nr_telefonu = %s,
-                        status = %s,
-                        active_task=%s
-                    WHERE id = %s;
-                '''
-                dane = (umeblowanie, liczba_pokoi, liczba_pieter, poziom, winda, tytul_ogloszenia, powierzchnia, 
-                        opis_ogloszenia, cena, zdjecia_string, rok_budowy, stan, typ_budynku,
-                        osoba_kontaktowa, nr_telefonu,
-                        5, 0,
-                    adresowo_id)
+                if region:
+                    zapytanie_sql = '''
+                        UPDATE ogloszenia_adresowo
+                        SET 
+                            region = %s,
+                            ulica = %s,
+                            umeblowanie = %s,
+                            liczba_pokoi = %s,
+                            liczba_pieter = %s,
+                            poziom = %s,
+                            winda = %s,
+                            tytul_ogloszenia = %s,   
+                            powierzchnia = %s, 
+                            opis_ogloszenia = %s, 
+                            cena = %s, 
+                            zdjecia_string = %s, 
+                            rok_budowy = %s, 
+                            stan = %s, 
+                            typ_budynku = %s,
+                            osoba_kontaktowa = %s, 
+                            nr_telefonu = %s,
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                    dane = (region, ulica, umeblowanie, liczba_pokoi, liczba_pieter, poziom, winda, tytul_ogloszenia, powierzchnia, 
+                            opis_ogloszenia, cena, zdjecia_string, rok_budowy, stan, typ_budynku,
+                            osoba_kontaktowa, nr_telefonu,
+                            5, 0,
+                        adresowo_id)
+                else:
+                    zapytanie_sql = '''
+                        UPDATE ogloszenia_adresowo
+                        SET 
+                            ulica = %s,
+                            umeblowanie = %s,
+                            liczba_pokoi = %s,
+                            liczba_pieter = %s,
+                            poziom = %s,
+                            winda = %s,
+                            tytul_ogloszenia = %s,   
+                            powierzchnia = %s, 
+                            opis_ogloszenia = %s, 
+                            cena = %s, 
+                            zdjecia_string = %s, 
+                            rok_budowy = %s, 
+                            stan = %s, 
+                            typ_budynku = %s,
+                            osoba_kontaktowa = %s, 
+                            nr_telefonu = %s,
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                    dane = (ulica, umeblowanie, liczba_pokoi, liczba_pieter, poziom, winda, tytul_ogloszenia, powierzchnia, 
+                            opis_ogloszenia, cena, zdjecia_string, rok_budowy, stan, typ_budynku,
+                            osoba_kontaktowa, nr_telefonu,
+                            5, 0,
+                        adresowo_id)
                 # print(dane)
                 # flash(f'{dane}', 'success')
 
@@ -7045,27 +7107,53 @@ def public_on_adresowo():
 
                 # tytul_ogloszenia powierzchnia cena nr_telefonu zdjecia_string opis_ogloszenia
                 # powierzchnia rodzaj_dzialki
-                zapytanie_sql = '''
-                    UPDATE ogloszenia_adresowo
-                    SET 
-                        tytul_ogloszenia = %s,   
-                        powierzchnia = %s, 
-                        opis_ogloszenia = %s, 
-                        cena = %s, 
-                        zdjecia_string = %s, 
-                        rodzaj_dzialki = %s,
-                        osoba_kontaktowa = %s, 
-                        nr_telefonu = %s,
-                        status = %s,
-                        active_task=%s
-                    WHERE id = %s;
-                '''
-                dane = (tytul_ogloszenia, powierzchnia, 
-                        opis_ogloszenia, cena, zdjecia_string, 
-                        rodzaj_dzialki,
-                        osoba_kontaktowa, nr_telefonu,
-                        5, 0,
-                    adresowo_id)
+                if region:
+                    zapytanie_sql = '''
+                        UPDATE ogloszenia_adresowo
+                        SET 
+                            region = %s,
+                            ulica = %s,
+                            tytul_ogloszenia = %s,   
+                            powierzchnia = %s, 
+                            opis_ogloszenia = %s, 
+                            cena = %s, 
+                            zdjecia_string = %s, 
+                            rodzaj_dzialki = %s,
+                            osoba_kontaktowa = %s, 
+                            nr_telefonu = %s,
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                    dane = (region, ulica, tytul_ogloszenia, powierzchnia, 
+                            opis_ogloszenia, cena, zdjecia_string, 
+                            rodzaj_dzialki,
+                            osoba_kontaktowa, nr_telefonu,
+                            5, 0,
+                        adresowo_id)
+                else:
+                    zapytanie_sql = '''
+                        UPDATE ogloszenia_adresowo
+                        SET 
+                            ulica = %s,
+                            tytul_ogloszenia = %s,   
+                            powierzchnia = %s, 
+                            opis_ogloszenia = %s, 
+                            cena = %s, 
+                            zdjecia_string = %s, 
+                            rodzaj_dzialki = %s,
+                            osoba_kontaktowa = %s, 
+                            nr_telefonu = %s,
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                    dane = (ulica, tytul_ogloszenia, powierzchnia, 
+                            opis_ogloszenia, cena, zdjecia_string, 
+                            rodzaj_dzialki,
+                            osoba_kontaktowa, nr_telefonu,
+                            5, 0,
+                        adresowo_id)
 
                 if msq.insert_to_database(zapytanie_sql, dane):
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
@@ -7085,27 +7173,53 @@ def public_on_adresowo():
 
                 # tytul_ogloszenia powierzchnia cena nr_telefonu zdjecia_string opis_ogloszenia
                 # przeznaczenie_lokalu
-                zapytanie_sql = '''
-                    UPDATE ogloszenia_adresowo
-                    SET 
-                        tytul_ogloszenia = %s,   
-                        powierzchnia = %s, 
-                        opis_ogloszenia = %s, 
-                        cena = %s, 
-                        zdjecia_string = %s, 
-                        przeznaczenie_lokalu = %s,
-                        osoba_kontaktowa = %s, 
-                        nr_telefonu = %s,
-                        status = %s,
-                        active_task=%s
-                    WHERE id = %s;
-                '''
-                dane = (tytul_ogloszenia, powierzchnia, 
-                        opis_ogloszenia, cena, zdjecia_string, 
-                        przeznaczenie_lokalu,
-                        osoba_kontaktowa, nr_telefonu,
-                        5, 0,
-                    adresowo_id)
+                if region:
+                    zapytanie_sql = '''
+                        UPDATE ogloszenia_adresowo
+                        SET 
+                            region = %s,
+                            ulica = %s,
+                            tytul_ogloszenia = %s,   
+                            powierzchnia = %s, 
+                            opis_ogloszenia = %s, 
+                            cena = %s, 
+                            zdjecia_string = %s, 
+                            przeznaczenie_lokalu = %s,
+                            osoba_kontaktowa = %s, 
+                            nr_telefonu = %s,
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                    dane = (region, ulica, tytul_ogloszenia, powierzchnia, 
+                            opis_ogloszenia, cena, zdjecia_string, 
+                            przeznaczenie_lokalu,
+                            osoba_kontaktowa, nr_telefonu,
+                            5, 0,
+                        adresowo_id)
+                else:
+                    zapytanie_sql = '''
+                        UPDATE ogloszenia_adresowo
+                        SET 
+                            ulica = %s,
+                            tytul_ogloszenia = %s,   
+                            powierzchnia = %s, 
+                            opis_ogloszenia = %s, 
+                            cena = %s, 
+                            zdjecia_string = %s, 
+                            przeznaczenie_lokalu = %s,
+                            osoba_kontaktowa = %s, 
+                            nr_telefonu = %s,
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                    dane = (ulica, tytul_ogloszenia, powierzchnia, 
+                            opis_ogloszenia, cena, zdjecia_string, 
+                            przeznaczenie_lokalu,
+                            osoba_kontaktowa, nr_telefonu,
+                            5, 0,
+                        adresowo_id)
 
                 if msq.insert_to_database(zapytanie_sql, dane):
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
