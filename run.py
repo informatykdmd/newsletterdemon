@@ -294,9 +294,9 @@ def takeFacebookResumeStatus(facebook_id):
 
 def checkAdresowoStatus(kind, id):
     try:
-        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors FROM ogloszenia_adresowo WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
+        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors, region, ulica FROM ogloszenia_adresowo WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
     except IndexError:
-        return (None, None, None, None, None)
+        return (None, None, None, None, None, None, None)
 
 def takeAdresowoResumeStatus(adresowo_id):
     try:
@@ -3138,6 +3138,8 @@ def estateAdsRent():
         item['adresowo']['data_aktualizacji'] = adresowoIDstatus[2]
         item['adresowo']['errors'] = adresowoIDstatus[3]
         item['adresowo']['action_before_errors'] = adresowoIDstatus[4]
+        item['adresowo']['region'] = adresowoIDstatus[5]
+        item['adresowo']['ulica'] = adresowoIDstatus[6]
 
 
         if item['adresowo']['status'] is not None:
@@ -6220,7 +6222,7 @@ def public_on_adresowo():
         return redirect(url_for('index'))
     
     if request.method == 'POST':
-        print(request.form)
+        # print(request.form)
         adresowo_id = request.form.get('adresowo_id')
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')

@@ -2820,8 +2820,10 @@
                                                 <div class="collapse" style="max-width: 400px;" id="collapse_id_adresowo_{{post_id}}">
                                                     <div class="mb-2 mt-2">
                                                         <div class="row mb-2 mt-2">
-                                                            <div class="text-body-secondary">Wybierz lokalizację:</div>
-                                                            <div class="col-10 text-warning fw-light font-monospace" id="locationString_adresowo_{{post_id}}"></div>
+                                                            <div class="text-body-secondary">Zmień lokalizację:</div>
+                                                            <div class="col-10 text-warning fw-light font-monospace" id="locationString_adresowo_{{post_id}}">
+                                                                {{post_data['adresowo']['region']}}
+                                                            </div>
                                                             <div class="col-2 text-end">
                                                                 <button class="btn btn-outline-warning btn-sm" id="changeLocation_adresowo_{{post_id}}" style="display: none; max-height: 25px; font-size: 10px;">Zmień</button>
                                                             </div>
@@ -2863,7 +2865,7 @@
                                                                         
                                                                         <input 
                                                                             type="text" 
-                                                                            value=""
+                                                                            value="{{post_data['adresowo']['ulica']}}"
                                                                             class="form-control bg-dark formatuj-maly-font text-warning" 
                                                                             style="color:#c2c2c2; border:#ffc800 solid 1px; max-height: 28px; font-size: 12px;"
                                                                             placeholder="Podaj ulicę (Nieokreślona)" 
