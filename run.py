@@ -3300,6 +3300,11 @@ def update_rent_offer_status():
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Facebooka", "danger")
             return redirect(url_for('estateAdsRent'))
         
+        statusNaAdresowo = checkAdresowoStatus('r', set_post_id)
+        if statusNaAdresowo[0] != None:
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Adresowo", "danger")
+            return redirect(url_for('estateAdsRent'))
+        
         if set_post_status == 0:
             removeSpecOffer(set_post_id, 'r')
         zapytanie_sql = f'''
@@ -3818,6 +3823,11 @@ def update_sell_offer_status():
         if statusNaFacebooku[0] != None:
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Facebooka", "danger")
             return redirect(url_for('estateAdsSell'))
+        
+        statusNaAdresowo = checkAdresowoStatus('s', set_post_id)
+        if statusNaAdresowo[0] != None:
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Adresowo", "danger")
+            return redirect(url_for('estateAdsRent'))
         
         if set_post_status == 0:
             removeSpecOffer(set_post_id, 's')
