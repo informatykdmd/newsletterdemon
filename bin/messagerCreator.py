@@ -38,5 +38,12 @@ def create_html_message(postID, client_name, heshed):
 with open(message_templates['config'], 'r', encoding="utf-8") as plik:
     HTML_ACTIVE = plik.read()
 
+def create_html_resend(client_name, client_email, data, tresc):
+    with open(message_templates['resend'], 'r', encoding="utf-8") as plik:
+        template = plik.read()
+
+    ready_template = template.replace('{{imie klienta}}', str(client_name)).replace('{{email klienta}}', str(client_email)).replace('{{data kontaktu}}', str(data)).replace('{{treść wiadomości}}', str(tresc))
+    return ready_template
+
 if __name__ == "__main__":
     print(create_html_message(1, 'michał', 'hash'))

@@ -38,11 +38,12 @@ def main():
                 )
             
         # Przekazanie widomości ze strony na biuro@dmddomy.pl
-        contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE FROM contact WHERE DONE=1;')
+        contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE, DATE_TIME FROM contact WHERE DONE=1;')
         for data in contectDB:
             EMAIL_COMPANY = "informatyk@dmdbudownictwo.pl" #'biuro@dmddomy.pl'
             TITLE_MESSAGE = f"{data[3]}"
-            message = f'''Wiadomość z formularza kontaktowego:\n\n{data[4]}\n\nImię nadawcy:{data[1]}\nE-mail:{data[2]}'''
+            message = messagerCreator.create_html_resend(client_name=data[1], client_email=data[2], data=data[5], tresc=data[4])
+            f'''Wiadomość z formularza kontaktowego:\n\n{data[4]}\n\nImię nadawcy:{data[1]}\nE-mail:{data[2]}'''
             sendEmailBySmtp.send_html_email(TITLE_MESSAGE, message, EMAIL_COMPANY)
             prepare_shedule.insert_to_database(
                 f"UPDATE contact SET DONE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
