@@ -37,7 +37,7 @@ def main():
                 (3, data[0], data[2])
                 )
             
-        # Przekazanie widomości ze strony na biuro@dmddomy.pl
+        # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
         contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE, DATE_TIME FROM contact WHERE DONE=1;')
         for data in contectDB:
             EMAIL_COMPANY = 'pawel@dmdbudownictwo.pl'
