@@ -3827,7 +3827,7 @@ def update_sell_offer_status():
         statusNaAdresowo = checkAdresowoStatus('s', set_post_id)
         if statusNaAdresowo[0] != None:
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Adresowo", "danger")
-            return redirect(url_for('estateAdsRent'))
+            return redirect(url_for('estateAdsSell'))
         
         if set_post_status == 0:
             removeSpecOffer(set_post_id, 's')
