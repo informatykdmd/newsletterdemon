@@ -1,8 +1,17 @@
+import re
 def wczytaj_dane(plik_csv, kolumna1, kolumna2):
     with open(plik_csv, 'r', encoding='utf-8') as file:
         next(file)  # Pomija nagłówek
         dane = [(row[kolumna1], row[kolumna2]) for row in (line.strip().split(';') for line in file)]
     return dane
+
+def contains_numbers(val):
+    # Sprawdź, czy w stringu znajduje się przynajmniej jedna cyfra
+    if re.search(r'\d', val):
+        return False
+    else:
+        return True
+    
 def getRegionData(
         wojewodztwo=None,
         powiat=None,
@@ -102,9 +111,7 @@ def getRegionData(
             } 
 
         for key, val in obreby_ewidencyjne_dict.items():
-            val_check = False
-            try: int(val[0])
-            except: val_check = True
+            val_check = contains_numbers(val)            
             if key.startswith(choice_gmina) and val_check:
                 miejscowosci_list.append(val.capitalize())
         
