@@ -3660,6 +3660,8 @@ def estateAdsSell():
         item['adresowo']['data_aktualizacji'] = adresowoIDstatus[2]
         item['adresowo']['errors'] = adresowoIDstatus[3]
         item['adresowo']['action_before_errors'] = adresowoIDstatus[4]
+        item['adresowo']['region'] = adresowoIDstatus[5]
+        item['adresowo']['ulica'] = adresowoIDstatus[6]
 
 
         if item['adresowo']['status'] is not None:
