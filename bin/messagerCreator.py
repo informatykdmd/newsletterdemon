@@ -36,7 +36,7 @@ def create_html_message(postID, client_name, heshed):
     return ready_template
 
 with open(message_templates['config'], 'r', encoding="utf-8") as plik:
-        HTML_ACTIVE = plik.read()
+    HTML_ACTIVE = plik.read()
 
 if __name__ == "__main__":
     print(create_html_message(1, 'michał', 'hash'))
