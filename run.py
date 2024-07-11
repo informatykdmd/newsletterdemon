@@ -152,7 +152,7 @@ def generator_userDataDB():
     return userData
 
 def get_messages():
-    dump_key = msq.connect_to_database("SELECT user_name, content, timestamp FROM Messages WHERE status != 1 ORDER BY timestamp DESC")
+    dump_key = msq.connect_to_database("SELECT user_name, content, timestamp FROM Messages WHERE status != 1 ORDER BY timestamp ASC")
     return dump_key
 
 def save_chat_message(user_name, content, status):
