@@ -217,8 +217,37 @@
         </div>
     </div>
 </div>
+<div id="chat-box">
+    <!-- Wiadomości będą tutaj -->
+</div>
 {% endblock %}
 
 {% block footer %}
  To jest stopka panelu administracyjnego. All right reserved &copy; 2024 by DMD Panel Administratora.<br/>
+{% endblock %}
+
+{% block bottom_script %}
+<script>
+    $(document).ready(function() {
+        function fetchMessages() {
+            $.ajax({
+                url: '/fetch-messages', // URL do endpointu Flask pobierającego wiadomości
+                method: 'GET',
+                success: function(data) {
+                    let chatBox = $('#chat-box');
+                    chatBox.empty();
+                    data.forEach(function(message) {
+                        chatBox.append(`<div><strong>${message[0]}:</strong> ${message[1]} <small>(${message[2]})</small></div>`);
+                    });
+                }
+            });
+        }
+
+        // Pobieranie wiadomości co 5 sekund
+        setInterval(fetchMessages, 5000);
+
+        // Początkowe pobranie wiadomości
+        fetchMessages();
+    });
+</script>
 {% endblock %}

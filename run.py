@@ -151,6 +151,10 @@ def generator_userDataDB():
         userData.append(theme)
     return userData
 
+def get_messages():
+    dump_key = msq.connect_to_database("SELECT user_name, content, timestamp FROM Messages WHERE status != 1 ORDER BY timestamp DESC")
+    return dump_key
+
 def generator_teamDB():
     took_teamD = take_data_table('*', 'workers_team')
     teamData = []
@@ -854,6 +858,11 @@ def home():
                             inwestycje=inwestycje,
                             instalacje=instalacje
                             )
+
+@app.route('/fetch-messages')
+def fetch_messages():
+    messages = get_messages()
+    return jsonify(messages)
 
 @app.route('/blog')
 def blog(router=True):
