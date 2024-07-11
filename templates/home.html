@@ -217,9 +217,18 @@
         </div>
     </div>
 </div>
-<div id="chat-box">
-    <!-- Wiadomości będą tutaj -->
+<div class="jasne rogi formatyj-maly-wiersz">
+    <div id="chat-box">
+        <!-- Wiadomości będą tutaj -->
+    </div>
+    <div>
+        <form id="chat-form">
+            <input type="text" id="message-input" placeholder="Wpisz wiadomość" required>
+            <button type="submit">Wyślij</button>
+        </form>
+    </div>
 </div>
+
 {% endblock %}
 
 {% block footer %}
@@ -249,5 +258,37 @@
         // Początkowe pobranie wiadomości
         fetchMessages();
     });
+
+    document.getElementById('chat-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Zapobiega przeładowaniu strony
+
+        var messageInput = document.getElementById('message-input');
+        var message = messageInput.value;
+
+        if (message.trim() !== "") {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/send-chat-message', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 201) {
+                    var chatBox = document.getElementById('chat-box');
+                    var newMessage = document.createElement('div');
+                    newMessage.textContent = "TwojeImię: " + message;
+                    chatBox.appendChild(newMessage);
+                    messageInput.value = ''; // Czyści pole tekstowe
+                }
+            };
+
+            var data = JSON.stringify({
+                user_name: "TwojeImię", // Zastąp własnym mechanizmem autoryzacji użytkownika
+                content: message
+            });
+
+            xhr.send(data);
+        }
+    });
+
+
 </script>
 {% endblock %}

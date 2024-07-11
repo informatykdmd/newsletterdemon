@@ -155,6 +155,14 @@ def get_messages():
     dump_key = msq.connect_to_database("SELECT user_name, content, timestamp FROM Messages WHERE status != 1 ORDER BY timestamp DESC")
     return dump_key
 
+def save_chat_message(user_name, content, status):
+    zapytanie_sql = f'''
+        INSERT INTO Messages (user_name, content, status)
+        VALUES (%s, %s, %s);
+    '''
+    dane = tuple(user_name, content, status)
+    return msq.insert_to_database(zapytanie_sql, dane)
+
 def generator_teamDB():
     took_teamD = take_data_table('*', 'workers_team')
     teamData = []
@@ -863,6 +871,13 @@ def home():
 def fetch_messages():
     messages = get_messages()
     return jsonify(messages)
+
+@app.route('/send-chat-message', methods=['POST'])
+def send_chat_message():
+    data = request.get_json()
+    new_message = save_chat_message(user_name=data['user_name'], content=data['content'])
+
+    return jsonify(user_name=data['user_name'], content=data['content'], timestamp=new_message.timestamp.isoformat())
 
 @app.route('/blog')
 def blog(router=True):
