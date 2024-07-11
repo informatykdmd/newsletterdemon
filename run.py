@@ -160,7 +160,7 @@ def save_chat_message(user_name, content, status):
         INSERT INTO Messages (user_name, content, status)
         VALUES (%s, %s, %s);
     '''
-    dane = tuple(user_name, content, status)
+    dane = (user_name, content, status)
     return msq.insert_to_database(zapytanie_sql, dane)
 
 def generator_teamDB():
