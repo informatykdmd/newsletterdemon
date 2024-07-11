@@ -151,8 +151,19 @@ def generator_userDataDB():
         userData.append(theme)
     return userData
 
-def get_messages():
-    dump_key = msq.connect_to_database("SELECT user_name, content, timestamp FROM Messages WHERE status != 1 ORDER BY timestamp ASC")
+def get_messages(flag='all'):
+    # WHERE status != 1
+    if flag == 'all':
+        dump_key = msq.connect_to_database(
+            "SELECT user_name, content, timestamp FROM Messages ORDER BY timestamp ASC;")
+
+    if flag == 'today':
+        dump_key = msq.connect_to_database(
+            "SELECT user_name, content, timestamp FROM Messages WHERE date(timestamp) = curdate() ORDER BY timestamp ASC;")
+
+    if flag == 'last':
+        dump_key = msq.connect_to_database(
+            """SELECT user_name, content, timestamp FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR ORDER BY timestamp ASC;""")
     return dump_key
 
 def save_chat_message(user_name, content, status):
@@ -869,7 +880,7 @@ def home():
 
 @app.route('/fetch-messages')
 def fetch_messages():
-    messages = get_messages()
+    messages = get_messages('last')
     return jsonify(messages)
 
 @app.route('/send-chat-message', methods=['POST'])
