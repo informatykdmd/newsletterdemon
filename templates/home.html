@@ -274,8 +274,8 @@
                 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 201) {
                     var chatBox = document.getElementById('chat-box');
                     var newMessage = document.createElement('div');
-                    newMessage.textContent = "TwojeImię: " + message;
-                    chatBox.appendChild(newMessage);
+                    newMessage.textContent = message;
+                    // chatBox.appendChild(newMessage);
                     messageInput.value = ''; // Czyści pole tekstowe
                 }
             };
