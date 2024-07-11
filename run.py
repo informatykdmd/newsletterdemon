@@ -874,10 +874,17 @@ def fetch_messages():
 
 @app.route('/send-chat-message', methods=['POST'])
 def send_chat_message():
+    """Strona z zarządzaniem czatem."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
     data = request.get_json()
-    new_message = save_chat_message(user_name=data['user_name'], content=data['content'])
-
-    return jsonify(user_name=data['user_name'], content=data['content'], timestamp=new_message.timestamp.isoformat())
+    
+    new_message = save_chat_message(user_name=session['username'], content=data['content'], status=0)
+    if new_message:
+        return jsonify({"status": "success"}), 201
+    else:
+        return jsonify({"status": "error"}), 500
 
 @app.route('/blog')
 def blog(router=True):
