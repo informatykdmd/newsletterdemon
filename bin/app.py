@@ -3,6 +3,7 @@ from datetime import datetime
 import prepare_shedule
 import messagerCreator 
 import sendEmailBySmtp
+import random
 from archiveSents import archive_sents
 from appslib import handle_error
 
@@ -95,7 +96,17 @@ def main():
                 )
 
         # komentowanie chata przez serwer automatów
-        pre_prompt = "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Włącz się do rozmowy, zwracając się do użytkowników po nicku. Odrazu pisz swąją wypowiedź!"
+        
+        random_choiced_prompt_list = [
+                "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Włącz się do rozmowy, zwracając się do użytkowników po nicku. Odrazu pisz swoją wypowiedź!",  # Przykład wzorcowy
+                "Oto wiadomość w chacie. Reaguj podekscytowanym tonem, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!",
+                "Oto wiadomość w chacie. Odpowiedz w sposób neutralny, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",
+                "Oto wiadomość w chacie. Reaguj w sposób powściągliwy, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!",
+                "Oto wiadomość w chacie. Odpowiedz w żartobliwy sposób, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",
+                "Oto wiadomość w chacie. Reaguj szyderczo, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!"
+            ]
+
+        pre_prompt = random.choice(random_choiced_prompt_list)
         final_prompt = prepare_prompt(pre_prompt)
         if final_prompt is not None:
 
