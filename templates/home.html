@@ -221,9 +221,9 @@
     <div class="m-2" id="chat-box">
         <!-- Wiadomości będą tutaj -->
     </div>
-    <div>
-        <form class="m-2" id="chat-form">
-            <input class="form-control form-control-lg" id="message-input" type="text" placeholder="Wpisz wiadomość" aria-label=".form-control-lg example" required>
+    <div class="m-2" >
+        <form id="chat-form">
+            <input class="form-control form-control-lg bg-dark" id="message-input" type="text" placeholder="Wpisz wiadomość" aria-label=".form-control-lg example" required>
             <!-- <input type="text" id="message-input" placeholder="Wpisz wiadomość" required> -->
             <!-- <button type="submit">Wyślij</button> -->
         </form>
@@ -247,7 +247,7 @@
                     let chatBox = $('#chat-box');
                     chatBox.empty();
                     data.forEach(function(message) {
-                        chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-2">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
+                        chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-4">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
                     });
                 }
             });
