@@ -36,6 +36,9 @@ def prepare_prompt(began_prompt):
         if theme["user_name"] == 'aifa':
             theme["user_name"] = 'Ty'
 
+        if theme["status"] == 2 and len(dump_key) < 2:
+            continue
+
         if prepare_shedule.insert_to_database(
                 f"UPDATE Messages SET status = %s WHERE id = %s",
                 (1, theme["id"])):
