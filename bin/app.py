@@ -98,7 +98,7 @@ def main():
                 f"""INSERT INTO chat_task
                         (question, status)
                     VALUES 
-                        (%s, %s, %s, %s)""",
+                        (%s, %s)""",
                 (final_prompt, 4)
                 )
 
