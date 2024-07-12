@@ -41,6 +41,7 @@ def insert_to_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], h
         polaczenie_DB.close()
     except Exception as e:
         handle_error(e)
+        return False
     return True
 
 def delete_row_from_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):

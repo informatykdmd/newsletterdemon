@@ -6,6 +6,45 @@ import sendEmailBySmtp
 from archiveSents import archive_sents
 from appslib import handle_error
 
+def get_messages(flag='all'):
+    # WHERE status != 1
+    if flag == 'all':
+        dump_key = prepare_shedule.connect_to_database(
+            "SELECT id, user_name, content, timestamp FROM Messages WHERE status != 1 ORDER BY timestamp ASC;")
+
+    if flag == 'today':
+        dump_key = prepare_shedule.connect_to_database(
+            "SELECT id, user_name, content, timestamp FROM Messages WHERE date(timestamp) = curdate() AND status != 1 ORDER BY timestamp ASC;")
+
+    if flag == 'last':
+        dump_key = prepare_shedule.connect_to_database(
+            """SELECT id, user_name, content, timestamp FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR AND status != 1 ORDER BY timestamp ASC;""")
+    return dump_key
+
+def prepare_prompt(began_prompt):
+    dump_key = get_messages()
+    ready_prompt = f'{began_prompt}\n\n'
+    count_ready = 0
+    for dump in dump_key:
+        theme = {
+            "id": dump[0],
+            "user_name": dump[1],
+            "content": dump[2]
+        }
+        if theme["user_name"] == 'aifa':
+            theme["user_name"] = 'Ty'
+        
+        if prepare_shedule.insert_to_database(
+                f"UPDATE Messages SET status = %s WHERE id = %s",
+                (1, theme["id"])):
+            ready_prompt += f'{theme["user_name"]}\n{theme["content"]}\n\n'
+            count_ready += 1
+
+    if count_ready > 0:
+        return ready_prompt
+    else:
+        return None
+
 def main():
     for _ in range(int(time())):
         # Wysyłka newslettera do aktywnych użytkowników według planu wysyłki
@@ -48,6 +87,19 @@ def main():
             prepare_shedule.insert_to_database(
                 f"UPDATE contact SET DONE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
                 (0, data[0], data[2])
+                )
+
+        # komentowanie chata przez serwer automatów
+        pre_prompt = "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Włącz się do rozmowy, zwracając się do użytkowników po nicku. Odrazu pisz swąją wypowiedź!"
+        final_prompt = prepare_prompt(pre_prompt)
+        if final_prompt is not None:
+
+            prepare_shedule.insert_to_database(
+                f"""INSERT INTO chat_task
+                        (question, status)
+                    VALUES 
+                        (%s, %s, %s, %s)""",
+                (final_prompt, 4)
                 )
 
 
