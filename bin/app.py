@@ -10,30 +10,35 @@ def get_messages(flag='all'):
     # WHERE status != 1
     if flag == 'all':
         dump_key = prepare_shedule.connect_to_database(
-            "SELECT id, user_name, content, timestamp FROM Messages WHERE status != 1 ORDER BY timestamp ASC;")
+            "SELECT id, user_name, content, timestamp, status FROM Messages WHERE status != 1 ORDER BY timestamp ASC;")
 
     if flag == 'today':
         dump_key = prepare_shedule.connect_to_database(
-            "SELECT id, user_name, content, timestamp FROM Messages WHERE date(timestamp) = curdate() AND status != 1 ORDER BY timestamp ASC;")
+            "SELECT id, user_name, content, timestamp, status FROM Messages WHERE date(timestamp) = curdate() AND status != 1 ORDER BY timestamp ASC;")
 
     if flag == 'last':
         dump_key = prepare_shedule.connect_to_database(
-            """SELECT id, user_name, content, timestamp FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR AND status != 1 ORDER BY timestamp ASC;""")
+            """SELECT id, user_name, content, timestamp, status FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR AND status != 1 ORDER BY timestamp ASC;""")
     return dump_key
 
 def prepare_prompt(began_prompt):
-    dump_key = get_messages()
+    dump_key = get_messages('last')
     ready_prompt = f'{began_prompt}\n\n'
     count_ready = 0
     for dump in dump_key:
         theme = {
             "id": dump[0],
             "user_name": dump[1],
-            "content": dump[2]
+            "content": dump[2],
+            "timestamp": dump[3],
+            "status": dump[4],
         }
         if theme["user_name"] == 'aifa':
             theme["user_name"] = 'Ty'
-        
+
+        if len(dump_key) > 2 and theme["status"] == 2:
+            continue
+
         if prepare_shedule.insert_to_database(
                 f"UPDATE Messages SET status = %s WHERE id = %s",
                 (1, theme["id"])):
