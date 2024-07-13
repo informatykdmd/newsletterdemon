@@ -238,65 +238,66 @@
 
 {% block bottom_script %}
 <script>
-    // $(document).ready(function() {
-    //     function fetchMessages() {
-    //         $.ajax({
-    //             url: '/fetch-messages', // URL do endpointu Flask pobierającego wiadomości
-    //             method: 'GET',
-    //             success: function(data) {
-    //                 let chatBox = $('#chat-box');
-    //                 chatBox.empty();
-    //                 data.forEach(function(message) {
-    //                     chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-4">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
-    //                 });
-    //                 // Przewijanie na dół po załadowaniu wiadomości
-    //                 $('html, body').scrollTop($(document).height());
-    //             }
-    //         });
-    //     }
-
-    //     // Pobieranie wiadomości co 5 sekund
-    //     setInterval(fetchMessages, 3000);
-
-    //     // Początkowe pobranie wiadomości
-    //     fetchMessages();
-    // });
     $(document).ready(function() {
-        let lastMessageId = null;
-
         function fetchMessages() {
             $.ajax({
                 url: '/fetch-messages', // URL do endpointu Flask pobierającego wiadomości
                 method: 'GET',
                 success: function(data) {
                     let chatBox = $('#chat-box');
-                    let currentMessageIds = data.map(message => message[3]); // Załóżmy, że message[3] to ID wiadomości
-
-                    if (lastMessageId !== null && currentMessageIds.includes(lastMessageId)) {
-                        // Znaleziono ostatnią wiadomość, nie przewijaj
-                        return;
-                    }
-
                     chatBox.empty();
                     data.forEach(function(message) {
                         chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-4">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
                     });
-
                     // Przewijanie na dół po załadowaniu wiadomości
                     $('html, body').scrollTop($(document).height());
-
-                    // Zaktualizuj ID ostatniej wiadomości
-                    lastMessageId = currentMessageIds.length > 0 ? currentMessageIds[currentMessageIds.length - 1] : null;
                 }
             });
         }
 
-        // Pobieranie wiadomości co 3 sekundy
+        // Pobieranie wiadomości co 5 sekund
         setInterval(fetchMessages, 3000);
 
         // Początkowe pobranie wiadomości
         fetchMessages();
     });
+
+    // $(document).ready(function() {
+    //     let lastMessageId = null;
+
+    //     function fetchMessages() {
+    //         $.ajax({
+    //             url: '/fetch-messages', // URL do endpointu Flask pobierającego wiadomości
+    //             method: 'GET',
+    //             success: function(data) {
+    //                 let chatBox = $('#chat-box');
+    //                 let currentMessageIds = data.map(message => message[3]); // Załóżmy, że message[3] to ID wiadomości
+
+    //                 if (lastMessageId !== null && currentMessageIds.includes(lastMessageId)) {
+    //                     // Znaleziono ostatnią wiadomość, nie przewijaj
+    //                     return;
+    //                 }
+
+    //                 chatBox.empty();
+    //                 data.forEach(function(message) {
+    //                     chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-4">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
+    //                 });
+
+    //                 // Przewijanie na dół po załadowaniu wiadomości
+    //                 $('html, body').scrollTop($(document).height());
+
+    //                 // Zaktualizuj ID ostatniej wiadomości
+    //                 lastMessageId = currentMessageIds.length > 0 ? currentMessageIds[currentMessageIds.length - 1] : null;
+    //             }
+    //         });
+    //     }
+
+    //     // Pobieranie wiadomości co 3 sekundy
+    //     setInterval(fetchMessages, 3000);
+
+    //     // Początkowe pobranie wiadomości
+    //     fetchMessages();
+    // });
 
     document.getElementById('chat-form').addEventListener('submit', function(event) {
         event.preventDefault(); // Zapobiega przeładowaniu strony
