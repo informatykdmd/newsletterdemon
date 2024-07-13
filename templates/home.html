@@ -275,10 +275,10 @@
 
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 201) {
-                    var chatBox = document.getElementById('chat-box');
-                    var newMessage = document.createElement('div');
-                    newMessage.textContent = message;
-                    chatBox.appendChild(newMessage);
+                    // var chatBox = document.getElementById('chat-box');
+                    // var newMessage = document.createElement('div');
+                    // newMessage.textContent = message;
+                    // chatBox.appendChild(newMessage);
                     messageInput.value = ''; // Czyści pole tekstowe
                 }
             };
