@@ -8083,8 +8083,8 @@ def public_on_allegro():
                     '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                         opis_ogloszenia, liczba_pokoi, liczba_pieter, poziom, ulica, powierzchnia, 
-                        kod_pocztowy, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
-                        pakiet, extra_wyroznienie, extra_wznawianie,
+                        kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
+                        pakiet, extra_wyroznienie, extra_wznawianie, 
                         4)
                 # print(dane)
                 # flash(f'{dane}', 'success')
