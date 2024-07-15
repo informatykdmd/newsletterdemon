@@ -128,3 +128,42 @@ CREATE TABLE ogloszenia_adresowo (
     data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     action_before_errors INT
 );
+
+-- tabela allegrolokalnie
+CREATE TABLE ogloszenia_allegrolokalnie (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rodzaj_ogloszenia VARCHAR(255),
+    id_ogloszenia INT,
+    tytul_ogloszenia TEXT,
+    kategoria_ogloszenia TEXT,
+    region TEXT,
+    kod_pocztowy TEXT,
+    ulica TEXT,
+    cena INT,
+    opis_ogloszenia TEXT,
+    liczba_pieter INT,
+    liczba_pokoi INT,
+    poziom TEXT,
+    powierzchnia INT,
+    pow_dzialki INT,
+    typ_budynku TEXT,
+    typ_komercyjny TEXT,
+    typ_dzialki TEXT,
+    typ_kuchni TEXT,
+    rodzaj_zabudowy TEXT,
+    rynek TEXT,
+    pakiet TEXT,
+    extra_wyroznienie TEXT,
+    extra_wznawianie TEXT,
+    zdjecia_string TEXT,
+    osoba_kontaktowa VARCHAR(255),
+    nr_telefonu VARCHAR(20),
+    adres_email VARCHAR(255),
+    id_zadania INT,
+    id_ogloszenia_na_allegro TEXT,
+    status INT,
+    active_task INT,
+    errors TEXT,
+    data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    action_before_errors INT
+);

@@ -326,6 +326,18 @@ def takeAdresowoResumeStatus(adresowo_id):
         return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_adresowo WHERE id="{adresowo_id}";')[0][0]
     except IndexError:
         return None
+    
+def checkAllegroStatus(kind, id):
+    try:
+        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors, region, ulica, kod_pocztowy FROM ogloszenia_allegrolokalnie WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
+    except IndexError:
+        return (None, None, None, None, None, None, None, None)
+
+def takeAllegroResumeStatus(adresowo_id):
+    try:
+        return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_allegrolokalnie WHERE id="{adresowo_id}";')[0][0]
+    except IndexError:
+        return None
 
 def takeAdresowoRegion(adresowo_id):
     try:
@@ -3194,6 +3206,30 @@ def estateAdsRent():
             item['adresowo']['zostalo_dni'] = days_left
 
             item['adresowo']['error_message'] = facebookIDstatus[3]
+
+        if 'allegro' not in item:
+            item['allegro'] = {}
+        adresowoIDstatus = checkAllegroStatus(kind="r", id=item['ID'])
+        item['allegro']['id'] = adresowoIDstatus[0]
+        item['allegro']['status'] = adresowoIDstatus[1]
+        item['allegro']['data_aktualizacji'] = adresowoIDstatus[2]
+        item['allegro']['errors'] = adresowoIDstatus[3]
+        item['allegro']['action_before_errors'] = adresowoIDstatus[4]
+        item['allegro']['region'] = adresowoIDstatus[5]
+        item['allegro']['ulica'] = adresowoIDstatus[6]
+        item['allegro']['kod'] = adresowoIDstatus[7]
+
+
+        if item['allegro']['status'] is not None:
+            start_date = item['allegro']['data_aktualizacji']
+            # Oblicz datę końca promocji
+            end_date = start_date + datetime.timedelta(days=30)
+            # Oblicz liczbę dni pozostałych do końca promocji
+            days_left = (end_date - datetime.datetime.now()).days
+
+            item['allegro']['zostalo_dni'] = days_left
+
+            item['allegro']['error_message'] = facebookIDstatus[3]
         
         new_all_rents.append(item)
 
@@ -7826,6 +7862,75 @@ def public_on_adresowo():
             else:
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         
+        return redirect(url_for(redirectGoal))
+    return redirect(url_for('index')) 
+
+@app.route('/public-on-allegro', methods=['POST'])
+def public_on_allegro():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        print(request.form)
+        allegro_id = request.form.get('allegro_id')
+        id_ogloszenia = request.form.get('PostID')
+        task_kind = request.form.get('task_kind')
+        redirectGoal = request.form.get('redirectGoal')
+        if 'region' in request.form:
+            get_region = request.form.get('region')
+            if get_region!='' and get_region.count('/')>4:
+                region = get_region
+            else:
+                region = None  
+        else:
+            region = None
+
+        if 'ulica' in request.form:
+            get_ulica = request.form.get('ulica')
+            if get_ulica!='':
+                ulica = get_ulica
+            else:
+                ulica = 'Nieokreślona' 
+        else:
+            ulica = 'Nieokreślona'
+        
+        if 'kodpocztowy' in request.form:
+            get_kod_pocztowy = request.form.get('kodpocztowy')
+            if get_kod_pocztowy!='':
+                kod_pocztowy = get_kod_pocztowy
+            else:
+                kod_pocztowy = None  
+        else:
+            kod_pocztowy = None
+        
+        rodzaj_ogloszenia = None
+        if redirectGoal == 'estateAdsRent':
+            rodzaj_ogloszenia = 'r'
+        if redirectGoal == 'estateAdsSell':
+            rodzaj_ogloszenia = 's'
+
+        if task_kind == 'Publikuj' and rodzaj_ogloszenia == 'r':
+            pass
+        if task_kind == 'Publikuj' and rodzaj_ogloszenia == 's':
+            pass
+
+        if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 'r': pass
+        if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 's': pass
+
+        if task_kind == 'Usun': pass
+        if task_kind == 'Ponow_zadanie': pass
+
+        if task_kind == 'Anuluj_zadanie': pass
+
+        if task_kind == 'Odswiez': pass
+
+        if task_kind == 'Ponow': pass
+
+
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
 
