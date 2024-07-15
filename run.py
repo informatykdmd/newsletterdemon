@@ -8060,7 +8060,39 @@ def public_on_allegro():
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
-            if kategoria_ogloszenia == 'mieszkanie': pass
+            if kategoria_ogloszenia == 'mieszkanie': 
+
+                liczba_pokoi = picked_offer['LiczbaPokoi']
+                liczba_pieter = picked_offer['LiczbaPieter']
+                poziom = 0
+
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_allegrolokalnie
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, liczba_pokoi, liczba_pieter, poziom, ulica, powierzchnia, 
+                            kod_pocztowy, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
+                            pakiet, extra_wyroznienie, extra_wznawianie, 
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, 
+                            %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, liczba_pokoi, liczba_pieter, poziom, ulica, powierzchnia, 
+                        kod_pocztowy, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
+                        pakiet, extra_wyroznienie, extra_wznawianie,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
             if kategoria_ogloszenia == 'dzialka': pass
             if kategoria_ogloszenia == 'lokal': pass
             if kategoria_ogloszenia == 'magazyn': pass
