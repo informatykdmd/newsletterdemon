@@ -8071,13 +8071,13 @@ def public_on_allegro():
                         INSERT INTO ogloszenia_allegrolokalnie
                             (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                             opis_ogloszenia, liczba_pokoi, liczba_pieter, poziom, ulica, powierzchnia, 
-                            kod_pocztowy, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
+                            kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
                             pakiet, extra_wyroznienie, extra_wznawianie, 
                             status)
                         VALUES 
                             (%s, %s, %s, %s, %s, %s,
                              %s, %s, %s, %s, %s, %s,
-                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, 
                              %s, %s, %s, 
                             %s);
                     '''
