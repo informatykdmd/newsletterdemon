@@ -2472,30 +2472,35 @@
                                                             <input type="hidden" name="allegro_id" value="{{post_data['allegro']['id']}}" />
                                                             <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                             <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                            <input 
-                                                                type="text" 
-                                                                value=""
-                                                                class="form-control bg-dark formatuj-maly-font text-warning" 
-                                                                style="color:#c2c2c2; border:#ffc800 solid 1px; max-height: 28px; font-size: 12px;"
-                                                                placeholder="Podaj ulicę (Nieokreślona)" 
-                                                                aria-label="Podaj ulicę"
-                                                                id="ulica_{{post_id}}" 
-                                                                name="ulica" />
-                                                            <input 
-                                                                type="text" 
-                                                                value=""
-                                                                class="form-control bg-dark formatuj-maly-font text-warning" 
-                                                                style="color:#c2c2c2; border:#ffc800 solid 1px; max-height: 28px; font-size: 12px;"
-                                                                placeholder="Podaj kod pocztowy" 
-                                                                aria-label="Podaj kod pocztowy"
-                                                                id="kodpocztowy_{{post_id}}" 
-                                                                name="kodpocztowy" />
-                                                            
+
                                                             <div class="col me-1 mb-1">
                                                                 
                                                                 <input type="hidden" name="Status" value="0" />
                                                                 <input type="hidden" name="task_kind" value="Publikuj" />
-
+                                                                <div class="row">
+                                                                    <div class="col-8">
+                                                                        <input 
+                                                                            type="text" 
+                                                                            value=""
+                                                                            class="form-control bg-dark formatuj-maly-font text-warning" 
+                                                                            style="color:#c2c2c2; border:#ffc800 solid 1px; max-height: 28px; font-size: 12px;"
+                                                                            placeholder="Podaj ulicę (Nieokreślona)" 
+                                                                            aria-label="Podaj ulicę"
+                                                                            id="ulica_{{post_id}}" 
+                                                                            name="ulica" />
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <input 
+                                                                            type="text" 
+                                                                            value=""
+                                                                            class="form-control bg-dark formatuj-maly-font text-warning" 
+                                                                            style="color:#c2c2c2; border:#ffc800 solid 1px; max-height: 28px; font-size: 12px;"
+                                                                            placeholder="Podaj kod pocztowy" 
+                                                                            aria-label="Podaj kod pocztowy"
+                                                                            id="kodpocztowy_{{post_id}}" 
+                                                                            name="kodpocztowy" />
+                                                                    </div>
+                                                                </div>
                                                                 <!-- block -->
                                                                 <div class="row">
                                                                     <div class="col">
