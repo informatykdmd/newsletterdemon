@@ -8060,6 +8060,8 @@ def public_on_allegro():
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+
             if kategoria_ogloszenia == 'mieszkanie': 
 
                 liczba_pokoi = picked_offer['LiczbaPokoi']
@@ -8093,7 +8095,48 @@ def public_on_allegro():
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
-            if kategoria_ogloszenia == 'dzialka': pass
+
+            if kategoria_ogloszenia == 'dzialka': 
+
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('budowlana') > 0: typ_dzialki = 'Budowlana'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rolna') > 0: typ_dzialki = 'Rolna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rolno-budowlana') > 0: typ_dzialki = 'Rolno-budowlana'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rekreacyjna') > 0: typ_dzialki = 'Rekreacyjna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('siedliskowa') > 0: typ_dzialki = 'Siedliskowa'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('usługowa') > 0: typ_dzialki = 'Handlowo-Usługowa'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('handlowa') > 0: typ_dzialki = 'Handlowo-Usługowa'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('leśna') > 0: typ_dzialki = 'Leśna'
+                else: typ_dzialki = 'Inna'
+
+                powierzchnia = picked_offer['Metraz']
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_allegrolokalnie
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, ulica, powierzchnia, typ_dzialki, 
+                            kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
+                            pakiet, extra_wyroznienie, extra_wznawianie, 
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, 
+                             %s, %s, %s, 
+                            %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, ulica, powierzchnia, typ_dzialki, 
+                        kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
+                        pakiet, extra_wyroznienie, extra_wznawianie, 
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
             if kategoria_ogloszenia == 'lokal': pass
             if kategoria_ogloszenia == 'magazyn': pass
 
