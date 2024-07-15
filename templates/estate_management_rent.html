@@ -2468,16 +2468,17 @@
                                                 
                                                 <div class="row row-cols-auto mb-3">
                                                     <div class="col">
-                                                        <form action="{{ url_for('public_on_allegro') }}" id="form_allegro_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                        <form action="{{ url_for('public_on_allegro') }}" id="form_allegro_{{post_id}}" style="display: none;" method="POST" enctype="multipart/form-data">
                                                             <input type="hidden" name="allegro_id" value="{{post_data['allegro']['id']}}" />
                                                             <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                             <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <input type="hidden" id="regionfirst_allgero_{{post_id}}" name="region" value="" />
 
                                                             <div class="col me-1 mb-1">
                                                                 
                                                                 <input type="hidden" name="Status" value="0" />
                                                                 <input type="hidden" name="task_kind" value="Publikuj" />
-                                                                <div class="row">
+                                                                <div class="row mb-3">
                                                                     <div class="col-8">
                                                                         <input 
                                                                             type="text" 
@@ -4284,7 +4285,7 @@
             $('#miejscowosc_allegro_' + select_id).hide().val('');
             $('#dzielnica_allegro_' + select_id).hide().val('');
             $('#changeLocation_allegro_' + select_id).hide();
-            $('#formfirst_allegro_' + select_id).hide();
+            $('#form_allegro_' + select_id).hide();
             $('#regionfirst_allegro_' + select_id).val('');
             fetchOptions_allegro('loaded', select_id);
         });
