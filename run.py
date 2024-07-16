@@ -8018,6 +8018,9 @@ def public_on_allegro():
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
             
+            time_truck = int(int(str(int(time.time()))[:6]) / 6)
+            id_ogloszenia_na_allegro = int(f'{time_truck}{id_ogloszenia}')
+
             if kategoria_ogloszenia == 'dom': 
                 pow_dzialki = picked_offer['PowierzchniaDzialki']
 
@@ -8039,19 +8042,19 @@ def public_on_allegro():
                             (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                             opis_ogloszenia, liczba_pokoi, pow_dzialki, ulica, powierzchnia, kod_pocztowy,
                             typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, pakiet,
-                            extra_wyroznienie, extra_wznawianie,
+                            extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                             status)
                         VALUES 
                             (%s, %s, %s, %s, %s, %s,
                              %s, %s, %s, %s, %s, %s,
                              %s, %s, %s, %s, %s, %s,
-                             %s, %s,  
+                             %s, %s, %s,
                             %s);
                     '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                         opis_ogloszenia, liczba_pokoi, pow_dzialki, ulica, powierzchnia, kod_pocztowy,
                         typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, pakiet,
-                        extra_wyroznienie, extra_wznawianie,
+                        extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
                 # print(dane)
                 # flash(f'{dane}', 'success')
@@ -8074,19 +8077,19 @@ def public_on_allegro():
                             (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                             opis_ogloszenia, liczba_pokoi, liczba_pieter, poziom, ulica, powierzchnia, 
                             kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
-                            pakiet, extra_wyroznienie, extra_wznawianie, 
+                            pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                             status)
                         VALUES 
                             (%s, %s, %s, %s, %s, %s,
                              %s, %s, %s, %s, %s, %s,
                              %s, %s, %s, %s, %s, 
-                             %s, %s, %s, 
+                             %s, %s, %s, %s,
                             %s);
                     '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                         opis_ogloszenia, liczba_pokoi, liczba_pieter, poziom, ulica, powierzchnia, 
                         kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
-                        pakiet, extra_wyroznienie, extra_wznawianie, 
+                        pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
                 # print(dane)
                 # flash(f'{dane}', 'success')
@@ -8113,19 +8116,19 @@ def public_on_allegro():
                             (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                             opis_ogloszenia, ulica, powierzchnia, typ_dzialki, 
                             kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
-                            pakiet, extra_wyroznienie, extra_wznawianie, 
+                            pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                             status)
                         VALUES 
                             (%s, %s, %s, %s, %s, %s,
                              %s, %s, %s, %s,
                              %s, %s, %s, %s, %s, 
-                             %s, %s, %s, 
+                             %s, %s, %s, %s,
                             %s);
                     '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                         opis_ogloszenia, ulica, powierzchnia, typ_dzialki, 
                         kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
-                        pakiet, extra_wyroznienie, extra_wznawianie, 
+                        pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
                 # print(dane)
                 # flash(f'{dane}', 'success')
@@ -8135,7 +8138,7 @@ def public_on_allegro():
                 else:
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
-            if kategoria_ogloszenia == 'lokal': 
+            if kategoria_ogloszenia == 'lokal' or kategoria_ogloszenia == 'magazyn': 
                 if str(picked_offer['InformacjeDodatkowe']).lower().count('biurowe') > 0: typ_komercyjny = 'Biuro'
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('handel i usługi') > 0: typ_komercyjny = 'Lokal usługowy'
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: typ_komercyjny = 'Fabryka'
@@ -8146,19 +8149,19 @@ def public_on_allegro():
                             (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                             opis_ogloszenia, ulica, powierzchnia, typ_komercyjny, 
                             kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
-                            pakiet, extra_wyroznienie, extra_wznawianie, 
+                            pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                             status)
                         VALUES 
                             (%s, %s, %s, %s, %s, %s,
                              %s, %s, %s, %s,
                              %s, %s, %s, %s, %s, 
-                             %s, %s, %s, 
+                             %s, %s, %s, %s,
                             %s);
                     '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                         opis_ogloszenia, ulica, powierzchnia, typ_komercyjny, 
                         kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
-                        pakiet, extra_wyroznienie, extra_wznawianie, 
+                        pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
                 # print(dane)
                 # flash(f'{dane}', 'success')
@@ -8167,8 +8170,6 @@ def public_on_allegro():
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
-
-            if kategoria_ogloszenia == 'magazyn': pass
 
         if task_kind == 'Publikuj' and rodzaj_ogloszenia == 's':
             pass
