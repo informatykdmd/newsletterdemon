@@ -3758,6 +3758,30 @@ def estateAdsSell():
 
             item['adresowo']['error_message'] = facebookIDstatus[3]
 
+        if 'allegro' not in item:
+            item['allegro'] = {}
+        adresowoIDstatus = checkAllegroStatus(kind="r", id=item['ID'])
+        item['allegro']['id'] = adresowoIDstatus[0]
+        item['allegro']['status'] = adresowoIDstatus[1]
+        item['allegro']['data_aktualizacji'] = adresowoIDstatus[2]
+        item['allegro']['errors'] = adresowoIDstatus[3]
+        item['allegro']['action_before_errors'] = adresowoIDstatus[4]
+        item['allegro']['region'] = adresowoIDstatus[5]
+        item['allegro']['ulica'] = adresowoIDstatus[6]
+        item['allegro']['kod'] = adresowoIDstatus[7]
+
+
+        if item['allegro']['status'] is not None:
+            start_date = item['allegro']['data_aktualizacji']
+            # Oblicz datę końca promocji
+            end_date = start_date + datetime.timedelta(days=30)
+            # Oblicz liczbę dni pozostałych do końca promocji
+            days_left = (end_date - datetime.datetime.now()).days
+
+            item['allegro']['zostalo_dni'] = days_left
+
+            item['allegro']['error_message'] = facebookIDstatus[3]
+
         new_all_sell.append(item)
 
     # Ustawienia paginacji
