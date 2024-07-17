@@ -8225,7 +8225,7 @@ def public_on_allegro():
             opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
 
 
-            kategoria_ogloszenia = checkAdresowoStatus('r', allegro_id)[8]
+            kategoria_ogloszenia = checkAllegroStatus('r', allegro_id)[8]
             print(kategoria_ogloszenia)
             if kategoria_ogloszenia == None:
                 flash(f'Bład kategorii! Oferta nie została wysłana do realizacji!', 'danger')
