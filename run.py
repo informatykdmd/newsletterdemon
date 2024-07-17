@@ -8850,8 +8850,6 @@ def public_on_allegro():
                             rynek = %s,   
                             typ_budynku = %s, 
                             zdjecia_string = %s, 
-                            cena = %s, 
-                            zdjecia_string = %s, 
                             osoba_kontaktowa = %s, 
                             nr_telefonu = %s,
                             adres_email = %s,
