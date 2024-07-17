@@ -8323,7 +8323,7 @@ def public_on_allegro():
             id_ogloszenia_na_allegro = int(f'{time_truck}{id_ogloszenia}')
 
             if kategoria_ogloszenia == 'dom': 
-                pow_dzialki = picked_offer['PowierzchniaDzialki']
+                pow_dzialki = int(powierzchnia) * 5
 
                 liczba_pokoi = picked_offer['LiczbaPokoi']
 
@@ -8803,10 +8803,7 @@ def public_on_allegro():
             extra_opis = ''
             if picked_offer['RodzajZabudowy'] != '':
                 extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
-            if picked_offer['Czynsz'] != 0:
-                extra_opis += f"Czynsz:\n{picked_offer['Czynsz']} zł.\n\n"
-            if picked_offer['Umeblowanie'] != "":
-                extra_opis += f"Umeblowanie:\n{picked_offer['Umeblowanie']}\n\n"
+           
             if picked_offer['TechBudowy'] != "":
                 extra_opis += f"Technologia Budowy:\n{picked_offer['TechBudowy']}\n\n"
             if picked_offer['StanWykonczenia'] != "":
@@ -8825,7 +8822,7 @@ def public_on_allegro():
                 flash(f'Bład kategorii! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dom': 
-                pow_dzialki = picked_offer['PowierzchniaDzialki']
+                pow_dzialki = int(powierzchnia) * 5
 
                 liczba_pokoi = picked_offer['LiczbaPokoi']
 
