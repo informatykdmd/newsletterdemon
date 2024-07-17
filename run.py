@@ -3205,19 +3205,19 @@ def estateAdsRent():
 
             item['adresowo']['zostalo_dni'] = days_left
 
-            item['adresowo']['error_message'] = facebookIDstatus[3]
+            item['adresowo']['error_message'] = adresowoIDstatus[3]
 
         if 'allegro' not in item:
             item['allegro'] = {}
-        adresowoIDstatus = checkAllegroStatus(kind="r", id=item['ID'])
-        item['allegro']['id'] = adresowoIDstatus[0]
-        item['allegro']['status'] = adresowoIDstatus[1]
-        item['allegro']['data_aktualizacji'] = adresowoIDstatus[2]
-        item['allegro']['errors'] = adresowoIDstatus[3]
-        item['allegro']['action_before_errors'] = adresowoIDstatus[4]
-        item['allegro']['region'] = adresowoIDstatus[5]
-        item['allegro']['ulica'] = adresowoIDstatus[6]
-        item['allegro']['kod'] = adresowoIDstatus[7]
+        allegroIDstatus = checkAllegroStatus(kind="r", id=item['ID'])
+        item['allegro']['id'] = allegroIDstatus[0]
+        item['allegro']['status'] = allegroIDstatus[1]
+        item['allegro']['data_aktualizacji'] = allegroIDstatus[2]
+        item['allegro']['errors'] = allegroIDstatus[3]
+        item['allegro']['action_before_errors'] = allegroIDstatus[4]
+        item['allegro']['region'] = allegroIDstatus[5]
+        item['allegro']['ulica'] = allegroIDstatus[6]
+        item['allegro']['kod'] = allegroIDstatus[7]
 
 
         if item['allegro']['status'] is not None:
@@ -3229,7 +3229,7 @@ def estateAdsRent():
 
             item['allegro']['zostalo_dni'] = days_left
 
-            item['allegro']['error_message'] = facebookIDstatus[3]
+            item['allegro']['error_message'] = allegroIDstatus[3]
         
         new_all_rents.append(item)
 
@@ -3381,6 +3381,11 @@ def update_rent_offer_status():
         statusNaAdresowo = checkAdresowoStatus('r', set_post_id)
         if statusNaAdresowo[0] != None:
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Adresowo", "danger")
+            return redirect(url_for('estateAdsRent'))
+        
+        statusNaAllegro = checkAllegroStatus('r', set_post_id)
+        if statusNaAllegro[0] != None:
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Allegro", "danger")
             return redirect(url_for('estateAdsRent'))
         
         if set_post_status == 0:
@@ -3760,15 +3765,15 @@ def estateAdsSell():
 
         if 'allegro' not in item:
             item['allegro'] = {}
-        adresowoIDstatus = checkAllegroStatus(kind="s", id=item['ID'])
-        item['allegro']['id'] = adresowoIDstatus[0]
-        item['allegro']['status'] = adresowoIDstatus[1]
-        item['allegro']['data_aktualizacji'] = adresowoIDstatus[2]
-        item['allegro']['errors'] = adresowoIDstatus[3]
-        item['allegro']['action_before_errors'] = adresowoIDstatus[4]
-        item['allegro']['region'] = adresowoIDstatus[5]
-        item['allegro']['ulica'] = adresowoIDstatus[6]
-        item['allegro']['kod'] = adresowoIDstatus[7]
+        allegroIDstatus = checkAllegroStatus(kind="s", id=item['ID'])
+        item['allegro']['id'] = allegroIDstatus[0]
+        item['allegro']['status'] = allegroIDstatus[1]
+        item['allegro']['data_aktualizacji'] = allegroIDstatus[2]
+        item['allegro']['errors'] = allegroIDstatus[3]
+        item['allegro']['action_before_errors'] = allegroIDstatus[4]
+        item['allegro']['region'] = allegroIDstatus[5]
+        item['allegro']['ulica'] = allegroIDstatus[6]
+        item['allegro']['kod'] = allegroIDstatus[7]
 
 
         if item['allegro']['status'] is not None:
@@ -3780,7 +3785,7 @@ def estateAdsSell():
 
             item['allegro']['zostalo_dni'] = days_left
 
-            item['allegro']['error_message'] = facebookIDstatus[3]
+            item['allegro']['error_message'] = allegroIDstatus[3]
 
         new_all_sell.append(item)
 
@@ -3929,6 +3934,11 @@ def update_sell_offer_status():
         statusNaAdresowo = checkAdresowoStatus('s', set_post_id)
         if statusNaAdresowo[0] != None:
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Adresowo", "danger")
+            return redirect(url_for('estateAdsSell'))
+        
+        statusNaAllegro = checkAllegroStatus('s', set_post_id)
+        if statusNaAllegro[0] != None:
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Allegro", "danger")
             return redirect(url_for('estateAdsSell'))
         
         if set_post_status == 0:
