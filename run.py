@@ -8865,7 +8865,7 @@ def public_on_allegro():
                     allegro_id)
                 
                 # print(dane)
-                # flash(f'{dane}', 'success')
+                flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
