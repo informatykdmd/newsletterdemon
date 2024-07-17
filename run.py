@@ -8248,7 +8248,7 @@ def public_on_allegro():
 
 
                 zapytanie_sql = '''
-                        UPDATE ogloszenia_adresowo
+                        UPDATE ogloszenia_allegrolokalnie
                         SET 
                             tytul_ogloszenia = %s,
                             cena = %s,
@@ -8288,7 +8288,7 @@ def public_on_allegro():
                 poziom = 0
 
                 zapytanie_sql = '''
-                        UPDATE ogloszenia_adresowo
+                        UPDATE ogloszenia_allegrolokalnie
                         SET 
                             tytul_ogloszenia = %s,
                             cena = %s,
@@ -8331,7 +8331,7 @@ def public_on_allegro():
                 else: typ_dzialki = 'Inna'
 
                 zapytanie_sql = '''
-                        UPDATE ogloszenia_adresowo
+                        UPDATE ogloszenia_allegrolokalnie
                         SET 
                             tytul_ogloszenia = %s,
                             cena = %s,
@@ -8368,7 +8368,7 @@ def public_on_allegro():
                 liczba_pokoi = picked_offer['LiczbaPokoi']
 
                 zapytanie_sql = '''
-                        UPDATE ogloszenia_adresowo
+                        UPDATE ogloszenia_allegrolokalnie
                         SET 
                             tytul_ogloszenia = %s,
                             cena = %s,
