@@ -3760,7 +3760,7 @@ def estateAdsSell():
 
         if 'allegro' not in item:
             item['allegro'] = {}
-        adresowoIDstatus = checkAllegroStatus(kind="r", id=item['ID'])
+        adresowoIDstatus = checkAllegroStatus(kind="s", id=item['ID'])
         item['allegro']['id'] = adresowoIDstatus[0]
         item['allegro']['status'] = adresowoIDstatus[1]
         item['allegro']['data_aktualizacji'] = adresowoIDstatus[2]
