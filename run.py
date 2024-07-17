@@ -8144,22 +8144,24 @@ def public_on_allegro():
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('produkcja i przemysł') > 0: typ_komercyjny = 'Fabryka'
                 else: typ_komercyjny = 'Inny obiekt'
 
+                liczba_pokoi = picked_offer['LiczbaPokoi']
+
                 zapytanie_sql = '''
                         INSERT INTO ogloszenia_allegrolokalnie
                             (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
-                            opis_ogloszenia, ulica, powierzchnia, typ_komercyjny, 
+                            opis_ogloszenia, ulica, powierzchnia, typ_komercyjny, liczba_pokoi,
                             kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
                             pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                             status)
                         VALUES 
                             (%s, %s, %s, %s, %s, %s,
-                             %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s,
                              %s, %s, %s, %s, %s, 
                              %s, %s, %s, %s,
                             %s);
                     '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
-                        opis_ogloszenia, ulica, powierzchnia, typ_komercyjny, 
+                        opis_ogloszenia, ulica, powierzchnia, typ_komercyjny, liczba_pokoi,
                         kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
                         pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
