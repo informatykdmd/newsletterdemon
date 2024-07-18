@@ -209,7 +209,7 @@ CREATE TABLE ogloszenia_allegrolokalnie (
     -- wynajem: cena, metraz, konstrukcja
     -- sprzedaż: cena, metraz, konstrukcja, stan_wykonczenia
 
--- tabela allegrolokalnie
+-- tabela otodom
 CREATE TABLE ogloszenia_otodom (
     id INT AUTO_INCREMENT PRIMARY KEY,
     rodzaj_ogloszenia VARCHAR(255),

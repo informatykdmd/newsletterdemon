@@ -3268,6 +3268,7 @@ def estateAdsRent():
             item['otodom']['error_message'] = otodom_IDstatus[3]
         
         new_all_rents.append(item)
+    flash(f"{str(new_all_rents)}", 'dnager')
 
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -3295,6 +3296,8 @@ def estateAdsRent():
     instalacje = settingsDB['instalacje']
 
     lentoOffer = 1
+
+    flash(f"{str(ads_rent)}", 'dnager')
 
     return render_template(
                             "estate_management_rent.html",
@@ -9177,7 +9180,16 @@ def public_on_otodom():
         else:
             region = None
 
-        
+        """
+        ImmutableMultiDict([
+            ('otodom_id', 'None'), ('redirectGoal', 'estateAdsRent'), ('PostID', '52'), 
+            ('region', 'dolnośląskie / Legnica / Legnica miasto / Legnica / Nieokreślona /'), 
+            ('Status', '0'), ('task_kind', 'Publikuj'), ('wznawiaj', 'on'), 
+            ('top_30_dni_otodom', '1'), ('wyswietlanie_na_stronie_glownej_7_dni_otodom', '1'), 
+            ('export_do_olx_otodom', 'on'), 
+            ('wyroznij_na_olx_otodom', '1'), ('odswiezaj_na_olx_otodom_', '1')
+            ])
+        """
         if 'pakiet_premium' in request.form:
             pakiet = 3
         elif 'pakiet_optymalny' in request.form:
@@ -9203,7 +9215,7 @@ def public_on_otodom():
 
 
 
-            
+
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
