@@ -167,3 +167,91 @@ CREATE TABLE ogloszenia_allegrolokalnie (
     data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     action_before_errors INT
 );
+
+-- otodom
+
+-- Odnawiaj ogłoszenie automatycznie co 30 dni (auto zaznaczenie)
+-- TOP
+-- Strona główna
+-- Ogłoszenie na OLX (eksportuje)
+-- Podbicie
+-- Megapodbicie
+-- Promuj swoje ogłoszenie na OLX 
+    -- Mini
+    -- Midi
+    -- Maxi
+
+    -- Wyróżnione na OLX
+    -- Odświeżenie na OLX
+
+-- https://www.otodom.pl/nowe-ogloszenie/edit/65685579/
+
+-- id na karcie promowania
+-- https://www.otodom.pl/pl/mojekonto/business/promuj/2/65685959
+
+-- domy
+    -- wynajem: cena, metraz, pow_dzialki, licz_pokoi, licz_pieter, rodzaj_zabudowy
+    -- sprzedaż: cena, metraz, pow_dzialki, rynek, rodzaj_zabudowy, licz_pieter, rok_budowy
+
+-- mieszkania
+    -- wynajem: cena, metraz, licz_pokoi
+    -- sprzedaż: cena, metraz, licz_pokoi, rynek, licz_pieter, pietro
+
+-- dzialki
+    -- wynajem: cena, metraz, typ_dzialki
+    -- sprzedaż: cena, metraz, typ_dzialki
+
+-- lokale
+    -- wynajem: cena, metraz
+    -- sprzedaż: cena, metraz, rynek
+
+-- hale
+    -- wynajem: cena, metraz, konstrukcja
+    -- sprzedaż: cena, metraz, konstrukcja, stan_wykonczenia
+
+-- tabela allegrolokalnie
+CREATE TABLE ogloszenia_otodom (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    rodzaj_ogloszenia VARCHAR(255),
+    id_ogloszenia INT,
+    tytul_ogloszenia TEXT,
+    kategoria_ogloszenia TEXT,
+    region TEXT,
+    cena INT,
+    opis_ogloszenia TEXT,
+    liczba_pieter INT,
+    liczba_pokoi INT,
+    poziom TEXT,
+    powierzchnia INT,
+
+    konstrukcja TEXT,
+    stan_wykonczenia TEXT,
+    pow_dzialki INT,
+    typ_dzialki TEXT,
+
+    rodzaj_zabudowy TEXT,
+    rynek TEXT,
+
+    promo INT,
+    auto_refresh INT,
+    extra_top INT,
+    extra_home INT,
+    export_olx INT,
+    extra_raise INT,
+    mega_raise INT,
+    pakiet_olx_mini INT,
+    pakiet_olx_midi INT,
+    pakiet_olx_maxi INT,
+    pick_olx INT,
+    auto_refresh_olx INT,
+
+    zdjecia_string TEXT,
+
+    id_zadania INT,
+    id_ogloszenia_na_otodom TEXT,
+    status INT,
+    active_task INT,
+    errors TEXT,
+    data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    action_before_errors INT
+);

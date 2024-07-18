@@ -877,3 +877,4 @@ function checkboxControlOffOther(formId, main_id, checkboxList) {
         });
     });
 }
+

@@ -333,6 +333,18 @@ def checkAllegroStatus(kind, id):
     except IndexError:
         return (None, None, None, None, None, None, None, None, None)
 
+def checkOtodomStatus(kind, id):
+    try:
+        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors, region, kategoria_ogloszenia FROM ogloszenia_otodom WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
+    except IndexError:
+        return (None, None, None, None, None, None, None)
+
+def takeOtodomResumeStatus(otodom_id):
+    try:
+        return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_otodom WHERE id="{otodom_id}";')[0][0]
+    except IndexError:
+        return None
+
 def takeAllegroResumeStatus(allegro_id):
     try:
         return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_allegrolokalnie WHERE id="{allegro_id}";')[0][0]
@@ -3230,6 +3242,30 @@ def estateAdsRent():
             item['allegro']['zostalo_dni'] = days_left
 
             item['allegro']['error_message'] = allegroIDstatus[3]
+
+        if 'otodom' not in item:
+            item['otodom'] = {}
+        otodom_IDstatus = checkOtodomStatus(kind="r", id=item['ID'])
+        item['otodom']['id'] = otodom_IDstatus[0]
+        item['otodom']['status'] = otodom_IDstatus[1]
+        item['otodom']['data_aktualizacji'] = otodom_IDstatus[2]
+        item['otodom']['errors'] = otodom_IDstatus[3]
+        item['otodom']['action_before_errors'] = otodom_IDstatus[4]
+        item['otodom']['region'] = otodom_IDstatus[5]
+        item['otodom']['kategoria_ogloszenia'] = otodom_IDstatus[6]
+
+
+
+        if item['otodom']['status'] is not None:
+            start_date = item['otodom']['data_aktualizacji']
+            # Oblicz datę końca promocji
+            end_date = start_date + datetime.timedelta(days=30)
+            # Oblicz liczbę dni pozostałych do końca promocji
+            days_left = (end_date - datetime.datetime.now()).days
+
+            item['otodom']['zostalo_dni'] = days_left
+
+            item['otodom']['error_message'] = otodom_IDstatus[3]
         
         new_all_rents.append(item)
 
@@ -9117,6 +9153,60 @@ def public_on_allegro():
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
 
+@app.route('/public-on-otodom', methods=['POST'])
+def public_on_otodom():
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['estate'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        print(request.form)
+        otodom_id = request.form.get('otodom_id')
+        id_ogloszenia = request.form.get('PostID')
+        task_kind = request.form.get('task_kind')
+        redirectGoal = request.form.get('redirectGoal')
+        if 'region' in request.form:
+            get_region = request.form.get('region')
+            if get_region!='' and get_region.count('/')>4:
+                region = get_region
+            else:
+                region = None  
+        else:
+            region = None
+
+        
+        if 'pakiet_premium' in request.form:
+            pakiet = 3
+        elif 'pakiet_optymalny' in request.form:
+            pakiet = 2
+        else:
+            pakiet = 1
+
+        if 'wyroznij' in request.form:
+            extra_wyroznienie = 1
+        else:
+            extra_wyroznienie = 0
+
+        if 'wznawiaj' in request.form:
+            extra_wznawianie = 1
+        else:
+            extra_wznawianie = 0
+
+        rodzaj_ogloszenia = None
+        if redirectGoal == 'estateAdsRent':
+            rodzaj_ogloszenia = 'r'
+        if redirectGoal == 'estateAdsSell':
+            rodzaj_ogloszenia = 's'
+
+
+
+            
+
+        return redirect(url_for(redirectGoal))
+    return redirect(url_for('index')) 
 @app.route('/estate-ads-special')
 def estateAdsspecial():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
