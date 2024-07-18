@@ -3268,7 +3268,7 @@ def estateAdsRent():
             item['otodom']['error_message'] = otodom_IDstatus[3]
         
         new_all_rents.append(item)
-    flash(f"{str(len(new_all_rents))}", 'dnager')
+    # flash(f"{str(len(new_all_rents))}", 'dnager')
 
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -3297,7 +3297,7 @@ def estateAdsRent():
 
     lentoOffer = 1
 
-    flash(f"{str(len(ads_rent))}", 'dnager')
+    # flash(f"{str(len(ads_rent))}", 'dnager')
 
     return render_template(
                             "estate_management_rent.html",
