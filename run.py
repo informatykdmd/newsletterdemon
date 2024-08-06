@@ -9628,7 +9628,7 @@ def public_on_otodom():
             
 
             if kategoria_ogloszenia == 'dom':
-                pow_dzialki = picked_offer['PowierzchniaDzialki']
+                pow_dzialki = picked_offer['Metraz'] * 5
 
                 if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
                 elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
@@ -10079,7 +10079,7 @@ def public_on_otodom():
             kategoria_ogloszenia = checkOtodomStatus('s', id_ogloszenia)[6]
 
             if kategoria_ogloszenia == 'dom': 
-                pow_dzialki = picked_offer['PowierzchniaDzialki']
+                pow_dzialki = picked_offer['Metraz'] * 5
 
                 if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
                 elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
