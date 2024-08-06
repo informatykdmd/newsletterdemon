@@ -9203,7 +9203,7 @@ def public_on_otodom():
         else:
             region = None
 
-        if 'bez_promowania' not in request.form:
+        if 'bez_promowania' in request.form:
             promo = 0
             auto_refresh = 0
             extra_top = 0
