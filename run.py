@@ -3826,6 +3826,29 @@ def estateAdsSell():
 
             item['allegro']['error_message'] = allegroIDstatus[3]
 
+        if 'otodom' not in item:
+            item['otodom'] = {}
+        otodom_IDstatus = checkOtodomStatus(kind="s", id=item['ID'])
+        item['otodom']['id'] = otodom_IDstatus[0]
+        item['otodom']['status'] = otodom_IDstatus[1]
+        item['otodom']['data_aktualizacji'] = otodom_IDstatus[2]
+        item['otodom']['errors'] = otodom_IDstatus[3]
+        item['otodom']['action_before_errors'] = otodom_IDstatus[4]
+        item['otodom']['region'] = otodom_IDstatus[5]
+        item['otodom']['kategoria_ogloszenia'] = otodom_IDstatus[6]
+
+        if item['otodom']['status'] is not None:
+            start_date = item['otodom']['data_aktualizacji']
+            # Oblicz datę końca promocji
+            end_date = start_date + datetime.timedelta(days=30)
+            # Oblicz liczbę dni pozostałych do końca promocji
+            days_left = (end_date - datetime.datetime.now()).days
+
+            item['otodom']['zostalo_dni'] = days_left
+
+            item['otodom']['error_message'] = otodom_IDstatus[3]
+
+
         new_all_sell.append(item)
 
     # Ustawienia paginacji
@@ -9180,32 +9203,71 @@ def public_on_otodom():
         else:
             region = None
 
-        """
-        ImmutableMultiDict([
-            ('otodom_id', 'None'), ('redirectGoal', 'estateAdsRent'), ('PostID', '52'), 
-            ('region', 'dolnośląskie / Legnica / Legnica miasto / Legnica / Nieokreślona /'), 
-            ('Status', '0'), ('task_kind', 'Publikuj'), ('wznawiaj', 'on'), 
-            ('top_30_dni_otodom', '1'), ('wyswietlanie_na_stronie_glownej_7_dni_otodom', '1'), 
-            ('export_do_olx_otodom', 'on'), 
-            ('wyroznij_na_olx_otodom', '1'), ('odswiezaj_na_olx_otodom_', '1')
-            ])
-        """
-        if 'pakiet_premium' in request.form:
-            pakiet = 3
-        elif 'pakiet_optymalny' in request.form:
-            pakiet = 2
+        if 'bez_promowania' not in request.form:
+            promo = 0
+            auto_refresh = 0
+            extra_top = 0
+            extra_home = 0
+            export_olx = 0
+            extra_raise = 0
+            mega_raise = 0
+            pakiet_olx_mini = 0
+            pakiet_olx_midi = 0
+            pakiet_olx_maxi = 0
+            pick_olx = 0
+            auto_refresh_olx = 0
         else:
-            pakiet = 1
+            promo = 1
+            if 'wznawiaj' in request.form:
+                auto_refresh = 1
+            else:
+                auto_refresh = 0
 
-        if 'wyroznij' in request.form:
-            extra_wyroznienie = 1
-        else:
-            extra_wyroznienie = 0
+            if 'top_14_dni_otodom' in request.form:
+                extra_top = 14
+            elif 'top_30_dni_otodom' in request.form:
+                extra_top = 30
+            else:
+                extra_top = 0
 
-        if 'wznawiaj' in request.form:
-            extra_wznawianie = 1
-        else:
-            extra_wznawianie = 0
+            if 'wyswietlanie_na_stronie_glownej_7_dni_otodom' in request.form:
+                extra_home = 7
+            elif 'wyswietlanie_na_stronie_glownej_14_dni_otodom' in request.form:
+                extra_home = 14
+            else:
+                extra_home = 0
+
+            if 'export_do_olx_otodom' in request.form:
+                export_olx = 1
+            else:
+                export_olx = 0
+
+            if 'pakiet_olxmini_otodom' in request.form:
+                pakiet_olx_mini = 1
+            else:
+                pakiet_olx_mini = 0
+
+            if 'pakiet_olxmidi_otodom' in request.form:
+                pakiet_olx_midi = 1
+            else:
+                pakiet_olx_midi = 0
+            
+            if 'pakiet_olxmaxi_otodom' in request.form:
+                pakiet_olx_maxi = 1
+            else:
+                pakiet_olx_maxi = 0
+
+            if 'wyroznij_na_olx_otodom' in request.form:
+                pick_olx = 1
+            else:
+                pick_olx = 0
+
+            if 'odswiezaj_na_olx_otodom' in request.form:
+                auto_refresh_olx = 1
+            else:
+                auto_refresh_olx = 0
+
+            mega_raise = 1
 
         rodzaj_ogloszenia = None
         if redirectGoal == 'estateAdsRent':
@@ -9213,12 +9275,1069 @@ def public_on_otodom():
         if redirectGoal == 'estateAdsSell':
             rodzaj_ogloszenia = 's'
 
+        if task_kind == 'Publikuj' and rodzaj_ogloszenia == 'r': 
+            if not region:
+                flash('Wybierz region!', 'danger')
+                return redirect(url_for(redirectGoal))
+
+            picked_offer = {}            
+            for offer in generator_rentOffert():
+                if str(offer['ID']) == str(id_ogloszenia):
+                    picked_offer = offer
+            
+            tytul_ogloszenia = picked_offer['Tytul']
+            powierzchnia = picked_offer['Metraz']
+            cena = picked_offer['Cena']
+
+            zdjecia_string = ''
+            for foto_link in picked_offer['Zdjecia']:
+                zdjecia_string += f'{foto_link}-@-'
+            if zdjecia_string != '':zdjecia_string = zdjecia_string[:-3]
+
+            prepared_opis = ''
+            for item in picked_offer['Opis']:
+                for val in item.values():
+                    if isinstance(val, str):
+                        prepared_opis += f'{val}\n'
+                    if isinstance(val, list):
+                        for v_val in val:
+                            prepared_opis += f'{v_val}\n'
+            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            else: prepared_opis = picked_offer['InformacjeDodatkowe']
+
+            extra_opis = ''
+            if picked_offer['RodzajZabudowy'] != '':
+                extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
+            if picked_offer['Czynsz'] != 0:
+                extra_opis += f"Czynsz:\n{picked_offer['Czynsz']} zł.\n\n"
+            if picked_offer['Umeblowanie'] != "":
+                extra_opis += f"Umeblowanie:\n{picked_offer['Umeblowanie']}\n\n"
+            if picked_offer['TechBudowy'] != "":
+                extra_opis += f"Technologia Budowy:\n{picked_offer['TechBudowy']}\n\n"
+            if picked_offer['StanWykonczenia'] != "":
+                extra_opis += f"Stan Wykończenia:\n{picked_offer['StanWykonczenia']}\n\n"
+            if picked_offer['RokBudowy'] != 0:
+                extra_opis += f"Rok Budowy:\n{picked_offer['RokBudowy']} r.\n\n"
+            if picked_offer['NumerKW'] != "":
+                extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
+            extra_opis = extra_opis[:-2]
+            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+
+            if str(picked_offer['TypDomu']).lower().count('dom') > 0\
+                or str(picked_offer['TypDomu']).lower().count('willa') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('bliźniak') > 0\
+                or str(picked_offer['TypDomu']).lower().count('segment') > 0:
+                # kategoria na adresowo dla dom
+                kategoria_ogloszenia = 'dom'
+
+            elif str(picked_offer['TypDomu']).lower().count('mieszkanie') > 0\
+                or str(picked_offer['TypDomu']).lower().count('kawalerka') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('apartament') > 0\
+                        or str(picked_offer['TypDomu']).lower().count('blok') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('kamienica') > 0\
+                or str(picked_offer['TypDomu']).lower().count('loft') > 0:
+                # kategoria na adresowo dla mieszkanie
+                kategoria_ogloszenia = 'mieszkanie'
+            
+            elif str(picked_offer['TypDomu']).lower().count('działka') > 0\
+                or str(picked_offer['TypDomu']).lower().count('plac') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('teren') > 0:
+                # kategoria na adresowo dla dzialka
+                kategoria_ogloszenia = 'dzialka'
+
+            elif str(picked_offer['TypDomu']).lower().count('biur') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('usługi') > 0\
+                    or str(picked_offer['TypDomu']).lower().count('lokal') > 0\
+                or str(picked_offer['TypDomu']).lower().count('produkcja') > 0:
+                # kategoria na adresowo dla lokal
+                kategoria_ogloszenia = 'lokal'
+
+            elif str(picked_offer['TypDomu']).lower().count('magazyn') > 0\
+                or str(picked_offer['TypDomu']).lower().count('hal') > 0:
+                # kategoria na adresowo dla magazyn
+                kategoria_ogloszenia = 'magazyn'
+            else:
+                flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
+                return redirect(url_for(redirectGoal))
+            
+
+            if kategoria_ogloszenia == 'dom':
+                pow_dzialki = picked_offer['PowierzchniaDzialki']
+
+                if picked_offer['LiczbaPieter'] == 0:liczba_pieter = 'parterowy'
+                elif picked_offer['LiczbaPieter'] > 3:liczba_pieter = '3 pietra i więcej'
+                else:liczba_pieter = f'{picked_offer["LiczbaPieter"]} piętr'
+
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
+                elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                if str(picked_offer['RodzajZabudowy']).lower().count('bliźniacza') > 0: rodzaj_zabudowy = 'Bliźniak'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('wolnostojąca') > 0: rodzaj_zabudowy = 'Wolnostojący'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('szeregowa') > 0: rodzaj_zabudowy = 'Szeregowiec'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: rodzaj_zabudowy = 'Kamienica'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('dworek') > 0: rodzaj_zabudowy = 'dworek/pałac'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('pałac') > 0: rodzaj_zabudowy = 'dworek/pałac'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('gospodarstwo') > 0: rodzaj_zabudowy = 'Gospodarstwo'
+                else: rodzaj_zabudowy = 'Wolnostojący'
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, liczba_pieter, liczba_pokoi, pow_dzialki, powierzchnia, rodzaj_zabudowy, 
+                            zdjecia_string, 
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, 
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, liczba_pieter, liczba_pokoi, pow_dzialki, powierzchnia, rodzaj_zabudowy, 
+                        zdjecia_string, 
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'mieszkanie': 
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
+                elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, liczba_pokoi, powierzchnia, zdjecia_string, 
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, liczba_pokoi, powierzchnia, zdjecia_string,  
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'dzialka': 
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('budowlana') > 0: typ_dzialki = 'budowlana'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rolna') > 0: typ_dzialki = 'rolna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rekreacyjna') > 0: typ_dzialki = 'rekreacyjna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('inwestycyjna') > 0: typ_dzialki = 'pod inwestycję'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('leśna') > 0: typ_dzialki = 'leśna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('siedliskowa') > 0: typ_dzialki = 'siedliskowa'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('usługowa') > 0: typ_dzialki = 'usługowa'
+                else: typ_dzialki = 'inna'
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, powierzchnia, typ_dzialki, zdjecia_string, 
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, powierzchnia, typ_dzialki, zdjecia_string, 
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'lokal': 
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, powierzchnia, zdjecia_string, 
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, powierzchnia, zdjecia_string, 
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'magazyn': 
+                if str(picked_offer['TechBudowy']).lower().count('stalowa') > 0: konstrukcja = 'stalowa'
+                elif str(picked_offer['TechBudowy']).lower().count('murowana') > 0: konstrukcja = 'murowana'
+                elif str(picked_offer['TechBudowy']).lower().count('wiata') > 0: konstrukcja = 'wiata'
+                elif str(picked_offer['TechBudowy']).lower().count('drewniana') > 0: konstrukcja = 'drewniana'
+                elif str(picked_offer['TechBudowy']).lower().count('szklana') > 0: konstrukcja = 'szklana'
+                else: konstrukcja = 'wybierz'
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, powierzchnia, konstrukcja, zdjecia_string, 
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, powierzchnia, konstrukcja, zdjecia_string, 
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+        if task_kind == 'Publikuj' and rodzaj_ogloszenia == 's': 
+            if not region:
+                flash('Wybierz region!', 'danger')
+                return redirect(url_for(redirectGoal))
+
+            picked_offer = {}            
+            for offer in generator_sellOffert():
+                if str(offer['ID']) == str(id_ogloszenia):
+                    picked_offer = offer
+            
+            tytul_ogloszenia = picked_offer['Tytul']
+            powierzchnia = picked_offer['Metraz']
+            cena = picked_offer['Cena']
+            rynek = picked_offer['Rynek']
+
+            zdjecia_string = ''
+            for foto_link in picked_offer['Zdjecia']:
+                zdjecia_string += f'{foto_link}-@-'
+            if zdjecia_string != '':zdjecia_string = zdjecia_string[:-3]
+
+            prepared_opis = ''
+            for item in picked_offer['Opis']:
+                for val in item.values():
+                    if isinstance(val, str):
+                        prepared_opis += f'{val}\n'
+                    if isinstance(val, list):
+                        for v_val in val:
+                            prepared_opis += f'{v_val}\n'
+            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            else: prepared_opis = picked_offer['InformacjeDodatkowe']
+
+            extra_opis = ''
+            if picked_offer['RodzajZabudowy'] != '':
+                extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
+            
+            if picked_offer['TechBudowy'] != "":
+                extra_opis += f"Technologia Budowy:\n{picked_offer['TechBudowy']}\n\n"
+            if picked_offer['StanWykonczenia'] != "":
+                extra_opis += f"Stan Wykończenia:\n{picked_offer['StanWykonczenia']}\n\n"
+            if picked_offer['RokBudowy'] != 0:
+                extra_opis += f"Rok Budowy:\n{picked_offer['RokBudowy']} r.\n\n"
+            if picked_offer['NumerKW'] != "":
+                extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
+            extra_opis = extra_opis[:-2]
+            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+
+            if str(picked_offer['TypNieruchomosci']).lower().count('dom') > 0\
+                or str(picked_offer['TypNieruchomosci']).lower().count('willa') > 0\
+                    or str(picked_offer['TypNieruchomosci']).lower().count('bliźniak') > 0\
+                or str(picked_offer['TypNieruchomosci']).lower().count('segment') > 0:
+                # kategoria na adresowo dla dom
+                kategoria_ogloszenia = 'dom'
+
+            elif str(picked_offer['TypNieruchomosci']).lower().count('mieszkanie') > 0\
+                or str(picked_offer['TypNieruchomosci']).lower().count('kawalerka') > 0\
+                    or str(picked_offer['TypNieruchomosci']).lower().count('apartament') > 0\
+                        or str(picked_offer['TypNieruchomosci']).lower().count('blok') > 0\
+                    or str(picked_offer['TypNieruchomosci']).lower().count('kamienica') > 0\
+                or str(picked_offer['TypNieruchomosci']).lower().count('loft') > 0:
+                # kategoria na adresowo dla mieszkanie
+                kategoria_ogloszenia = 'mieszkanie'
+            
+            elif str(picked_offer['TypNieruchomosci']).lower().count('działka') > 0\
+                or str(picked_offer['TypNieruchomosci']).lower().count('plac') > 0\
+                    or str(picked_offer['TypNieruchomosci']).lower().count('teren') > 0:
+                # kategoria na adresowo dla dzialka
+                kategoria_ogloszenia = 'dzialka'
+
+            elif str(picked_offer['TypNieruchomosci']).lower().count('biur') > 0\
+                    or str(picked_offer['TypNieruchomosci']).lower().count('usługi') > 0\
+                    or str(picked_offer['TypNieruchomosci']).lower().count('lokal') > 0\
+                or str(picked_offer['TypNieruchomosci']).lower().count('produkcja') > 0:
+                # kategoria na adresowo dla lokal
+                kategoria_ogloszenia = 'lokal'
+
+            elif str(picked_offer['TypNieruchomosci']).lower().count('magazyn') > 0\
+                or str(picked_offer['TypNieruchomosci']).lower().count('hal') > 0:
+                # kategoria na adresowo dla magazyn
+                kategoria_ogloszenia = 'magazyn'
+            else:
+                flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
+                return redirect(url_for(redirectGoal))
+            
+
+            if kategoria_ogloszenia == 'dom':
+                pow_dzialki = picked_offer['PowierzchniaDzialki']
+
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
+                elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                rok_budowy = picked_offer['RokBudowy']
+
+                if str(picked_offer['RodzajZabudowy']).lower().count('bliźniacza') > 0: rodzaj_zabudowy = 'Bliźniak'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('wolnostojąca') > 0: rodzaj_zabudowy = 'Wolnostojący'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('szeregowa') > 0: rodzaj_zabudowy = 'Szeregowiec'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: rodzaj_zabudowy = 'Kamienica'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('dworek') > 0: rodzaj_zabudowy = 'dworek/pałac'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('pałac') > 0: rodzaj_zabudowy = 'dworek/pałac'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('gospodarstwo') > 0: rodzaj_zabudowy = 'Gospodarstwo'
+                else: rodzaj_zabudowy = 'Wolnostojący'
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, liczba_pokoi, pow_dzialki, powierzchnia, rodzaj_zabudowy, 
+                            zdjecia_string, rynek, rok_budowy, 
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, 
+                             %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, liczba_pokoi, pow_dzialki, powierzchnia, rodzaj_zabudowy, 
+                        zdjecia_string, rynek, rok_budowy, 
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'mieszkanie': 
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
+                elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, liczba_pokoi, powierzchnia, zdjecia_string, rynek,
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, liczba_pokoi, powierzchnia, zdjecia_string, rynek,
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'dzialka': 
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('budowlana') > 0: typ_dzialki = 'budowlana'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rolna') > 0: typ_dzialki = 'rolna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rekreacyjna') > 0: typ_dzialki = 'rekreacyjna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('inwestycyjna') > 0: typ_dzialki = 'pod inwestycję'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('leśna') > 0: typ_dzialki = 'leśna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('siedliskowa') > 0: typ_dzialki = 'siedliskowa'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('usługowa') > 0: typ_dzialki = 'usługowa'
+                else: typ_dzialki = 'inna'
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, powierzchnia, typ_dzialki, zdjecia_string, 
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, powierzchnia, typ_dzialki, zdjecia_string, 
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'lokal': 
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, powierzchnia, zdjecia_string, rynek,
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, powierzchnia, zdjecia_string, rynek,
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'magazyn': 
+                if str(picked_offer['TechBudowy']).lower().count('stalowa') > 0: konstrukcja = 'stalowa'
+                elif str(picked_offer['TechBudowy']).lower().count('murowana') > 0: konstrukcja = 'murowana'
+                elif str(picked_offer['TechBudowy']).lower().count('wiata') > 0: konstrukcja = 'wiata'
+                elif str(picked_offer['TechBudowy']).lower().count('drewniana') > 0: konstrukcja = 'drewniana'
+                elif str(picked_offer['TechBudowy']).lower().count('szklana') > 0: konstrukcja = 'szklana'
+                else: konstrukcja = 'wybierz'
+
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_otodom
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                            opis_ogloszenia, powierzchnia, konstrukcja, zdjecia_string, rynek,
+                            promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                            mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s, %s, %s, %s, %s, %s,
+                             %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, powierzchnia, konstrukcja, zdjecia_string, rynek,
+                        promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
+                        mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
+                        4)
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+        if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 'r': 
+            picked_offer = {}            
+            for offer in generator_rentOffert():
+                if str(offer['ID']) == str(id_ogloszenia):
+                    picked_offer = offer
+            
+            tytul_ogloszenia = picked_offer['Tytul']
+            powierzchnia = picked_offer['Metraz']
+            cena = picked_offer['Cena']
+
+            zdjecia_string = ''
+            for foto_link in picked_offer['Zdjecia']:
+                zdjecia_string += f'{foto_link}-@-'
+            if zdjecia_string != '':zdjecia_string = zdjecia_string[:-3]
+
+            prepared_opis = ''
+            for item in picked_offer['Opis']:
+                for val in item.values():
+                    if isinstance(val, str):
+                        prepared_opis += f'{val}\n'
+                    if isinstance(val, list):
+                        for v_val in val:
+                            prepared_opis += f'{v_val}\n'
+            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            else: prepared_opis = picked_offer['InformacjeDodatkowe']
+
+            extra_opis = ''
+            if picked_offer['RodzajZabudowy'] != '':
+                extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
+            if picked_offer['Czynsz'] != 0:
+                extra_opis += f"Czynsz:\n{picked_offer['Czynsz']} zł.\n\n"
+            if picked_offer['Umeblowanie'] != "":
+                extra_opis += f"Umeblowanie:\n{picked_offer['Umeblowanie']}\n\n"
+            if picked_offer['TechBudowy'] != "":
+                extra_opis += f"Technologia Budowy:\n{picked_offer['TechBudowy']}\n\n"
+            if picked_offer['StanWykonczenia'] != "":
+                extra_opis += f"Stan Wykończenia:\n{picked_offer['StanWykonczenia']}\n\n"
+            if picked_offer['RokBudowy'] != 0:
+                extra_opis += f"Rok Budowy:\n{picked_offer['RokBudowy']} r.\n\n"
+            if picked_offer['NumerKW'] != "":
+                extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
+            extra_opis = extra_opis[:-2]
+            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+
+            kategoria_ogloszenia = checkOtodomStatus('r', id_ogloszenia)[6]
+
+            if kategoria_ogloszenia == 'dom': 
+                pow_dzialki = picked_offer['PowierzchniaDzialki']
+
+                if picked_offer['LiczbaPieter'] == 0:liczba_pieter = 'parterowy'
+                elif picked_offer['LiczbaPieter'] > 3:liczba_pieter = '3 pietra i więcej'
+                else:liczba_pieter = f'{picked_offer["LiczbaPieter"]} piętr'
+
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
+                elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                if str(picked_offer['RodzajZabudowy']).lower().count('bliźniacza') > 0: rodzaj_zabudowy = 'Bliźniak'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('wolnostojąca') > 0: rodzaj_zabudowy = 'Wolnostojący'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('szeregowa') > 0: rodzaj_zabudowy = 'Szeregowiec'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: rodzaj_zabudowy = 'Kamienica'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('dworek') > 0: rodzaj_zabudowy = 'dworek/pałac'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('pałac') > 0: rodzaj_zabudowy = 'dworek/pałac'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('gospodarstwo') > 0: rodzaj_zabudowy = 'Gospodarstwo'
+                else: rodzaj_zabudowy = 'Wolnostojący'
+
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            rodzaj_zabudowy = %s,
+                            liczba_pieter = %s,
+                            liczba_pokoi = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, rodzaj_zabudowy, liczba_pieter, liczba_pokoi,
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'mieszkanie': 
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
+                elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            rodzaj_zabudowy = %s,
+                            liczba_pokoi = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, rodzaj_zabudowy, liczba_pokoi,
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'dzialka': 
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('budowlana') > 0: typ_dzialki = 'budowlana'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rolna') > 0: typ_dzialki = 'rolna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rekreacyjna') > 0: typ_dzialki = 'rekreacyjna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('inwestycyjna') > 0: typ_dzialki = 'pod inwestycję'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('leśna') > 0: typ_dzialki = 'leśna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('siedliskowa') > 0: typ_dzialki = 'siedliskowa'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('usługowa') > 0: typ_dzialki = 'usługowa'
+                else: typ_dzialki = 'inna'
+
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            typ_dzialki = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, typ_dzialki, 
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'lokal': 
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, 
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'magazyn': 
+                if str(picked_offer['TechBudowy']).lower().count('stalowa') > 0: konstrukcja = 'stalowa'
+                elif str(picked_offer['TechBudowy']).lower().count('murowana') > 0: konstrukcja = 'murowana'
+                elif str(picked_offer['TechBudowy']).lower().count('wiata') > 0: konstrukcja = 'wiata'
+                elif str(picked_offer['TechBudowy']).lower().count('drewniana') > 0: konstrukcja = 'drewniana'
+                elif str(picked_offer['TechBudowy']).lower().count('szklana') > 0: konstrukcja = 'szklana'
+                else: konstrukcja = 'wybierz'
+
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            konstrukcja = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, konstrukcja, 
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+        if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 's': 
+            picked_offer = {}            
+            for offer in generator_sellOffert():
+                if str(offer['ID']) == str(id_ogloszenia):
+                    picked_offer = offer
+            
+            tytul_ogloszenia = picked_offer['Tytul']
+            powierzchnia = picked_offer['Metraz']
+            cena = picked_offer['Cena']
+            rynek = picked_offer['Rynek']
+
+            zdjecia_string = ''
+            for foto_link in picked_offer['Zdjecia']:
+                zdjecia_string += f'{foto_link}-@-'
+            if zdjecia_string != '':zdjecia_string = zdjecia_string[:-3]
+
+            prepared_opis = ''
+            for item in picked_offer['Opis']:
+                for val in item.values():
+                    if isinstance(val, str):
+                        prepared_opis += f'{val}\n'
+                    if isinstance(val, list):
+                        for v_val in val:
+                            prepared_opis += f'{v_val}\n'
+            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            else: prepared_opis = picked_offer['InformacjeDodatkowe']
+
+            extra_opis = ''
+            if picked_offer['RodzajZabudowy'] != '':
+                extra_opis += f"Rodzaj Zabudowy:\n{picked_offer['RodzajZabudowy']}\n\n"
+            
+            if picked_offer['TechBudowy'] != "":
+                extra_opis += f"Technologia Budowy:\n{picked_offer['TechBudowy']}\n\n"
+            if picked_offer['StanWykonczenia'] != "":
+                extra_opis += f"Stan Wykończenia:\n{picked_offer['StanWykonczenia']}\n\n"
+            if picked_offer['RokBudowy'] != 0:
+                extra_opis += f"Rok Budowy:\n{picked_offer['RokBudowy']} r.\n\n"
+            if picked_offer['NumerKW'] != "":
+                extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
+            extra_opis = extra_opis[:-2]
+            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+
+            kategoria_ogloszenia = checkOtodomStatus('s', id_ogloszenia)[6]
+
+            if kategoria_ogloszenia == 'dom': 
+                pow_dzialki = picked_offer['PowierzchniaDzialki']
+
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
+                elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                rok_budowy = picked_offer['RokBudowy']
+
+                if str(picked_offer['RodzajZabudowy']).lower().count('bliźniacza') > 0: rodzaj_zabudowy = 'Bliźniak'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('wolnostojąca') > 0: rodzaj_zabudowy = 'Wolnostojący'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('szeregowa') > 0: rodzaj_zabudowy = 'Szeregowiec'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('kamienica') > 0: rodzaj_zabudowy = 'Kamienica'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('dworek') > 0: rodzaj_zabudowy = 'dworek/pałac'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('pałac') > 0: rodzaj_zabudowy = 'dworek/pałac'
+                elif str(picked_offer['RodzajZabudowy']).lower().count('gospodarstwo') > 0: rodzaj_zabudowy = 'Gospodarstwo'
+                else: rodzaj_zabudowy = 'Wolnostojący'
+
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            pow_dzialki = %s,
+                            rok_budowy = %s,
+                            rynek = %s,
+                            rodzaj_zabudowy = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, pow_dzialki, rok_budowy, rynek, rodzaj_zabudowy,
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'mieszkanie': 
+                if picked_offer['LiczbaPokoi'] == 0:liczba_pokoi = '1'
+                elif picked_offer['LiczbaPokoi'] > 10:liczba_pokoi = 'więcej niż 10'
+                else:liczba_pokoi = picked_offer['LiczbaPokoi']
+
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            liczba_pokoi = %s,
+                            rynek = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, liczba_pokoi, rynek,
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'dzialka': 
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('budowlana') > 0: typ_dzialki = 'budowlana'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rolna') > 0: typ_dzialki = 'rolna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('rekreacyjna') > 0: typ_dzialki = 'rekreacyjna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('inwestycyjna') > 0: typ_dzialki = 'pod inwestycję'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('leśna') > 0: typ_dzialki = 'leśna'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('siedliskowa') > 0: typ_dzialki = 'siedliskowa'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('usługowa') > 0: typ_dzialki = 'usługowa'
+                else: typ_dzialki = 'inna'
+
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            typ_dzialki = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, typ_dzialki,
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'lokal': 
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            rynek = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, rynek,
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+            if kategoria_ogloszenia == 'magazyn': 
+                if str(picked_offer['TechBudowy']).lower().count('stalowa') > 0: konstrukcja = 'stalowa'
+                elif str(picked_offer['TechBudowy']).lower().count('murowana') > 0: konstrukcja = 'murowana'
+                elif str(picked_offer['TechBudowy']).lower().count('wiata') > 0: konstrukcja = 'wiata'
+                elif str(picked_offer['TechBudowy']).lower().count('drewniana') > 0: konstrukcja = 'drewniana'
+                elif str(picked_offer['TechBudowy']).lower().count('szklana') > 0: konstrukcja = 'szklana'
+                else: konstrukcja = 'wybierz'
+
+                zapytanie_sql = '''
+                        UPDATE ogloszenia_otodom
+                        SET 
+                            tytul_ogloszenia = %s,
+                            cena = %s,
+                            opis_ogloszenia = %s,
+                            powierzchnia = %s,
+                            rynek = %s,
+                            konstrukcja = %s,
+                            zdjecia_string = %s, 
+                            status = %s,
+                            active_task=%s
+                        WHERE id = %s;
+                    '''
+                dane = (tytul_ogloszenia, cena, opis_ogloszenia,
+                        powierzchnia, rynek, konstrukcja,
+                        zdjecia_string,
+                        5, 0,
+                    otodom_id)
+
+                # print(dane)
+                # flash(f'{dane}', 'success')
+
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+        if task_kind == 'Usun': 
+            zapytanie_sql = '''
+                UPDATE ogloszenia_otodom
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, 6, otodom_id)
+            
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+        if task_kind == 'Ponow_zadanie': 
+            oldStatus = takeOtodomResumeStatus(otodom_id)
+            zapytanie_sql = '''
+                UPDATE ogloszenia_otodom
+                    SET 
+                        active_task=%s,
+                        status=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, oldStatus, otodom_id)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+        if task_kind == 'Anuluj_zadanie': 
+            oldStatus = takeOtodomResumeStatus(otodom_id)
+            if oldStatus == 4:
+                zapytanie_sql = '''
+                    DELETE FROM ogloszenia_otodom
+                        
+                    WHERE id = %s;
+                    '''
+                dane = (otodom_id,)
+            
+            if oldStatus == 5 or oldStatus == 6 or oldStatus == 7:
+                zapytanie_sql = '''
+                    UPDATE ogloszenia_otodom
+                        SET 
+                            active_task=%s,
+                            status=%s
+                        WHERE id = %s;
+                    '''
+                dane = (0, 1, otodom_id)
 
 
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Zadanie zostało anulowane!', 'success')
+            else:
+                flash(f'Bład zapisu! Zadanie nie zostało anulowane!', 'danger')
 
+        if task_kind == 'Odswiez': 
+            flash(f'Oferta została odświeżona pomyślnie!', 'success')
+
+        if task_kind == 'Ponow': 
+            zapytanie_sql = '''
+                UPDATE ogloszenia_otodom
+                    SET 
+                        active_task=%s
+                    WHERE id = %s;
+                '''
+            dane = (0, otodom_id)
+            
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+            else:
+                flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
+
+
 @app.route('/estate-ads-special')
 def estateAdsspecial():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
