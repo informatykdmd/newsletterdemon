@@ -9242,6 +9242,7 @@ def public_on_otodom():
             else:
                 export_olx = 0
 
+
             if 'pakiet_olxmini_otodom' in request.form:
                 pakiet_olx_mini = 1
             else:
@@ -9267,6 +9268,7 @@ def public_on_otodom():
             else:
                 auto_refresh_olx = 0
 
+            extra_raise = 1
             mega_raise = 1
 
         rodzaj_ogloszenia = None
