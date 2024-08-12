@@ -1988,7 +1988,7 @@
                                                         </div>
                                                         <div class="row row-cols-auto mb-3">
                                                             <div class="col-12">
-                                                                <form action="{{ url_for('public_on_otodom') }}" id="formfirst_otodom_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                                <form action="{{ url_for('public_on_otodom') }}" id="form_otodom_{{post_id}}" method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="otodom_id" value="{{post_data['otodom']['id']}}" />
                                                                     <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                                     <input type="hidden" name="PostID" value="{{post_id}}" />
