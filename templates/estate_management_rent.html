@@ -1489,7 +1489,6 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4 col-sm-12">
-                                        
                                         <div> 
                                                     
                                             <!-- 
@@ -1918,7 +1917,17 @@
                                                     <div class="row row-cols-auto "> 
 
                                                         <div class="col">
-                                                            <form action="{{ url_for('public_on_otodom') }}" method="POST" enctype="multipart/form-data">
+                                                            <button 
+                                                                type="submit" 
+                                                                class="btn btn-outline-secondary btn-sm" 
+                                                                style="max-height: 30px; font-size: 12px;" 
+                                                                data-bs-toggle="collapse" 
+                                                                href="#collapse_id_otodom_{{post_id}}" 
+                                                                role="button" aria-expanded="false" 
+                                                                aria-controls="collapse_id_otodom_{{post_id}}">
+                                                                Aktualizuj
+                                                            </button>
+                                                            <!-- <form action="{{ url_for('public_on_otodom') }}" method="POST" enctype="multipart/form-data">
                                                                 <input type="hidden" name="otodom_id" value="{{post_data['otodom']['id']}}" />
                                                                 
                                                                 <input type="hidden" name="redirectGoal" value="estateAdsRent" />
@@ -1930,7 +1939,7 @@
                                                                         Aktualizuj na OtoDom
                                                                     </button>
                                                                 </div>
-                                                            </form>
+                                                            </form> -->
                                                         </div>
                                                         <div class="col">
                                                             <form action="{{ url_for('public_on_otodom') }}" method="POST" enctype="multipart/form-data">
@@ -1947,6 +1956,73 @@
                                                             </form>
                                                         </div>
 
+                                                    </div>
+                                                    <div class="collapse" style="max-width: 400px;" id="collapse_id_otodom_{{post_id}}">
+                                                        <div class="mb-2 mt-2">
+                                                            <div class="row mb-2 mt-2">
+                                                                <div class="text-body-secondary">Zmień lokalizację: <p class="text-warning fw-light" id="oldlocation_otodom_{{post_id}}">{{post_data['otodom']['region']}}</p></div>
+                                                                <div class="col-10 text-warning fw-light font-monospace" id="locationString_otodom_{{post_id}}"></div>
+                                                                <div class="col-2 text-end">
+                                                                    <button class="btn btn-outline-warning btn-sm" id="changeLocation_otodom_{{post_id}}" style="display: none; max-height: 25px; font-size: 10px;">Zmień</button>
+                                                                </div>
+                                                            </div>                                                
+                                                            <select class="form-select dark-mode mb-2 mt-2" style="max-height: 30px; font-size: 12px;" id="wojewodztwo_otodom_{{post_id}}" name="wojewodztwo">
+                                                                <option value="">Wybierz województwo</option>
+                                                            </select>
+                                                            
+                                                            <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="powiat_otodom_{{post_id}}" name="powiat">
+                                                                <option value="">Wybierz powiat</option>
+                                                            </select>
+                                                            
+                                                            <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="gmina_otodom_{{post_id}}" name="gmina">
+                                                                <option value="">Wybierz gminę</option>
+                                                            </select>
+                                                            
+                                                            <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="miejscowosc_otodom_{{post_id}}" name="miejscowosc">
+                                                                <option value="">Wybierz miejscowość</option>
+                                                            </select>
+                                                            
+                                                            <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="dzielnica_otodom_{{post_id}}" name="dzielnica" >
+                                                                <option value="">Wybierz dzielnicę</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="row row-cols-auto mb-3">
+                                                            <div class="col-12">
+                                                                <form action="{{ url_for('public_on_otodom') }}" id="formfirst_otodom_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                                    <input type="hidden" name="otodom_id" value="{{post_data['otodom']['id']}}" />
+                                                                    <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                                    <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                                    <input type="hidden" id="regionfirst_otodom_{{post_id}}" name="region" value="" />
+                                                                    <input type="hidden" name="Status" value="0" />
+                                                                    <input type="hidden" name="task_kind" value="Aktualizuj" />
+        
+                                                                    <div class="row">
+                                                                        <div class="col-4 mb-1 text-end">
+                                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                                Aktualizuj
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+
+
+
+
+                                                        <!-- <form action="{{ url_for('public_on_otodom') }}" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="otodom_id" value="{{post_data['otodom']['id']}}" />
+                                                            
+                                                            <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                            <div class="col me-1 mb-1">
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Aktualizuj" />
+                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Aktualizuj na OtoDom
+                                                                </button>
+                                                            </div>
+                                                        </form> -->
                                                     </div>
 
                                                 {% elif post_data['otodom']['status'] == 2 %}
