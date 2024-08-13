@@ -1927,44 +1927,7 @@
                                             -->
                                             {% if post_data['StatusOferty'] == 1 %}
                                                 {% if post_data['otodom']['status'] == 1 %}
-                                                    <!-- <div class="mb-2 mt-2">
-                                                        
-                                                        <h5>OTODOM</h5>
-                                                        <p>Status: Opublikowano (pozostało {{post_data['otodom']['zostalo_dni']}} dni)</p>
-                                                    </div>
-                                                    <div class="row row-cols-auto "> 
-
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_otodom') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="otodom_id" value="{{post_data['otodom']['id']}}" />
-                                                                
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Aktualizuj" />
-                                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Aktualizuj na OtoDom
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class="col">
-                                                            <form action="{{ url_for('public_on_otodom') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="otodom_id" value="{{post_data['otodom']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Usun" />
-                                                                    <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Usuń na zawsze z OtoDom
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-
-                                                    </div> -->
+                                                    
 
                                                     <div class="mb-2 mt-2">
                                                         
