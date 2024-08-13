@@ -1927,19 +1927,7 @@
                                                                 aria-controls="collapse_id_otodom_{{post_id}}">
                                                                 Aktualizuj
                                                             </button>
-                                                            <!-- <form action="{{ url_for('public_on_otodom') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="otodom_id" value="{{post_data['otodom']['id']}}" />
-                                                                
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsRent" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Aktualizuj" />
-                                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Aktualizuj na OtoDom
-                                                                    </button>
-                                                                </div>
-                                                            </form> -->
+                                                            
                                                         </div>
                                                         <div class="col">
                                                             <form action="{{ url_for('public_on_otodom') }}" method="POST" enctype="multipart/form-data">
@@ -2007,23 +1995,6 @@
                                                                 </form>
                                                             </div>
                                                         </div>
-
-
-
-
-                                                        <!-- <form action="{{ url_for('public_on_otodom') }}" method="POST" enctype="multipart/form-data">
-                                                            <input type="hidden" name="otodom_id" value="{{post_data['otodom']['id']}}" />
-                                                            
-                                                            <input type="hidden" name="redirectGoal" value="estateAdsRent" />
-                                                            <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                            <div class="col me-1 mb-1">
-                                                                <input type="hidden" name="Status" value="0" />
-                                                                <input type="hidden" name="task_kind" value="Aktualizuj" />
-                                                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                    Aktualizuj na OtoDom
-                                                                </button>
-                                                            </div>
-                                                        </form> -->
                                                     </div>
 
                                                 {% elif post_data['otodom']['status'] == 2 %}
