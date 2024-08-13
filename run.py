@@ -9885,6 +9885,7 @@ def public_on_otodom():
                             rodzaj_zabudowy = %s,
                             liczba_pieter = %s,
                             liczba_pokoi = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -9892,7 +9893,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, rodzaj_zabudowy, liczba_pieter, liczba_pokoi,
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
@@ -9918,6 +9919,7 @@ def public_on_otodom():
                             powierzchnia = %s,
                             rodzaj_zabudowy = %s,
                             liczba_pokoi = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -9925,7 +9927,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, rodzaj_zabudowy, liczba_pokoi,
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
@@ -9955,6 +9957,7 @@ def public_on_otodom():
                             opis_ogloszenia = %s,
                             powierzchnia = %s,
                             typ_dzialki = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -9962,7 +9965,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, typ_dzialki, 
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
@@ -9982,6 +9985,7 @@ def public_on_otodom():
                             cena = %s,
                             opis_ogloszenia = %s,
                             powierzchnia = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -9989,7 +9993,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, 
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
@@ -10017,6 +10021,7 @@ def public_on_otodom():
                             opis_ogloszenia = %s,
                             powierzchnia = %s,
                             konstrukcja = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -10024,7 +10029,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, konstrukcja, 
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
@@ -10109,6 +10114,7 @@ def public_on_otodom():
                             rok_budowy = %s,
                             rynek = %s,
                             rodzaj_zabudowy = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -10116,7 +10122,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, pow_dzialki, rok_budowy, rynek, rodzaj_zabudowy,
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
@@ -10142,6 +10148,7 @@ def public_on_otodom():
                             powierzchnia = %s,
                             liczba_pokoi = %s,
                             rynek = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -10149,7 +10156,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, liczba_pokoi, rynek,
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
@@ -10179,6 +10186,7 @@ def public_on_otodom():
                             opis_ogloszenia = %s,
                             powierzchnia = %s,
                             typ_dzialki = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -10186,7 +10194,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, typ_dzialki,
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
@@ -10207,6 +10215,7 @@ def public_on_otodom():
                             opis_ogloszenia = %s,
                             powierzchnia = %s,
                             rynek = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -10214,7 +10223,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, rynek,
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
@@ -10243,6 +10252,7 @@ def public_on_otodom():
                             powierzchnia = %s,
                             rynek = %s,
                             konstrukcja = %s,
+                            region = %s,
                             zdjecia_string = %s, 
                             status = %s,
                             active_task=%s
@@ -10250,7 +10260,7 @@ def public_on_otodom():
                     '''
                 dane = (tytul_ogloszenia, cena, opis_ogloszenia,
                         powierzchnia, rynek, konstrukcja,
-                        zdjecia_string,
+                        region, zdjecia_string,
                         5, 0,
                     otodom_id)
 
