@@ -1963,10 +1963,10 @@
                                                                 <div class="text-body-secondary">Zmień lokalizację: <p class="text-warning fw-light" id="oldlocation_otodom_{{post_id}}">{{post_data['otodom']['region']}}</p></div>
                                                                 <div class="col-10 text-warning fw-light font-monospace" id="locationString_otodom_{{post_id}}"></div>
                                                                 <div class="col-2 text-end">
-                                                                    <button class="btn btn-outline-warning btn-sm" id="changeLocation_otodom_{{post_id}}" style="display: none; max-height: 25px; font-size: 10px;">Zmień</button>
+                                                                    <button class="btn btn-outline-warning btn-sm" id="changeLocation_otodom_{{post_id}}" style="max-height: 25px; font-size: 10px;">Zmień</button>
                                                                 </div>
                                                             </div>                                                
-                                                            <select class="form-select dark-mode mb-2 mt-2" style="max-height: 30px; font-size: 12px;" id="wojewodztwo_otodom_{{post_id}}" name="wojewodztwo">
+                                                            <select class="form-select dark-mode mb-2 mt-2" style="display: none; max-height: 30px; font-size: 12px;" id="wojewodztwo_otodom_{{post_id}}" name="wojewodztwo">
                                                                 <option value="">Wybierz województwo</option>
                                                             </select>
                                                             
@@ -1988,7 +1988,8 @@
                                                         </div>
                                                         <div class="row row-cols-auto mb-3">
                                                             <div class="col-12">
-                                                                <form action="{{ url_for('public_on_otodom') }}" id="form_otodom_{{post_id}}"  style="display: none;" method="POST" enctype="multipart/form-data">
+                                                                <!-- style="display: none;" -->
+                                                                <form action="{{ url_for('public_on_otodom') }}" id="form_otodom_{{post_id}}"   method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="otodom_id" value="{{post_data['otodom']['id']}}" />
                                                                     <input type="hidden" name="redirectGoal" value="estateAdsRent" />
                                                                     <input type="hidden" name="PostID" value="{{post_id}}" />
