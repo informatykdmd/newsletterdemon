@@ -20,6 +20,7 @@ import html
 from markupsafe import Markup
 import subprocess
 import regions
+from flask_session import Session
 
 
 """
@@ -33,7 +34,8 @@ różnymi aspektami stron.
 """
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex(16)
-
+app.config['SESSION_TYPE'] = 'filesystem'  # Możesz wybrać inny backend, np. 'redis', 'sqlalchemy', itp.
+Session(app)
 
 class LoginForm(FlaskForm):
     username = StringField('Nazwa użytkownika', validators=[DataRequired()])
