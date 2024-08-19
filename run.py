@@ -3494,7 +3494,9 @@ def save_rent_offer():
     print([metraz])
     # if metraz.count('.'): metraz = metraz.replace('.', ',')
     try: metraz = int(metraz)
-    except ValueError: metraz = 0
+    except Exception as e: 
+        print(e)
+        metraz = 0
     print(metraz)
 
     powDzialki = request.form.get('powDzialki')
