@@ -3489,10 +3489,14 @@ def save_rent_offer():
     kaucja = request.form.get('kaucja')
     try: kaucja = int(kaucja)
     except ValueError: kaucja = 0
+
     metraz = request.form.get('metraz')
+    print(metraz)
     if metraz.count('.'): metraz = metraz.replace('.', ',')
     try: metraz = int(metraz)
     except ValueError: metraz = 0
+    print(metraz)
+
     powDzialki = request.form.get('powDzialki')
     try: powDzialki = int(powDzialki)
     except ValueError: powDzialki = 0
@@ -4067,9 +4071,12 @@ def save_sell_offer():
     przeznaczenieLokalu = request.form.get('przeznaczenieLokalu')
 
     metraz = request.form.get('metraz')
+    print(metraz)
     if metraz.count('.'): metraz = metraz.replace('.', ',')
     try: metraz = int(metraz)
     except ValueError: metraz = 0
+    print(metraz)
+
     poziom = request.form.get('poziom')
     try: poziom = int(poziom)
     except ValueError: poziom = None
