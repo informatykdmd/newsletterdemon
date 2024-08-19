@@ -3491,14 +3491,11 @@ def save_rent_offer():
     except ValueError: kaucja = 0
 
     metraz = request.form.get('metraz')
-    print([metraz])
-
     try: 
         metraz = int(float(metraz))
     except Exception as e: 
         print(e)
         metraz = 0
-    print(metraz)
 
     powDzialki = request.form.get('powDzialki')
     try: powDzialki = int(powDzialki)
@@ -4074,11 +4071,11 @@ def save_sell_offer():
     przeznaczenieLokalu = request.form.get('przeznaczenieLokalu')
 
     metraz = request.form.get('metraz')
-    print(metraz)
- 
-    try: metraz = int(metraz)
-    except ValueError: metraz = 0
-    print(metraz)
+    try: 
+        metraz = int(float(metraz))
+    except Exception as e: 
+        print(e)
+        metraz = 0
 
     poziom = request.form.get('poziom')
     try: poziom = int(poziom)
