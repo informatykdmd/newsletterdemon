@@ -3491,8 +3491,8 @@ def save_rent_offer():
     except ValueError: kaucja = 0
 
     metraz = request.form.get('metraz')
-    print(metraz)
-    if metraz.count('.'): metraz = metraz.replace('.', ',')
+    print([metraz])
+    # if metraz.count('.'): metraz = metraz.replace('.', ',')
     try: metraz = int(metraz)
     except ValueError: metraz = 0
     print(metraz)
@@ -4072,7 +4072,7 @@ def save_sell_offer():
 
     metraz = request.form.get('metraz')
     print(metraz)
-    if metraz.count('.'): metraz = metraz.replace('.', ',')
+ 
     try: metraz = int(metraz)
     except ValueError: metraz = 0
     print(metraz)
