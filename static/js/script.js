@@ -295,6 +295,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     toggleWarning('RodzajNieruchomosci_' + offerId, !rodzajNieruchomosci);
     toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
     toggleWarning('Cena_' + offerId, !cena);
+    toggleWarning('Metraz_' + offerId, !metraz);
 
     if (!oldFotos) {
         if (zdjecia.length === 0) {
@@ -463,6 +464,8 @@ function prepareAndSubmitSellOfferForm(offerId, oldFotos=true) {
     toggleWarning('Rynek_' + offerId, !rynek);
     toggleWarning('Lokalizacja_' + offerId, !lokalizacja);
     toggleWarning('Cena_' + offerId, !cena);
+    toggleWarning('Metraz_' + offerId, !metraz);
+
 
     if (!oldFotos) {
         if (zdjecia.length === 0) {
