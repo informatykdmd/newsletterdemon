@@ -3564,6 +3564,9 @@ def save_rent_offer():
             try:
                 photo.save(full_path)
                 saved_photos.append(complete_URL_PIC)
+                if secure_filename(photo.filename) in allPhotos:
+                    pobrany_index = allPhotos.index(secure_filename(photo.filename))
+                    allPhotos[pobrany_index] = complete_URL_PIC
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
 
