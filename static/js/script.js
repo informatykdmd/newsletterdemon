@@ -277,7 +277,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
 
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
-    // console.log('fotoList: ', fotoList);
+    console.log('fotoList: ', fotoList);
     var zdjecia = [];
     var oldFotos_list = [];
 
