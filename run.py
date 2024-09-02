@@ -3658,7 +3658,7 @@ def save_rent_offer():
         oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
         print(oldPhotos_plus_saved_photos_sorted)
         
-        if len(oldPhotos_plus_saved_photos)>=1 and len(oldPhotos_plus_saved_photos) <=10:
+        if len(oldPhotos_plus_saved_photos_sorted)>=1 and len(oldPhotos_plus_saved_photos_sorted) <=10:
             # dodaj zdjęcia do bazy i pobierz id galerii
             dynamic_col_name = ''
             
@@ -3672,11 +3672,11 @@ def save_rent_offer():
                 SET {dynamic_col_name} 
                 WHERE ID = %s;
                 '''
-            len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos)
+            len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos_sorted)
             if 10 - len_oldPhotos_plus_saved_photos == 0:
-                dane = tuple(a for a in oldPhotos_plus_saved_photos + [gallery_id])
+                dane = tuple(a for a in oldPhotos_plus_saved_photos_sorted + [gallery_id])
             else:
-                oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos
+                oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos_sorted
                 for _ in  range(10 - len_oldPhotos_plus_saved_photos):
                     oldPhotos_plus_saved_photos_plus_empyts += [None]
                 dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
