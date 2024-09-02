@@ -515,6 +515,15 @@ function prepareAndSubmitSellOfferForm(offerId, oldFotos=true) {
         formData.append('oldPhotos[]', url);
     });
 
+    // Dodawanie istniejących nazw zdjęć
+    fotoList.childNodes.forEach(child => {
+        if (child.textContent.includes('(')) {
+            formData.append('allPhotos[]', child.textContent.split(' (')[0]);
+        } else {
+            formData.append('allPhotos[]', child.textContent);
+        }
+    });
+
     // Dodanie pozostałych danych do FormData
     formData.append('title', title);
     formData.append('typNieruchomosci', typNieruchomosci);
