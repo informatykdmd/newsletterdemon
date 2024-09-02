@@ -4245,6 +4245,8 @@
                 li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
                 this.fileList.appendChild(li);
             });
+            // Inicjalizacja Sortable po załadowaniu istniejących obrazów
+            this.initSortable();
         }
 
         removeFileFromURL(index, url) {
