@@ -4198,6 +4198,7 @@
                         </div>
 {% endblock %}
 {% block bottom_script %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script>
     class FotoDropBox { // v 2.1
         constructor(formId, existingImageUrls = []) {
@@ -4251,6 +4252,9 @@
                 li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
                 this.fileList.appendChild(li);
             });
+            // ver. 2.4
+            // Inicjalizacja Sortable po załadowaniu istniejących obrazów
+            this.initSortable();
         }
 
         removeFileFromURL(index, url) {
@@ -4345,9 +4349,11 @@
             );
         }
 
+        // ver. 2.4
         displayFiles() {
             this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
             this.loadExistingImages();
+
             this.accumulatedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
                 li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
@@ -4365,7 +4371,6 @@
                     return;  // Nie dodawaj plików, które nie są obrazami
                 }
 
-                // li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`));
                 li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
                 if (file.size > 2097200) {
                     li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
@@ -4383,7 +4388,33 @@
                 closeButton.addEventListener('click', () => this.removeFile(index));
                 li.appendChild(closeButton);
             });
+
+            // Zainicjuj Sortable.js po załadowaniu wszystkich elementów listy, nawet jeśli są tylko istniejące obrazy
+            this.initSortable();
         }
+
+        initSortable() {
+            new Sortable(this.fileList, {
+                animation: 150,
+                onEnd: (evt) => {
+                    // Zaktualizuj kolejność plików na podstawie nowej kolejności elementów listy
+                    const newOrder = [];
+                    this.fileList.querySelectorAll('li').forEach((li, index) => {
+                        if (li.file) {
+                            newOrder.push(li.file);
+                        } else {
+                            const imgIndex = Array.from(this.fileList.children).indexOf(li);
+                            if (this.existingImageUrls[imgIndex]) {
+                                newOrder.push(this.existingImageUrls[imgIndex]);
+                            }
+                        }
+                    });
+                    this.accumulatedFiles = newOrder.filter(file => typeof file !== 'string');  // Przechowuj tylko obiekty File
+                    this.existingImageUrls = newOrder.filter(file => typeof file === 'string'); // Przechowuj tylko URL-e
+                }
+            });
+        }
+
         
         removeFile(index) {
             this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
