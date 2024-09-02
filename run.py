@@ -21,6 +21,7 @@ from markupsafe import Markup
 import subprocess
 import regions
 from flask_session import Session
+from PIL import Image
 
 
 """
@@ -797,6 +798,42 @@ def restart_pm2_tasks_signal():
     except Exception as e:
         print(f"Błąd podczas restartu tasków PM2: {e}")
         return False
+
+def apply_logo_to_image(image_path, logo_path, output_path, scale_factor=1):
+    # Otwórz obraz główny i logo
+    image = Image.open(image_path)
+    logo = Image.open(logo_path)
+
+    # Skalowanie logo
+    image_width, image_height = image.size
+    logo_width, logo_height = logo.size
+
+    # Obliczenie nowych rozmiarów logo proporcjonalnie do rozmiaru zdjęcia
+    new_logo_width = int(image_width * scale_factor)
+    new_logo_height = int(logo_height * (new_logo_width / logo_width))
+    logo = logo.resize((new_logo_width, new_logo_height), Image.LANCZOS)
+
+    # Ustawienie przezroczystości logo
+    logo = logo.convert("RGBA")
+
+    # Ustawienie przezroczystości obrazu głównego
+    image = image.convert("RGBA")
+
+    # Pozycja logo w prawym dolnym rogu
+    position = (image_width - new_logo_width, image_height - new_logo_height)
+
+    # Nałożenie logo na obraz
+    image.paste(logo, position, logo)
+
+    # Sprawdzenie formatu wyjściowego
+    if str(output_path).lower().endswith('.png')\
+        or str(output_path).lower().endswith('.webp'):
+        final_image = image  # Zostawiamy przezroczystość
+    else:
+        final_image = image.convert("RGB")  # Konwersja do RGB dla JPEG i innych formatów bez przezroczystości
+    
+    # Konwersja z powrotem do formatu RGB, aby zapisać jako JPG
+    final_image.save(output_path, format='JPEG')
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
@@ -3555,6 +3592,7 @@ def save_rent_offer():
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
     saved_photos =[]
+    first_photo_processed = False 
     for photo in photos:
         if photo:
             filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
@@ -3563,6 +3601,13 @@ def save_rent_offer():
             complete_URL_PIC = f'{mainDomain_URL}{filename}'
             try:
                 photo.save(full_path)
+                
+                if not first_photo_processed:
+                    logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+                    output_path = full_path  # Zapisujemy z nałożonym logo pod tym samym adresem
+                    apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+                    first_photo_processed = True
+
                 saved_photos.append(complete_URL_PIC)
                 if secure_filename(photo.filename) in allPhotos:
                     pobrany_index = allPhotos.index(secure_filename(photo.filename))
@@ -3657,7 +3702,7 @@ def save_rent_offer():
 
         index_map = {nazwa: index for index, nazwa in enumerate(allPhotos)}
 
-        # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w lista_1
+        # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w allPhotos
         oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
         # print(oldPhotos_plus_saved_photos_sorted)
         
@@ -4161,7 +4206,7 @@ def save_sell_offer():
                     allPhotos[pobrany_index] = filename
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
-    print(allPhotos)
+    # print(allPhotos)
     if offerID_int == 9999999:
         gallery_id = None
         # Obsługa zdjęć 
@@ -4250,7 +4295,7 @@ def save_sell_offer():
 
         index_map = {nazwa: index for index, nazwa in enumerate(allPhotos)}
 
-        # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w lista_1
+        # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w allPhotos
         oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
         
         if len(oldPhotos_plus_saved_photos_sorted)>=1 and len(oldPhotos_plus_saved_photos_sorted) <=10:
