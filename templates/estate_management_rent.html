@@ -4379,7 +4379,69 @@
         //     });
         // }
 
-        displayFiles() { // V. 2.2
+        // displayFiles() { // V. 2.2
+        //     this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
+        //     this.loadExistingImages();
+
+        //     this.accumulatedFiles.forEach((file, index) => {
+        //         const li = document.createElement('li');
+        //         li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
+
+        //         if (file.type.startsWith('image/')) {
+        //             const img = document.createElement('img');
+        //             img.src = URL.createObjectURL(file);
+        //             img.onload = () => { URL.revokeObjectURL(img.src); };
+        //             img.style.height = '50px';
+        //             img.style.marginRight = '10px';
+        //             img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+        //             li.appendChild(img);
+        //         } else {
+        //             alert('Plik ' + file.name + ' nie jest zdjęciem.');
+        //             return;  // Nie dodawaj plików, które nie są obrazami
+        //         }
+
+        //         li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
+        //         if (file.size > 2097200) {
+        //             li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
+        //         } else if (file.size > 1048576) {
+        //             li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
+        //         } else {
+        //             li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
+        //         }
+        //         li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+        //         this.fileList.appendChild(li);
+
+        //         const closeButton = document.createElement('button');
+        //         closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+        //         closeButton.setAttribute('aria-label', 'Close');
+        //         closeButton.addEventListener('click', () => this.removeFile(index));
+        //         li.appendChild(closeButton);
+        //     });
+
+        //     // Zainicjuj Sortable.js po załadowaniu wszystkich elementów listy
+        //     new Sortable(this.fileList, {
+        //         animation: 150,
+        //         onEnd: (evt) => {
+        //             // Zaktualizuj kolejność plików na podstawie nowej kolejności elementów listy
+        //             const newOrder = [];
+        //             this.fileList.querySelectorAll('li').forEach((li, index) => {
+        //                 if (li.file) {
+        //                     newOrder.push(li.file);
+        //                 } else {
+        //                     const imgIndex = Array.from(this.fileList.children).indexOf(li);
+        //                     if (this.existingImageUrls[imgIndex]) {
+        //                         newOrder.push(this.existingImageUrls[imgIndex]);
+        //                     }
+        //                 }
+        //             });
+        //             this.accumulatedFiles = newOrder.filter(file => typeof file !== 'string');  // Przechowuj tylko obiekty File
+        //             this.existingImageUrls = newOrder.filter(file => typeof file === 'string'); // Przechowuj tylko URL-e
+        //         }
+        //     });
+        // }
+
+        // ver. 2.4
+        displayFiles() {
             this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
             this.loadExistingImages();
 
@@ -4418,7 +4480,11 @@
                 li.appendChild(closeButton);
             });
 
-            // Zainicjuj Sortable.js po załadowaniu wszystkich elementów listy
+            // Zainicjuj Sortable.js po załadowaniu wszystkich elementów listy, nawet jeśli są tylko istniejące obrazy
+            this.initSortable();
+        }
+
+        initSortable() {
             new Sortable(this.fileList, {
                 animation: 150,
                 onEnd: (evt) => {
@@ -4439,6 +4505,7 @@
                 }
             });
         }
+
         
         removeFile(index) {
             this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
