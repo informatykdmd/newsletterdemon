@@ -3517,12 +3517,13 @@ def save_rent_offer():
 
     if offerID_int == 9999999:
         oldPhotos = []
+        allPhotos = []
     else:
         oldPhotos = request.form.getlist('oldPhotos[]')
         allPhotos = request.form.getlist('allPhotos[]')
 
     print(allPhotos)
-    
+
     validOpis = []
     for test in opis:
         for val in test.values():
@@ -3650,6 +3651,12 @@ def save_rent_offer():
                     print(f"Error removing file {file_path}: {e}")
 
         oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
+
+        index_map = {nazwa: index for index, nazwa in enumerate(allPhotos)}
+
+        # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w lista_1
+        oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
+        print(oldPhotos_plus_saved_photos_sorted)
         
         if len(oldPhotos_plus_saved_photos)>=1 and len(oldPhotos_plus_saved_photos) <=10:
             # dodaj zdjęcia do bazy i pobierz id galerii
