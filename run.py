@@ -3519,8 +3519,10 @@ def save_rent_offer():
         oldPhotos = []
     else:
         oldPhotos = request.form.getlist('oldPhotos[]')
+        allPhotos = request.form.getlist('allPhotos[]')
 
-
+    print(allPhotos)
+    
     validOpis = []
     for test in opis:
         for val in test.values():

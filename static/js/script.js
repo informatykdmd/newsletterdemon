@@ -277,7 +277,7 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
 
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
-    console.log('fotoList: ', fotoList);
+    // console.log('fotoList: ', fotoList);
     var zdjecia = [];
     var oldFotos_list = [];
 
@@ -334,6 +334,11 @@ function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     // Dodawanie istniejących nazw zdjęć jako FormData
     oldFotos_list.forEach(url => {
         formData.append('oldPhotos[]', url);
+    });
+
+    // Dodawanie istniejących nazw zdjęć jako FormData
+    fotoList.forEach(url => {
+        formData.append('allPhotos[]', url);
     });
 
     // Dodanie pozostałych danych do FormData
