@@ -3566,10 +3566,10 @@ def save_rent_offer():
                 saved_photos.append(complete_URL_PIC)
                 if secure_filename(photo.filename) in allPhotos:
                     pobrany_index = allPhotos.index(secure_filename(photo.filename))
-                    allPhotos[pobrany_index] = complete_URL_PIC
+                    allPhotos[pobrany_index] = filename
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
-
+    print(allPhotos)
     if offerID_int == 9999999:
         gallery_id = None
         # Obsługa zdjęć 
