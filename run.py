@@ -4114,7 +4114,7 @@ def save_sell_offer():
         oldPhotos = request.form.getlist('oldPhotos[]')
         allPhotos = request.form.getlist('allPhotos[]')
 
-
+    print(allPhotos)
     validOpis = []
     for test in opis:
         for val in test.values():
@@ -4161,7 +4161,7 @@ def save_sell_offer():
                     allPhotos[pobrany_index] = filename
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
-
+    print(allPhotos)
     if offerID_int == 9999999:
         gallery_id = None
         # Obsługa zdjęć 
