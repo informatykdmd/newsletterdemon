@@ -3522,7 +3522,7 @@ def save_rent_offer():
         oldPhotos = request.form.getlist('oldPhotos[]')
         allPhotos = request.form.getlist('allPhotos[]')
 
-    print(allPhotos)
+    # print(allPhotos)
 
     validOpis = []
     for test in opis:
@@ -3569,7 +3569,7 @@ def save_rent_offer():
                     allPhotos[pobrany_index] = filename
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
-    print(allPhotos)
+    # print(allPhotos)
     if offerID_int == 9999999:
         gallery_id = None
         # Obsługa zdjęć 
@@ -3659,7 +3659,7 @@ def save_rent_offer():
 
         # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w lista_1
         oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
-        print(oldPhotos_plus_saved_photos_sorted)
+        # print(oldPhotos_plus_saved_photos_sorted)
         
         if len(oldPhotos_plus_saved_photos_sorted)>=1 and len(oldPhotos_plus_saved_photos_sorted) <=10:
             # dodaj zdjęcia do bazy i pobierz id galerii
@@ -4109,8 +4109,10 @@ def save_sell_offer():
 
     if offerID_int == 9999999:
         oldPhotos = []
+        allPhotos = []
     else:
         oldPhotos = request.form.getlist('oldPhotos[]')
+        allPhotos = request.form.getlist('allPhotos[]')
 
 
     validOpis = []
@@ -4154,6 +4156,9 @@ def save_sell_offer():
             try:
                 photo.save(full_path)
                 saved_photos.append(complete_URL_PIC)
+                if secure_filename(photo.filename) in allPhotos:
+                    pobrany_index = allPhotos.index(secure_filename(photo.filename))
+                    allPhotos[pobrany_index] = filename
             except Exception as e:
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
 
@@ -4242,8 +4247,13 @@ def save_sell_offer():
 
 
         oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
+
+        index_map = {nazwa: index for index, nazwa in enumerate(allPhotos)}
+
+        # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w lista_1
+        oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
         
-        if len(oldPhotos_plus_saved_photos)>=1 and len(oldPhotos_plus_saved_photos) <=10:
+        if len(oldPhotos_plus_saved_photos_sorted)>=1 and len(oldPhotos_plus_saved_photos_sorted) <=10:
             # dodaj zdjęcia do bazy i pobierz id galerii
             dynamic_col_name = ''
             
@@ -4257,11 +4267,11 @@ def save_sell_offer():
                 SET {dynamic_col_name} 
                 WHERE ID = %s;
                 '''
-            len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos)
+            len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos_sorted)
             if 10 - len_oldPhotos_plus_saved_photos == 0:
-                dane = tuple(a for a in oldPhotos_plus_saved_photos + [gallery_id])
+                dane = tuple(a for a in oldPhotos_plus_saved_photos_sorted + [gallery_id])
             else:
-                oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos
+                oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos_sorted
                 for _ in  range(10 - len_oldPhotos_plus_saved_photos):
                     oldPhotos_plus_saved_photos_plus_empyts += [None]
                 dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
