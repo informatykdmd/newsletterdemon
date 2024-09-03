@@ -2018,12 +2018,12 @@ def set_settings():
         form_data = request.form.to_dict()
 
         upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['estate-pic-offer']
-        avatarPic = request.files.get(f'tmpl_logo')
-        print(upload_path, avatarPic)
-        # if avatarPic and allowed_file(avatarPic.filename):
-        #     filename = f"{int(time.time())}_{secure_filename(avatarPic.filename)}"
+        logoPic = request.files.get(f'tmpl_logo')
+        print(upload_path, logoPic.filename)
+        # if logoPic and allowed_file(avatarPic.filename) and str(avatarPic.filename).endswith('.png'):
+        #     filename = f"{logo.png}"
         #     full_path = os.path.join(upload_path, filename)
-        #     avatarPic.save(full_path)
+        #     logoPic.save(full_path)
        
         ADMIN_DOMAIN = form_data['main-domain']
         ADMIN_REALLOC = form_data['real-loc-on-server']
