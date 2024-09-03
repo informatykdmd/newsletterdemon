@@ -2020,10 +2020,11 @@ def set_settings():
         upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['estate-pic-offer']
         logoPic = request.files.get(f'tmpl_logo')
         print(upload_path, logoPic.filename)
-        # if logoPic and allowed_file(avatarPic.filename) and str(avatarPic.filename).endswith('.png'):
-        #     filename = f"{logo.png}"
-        #     full_path = os.path.join(upload_path, filename)
-        #     logoPic.save(full_path)
+        if logoPic and allowed_file(logoPic.filename) and str(logoPic.filename).endswith('.png'):
+            logo_filename = f"logo.png"
+            full_path = os.path.join(upload_path, logo_filename)
+            logoPic.save(full_path)
+            flash('Plik nakładki został załadowany!', 'success')
        
         ADMIN_DOMAIN = form_data['main-domain']
         ADMIN_REALLOC = form_data['real-loc-on-server']
