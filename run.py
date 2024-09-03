@@ -2016,6 +2016,14 @@ def set_settings():
     
     if request.method == 'POST':
         form_data = request.form.to_dict()
+
+        upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['estate-pic-offer']
+        avatarPic = request.files.get(f'etate_logo')
+        print(upload_path, avatarPic, settingsDB['real-loc-on-server'])
+        # if avatarPic and allowed_file(avatarPic.filename):
+        #     filename = f"{int(time.time())}_{secure_filename(avatarPic.filename)}"
+        #     full_path = os.path.join(upload_path, filename)
+        #     avatarPic.save(full_path)
        
         ADMIN_DOMAIN = form_data['main-domain']
         ADMIN_REALLOC = form_data['real-loc-on-server']
@@ -4272,7 +4280,7 @@ def save_sell_offer():
 
         # print(full_path, logo_path, output_path)
         apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
-        
+
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertySprzedazy', 'ID', offerID_int)[0][0]
         except IndexError: 
