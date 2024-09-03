@@ -3661,8 +3661,8 @@ def save_rent_offer():
         output_path = upload_path+saved_photos[0].split('/')[-1]
         full_path = output_path
 
-        print(full_path, logo_path, output_path)
-        # apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+        # print(full_path, logo_path, output_path)
+        apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
 
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', offerID_int)[0][0]
@@ -3752,8 +3752,8 @@ def save_rent_offer():
         output_path = upload_path+oldPhotos_plus_saved_photos_sorted[0].split('/')[-1]
         full_path = output_path
 
-        print(full_path, logo_path, output_path)
-        # apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+        # print(full_path, logo_path, output_path)
+        apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
 
 
     user_phone = session['user_data']['phone']
