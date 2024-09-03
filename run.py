@@ -2019,7 +2019,7 @@ def set_settings():
 
         upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['estate-pic-offer']
         avatarPic = request.files.get(f'etate_logo')
-        print(upload_path, avatarPic, settingsDB['real-loc-on-server'])
+        print(upload_path, avatarPic)
         # if avatarPic and allowed_file(avatarPic.filename):
         #     filename = f"{int(time.time())}_{secure_filename(avatarPic.filename)}"
         #     full_path = os.path.join(upload_path, filename)
