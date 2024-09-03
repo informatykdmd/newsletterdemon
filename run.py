@@ -2019,12 +2019,16 @@ def set_settings():
 
         upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['estate-pic-offer']
         logoPic = request.files.get(f'tmpl_logo')
-        print(upload_path, logoPic.filename)
-        if logoPic and allowed_file(logoPic.filename) and str(logoPic.filename).endswith('.png'):
-            logo_filename = f"logo.png"
-            full_path = os.path.join(upload_path, logo_filename)
-            logoPic.save(full_path)
-            flash('Plik nakładki został załadowany!', 'success')
+        
+        if logoPic:  # Sprawdza, czy plik został przesłany
+            if allowed_file(logoPic.filename) and logoPic.filename.lower().endswith('.png'):
+                logo_filename = "logo.png"
+                full_path = os.path.join(upload_path, logo_filename)
+                logoPic.save(full_path)
+                flash('Plik nakładki został załadowany!', 'success')
+            else:
+                flash('Nieprawidłowy plik. Tylko pliki PNG są dozwolone.', 'danger')
+        
        
         ADMIN_DOMAIN = form_data['main-domain']
         ADMIN_REALLOC = form_data['real-loc-on-server']
@@ -10599,6 +10603,7 @@ def settings():
     avatar = settingsDB['avatar-pic-path']
     real_loc_on_server = settingsDB['real-location-on-server']
     estate_pic_path = settingsDB['estate-pic-offer']
+    etate_logo_png = settingsDB['main-domain']+estate_pic_path+'logo.png'
     
     restart = settingsDB['last-restart']
     domy = settingsDB['domy']
@@ -10626,7 +10631,8 @@ def settings():
                             elitehome=elitehome,
                             inwestycje=inwestycje,
                             instalacje=instalacje,
-                            smtpAdmin=smtpAdmin
+                            smtpAdmin=smtpAdmin,
+                            etate_logo_png=etate_logo_png
                             )
 
 if __name__ == '__main__':
