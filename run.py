@@ -4176,7 +4176,7 @@ def save_sell_offer():
         oldPhotos = request.form.getlist('oldPhotos[]')
         allPhotos = request.form.getlist('allPhotos[]')
 
-    print(allPhotos)
+    # print(allPhotos)
     validOpis = []
     for test in opis:
         for val in test.values():
@@ -4265,6 +4265,14 @@ def save_sell_offer():
                     'message': 'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!',
                     'success': True
                     }), 200
+        
+        logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+        output_path = upload_path+saved_photos[0].split('/')[-1]
+        full_path = output_path
+
+        # print(full_path, logo_path, output_path)
+        apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+        
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertySprzedazy', 'ID', offerID_int)[0][0]
         except IndexError: 
@@ -4347,6 +4355,14 @@ def save_sell_offer():
                         'message': 'xxx',
                         'success': True
                         }), 200
+            
+        logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+        output_path = upload_path+oldPhotos_plus_saved_photos_sorted[0].split('/')[-1]
+        full_path = output_path
+
+        # print(full_path, logo_path, output_path)
+        apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+
 
     user_phone = session['user_data']['phone']
     user_email = session['user_data']['email']
