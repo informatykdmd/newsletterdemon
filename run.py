@@ -2018,7 +2018,7 @@ def set_settings():
         form_data = request.form.to_dict()
 
         upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['estate-pic-offer']
-        avatarPic = request.files.get(f'etate_logo')
+        avatarPic = request.files.get(f'tmpl_logo')
         print(upload_path, avatarPic)
         # if avatarPic and allowed_file(avatarPic.filename):
         #     filename = f"{int(time.time())}_{secure_filename(avatarPic.filename)}"
