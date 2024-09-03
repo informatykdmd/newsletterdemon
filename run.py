@@ -3592,7 +3592,7 @@ def save_rent_offer():
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
     saved_photos =[]
-    first_photo_processed = False 
+    # first_photo_processed = False 
     for photo in photos:
         if photo:
             filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
@@ -3602,11 +3602,11 @@ def save_rent_offer():
             try:
                 photo.save(full_path)
                 
-                if not first_photo_processed:
-                    logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
-                    output_path = full_path  # Zapisujemy z nałożonym logo pod tym samym adresem
-                    apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
-                    first_photo_processed = True
+                # if not first_photo_processed:
+                #     logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+                #     output_path = full_path  # Zapisujemy z nałożonym logo pod tym samym adresem
+                #     apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+                #     first_photo_processed = True
 
                 saved_photos.append(complete_URL_PIC)
                 if secure_filename(photo.filename) in allPhotos:
@@ -3656,6 +3656,14 @@ def save_rent_offer():
                     'message': 'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!',
                     'success': True
                     }), 200
+        
+        logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+        output_path = upload_path+saved_photos[0].split('/')[-1]
+        full_path = output_path
+
+        print(full_path, logo_path, output_path)
+        # apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', offerID_int)[0][0]
         except IndexError: 
@@ -3738,6 +3746,15 @@ def save_rent_offer():
                         'message': 'xxx',
                         'success': True
                         }), 200
+
+    
+        logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+        output_path = upload_path+oldPhotos_plus_saved_photos_sorted[0].split('/')[-1]
+        full_path = output_path
+
+        print(full_path, logo_path, output_path)
+        # apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+
 
     user_phone = session['user_data']['phone']
     user_email = session['user_data']['email']
