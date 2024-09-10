@@ -129,7 +129,7 @@ def getRegionData(
             } 
         
         
-        dzielnica='Brak'
+        dzielnica='Nieokreślona'
         return {
                 'wariant': 4,
                 'lista_wyboru': 'ready',
