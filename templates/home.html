@@ -238,69 +238,6 @@
 
 {% block bottom_script %}
 <script>
-    // ver 1
-    // $(document).ready(function() {
-    //     function fetchMessages() {
-    //         $.ajax({
-    //             url: '/fetch-messages', // URL do endpointu Flask pobierającego wiadomości
-    //             method: 'GET',
-    //             success: function(data) {
-    //                 let chatBox = $('#chat-box');
-    //                 chatBox.empty();
-    //                 data.forEach(function(message) {
-    //                     chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-4">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
-    //                 });
-    //                 // Przewijanie na dół po załadowaniu wiadomości
-    //                 $('html, body').scrollTop($(document).height());
-    //             }
-    //         });
-    //     }
-
-    //     // Pobieranie wiadomości co 5 sekund
-    //     setInterval(fetchMessages, 3000);
-
-    //     // Początkowe pobranie wiadomości
-    //     fetchMessages();
-    // });
-
-    // ver 2
-    // $(document).ready(function() {
-    //     let lastMessageId = null;
-
-    //     function fetchMessages() {
-    //         $.ajax({
-    //             url: '/fetch-messages', // URL do endpointu Flask pobierającego wiadomości
-    //             method: 'GET',
-    //             success: function(data) {
-    //                 let chatBox = $('#chat-box');
-    //                 let currentMessageIds = data.map(message => message[3]); // Załóżmy, że message[3] to ID wiadomości
-
-    //                 if (lastMessageId !== null && currentMessageIds.includes(lastMessageId)) {
-    //                     // Znaleziono ostatnią wiadomość, nie przewijaj
-    //                     return;
-    //                 }
-
-    //                 chatBox.empty();
-    //                 data.forEach(function(message) {
-    //                     chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-4">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
-    //                 });
-
-    //                 // Przewijanie na dół po załadowaniu wiadomości
-    //                 $('html, body').scrollTop($(document).height());
-
-    //                 // Zaktualizuj ID ostatniej wiadomości
-    //                 lastMessageId = currentMessageIds.length > 0 ? currentMessageIds[currentMessageIds.length - 1] : null;
-    //             }
-    //         });
-    //     }
-
-    //     // Pobieranie wiadomości co 3 sekundy
-    //     setInterval(fetchMessages, 3000);
-
-    //     // Początkowe pobranie wiadomości
-    //     fetchMessages();
-    // });
-
     $(document).ready(function() {
         let autoScrollEnabled = true;
 
@@ -340,35 +277,6 @@
     });
 
     // wysyłanie na czat
-    // document.getElementById('chat-form').addEventListener('submit', function(event) {
-    //     event.preventDefault(); // Zapobiega przeładowaniu strony
-
-    //     var messageInput = document.getElementById('message-input');
-    //     var message = messageInput.value;
-
-    //     if (message.trim() !== "") {
-    //         var xhr = new XMLHttpRequest();
-    //         xhr.open('POST', '/send-chat-message', true);
-    //         xhr.setRequestHeader('Content-Type', 'application/json');
-
-    //         xhr.onreadystatechange = function() {
-    //             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 201) {
-    //                 // var chatBox = document.getElementById('chat-box');
-    //                 // var newMessage = document.createElement('div');
-    //                 // newMessage.textContent = message;
-    //                 // chatBox.appendChild(newMessage);
-    //                 messageInput.value = ''; // Czyści pole tekstowe
-    //             }
-    //         };
-
-    //         var data = JSON.stringify({
-    //             content: message
-    //         });
-
-    //         xhr.send(data);
-    //     }
-    // });
-
     document.getElementById('chat-form').addEventListener('submit', function(event) {
         event.preventDefault(); // Zapobiega przeładowaniu strony
 
@@ -382,14 +290,11 @@
 
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 201) {
+                    // var chatBox = document.getElementById('chat-box');
+                    // var newMessage = document.createElement('div');
+                    // newMessage.textContent = message;
+                    // chatBox.appendChild(newMessage);
                     messageInput.value = ''; // Czyści pole tekstowe
-
-                    // Włączanie automatycznego przewijania po wysłaniu wiadomości
-                    autoScrollEnabled = true;
-                    document.getElementById('toggle-scroll').innerHTML = '⬆️ Wyłącz przewijanie';
-
-                    // Ręczne odświeżenie wiadomości
-                    fetchMessages();
                 }
             };
 
@@ -400,58 +305,6 @@
             xhr.send(data);
         }
     });
-
-    // Dodatkowy kod odpowiedzialny za włączanie/wyłączanie przewijania
-    let autoScrollEnabled = true;
-
-    function fetchMessages() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/fetch-messages', true);
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                var chatBox = document.getElementById('chat-box');
-                chatBox.innerHTML = ''; // Czyści stare wiadomości
-
-                var messages = JSON.parse(xhr.responseText);
-                messages.forEach(function(message) {
-                    var newMessage = document.createElement('div');
-                    newMessage.classList.add('card', 'm-2', 'bg-dark');
-                    newMessage.innerHTML = `
-                        <div class="card-header text-info fs-4">${message[0]}</div>
-                        <div class="card-body">
-                            <blockquote class="blockquote mb-0">
-                                <p>${message[1]}</p>
-                                <footer class="blockquote-footer"><small>(${message[2]})</small></footer>
-                            </blockquote>
-                        </div>`;
-                    chatBox.appendChild(newMessage);
-                });
-
-                if (autoScrollEnabled) {
-                    // Przewijanie na dół po załadowaniu wiadomości
-                    window.scrollTo(0, document.body.scrollHeight);
-                }
-            }
-        };
-
-        xhr.send();
-    }
-
-    // Funkcja do włączania/wyłączania przewijania
-    document.getElementById('toggle-scroll').addEventListener('click', function() {
-        autoScrollEnabled = !autoScrollEnabled;
-        if (autoScrollEnabled) {
-            this.innerHTML = '⬆️ Wyłącz przewijanie';
-        } else {
-            this.innerHTML = '⬇️ Włącz przewijanie';
-        }
-    });
-
-    // Początkowe załadowanie wiadomości i ustawienie interwału
-    fetchMessages();
-    setInterval(fetchMessages, 3000);
-
 
 </script>
 {% endblock %}
