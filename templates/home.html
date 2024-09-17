@@ -339,6 +339,36 @@
         });
     });
 
+    // wysyłanie na czat
+    // document.getElementById('chat-form').addEventListener('submit', function(event) {
+    //     event.preventDefault(); // Zapobiega przeładowaniu strony
+
+    //     var messageInput = document.getElementById('message-input');
+    //     var message = messageInput.value;
+
+    //     if (message.trim() !== "") {
+    //         var xhr = new XMLHttpRequest();
+    //         xhr.open('POST', '/send-chat-message', true);
+    //         xhr.setRequestHeader('Content-Type', 'application/json');
+
+    //         xhr.onreadystatechange = function() {
+    //             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 201) {
+    //                 // var chatBox = document.getElementById('chat-box');
+    //                 // var newMessage = document.createElement('div');
+    //                 // newMessage.textContent = message;
+    //                 // chatBox.appendChild(newMessage);
+    //                 messageInput.value = ''; // Czyści pole tekstowe
+    //             }
+    //         };
+
+    //         var data = JSON.stringify({
+    //             content: message
+    //         });
+
+    //         xhr.send(data);
+    //     }
+    // });
+
     document.getElementById('chat-form').addEventListener('submit', function(event) {
         event.preventDefault(); // Zapobiega przeładowaniu strony
 
@@ -352,11 +382,14 @@
 
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 201) {
-                    // var chatBox = document.getElementById('chat-box');
-                    // var newMessage = document.createElement('div');
-                    // newMessage.textContent = message;
-                    // chatBox.appendChild(newMessage);
                     messageInput.value = ''; // Czyści pole tekstowe
+
+                    // Włączanie automatycznego przewijania po wysłaniu wiadomości
+                    autoScrollEnabled = true;
+                    document.getElementById('toggle-scroll').innerHTML = '⬆️ Wyłącz przewijanie';
+
+                    // Ręczne odświeżenie wiadomości
+                    fetchMessages();
                 }
             };
 
@@ -367,6 +400,57 @@
             xhr.send(data);
         }
     });
+
+    // Dodatkowy kod odpowiedzialny za włączanie/wyłączanie przewijania
+    let autoScrollEnabled = true;
+
+    function fetchMessages() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/fetch-messages', true);
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                var chatBox = document.getElementById('chat-box');
+                chatBox.innerHTML = ''; // Czyści stare wiadomości
+
+                var messages = JSON.parse(xhr.responseText);
+                messages.forEach(function(message) {
+                    var newMessage = document.createElement('div');
+                    newMessage.classList.add('card', 'm-2', 'bg-dark');
+                    newMessage.innerHTML = `
+                        <div class="card-header text-info fs-4">${message[0]}</div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>${message[1]}</p>
+                                <footer class="blockquote-footer"><small>(${message[2]})</small></footer>
+                            </blockquote>
+                        </div>`;
+                    chatBox.appendChild(newMessage);
+                });
+
+                if (autoScrollEnabled) {
+                    // Przewijanie na dół po załadowaniu wiadomości
+                    window.scrollTo(0, document.body.scrollHeight);
+                }
+            }
+        };
+
+        xhr.send();
+    }
+
+    // Funkcja do włączania/wyłączania przewijania
+    document.getElementById('toggle-scroll').addEventListener('click', function() {
+        autoScrollEnabled = !autoScrollEnabled;
+        if (autoScrollEnabled) {
+            this.innerHTML = '⬆️ Wyłącz przewijanie';
+        } else {
+            this.innerHTML = '⬇️ Włącz przewijanie';
+        }
+    });
+
+    // Początkowe załadowanie wiadomości i ustawienie interwału
+    fetchMessages();
+    setInterval(fetchMessages, 3000);
 
 
 </script>
