@@ -224,14 +224,36 @@
                                     </div>
 
                                     <script>
+                                        function saveSelection() {
+                                            if (window.getSelection) {
+                                                const sel = window.getSelection();
+                                                if (sel.rangeCount > 0) {
+                                                    return sel.getRangeAt(0);
+                                                }
+                                            }
+                                            return null;
+                                        }
+                                    
+                                        function restoreSelection(range) {
+                                            if (range) {
+                                                const sel = window.getSelection();
+                                                sel.removeAllRanges();
+                                                sel.addRange(range);
+                                            }
+                                        }
+                                    
                                         document.getElementById('test_9999999').addEventListener('input', function() {
+                                            const range = saveSelection(); // Zachowaj pozycję kursora
+                                    
                                             let content = this.innerHTML;
-
+                                    
                                             // Zamień nawiasy kwadratowe na kolorowy tekst
-                                            content = content.replace(/\[(.*?)\]/g, '<span style="color: red;">[$1]</span>');
+                                            content = content.replace(/\[(.*?)\]/g, '<span style="color: #f39c12;">[$1]</span>');
                                             
                                             // Zaktualizuj zawartość div'a z nowym formatowaniem
                                             this.innerHTML = content;
+                                    
+                                            restoreSelection(range); // Przywróć pozycję kursora
                                         });
                                     </script>
                                     
