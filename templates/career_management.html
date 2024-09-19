@@ -68,10 +68,14 @@
                                             id="start_9999999" 
                                             name="startdate_9999999"
                                             class="dark-mode-data-career" 
-                                            value="2024-09-19"
-                                            min="2024-01-01" max="2024-12-31">
+                                            value="2024-09-19" />
                                     </div>
-                                    
+                                    <script>
+                                        // Ustaw dzisiejszą datę jako minimalną datę
+                                        const dateInput = document.getElementById('start_9999999');
+                                        const today = new Date().toISOString().split('T')[0];  // Pobierz dzisiejszą datę w formacie YYYY-MM-DD
+                                        dateInput.setAttribute('min', today);
+                                    </script>
                                     <div class="input-group ">
                                         <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
                                         <input 
