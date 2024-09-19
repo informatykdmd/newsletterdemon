@@ -224,33 +224,50 @@
                                     </div>
 
                                     <script>
-                                        // Funkcja do zapisywania zakresu (kursora)
                                         function saveSelection() {
                                             const selection = window.getSelection();
                                             if (selection.rangeCount > 0) {
-                                                return selection.getRangeAt(0);
+                                                const range = selection.getRangeAt(0);
+                                                const preSelectionRange = range.cloneRange();
+                                                preSelectionRange.selectNodeContents(range.startContainer);
+                                                preSelectionRange.setEnd(range.startContainer, range.startOffset);
+                                                return preSelectionRange.toString().length; // Zwraca liczbę znaków do pozycji kursora
                                             }
-                                            return null;
+                                            return 0;
                                         }
                                         
-                                        // Funkcja do przywracania zakresu (kursora)
-                                        function restoreSelection(range) {
+                                        function restoreSelection(el, pos) {
                                             const selection = window.getSelection();
+                                            const range = document.createRange();
+                                            let node = el.firstChild;
+                                            let charCount = 0;
+                                        
+                                            // Przejdź przez węzły tekstowe, aby znaleźć właściwą pozycję
+                                            while (node) {
+                                                let textLength = node.textContent.length;
+                                                if (charCount + textLength >= pos) {
+                                                    range.setStart(node, pos - charCount);
+                                                    range.collapse(true);
+                                                    break;
+                                                }
+                                                charCount += textLength;
+                                                node = node.nextSibling;
+                                            }
+                                        
                                             selection.removeAllRanges();
                                             selection.addRange(range);
                                         }
                                         
                                         document.getElementById('test_9999999').addEventListener('input', function() {
                                             const element = this;
-                                            const range = saveSelection(); // Zapisz pozycję kursora
+                                            const pos = saveSelection(); // Zachowaj pozycję kursora jako liczbę
                                             
-                                            // Modyfikacja zawartości i kolorowanie nawiasów kwadratowych
                                             let content = element.innerHTML;
                                             content = content.replace(/\[(.*?)\]/g, '<span style="color: #f39c12;">[$1]</span>');
                                             
-                                            element.innerHTML = content; // Ustaw zaktualizowaną zawartość
+                                            element.innerHTML = content; // Zaktualizuj zawartość
                                         
-                                            restoreSelection(range); // Przywróć pozycję kursora
+                                            restoreSelection(element, pos); // Przywróć pozycję kursora na właściwe miejsce
                                         });
                                     </script>
                                     
