@@ -228,7 +228,7 @@
                                             let content = this.innerHTML;
 
                                             // Zamień nawiasy kwadratowe na kolorowy tekst
-                                            content = content.replace(/\[(.*?)\]/g, '<span style="color: #f39c12;">[$1]</span>');
+                                            content = content.replace(/\[(.*?)\]/g, '<span style="color: red;">[$1]</span>');
                                             
                                             // Zaktualizuj zawartość div'a z nowym formatowaniem
                                             this.innerHTML = content;
