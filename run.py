@@ -1304,6 +1304,7 @@ def update_permission():
     if perm_id == 9: perm_name = 'Zarządzanie Ustawieniami'
 
     if perm_id == 16: perm_name = 'Zarządzanie Ogłoszeniami'
+    if perm_id == 17: perm_name = 'Zarządzanie Karierą'
 
     if perm_id == 10: perm_name = 'Przynależność do DMD Domy'
     if perm_id == 11: perm_name = 'Przynależność do DMD Budownictwo'
@@ -1312,7 +1313,7 @@ def update_permission():
     if perm_id == 14: perm_name = 'Przynależność do DMD Instalacje'
     if perm_id == 15: perm_name = 'Przynależność do DMD Development'
 
-    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16]:
+    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16, 17]:
         if session['userperm']['permissions'] == 0:
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
             return redirect(url_for('users'))
@@ -1394,6 +1395,15 @@ def update_permission():
         if perm_id == 16: 
             'Zarządzanie Ogłoszeniami'
             zapytanie_sql = '''UPDATE admins SET PERM_ESTATE = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        
+        if perm_id == 17: 
+            'Zarządzanie Karierą'
+            zapytanie_sql = '''UPDATE admins SET PERM_CAREER = %s WHERE ID = %s;'''
             if permission: onOff = 1
             else: onOff = 0
             dane = (onOff, user_id)
