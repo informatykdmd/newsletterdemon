@@ -731,3 +731,24 @@ color:#969696;
     }
 }
 
+.dark-mode-data-career {
+    background-color: #333; /* Ciemne tło dla pola */
+    color: #f0f0f0; /* Jasny tekst */
+    border: 1px solid #555; /* Ciemniejsze obramowanie */
+    border-radius: 5px; /* Zaokrąglone rogi */
+    padding: 10px; /* Odpowiednia wielkość wnętrza */
+    width: 100%; /* Pełna szerokość */
+    box-sizing: border-box;
+}
+
+/* Zmiana stylu na focus (gdy użytkownik klika) */
+.dark-mode-data-career:focus {
+    outline: none;
+    border-color: #1a73e8; /* Niebieskie obramowanie na focus */
+    box-shadow: 0 0 5px #1a73e8;
+}
+
+/* Stylizacja przy najechaniu myszką */
+.dark-mode-data-career:hover {
+    border-color: #888; /* Jaśniejsze obramowanie przy najechaniu */
+}
