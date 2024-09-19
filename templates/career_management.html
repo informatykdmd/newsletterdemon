@@ -1,0 +1,1221 @@
+{% extends 'base.html' %}
+
+{% block title %}DMD Panel Administratora - Zarządzanie Ogłoszeniami{% endblock %}
+
+{% block addButton %}
+    <li style="margin-left: 15px;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(14, 144, 14) !important;"></i></a>
+    </li>
+{% endblock %}
+{% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Zarządzanie Ofertami Pracy</a>{% endblock %}
+
+{% block tableHeader %}
+                        <div>
+                            <div class="row klej formatuj-header">
+                                <div class="d-none d-lg-block" style="max-width: 30px;">
+                                    #
+                                </div>
+                                <div  class="col-xl-8 col-lg-6 col-sm-8">
+                                    Tytuł
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Wynagrodzenie
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 150px;">
+                                    Lokalizacja
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Forma Zatrudnienia
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 250px;">
+                                    Operator
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 150px;">
+                                    Data Rozpoczęcia
+                                </div>
+                                <div  class="text-end" style="max-width: 80px;">
+                                    <i class="bi bi-person-gear"></i> Akcja 
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}
+{% block tableContent%}
+                        <!-- OFFCANVANSE RIGHT ADD NEW POST -->
+                        <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowej oferty pracy.</h4>
+                                <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <form method="POST" id="rentOffer_9999999" action="{{ url_for('save_career_offer') }}" enctype="multipart/form-data" >
+                                    <!-- Tytuł artykułu -->
+                                    <div class="mb-3">
+                                        <label for="title_9999999" class="form-label">Stanowisko</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="title_9999999" 
+                                                name="title_9999999" 
+                                                required>
+                                    </div>
+                                    <!-- Informacje ogólne o stanowisku -->
+                                    <label class="form-label">Informacje ogólne o stanowisku</label>
+                                    <div class="mb-3">
+                                        <label for="start">Wybierz Datę Rozpoczęcia:</label>
+                                        <input type="date" id="start" name="startdate_9999999"
+                                            value="2024-09-19"
+                                            min="2024-01-01" max="2024-12-31">
+                                    </div>
+                                    
+                                    <div class="input-group ">
+                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                        <input 
+                                            type="number" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="Cena_9999999" 
+                                            name="Cena_9999999" 
+                                            placeholder="Cena" 
+                                            aria-label="Cena" />
+                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;">.00</span>
+                                    </div>
+                                    <div class="no-border formatuj-maly-font fadeIn">
+                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 5000);">5000</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 10000);">10 000</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 15000);">15 000</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 20000);">20 000</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="sumWithInputValue('Cena_9999999', 25000);">25 000</a>
+                                    </div>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+
+                                    <label class="form-label">Dodatkowe informacje</label>
+                                    <div class="input-group mb-1">
+                                        <textarea 
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="InformacjeDodatkowe_9999999" 
+                                            name="InformacjeDodatkowe_9999999" 
+                                            rows="4" required></textarea>
+                                    </div>
+                                    <div class="no-border formatuj-maly-font fadeIn mb-3">
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Przeznaczenie biurowe. ');">Przeznaczenie biurowe</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Przeznaczenie na handel i usługi. ');">Przeznaczenie na handel i usługi</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Produkcja i przemysł. ');">Produkcja i przemysł</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Działka budowlana. ');">Działka budowlana</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Działka inwestycyjna. ');">Działka inwestycyjna</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Ogródek działkowy. ');">Ogródek działkowy</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Działka przemysłowa. ');">Działka przemysłowa</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Działka usługowa. ');">Działka usługowa</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Działka leśna. ');">Działka leśna</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Pierwszy właściciel. ');">Pierwszy właściciel</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Atrakcyjna lokalizacja. ');">Atrakcyjna lokalizacja</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Okazja!');">Okazja!</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Możliwość negocjacji. ');">Możliwość negocjacji</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="appendValueWithNewline('InformacjeDodatkowe_9999999', 'Media i monitoring w cenie najmu. ');">Media i monitoring w cenie najmu</a>
+                                    </div>
+
+                                    
+
+
+                                    
+                                    <input type="hidden" name="OfferID" id="OfferID_9999999" value="9999999"/>
+                                    <!-- Przycisk Zapisz artykuł -->
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-sm" 
+                                        style="max-height: 30px; font-size: 12px;" 
+                                        onclick="prepareAndSubmitRentOfferForm('9999999', false)"
+                                    >
+                                        Dodaj ogłoszenie o pracę
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        
+                        {% for post_data in ads_career %}
+                            {% set post_id  = post_data['id'] %}
+                            <!-- linia contentu tabeli ciemna-->
+                            <div>
+                                <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                    <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {{post_id}}
+                                    </div>
+                                    <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {% if post_data['status'] == 1 %}
+                                            <span class="d-none d-md-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
+                                        {% else %}
+                                            <span class="d-none d-md-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-secondary"></i></span>
+                                        {% endif %}
+                                    </div>
+                                    <div  class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            {{post_data['title']}}
+                                        </a>
+                                        
+                                    </div>
+                                    <div  class="d-none d-lg-block"  style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            <span class="display-6 formatuj-maly-font">{{post_data['salary']}} PLN</span>
+                                        </a>
+                                    </div>
+                                    <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            <span class="display-6 formatuj-maly-font">{{post_data['location'][:12]}}</span>
+                                        </a>
+                                    </div>
+                                    <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            {% if post_data['status'] == 1 %}
+                                                <span class="text-warning">Aktywna</span>
+                                            {% else %}
+                                                <span class="text-secondary">Nieaktywna</span>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {% if post_data['contact_email'] != '' %}
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            <span class="text-secondary formatuj-maly-font">{{post_data['contact_email']}}</span>
+                                        </a>
+                                        {% else %}
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            <span class="text-secondary">Brak</span>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            <span class="display-6 formatuj-maly-font">{{post_data['data']}}</span>
+                                        </a>
+                                    </div>
+                                    <div class="text-end" style="max-width: 80px;">
+                                        
+                                        <form method="POST" id="remove_rent_offer_{{post_id}}" action="{{ url_for('remove_career_offer') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz usunąć ofertę pracy?');">
+
+                                            <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
+
+                                            <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling_{{post_id}}" aria-controls="offcanvasScrolling_{{post_id}}"><i class="bi bi-pencil" style="color: #7eb5cc !important;"></i></a>
+                                            <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/>
+                                            <input type="hidden" name="PostID" id="PostID_{{post_id}}" value="{{post_id}}"/>
+                                            <button type="submit" class="custom-icon-button"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></button>
+                                            <!-- <a href="#"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></a> -->
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- offcanvanse left -->
+                            <div class="offcanvas offcanvas-start bg-dark oc-width" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling_{{post_id}}" aria-labelledby="offcanvasScrollingLabel">
+                                <div class="offcanvas-header">
+                                <h4 class="offcanvas-title" id="offcanvasScrollingLabel">Edycja Ogłoszenia Najmu id: {{post_id}}</h4>
+                                <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div class="offcanvas-body formatuj-maly-font">
+                                    <div class="tylko-klej">
+                                        <div style="color:#6a6a6a;">
+                                            <form method="POST" id="rentOffer_{{post_id}}" action="{{ url_for('save_rent_offer') }}" enctype="multipart/form-data" >
+
+                                                
+                                                <input type="hidden" name="OfferID" id="OfferID_{{post_id}}" value="{{post_id}}"/>
+
+                                                <!-- Przycisk Zapisz artykuł -->
+                                                <button 
+                                                    type="button" 
+                                                    class="btn btn-success btn-sm" 
+                                                    style="max-height: 30px; font-size: 12px;" 
+                                                    onclick="prepareAndSubmitRentOfferForm('{{post_id}}', true)"
+                                                >
+                                                    Zapisz ogłoszenie najmu
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <!-- collapse start -->
+
+                            <div class="sub-panel rogi collapse formatyj-maly-wiersz p-2" id="collapse_id_{{post_id}}">
+
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-12">
+                                        <h5>{{post_data['title']}}</h5>
+                                        <p>Wynagrodzenie: {{post_data['salary']}}</p>
+                                        <p>Rozpoczęcie pracy: {{post_data['start_date']}}</p>
+                                        <p>Lokalizacja: {{post_data['location']}}</p>
+                                        <p>Forma zatrudnienia: {{post_data['employment_type']}}</p>
+                                        <p>Ogłoszenie z: {{post_data['data']}}</p>
+                                        <p>Dział: {{post_data['brand']}}</p>
+                                        <p>E-mail kontaktowy: {{post_data['contact_email']}}</p>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <h5>Opis Stanowiska</h5>
+                                        <p>{{post_data['description']}}</p>
+
+                                        <h5>Opis Wymagań</h5>
+                                        <p>{{post_data['requirements_description']}}</p>
+
+                                        <!-- lista wymagań -->
+                                         <h5>Lista Wymagań</h5>
+                                         <ul>
+                                            {% for requirement in post_data['requirements'] %}
+                                                <li>{{requirement}}</li>
+                                            {% endfor %}
+                                         </ul>
+
+                                        
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        <h5>Benefity</h5>
+                                        <ul>
+                                            {% for benefit in post_data['benefits'] %}
+                                                <li>{{benefit}}</li>
+                                            {% endfor %}
+                                         </ul>
+                                        
+                                    </div>
+                                    
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-12">
+                                        <!-- pusta  -->
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        PUBLIKACJE NA GRUPACH FB
+                                    </div>
+                                    <div class="col-lg-4 col-sm-12">
+                                        ZARZĄDZANIE OGŁOSZENIEM
+                                    </div>
+                                </div>
+                                
+
+                            </div>
+
+                            <!-- collapse end -->
+                        {% endfor %}
+                        <!-- Paginacja -->
+                        <span class="formatuj-maly-logout">{{ pagination.info }}</span>
+                        <div class="pagination formatuj-margin-top">
+                            <nav aria-label="Page navigation example">                            
+                                <ul class="pagination justify-content-center dark-mode">
+                                    <li class="page-item">{{ pagination.prev }}</li>
+                                    <li class="page-item">{{ pagination.links }}</li>
+                                    <li class="page-item">{{ pagination.next }}</li>
+                                </ul>
+                            </nav>
+                        </div>
+{% endblock %}
+{% block bottom_script %}
+<!-- sortowanie listy zdjęć dropbox estate -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script>
+    class FotoDropBox { // v 2.1
+        constructor(formId, existingImageUrls = []) {
+            if (!this.checkDragAndDropSupport()) {
+                alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików.');
+                return;
+            }
+
+            this.dropArea = document.getElementById(`${formId}-drop-area`);
+            this.fileList = document.getElementById(`${formId}-fileList`);
+            this.accumulatedFiles = [];
+            this.accounter_accumulatedFiles = 0;
+            // v 2.1
+            this.existingImageUrls = existingImageUrls;
+
+            // v 2.0
+            this.fileInput = document.createElement('input');
+            this.fileInput.type = 'file';
+            this.fileInput.multiple = true; // jeśli chcesz obsługiwać wiele plików naraz
+            this.fileInput.style.display = 'none'; // ukryj element input
+            document.body.appendChild(this.fileInput); // dodaj input do DOM
+            this.dropArea.addEventListener('click', () => this.fileInput.click()); // po kliknięciu na dropArea, aktywuj input file
+            this.fileInput.addEventListener('change', (e) => this.handleFileInput(e)); // obsługa zdarzenia change
+            // v 2.0
+            this.initEventListeners();
+            // v 2.1
+            this.loadExistingImages();
+        }
+
+        loadExistingImages() {
+            this.existingImageUrls.forEach((url, index) => {
+                this.accounter_accumulatedFiles += 1;
+                const li = document.createElement('li');
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.height = '50px';
+                img.style.marginRight = '10px';
+                img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                li.appendChild(img);
+
+                const fileName = url.slice(url.lastIndexOf('/') + 1);
+                li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
+                li.style.color = '#fff';
+
+                const closeButton = document.createElement('button');
+                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+                closeButton.setAttribute('aria-label', 'Close');
+                closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
+                li.appendChild(closeButton);
+
+                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+                this.fileList.appendChild(li);
+            });
+            // ver. 2.4
+            // Inicjalizacja Sortable po załadowaniu istniejących obrazów
+            this.initSortable();
+        }
+
+        removeFileFromURL(index, url) {
+            // Możesz dodać logikę do usuwania obrazu z serwera lub z aktualnej listy zdjęć
+            this.existingImageUrls.splice(index, 1); // Usuń URL z listy
+            this.accounter_accumulatedFiles -= 1;
+            this.displayFiles(); // Odśwież wyświetlaną listę
+        }
+  
+        checkDragAndDropSupport() {
+            const div = document.createElement('div');
+            return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+        }
+
+        initEventListeners() {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, (e) => this.preventDefaults(e), false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.highlight(), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.unhighlight(), false);
+            });
+
+            this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+        }
+
+        preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        highlight() {
+            this.dropArea.classList.add('highlight');
+        }
+
+        unhighlight() {
+            this.dropArea.classList.remove('highlight');
+        }
+
+        handleDrop(e) {
+            this.preventDefaults(e);
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            this.updateFileList(files);
+        }
+        
+        handleDropImg(event) {
+            event.preventDefault();
+            let files = event.dataTransfer.files; // Pobierz pliki z obiektu DataTransfer
+            let list = document.getElementById(formId + '-fileList');
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                let li = document.createElement('li');
+                li.textContent = file.name + " (" + (file.size / 1024).toFixed(1) + " KB)"; // Dodaj informacje o pliku
+                li.file = file; // Kluczowe: Przypisz obiekt File do elementu li
+                list.appendChild(li);
+            }
+        }
+
+        // Tuning po kliknieciu w dropbox tradycyjne okienko
+        handleFileInput(e) {
+            const files = e.target.files;
+            this.updateFileList(files);
+        }
+
+
+        updateFileList(newFiles) {
+            for (let file of newFiles) {
+                if (this.accumulatedFiles.length >= 10 - this.accounter_accumulatedFiles) {
+                    alert('Osiągnięto limit 10 plików.');
+                    break;
+                }
+                if (!this.isFileUnique(file)) {
+                    alert('Plik ' + file.name + ' jest już na liście.');
+                    continue;
+                }
+                this.accumulatedFiles.push(file);
+            }
+            this.displayFiles();
+        }
+
+        isFileUnique(newFile) {
+            return !this.accumulatedFiles.some(file => 
+                file.name === newFile.name &&
+                file.size === newFile.size &&
+                this.getFileExtension(file.name) === this.getFileExtension(newFile.name)
+            );
+        }
+
+        // ver. 2.4
+        displayFiles() {
+            this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
+            this.loadExistingImages();
+
+            this.accumulatedFiles.forEach((file, index) => {
+                const li = document.createElement('li');
+                li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
+
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.onload = () => { URL.revokeObjectURL(img.src); };
+                    img.style.height = '50px';
+                    img.style.marginRight = '10px';
+                    img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                    li.appendChild(img);
+                } else {
+                    alert('Plik ' + file.name + ' nie jest zdjęciem.');
+                    return;  // Nie dodawaj plików, które nie są obrazami
+                }
+
+                li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
+                if (file.size > 2097200) {
+                    li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
+                } else if (file.size > 1048576) {
+                    li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
+                } else {
+                    li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
+                }
+                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+                this.fileList.appendChild(li);
+
+                const closeButton = document.createElement('button');
+                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+                closeButton.setAttribute('aria-label', 'Close');
+                closeButton.addEventListener('click', () => this.removeFile(index));
+                li.appendChild(closeButton);
+            });
+
+            // Zainicjuj Sortable.js po załadowaniu wszystkich elementów listy, nawet jeśli są tylko istniejące obrazy
+            this.initSortable();
+        }
+
+        initSortable() {
+            new Sortable(this.fileList, {
+                animation: 150,
+                onEnd: (evt) => {
+                    // Zaktualizuj kolejność plików na podstawie nowej kolejności elementów listy
+                    const newOrder = [];
+                    this.fileList.querySelectorAll('li').forEach((li, index) => {
+                        if (li.file) {
+                            newOrder.push(li.file);
+                        } else {
+                            const imgIndex = Array.from(this.fileList.children).indexOf(li);
+                            if (this.existingImageUrls[imgIndex]) {
+                                newOrder.push(this.existingImageUrls[imgIndex]);
+                            }
+                        }
+                    });
+                    this.accumulatedFiles = newOrder.filter(file => typeof file !== 'string');  // Przechowuj tylko obiekty File
+                    this.existingImageUrls = newOrder.filter(file => typeof file === 'string'); // Przechowuj tylko URL-e
+                }
+            });
+        }
+
+        
+        removeFile(index) {
+            this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
+            this.displayFiles(); // Ponownie wyświetl listę plików bez usuniętego elementu
+        }
+
+        getFileExtension(filename) {
+            return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
+        }
+    }
+
+    function openGoogleEarthAddress(inputId) {
+        // Pobranie wartości z pola input o zadanym id
+        var address_str = document.getElementById(inputId).value.trim();
+
+        // Sprawdzenie, czy pole nie jest puste
+        if (address_str === "") {
+            alert("Proszę wpisać adres w odpowiednie pole.");
+            return; // Przerywanie funkcji, jeśli pole jest puste
+        }
+
+        // Zamiana spacji na plusy (+) w adresie
+        var formattedAddress = address_str.replace(/ /g, '+');
+
+        // Ustawienie cech okna, które zostanie otwarte
+        var features = "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=900,height=600";
+
+        // Otwarcie nowego okna z Google Earth z wyszukanym adresem
+        var newWindow = window.open(`https://earth.google.com/web/search/${formattedAddress}`, "DemoWindow", features);
+    }
+
+    function extractAndDisplayCoords(link_id, gps_div_id, formID) {
+        // Pobranie wartości z pola input
+        var url = document.getElementById(link_id).value.trim();
+
+        // Sprawdzenie, czy pole nie jest puste
+        if (url === "") {
+            alert("Proszę wpisać link GPS.");
+            return; // Przerywanie funkcji, jeśli pole jest puste
+        }
+
+        // Sprawdzenie, czy URL zawiera '@'
+        if (!url.includes('@')) {
+            alert("Podany link nie zawiera poprawnych danych GPS.");
+            return; // Przerywanie funkcji, jeśli URL jest niepoprawny
+        }
+
+        // Ekstrakcja szerokości i długości geograficznej
+        var coords = url.split('@')[1];
+        var parts = coords.split(',');
+        if (parts.length < 2) {
+            alert("Nieprawidłowy format danych GPS.");
+            return; // Przerywanie funkcji, jeśli dane są niepełne
+        }
+        var lat = parts[0];
+        var lon = parts[1];
+
+        // Sprawdzenie, czy wartości koordynatów można przekonwertować na liczby
+        if (isNaN(parseFloat(lat)) || isNaN(parseFloat(lon))) {
+            alert("Podane wartości nie są prawidłowymi koordynatami GPS.");
+            return; // Przerywanie funkcji, jeśli koordynaty nie są liczbami
+        }
+
+        // Wyświetlenie wyników w elemencie div o id 'GPS_9999999'
+        var displayDiv = document.getElementById(gps_div_id);
+        displayDiv.innerHTML = "GPS: " + lat + " <i class='bi bi-geo-alt-fill'></i> " + lon;
+
+        // Tworzenie ukrytych pól input dla szerokości i długości geograficznej
+        var latInput = document.createElement('input');
+        latInput.type = 'hidden';
+        latInput.id = 'lat_' + formID;
+        latInput.name = 'lat_' + formID;
+        latInput.value = lat;
+
+        var lonInput = document.createElement('input');
+        lonInput.type = 'hidden';
+        lonInput.id = 'lon_' + formID;
+        lonInput.name = 'lon_' + formID;
+        lonInput.value = lon;
+
+        // Dodanie ukrytych inputów do tego samego elementu div, w którym są wyświetlane koordynaty
+        displayDiv.appendChild(latInput);
+        displayDiv.appendChild(lonInput);
+    }
+
+    function fillInput(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.value = value; // Przypisz wartość do elementu
+        } else {
+            console.error('Element o ID ' + elementId + ' nie istnieje.');
+        }
+    }
+
+    function sumWithInputValue(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            if (element.value === '') {
+                element.value = value; // Jeśli input jest pusty, wpisz wartość
+            } else {
+                // Sumuj wartość z obecną wartością, przekształcając stringi na liczby
+                element.value = Number(element.value) + Number(value);
+            }
+        } else {
+            console.error('Element o ID ' + elementId + ' nie istnieje.');
+        }
+    }
+
+    function appendValueWithNewline(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.value += value + '\n'; // Dodaj wartość i nową linię na końcu
+        } else {
+            console.error('Element o ID ' + elementId + ' nie istnieje.');
+        }
+    }
+
+    function fetchOptions(level, select_id, wojewodztwo = '', powiat = '', gmina = '', miejscowosc = '', dzielnica = '') {
+        console.log(`Fetching options for level: ${level}, select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, miejscowosc: ${miejscowosc}, dzielnica: ${dzielnica}`);
+        $.ajax({
+            url: '/get-region-data',
+            method: 'GET',
+            data: {
+                level: level,
+                wojewodztwo: wojewodztwo,
+                powiat: powiat,
+                gmina: gmina,
+                miejscowosc: miejscowosc,
+                dzielnica: dzielnica
+            },
+            success: function(response) {
+                console.log(`Received response for level: ${level}`, response);
+                const { wariant, lista_wyboru, list, wojewodztwo, powiat, gmina, miejscowosc, dzielnica, string } = response;
+
+                if (lista_wyboru === 'ready') {
+                    $('#wojewodztwo_adresowo_' + select_id).hide();
+                    $('#powiat_adresowo_' + select_id).hide();
+                    $('#gmina_adresowo_' + select_id).hide();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                    $('#changeLocation_adresowo_' + select_id).show();
+                    $('#formfirst_adresowo_' + select_id).show();
+                    $('#locationString_adresowo_' + select_id).text(string);
+                    $('#oldlocation_adresowo_' + select_id).hide();
+
+                    // console.log('Updating hidden input:', '#region_first_adresowo_' + select_id, 'with value:', string);
+
+                    // Check if the hidden input element exists before updating its value
+                    var hiddenInput = $('#regionfirst_adresowo_' + select_id);
+                    if (hiddenInput.length) {
+                        hiddenInput.val(string);
+                    } else {
+                        console.error('Hidden input element not found:', '#regionfirst_adresowo_' + select_id);
+                    }
+
+                } else {
+                    updateSelectOptions(select_id, list, lista_wyboru);
+                    let locationString = '';
+                    if (wojewodztwo) locationString += `${wojewodztwo} / `;
+                    if (powiat) locationString += `${powiat} / `;
+                    if (gmina) locationString += `${gmina} / `;
+                    if (miejscowosc) locationString += `${miejscowosc} / `;
+                    if (dzielnica) locationString += `${dzielnica} /`;
+                    $('#locationString_adresowo_' + select_id).text(locationString);
+                }
+
+                if (wariant === 0) {
+                    $('#powiat_adresowo_' + select_id).hide();
+                    $('#gmina_adresowo_' + select_id).hide();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                } else if (wariant === 1) {
+                    $('#powiat_adresowo_' + select_id).show();
+                    $('#gmina_adresowo_' + select_id).hide();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                } else if (wariant === 2) {
+                    $('#powiat_adresowo_' + select_id).show();
+                    $('#gmina_adresowo_' + select_id).show();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                } else if (wariant === 3) {
+                    $('#powiat_adresowo_' + select_id).show();
+                    $('#gmina_adresowo_' + select_id).show();
+                    $('#miejscowosc_adresowo_' + select_id).show();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                } else if (wariant === 6) {
+                    $('#powiat_adresowo_' + select_id).show();
+                    $('#gmina_adresowo_' + select_id).hide();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).show();
+                } else if (wariant === 7) {
+                    $('#wojewodztwo_adresowo_' + select_id).hide();
+                    $('#powiat_adresowo_' + select_id).hide();
+                    $('#gmina_adresowo_' + select_id).hide();
+                    $('#miejscowosc_adresowo_' + select_id).hide();
+                    $('#dzielnica_adresowo_' + select_id).hide();
+                    $('#changeLocation_adresowo_' + select_id).show();
+                    $('#locationString_adresowo_' + select_id).text(string);
+                }
+            }
+        });
+    }
+
+    function updateSelectOptions(select_id, options, lista_wyboru, selectedValue = null) {
+        const selectId = `${lista_wyboru}_adresowo_${select_id}`;
+        console.log(`Updating options for selectId: ${selectId} with options:`, options);
+        let select = document.getElementById(selectId);
+        if (select === null) {
+            console.error(`Select element with id ${selectId} not found`);
+            return;
+        }
+        select.innerHTML = `<option value="">Wybierz ${lista_wyboru}</option>`;
+        options.forEach(option => {
+            let opt = document.createElement('option');
+            opt.value = option;
+            opt.innerHTML = option;
+            if (option === selectedValue) {
+                opt.selected = true;
+            }
+            select.appendChild(opt);
+        });
+    }
+
+    // Event listeners
+    $(document).on('change', '[id^="wojewodztwo_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let value = this.value;
+        console.log(`Wojewodztwo changed: select_id: ${select_id}, value: ${value}`);
+        if (value) {
+            fetchOptions('wojewodztwo', select_id, value);
+        }
+    });
+
+    $(document).on('change', '[id^="powiat_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+        let value = this.value;
+        console.log(`Powiat changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, value: ${value}`);
+        if (value) {
+            fetchOptions('powiat', select_id, wojewodztwo, value);
+        }
+    });
+
+    $(document).on('change', '[id^="gmina_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+        let powiat = $('#powiat_adresowo_' + select_id).val();
+        let value = this.value;
+        console.log(`Gmina changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, value: ${value}`);
+        if (value) {
+            fetchOptions('gmina', select_id, wojewodztwo, powiat, value);
+        }
+    });
+
+    $(document).on('change', '[id^="miejscowosc_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+        let powiat = $('#powiat_adresowo_' + select_id).val();
+        let gmina = $('#gmina_adresowo_' + select_id).val();
+        let value = this.value;
+        console.log(`Miejscowosc changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, value: ${value}`);
+        if (value) {
+            fetchOptions('miejscowosc', select_id, wojewodztwo, powiat, gmina, value);
+        }
+    });
+
+    $(document).on('change', '[id^="dzielnica_adresowo_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_adresowo_' + select_id).val();
+        let powiat = $('#powiat_adresowo_' + select_id).val();
+        let gmina = $('#gmina_adresowo_' + select_id).val();
+        let miejscowosc = $('#miejscowosc_adresowo_' + select_id).val();
+        let value = this.value;
+        console.log(`Dzielnica changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, miejscowosc: ${miejscowosc}, value: ${value}`);
+        if (value) {
+            fetchOptions('dzielnica', select_id, wojewodztwo, powiat, gmina, miejscowosc, value);
+        }
+    });
+
+    // Initial load of wojewodztwa
+    $(document).ready(function() {
+        $('[id^="wojewodztwo_adresowo_"]').each(function() {
+            let select_id = this.id.split('_')[2];
+            fetchOptions('loaded', select_id);
+        });
+
+        // Reset location selection
+        $(document).on('click', '[id^="changeLocation_adresowo_"]', function() {
+            let select_id = this.id.split('_')[2];
+            console.log(`Reset location for select_id: ${select_id}`);
+            $('#locationString_adresowo_' + select_id).text('Wybierz lokalizację:');
+            $('#wojewodztwo_adresowo_' + select_id).val('').show();
+            $('#powiat_adresowo_' + select_id).hide().val('');
+            $('#gmina_adresowo_' + select_id).hide().val('');
+            $('#miejscowosc_adresowo_' + select_id).hide().val('');
+            $('#dzielnica_adresowo_' + select_id).hide().val('');
+            $('#changeLocation_adresowo_' + select_id).hide();
+            $('#formfirst_adresowo_' + select_id).hide();
+            $('#regionfirst_adresowo_' + select_id).val('');
+            fetchOptions('loaded', select_id);
+        });
+    });
+
+    function fetchOptions_allegro(level, select_id, wojewodztwo = '', powiat = '', gmina = '', miejscowosc = '', dzielnica = '') {
+        console.log(`Fetching options for level: ${level}, select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, miejscowosc: ${miejscowosc}, dzielnica: ${dzielnica}`);
+        $.ajax({
+            url: '/get-region-data',
+            method: 'GET',
+            data: {
+                level: level,
+                wojewodztwo: wojewodztwo,
+                powiat: powiat,
+                gmina: gmina,
+                miejscowosc: miejscowosc,
+                dzielnica: dzielnica
+            },
+            success: function(response) {
+                console.log(`Received response for level: ${level}`, response);
+                const { wariant, lista_wyboru, list, wojewodztwo, powiat, gmina, miejscowosc, dzielnica, string } = response;
+
+                if (lista_wyboru === 'ready') {
+                    $('#wojewodztwo_allegro_' + select_id).hide();
+                    $('#powiat_allegro_' + select_id).hide();
+                    $('#gmina_allegro_' + select_id).hide();
+                    $('#miejscowosc_allegro_' + select_id).hide();
+                    $('#dzielnica_allegro_' + select_id).hide();
+                    $('#changeLocation_allegro_' + select_id).show();
+                    $('#form_allegro_' + select_id).show();
+                    $('#locationString_allegro_' + select_id).text(string);
+                    $('#oldlocation_allegro_' + select_id).hide();
+
+                    // console.log('Updating hidden input:', '#region_first_allegro_' + select_id, 'with value:', string);
+
+                    // Check if the hidden input element exists before updating its value
+                    var hiddenInput = $('#regionfirst_allegro_' + select_id);
+                    if (hiddenInput.length) {
+                        hiddenInput.val(string);
+                    } else {
+                        console.error('Hidden input element not found:', '#regionfirst_allegro_' + select_id);
+                    }
+
+                } else {
+                    updateSelectOptions_allegro(select_id, list, lista_wyboru);
+                    let locationString = '';
+                    if (wojewodztwo) locationString += `${wojewodztwo} / `;
+                    if (powiat) locationString += `${powiat} / `;
+                    if (gmina) locationString += `${gmina} / `;
+                    if (miejscowosc) locationString += `${miejscowosc} / `;
+                    if (dzielnica) locationString += `${dzielnica} /`;
+                    $('#locationString_allegro_' + select_id).text(locationString);
+                }
+
+                if (wariant === 0) {
+                    $('#powiat_allegro_' + select_id).hide();
+                    $('#gmina_allegro_' + select_id).hide();
+                    $('#miejscowosc_allegro_' + select_id).hide();
+                    $('#dzielnica_allegro_' + select_id).hide();
+                } else if (wariant === 1) {
+                    $('#powiat_allegro_' + select_id).show();
+                    $('#gmina_allegro_' + select_id).hide();
+                    $('#miejscowosc_allegro_' + select_id).hide();
+                    $('#dzielnica_allegro_' + select_id).hide();
+                } else if (wariant === 2) {
+                    $('#powiat_allegro_' + select_id).show();
+                    $('#gmina_allegro_' + select_id).show();
+                    $('#miejscowosc_allegro_' + select_id).hide();
+                    $('#dzielnica_allegro_' + select_id).hide();
+                } else if (wariant === 3) {
+                    $('#powiat_allegro_' + select_id).show();
+                    $('#gmina_allegro_' + select_id).show();
+                    $('#miejscowosc_allegro_' + select_id).show();
+                    $('#dzielnica_allegro_' + select_id).hide();
+                } else if (wariant === 6) {
+                    $('#powiat_allegro_' + select_id).show();
+                    $('#gmina_allegro_' + select_id).hide();
+                    $('#miejscowosc_allegro_' + select_id).hide();
+                    $('#dzielnica_allegro_' + select_id).show();
+                } else if (wariant === 7) {
+                    $('#wojewodztwo_allegro_' + select_id).hide();
+                    $('#powiat_allegro_' + select_id).hide();
+                    $('#gmina_allegro_' + select_id).hide();
+                    $('#miejscowosc_allegro_' + select_id).hide();
+                    $('#dzielnica_allegro_' + select_id).hide();
+                    $('#changeLocation_allegro_' + select_id).show();
+                    $('#locationString_allegro_' + select_id).text(string);
+                }
+            }
+        });
+    }
+
+    function updateSelectOptions_allegro(select_id, options, lista_wyboru, selectedValue = null) {
+        const selectId = `${lista_wyboru}_allegro_${select_id}`;
+        console.log(`Updating options for selectId: ${selectId} with options:`, options);
+        let select = document.getElementById(selectId);
+        if (select === null) {
+            console.error(`Select element with id ${selectId} not found`);
+            return;
+        }
+        select.innerHTML = `<option value="">Wybierz ${lista_wyboru}</option>`;
+        options.forEach(option => {
+            let opt = document.createElement('option');
+            opt.value = option;
+            opt.innerHTML = option;
+            if (option === selectedValue) {
+                opt.selected = true;
+            }
+            select.appendChild(opt);
+        });
+    }
+
+    // Event listeners
+    $(document).on('change', '[id^="wojewodztwo_allegro_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let value = this.value;
+        console.log(`Wojewodztwo changed: select_id: ${select_id}, value: ${value}`);
+        if (value) {
+            fetchOptions_allegro('wojewodztwo', select_id, value);
+        }
+    });
+
+    $(document).on('change', '[id^="powiat_allegro_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_allegro_' + select_id).val();
+        let value = this.value;
+        console.log(`Powiat changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, value: ${value}`);
+        if (value) {
+            fetchOptions_allegro('powiat', select_id, wojewodztwo, value);
+        }
+    });
+
+    $(document).on('change', '[id^="gmina_allegro_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_allegro_' + select_id).val();
+        let powiat = $('#powiat_allegro_' + select_id).val();
+        let value = this.value;
+        console.log(`Gmina changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, value: ${value}`);
+        if (value) {
+            fetchOptions_allegro('gmina', select_id, wojewodztwo, powiat, value);
+        }
+    });
+
+    $(document).on('change', '[id^="miejscowosc_allegro_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_allegro_' + select_id).val();
+        let powiat = $('#powiat_allegro_' + select_id).val();
+        let gmina = $('#gmina_allegro_' + select_id).val();
+        let value = this.value;
+        console.log(`Miejscowosc changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, value: ${value}`);
+        if (value) {
+            fetchOptions_allegro('miejscowosc', select_id, wojewodztwo, powiat, gmina, value);
+        }
+    });
+
+    $(document).on('change', '[id^="dzielnica_allegro_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_allegro_' + select_id).val();
+        let powiat = $('#powiat_allegro_' + select_id).val();
+        let gmina = $('#gmina_allegro_' + select_id).val();
+        let miejscowosc = $('#miejscowosc_allegro_' + select_id).val();
+        let value = this.value;
+        console.log(`Dzielnica changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, miejscowosc: ${miejscowosc}, value: ${value}`);
+        if (value) {
+            fetchOptions_allegro('dzielnica', select_id, wojewodztwo, powiat, gmina, miejscowosc, value);
+        }
+    });
+
+    // Initial load of wojewodztwa
+    $(document).ready(function() {
+        $('[id^="wojewodztwo_allegro_"]').each(function() {
+            let select_id = this.id.split('_')[2];
+            fetchOptions_allegro('loaded', select_id);
+        });
+
+        // Reset location selection
+        $(document).on('click', '[id^="changeLocation_allegro_"]', function() {
+            let select_id = this.id.split('_')[2];
+            console.log(`Reset location for select_id: ${select_id}`);
+            $('#locationString_allegro_' + select_id).text('Wybierz lokalizację:');
+            $('#wojewodztwo_allegro_' + select_id).val('').show();
+            $('#powiat_allegro_' + select_id).hide().val('');
+            $('#gmina_allegro_' + select_id).hide().val('');
+            $('#miejscowosc_allegro_' + select_id).hide().val('');
+            $('#dzielnica_allegro_' + select_id).hide().val('');
+            $('#changeLocation_allegro_' + select_id).hide();
+            $('#form_allegro_' + select_id).hide();
+            $('#regionfirst_allegro_' + select_id).val('');
+            fetchOptions_allegro('loaded', select_id);
+        });
+    });
+
+
+    function fetchOptions_otodom(level, select_id, wojewodztwo = '', powiat = '', gmina = '', miejscowosc = '', dzielnica = '') {
+        console.log(`Fetching options for level: ${level}, select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, miejscowosc: ${miejscowosc}, dzielnica: ${dzielnica}`);
+        $.ajax({
+            url: '/get-region-data',
+            method: 'GET',
+            data: {
+                level: level,
+                wojewodztwo: wojewodztwo,
+                powiat: powiat,
+                gmina: gmina,
+                miejscowosc: miejscowosc,
+                dzielnica: dzielnica
+            },
+            success: function(response) {
+                console.log(`Received response for level: ${level}`, response);
+                const { wariant, lista_wyboru, list, wojewodztwo, powiat, gmina, miejscowosc, dzielnica, string } = response;
+
+                if (lista_wyboru === 'ready') {
+                    $('#wojewodztwo_otodom_' + select_id).hide();
+                    $('#powiat_otodom_' + select_id).hide();
+                    $('#gmina_otodom_' + select_id).hide();
+                    $('#miejscowosc_otodom_' + select_id).hide();
+                    $('#dzielnica_otodom_' + select_id).hide();
+                    $('#changeLocation_otodom_' + select_id).show();
+                    $('#form_otodom_' + select_id).show();
+                    $('#locationString_otodom_' + select_id).text(string);
+                    $('#oldlocation_otodom_' + select_id).hide();
+
+                    // console.log('Updating hidden input:', '#region_first_otodom_' + select_id, 'with value:', string);
+
+                    // Check if the hidden input element exists before updating its value
+                    var hiddenInput = $('#regionfirst_otodom_' + select_id);
+                    if (hiddenInput.length) {
+                        hiddenInput.val(string);
+                    } else {
+                        console.error('Hidden input element not found:', '#regionfirst_otodom_' + select_id);
+                    }
+
+                } else {
+                    updateSelectOptions_otodom(select_id, list, lista_wyboru);
+                    let locationString = '';
+                    if (wojewodztwo) locationString += `${wojewodztwo} / `;
+                    if (powiat) locationString += `${powiat} / `;
+                    if (gmina) locationString += `${gmina} / `;
+                    if (miejscowosc) locationString += `${miejscowosc} / `;
+                    if (dzielnica) locationString += `${dzielnica} /`;
+                    $('#locationString_otodom_' + select_id).text(locationString);
+                }
+
+                if (wariant === 0) {
+                    $('#powiat_otodom_' + select_id).hide();
+                    $('#gmina_otodom_' + select_id).hide();
+                    $('#miejscowosc_otodom_' + select_id).hide();
+                    $('#dzielnica_otodom_' + select_id).hide();
+                } else if (wariant === 1) {
+                    $('#powiat_otodom_' + select_id).show();
+                    $('#gmina_otodom_' + select_id).hide();
+                    $('#miejscowosc_otodom_' + select_id).hide();
+                    $('#dzielnica_otodom_' + select_id).hide();
+                } else if (wariant === 2) {
+                    $('#powiat_otodom_' + select_id).show();
+                    $('#gmina_otodom_' + select_id).show();
+                    $('#miejscowosc_otodom_' + select_id).hide();
+                    $('#dzielnica_otodom_' + select_id).hide();
+                } else if (wariant === 3) {
+                    $('#powiat_otodom_' + select_id).show();
+                    $('#gmina_otodom_' + select_id).show();
+                    $('#miejscowosc_otodom_' + select_id).show();
+                    $('#dzielnica_otodom_' + select_id).hide();
+                } else if (wariant === 6) {
+                    $('#powiat_otodom_' + select_id).show();
+                    $('#gmina_otodom_' + select_id).hide();
+                    $('#miejscowosc_otodom_' + select_id).hide();
+                    $('#dzielnica_otodom_' + select_id).show();
+                } else if (wariant === 7) {
+                    $('#wojewodztwo_otodom_' + select_id).hide();
+                    $('#powiat_otodom_' + select_id).hide();
+                    $('#gmina_otodom_' + select_id).hide();
+                    $('#miejscowosc_otodom_' + select_id).hide();
+                    $('#dzielnica_otodom_' + select_id).hide();
+                    $('#changeLocation_otodom_' + select_id).show();
+                    $('#locationString_otodom_' + select_id).text(string);
+                }
+            }
+        });
+    }
+
+    function updateSelectOptions_otodom(select_id, options, lista_wyboru, selectedValue = null) {
+        const selectId = `${lista_wyboru}_otodom_${select_id}`;
+        console.log(`Updating options for selectId: ${selectId} with options:`, options);
+        let select = document.getElementById(selectId);
+        if (select === null) {
+            console.error(`Select element with id ${selectId} not found`);
+            return;
+        }
+        select.innerHTML = `<option value="">Wybierz ${lista_wyboru}</option>`;
+        options.forEach(option => {
+            let opt = document.createElement('option');
+            opt.value = option;
+            opt.innerHTML = option;
+            if (option === selectedValue) {
+                opt.selected = true;
+            }
+            select.appendChild(opt);
+        });
+    }
+
+    // Event listeners
+    $(document).on('change', '[id^="wojewodztwo_otodom_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let value = this.value;
+        console.log(`Wojewodztwo changed: select_id: ${select_id}, value: ${value}`);
+        if (value) {
+            fetchOptions_otodom('wojewodztwo', select_id, value);
+        }
+    });
+
+    $(document).on('change', '[id^="powiat_otodom_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_otodom_' + select_id).val();
+        let value = this.value;
+        console.log(`Powiat changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, value: ${value}`);
+        if (value) {
+            fetchOptions_otodom('powiat', select_id, wojewodztwo, value);
+        }
+    });
+
+    $(document).on('change', '[id^="gmina_otodom_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_otodom_' + select_id).val();
+        let powiat = $('#powiat_otodom_' + select_id).val();
+        let value = this.value;
+        console.log(`Gmina changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, value: ${value}`);
+        if (value) {
+            fetchOptions_otodom('gmina', select_id, wojewodztwo, powiat, value);
+        }
+    });
+
+    $(document).on('change', '[id^="miejscowosc_otodom_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_otodom_' + select_id).val();
+        let powiat = $('#powiat_otodom_' + select_id).val();
+        let gmina = $('#gmina_otodom_' + select_id).val();
+        let value = this.value;
+        console.log(`Miejscowosc changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, value: ${value}`);
+        if (value) {
+            fetchOptions_otodom('miejscowosc', select_id, wojewodztwo, powiat, gmina, value);
+        }
+    });
+
+    $(document).on('change', '[id^="dzielnica_otodom_"]', function() {
+        let select_id = this.id.split('_')[2];
+        let wojewodztwo = $('#wojewodztwo_otodom_' + select_id).val();
+        let powiat = $('#powiat_otodom_' + select_id).val();
+        let gmina = $('#gmina_otodom_' + select_id).val();
+        let miejscowosc = $('#miejscowosc_otodom_' + select_id).val();
+        let value = this.value;
+        console.log(`Dzielnica changed: select_id: ${select_id}, wojewodztwo: ${wojewodztwo}, powiat: ${powiat}, gmina: ${gmina}, miejscowosc: ${miejscowosc}, value: ${value}`);
+        if (value) {
+            fetchOptions_otodom('dzielnica', select_id, wojewodztwo, powiat, gmina, miejscowosc, value);
+        }
+    });
+
+    // Initial load of wojewodztwa
+    $(document).ready(function() {
+        $('[id^="wojewodztwo_otodom_"]').each(function() {
+            let select_id = this.id.split('_')[2];
+            fetchOptions_otodom('loaded', select_id);
+        });
+
+        // Reset location selection
+        $(document).on('click', '[id^="changeLocation_otodom_"]', function() {
+            let select_id = this.id.split('_')[2];
+            console.log(`Reset location for select_id: ${select_id}`);
+            $('#locationString_otodom_' + select_id).text('Wybierz lokalizację:');
+            $('#wojewodztwo_otodom_' + select_id).val('').show();
+            $('#powiat_otodom_' + select_id).hide().val('');
+            $('#gmina_otodom_' + select_id).hide().val('');
+            $('#miejscowosc_otodom_' + select_id).hide().val('');
+            $('#dzielnica_otodom_' + select_id).hide().val('');
+            $('#changeLocation_otodom_' + select_id).hide();
+            $('#form_otodom_' + select_id).hide();
+            $('#regionfirst_otodom_' + select_id).val('');
+            fetchOptions_otodom('loaded', select_id);
+        });
+    });
+
+</script>
+{% endblock %}
+{% block footer %}
+<p>All right reserved &copy; 2024 by DMD Panel Administratora.<br/></p>
+{% endblock %}

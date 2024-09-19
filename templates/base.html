@@ -172,6 +172,9 @@
                                 {% if userperm['team'] == 1 %}    
                                     <li><a class="dropdown-item" href="/team-domy">Zarządzaj Kadrą</a></li>
                                 {% endif %}
+                                {% if userperm['career'] == 1 %}    
+                                    <li><a class="dropdown-item" href="/team-domy">Zarządzaj Karierą</a></li>
+                                {% endif %}
                                 {% if userperm['estate'] == 1 %}
                                     <li><a class="dropdown-item" href="/estate-ads-rent">Zarządzaj Ogłoszeniami</a></li>
                                 {% endif %}
