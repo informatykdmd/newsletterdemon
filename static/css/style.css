@@ -734,7 +734,7 @@ color:#969696;
 .dark-mode-data-career {
     background-color: #212529; /* Ciemne tło dla pola */
     color: #b5b6b6; /* Jasny tekst */
-    border: 1px solid #b5b6b6; /* Ciemniejsze obramowanie */
+    border: 1px solid #383838; /* Ciemniejsze obramowanie */
     border-radius: 5px; /* Zaokrąglone rogi */
     padding: 5px; /* Odpowiednia wielkość wnętrza */
     /* width: 100%; */
