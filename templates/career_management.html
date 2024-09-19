@@ -60,22 +60,29 @@
                                                 name="title_9999999" 
                                                 required>
                                     </div>
-                                    <!-- Informacje ogólne o stanowisku -->
+                                    <!-- Data rozpoczęcia -->
                                     <div class="mb-3">
                                         <label for="start_9999999">Wybierz Datę Rozpoczęcia:</label>
                                         <input 
                                             type="date" 
                                             id="start_9999999" 
                                             name="startdate_9999999"
-                                            class="dark-mode-data-career" 
-                                            value="2024-09-19" />
+                                            class="dark-mode-data-career" />
                                     </div>
                                     <script>
-                                        // Ustaw dzisiejszą datę jako minimalną datę
+                                        // Ustaw dzisiejszą datę jako minimalną
                                         const dateInput = document.getElementById('start_9999999');
-                                        const today = new Date().toISOString().split('T')[0];  // Pobierz dzisiejszą datę w formacie YYYY-MM-DD
-                                        dateInput.setAttribute('min', today);
+                                        const today = new Date();
+
+                                        // Ustaw jutrzejszą datę jako wartość domyślną
+                                        const tomorrow = new Date(today);
+                                        tomorrow.setDate(today.getDate() + 1);  // Dodaj 1 dzień do dzisiejszej daty
+                                        const tomorrowStr = tomorrow.toISOString().split('T')[0];  // Formatowanie na YYYY-MM-DD
+
+                                        dateInput.setAttribute('min', today.toISOString().split('T')[0]);  // Ustaw dzisiejszy dzień jako minimalny
+                                        dateInput.setAttribute('value', tomorrowStr);  // Ustaw jutrzejszą datę jako wartość domyślną
                                     </script>
+
                                     <div class="input-group ">
                                         <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
                                         <input 
