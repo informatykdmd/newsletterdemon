@@ -40,7 +40,7 @@
                         </div>
 {% endblock %}
 {% block tableContent%}
-                        <!-- OFFCANVANSE RIGHT ADD NEW POST -->
+                        <!-- OFFCANVANSE RIGHT ADD NEW  -->
                         <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                             <div class="offcanvas-header">
                                 <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowej oferty pracy.</h4>
@@ -48,7 +48,7 @@
                             </div>
                             <div class="offcanvas-body">
                                 <form method="POST" id="rentOffer_9999999" action="{{ url_for('save_career_offer') }}" enctype="multipart/form-data" >
-                                    <!-- Tytuł artykułu -->
+                                    <!-- Tytuł Stanowisko -->
                                     <div class="mb-3">
                                         <label for="title_9999999" class="form-label">Stanowisko</label>
                                         <input 
@@ -61,10 +61,13 @@
                                                 required>
                                     </div>
                                     <!-- Informacje ogólne o stanowisku -->
-                                    <label class="form-label">Informacje ogólne o stanowisku</label>
                                     <div class="mb-3">
-                                        <label for="start">Wybierz Datę Rozpoczęcia:</label>
-                                        <input type="date" id="start" name="startdate_9999999"
+                                        <label for="start_9999999">Wybierz Datę Rozpoczęcia:</label>
+                                        <input 
+                                            type="date" 
+                                            id="start_9999999" 
+                                            name="startdate_9999999"
+                                            class="form-control bg-dark formatuj-maly-font" 
                                             value="2024-09-19"
                                             min="2024-01-01" max="2024-12-31">
                                     </div>
@@ -72,7 +75,7 @@
                                     <div class="input-group ">
                                         <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
                                         <input 
-                                            type="number" 
+                                            type="text" 
                                             value=""
                                             class="form-control bg-dark formatuj-maly-font" 
                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
