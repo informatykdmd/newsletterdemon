@@ -202,9 +202,39 @@
                                         </a>
                                     </div>
 
+                                    <div 
+                                        id="test_9999999" 
+                                        contenteditable="true" 
+                                        class="form-control bg-dark formatuj-maly-font" 
+                                        style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
+                                    </div>
+                                    <div class="no-border formatuj-maly-font fadeIn mb-3">
+                                        <a class="ms-2" href="javascript:void(0);" onClick="fillContentEditable('test_9999999', 'Jako [nazwa stanowiska] będziesz odpowiedzialny za [główne obowiązki]. Twoje zadania będą obejmować [krótkie przedstawienie codziennych obowiązków]. Praca na tym stanowisku wymaga [kluczowe umiejętności] oraz [pożądane cechy charakteru].');">
+                                            Szablon Ogólny
+                                        </a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="fillContentEditable('test_9999999', 'Na stanowisku [nazwa stanowiska] będziesz odpowiedzialny za realizację [główne obowiązki] zgodnie z harmonogramem oraz wytycznymi. Twoje codzienne zadania obejmą [krótkie przedstawienie codziennych obowiązków] oraz współpracę z innymi działami w celu [cel współpracy]. Idealny kandydat na to stanowisko musi posiadać [kluczowe umiejętności] oraz cechować się [pożądane cechy charakteru], aby efektywnie realizować swoje obowiązki.');">
+                                            Szablon Zadaniowiec
+                                        </a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="fillContentEditable('test_9999999', 'Jako [nazwa stanowiska] będziesz odpowiedzialny za kierowanie zespołem [nazwa zespołu lub działu], nadzorowanie [główne obowiązki] oraz zapewnienie efektywnej współpracy między działami. W ramach tej roli będziesz zarządzać [krótkie przedstawienie codziennych obowiązków], a także wspierać rozwój członków zespołu poprzez [aspekt związany z mentoringiem]. Praca na tym stanowisku wymaga [kluczowe umiejętności] oraz [pożądane cechy charakteru], które umożliwią efektywne prowadzenie zespołu.');">
+                                            Szablon Lider Zespołu
+                                        </a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="fillContentEditable('test_9999999', 'Na stanowisku [nazwa stanowiska] będziesz ekspertem odpowiedzialnym za [główne obowiązki], koncentrując się na [obszar specjalizacji]. Twoje główne zadania obejmują [krótkie przedstawienie codziennych obowiązków], w tym analizę, wdrażanie i optymalizację procesów. Aby osiągnąć sukces w tej roli, musisz posiadać [kluczowe umiejętności] oraz [pożądane cechy charakteru], które umożliwią skuteczne działanie w środowisku specjalistycznym.');">
+                                            Szablon Ekspert Specjalistyczny
+                                        </a>
+                                    </div>
+
+                                    <script>
+                                        document.getElementById('test_9999999').addEventListener('input', function() {
+                                            let content = this.innerHTML;
+
+                                            // Zamień nawiasy kwadratowe na kolorowy tekst
+                                            content = content.replace(/\[(.*?)\]/g, '<span style="color: #f39c12;">[$1]</span>');
+                                            
+                                            // Zaktualizuj zawartość div'a z nowym formatowaniem
+                                            this.innerHTML = content;
+                                        });
+                                    </script>
                                     
-
-
                                     
                                     <input type="hidden" name="OfferID" id="OfferID_9999999" value="9999999"/>
                                     <!-- Przycisk Zapisz artykuł -->
@@ -706,6 +736,20 @@
             console.error('Element o ID ' + elementId + ' nie istnieje.');
         }
     }
+
+    function fillContentEditable(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            if (element.hasAttribute('contenteditable')) {
+                element.innerHTML = value; // Przypisz wartość do elementu contenteditable
+            } else {
+                console.error('Element o ID ' + elementId + ' nie jest contenteditable.');
+            }
+        } else {
+            console.error('Element o ID ' + elementId + ' nie istnieje.');
+        }
+    }
+
 
     function sumWithInputValue(elementId, value) {
         const element = document.getElementById(elementId);
