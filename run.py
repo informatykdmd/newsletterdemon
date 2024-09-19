@@ -839,7 +839,7 @@ def apply_logo_to_image(image_path, logo_path, output_path, scale_factor=1):
 def generator_jobs():
     daneList = []
     
-    try: took_allRecords = msq.connect_to_database(f'SELECT * FROM job_offers WHERE status=1 ORDER BY ID DESC;') 
+    try: took_allRecords = msq.connect_to_database(f'SELECT * FROM job_offers ORDER BY ID DESC;') 
     except: return []
     
     for rec in took_allRecords:
