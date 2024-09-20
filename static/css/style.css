@@ -760,3 +760,12 @@ color:#969696;
 .dark-mode-data-career:hover {
     border-color: #e5e6e6; /* Jaśniejsze obramowanie przy najechaniu */
 }
+
+.career-properties {
+    font-size: 14px;
+}
+
+.career-properties span{
+    font-weight: 600;
+    padding-left: 5px;
+}
