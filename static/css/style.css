@@ -789,8 +789,12 @@ color:#969696;
 }
 
 .career-properties-other {
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.career-properties-other p {
+    font-size: 13px;
 }
 
 .career-properties-other li{
