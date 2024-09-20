@@ -3283,7 +3283,7 @@ def save_career_offer():
         flash('Błąd z id oferty. Skontaktuj się z administratorem!', 'danger')
         return redirect(url_for('index'))
 
-    print(f'title: {title} | start_date: {start_date} | salary: {salary} | employment_type: {employment_type} | location: {location} | brand: {brand} | contact_email: {contact_email} | description: {description} | requirements_description: {requirements_description} | requirements: {requirements} | benefits: {benefits} | offerID: {offerID} |')
+    # print(f'title: {title} | start_date: {start_date} | salary: {salary} | employment_type: {employment_type} | location: {location} | brand: {brand} | contact_email: {contact_email} | description: {description} | requirements_description: {requirements_description} | requirements: {requirements} | benefits: {benefits} | offerID: {offerID} |')
 
     # Sprawdzenie czy użytkownik jest zalogowany i ma uprawnienia
     if 'username' not in session or 'userperm' not in session:
@@ -3350,23 +3350,20 @@ def save_career_offer():
             offerID_int
         )
     print(f'dene: {dane}')
-    return jsonify({
+
+    # Wykonanie zapytania
+    if msq.insert_to_database(zapytanie_sql, dane):
+        flash(f'Oferta pracy została zapisana pomyślnie!', 'success')
+        return jsonify({
             'message': 'Oferta pracy została zapisana pomyślnie!',
             'success': True
         }), 200
-    # Wykonanie zapytania
-    # if msq.insert_to_database(zapytanie_sql, dane):
-    #     flash(f'Oferta pracy została zapisana pomyślnie!', 'success')
-    #     return jsonify({
-    #         'message': 'Oferta pracy została zapisana pomyślnie!',
-    #         'success': True
-    #     }), 200
-    # else:
-    #     flash(f'Błąd zapisu! Oferta pracy nie została zapisana!', 'danger')
-    #     return jsonify({
-    #         'message': 'Błąd zapisu! Oferta pracy nie została zapisana!',
-    #         'success': False
-    #     }), 500
+    else:
+        flash(f'Błąd zapisu! Oferta pracy nie została zapisana!', 'danger')
+        return jsonify({
+            'message': 'Błąd zapisu! Oferta pracy nie została zapisana!',
+            'success': False
+        }), 500
 
 
 @app.route('/remove-career-offer', methods=["POST"])

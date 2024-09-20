@@ -214,6 +214,10 @@ function prepareAndSubmitCareerForm(careerId) {
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     toggleWarning('title_' + careerId, !title);
+    toggleWarning('start_' + careerId, !startDate);
+    toggleWarning('employmenttype_' + careerId, !employmentType);
+    toggleWarning('lokalizacja_' + careerId, !location);
+    toggleWarning('brand_' + careerId, !brand);
     toggleWarning('email_' + careerId, !email);
 
     // Jeżeli którykolwiek z testów nie przeszedł, nie wysyłaj formularza
