@@ -1012,19 +1012,40 @@ function checkboxControlOffOther(formId, main_id, checkboxList) {
         });
     });
 }
-function setCareerDateStart(dataPoolID, dateStart=true) {
+// function setCareerDateStart(dataPoolID) {
 
-    // Ustaw dzisiejszą datę jako minimalną
+//     // Ustaw dzisiejszą datę jako minimalną
+//     const dateInput = document.getElementById(dataPoolID);
+//     const today = new Date();
+    
+//     // Ustaw jutrzejszą datę jako wartość domyślną
+//     const tomorrow = new Date(today);
+//     tomorrow.setDate(today.getDate() + 1);  // Dodaj 1 dzień do dzisiejszej daty
+//     const tomorrowStr = tomorrow.toISOString().split('T')[0];  // Formatowanie na YYYY-MM-DD
+    
+//     dateInput.setAttribute('min', today.toISOString().split('T')[0]);  // Ustaw dzisiejszy dzień jako minimalny
+//     dateInput.setAttribute('value', tomorrowStr);  // Ustaw jutrzejszą datę jako wartość domyślną
+    
+// }
+
+function setCareerDateStart(dataPoolID, isNew=true, setDateString=null) {
+    // Pobranie elementu input (pole daty)
     const dateInput = document.getElementById(dataPoolID);
     const today = new Date();
     
-    // Ustaw jutrzejszą datę jako wartość domyślną
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);  // Dodaj 1 dzień do dzisiejszej daty
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];  // Formatowanie na YYYY-MM-DD
-    
-    dateInput.setAttribute('min', today.toISOString().split('T')[0]);  // Ustaw dzisiejszy dzień jako minimalny
-    if (dateStart) {
-        dateInput.setAttribute('value', tomorrowStr);  // Ustaw jutrzejszą datę jako wartość domyślną
+    // Ustaw dzisiejszą datę jako minimalną
+    dateInput.setAttribute('min', today.toISOString().split('T')[0]);  // Formatowanie na YYYY-MM-DD
+
+    if (isNew) {
+        // Dla nowej oferty, ustaw jutrzejszą datę jako domyślną
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const tomorrowStr = tomorrow.toISOString().split('T')[0];  // Formatowanie na YYYY-MM-DD
+        dateInput.setAttribute('value', tomorrowStr);
+    } else if (setDateString) {
+        // Dla edycji, ustaw datę z bazy danych
+        const setDateObe = new Date(setDateString);
+        const setDateStr = setDateObe.toISOString().split('T')[0];  // Formatowanie na YYYY-MM-DD
+        dateInput.setAttribute('value', setDateStr);
     }
 }
