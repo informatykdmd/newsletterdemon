@@ -850,7 +850,9 @@ def generator_jobs():
             'description': rec[2],
             'requirements_description': rec[3],
             'requirements': str(rec[4]).split('#splx#'), # lista
+            'requirements_string': str(rec[4]), # string
             'benefits': str(rec[5]).split('#splx#'), # lista
+            'benefits_string': str(rec[5]), # string
             'location': rec[6],
             'contact_email': rec[7],
             'employment_type': rec[8],
