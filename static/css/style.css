@@ -768,11 +768,12 @@ color:#969696;
 }
 
 .career-properties p{
-    margin: none;
+    margin-top: 0px;
 }
 
 .career-properties-h1{
     padding-left: 5px;
+    margin-bottom: 15px;
     font-size: 30px;
     font-weight: 700;
 }
