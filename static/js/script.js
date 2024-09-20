@@ -103,7 +103,11 @@ function addListItem(
     listItem.appendChild(inputElement);
 
     var removeButton = document.createElement("button");
-    removeButton.textContent = removeButtonTextContent;
+    if (removeButtonTextContent === '') {
+        removeButton.textContent = removeButtonTextContent;
+    } else {
+        removeButton.innerHTML = '<i class="bi bi-dash-square-dotted"></i>';
+    }
     removeButton.type = "button";
     removeButton.className = removeButtonClass;
 
@@ -128,7 +132,7 @@ function joinListFields(id, sep, elementName="dynamicField",) {
         values.push(inputElements[i].value);
     }
 
-    // Złącz tablicę w jeden string używając separatora #splx#
+    // Złącz tablicę w jeden string używając separatora np. #splx#
     var resultString = values.join(sep);
 
     // Wyświetl wynik w konsoli (możesz zmienić to na zapis do bazy danych)
