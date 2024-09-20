@@ -3276,7 +3276,7 @@ def save_career_offer():
     requirements_description = request.form.get('requirementsDescription')
     requirements = request.form.get('dynamicRequirementsList')
     benefits = request.form.get('dynamicBenefitsList')
-    date_posted = datetime.now().date()
+    date_posted = datetime.datetime.now().date()
     offerID = request.form.get('OfferID')
     try: offerID_int = int(offerID)
     except ValueError:
