@@ -727,6 +727,11 @@
                                         <h5>Opis Stanowiska</h5>
                                         <p>{{post_data['description']}}</p>
 
+                                        
+
+                                        
+                                    </div>
+                                    <div class="col-lg-3 col-sm-12 career-properties-other">
                                         <h5>Opis Wymagań</h5>
                                         <p>{{post_data['requirements_description']}}</p>
 
@@ -737,10 +742,7 @@
                                                 <li>{{requirement}}</li>
                                             {% endfor %}
                                          </ul>
-
-                                        
-                                    </div>
-                                    <div class="col-lg-3 col-sm-12 career-properties-other">
+                                         
                                         <h5>Benefity</h5>
                                         <ul>
                                             {% for benefit in post_data['benefits'] %}
