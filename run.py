@@ -3266,7 +3266,7 @@ def career():
 def save_career_offer():
     # Odczytanie danych z formularza
     title = request.form.get('title')
-    start_date = request.form.get('startdate') + ' 12:00:00'
+    start_date = request.form.get('startdate') + ' 07:00:00'
     salary = request.form.get('salary')
     employment_type = request.form.get('employmenttype')
     location = request.form.get('location')
@@ -3373,7 +3373,7 @@ def remove_career_offer():
     if 'username' not in session or 'userperm' not in session:
         return redirect(url_for('index'))
     
-    if session['userperm']['estate'] == 0:
+    if session['userperm']['career'] == 0:
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -3383,58 +3383,16 @@ def remove_career_offer():
         try: form_data['PostID']
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
-        # pobieram id galerii
-        try: id_galerry = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', set_post_id )[0][0]
-        except IndexError: 
-            flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
-            return redirect(url_for('estateAdsRent'))
         
-        try: current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
-        except IndexError: 
-            flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
-            return redirect(url_for('estateAdsRent'))
-        
-        removeSpecOffer(set_post_id, 'r')
         msq.delete_row_from_database(
                 """
-                    DELETE FROM OfertyNajmu WHERE ID = %s;
+                    DELETE FROM job_offers WHERE ID = %s;
                 """,
                 (set_post_id,)
             )
-        
-        msq.delete_row_from_database(
-                """
-                    DELETE FROM ZdjeciaOfert WHERE ID = %s;
-                """,
-                (id_galerry,)
-            )
-        
-        real_loc_on_server = settingsDB['real-location-on-server']
-        domain = settingsDB['main-domain']
-        estate_pic_path = settingsDB['estate-pic-offer']
-        upload_path = f'{real_loc_on_server}{estate_pic_path}'
-        mainDomain_URL = f'{domain}{estate_pic_path}'
 
-        
-        current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
-        # print(current_gallery_list)
-        for delIt in current_gallery_list:
-            delIt_clear = str(delIt).replace(mainDomain_URL, '')
-            # print(delIt)
-            # print(delIt_clear)
-            if delIt in current_gallery_list:
-                try:
-                    file_path = upload_path + delIt_clear
-                    # print(file_path)
-                    if os.path.exists(file_path):
-                        os.remove(file_path)
-                    else:
-                        print(f"File {file_path} not found.")
-                except Exception as e:
-                    print(f"Error removing file {file_path}: {e}")
-
-        flash("Wpis został usunięty.", "success")
-        return redirect(url_for('estateAdsRent'))
+        flash("Oferta pracy została usunięta.", "success")
+        return redirect(url_for('career'))
     
     return redirect(url_for('index'))
 
