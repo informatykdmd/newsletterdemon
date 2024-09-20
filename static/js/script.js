@@ -74,7 +74,7 @@ function addListItem(
     styleColor="#c2c2c2",
     styleBorders="#6a6a6a solid 1px",
     req=true,
-    itemStyles="no-border formatuj-margin form-control bg-dark formatuj-right",
+    itemStyles="no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej",
     extraID="list-container",
     removeButtonClass="btn btn-outline-danger formatuj-maly-font formatuj-margin",
     removeButtonTextContent="Usuń pole"
