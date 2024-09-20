@@ -3266,7 +3266,7 @@ def career():
 def save_career_offer():
     # Odczytanie danych z formularza
     title = request.form.get('title')
-    start_date = request.form.get('startdate')
+    start_date = request.form.get('startdate') + ' 12:00:00'
     salary = request.form.get('salary')
     employment_type = request.form.get('employmenttype')
     location = request.form.get('location')
