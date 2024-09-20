@@ -205,7 +205,7 @@ function prepareAndSubmitCareerForm(careerId) {
     var offerID = document.getElementById('OfferID_' + careerId).value;
 
     // Pobranie surowego tekstu z contenteditable (usuwanie znaczników HTML)
-    var jobDescription = document.getElementById('location_' + careerId).innerText;
+    var jobDescription = document.getElementById('description_' + careerId).innerText;
     var requirementsDescription = document.getElementById('requirementsDescription_' + careerId).innerText;
 
     // Łączenie dynamicznych list
@@ -214,11 +214,14 @@ function prepareAndSubmitCareerForm(careerId) {
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     toggleWarning('title_' + careerId, !title);
+    toggleWarning('salary_' + careerId, !salary);
     toggleWarning('start_' + careerId, !startDate);
     toggleWarning('employmenttype_' + careerId, !employmentType);
     toggleWarning('lokalizacja_' + careerId, !location);
     toggleWarning('brand_' + careerId, !brand);
     toggleWarning('email_' + careerId, !email);
+    toggleWarning('description_' + careerId, !jobDescription);
+    toggleWarning('requirementsDescription_' + careerId, !requirementsDescription);
 
     // Jeżeli którykolwiek z testów nie przeszedł, nie wysyłaj formularza
     if (!formIsValid) {
