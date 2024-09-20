@@ -1007,4 +1007,16 @@ function checkboxControlOffOther(formId, main_id, checkboxList) {
         });
     });
 }
-
+function setCareerDateStart(dataPoolID) {
+    // Ustaw dzisiejszą datę jako minimalną
+    const dateInput = document.getElementById(dataPoolID);
+    const today = new Date();
+    
+    // Ustaw jutrzejszą datę jako wartość domyślną
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);  // Dodaj 1 dzień do dzisiejszej daty
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];  // Formatowanie na YYYY-MM-DD
+    
+    dateInput.setAttribute('min', today.toISOString().split('T')[0]);  // Ustaw dzisiejszy dzień jako minimalny
+    dateInput.setAttribute('value', tomorrowStr);  // Ustaw jutrzejszą datę jako wartość domyślną
+}
