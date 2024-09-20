@@ -3249,6 +3249,7 @@ def career():
     return render_template(
                             "career_management.html", 
                             username=session['username'],
+                            useremail=session['user_data']['email'],
                             userperm=session['userperm'], 
                             user_brands=session['brands'], 
                             ads_career=ads_career,

@@ -175,7 +175,20 @@
                                     </div>
                                     
                                     
-                                    
+                                    <!-- Email -->
+                                    <div class="input-group mt-2">
+                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-envelope-fill"></i></span>
+                                        <input 
+                                            type="email" 
+                                            value="{{useremail}}"
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="email_9999999" 
+                                            name="email_9999999" 
+                                            placeholder="email" 
+                                            aria-label="email" />
+                                        
+                                    </div>
                                     
 
                                     <label class="form-label mt-2">Opis Stanowiska</label>
@@ -221,7 +234,7 @@
 
                                     <!-- Additional List wymagania-->
                                     <div class="mb-3">
-                                        <label for="additionaRequirementslList_9999999" class="form-label">Lista wymagań</label>
+                                        <label for="additionaRequirementsList_9999999" class="form-label">Lista wymagań</label>
                                         <div id="list-container_9999999" class="no-border">
                                             <!-- Tutaj będą dynamicznie dodawane elementy listy -->
                                         </div>
@@ -231,7 +244,7 @@
                                                 elementName='dynamicRequirementsList_',
                                                 spec='input', 
                                                 classes='form-control bg-dark formatuj-maly-font',
-                                                idName='additionaRequirementslList_',
+                                                idName='additionaRequirementsList_',
                                                 rowsAmount='4',
                                                 styleColor='#c2c2c2',
                                                 styleBorders='#6a6a6a solid 1px',
@@ -249,7 +262,7 @@
                                             elementName='dynamicRequirementsList_',
                                             spec='input', 
                                             classes='form-control bg-dark formatuj-maly-font',
-                                            idName='additionaRequirementslList_',
+                                            idName='additionaRequirementsList_',
                                             rowsAmount='4',
                                             styleColor='#c2c2c2',
                                             styleBorders='#6a6a6a solid 1px',
@@ -261,7 +274,47 @@
                                         );
                                     </script>
 
-
+                                    <!-- Additional List benefitów-->
+                                    <div class="mb-3">
+                                        <label for="additionaBenefitsList_9999999" class="form-label">Lista benefitów</label>
+                                        <div id="list-benefits-container_9999999" class="no-border">
+                                            <!-- Tutaj będą dynamicznie dodawane elementy listy -->
+                                        </div>
+                                        <div class="formatuj-right formatuj-margin">
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="addListItem(
+                                                '9999999', 
+                                                elementName='dynamicBenefitsList_',
+                                                spec='input', 
+                                                classes='form-control bg-dark formatuj-maly-font',
+                                                idName='additionaBenefitsList_',
+                                                rowsAmount='4',
+                                                styleColor='#c2c2c2',
+                                                styleBorders='#6a6a6a solid 1px',
+                                                req=true,
+                                                itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
+                                                extraID='list-benefits-container_',
+                                                removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
+                                                removeButtonTextContent='-' 
+                                                )"><i class="bi bi-plus-square-dotted"></i> Dodaj</button>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        addListItem(
+                                            '9999999', 
+                                            elementName='dynamicBenefitsList_',
+                                            spec='input', 
+                                            classes='form-control bg-dark formatuj-maly-font',
+                                            idName='additionaBenefitsList_',
+                                            rowsAmount='4',
+                                            styleColor='#c2c2c2',
+                                            styleBorders='#6a6a6a solid 1px',
+                                            req=true,
+                                            itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
+                                            extraID='list-benefits-container_',
+                                            removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
+                                            removeButtonTextContent='-' 
+                                        );
+                                    </script>
                                     
                                     
                                     <input type="hidden" name="OfferID" id="OfferID_9999999" value="9999999"/>
