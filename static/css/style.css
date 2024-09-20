@@ -764,10 +764,11 @@ color:#969696;
 .career-properties {
     margin-left: 10px;
     font-size: 14px;
+    line-height: 1.2;
 }
 
 .career-properties p{
-    line-height: 1.2;
+    margin: none;
 }
 
 .career-properties span{
