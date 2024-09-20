@@ -47,7 +47,7 @@
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form method="POST" id="rentOffer_9999999" action="{{ url_for('save_career_offer') }}" enctype="multipart/form-data" >
+                                <form method="POST" id="jobOffer_9999999" action="{{ url_for('save_career_offer') }}" enctype="multipart/form-data" >
                                     <!-- Tytuł Stanowisko -->
                                     <div class="mb-3">
                                         <label for="title_9999999" class="form-label">Stanowisko</label>
@@ -402,19 +402,287 @@
                                 <div class="offcanvas-body formatuj-maly-font">
                                     <div class="tylko-klej">
                                         <div style="color:#6a6a6a;">
-                                            <form method="POST" id="rentOffer_{{post_id}}" action="{{ url_for('save_rent_offer') }}" enctype="multipart/form-data" >
-
+                                            <form method="POST" id="jobOffer_{{post_id}}" action="{{ url_for('save_career_offer') }}" enctype="multipart/form-data" >
+                                                <!-- Tytuł Stanowisko -->
+                                                <div class="mb-3">
+                                                    <label for="title_{{post_id}}" class="form-label">Stanowisko</label>
+                                                    <input 
+                                                            type="text" 
+                                                            value="{{post_data['title']}}"
+                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                            id="title_{{post_id}}" 
+                                                            name="title_{{post_id}}" 
+                                                            required>
+                                                </div>
+                                                <!-- Data rozpoczęcia -->
+                                                <div class="mb-3">
+                                                    <label for="start_{{post_id}}" class="bg-dark formatuj-maly-font">Wybierz Datę Rozpoczęcia:</label>
+                                                    <input 
+                                                        type="date" 
+                                                        id="start_{{post_id}}" 
+                                                        name="startdate_{{post_id}}"
+                                                        class="dark-mode-data-career" 
+                                                        value="{{post_data['start_date']}}"
+                                                        />
+                                                </div>
+                                                <script>
+                                                    setCareerDateStart('start_{{post_id}}')
+                                                </script>
+            
+                                                <!-- Wynagrodzenie -->
+                                                <div class="input-group ">
+                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                                    <input 
+                                                        type="text" 
+                                                        value="{{post_data['salary']}}"
+                                                        class="form-control bg-dark formatuj-maly-font" 
+                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                        id="salary_{{post_id}}" 
+                                                        name="salary_{{post_id}}" 
+                                                        placeholder="Wynagrodzenie" 
+                                                        aria-label="Wynagrodzenie" />
+                                                    
+                                                </div>
+                                                <div class="no-border formatuj-maly-font fadeIn">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '5000 zł - 8000 zł brutto');">5000 - 10000 brutto</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '8000 zł - 10000 zł brutto');">8000 - 10000 brutto</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '10000 zł - 12000 zł brutto');">10000 - 12000 brutto</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '100 zł/h brutto');">100 zł/h brutto</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '100 zł/h brutto');">150 zł/h netto</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', 'Do negocjacji');">Do negocjacji</a>
+                                                </div>
+            
+                                                <!-- Forma zatrudnienia -->
+                                                <div class="input-group mt-2">
+                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-file-earmark-richtext"></i></span>
+                                                    <input 
+                                                        type="text" 
+                                                        value="{{post_data['employment_type']}}"
+                                                        class="form-control bg-dark formatuj-maly-font" 
+                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                        id="employmenttype_{{post_id}}" 
+                                                        name="employmenttype_{{post_id}}" 
+                                                        placeholder="Forma zatrudnienia" 
+                                                        aria-label="Forma zatrudnienia" />
+                                                    
+                                                </div>
+                                                <div class="no-border formatuj-maly-font fadeIn">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_{{post_id}}', 'Umowa o pracę');">Umowa o pracę</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_{{post_id}}', 'Umowa zlecenie');">Umowa zlecenie</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_{{post_id}}', 'Kontrakt');">Kontrakt</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_{{post_id}}', 'Umowa o dzieło');">Umowa o dzieło</a>
+                                                </div>
+                                                
+                                                <!-- Lokalizacja -->
+                                                <div class="input-group mt-2">
+                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-geo-alt"></i></span>
+                                                    <input 
+                                                        type="text" 
+                                                        value="{{post_data['location']}}"
+                                                        class="form-control bg-dark formatuj-maly-font" 
+                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                        id="lokalizacja_{{post_id}}" 
+                                                        name="lokalizacja_{{post_id}}" 
+                                                        placeholder="Lokalizacja" 
+                                                        aria-label="Lokalizacja" />
+                                                    
+                                                </div>
+                                                <div class="no-border formatuj-maly-font fadeIn">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_{{post_id}}', 'Stare Babice');">Stare Babice</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_{{post_id}}', 'Izabelin');">Izabelin</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_{{post_id}}', 'Warszawa');">Warszawa</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_{{post_id}}', 'Cała Polska');">Cała Polska</a>
+                                                </div>
+            
+                                                <!-- Dział -->
+                                                <div class="input-group mt-2">
+                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-clipboard2-pulse-fill"></i></span>
+                                                    <input 
+                                                        type="text" 
+                                                        value="{{post_data['brand']}}"
+                                                        class="form-control bg-dark formatuj-maly-font" 
+                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                        id="brand_{{post_id}}" 
+                                                        name="brand_{{post_id}}" 
+                                                        placeholder="Dział" 
+                                                        aria-label="Dział" />
+                                                    
+                                                </div>
+                                                <div class="no-border formatuj-maly-font fadeIn">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Budownictwo');">DMD Budownictwo</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Domy');">DMD Domy</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Instalacje');">DMD Instalacje</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD EliteHome');">DMD EliteHome</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Inwestycje');">DMD Inwestycje</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Development');">DMD Development</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'Księgowości');">Księgowości</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'Biuro');">Biuro</a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'Transportu');">Transportu</a>
+                                                </div>
+                                                
+                                                
+                                                <!-- Email -->
+                                                <div class="input-group mt-2">
+                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-envelope-fill"></i></span>
+                                                    <input 
+                                                        type="email" 
+                                                        value="{{post_data['contact_email']}}"
+                                                        class="form-control bg-dark formatuj-maly-font" 
+                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                        id="email_{{post_id}}" 
+                                                        name="email_{{post_id}}" 
+                                                        placeholder="E-mail" 
+                                                        aria-label="E-mail" />
+                                                    
+                                                </div>
+                                                
+            
+                                                <label class="form-label mt-2">Opis Stanowiska</label>
+                                                <div 
+                                                    id="description_{{post_id}}" 
+                                                    contenteditable="true" 
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
+                                                    {{post_data['description']}}
+                                                </div>
+                                                <div class="no-border formatuj-maly-font fadeIn mb-3">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Jako [nazwa stanowiska] będziesz odpowiedzialny za [główne obowiązki]. Twoje zadania będą obejmować [krótkie przedstawienie codziennych obowiązków]. Praca na tym stanowisku wymaga [kluczowe umiejętności] oraz [pożądane cechy charakteru].');">
+                                                        Szablon Ogólny
+                                                    </a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Na stanowisku [nazwa stanowiska] będziesz odpowiedzialny za realizację [główne obowiązki] zgodnie z harmonogramem oraz wytycznymi. Twoje codzienne zadania obejmą [krótkie przedstawienie codziennych obowiązków] oraz współpracę z innymi działami w celu [cel współpracy]. Idealny kandydat na to stanowisko musi posiadać [kluczowe umiejętności] oraz cechować się [pożądane cechy charakteru], aby efektywnie realizować swoje obowiązki.');">
+                                                        Szablon Zadaniowiec
+                                                    </a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Jako [nazwa stanowiska] będziesz odpowiedzialny za kierowanie zespołem [nazwa zespołu lub działu], nadzorowanie [główne obowiązki] oraz zapewnienie efektywnej współpracy między działami. W ramach tej roli będziesz zarządzać [krótkie przedstawienie codziennych obowiązków], a także wspierać rozwój członków zespołu poprzez [aspekt związany z mentoringiem]. Praca na tym stanowisku wymaga [kluczowe umiejętności] oraz [pożądane cechy charakteru], które umożliwią efektywne prowadzenie zespołu.');">
+                                                        Szablon Lider Zespołu
+                                                    </a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Na stanowisku [nazwa stanowiska] będziesz ekspertem odpowiedzialnym za [główne obowiązki], koncentrując się na [obszar specjalizacji]. Twoje główne zadania obejmują [krótkie przedstawienie codziennych obowiązków], w tym analizę, wdrażanie i optymalizację procesów. Aby osiągnąć sukces w tej roli, musisz posiadać [kluczowe umiejętności] oraz [pożądane cechy charakteru], które umożliwią skuteczne działanie w środowisku specjalistycznym.');">
+                                                        Szablon Ekspert Specjalistyczny
+                                                    </a>
+                                                </div>
+            
+                                                <label class="form-label mt-2">Opis Wymagań</label>
+                                                <div 
+                                                    id="requirementsDescription_{{post_id}}" 
+                                                    contenteditable="true" 
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
+                                                    {{post_data['requirements_description']}}
+                                                </div>
+                                                <div class="no-border formatuj-maly-font fadeIn mb-3">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('requirementsDescription_{{post_id}}', 'Wymagane wykształcenie [szkoła] oraz [ilość lat doświadczenia] doświadczenie na stanowisku [stanowisko] w [branża].');">
+                                                        Szablon Ogólny
+                                                    </a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('requirementsDescription_{{post_id}}', 'Poszukujemy kandydatów z wykształceniem [szkoła] oraz minimum [ilość lat doświadczenia] doświadczeniem w pracy na stanowisku [stanowisko]. Doświadczenie w [branża] będzie dodatkowym atutem.');">
+                                                        Szablon Specjalistyczny
+                                                    </a>
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('requirementsDescription_{{post_id}}', 'Wymagamy wykształcenia wyższego w dziedzinie [dziedzina] oraz [ilość lat doświadczenia] doświadczenia w zarządzaniu zespołem na stanowisku [stanowisko]. Doświadczenie w sektorze [branża] jest niezbędne.');">
+                                                        Szablon Menedżerski
+                                                    </a>                                        
+                                                </div>
+            
+                                                <!-- Additional List wymagania-->
+                                                <div class="mb-3">
+                                                    <label for="additionaRequirementsList_{{post_id}}" class="form-label">Lista wymagań</label>
+                                                    <div id="list-container_{{post_id}}" class="no-border">
+                                                        <!-- Tutaj będą dynamicznie dodawane elementy listy -->
+                                                    </div>
+                                                    <div class="formatuj-right formatuj-margin">
+                                                        <button type="button" class="btn btn-warning btn-sm" onclick="addListItem(
+                                                            '{{post_id}}', 
+                                                            elementName='dynamicRequirementsList_',
+                                                            spec='input', 
+                                                            classes='form-control bg-dark formatuj-maly-font',
+                                                            idName='additionaRequirementsList_',
+                                                            rowsAmount='4',
+                                                            styleColor='#c2c2c2',
+                                                            styleBorders='#6a6a6a solid 1px',
+                                                            req=true,
+                                                            itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
+                                                            extraID='list-container_',
+                                                            removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
+                                                            removeButtonTextContent='-' 
+                                                            )"><i class="bi bi-plus-square-dotted"></i> Dodaj</button>
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                    var additionalRequirementsList = "{{post_data['requirements']}}";
+                                                    var idAddionalRequirementsList = '{{post_id}}';
+                                                    addListFields(
+                                                                    additionalRequirementsList, 
+                                                                    idAddionalRequirementsList, 
+                                                                    "#splx#", 
+                                                                    "dynamicRequirementsList_",
+                                                                    'input', 
+                                                                    "form-control bg-dark formatuj-maly-font",
+                                                                    'additionaRequirementsList_', 
+                                                                    '4',
+                                                                    "#c2c2c2",
+                                                                    "#6a6a6a solid 1px",
+                                                                    true,
+                                                                    "no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej",
+                                                                    "list-container_",
+                                                                    "btn btn-outline-danger formatuj-maly-font formatuj-margin",
+                                                                    "-"
+                                                                    );
+                                                </script>
+            
+                                                <!-- Additional List benefitów-->
+                                                <div class="mb-3">
+                                                    <label for="additionaBenefitsList_{{post_id}}" class="form-label">Lista benefitów</label>
+                                                    <div id="list-benefits-container_{{post_id}}" class="no-border">
+                                                        <!-- Tutaj będą dynamicznie dodawane elementy listy -->
+                                                    </div>
+                                                    <div class="formatuj-right formatuj-margin">
+                                                        <button type="button" class="btn btn-warning btn-sm" onclick="addListItem(
+                                                            '{{post_id}}', 
+                                                            elementName='dynamicBenefitsList_',
+                                                            spec='input', 
+                                                            classes='form-control bg-dark formatuj-maly-font',
+                                                            idName='additionaBenefitsList_',
+                                                            rowsAmount='4',
+                                                            styleColor='#c2c2c2',
+                                                            styleBorders='#6a6a6a solid 1px',
+                                                            req=true,
+                                                            itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
+                                                            extraID='list-benefits-container_',
+                                                            removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
+                                                            removeButtonTextContent='-' 
+                                                            )"><i class="bi bi-plus-square-dotted"></i> Dodaj</button>
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                    var additionalBenefitsList = "{{post_data['benefits']}}";
+                                                    var idAddionalBenefitsList = '{{post_id}}';
+                                                    addListFields(
+                                                        additionalBenefitsList, 
+                                                        idAddionalBenefitsList, 
+                                                        "#splx#", 
+                                                        "dynamicBenefitsList_",
+                                                        'input', 
+                                                        "form-control bg-dark formatuj-maly-font",
+                                                        'additionaBenefitsList_', 
+                                                        '4',
+                                                        "#c2c2c2",
+                                                        "#6a6a6a solid 1px",
+                                                        true,
+                                                        "no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej",
+                                                        "list-benefits-container_",
+                                                        "btn btn-outline-danger formatuj-maly-font formatuj-margin",
+                                                        "-"
+                                                        );
+                                                </script>
+                                                
                                                 
                                                 <input type="hidden" name="OfferID" id="OfferID_{{post_id}}" value="{{post_id}}"/>
-
                                                 <!-- Przycisk Zapisz artykuł -->
                                                 <button 
                                                     type="button" 
                                                     class="btn btn-success btn-sm" 
                                                     style="max-height: 30px; font-size: 12px;" 
-                                                    onclick="prepareAndSubmitRentOfferForm('{{post_id}}', true)"
+                                                    onclick="prepareAndSubmitCareerForm('{{post_id}}')"
                                                 >
-                                                    Zapisz ogłoszenie najmu
+                                                    Zapisz ogłoszenie pracy
                                                 </button>
                                             </form>
                                         </div>

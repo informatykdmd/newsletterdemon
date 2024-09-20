@@ -43,7 +43,12 @@ function addListFields(
 
         // Przycisk usuwania
         var removeButton = document.createElement("button");
-        removeButton.textContent = removeButtonTextContent;
+        if (removeButtonTextContent === '') {
+            removeButton.textContent = removeButtonTextContent;
+        } else {
+            removeButton.innerHTML = '<i class="bi bi-trash3-fill" style="font-size: 15px !important;"></i>';
+        }
+
         removeButton.type = "button";
         removeButton.className = removeButtonClass;
         removeButton.onclick = function () {
@@ -256,7 +261,7 @@ function prepareAndSubmitCareerForm(careerId) {
         }
     }).then(data => {
         if (data.success == true) {
-            var form = document.getElementById('rentOffer_' + careerId);
+            var form = document.getElementById('jobOffer_' + careerId);
             form.reset();
             window.location.href = '/career';
         } else if (data.error) {
