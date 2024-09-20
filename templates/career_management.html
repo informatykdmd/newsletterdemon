@@ -423,11 +423,11 @@
                                                         id="start_{{post_id}}" 
                                                         name="startdate_{{post_id}}"
                                                         class="dark-mode-data-career" 
-                                                        value="{{post_data['start_date']}}"
+                                                        value=""
                                                         />
                                                 </div>
                                                 <script>
-                                                    setCareerDateStart('start_{{post_id}}', false)
+                                                    setCareerDateStart('start_{{post_id}}', false, "{{post_data['start_data_string']}}")
                                                 </script>
             
                                                 <!-- Wynagrodzenie -->
