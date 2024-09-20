@@ -706,6 +706,22 @@
                                             <p><i class="bi bi-building"></i> <span>Dział:</span> {{post_data['brand']}}</p>
                                             <p><i class="bi bi-at"></i> <span>E-mail kontaktowy:</span> {{post_data['contact_email']}}</p>
                                         </div>
+                                        <div>
+                                            <form action="{{ url_for('update_career_offer_status') }}" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                {% if post_data['status'] == 1 %}
+                                                    <div class="col me-1 mb-1">
+                                                        <input type="hidden" name="Status" value="0" />
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj</button>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col me-1 mb-1">
+                                                        <input type="hidden" name="Status" value="1" />
+                                                        <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj</button>
+                                                    </div>
+                                                {% endif %}
+                                            </form>
+                                        </div>
                                     </div>
                                     <div class="col-lg-3 col-sm-12 career-properties-other">
                                         <h5>Opis Stanowiska</h5>
@@ -744,20 +760,7 @@
                                         PUBLIKACJE NA GRUPACH FB
                                     </div>
                                     <div class="col-lg-3 col-sm-12">
-                                        <form action="{{ url_for('update_career_offer_status') }}" method="POST" enctype="multipart/form-data">
-                                            <input type="hidden" name="PostID" value="{{post_id}}" />
-                                            {% if post_data['status'] == 1 %}
-                                                <div class="col me-1 mb-1">
-                                                    <input type="hidden" name="Status" value="0" />
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj</button>
-                                                </div>
-                                            {% else %}
-                                                <div class="col me-1 mb-1">
-                                                    <input type="hidden" name="Status" value="1" />
-                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj</button>
-                                                </div>
-                                            {% endif %}
-                                        </form>
+                                        <!-- pusta  -->
                                     </div>
                                 </div>
                                 
