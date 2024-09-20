@@ -849,8 +849,8 @@ def generator_jobs():
             'title': rec[1],
             'description': rec[2],
             'requirements_description': rec[3],
-            'requirements': str(rec[4]).split(','), # lista
-            'benefits': str(rec[5]).split(','), # lista
+            'requirements': str(rec[4]).split('#splx#'), # lista
+            'benefits': str(rec[5]).split('#splx#'), # lista
             'location': rec[6],
             'contact_email': rec[7],
             'employment_type': rec[8],
@@ -3349,7 +3349,7 @@ def save_career_offer():
             1,
             offerID_int
         )
-    print(f'dene: {dane}')
+    # print(f'dene: {dane}')
 
     # Wykonanie zapytania
     if msq.insert_to_database(zapytanie_sql, dane):
