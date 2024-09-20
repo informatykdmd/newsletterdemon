@@ -765,7 +765,12 @@ color:#969696;
     font-size: 14px;
 }
 
+.career-properties p{
+    margin-left: 10px;
+}
+
 .career-properties span{
     font-weight: 600;
     padding-left: 5px;
+    color: #fcca05;
 }
