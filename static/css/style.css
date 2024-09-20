@@ -771,6 +771,10 @@ color:#969696;
     margin: none;
 }
 
+.career-properties i{
+    color: #af1d00;
+}
+
 .career-properties span{
     font-weight: 600;
     padding-left: 5px;
