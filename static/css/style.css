@@ -771,6 +771,10 @@ color:#969696;
     margin: none;
 }
 
+.career-properties h1{
+    font-weight: 700;
+}
+
 .career-properties i{
     color: #43ba03;
 }
