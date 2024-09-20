@@ -3399,6 +3399,38 @@ def remove_career_offer():
     
     return redirect(url_for('index'))
 
+
+@app.route('/update-career-offer-status', methods=['POST'])
+def update_career_offer_status():
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['career'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: 
+            form_data['PostID']
+            form_data['Status']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        set_post_status = int(form_data['Status'])
+
+        zapytanie_sql = f'''
+                UPDATE job_offers
+                SET status = %s
+                WHERE ID = %s;
+                '''
+        dane = (set_post_status, set_post_id)
+        if msq.insert_to_database(zapytanie_sql, dane):
+            flash("Status oferty został zmieniony.", "success")
+            return redirect(url_for('career'))
+    
+    return redirect(url_for('index'))
 @app.template_filter()
 def decode_html_entities_filter(text):
     return html.unescape(text)
