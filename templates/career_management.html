@@ -221,16 +221,57 @@
 
                                     <!-- Additional List -->
                                     <div class="mb-3">
-                                        <label for="additionalList9999999" class="form-label">Additional List</label>
+                                        <label for="additionalList9999999" class="form-label">Lista wymagań</label>
                                         <div id="list-container9999999" class="no-border">
                                             <!-- Tutaj będą dynamicznie dodawane elementy listy -->
                                         </div>
                                         <div class="formatuj-right formatuj-margin">
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="addListItem('9999999')">Dodaj pole</button>
+                                            <!-- id, 
+                                            elementName="dynamicField",
+                                            spec="textarea", 
+                                            classes="form-control bg-dark formatuj-maly-font",
+                                            idName="additionalList",
+                                            rowsAmount="4",
+                                            styleColor="#c2c2c2",
+                                            styleBorders="#6a6a6a solid 1px",
+                                            req=true,
+                                            itemStyles="no-border formatuj-margin form-control bg-dark formatuj-right",
+                                            extraID="list-container",
+                                            removeButtonClass="btn btn-outline-danger formatuj-maly-font formatuj-margin",
+                                            removeButtonTextContent="Usuń pole" -->
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="addListItem(
+                                                '9999999', 
+                                                elementName='dynamicRequirementsList_',
+                                                spec='input', 
+                                                classes='form-control bg-dark formatuj-maly-font',
+                                                idName='additionaRequirementslList',
+                                                rowsAmount='4',
+                                                styleColor='#c2c2c2',
+                                                styleBorders='#6a6a6a solid 1px',
+                                                req=true,
+                                                itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right',
+                                                extraID='list-container',
+                                                removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
+                                                removeButtonTextContent='Usuń pole'
+                                                )">Dodaj pole</button>
                                         </div>
                                     </div>
                                     <script>
-                                        addListItem('9999999');
+                                        addListItem(
+                                            '9999999', 
+                                            elementName='dynamicRequirementsList_',
+                                            spec='input', 
+                                            classes='form-control bg-dark formatuj-maly-font',
+                                            idName='additionaRequirementslList',
+                                            rowsAmount='4',
+                                            styleColor='#c2c2c2',
+                                            styleBorders='#6a6a6a solid 1px',
+                                            req=true,
+                                            itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right',
+                                            extraID='list-container',
+                                            removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
+                                            removeButtonTextContent='Usuń pole'
+                                        );
                                     </script>
 
 
