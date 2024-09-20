@@ -181,6 +181,82 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     form.submit();
 }
 
+function prepareAndSubmitCareerForm(careerId) {
+    let formIsValid = true;
+
+    function toggleWarning(elementId, condition) {
+        const element = document.getElementById(elementId);
+        if (condition) {
+            element.classList.add('input-warning');
+            formIsValid = false;
+        } else {
+            element.classList.remove('input-warning');
+        }
+    }
+
+    // Pobieranie wartości z formularza
+    var title = document.getElementById('title_' + careerId).value;
+    var startDate = document.getElementById('start_' + careerId).value;
+    var salary = document.getElementById('salary_' + careerId).value;
+    var employmentType = document.getElementById('employmenttype_' + careerId).value;
+    var location = document.getElementById('lokalizacja_' + careerId).value;
+    var brand = document.getElementById('brand_' + careerId).value;
+    var email = document.getElementById('email_' + careerId).value;
+
+    // Pobranie surowego tekstu z contenteditable (usuwanie znaczników HTML)
+    var jobDescription = document.getElementById('location_' + careerId).innerText;
+    var requirementsDescription = document.getElementById('requirementsDescription_' + careerId).innerText;
+
+    // Łączenie dynamicznych list
+    var dynamicRequirementsList = joinListFields(careerId, '#splx#', 'dynamicRequirementsList_');
+    var dynamicBenefitsList = joinListFields(careerId, '#splx#', 'dynamicBenefitsList_');
+
+    // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
+    toggleWarning('title_' + careerId, !title);
+    toggleWarning('email_' + careerId, !email);
+
+    // Jeżeli którykolwiek z testów nie przeszedł, nie wysyłaj formularza
+    if (!formIsValid) {
+        return;
+    }
+
+    // Tworzenie FormData i dodanie wartości
+    let formData = new FormData();
+    formData.append('title', title);
+    formData.append('startdate', startDate);
+    formData.append('salary', salary);
+    formData.append('employmenttype', employmentType);
+    formData.append('location', location);
+    formData.append('brand', brand);
+    formData.append('email', email);
+    formData.append('jobDescription', jobDescription);
+    formData.append('requirementsDescription', requirementsDescription);
+    formData.append('dynamicRequirementsList', dynamicRequirementsList);
+    formData.append('dynamicBenefitsList', dynamicBenefitsList);
+
+    // Wysyłanie formularza za pomocą AJAX (fetch API)
+    fetch('/save-career-offer', {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Problem z serwerem');
+        }
+    }).then(data => {
+        if (data.success == true) {
+            var form = document.getElementById('rentOffer_' + careerId);
+            form.reset();
+            window.location.href = '/career';
+        } else if (data.error) {
+            alert('Wystąpił błąd: ' + data.error);
+        }
+    }).catch(error => {
+        alert('Wystąpił błąd: ' + error.message);
+    });
+}
+
 // Funkcja do złączania zawartości pól dynamicznego opisu oferty do json na podstawie atrybutu data-type
 // wszystkie elementy wygenerowane za pomocą funkcji addCustomElement mają atrybut data-type w którym jest zawarty rodzaj pola
 // funkcja rozrónia pola pomiedzy li i inne. pola li mają strukturę listy json gdzie kluczem jest "li" a wartością lista. 
