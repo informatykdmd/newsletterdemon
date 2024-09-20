@@ -106,7 +106,7 @@ function addListItem(
     if (removeButtonTextContent === '') {
         removeButton.textContent = removeButtonTextContent;
     } else {
-        removeButton.innerHTML = '<i class="bi bi-dash-square-dotted" style="font-size: 25px !important;"></i>';
+        removeButton.innerHTML = '<i class="bi bi-trash3-fill" style="font-size: 15px !important;"></i>';
     }
     removeButton.type = "button";
     removeButton.className = removeButtonClass;
