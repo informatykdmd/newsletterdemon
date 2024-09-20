@@ -202,6 +202,7 @@ function prepareAndSubmitCareerForm(careerId) {
     var location = document.getElementById('lokalizacja_' + careerId).value;
     var brand = document.getElementById('brand_' + careerId).value;
     var email = document.getElementById('email_' + careerId).value;
+    var offerID = document.getElementById('OfferID_' + careerId).value;
 
     // Pobranie surowego tekstu z contenteditable (usuwanie znaczników HTML)
     var jobDescription = document.getElementById('location_' + careerId).innerText;
@@ -233,6 +234,8 @@ function prepareAndSubmitCareerForm(careerId) {
     formData.append('requirementsDescription', requirementsDescription);
     formData.append('dynamicRequirementsList', dynamicRequirementsList);
     formData.append('dynamicBenefitsList', dynamicBenefitsList);
+    formData.append('OfferID', offerID);
+
 
     // Wysyłanie formularza za pomocą AJAX (fetch API)
     fetch('/save-career-offer', {
