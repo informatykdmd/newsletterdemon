@@ -3283,6 +3283,8 @@ def save_career_offer():
         flash('Błąd z id oferty. Skontaktuj się z administratorem!', 'danger')
         return redirect(url_for('index'))
 
+    print(f'title: {title} | start_date: {start_date} | salary: {salary} | employment_type: {employment_type} | location: {location} | brand: {brand} | contact_email: {contact_email} | description: {description} | requirements_description: {requirements_description} | requirements: {requirements} | benefits: {benefits} | offerID: {offerID} |')
+
     # Sprawdzenie czy użytkownik jest zalogowany i ma uprawnienia
     if 'username' not in session or 'userperm' not in session:
         return redirect(url_for('index'))
@@ -3347,7 +3349,7 @@ def save_career_offer():
             1,
             offerID_int
         )
-    flash(f'dene: {dane}', 'danger')
+    print(f'dene: {dane}')
     return jsonify({
             'message': 'Oferta pracy została zapisana pomyślnie!',
             'success': True
