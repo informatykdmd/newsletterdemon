@@ -3347,7 +3347,7 @@ def save_career_offer():
             1,
             offerID_int
         )
-    flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
+    flash(f'dene: {dane}', 'danger')
     return jsonify({
             'message': 'Oferta pracy została zapisana pomyślnie!',
             'success': True
