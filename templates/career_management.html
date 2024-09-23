@@ -800,7 +800,7 @@
                                                                         <div class="col">
                                                                             <div class="form-check form-switch">
                                                                                 <input class="form-check-input" type="checkbox" role="switch" id="codwatygodnie_{{post_id}}" name="codwatygodnie" value="1" checked>
-                                                                                <label class="form-check-label" for="codwatygodnie_{{post_id}}">co dwa tygodnie</label>
+                                                                                <label class="form-check-label" for="codwatygodnie_{{post_id}}">co 2 tygodnie</label>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col">
@@ -828,7 +828,26 @@
                                             </div>
                                             <script>
                                                 document.addEventListener('DOMContentLoaded', function(){
-                                                        
+                                                    checkboxControlDisable(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'wznawiaj_{{post_id}}', 
+                                                        [
+                                                            'codwatygodnie_{{post_id}}', 
+                                                            'cotydzien_{{post_id}}', 
+                                                            'codwadni_{{post_id}}'
+                                                        ]
+                                                    );
+
+                                                    checkboxControlEnabled(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'wznawiaj_{{post_id}}', 
+                                                        [
+                                                            'codwatygodnie_{{post_id}}', 
+                                                            'cotydzien_{{post_id}}', 
+                                                            'codwadni_{{post_id}}'
+                                                        ]
+                                                    );
+
                                                     checkboxControlOffOther(
                                                         'karieraFB_{{post_id}}', 
                                                         'codwatygodnie_{{post_id}}', 
