@@ -727,9 +727,6 @@
                                         <h5>Opis Stanowiska</h5>
                                         <p>{{post_data['description']}}</p>
 
-                                        
-
-                                        
                                     </div>
                                     <div class="col-lg-3 col-sm-12 career-properties-other">
                                         <h5>Opis Wymagań</h5>
@@ -742,7 +739,7 @@
                                                 <li>{{requirement}}</li>
                                             {% endfor %}
                                          </ul>
-                                         
+
                                         <h5>Benefity</h5>
                                         <ul>
                                             {% for benefit in post_data['benefits'] %}
@@ -759,7 +756,111 @@
                                         <!-- pusta  -->
                                     </div>
                                     <div class="col-lg-3 col-sm-12">
-                                        PUBLIKACJE NA GRUPACH FB
+                                        <div> 
+                                            
+                                            <div class="mb-2 mt-2">
+                                                <h5>ALLEGRO LOKALNIE</h5>
+                                                
+                                                <p>Status: Pierwsza publikacja na allegro lokalnie</p>
+                                            </div>
+
+                                            <div class="row row-cols-auto mb-3">
+                                                <div class="col">
+                                                    <form action="" id="karieraFB_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="" value="" />
+                                                        <input type="hidden" name="" value="" />
+                                                        <input type="hidden" name="" value="" />
+                                                        <input type="hidden" id="" name="region" value="" />
+
+                                                        <div class="col me-1 mb-1">
+                                                            
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Publikuj" />
+                                                            
+
+                                                            <!-- block -->
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="form-check form-switch">
+                                                                        <input class="form-check-input" type="checkbox" role="switch" id="wznawiaj_{{post_id}}" name="wznawiaj">
+                                                                        <label class="form-check-label" for="wznawiaj_{{post_id}}">Wznawiaj ogłoszenie automatycznie</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <!-- block -->
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            Częśtotliwość
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="codwatygodnie_{{post_id}}" name="codwatygodnie" value="1" checked>
+                                                                                <label class="form-check-label" for="codwatygodnie_{{post_id}}">co dwa tygodnie</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="cotydzien_{{post_id}}" name="cotydzien" value="1" >
+                                                                                <label class="form-check-label" for="cotydzien_{{post_id}}">co tydzień</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="codwadni_{{post_id}}" name="codwadni" value="1">
+                                                                                <label class="form-check-label" for="codwadni_{{post_id}}">co 2 dni</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Publikuj grupach
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function(){
+                                                        
+                                                    checkboxControlOffOther(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'codwatygodnie_{{post_id}}', 
+                                                        [
+                                                            'cotydzien_{{post_id}}',
+                                                            'codwadni_{{post_id}}'
+                                                        ]
+                                                    );
+                                                    checkboxControlOffOther(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'cotydzien_{{post_id}}', 
+                                                        [
+                                                            'codwatygodnie_{{post_id}}',
+                                                            'codwadni_{{post_id}}'
+                                                        ]
+                                                    );
+                                                    checkboxControlOffOther(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'codwadni_{{post_id}}', 
+                                                        [
+                                                            'codwatygodnie_{{post_id}}',
+                                                            'cotydzien_{{post_id}}'
+                                                        ]
+                                                    );
+                                                    
+                                                });
+                                                
+                                            </script>
+                                                
+
+                                            
+                                        </div>
                                     </div>
                                     <div class="col-lg-3 col-sm-12">
                                         <!-- pusta  -->
