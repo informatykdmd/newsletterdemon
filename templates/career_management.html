@@ -800,21 +800,21 @@
                                                                         <div class="col">
                                                                             <div class="form-check form-switch">
                                                                                 <input class="form-check-input" type="checkbox" role="switch" id="codwatygodnie_{{post_id}}" name="codwatygodnie" value="1" checked>
-                                                                                <label class="form-check-label" for="codwatygodnie_{{post_id}}">14 dni</label>
+                                                                                <label class="form-check-label" for="codwatygodnie_{{post_id}}">dwa tygodnie</label>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col">
                                                                             <div class="form-check form-switch">
                                                                                 <input class="form-check-input" type="checkbox" role="switch" id="cotydzien_{{post_id}}" name="cotydzien" value="1" >
-                                                                                <label class="form-check-label" for="cotydzien_{{post_id}}">7 dni</label>
+                                                                                <label class="form-check-label" for="cotydzien_{{post_id}}">tydzień</label>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
                                                                         <div class="col">
                                                                             <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="codwadni_{{post_id}}" name="codwadni" value="1">
-                                                                                <label class="form-check-label" for="codwadni_{{post_id}}">4 dni</label>
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="coczterydni_{{post_id}}" name="coczterydni" value="1">
+                                                                                <label class="form-check-label" for="coczterydni_{{post_id}}">4 dni</label>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col">
@@ -842,6 +842,7 @@
                                                         [
                                                             'codwatygodnie_{{post_id}}', 
                                                             'cotydzien_{{post_id}}', 
+                                                            'coczterydni_{{post_id}}',
                                                             'codwadni_{{post_id}}'
                                                         ]
                                                     );
@@ -852,6 +853,7 @@
                                                         [
                                                             'codwatygodnie_{{post_id}}', 
                                                             'cotydzien_{{post_id}}', 
+                                                            'coczterydni_{{post_id}}',
                                                             'codwadni_{{post_id}}'
                                                         ]
                                                     );
@@ -861,6 +863,7 @@
                                                         'codwatygodnie_{{post_id}}', 
                                                         [
                                                             'cotydzien_{{post_id}}',
+                                                            'coczterydni_{{post_id}}',
                                                             'codwadni_{{post_id}}'
                                                         ]
                                                     );
@@ -869,6 +872,16 @@
                                                         'cotydzien_{{post_id}}', 
                                                         [
                                                             'codwatygodnie_{{post_id}}',
+                                                            'coczterydni_{{post_id}}',
+                                                            'codwadni_{{post_id}}'
+                                                        ]
+                                                    );
+                                                    checkboxControlOffOther(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'coczterydni_{{post_id}}', 
+                                                        [
+                                                            'codwatygodnie_{{post_id}}',
+                                                            'cotydzien_{{post_id}}',
                                                             'codwadni_{{post_id}}'
                                                         ]
                                                     );
@@ -877,7 +890,8 @@
                                                         'codwadni_{{post_id}}', 
                                                         [
                                                             'codwatygodnie_{{post_id}}',
-                                                            'cotydzien_{{post_id}}'
+                                                            'cotydzien_{{post_id}}',
+                                                            'coczterydni_{{post_id}}'
                                                         ]
                                                     );
                                                     
