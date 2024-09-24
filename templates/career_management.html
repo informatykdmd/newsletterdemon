@@ -793,7 +793,7 @@
                                                                     <!-- block -->
                                                                     <div class="row">
                                                                         <div class="col">
-                                                                            Częśtotliwość co:
+                                                                            Częstotliwość co:
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
@@ -825,6 +825,42 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <div class="col">
+                                                                    <!-- block -->
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            Iloś ponowień:
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="ponow2razy_{{post_id}}" name="ponow2razy" value="1" checked>
+                                                                                <label class="form-check-label" for="ponow2razy_{{post_id}}">x 2</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="ponow5razy_{{post_id}}" name="ponow5razy" value="1" >
+                                                                                <label class="form-check-label" for="ponow5razy_{{post_id}}">x 5</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="ponow8razy_{{post_id}}" name="ponow8razy" value="1">
+                                                                                <label class="form-check-label" for="ponow8razy_{{post_id}}">x 8</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="ponow10razy_{{post_id}}" name="ponow10razy" value="1">
+                                                                                <label class="form-check-label" for="ponow10razy_{{post_id}}">x 10</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
 
                                                             <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
@@ -842,8 +878,12 @@
                                                         [
                                                             'codwatygodnie_{{post_id}}', 
                                                             'cotydzien_{{post_id}}', 
-                                                            'coczterydni_{{post_id}}',
-                                                            'codwadni_{{post_id}}'
+                                                            'coczterydni_{{post_id}}', 
+                                                            'codwadni_{{post_id}}',
+                                                            'ponow2razy_{{post_id}}',
+                                                            'ponow5razy_{{post_id}}',
+                                                            'ponow8razy_{{post_id}}',
+                                                            'ponow10razy_{{post_id}}'
                                                         ]
                                                     );
 
@@ -854,7 +894,11 @@
                                                             'codwatygodnie_{{post_id}}', 
                                                             'cotydzien_{{post_id}}', 
                                                             'coczterydni_{{post_id}}',
-                                                            'codwadni_{{post_id}}'
+                                                            'codwadni_{{post_id}}',
+                                                            'ponow2razy_{{post_id}}',
+                                                            'ponow5razy_{{post_id}}',
+                                                            'ponow8razy_{{post_id}}',
+                                                            'ponow10razy_{{post_id}}'
                                                         ]
                                                     );
 
@@ -892,6 +936,42 @@
                                                             'codwatygodnie_{{post_id}}',
                                                             'cotydzien_{{post_id}}',
                                                             'coczterydni_{{post_id}}'
+                                                        ]
+                                                    );
+                                                    checkboxControlOffOther(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'ponow2razy_{{post_id}}', 
+                                                        [
+                                                            'ponow5razy_{{post_id}}',
+                                                            'ponow8razy_{{post_id}}',
+                                                            'ponow10razy_{{post_id}}'
+                                                        ]
+                                                    );
+                                                    checkboxControlOffOther(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'ponow5razy_{{post_id}}', 
+                                                        [
+                                                            'ponow2razy_{{post_id}}',
+                                                            'ponow8razy_{{post_id}}',
+                                                            'ponow10razy_{{post_id}}'
+                                                        ]
+                                                    );
+                                                    checkboxControlOffOther(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'ponow8razy_{{post_id}}', 
+                                                        [
+                                                            'ponow2razy_{{post_id}}',
+                                                            'ponow5razy_{{post_id}}',
+                                                            'ponow10razy_{{post_id}}'
+                                                        ]
+                                                    );
+                                                    checkboxControlOffOther(
+                                                        'karieraFB_{{post_id}}', 
+                                                        'ponow10razy_{{post_id}}', 
+                                                        [
+                                                            'ponow2razy_{{post_id}}',
+                                                            'ponow5razy_{{post_id}}',
+                                                            'ponow8razy_{{post_id}}'
                                                         ]
                                                     );
                                                     
