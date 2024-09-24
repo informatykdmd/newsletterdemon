@@ -10889,6 +10889,64 @@ def settings():
                             etate_logo_png=etate_logo_png
                             )
 
+@app.route('/fb-groups')
+def fbGroups():
+    """Zarządzanie grupami FB"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['settings'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    all_groups = [
+        {
+            "id": 1,
+            "name": "INTERIOR DESIGNERS",
+            "category": 'praca',
+            "link": "https://www.facebook.com/groups/msianinteriordesigners"
+        },
+        {
+            "id": 2,
+            "name": "INTERIOR DESIGNERS 2",
+            "category": 'praca',
+            "link": "https://www.facebook.com/groups/msianinteriordesigners"
+        },
+    ]
+    
+    
+
+    # Ustawienia paginacji
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(all_groups)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
+    groups = all_groups[offset: offset + per_page]
+
+    domy = settingsDB['domy']
+    budownictwo = settingsDB['budownictwo']
+    development = settingsDB['development']
+    elitehome = settingsDB['elitehome']
+    inwestycje = settingsDB['inwestycje']
+    instalacje = settingsDB['instalacje']
+
+
+    return render_template(
+                            "fb-groups_management.html", 
+                            username=session['username'],
+                            userperm=session['userperm'], 
+                            groups=groups,
+                            domy=domy,
+                            budownictwo=budownictwo,
+                            development=development,
+                            elitehome=elitehome,
+                            inwestycje=inwestycje,
+                            instalacje=instalacje,
+                            pagination=pagination
+                            )
+
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
     app.run(debug=False, host='0.0.0.0', port=8000)

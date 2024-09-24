@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}DMD Panel Administratora - Zarządzanie Blogiem{% endblock %}
+
+{% block addButton %}
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+            Zarządzanie Grupami FB
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="estate_button dropdown-item" href="/setting">Zarządzanie Aplikacją</a></li>
+            <li><a class="dropdown-item active" href="/fb-groups">Zarządzanie Grupami FB</a></li>
+        </ul>
+    </div>
+    <li style="margin-left: 15px;">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(14, 144, 14) !important;"></i></a>
+    </li>
+{% endblock %}
+{% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Zarządzanie Grupami FB</a>{% endblock %}
+
+{% block tableHeader %}
+                        <div>
+                            <div class="row klej formatuj-header">
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;">
+                                    #
+                                </div>
+                                <div  class="col-xl-8 col-lg-6 col-sm-8 formatuj-maly-font">
+                                    Nazwa grupy
+                                </div>
+                                <div  class="d-none d-lg-block formatuj-maly-font" style="max-width: 200px;">
+                                    Kategoria
+                                </div>
+                                <div  class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
+                                    Link
+                                </div>
+                                <div  class="text-end formatuj-maly-font" style="max-width: 80px;">
+                                    <i class="bi bi-person-gear"></i> Akcja 
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}
+{% block tableContent%}
+                        <!-- OFFCANVANSE RIGHT ADD NEW POST -->
+                        <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowej grupy fb</h4>
+                                <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_post') }}" enctype="multipart/form-data" >
+                                    <!-- Tytuł artykułu -->
+                                    <div class="mb-3">
+                                    <label for="title_9999999" class="form-label">Tytuł artykułu</label>
+                                    <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="title_9999999" 
+                                            name="title_9999999" 
+                                            required>
+                                    </div>
+
+                                    
+                                    <!-- Ukryte pola formularza -->
+                                    <input type="hidden" name="tagsFieldData_9999999" id="tagsFieldData_9999999" />
+                                    <input type="hidden" name="dynamicFieldData_9999999" id="dynamicFieldData_9999999" />
+                                    <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}"/>
+                                    <!-- Przycisk Zapisz artykuł -->
+                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitForm('9999999', false)">Dodaj artykuł</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% for post_data in groups %}
+                            {% set post_id  = post_data['id'] %}
+                        <!-- linia contentu tabeli ciemna-->
+                        <div>
+                            <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;" >
+                                    {{post_id}}
+                                </div>
+                                
+                                <div  class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font" >
+                                    <a>
+                                        {{post_data['name']}}
+                                    </a>
+                                    
+                                </div>
+                                <div  class="d-none d-lg-block"  style="max-width: 200px;" >
+                                    <a >
+                                        <span class="display-6 formatuj-maly-font">{{post_data['category']}}</span>
+                                    </a>
+                                </div>
+                                <div class="d-none d-xl-block"  style="max-width: 150px;">
+                                    <a>
+                                        <span class="display-6 formatuj-maly-font">{{post_data['link'][:12]}}</span>
+                                    </a>
+                                </div>
+                                
+                                <div class="text-end" style="max-width: 80px;">
+                                    
+                                    <form method="POST" id="remove_rent_offer_{{post_id}}" action="{{ url_for('remove_career_offer') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz usunąć ofertę pracy?');">
+
+                                        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling_{{post_id}}" aria-controls="offcanvasScrolling_{{post_id}}"><i class="bi bi-pencil" style="color: #7eb5cc !important;"></i></a>
+                                        <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/>
+                                        <input type="hidden" name="PostID" id="PostID_{{post_id}}" value="{{post_id}}"/>
+                                        <button type="submit" class="custom-icon-button"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></button>
+                                        <!-- <a href="#"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></a> -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- offcanvanse left -->
+                        <div class="offcanvas offcanvas-start bg-dark oc-width" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling_{{post_id}}" aria-labelledby="offcanvasScrollingLabel">
+                            <div class="offcanvas-header">
+                              <h4 class="offcanvas-title" id="offcanvasScrollingLabel">Edycja Post id: {{post_id}}</h4>
+                              <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body formatuj-maly-font">
+                                <div class="tylko-klej">
+                                    <div style="color:#6a6a6a;">
+                                        <form method="POST" id="editPost_{{post_id}}" action="{{ url_for('save_post') }}" enctype="multipart/form-data">
+                                            <!-- Tytuł artykułu -->
+                                            <div class="mb-3">
+                                            <label for="title_{{post_id}}" class="form-label">Tytuł artykułu</label>
+                                            <input 
+                                                    type="text" 
+                                                    value="{{post_data['name']}}"
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="title_{{post_id}}" 
+                                                    name="title_{{post_id}}" 
+                                                    required>
+                                            </div>
+    
+                                            
+                                            <!-- Ukryte pola formularza -->
+                                            <input type="hidden" name="tagsFieldData_{{post_id}}" id="tagsFieldData_{{post_id}}" />
+                                            <input type="hidden" name="dynamicFieldData_{{post_id}}" id="dynamicFieldData_{{post_id}}" />
+                                            <input type="hidden" name="UserName_{{post_id}}" id="UserName_{{post_id}}" value="{{username}}"/>
+                                            
+                                            <!-- Przycisk Zapisz artykuł -->
+                                            <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitForm('{{post_id}}', true)">Zapisz artykuł</button>
+                                            <!-- <button type="submit" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="joinListFields('{{post_id}}', ', ', 'dynamicTagsField'); joinListFields('{{post_id}}', '#splx ', 'dynamicField')">Zapisz artykuł</button> -->
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        
+                        
+                        {% endfor %}
+                        <!-- Paginacja -->
+                        <span class="formatuj-maly-logout">{{ pagination.info }}</span>
+                        <div class="pagination formatuj-margin-top">
+                            <nav aria-label="Page navigation example">                            
+                                <ul class="pagination justify-content-center dark-mode">
+                                    <li class="page-item">{{ pagination.prev }}</li>
+                                    <li class="page-item">{{ pagination.links }}</li>
+                                    <li class="page-item">{{ pagination.next }}</li>
+                                </ul>
+                            </nav>
+                        </div>
+{% endblock %}
+
+
+{% block footer %}
+<p>
+    All right reserved &copy; 2024 by DMD Panel Administratora.<br/>
+</p>
+{% endblock %}
