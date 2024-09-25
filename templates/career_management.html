@@ -1140,11 +1140,19 @@
 
             // Warunkowa zmiana klas i wyświetlanie odpowiednich divów
             if (charCount > 130) {
-            this.divMore130.style.display = 'block';
-            this.divMinus130.style.display = 'none';
-            } else {
-            this.divMore130.style.display = 'none';
-            this.divMinus130.style.display = 'block';
+                this.divMore130.style.display = 'block';
+                this.divMinus130.style.display = 'none';
+                
+                // Dodajemy klasę dla więcej niż 130 znaków
+                this.contentDiv.classList.remove('mainDiv-minus130');
+                this.contentDiv.classList.add('mainDiv-more130');
+                } else {
+                this.divMore130.style.display = 'none';
+                this.divMinus130.style.display = 'block';
+                
+                // Dodajemy klasę dla mniej niż 130 znaków
+                this.contentDiv.classList.remove('mainDiv-more130');
+                this.contentDiv.classList.add('mainDiv-minus130');
             }
         }
     }
