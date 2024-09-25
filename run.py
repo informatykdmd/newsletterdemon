@@ -10967,16 +10967,29 @@ def add_fb_group():
         try: form_data['PostID']
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
-        
-        # msq.delete_row_from_database(
-        #         """
-        #             DELETE FROM fb_groups WHERE ID = %s;
-        #         """,
-        #         (set_post_id,)
-        #     )
 
-        flash("Grupa została dodana!", "success")
-        return redirect(url_for('fbGroups'))
+        if not form_data['name'] or form_data['name'] == '':
+            flash("Musisz podać nazwę grupy!", "danger")
+            return redirect(url_for('fbGroups'))
+        if not form_data['kategoria'] or form_data['kategoria'] == '':
+            flash("Musisz wybrać kategorię grupy!", "danger")
+            return redirect(url_for('fbGroups'))
+        if not form_data['link'] or form_data['link'] == '':
+            flash("Podaj LINK! Link jest niezbedny do prawidłowego wykorzystywania grup w modułach!", "danger")
+            return redirect(url_for('fbGroups'))
+        if not form_data['link'].startswith('https://www.facebook.com/groups/'):
+            flash("Możliwy jest tylko link do grup Facebooka", "danger")
+            return redirect(url_for('fbGroups'))
+
+        if set_post_id == 9999999:
+            
+            flash("Grupa została dodana!", "success")
+            return redirect(url_for('fbGroups'))
+        else:
+            
+
+            flash("Zmiany zostały zapisane!", "success")
+            return redirect(url_for('fbGroups'))
     
     return redirect(url_for('index'))
 
