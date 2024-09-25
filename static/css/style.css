@@ -806,36 +806,43 @@ color:#969696;
 
 /* Stylowanie edytowalnego div-a */
 .fbgroups-requirements-description {
-    color: #c2c2c2;
-    border: #6a6a6a solid 1px;
-    padding: 10px;
-    min-height: 100px;
-    width: 100%;
-    box-sizing: border-box;
-    position: relative; /* Umożliwia pozycjonowanie licznika znaków */
-  }
+  color: #c2c2c2;
+  border: #6a6a6a solid 1px;
+  padding: 10px;
+  min-height: 100px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative; /* Umożliwia pozycjonowanie licznika znaków */
+}
+
+
   
-  /* Stylowanie dla licznika znaków w prawym dolnym rogu */
-  .fbgroups-requirements-description .char-count {
-    position: absolute;
-    bottom: 5px;
-    right: 10px;
-    font-size: 12px;
-    color: #666;
+  /* Stan podczas edycji (edycja aktywna) */
+.fbgroups-requirements-description.editing {
+    background-color: #444; /* Inne tło podczas edycji */
+    color: #fff; /* Zmieniony kolor czcionki podczas edycji */
   }
-  
-  /* Klasy dla warunków mniejszej i większej liczby znaków */
-  .minus130, .more130 {
-    font-size: 14px;
-    margin-top: 10px;
-  }
-  
-  /* Style, które zmienią się dynamicznie */
-  .minus130 {
-    color: green;
-  }
-  
-  .more130 {
-    color: red;
-  }
-  
+
+/* Stylowanie dla licznika znaków w prawym dolnym rogu */
+.fbgroups-requirements-description .char-count {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Klasy dla warunków mniejszej i większej liczby znaków */
+.minus130, .more130 {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Style, które zmienią się dynamicznie */
+.minus130 {
+  color: green;
+}
+
+.more130 {
+  color: red;
+}
