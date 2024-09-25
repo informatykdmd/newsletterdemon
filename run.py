@@ -10918,22 +10918,6 @@ def fbGroups():
         return redirect(url_for('index'))
     
     all_groups = generator_facebookGroups()
-    [
-        {
-            "id": 1,
-            "name": "INTERIOR DESIGNERS",
-            "category": 'praca',
-            "link": "https://www.facebook.com/groups/msianinteriordesigners"
-        },
-        {
-            "id": 2,
-            "name": "INTERIOR DESIGNERS 2",
-            "category": 'nieruchomości',
-            "link": "https://www.facebook.com/groups/msianinteriordesigners"
-        },
-    ]
-    
-    
 
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -11042,7 +11026,34 @@ def add_fb_group():
     
     return redirect(url_for('index'))
 
-
+@app.route('/remove-fbgroup', methods=['POST'])
+def remove_fbgroup():
+    """Usuwanie bloga"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['settings'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: form_data['PostID']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        msq.delete_row_from_database(
+                """
+                    DELETE FROM facebook_gropus WHERE ID = %s;
+                """,
+                (set_post_id,)
+            )
+        
+        flash("Grupa została usunięta.", "success")
+        return redirect(url_for('fbGroups'))
+    
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
