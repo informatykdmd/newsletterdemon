@@ -853,10 +853,12 @@ color:#969696;
 .mainDiv-minus130 {
     font-size: 24px; /* Czcionka 24px, gdy liczba znaków jest <= 130 */
     text-align: center;
+    font-weight: 700;
 }
   
   /* Klasa dla więcej niż 130 znaków */
 .mainDiv-more130 {
     font-size: 13px; /* Czcionka 13px, gdy liczba znaków jest > 130 */
     text-align: left;
+    font-weight:normal;
 }
