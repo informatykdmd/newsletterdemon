@@ -760,17 +760,17 @@
                                                 contenteditable="true" 
                                                 class="form-control bg-dark formatuj-maly-font" 
                                                 style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
-                                                {{post_data['requirements_description']}}
+                                                {{post_data['brand']}} poszukuje {{post_data['title']}}. Kontakt: {{post_data['contact_email']}}
                                             </div>
                                             <div class="no-border formatuj-maly-font fadeIn mb-3">
-                                                <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', 'Wymagane wykształcenie [szkoła] oraz [ilość lat doświadczenia] doświadczenie na stanowisku [stanowisko] w [branża].');">
-                                                    Szablon Ogólny
+                                                <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', 'Szukamy {{post_data[\'title\']}}! Dołącz do naszego zespołu DMD. Więcej info na DM');">
+                                                    Dołącz do naszego zespołu
                                                 </a>
-                                                <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', 'Poszukujemy kandydatów z wykształceniem [szkoła] oraz minimum [ilość lat doświadczenia] doświadczeniem w pracy na stanowisku [stanowisko]. Doświadczenie w [branża] będzie dodatkowym atutem.');">
-                                                    Szablon Specjalistyczny
+                                                <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', '{{post_data[\'brand\']}} poszukuje {{post_data[\'title\']}}. Kontakt: {{post_data[\'contact_email\']}}');">
+                                                    DMD poszukuje
                                                 </a>
-                                                <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', 'Wymagamy wykształcenia wyższego w dziedzinie [dziedzina] oraz [ilość lat doświadczenia] doświadczenia w zarządzaniu zespołem na stanowisku [stanowisko]. Doświadczenie w sektorze [branża] jest niezbędne.');">
-                                                    Szablon Menedżerski
+                                                <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', 'Zatrudnimy na stanowisko {{post_data[\'title\']}} w {{post_data[\'brand\']}}! Szczegóły na DM');">
+                                                    Zatrudnimy na stanowisko
                                                 </a>                                        
                                             </div>
                                         </div>
