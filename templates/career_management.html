@@ -757,11 +757,21 @@
                                             <label class="form-label mt-2">Treść Ogłoszenia na Grupach FB</label>
                                             <div 
                                                 id="fbgroups_requirementsDescription_{{post_id}}" 
+                                                class="fbgroups-requirements-description content-editable form-control bg-dark formatuj-maly-font" 
+                                                contenteditable="true">
+                                                {{post_data['brand']}} poszukuje {{post_data['title']}}. Kontakt: {{post_data['contact_email']}}
+                                                <div id="char_count_{{post_id}}" class="char-count"></div> <!-- Licznik znaków w prawym dolnym rogu -->
+                                            </div>
+
+
+
+                                            <!-- <div 
+                                                id="fbgroups_requirementsDescription_{{post_id}}" 
                                                 contenteditable="true" 
                                                 class="form-control bg-dark formatuj-maly-font" 
                                                 style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
                                                 {{post_data['brand']}} poszukuje {{post_data['title']}}. Kontakt: {{post_data['contact_email']}}
-                                            </div>
+                                            </div> -->
                                             <div class="no-border formatuj-maly-font fadeIn mb-3">
                                                 <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', `Szukamy {{post_data['title']}}! Dołącz do naszego zespołu DMD. Więcej info na DM`);">
                                                     Dołącz do naszego zespołu
@@ -773,6 +783,23 @@
                                                     Zatrudnimy na stanowisko
                                                 </a>                                        
                                             </div>
+
+
+
+                                            <!-- Div dla opcji wyświetlanych w zależności od liczby znaków -->
+                                            <div class="minus130" id="fbgroup_minus130_{{post_id}}" style="display: none;">
+                                            Tekst ma mniej niż 130 znaków.
+                                            </div>
+
+                                            <div class="more130" id="fbgroup_more130_{{post_id}}" style="display: none;">
+                                            Tekst ma więcej niż 130 znaków.
+                                            </div>
+
+                                            <!-- Skrypt do uruchomienia dla każdego postu -->
+                                            <script>
+                                                new CharCounter('{{post_id}}');
+                                            </script>
+
                                         </div>
                                         <div class="col-lg-3 col-sm-12">
                                             <div> 
@@ -1080,6 +1107,42 @@
             element.value += value + '\n'; // Dodaj wartość i nową linię na końcu
         } else {
             console.error('Element o ID ' + elementId + ' nie istnieje.');
+        }
+    }
+
+    class CharCounter {
+        constructor(postId) {
+            this.postId = postId;
+            
+            // Pobranie elementów dynamicznie na podstawie postId
+            this.contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
+            this.charCountDiv = document.getElementById(`char_count_${postId}`);
+            this.divMinus130 = document.getElementById(`fbgroup_minus130_${postId}`);
+            this.divMore130 = document.getElementById(`fbgroup_more130_${postId}`);
+
+            // Inicjalna aktualizacja licznika znaków
+            this.updateCharCount();
+
+            // Nasłuchiwanie zmian w treści contentEditable
+            this.contentDiv.addEventListener('keyup', () => this.updateCharCount());
+        }
+
+        // Metoda do liczenia znaków i aktualizowania stanu
+        updateCharCount() {
+            const text = this.contentDiv.innerText || this.contentDiv.textContent;
+            const charCount = text.length;
+
+            // Aktualizacja licznika znaków
+            this.charCountDiv.textContent = `${charCount} znaków`;
+
+            // Warunkowa zmiana klas i wyświetlanie odpowiednich divów
+            if (charCount > 130) {
+            this.divMore130.style.display = 'block';
+            this.divMinus130.style.display = 'none';
+            } else {
+            this.divMore130.style.display = 'none';
+            this.divMinus130.style.display = 'block';
+            }
         }
     }
 </script>
