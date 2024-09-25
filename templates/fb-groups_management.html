@@ -48,7 +48,7 @@
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_post') }}" enctype="multipart/form-data" >
+                                <form method="POST" id="add_fb_group_9999999" action="{{ url_for('add_fb_group') }}" enctype="multipart/form-data" >
                                     <!-- Nazwa grupy -->
                                     
                                     <div class="form-floating mb-3">
@@ -97,10 +97,10 @@
                                     <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}"/>
                                     <!-- Przycisk Zapisz artykuł -->
                                     <button 
-                                        type="button" 
+                                        type="submit" 
                                         class="btn btn-success btn-sm" 
                                         style="max-height: 30px; font-size: 12px;" 
-                                        onclick="prepareAndSubmitForm('9999999', false)">
+                                        >
                                         Dodaj grupę
                                     </button>
                                 </form>
@@ -154,7 +154,7 @@
                             <div class="offcanvas-body formatuj-maly-font">
                                 <div class="tylko-klej">
                                     <div style="color:#6a6a6a;">
-                                        <form method="POST" id="editPost_{{post_id}}" action="{{ url_for('save_post') }}" enctype="multipart/form-data">
+                                        <form method="POST" id="edit_fb_group_{{post_id}}" action="{{ url_for('add_fb_group') }}" enctype="multipart/form-data" >
                                             <!-- Nazwa grupy -->                                    
                                             <div class="form-floating mb-3">
                                                 <input 
@@ -204,10 +204,10 @@
                                             
                                             <!-- Przycisk Zapisz artykuł -->
                                             <button 
-                                                type="button" 
+                                                type="submit" 
                                                 class="btn btn-success btn-sm" 
                                                 style="max-height: 30px; font-size: 12px;" 
-                                                onclick="prepareAndSubmitForm('{{post_id}}', true)">
+                                                >
                                                 Zapisz zmiany
                                             </button>
                                         </form>

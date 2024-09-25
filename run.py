@@ -10947,6 +10947,41 @@ def fbGroups():
                             pagination=pagination
                             )
 
+
+
+@app.route('/add-fb-group', methods=["POST"])
+def add_fb_group():
+    """Usuwanie ofertę najmu"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+    
+    if session['userperm']['settings'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        print(form_data)
+        try: form_data['PostID']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        
+        # msq.delete_row_from_database(
+        #         """
+        #             DELETE FROM fb_groups WHERE ID = %s;
+        #         """,
+        #         (set_post_id,)
+        #     )
+
+        flash("Grupa została dodana!", "success")
+        return redirect(url_for('fbGroups'))
+    
+    return redirect(url_for('index'))
+
+
+
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
     app.run(debug=False, host='0.0.0.0', port=8000)
