@@ -10919,7 +10919,7 @@ def fbGroups():
     
     all_groups = generator_facebookGroups()
 
-    sort_by = request.args.get('sort', 'name')  # Domyślnie sortowanie po nazwie
+    sort_by = request.args.get('sort', 'id')  # Domyślnie sortowanie po nazwie
     sort_type = request.args.get('type', 'up')  # Domyślnie sortowanie rosnące
     
     if sort_by == 'name':
