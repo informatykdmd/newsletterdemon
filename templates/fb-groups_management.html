@@ -50,16 +50,17 @@
                             <div class="offcanvas-body">
                                 <form method="POST" id="editPost_9999999" action="{{ url_for('save_post') }}" enctype="multipart/form-data" >
                                     <!-- Nazwa grupy -->
-                                    <div class="mb-3">
-                                        <label for="name_9999999" class="form-label">Nazwa Grupy</label>
+                                    
+                                    <div class="form-floating mb-3">
                                         <input 
-                                                type="text" 
-                                                value=""
-                                                class="form-control bg-dark formatuj-maly-font" 
-                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                id="name_9999999" 
-                                                name="name_9999999" 
-                                                required>
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="name_9999999" 
+                                            name="name_9999999" 
+                                            required />
+                                        <label for="name_9999999">Nazwa Grupy</label>
                                     </div>
                                     <!-- Kategoria -->
                                     <div class="mb-3">
@@ -71,16 +72,16 @@
                                         </select>
                                     </div>
                                     <!-- Link -->
-                                    <div class="mb-3">
-                                        <label for="name_9999999" class="form-label">Link do grupy</label>
+                                    <div class="form-floating mb-3">
                                         <input 
-                                                type="text" 
-                                                value=""
-                                                class="form-control bg-dark formatuj-maly-font" 
-                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                id="link_9999999" 
-                                                name="link_9999999" 
-                                                required>
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="link_9999999" 
+                                            name="link_9999999" 
+                                            required />
+                                        <label for="link_9999999">Link do grupy</label>
                                     </div>
                                     
                                     <!-- Ukryte pola formularza -->
