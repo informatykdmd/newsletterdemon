@@ -49,19 +49,39 @@
                             </div>
                             <div class="offcanvas-body">
                                 <form method="POST" id="editPost_9999999" action="{{ url_for('save_post') }}" enctype="multipart/form-data" >
-                                    <!-- Tytuł artykułu -->
+                                    <!-- Nazwa grupy -->
                                     <div class="mb-3">
-                                    <label for="title_9999999" class="form-label">Tytuł artykułu</label>
-                                    <input 
-                                            type="text" 
-                                            value=""
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                            id="title_9999999" 
-                                            name="title_9999999" 
-                                            required>
+                                        <label for="name_9999999" class="form-label">Nazwa Grupy</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="name_9999999" 
+                                                name="name_9999999" 
+                                                required>
                                     </div>
-
+                                    <!-- Kategoria -->
+                                    <div class="mb-3">
+                                        <select class="form-select dark-mode mb-2 mt-2" style="max-height: 30px; font-size: 12px;" id="kategoria_9999999" name="kategoria">
+                                            <option value="">Kategoria grupy</option>
+                                            <option value="praca">Paraca</option>
+                                            <option value="nieruchomości">Nieruchomości</option>
+                                            <option value="inne">Inne</option>
+                                        </select>
+                                    </div>
+                                    <!-- Link -->
+                                    <div class="mb-3">
+                                        <label for="name_9999999" class="form-label">Link do grupy</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="link_9999999" 
+                                                name="link_9999999" 
+                                                required>
+                                    </div>
                                     
                                     <!-- Ukryte pola formularza -->
                                     <input type="hidden" name="tagsFieldData_9999999" id="tagsFieldData_9999999" />
