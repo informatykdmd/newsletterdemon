@@ -255,3 +255,12 @@ CREATE TABLE ogloszenia_otodom (
     data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     action_before_errors INT
 );
+
+-- tabela grupy na facebooku
+CREATE TABLE facebook_gropus (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name TEXT,
+    category VARCHAR(255),
+    link TEXT,
+    data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

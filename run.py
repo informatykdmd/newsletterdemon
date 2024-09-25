@@ -224,6 +224,23 @@ def generator_subsDataDB():
         subsData.append(theme)
     return subsData
 
+def generator_facebookGroups(cat='all'):
+    groupsData = []
+    if cat == 'all':
+        took_groups = take_data_table('*', 'facebook_gropus')
+    else:
+        took_groups = take_data_where_ID('*', 'facebook_gropus', 'category', cat)
+    for data in took_groups:
+
+        theme = {
+            'id': data[0], 
+            'name': data[1],
+            'category': data[2], 
+            'link': data[3]
+            }
+        groupsData.append(theme)
+    return groupsData
+
 def generator_daneDBList():
     daneList = []
     took_allPost = msq.connect_to_database(f'SELECT * FROM blog_posts ORDER BY ID DESC;') # take_data_table('*', 'blog_posts')
@@ -10900,7 +10917,8 @@ def fbGroups():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    all_groups = [
+    all_groups = generator_facebookGroups()
+    [
         {
             "id": 1,
             "name": "INTERIOR DESIGNERS",
@@ -10971,25 +10989,56 @@ def add_fb_group():
         if not form_data['name'] or form_data['name'] == '':
             flash("Musisz podać nazwę grupy!", "danger")
             return redirect(url_for('fbGroups'))
+        else:
+            name = form_data['name']
+
         if not form_data['kategoria'] or form_data['kategoria'] == '':
             flash("Musisz wybrać kategorię grupy!", "danger")
             return redirect(url_for('fbGroups'))
+        else:
+            category = form_data['kategoria']
+
         if not form_data['link'] or form_data['link'] == '':
             flash("Podaj LINK! Link jest niezbedny do prawidłowego wykorzystywania grup w modułach!", "danger")
             return redirect(url_for('fbGroups'))
+        
         if not form_data['link'].startswith('https://www.facebook.com/groups/'):
             flash("Możliwy jest tylko link do grup Facebooka", "danger")
             return redirect(url_for('fbGroups'))
+        else:
+            link = form_data['link']
 
         if set_post_id == 9999999:
-            
-            flash("Grupa została dodana!", "success")
-            return redirect(url_for('fbGroups'))
-        else:
-            
+            zapytanie_sql = '''
+                        INSERT INTO facebook_gropus
+                            (name, category, link)
+                        VALUES 
+                            (%s, %s, %s);
+                    '''
+            dane = (name, category, link)
 
-            flash("Zmiany zostały zapisane!", "success")
-            return redirect(url_for('fbGroups'))
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Grupa została dodana!', 'success')
+            else:
+                flash(f'Bład zapisu! Grupa nie została dodana!', 'danger')
+
+        else:
+            zapytanie_sql = '''
+                    UPDATE facebook_gropus
+                    SET 
+                        name = %s,
+                        category = %s,
+                        link = %s
+                    WHERE id = %s;
+                '''
+            dane = (name, category, link, set_post_id)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                flash(f'Zmiany zostały zapisane!', 'success')
+            else:
+                flash(f'Bład zapisu! Grupa nie została zmodyfikowana!', 'danger')
+
+        return redirect(url_for('fbGroups'))
     
     return redirect(url_for('index'))
 
