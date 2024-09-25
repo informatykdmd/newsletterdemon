@@ -806,20 +806,22 @@ color:#969696;
 
 /* Stylowanie edytowalnego div-a */
 .fbgroups-requirements-description {
-  color: #c2c2c2;
-  border: #6a6a6a solid 1px;
-  padding: 10px;
-  min-height: 100px;
-  width: 100%;
-  box-sizing: border-box;
-  position: relative; /* Umożliwia pozycjonowanie licznika znaków */
+    color: #c2c2c2;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 100px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative; /* Umożliwia pozycjonowanie licznika znaków */
+    border-radius: 5px; /* Zakrąglone rogi */
+    background-color: #0e1d13; /* Kolor tła */
 }
 
 
   
   /* Stan podczas edycji (edycja aktywna) */
 .fbgroups-requirements-description.editing {
-    background-color: #444; /* Inne tło podczas edycji */
+    background-color: #0e1d13; /* Inne tło podczas edycji */
     color: #fff; /* Zmieniony kolor czcionki podczas edycji */
   }
 
