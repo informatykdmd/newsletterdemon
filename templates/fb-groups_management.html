@@ -24,9 +24,8 @@
                             <div class="row klej formatuj-header">
                                 <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;">
                                     <a href="/fb-groups?sort=id&type={{ 'down' if sort_by == 'id' and sort_type == 'up' else 'up' }}">
-                                        #
                                         {% if sort_by == 'id' %}
-                                            <i class="bi bi-arrow-{{ 'up' if sort_type == 'up' else 'down' }}"></i>
+                                            <i class="bi bi-arrow-{{ 'up' if sort_type == 'up' else 'down' }}-square-fill"></i>
                                         {% endif %}
                                     </a>
                                 </div>
