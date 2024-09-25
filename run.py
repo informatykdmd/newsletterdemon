@@ -10919,13 +10919,23 @@ def fbGroups():
     
     all_groups = generator_facebookGroups()
 
+    sort_by = request.args.get('sort', 'name')  # Domyślnie sortowanie po nazwie
+    sort_type = request.args.get('type', 'up')  # Domyślnie sortowanie rosnące
+    
+    if sort_by == 'name':
+        items_sorted = sorted(all_groups, key=lambda x: x['name'], reverse=(sort_type == 'down'))
+    elif sort_by == 'category':
+        items_sorted = sorted(all_groups, key=lambda x: x['category'], reverse=(sort_type == 'down'))
+    elif sort_by == 'id':
+        items_sorted = sorted(all_groups, key=lambda x: x['id'], reverse=(sort_type == 'down'))
+
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-    total = len(all_groups)
+    total = len(items_sorted)
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
-    groups = all_groups[offset: offset + per_page]
+    groups = items_sorted[offset: offset + per_page]
 
     domy = settingsDB['domy']
     budownictwo = settingsDB['budownictwo']
@@ -10946,7 +10956,9 @@ def fbGroups():
                             elitehome=elitehome,
                             inwestycje=inwestycje,
                             instalacje=instalacje,
-                            pagination=pagination
+                            pagination=pagination,
+                            sort_by=sort_by, 
+                            sort_type=sort_type
                             )
 
 

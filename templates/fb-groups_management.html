@@ -23,19 +23,34 @@
                         <div>
                             <div class="row klej formatuj-header">
                                 <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;">
-                                    #
+                                    <a href="/fb-groups?sort=id&type={{ 'down' if sort_by == 'id' and sort_type == 'up' else 'up' }}">
+                                        #
+                                        {% if sort_by == 'id' %}
+                                            <i class="bi bi-arrow-{{ 'up' if sort_type == 'up' else 'down' }}"></i>
+                                        {% endif %}
+                                    </a>
                                 </div>
-                                <div  class="col-xl-8 col-lg-6 col-sm-8 formatuj-maly-font">
-                                    Nazwa grupy
+                                <div class="col-xl-8 col-lg-6 col-sm-8 formatuj-maly-font">
+                                    <a href="/fb-groups?sort=name&type={{ 'down' if sort_by == 'name' and sort_type == 'up' else 'up' }}">
+                                        Nazwa grupy
+                                        {% if sort_by == 'name' %}
+                                            <i class="bi bi-arrow-{{ 'up' if sort_type == 'up' else 'down' }}"></i>
+                                        {% endif %}
+                                    </a>
                                 </div>
-                                <div  class="d-none d-lg-block formatuj-maly-font" style="max-width: 200px;">
-                                    Kategoria
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 200px;">
+                                    <a href="/fb-groups?sort=category&type={{ 'down' if sort_by == 'category' and sort_type == 'up' else 'up' }}">
+                                        Kategoria
+                                        {% if sort_by == 'category' %}
+                                            <i class="bi bi-arrow-{{ 'up' if sort_type == 'up' else 'down' }}"></i>
+                                        {% endif %}
+                                    </a>
                                 </div>
-                                <div  class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
                                     Link
                                 </div>
-                                <div  class="text-end formatuj-maly-font" style="max-width: 80px;">
-                                    <i class="bi bi-person-gear"></i> Akcja 
+                                <div class="text-end formatuj-maly-font" style="max-width: 80px;">
+                                    <i class="bi bi-person-gear"></i> Akcja
                                 </div>
                             </div>
                         </div>
