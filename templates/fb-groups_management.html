@@ -26,6 +26,8 @@
                                     <a href="/fb-groups?sort=id&type={{ 'down' if sort_by == 'id' and sort_type == 'up' else 'up' }}">
                                         {% if sort_by == 'id' %}
                                             <i class="bi bi-arrow-{{ 'up' if sort_type == 'up' else 'down' }}-square-fill"></i>
+                                        {% else %}
+                                            <i class="bi bi-app"></i>
                                         {% endif %}
                                     </a>
                                 </div>
