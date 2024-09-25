@@ -85,6 +85,7 @@
                                             class="form-control bg-dark formatuj-maly-font" 
                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                             id="link_9999999" 
+                                            placeholder="Link do grupy"
                                             name="link" 
                                             required />
                                         <label for="link_9999999">Link do grupy</label>
@@ -148,17 +149,45 @@
                                 <div class="tylko-klej">
                                     <div style="color:#6a6a6a;">
                                         <form method="POST" id="editPost_{{post_id}}" action="{{ url_for('save_post') }}" enctype="multipart/form-data">
-                                            <!-- Tytuł artykułu -->
-                                            <div class="mb-3">
-                                            <label for="title_{{post_id}}" class="form-label">Tytuł artykułu</label>
-                                            <input 
+                                            <!-- Nazwa grupy -->                                    
+                                            <div class="form-floating mb-3">
+                                                <input 
                                                     type="text" 
-                                                    value="{{post_data['name']}}"
+                                                    value=""
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                    id="title_{{post_id}}" 
-                                                    name="title_{{post_id}}" 
-                                                    required>
+                                                    id="name_{{post_id}}" 
+                                                    name="name" 
+                                                    placeholder="Nazwa Grupy"
+                                                    required />
+                                                <label for="name_{{post_id}}">Nazwa Grupy</label>
+                                            </div>
+                                            <!-- Kategoria -->
+                                            <div class="mb-3">
+                                                <select 
+                                                    class="form-select dark-mode mb-2 mt-2" 
+                                                    style="max-height: 30px; font-size: 12px;" 
+                                                    id="kategoria_{{post_id}}" 
+                                                    name="kategoria">
+
+                                                    <option value="">Kategoria grupy</option>
+                                                    <option value="praca" selected>Paraca</option>
+                                                    <option value="nieruchomości">Nieruchomości</option>
+                                                    <option value="inne">Inne</option>
+                                                </select>
+                                            </div>
+                                            <!-- Link -->
+                                            <div class="form-floating mb-3">
+                                                <input 
+                                                    type="text" 
+                                                    value=""
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="link_{{post_id}}" 
+                                                    placeholder="Link do grupy"
+                                                    name="link" 
+                                                    required />
+                                                <label for="link_{{post_id}}">Link do grupy</label>
                                             </div>
     
                                             
