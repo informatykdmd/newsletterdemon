@@ -752,243 +752,263 @@
                                     
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-5 col-sm-12">
-                                        <!-- pusta  -->
-                                    </div>
-                                    <div class="col-lg-3 col-sm-12">
-                                        <div> 
-                                            
-                                            <div class="mb-2 mt-2">
-                                                <h5>FACEBOOK GRUPY</h5>
-                                                
-                                                <p>Status: Pierwsza publikacja na grupach facebook</p>
+                                    <form action="" id="form_karieraFB_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                        <div class="col-lg-5 col-sm-12">
+                                            <label class="form-label mt-2">Treść Ogłoszenia na Grupach FB</label>
+                                            <div 
+                                                id="fbgroups_requirementsDescription_{{post_id}}" 
+                                                contenteditable="true" 
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
+                                                {{post_data['requirements_description']}}
                                             </div>
-
-                                            <div class="row row-cols-auto mb-3">
-                                                <div class="col">
-                                                    <form action="" id="form_karieraFB_{{post_id}}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="" value="" />
-                                                        <input type="hidden" name="" value="" />
-                                                        <input type="hidden" name="" value="" />
-                                                        <input type="hidden" id="" name="region" value="" />
-
-                                                        <div class="col me-1 mb-1">
-                                                            
-                                                            <input type="hidden" name="Status" value="0" />
-                                                            <input type="hidden" name="task_kind" value="Publikuj" />
-                                                            
-
-                                                            <!-- block -->
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <div class="form-check form-switch">
-                                                                        <input class="form-check-input" type="checkbox" role="switch" id="wznawiaj_{{post_id}}" name="wznawiaj">
-                                                                        <label class="form-check-label" for="wznawiaj_{{post_id}}">Wznawiaj ogłoszenie automatycznie</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <!-- block -->
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            Częstotliwość co:
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="codwatygodnie_{{post_id}}" name="codwatygodnie" value="1" checked>
-                                                                                <label class="form-check-label" for="codwatygodnie_{{post_id}}">14 dni</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="cotydzien_{{post_id}}" name="cotydzien" value="1" >
-                                                                                <label class="form-check-label" for="cotydzien_{{post_id}}">7 dni</label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="coczterydni_{{post_id}}" name="coczterydni" value="1">
-                                                                                <label class="form-check-label" for="coczterydni_{{post_id}}">4 dni</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="codwadni_{{post_id}}" name="codwadni" value="1">
-                                                                                <label class="form-check-label" for="codwadni_{{post_id}}">2 dni</label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <!-- block -->
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            Iloś ponowień:
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="ponow2razy_{{post_id}}" name="ponow2razy" value="1" checked>
-                                                                                <label class="form-check-label" for="ponow2razy_{{post_id}}">x 2</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="ponow5razy_{{post_id}}" name="ponow5razy" value="1" >
-                                                                                <label class="form-check-label" for="ponow5razy_{{post_id}}">x 5</label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="ponow8razy_{{post_id}}" name="ponow8razy" value="1">
-                                                                                <label class="form-check-label" for="ponow8razy_{{post_id}}">x 8</label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="ponow10razy_{{post_id}}" name="ponow10razy" value="1">
-                                                                                <label class="form-check-label" for="ponow10razy_{{post_id}}">x 10</label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                Publikuj grupach
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                            <div class="no-border formatuj-maly-font fadeIn mb-3">
+                                                <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', 'Wymagane wykształcenie [szkoła] oraz [ilość lat doświadczenia] doświadczenie na stanowisku [stanowisko] w [branża].');">
+                                                    Szablon Ogólny
+                                                </a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', 'Poszukujemy kandydatów z wykształceniem [szkoła] oraz minimum [ilość lat doświadczenia] doświadczeniem w pracy na stanowisku [stanowisko]. Doświadczenie w [branża] będzie dodatkowym atutem.');">
+                                                    Szablon Specjalistyczny
+                                                </a>
+                                                <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', 'Wymagamy wykształcenia wyższego w dziedzinie [dziedzina] oraz [ilość lat doświadczenia] doświadczenia w zarządzaniu zespołem na stanowisku [stanowisko]. Doświadczenie w sektorze [branża] jest niezbędne.');">
+                                                    Szablon Menedżerski
+                                                </a>                                        
                                             </div>
-                                            <script>
-                                                document.addEventListener('DOMContentLoaded', function(){
-                                                    checkboxControlDisable(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'wznawiaj_{{post_id}}', 
-                                                        [
-                                                            'codwatygodnie_{{post_id}}', 
-                                                            'cotydzien_{{post_id}}', 
-                                                            'coczterydni_{{post_id}}', 
-                                                            'codwadni_{{post_id}}',
-                                                            'ponow2razy_{{post_id}}',
-                                                            'ponow5razy_{{post_id}}',
-                                                            'ponow8razy_{{post_id}}',
-                                                            'ponow10razy_{{post_id}}'
-                                                        ]
-                                                    );
-
-                                                    checkboxControlEnabled(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'wznawiaj_{{post_id}}', 
-                                                        [
-                                                            'codwatygodnie_{{post_id}}', 
-                                                            'cotydzien_{{post_id}}', 
-                                                            'coczterydni_{{post_id}}',
-                                                            'codwadni_{{post_id}}',
-                                                            'ponow2razy_{{post_id}}',
-                                                            'ponow5razy_{{post_id}}',
-                                                            'ponow8razy_{{post_id}}',
-                                                            'ponow10razy_{{post_id}}'
-                                                        ]
-                                                    );
-
-                                                    checkboxControlOffOther(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'codwatygodnie_{{post_id}}', 
-                                                        [
-                                                            'cotydzien_{{post_id}}',
-                                                            'coczterydni_{{post_id}}',
-                                                            'codwadni_{{post_id}}'
-                                                        ]
-                                                    );
-                                                    checkboxControlOffOther(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'cotydzien_{{post_id}}', 
-                                                        [
-                                                            'codwatygodnie_{{post_id}}',
-                                                            'coczterydni_{{post_id}}',
-                                                            'codwadni_{{post_id}}'
-                                                        ]
-                                                    );
-                                                    checkboxControlOffOther(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'coczterydni_{{post_id}}', 
-                                                        [
-                                                            'codwatygodnie_{{post_id}}',
-                                                            'cotydzien_{{post_id}}',
-                                                            'codwadni_{{post_id}}'
-                                                        ]
-                                                    );
-                                                    checkboxControlOffOther(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'codwadni_{{post_id}}', 
-                                                        [
-                                                            'codwatygodnie_{{post_id}}',
-                                                            'cotydzien_{{post_id}}',
-                                                            'coczterydni_{{post_id}}'
-                                                        ]
-                                                    );
-                                                    checkboxControlOffOther(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'ponow2razy_{{post_id}}', 
-                                                        [
-                                                            'ponow5razy_{{post_id}}',
-                                                            'ponow8razy_{{post_id}}',
-                                                            'ponow10razy_{{post_id}}'
-                                                        ]
-                                                    );
-                                                    checkboxControlOffOther(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'ponow5razy_{{post_id}}', 
-                                                        [
-                                                            'ponow2razy_{{post_id}}',
-                                                            'ponow8razy_{{post_id}}',
-                                                            'ponow10razy_{{post_id}}'
-                                                        ]
-                                                    );
-                                                    checkboxControlOffOther(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'ponow8razy_{{post_id}}', 
-                                                        [
-                                                            'ponow2razy_{{post_id}}',
-                                                            'ponow5razy_{{post_id}}',
-                                                            'ponow10razy_{{post_id}}'
-                                                        ]
-                                                    );
-                                                    checkboxControlOffOther(
-                                                        'karieraFB_{{post_id}}', 
-                                                        'ponow10razy_{{post_id}}', 
-                                                        [
-                                                            'ponow2razy_{{post_id}}',
-                                                            'ponow5razy_{{post_id}}',
-                                                            'ponow8razy_{{post_id}}'
-                                                        ]
-                                                    );
-                                                    
-                                                });
-                                                
-                                            </script>
-                                                
-
-                                            
                                         </div>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-12">
-                                        <!-- pusta  -->
-                                    </div>
+                                        <div class="col-lg-3 col-sm-12">
+                                            <div> 
+                                                
+                                                <div class="mb-2 mt-2">
+                                                    <h5>FACEBOOK GRUPY</h5>
+                                                    
+                                                    <p>Status: Pierwsza publikacja na grupach facebook</p>
+                                                </div>
+
+                                                <div class="row row-cols-auto mb-3">
+                                                    <div class="col">
+                                                        
+                                                            <input type="hidden" name="" value="" />
+                                                            <input type="hidden" name="" value="" />
+                                                            <input type="hidden" name="" value="" />
+                                                            <input type="hidden" id="" name="region" value="" />
+
+                                                            <div class="col me-1 mb-1">
+                                                                
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Publikuj" />
+                                                                
+
+                                                                <!-- block -->
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-check form-switch">
+                                                                            <input class="form-check-input" type="checkbox" role="switch" id="wznawiaj_{{post_id}}" name="wznawiaj">
+                                                                            <label class="form-check-label" for="wznawiaj_{{post_id}}">Wznawiaj ogłoszenie automatycznie</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Częstotliwość co:
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="codwatygodnie_{{post_id}}" name="codwatygodnie" value="1" checked>
+                                                                                    <label class="form-check-label" for="codwatygodnie_{{post_id}}">14 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="cotydzien_{{post_id}}" name="cotydzien" value="1" >
+                                                                                    <label class="form-check-label" for="cotydzien_{{post_id}}">7 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="coczterydni_{{post_id}}" name="coczterydni" value="1">
+                                                                                    <label class="form-check-label" for="coczterydni_{{post_id}}">4 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="codwadni_{{post_id}}" name="codwadni" value="1">
+                                                                                    <label class="form-check-label" for="codwadni_{{post_id}}">2 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Iloś ponowień:
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="ponow2razy_{{post_id}}" name="ponow2razy" value="1" checked>
+                                                                                    <label class="form-check-label" for="ponow2razy_{{post_id}}">x 2</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="ponow5razy_{{post_id}}" name="ponow5razy" value="1" >
+                                                                                    <label class="form-check-label" for="ponow5razy_{{post_id}}">x 5</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="ponow8razy_{{post_id}}" name="ponow8razy" value="1">
+                                                                                    <label class="form-check-label" for="ponow8razy_{{post_id}}">x 8</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="ponow10razy_{{post_id}}" name="ponow10razy" value="1">
+                                                                                    <label class="form-check-label" for="ponow10razy_{{post_id}}">x 10</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                    Publikuj grupach
+                                                                </button>
+                                                            </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <script>
+                                                    document.addEventListener('DOMContentLoaded', function(){
+                                                        checkboxControlDisable(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'wznawiaj_{{post_id}}', 
+                                                            [
+                                                                'codwatygodnie_{{post_id}}', 
+                                                                'cotydzien_{{post_id}}', 
+                                                                'coczterydni_{{post_id}}', 
+                                                                'codwadni_{{post_id}}',
+                                                                'ponow2razy_{{post_id}}',
+                                                                'ponow5razy_{{post_id}}',
+                                                                'ponow8razy_{{post_id}}',
+                                                                'ponow10razy_{{post_id}}'
+                                                            ]
+                                                        );
+
+                                                        checkboxControlEnabled(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'wznawiaj_{{post_id}}', 
+                                                            [
+                                                                'codwatygodnie_{{post_id}}', 
+                                                                'cotydzien_{{post_id}}', 
+                                                                'coczterydni_{{post_id}}',
+                                                                'codwadni_{{post_id}}',
+                                                                'ponow2razy_{{post_id}}',
+                                                                'ponow5razy_{{post_id}}',
+                                                                'ponow8razy_{{post_id}}',
+                                                                'ponow10razy_{{post_id}}'
+                                                            ]
+                                                        );
+
+                                                        checkboxControlOffOther(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'codwatygodnie_{{post_id}}', 
+                                                            [
+                                                                'cotydzien_{{post_id}}',
+                                                                'coczterydni_{{post_id}}',
+                                                                'codwadni_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'cotydzien_{{post_id}}', 
+                                                            [
+                                                                'codwatygodnie_{{post_id}}',
+                                                                'coczterydni_{{post_id}}',
+                                                                'codwadni_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'coczterydni_{{post_id}}', 
+                                                            [
+                                                                'codwatygodnie_{{post_id}}',
+                                                                'cotydzien_{{post_id}}',
+                                                                'codwadni_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'codwadni_{{post_id}}', 
+                                                            [
+                                                                'codwatygodnie_{{post_id}}',
+                                                                'cotydzien_{{post_id}}',
+                                                                'coczterydni_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'ponow2razy_{{post_id}}', 
+                                                            [
+                                                                'ponow5razy_{{post_id}}',
+                                                                'ponow8razy_{{post_id}}',
+                                                                'ponow10razy_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'ponow5razy_{{post_id}}', 
+                                                            [
+                                                                'ponow2razy_{{post_id}}',
+                                                                'ponow8razy_{{post_id}}',
+                                                                'ponow10razy_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'ponow8razy_{{post_id}}', 
+                                                            [
+                                                                'ponow2razy_{{post_id}}',
+                                                                'ponow5razy_{{post_id}}',
+                                                                'ponow10razy_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        checkboxControlOffOther(
+                                                            'karieraFB_{{post_id}}', 
+                                                            'ponow10razy_{{post_id}}', 
+                                                            [
+                                                                'ponow2razy_{{post_id}}',
+                                                                'ponow5razy_{{post_id}}',
+                                                                'ponow8razy_{{post_id}}'
+                                                            ]
+                                                        );
+                                                        
+                                                    });
+                                                    
+                                                </script>
+                                                    
+
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-12">
+                                            <!-- pusta  -->
+                                        </div>
+                                    </form>
                                 </div>
                                 
 
