@@ -853,7 +853,7 @@ color:#969696;
     font-size: 24px; /* Czcionka 24px, gdy liczba znaków jest <= 130 */
     text-align: center;
     font-weight: 700;
-    background-color: #0e1d13; /* Kolor tła */
+    background-color: #5c0101; /* Kolor tła */
 }
   
   /* Klasa dla więcej niż 130 znaków */
