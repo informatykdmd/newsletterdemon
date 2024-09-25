@@ -69,9 +69,10 @@
                                             class="form-select dark-mode mb-2 mt-2" 
                                             style="max-height: 30px; font-size: 12px;" 
                                             id="kategoria_9999999" 
-                                            name="kategoria">
+                                            name="kategoria"
+                                            required>
 
-                                            <option value="">Kategoria grupy</option>
+                                            <option>Kategoria grupy</option>
                                             <option value="praca">Paraca</option>
                                             <option value="nieruchomości">Nieruchomości</option>
                                             <option value="inne">Inne</option>
@@ -92,9 +93,7 @@
                                     </div>
                                     
                                     <!-- Ukryte pola formularza -->
-                                    <input type="hidden" name="tagsFieldData_9999999" id="tagsFieldData_9999999" />
-                                    <input type="hidden" name="dynamicFieldData_9999999" id="dynamicFieldData_9999999" />
-                                    <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}"/>
+                                    <input type="hidden" name="PostID" id="PostID_9999999" value="9999999"/>
                                     <!-- Przycisk Zapisz artykuł -->
                                     <button 
                                         type="submit" 
@@ -174,7 +173,8 @@
                                                     class="form-select dark-mode mb-2 mt-2" 
                                                     style="max-height: 30px; font-size: 12px;" 
                                                     id="kategoria_{{post_id}}" 
-                                                    name="kategoria">
+                                                    name="kategoria"
+                                                    required>
                                                     
                                                     <option value="">Kategoria grupy</option>
                                                     <option value="praca" {{ 'selected' if post_data['category'] == 'praca' else '' }}>Praca</option>
