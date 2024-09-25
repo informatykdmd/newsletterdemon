@@ -60,6 +60,8 @@ def delete_row_from_database(queryA, queryB, userA=DB['user'], passwordA=DB['pas
         
         polaczenie_DB.commit()
         polaczenie_DB.close()
+        return True
     except Exception as e:
         handle_error(e, log_path='./logs/errors.log')
+        return False
 

@@ -11043,14 +11043,15 @@ def remove_fbgroup():
         try: form_data['PostID']
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
-        msq.delete_row_from_database(
+        if msq.delete_row_from_database(
                 """
                     DELETE FROM facebook_gropus WHERE ID = %s;
                 """,
                 (set_post_id,)
-            )
-        
-        flash("Grupa została usunięta.", "success")
+            ):
+            flash("Grupa została usunięta.", "success")
+        else:
+            flash("Błąd usunięcia grupy.", "danger")
         return redirect(url_for('fbGroups'))
     
     return redirect(url_for('index'))
