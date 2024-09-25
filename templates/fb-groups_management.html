@@ -96,7 +96,13 @@
                                     <input type="hidden" name="dynamicFieldData_9999999" id="dynamicFieldData_9999999" />
                                     <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}"/>
                                     <!-- Przycisk Zapisz artykuł -->
-                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitForm('9999999', false)">Dodaj artykuł</button>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-sm" 
+                                        style="max-height: 30px; font-size: 12px;" 
+                                        onclick="prepareAndSubmitForm('9999999', false)">
+                                        Dodaj grupę
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -197,8 +203,13 @@
                                             <input type="hidden" name="UserName_{{post_id}}" id="UserName_{{post_id}}" value="{{username}}"/>
                                             
                                             <!-- Przycisk Zapisz artykuł -->
-                                            <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitForm('{{post_id}}', true)">Zapisz artykuł</button>
-                                            <!-- <button type="submit" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="joinListFields('{{post_id}}', ', ', 'dynamicTagsField'); joinListFields('{{post_id}}', '#splx ', 'dynamicField')">Zapisz artykuł</button> -->
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-success btn-sm" 
+                                                style="max-height: 30px; font-size: 12px;" 
+                                                onclick="prepareAndSubmitForm('{{post_id}}', true)">
+                                                Zapisz zmiany
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
