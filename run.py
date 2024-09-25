@@ -10910,7 +10910,7 @@ def fbGroups():
         {
             "id": 2,
             "name": "INTERIOR DESIGNERS 2",
-            "category": 'praca',
+            "category": 'nieruchomości',
             "link": "https://www.facebook.com/groups/msianinteriordesigners"
         },
     ]
