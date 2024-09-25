@@ -169,11 +169,11 @@
                                                     style="max-height: 30px; font-size: 12px;" 
                                                     id="kategoria_{{post_id}}" 
                                                     name="kategoria">
-
+                                                    
                                                     <option value="">Kategoria grupy</option>
-                                                    <option value="praca" selected>Paraca</option>
-                                                    <option value="nieruchomości">Nieruchomości</option>
-                                                    <option value="inne">Inne</option>
+                                                    <option value="praca" {{ 'selected' if post_data['category'] == 'praca' else '' }}>Praca</option>
+                                                    <option value="nieruchomości" {{ 'selected' if post_data['category'] == 'nieruchomości' else '' }}>Nieruchomości</option>
+                                                    <option value="inne" {{ 'selected' if post_data['category'] == 'inne' else '' }}>Inne</option>
                                                 </select>
                                             </div>
                                             <!-- Link -->
