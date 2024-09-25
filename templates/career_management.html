@@ -795,9 +795,12 @@
                                             Tekst ma więcej niż 130 znaków.
                                             </div>
 
-                                            <!-- Skrypt do uruchomienia dla każdego postu -->
+                                            <!-- Skrypt do uruchomienia dla każdego posta -->
                                             <script>
-                                                new CharCounter('{{post_id}}');
+                                                document.addEventListener('DOMContentLoaded', function () {
+                                                    new CharCounter('{{post_id}}');
+                                                    }
+                                                );
                                             </script>
 
                                         </div>
