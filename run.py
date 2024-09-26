@@ -11093,21 +11093,21 @@ def remove_fbgroup():
 def fb_groups_sender():
     data = request.json  # Odbieramy dane JSON
 
-    print(data)
+    # print(data)
     # Pobieranie harmonogramu
     schedule = data.get('schedule', [])
-
-    {'wznawiaj': True}
     wznawiaj = data.get('wznawiaj', False)
-
-    {'ponow2razy': False, 'ponow5razy': False, 'ponow8razy': False, 'ponow10razy': True}
     repeats = data.get('repeats', {})
+    content = data.get('content')
+    color_choice = data.get('color_choice')
+    post_id = data.get('post_id')
+
+    # Flagi konfigruracyjne deamona
+    category = 'praca'
+    section = 'career'
 
     # Przekształcanie każdej daty w harmonogramie na standardowy format
     formatted_schedule = [format_date_pl(date_str) for date_str in schedule]
-
-    # Debugging: sprawdź sformatowane daty
-    print(f'Sformatowane daty: {formatted_schedule}')
 
     # Sprawdzamy, czy wszystkie daty są poprawnie sformatowane
     if None in formatted_schedule:
@@ -11115,20 +11115,38 @@ def fb_groups_sender():
 
     # Przygotowywanie list jednej długości
     less_index = []
-    [None, None, None, None, None, None, None, None, None, None]
-    if not wznawiaj: less_index  = [None for _ in range(10)]
+    raiser = 0
+    repeater = 0
+    if not wznawiaj: 
+        less_index  = [None for _ in range(10)]
+        raiser = 0
+        repeater = 0
     else:
         if 'ponow2razy' in repeats and 'ponow5razy' in repeats\
             and 'ponow8razy' in repeats and 'ponow10razy' in repeats\
                 and wznawiaj:
-            if repeats['ponow2razy']: less_index = [None for _ in range(8)]
-            elif repeats['ponow5razy']: less_index = [None for _ in range(5)]
-            elif repeats['ponow8razy']: less_index = [None for _ in range(2)]
-            elif repeats['ponow10razy']: less_index = []
+            if repeats['ponow2razy']: 
+                less_index = [None for _ in range(8)]
+                raiser = 1
+                repeater = 2
+            elif repeats['ponow5razy']: 
+                less_index = [None for _ in range(5)]
+                raiser = 1
+                repeater = 5
+            elif repeats['ponow8razy']: 
+                less_index = [None for _ in range(2)]
+                raiser = 1
+                repeater = 8
+            elif repeats['ponow10razy']: 
+                less_index = []
+                raiser = 1
+                repeater = 10
         else:
             return jsonify({'success': False, 'message': 'Błąd w przygotowywaniu list hramonogramów'}), 400
-    
+        
+    # Gotowa lista prepareded_schedule
     prepareded_schedule = formatted_schedule + less_index
+
     print(f'formatted_schedule: {formatted_schedule}')
     print(f'less_index: {less_index}')
     print(f'prepareded_schedule: {prepareded_schedule}', len(prepareded_schedule))
