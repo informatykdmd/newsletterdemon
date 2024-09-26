@@ -1280,7 +1280,9 @@
         // Funkcja do generowania harmonogramu
         function generateSchedule() {
             const today = new Date();
-            let schedule = '<ul>'; // Tworzymy element ul
+            let schedule = '<h5>Harmonogram</h5>'; // Dodaj nagłówek na początku
+
+            schedule += '<ul>'; // Tworzymy element ul
 
             if (!wznawiajSwitch.checked) {
                 // Tylko jedna publikacja dzisiaj
