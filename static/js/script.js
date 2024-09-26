@@ -1101,7 +1101,6 @@ function collectAndSendfbgroupsform_v1(postId) {
     });
 }
 
-
 function collectAndSendfbgroupsform(postId) {
     // Zbieramy treść ogłoszenia
     const contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
@@ -1125,14 +1124,18 @@ function collectAndSendfbgroupsform(postId) {
     // Zbieramy harmonogram jako listę dat
     const scheduleDates = [];
     const scheduleItems = document.querySelectorAll(`#fbgroups_shedule_${postId} .shedule-date-details`);
+    console.log('Zebrane elementy harmonogramu:', scheduleItems); // Debugowanie: logowanie zebranych elementów
+
     scheduleItems.forEach(item => {
-        console.log('item:', item);
-        const dateText = item.textContent.trim();
+        const dateText = item.lastChild.nodeValue.trim();  // Pobranie czystej daty z lastChild
+        console.log('Przetwarzana data:', dateText); // Debugowanie: logowanie daty
         const dateObject = parseDate(dateText);
         if (dateObject) {
             scheduleDates.push(dateObject);
         }
     });
+
+    console.log('Harmonogram po konwersji:', scheduleDates); // Debugowanie: logowanie listy harmonogramu
 
     // Tworzymy obiekt z danymi do wysłania
     const dataToSend = {
