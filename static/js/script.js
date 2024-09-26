@@ -1126,6 +1126,7 @@ function collectAndSendfbgroupsform(postId) {
     const scheduleDates = [];
     const scheduleItems = document.querySelectorAll(`#fbgroups_shedule_${postId} .shedule-date-details`);
     scheduleItems.forEach(item => {
+        console.log('item:', item);
         const dateText = item.textContent.trim();
         const dateObject = parseDate(dateText);
         if (dateObject) {
