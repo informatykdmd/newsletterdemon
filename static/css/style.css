@@ -891,3 +891,19 @@ color:#969696;
     font-size: 14px;
     margin-top: 15px;
 }
+
+
+/* Styl dla listy dni tygodnia */
+.shedule-list-config {
+    font-weight: bold;
+    margin-bottom: 5px;
+    list-style-type: none; /* Usuwa kropki z listy */
+}
+
+/* Styl dla szczegółów daty */
+.shedule-date-details {
+    color: #555; /* Przyciemnienie koloru szczegółów daty */
+    font-size: 0.9em;
+    display: block; /* Ustawienie wiersza dla daty */
+    margin-bottom: 10px;
+}

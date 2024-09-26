@@ -1280,7 +1280,7 @@
         // Funkcja do generowania harmonogramu
         function generateSchedule() {
             const today = new Date();
-            let schedule = '';
+            let schedule = '<ul>'; // Tworzymy element ul
 
             if (!wznawiajSwitch.checked) {
                 // Tylko jedna publikacja dzisiaj
@@ -1301,6 +1301,7 @@
                     schedule += formatSchedule(date);
                 }
             }
+            schedule += '</ul>'; // Zamykamy ul
             console.log('schedule', schedule);
             scheduleOutput.innerHTML = schedule;
         }
@@ -1317,11 +1318,13 @@
             const hours = date.getHours().toString().padStart(2, '0');
             const minutes = date.getMinutes().toString().padStart(2, '0');
 
-            let formattedDate = `${dayOfWeek}`;
+            // Tworzymy element listy z datą i godziną
+            let formattedDate = `<li class="shedule-list-config">${dayOfWeek}`;
+
             if (date.getDate() === (new Date()).getDate()) {
                 formattedDate += ' (dzisiaj)';
             }
-            formattedDate += `<br> - ${dayOfMonth} ${month} ${year} godzina ${hours}:${minutes}<br>`;
+            formattedDate += `</li><span class="shedule-date-details"> - ${dayOfMonth} ${month} ${year} godzina ${hours}:${minutes}</span>`;
 
             return formattedDate;
         }
