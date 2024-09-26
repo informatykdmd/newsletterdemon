@@ -1012,21 +1012,7 @@ function checkboxControlOffOther(formId, main_id, checkboxList) {
         });
     });
 }
-// function setCareerDateStart(dataPoolID) {
 
-//     // Ustaw dzisiejszą datę jako minimalną
-//     const dateInput = document.getElementById(dataPoolID);
-//     const today = new Date();
-    
-//     // Ustaw jutrzejszą datę jako wartość domyślną
-//     const tomorrow = new Date(today);
-//     tomorrow.setDate(today.getDate() + 1);  // Dodaj 1 dzień do dzisiejszej daty
-//     const tomorrowStr = tomorrow.toISOString().split('T')[0];  // Formatowanie na YYYY-MM-DD
-    
-//     dateInput.setAttribute('min', today.toISOString().split('T')[0]);  // Ustaw dzisiejszy dzień jako minimalny
-//     dateInput.setAttribute('value', tomorrowStr);  // Ustaw jutrzejszą datę jako wartość domyślną
-    
-// }
 
 function setCareerDateStart(dataPoolID, isNew=true, setDateString=null) {
     // Pobranie elementu input (pole daty)
@@ -1048,4 +1034,69 @@ function setCareerDateStart(dataPoolID, isNew=true, setDateString=null) {
         const setDateStr = setDateObe.toISOString().split('T')[0];  // Formatowanie na YYYY-MM-DD
         dateInput.setAttribute('value', setDateStr);
     }
+}
+
+
+function collectAndSendfbgroupsform(postId) {
+    // Zbieramy treść ogłoszenia
+    const contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
+    const content = contentDiv.innerText.trim();
+
+    // Sprawdzamy, czy treść ogłoszenia nie jest pusta
+    if (!content) {
+        contentDiv.style.border = '2px solid red'; // Podświetlenie na czerwono
+        alert('Treść ogłoszenia nie może być pusta!');
+        return; // Zatrzymujemy wysyłkę
+    } else {
+        contentDiv.style.border = ''; // Usuwamy czerwone podświetlenie, jeśli pole jest wypełnione
+    }
+
+    // Zbieramy harmonogram jako listę dat
+    const scheduleDates = [];
+    const scheduleItems = document.querySelectorAll(`#fbgroups_shedule_${postId} .shedule-date-details`);
+    scheduleItems.forEach(item => {
+        scheduleDates.push(item.textContent.trim());
+    });
+
+    // Tworzymy obiekt z danymi do wysłania
+    const dataToSend = {
+        post_id: postId,
+        content: content,
+        color_choice: document.getElementById(`color_choice_${postId}`).value,
+        wznawiaj: document.getElementById(`wznawiaj_${postId}`).checked,
+        schedule: scheduleDates,  // Harmonogram jako lista dat
+        frequency: {
+            codwatygodnie: document.getElementById(`codwatygodnie_${postId}`).checked,
+            cotydzien: document.getElementById(`cotydzien_${postId}`).checked,
+            coczterydni: document.getElementById(`coczterydni_${postId}`).checked,
+            codwadni: document.getElementById(`codwadni_${postId}`).checked
+        },
+        repeats: {
+            ponow2razy: document.getElementById(`ponow2razy_${postId}`).checked,
+            ponow5razy: document.getElementById(`ponow5razy_${postId}`).checked,
+            ponow8razy: document.getElementById(`ponow8razy_${postId}`).checked,
+            ponow10razy: document.getElementById(`ponow10razy_${postId}`).checked
+        }
+    };
+
+    // Wysyłanie danych AJAX
+    fetch('/fb-groups-sender', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Ogłoszenie zostało wysłane!');
+        } else {
+            alert('Wystąpił błąd podczas wysyłania ogłoszenia.');
+        }
+    })
+    .catch((error) => {
+        console.error('Błąd:', error);
+        alert('Wystąpił błąd podczas wysyłania ogłoszenia.');
+    });
 }

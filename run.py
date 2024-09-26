@@ -11068,6 +11068,22 @@ def remove_fbgroup():
     
     return redirect(url_for('index'))
 
+@app.route('/fb-groups-sender', methods=['POST'])
+def fb_groups_sender():
+    data = request.json  # Odbieramy dane w formacie JSON
+    post_id = data.get('post_id')
+    content = data.get('content')
+    color_choice = data.get('color_choice')
+    wznawiaj = data.get('wznawiaj')
+    schedule = data.get('schedule')  # Lista harmonogramu (dat)
+    frequency = data.get('frequency')
+    repeats = data.get('repeats')
+
+    # Tutaj dodaj logikę zapisu do bazy danych lub innych operacji
+    print(f"Post ID: {post_id}, Content: {content}, Harmonogram: {schedule}, all: {data}")
+
+    return jsonify({'success': True})
+
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
     app.run(debug=False, host='0.0.0.0', port=8000)
