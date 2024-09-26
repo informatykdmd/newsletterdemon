@@ -1050,7 +1050,11 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2 col-sm-12">
-                                            <!-- pusta  -->
+                                            <div id="fbgroups_shedule_{{post_id}}" class="schedule-output"></div>
+                                            <script>
+                                                // Funkcja wywołana dla każdego postu (w pętli Flask)
+                                                setupSchedule('{{post_id}}');
+                                            </script>
                                         </div>
                                     </div>
                                 </form>
@@ -1127,49 +1131,6 @@
         }
     }
 
-    // class CharCounter {
-    //     constructor(postId) {
-    //         this.postId = postId;
-            
-    //         // Pobranie elementów dynamicznie na podstawie postId
-    //         this.contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
-    //         this.charCountDiv = document.getElementById(`char_count_${postId}`);
-    //         this.divMinus130 = document.getElementById(`fbgroup_minus130_${postId}`);
-    //         this.divMore130 = document.getElementById(`fbgroup_more130_${postId}`);
-
-    //         // Inicjalna aktualizacja licznika znaków
-    //         this.updateCharCount();
-
-    //         // Nasłuchiwanie zmian w treści contentEditable
-    //         this.contentDiv.addEventListener('keyup', () => this.updateCharCount());
-    //     }
-
-    //     // Metoda do liczenia znaków i aktualizowania stanu
-    //     updateCharCount() {
-    //         const text = this.contentDiv.innerText || this.contentDiv.textContent;
-    //         const charCount = text.length;
-
-    //         // Aktualizacja licznika znaków
-    //         this.charCountDiv.textContent = `${charCount} znaków`;
-
-    //         // Warunkowa zmiana klas i wyświetlanie odpowiednich divów
-    //         if (charCount > 130) {
-    //             this.divMore130.style.display = 'block';
-    //             this.divMinus130.style.display = 'none';
-                
-    //             // Dodajemy klasę dla więcej niż 130 znaków
-    //             this.contentDiv.classList.remove('mainDiv-minus130');
-    //             this.contentDiv.classList.add('mainDiv-more130');
-    //             } else {
-    //             this.divMore130.style.display = 'none';
-    //             this.divMinus130.style.display = 'block';
-                
-    //             // Dodajemy klasę dla mniej niż 130 znaków
-    //             this.contentDiv.classList.remove('mainDiv-more130');
-    //             this.contentDiv.classList.add('mainDiv-minus130');
-    //         }
-    //     }
-    // }
 
     class CharCounter {
         constructor(postId) {
@@ -1297,6 +1258,83 @@
             });
         });
     });
+
+
+    function setupSchedule(postId) {
+        const wznawiajSwitch = document.getElementById(`wznawiaj_${postId}`);
+        const scheduleOutput = document.getElementById(`fbgroups_shedule_${postId}`);
+        const freqSwitches = {
+            "2": document.getElementById(`codwadni_${postId}`),
+            "4": document.getElementById(`coczterydni_${postId}`),
+            "7": document.getElementById(`cotydzien_${postId}`),
+            "14": document.getElementById(`codwatygodnie_${postId}`)
+        };
+        const repeatSwitches = {
+            "2": document.getElementById(`ponow2razy_${postId}`),
+            "5": document.getElementById(`ponow5razy_${postId}`),
+            "8": document.getElementById(`ponow8razy_${postId}`),
+            "10": document.getElementById(`ponow10razy_${postId}`)
+        };
+
+        // Funkcja do generowania harmonogramu
+        function generateSchedule() {
+            const today = new Date();
+            let schedule = '';
+
+            if (!wznawiajSwitch.checked) {
+                // Tylko jedna publikacja dzisiaj
+                schedule = formatSchedule(today);
+            } else {
+                // Liczba powtórzeń
+                const selectedRepeat = Object.keys(repeatSwitches).find(key => repeatSwitches[key]?.checked);
+                const repeatCount = selectedRepeat ? parseInt(selectedRepeat) : 1;
+                
+                // Częstotliwość (co ile dni)
+                const selectedFreq = Object.keys(freqSwitches).find(key => freqSwitches[key]?.checked);
+                const frequency = selectedFreq ? parseInt(selectedFreq) : 1;
+
+                // Generowanie harmonogramu
+                for (let i = 0; i <= repeatCount; i++) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() + i * frequency);
+                    schedule += formatSchedule(date);
+                }
+            }
+
+            scheduleOutput.innerHTML = schedule;
+        }
+
+        // Funkcja formatująca datę na czytelny format
+        function formatSchedule(date) {
+            const daysOfWeek = ["niedziela", "poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota"];
+            const months = ["styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"];
+
+            const dayOfWeek = daysOfWeek[date.getDay()];
+            const dayOfMonth = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+
+            let formattedDate = `${dayOfWeek}`;
+            if (date.getDate() === (new Date()).getDate()) {
+                formattedDate += ' (dzisiaj)';
+            }
+            formattedDate += `<br> - ${dayOfMonth} ${month} ${year} godzina ${hours}:${minutes}<br>`;
+
+            return formattedDate;
+        }
+
+        // Nasłuchuj zmian na przełącznikach i generuj harmonogram
+        wznawiajSwitch.addEventListener('change', generateSchedule);
+        Object.values(freqSwitches).forEach(switchElement => switchElement?.addEventListener('change', generateSchedule));
+        Object.values(repeatSwitches).forEach(switchElement => switchElement?.addEventListener('change', generateSchedule));
+
+        // Inicjalne wyświetlenie harmonogramu
+        generateSchedule();
+    }
+
+    
 
 
 

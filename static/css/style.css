@@ -885,3 +885,9 @@ color:#969696;
 .color-box.selected {
     outline: 3px solid #fff; /* Możesz zmienić na dowolny kolor obrysu */
 }
+
+.schedule-output {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin-top: 15px;
+}
