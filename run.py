@@ -11097,6 +11097,12 @@ def fb_groups_sender():
     # Pobieranie harmonogramu
     schedule = data.get('schedule', [])
 
+    {'wznawiaj': True}
+    wznawiaj = data.get('wznawiaj', False)
+
+    {'ponow2razy': False, 'ponow5razy': False, 'ponow8razy': False, 'ponow10razy': True}
+    repeats = data.get('repeats', {})
+
     # Przekształcanie każdej daty w harmonogramie na standardowy format
     formatted_schedule = [format_date_pl(date_str) for date_str in schedule]
 
@@ -11107,8 +11113,23 @@ def fb_groups_sender():
     if None in formatted_schedule:
         return jsonify({'success': False, 'message': 'Błąd w przekształcaniu dat'}), 400
 
-    # Można teraz zapisać dane do bazy danych
-    # Tutaj kod do zapisu w bazie danych...
+    # przygotowywanie list jednej długości
+
+    if not wznawiaj:
+        less_index  = [None, None, None, None, None, None, None, None, None]
+    
+    if 'ponow2razy' in repeats and 'ponow5razy' in repeats and 'ponow8razy' in repeats and 'ponow10razy' in repeats:
+        if repeats['ponow2razy']:
+            less_index  = [None, None, None, None, None, None, None, None]
+        elif repeats['ponow5razy']:
+            less_index  = [None, None, None, None, None]
+        elif repeats['ponow8razy']:
+            less_index  = [None, None]
+        elif repeats['ponow10razy']:
+            less_index  = []
+
+    formatted_schedule = formatted_schedule + less_index
+    print(len(formatted_schedule))
 
     # Zwracamy sukces
     return jsonify({'success': True, 'formatted_schedule': formatted_schedule})
