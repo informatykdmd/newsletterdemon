@@ -863,3 +863,23 @@ color:#969696;
     font-weight:normal;
     background-color: #161616; /* Kolor tła */
 }
+
+
+/* Styl dla divów z kolorami */
+.color-picker {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .color-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    background-size: cover;
+  }
+  
+  /* Dodajemy obrys, gdy div jest wybrany */
+  .color-box.selected {
+    outline: 3px solid #fff; /* Możesz zmienić na dowolny kolor obrysu */
+  }

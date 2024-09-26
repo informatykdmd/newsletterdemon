@@ -781,11 +781,22 @@
                                                 </a>                                        
                                             </div>
 
-
+                                            <!-- Ukryte pole do przechowywania wartości wybranego koloru -->
+                                            <input type="hidden" id="color_choice_{{post_id}}" name="color_choice" value="0">
 
                                             <!-- Div dla opcji wyświetlanych w zależności od liczby znaków -->
                                             <div class="minus130" id="fbgroup_minus130_{{post_id}}" style="display: none;">
                                             Tekst ma mniej niż 130 znaków.
+                                                <!-- Divy dla wyboru koloru -->
+                                                <div class="color-picker">
+                                                    <div class="color-box" data-color="1" id="color_box_1_{{post_id}}" style="background-image: url('static/img/fb-short-1.png');"></div>
+                                                    <div class="color-box" data-color="2" id="color_box_2_{{post_id}}" style="background-image: url('static/img/fb-short-2.png');"></div>
+                                                    <div class="color-box" data-color="3" id="color_box_3_{{post_id}}" style="background-image: url('static/img/fb-short-3.png');"></div>
+                                                    <div class="color-box" data-color="4" id="color_box_4_{{post_id}}" style="background-image: url('static/img/fb-short-4.png');"></div>
+                                                    <div class="color-box" data-color="5" id="color_box_5_{{post_id}}" style="background-image: url('static/img/fb-short-5.png');"></div>
+                                                    <div class="color-box" data-color="6" id="color_box_6_{{post_id}}" style="background-image: url('static/img/fb-short-6.png');"></div>
+                                                    <div class="color-box" data-color="7" id="color_box_7_{{post_id}}" style="background-image: url('static/img/fb-short-7.png');"></div>
+                                                </div>
                                             </div>
 
                                             <div class="more130" id="fbgroup_more130_{{post_id}}" style="display: none;">
@@ -1153,6 +1164,34 @@
             }
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Pobranie wszystkich elementów typu color-picker
+        const allPickers = document.querySelectorAll('.color-picker');
+        
+        allPickers.forEach(function(picker) {
+            const postId = picker.id.split('_')[2]; // Wyciągnięcie post_id z identyfikatora
+            
+            // Pobieranie ukrytego inputa dla tego postu
+            const hiddenInput = document.getElementById(`color_choice_${postId}`);
+            
+            // Pobranie wszystkich boxów wewnątrz danego picker-a
+            const colorBoxes = picker.querySelectorAll('.color-box');
+            
+            colorBoxes.forEach(function(box) {
+            box.addEventListener('click', function() {
+                // Usunięcie klasy 'selected' z każdego boxa w danym pickerze
+                colorBoxes.forEach(b => b.classList.remove('selected'));
+                
+                // Dodanie klasy 'selected' do wybranego boxa
+                box.classList.add('selected');
+                
+                // Ustawienie wartości ukrytego inputa na numer wybranego koloru
+                hiddenInput.value = box.getAttribute('data-color');
+            });
+            });
+        });
+    });
 </script>
 {% endblock %}
 {% block footer %}
