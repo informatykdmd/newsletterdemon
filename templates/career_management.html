@@ -1127,21 +1127,88 @@
         }
     }
 
+    // class CharCounter {
+    //     constructor(postId) {
+    //         this.postId = postId;
+            
+    //         // Pobranie elementów dynamicznie na podstawie postId
+    //         this.contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
+    //         this.charCountDiv = document.getElementById(`char_count_${postId}`);
+    //         this.divMinus130 = document.getElementById(`fbgroup_minus130_${postId}`);
+    //         this.divMore130 = document.getElementById(`fbgroup_more130_${postId}`);
+
+    //         // Inicjalna aktualizacja licznika znaków
+    //         this.updateCharCount();
+
+    //         // Nasłuchiwanie zmian w treści contentEditable
+    //         this.contentDiv.addEventListener('keyup', () => this.updateCharCount());
+    //     }
+
+    //     // Metoda do liczenia znaków i aktualizowania stanu
+    //     updateCharCount() {
+    //         const text = this.contentDiv.innerText || this.contentDiv.textContent;
+    //         const charCount = text.length;
+
+    //         // Aktualizacja licznika znaków
+    //         this.charCountDiv.textContent = `${charCount} znaków`;
+
+    //         // Warunkowa zmiana klas i wyświetlanie odpowiednich divów
+    //         if (charCount > 130) {
+    //             this.divMore130.style.display = 'block';
+    //             this.divMinus130.style.display = 'none';
+                
+    //             // Dodajemy klasę dla więcej niż 130 znaków
+    //             this.contentDiv.classList.remove('mainDiv-minus130');
+    //             this.contentDiv.classList.add('mainDiv-more130');
+    //             } else {
+    //             this.divMore130.style.display = 'none';
+    //             this.divMinus130.style.display = 'block';
+                
+    //             // Dodajemy klasę dla mniej niż 130 znaków
+    //             this.contentDiv.classList.remove('mainDiv-more130');
+    //             this.contentDiv.classList.add('mainDiv-minus130');
+    //         }
+    //     }
+    // }
+
     class CharCounter {
         constructor(postId) {
             this.postId = postId;
-            
+
             // Pobranie elementów dynamicznie na podstawie postId
             this.contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
             this.charCountDiv = document.getElementById(`char_count_${postId}`);
             this.divMinus130 = document.getElementById(`fbgroup_minus130_${postId}`);
             this.divMore130 = document.getElementById(`fbgroup_more130_${postId}`);
 
+            // Ukryty input dla koloru
+            this.hiddenInput = document.getElementById(`color_choice_${postId}`);
+
+            // Pobranie wszystkich boxów dla minus130 i more130
+            this.colorPickerMinus130 = document.getElementById(`color_picker_minus130_${postId}`);
+            this.colorPickerMore130 = document.getElementById(`color_picker_more130_${postId}`);
+
             // Inicjalna aktualizacja licznika znaków
             this.updateCharCount();
 
             // Nasłuchiwanie zmian w treści contentEditable
             this.contentDiv.addEventListener('keyup', () => this.updateCharCount());
+        }
+
+        // Metoda do resetowania zaznaczeń i ukrytego inputa
+        resetColorSelection() {
+            // Resetujemy wartość ukrytego inputa na 0
+            this.hiddenInput.value = '0';
+
+            // Usuwamy zaznaczenie (klasę 'selected') ze wszystkich boxów w obu pickerach
+            const allColorBoxes = this.colorPickerMinus130.querySelectorAll('.color-box');
+            const moreColorBoxes = this.colorPickerMore130.querySelectorAll('.color-box');
+
+            // Usuwanie 'selected' z minus130
+            allColorBoxes.forEach(box => box.classList.remove('selected'));
+
+            // Usuwanie 'selected' z more130
+            moreColorBoxes.forEach(box => box.classList.remove('selected'));
         }
 
         // Metoda do liczenia znaków i aktualizowania stanu
@@ -1152,101 +1219,35 @@
             // Aktualizacja licznika znaków
             this.charCountDiv.textContent = `${charCount} znaków`;
 
-            // Warunkowa zmiana klas i wyświetlanie odpowiednich divów
+            // Przełączanie między trybami
             if (charCount > 130) {
                 this.divMore130.style.display = 'block';
                 this.divMinus130.style.display = 'none';
-                
+
                 // Dodajemy klasę dla więcej niż 130 znaków
                 this.contentDiv.classList.remove('mainDiv-minus130');
                 this.contentDiv.classList.add('mainDiv-more130');
-                } else {
+
+                // Resetowanie zaznaczenia po przejściu do more130
+                this.resetColorSelection();
+
+            } else {
                 this.divMore130.style.display = 'none';
                 this.divMinus130.style.display = 'block';
-                
+
                 // Dodajemy klasę dla mniej niż 130 znaków
                 this.contentDiv.classList.remove('mainDiv-more130');
                 this.contentDiv.classList.add('mainDiv-minus130');
+
+                // Resetowanie zaznaczenia po przejściu do minus130
+                this.resetColorSelection();
             }
         }
     }
 
 
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     // Pobranie wszystkich elementów typu color-picker
-    //     const allPickers = document.querySelectorAll('.color-picker');
-        
-    //     allPickers.forEach(function(picker) {
-    //         const postId = picker.id.split('_')[2]; // Wyciągnięcie post_id z identyfikatora
-    //         console.log('picker postId', picker.id, postId);
-    //         // Pobieranie ukrytego inputa dla tego postu
-    //         const hiddenInput = document.getElementById(`color_choice_${postId}`);
-            
-    //         // Pobranie wszystkich boxów wewnątrz danego picker-a
-    //         const colorBoxes = picker.querySelectorAll('.color-box');
-            
-    //         colorBoxes.forEach(function(box) {
-    //         box.addEventListener('click', function() {
-    //             // Usunięcie klasy 'selected' z każdego boxa w danym pickerze
-    //             colorBoxes.forEach(b => b.classList.remove('selected'));
-                
-    //             // Dodanie klasy 'selected' do wybranego boxa
-    //             box.classList.add('selected');
-                
-    //             // Ustawienie wartości ukrytego inputa na numer wybranego koloru
-    //             hiddenInput.value = box.getAttribute('data-color');
-    //         });
-    //         });
-    //     });
-    // });
 
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     // Pobranie wszystkich elementów typu color-picker
-    //     const allPickers = document.querySelectorAll('.color-picker');
-        
-    //     allPickers.forEach(function(picker) {
-    //         // Sprawdzenie, czy picker ma prawidłowe id
-    //         if (!picker.id) {
-    //             console.error('Color picker does not have a valid ID:', picker);
-    //             return; // Pomiń, jeśli ID jest puste
-    //         }
-
-    //         // Wyciągnięcie post_id z identyfikatora pickera
-    //         const postId = picker.id.split('_')[2]; // Sprawdzenie podzielonego ID
-
-    //         // Sprawdzanie, czy postId jest prawidłowe
-    //         if (!postId) {
-    //             console.error('Post ID not found:', picker.id);
-    //             return; // Pomiń, jeśli postId nie istnieje
-    //         }
-
-    //         console.log('picker postId', picker.id, postId);
-
-    //         // Pobranie ukrytego inputa dla tego postu
-    //         const hiddenInput = document.getElementById(`color_choice_${postId}`);
-            
-    //         if (!hiddenInput) {
-    //             console.error('Hidden input not found for postId:', postId);
-    //             return; // Pomiń, jeśli ukryty input nie istnieje
-    //         }
-
-    //         // Pobranie wszystkich boxów wewnątrz danego picker-a
-    //         const colorBoxes = picker.querySelectorAll('.color-box');
-            
-    //         colorBoxes.forEach(function(box) {
-    //             box.addEventListener('click', function() {
-    //                 // Usunięcie klasy 'selected' z każdego boxa w danym pickerze
-    //                 colorBoxes.forEach(b => b.classList.remove('selected'));
-                    
-    //                 // Dodanie klasy 'selected' do wybranego boxa
-    //                 box.classList.add('selected');
-                    
-    //                 // Ustawienie wartości ukrytego inputa na numer wybranego koloru
-    //                 hiddenInput.value = box.getAttribute('data-color');
-    //             });
-    //         });
-    //     });
-    // });
+    
 
     document.addEventListener('DOMContentLoaded', function() {
         // Pobranie wszystkich elementów typu color-picker
