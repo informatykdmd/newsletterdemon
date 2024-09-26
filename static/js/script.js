@@ -1037,7 +1037,7 @@ function setCareerDateStart(dataPoolID, isNew=true, setDateString=null) {
 }
 
 
-function collectAndSendfbgroupsform_v1(postId) {
+function collectAndSendfbgroupsform(postId) {
     // Zbieramy treść ogłoszenia
     const contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
     const content = contentDiv.innerText.trim();
@@ -1101,105 +1101,4 @@ function collectAndSendfbgroupsform_v1(postId) {
     });
 }
 
-function collectAndSendfbgroupsform(postId) {
-    // Zbieramy treść ogłoszenia
-    const contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
-    let content = contentDiv.innerText.trim();
-
-    // Usuwamy informację o liczbie znaków, jeśli jest dodawana do treści
-    const charCountText = document.getElementById(`char_count_${postId}`).innerText.trim();
-    if (content.endsWith(charCountText)) {
-        content = content.slice(0, -charCountText.length).trim();  // Usuwamy ilość znaków
-    }
-
-    // Sprawdzamy, czy treść ogłoszenia nie jest pusta
-    if (!content) {
-        contentDiv.style.border = '2px solid red'; // Podświetlenie na czerwono
-        alert('Treść ogłoszenia nie może być pusta!');
-        return; // Zatrzymujemy wysyłkę
-    } else {
-        contentDiv.style.border = ''; // Usuwamy czerwone podświetlenie, jeśli pole jest wypełnione
-    }
-
-    // Zbieramy harmonogram jako listę dat
-    const scheduleDates = [];
-    const scheduleItems = document.querySelectorAll(`#fbgroups_shedule_${postId} .shedule-date-details`);
-    console.log('Zebrane elementy harmonogramu:', scheduleItems); // Debugowanie: logowanie zebranych elementów
-
-    scheduleItems.forEach(item => {
-        const dateText = item.lastChild.nodeValue.trim();  // Pobranie czystej daty z lastChild
-        console.log('Przetwarzana data:', dateText); // Debugowanie: logowanie daty
-        const dateObject = parseDate(dateText);
-        if (dateObject) {
-            scheduleDates.push(dateObject);
-        }
-    });
-
-    console.log('Harmonogram po konwersji:', scheduleDates); // Debugowanie: logowanie listy harmonogramu
-
-    // Tworzymy obiekt z danymi do wysłania
-    const dataToSend = {
-        post_id: postId,
-        content: content,  // Treść ogłoszenia
-        color_choice: document.getElementById(`color_choice_${postId}`).value,
-        wznawiaj: document.getElementById(`wznawiaj_${postId}`).checked,
-        schedule: scheduleDates,  // Harmonogram jako lista dat
-        frequency: {
-            codwatygodnie: document.getElementById(`codwatygodnie_${postId}`).checked,
-            cotydzien: document.getElementById(`cotydzien_${postId}`).checked,
-            coczterydni: document.getElementById(`coczterydni_${postId}`).checked,
-            codwadni: document.getElementById(`codwadni_${postId}`).checked
-        },
-        repeats: {
-            ponow2razy: document.getElementById(`ponow2razy_${postId}`).checked,
-            ponow5razy: document.getElementById(`ponow5razy_${postId}`).checked,
-            ponow8razy: document.getElementById(`ponow8razy_${postId}`).checked,
-            ponow10razy: document.getElementById(`ponow10razy_${postId}`).checked
-        }
-    };
-
-    // Wysyłanie danych AJAX
-    fetch('/fb-groups-sender', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Ogłoszenie zostało wysłane!');
-        } else {
-            alert('Wystąpił błąd podczas wysyłania ogłoszenia.');
-        }
-    })
-    .catch((error) => {
-        console.error('Błąd:', error);
-        alert('Wystąpił błąd podczas wysyłania ogłoszenia.');
-    });
-}
-
-// Funkcja do konwersji tekstu opisu daty na format DD-MM-YYYY HH:mm:ss
-function parseDate(dateText) {
-    const months = {
-        'styczeń': '01', 'luty': '02', 'marzec': '03', 'kwiecień': '04', 'maj': '05', 'czerwiec': '06',
-        'lipiec': '07', 'sierpień': '08', 'wrzesień': '09', 'październik': '10', 'listopad': '11', 'grudzień': '12'
-    };
-
-    const regex = /(\d{1,2}) (\w+) (\d{4}) godzina (\d{2}):(\d{2})/;
-    const match = dateText.match(regex);
-
-    if (match) {
-        const day = match[1].padStart(2, '0');
-        const month = months[match[2]];
-        const year = match[3];
-        const hours = match[4];
-        const minutes = match[5];
-
-        return `${day}-${month}-${year} ${hours}:${minutes}:00`;  // Format DD-MM-YYYY HH:mm:ss
-    }
-
-    return null;  // W razie błędu w formacie zwracamy null
-}
 
