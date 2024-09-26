@@ -1052,7 +1052,9 @@
                                         <div class="col-lg-2 col-sm-12">
                                             <div id="fbgroups_shedule_{{post_id}}" class="schedule-output"></div>
                                             <script>
-                                                setupSchedule('{{post_id}}');
+                                                document.addEventListener('DOMContentLoaded', function(){
+                                                    setupSchedule('{{post_id}}');
+                                                });
                                             </script>
                                         </div>
                                     </div>
