@@ -878,6 +878,7 @@ color:#969696;
     border-radius: 8px;
     cursor: pointer;
     background-size: cover;
+    border: #33383b 1px solid;
 }
   
   /* Dodajemy obrys, gdy div jest wybrany */
