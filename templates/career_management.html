@@ -766,15 +766,24 @@
                                             <!-- Div dla opcji wyświetlanych w zależności od liczby znaków -->
                                             <div class="minus130" id="fbgroup_minus130_{{post_id}}" style="display: none;">
                                                 <div class="no-border formatuj-maly-font fadeIn mb-3">
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', `Szukamy {{post_data['title']}}! Dołącz do naszego zespołu DMD. Więcej info na DM`);">
+                                                    <a 
+                                                        class="ms-2" 
+                                                        href="javascript:void(0);" 
+                                                        onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', `Szukamy {{post_data['title']}}! Dołącz do naszego zespołu DMD. Więcej info na DM`);">
                                                         Dołącz do naszego zespołu
                                                     </a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', `{{post_data['brand']}} poszukuje {{post_data['title']}}. Kontakt: {{post_data['contact_email']}}`);">
+                                                    <a 
+                                                        class="ms-2" 
+                                                        href="javascript:void(0);" 
+                                                        onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', `{{post_data['brand']}} poszukuje {{post_data['title']}}. Kontakt: {{post_data['contact_email']}}`);">
                                                         DMD poszukuje
                                                     </a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', `Zatrudnimy na stanowisko {{post_data['title']}} w {{post_data['brand']}}! Szczegóły na DM`);">
+                                                    <a 
+                                                        class="ms-2" 
+                                                        href="javascript:void(0);" 
+                                                        onClick="applyTemplate('fbgroups_requirementsDescription_{{post_id}}', `Zatrudnimy na stanowisko {{post_data['title']}} w {{post_data['brand']}}! Szczegóły na DM`);">
                                                         Zatrudnimy na stanowisko
-                                                    </a>                                        
+                                                    </a>
                                                 </div>
                                                 <!-- Divy dla wyboru koloru -->
                                                 <div class="color-picker" id="color_picker_{{post_id}}">
@@ -1111,50 +1120,6 @@
         }
     }
 
-    // class CharCounter {
-    //     constructor(postId) {
-    //         this.postId = postId;
-            
-    //         // Pobranie elementów dynamicznie na podstawie postId
-    //         this.contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
-    //         this.charCountDiv = document.getElementById(`char_count_${postId}`);
-    //         this.divMinus130 = document.getElementById(`fbgroup_minus130_${postId}`);
-    //         this.divMore130 = document.getElementById(`fbgroup_more130_${postId}`);
-
-    //         // Inicjalna aktualizacja licznika znaków
-    //         this.updateCharCount();
-
-    //         // Nasłuchiwanie zmian w treści contentEditable
-    //         this.contentDiv.addEventListener('keyup', () => this.updateCharCount());
-    //     }
-
-    //     // Metoda do liczenia znaków i aktualizowania stanu
-    //     updateCharCount() {
-    //         const text = this.contentDiv.innerText || this.contentDiv.textContent;
-    //         const charCount = text.length;
-
-    //         // Aktualizacja licznika znaków
-    //         this.charCountDiv.textContent = `${charCount} znaków`;
-
-    //         // Warunkowa zmiana klas i wyświetlanie odpowiednich divów
-    //         if (charCount > 130) {
-    //             this.divMore130.style.display = 'block';
-    //             this.divMinus130.style.display = 'none';
-                
-    //             // Dodajemy klasę dla więcej niż 130 znaków
-    //             this.contentDiv.classList.remove('mainDiv-minus130');
-    //             this.contentDiv.classList.add('mainDiv-more130');
-    //             } else {
-    //             this.divMore130.style.display = 'none';
-    //             this.divMinus130.style.display = 'block';
-                
-    //             // Dodajemy klasę dla mniej niż 130 znaków
-    //             this.contentDiv.classList.remove('mainDiv-more130');
-    //             this.contentDiv.classList.add('mainDiv-minus130');
-    //         }
-    //     }
-    // }
-
     class CharCounter {
         constructor(postId) {
             this.postId = postId;
@@ -1165,17 +1130,11 @@
             this.divMinus130 = document.getElementById(`fbgroup_minus130_${postId}`);
             this.divMore130 = document.getElementById(`fbgroup_more130_${postId}`);
 
-            // Nasłuchiwanie ukrytego inputa
-            this.hiddenInput = document.getElementById(`color_choice_${postId}`);
-
             // Inicjalna aktualizacja licznika znaków
             this.updateCharCount();
 
             // Nasłuchiwanie zmian w treści contentEditable
             this.contentDiv.addEventListener('keyup', () => this.updateCharCount());
-
-            // Dodatkowe nasłuchiwanie na zmianę wyboru koloru
-            this.hiddenInput.addEventListener('change', () => this.updateBackgroundColor());
         }
 
         // Metoda do liczenia znaków i aktualizowania stanu
@@ -1194,8 +1153,7 @@
                 // Dodajemy klasę dla więcej niż 130 znaków
                 this.contentDiv.classList.remove('mainDiv-minus130');
                 this.contentDiv.classList.add('mainDiv-more130');
-
-            } else {
+                } else {
                 this.divMore130.style.display = 'none';
                 this.divMinus130.style.display = 'block';
                 
@@ -1203,49 +1161,8 @@
                 this.contentDiv.classList.remove('mainDiv-more130');
                 this.contentDiv.classList.add('mainDiv-minus130');
             }
-
-            // Zawsze aktualizujemy tło na podstawie wyboru koloru
-            this.updateBackgroundColor();
-        }
-
-        // Metoda do aktualizacji tła na podstawie hidden inputa
-        updateBackgroundColor() {
-            const selectedColor = this.hiddenInput.value; // Pobierz wartość z ukrytego inputa
-
-            // Wybierz odpowiedni styl tła na podstawie wartości
-            switch (selectedColor) {
-                case '0':
-                    this.contentDiv.style.backgroundImage = 'none'; // Brak wypełnienia
-                    break;
-                case '1':
-                    this.contentDiv.style.backgroundImage = "url('static/img/fb-short-1.png')";
-                    break;
-                case '2':
-                    this.contentDiv.style.backgroundImage = "url('static/img/fb-short-2.png')";
-                    break;
-                case '3':
-                    this.contentDiv.style.backgroundImage = "url('static/img/fb-short-3.png')";
-                    break;
-                case '4':
-                    this.contentDiv.style.backgroundImage = "url('static/img/fb-short-4.png')";
-                    break;
-                case '5':
-                    this.contentDiv.style.backgroundImage = "url('static/img/fb-short-5.png')";
-                    break;
-                case '6':
-                    this.contentDiv.style.backgroundImage = "url('static/img/fb-short-6.png')";
-                    break;
-                case '7':
-                    this.contentDiv.style.backgroundImage = "url('static/img/fb-short-7.png')";
-                    break;
-                default:
-                    this.contentDiv.style.backgroundImage = 'none'; // Domyślnie brak wypełnienia
-                    break;
-            }
         }
     }
-
-    
 
 
     document.addEventListener('DOMContentLoaded', function() {
