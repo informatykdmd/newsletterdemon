@@ -11116,7 +11116,7 @@ def fb_groups_sender():
     # przygotowywanie list jednej długości
 
     if not wznawiaj:
-        less_index  = [None, None, None, None, None, None, None, None, None]
+        less_index  = [None, None, None, None, None, None, None, None, None, None]
     
     if 'ponow2razy' in repeats and 'ponow5razy' in repeats and 'ponow8razy' in repeats and 'ponow10razy' in repeats and wznawiaj:
         if repeats['ponow2razy']:
