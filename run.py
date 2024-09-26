@@ -11118,7 +11118,7 @@ def fb_groups_sender():
     if not wznawiaj:
         less_index  = [None, None, None, None, None, None, None, None, None]
     
-    if 'ponow2razy' in repeats and 'ponow5razy' in repeats and 'ponow8razy' in repeats and 'ponow10razy' in repeats:
+    if 'ponow2razy' in repeats and 'ponow5razy' in repeats and 'ponow8razy' in repeats and 'ponow10razy' in repeats and wznawiaj:
         if repeats['ponow2razy']:
             less_index  = [None, None, None, None, None, None, None, None]
         elif repeats['ponow5razy']:
@@ -11128,8 +11128,12 @@ def fb_groups_sender():
         elif repeats['ponow10razy']:
             less_index  = []
 
-    formatted_schedule = formatted_schedule + less_index
-    print(len(formatted_schedule))
+    prepareded_schedule = formatted_schedule + less_index
+    print(f'formatted_schedule: {formatted_schedule}')
+    print(f'less_index: {less_index}')
+    print(f'prepareded_schedule: {prepareded_schedule}', len(prepareded_schedule))
+
+    print(len(prepareded_schedule))
 
     # Zwracamy sukces
     return jsonify({'success': True, 'formatted_schedule': formatted_schedule})
