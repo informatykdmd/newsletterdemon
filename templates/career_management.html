@@ -1164,7 +1164,7 @@
         
         allPickers.forEach(function(picker) {
             const postId = picker.id.split('_')[2]; // Wyciągnięcie post_id z identyfikatora
-            
+            console.log('picker postId', postId);
             // Pobieranie ukrytego inputa dla tego postu
             const hiddenInput = document.getElementById(`color_choice_${postId}`);
             
