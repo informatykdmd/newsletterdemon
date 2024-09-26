@@ -1207,10 +1207,6 @@
         }
     }
 
-
-
-    
-
     document.addEventListener('DOMContentLoaded', function() {
         // Pobranie wszystkich elementów typu color-picker
         const allPickers = document.querySelectorAll('.color-picker');
@@ -1232,7 +1228,7 @@
                 return; // Pomiń, jeśli postId nie istnieje
             }
 
-            console.log('picker postId', picker.id, postId);
+            // console.log('picker postId', picker.id, postId);
 
             // Pobranie ukrytego inputa dla tego postu
             const hiddenInput = document.getElementById(`color_choice_${postId}`);
@@ -1286,7 +1282,7 @@
 
             if (!wznawiajSwitch.checked) {
                 // Tylko jedna publikacja dzisiaj
-                schedule = formatSchedule(today);
+                schedule += formatSchedule(today);
             } else {
                 // Liczba powtórzeń
                 const selectedRepeat = Object.keys(repeatSwitches).find(key => repeatSwitches[key]?.checked);
@@ -1304,7 +1300,7 @@
                 }
             }
             schedule += '</ul>'; // Zamykamy ul
-            console.log('schedule', schedule);
+            // console.log('schedule', schedule);
             scheduleOutput.innerHTML = schedule;
         }
 

@@ -11093,6 +11093,7 @@ def remove_fbgroup():
 def fb_groups_sender():
     data = request.json  # Odbieramy dane JSON
 
+    print(data)
     # Pobieranie harmonogramu
     schedule = data.get('schedule', [])
 
@@ -11108,8 +11109,7 @@ def fb_groups_sender():
 
     # Można teraz zapisać dane do bazy danych
     # Tutaj kod do zapisu w bazie danych...
-    print(formatted_schedule)
-    print(data)
+
     # Zwracamy sukces
     return jsonify({'success': True, 'formatted_schedule': formatted_schedule})
 
