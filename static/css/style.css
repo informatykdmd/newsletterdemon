@@ -868,18 +868,19 @@ color:#969696;
 /* Styl dla divów z kolorami */
 .color-picker {
     display: flex;
-    justify-content: space-between;
-  }
+    justify-content: flex-start; /* Justowanie od lewej */
+    gap: 10px; /* Odstęp między boxami */
+}
   
-  .color-box {
+.color-box {
     width: 40px;
     height: 40px;
     border-radius: 8px;
     cursor: pointer;
     background-size: cover;
-  }
+}
   
   /* Dodajemy obrys, gdy div jest wybrany */
-  .color-box.selected {
+.color-box.selected {
     outline: 3px solid #fff; /* Możesz zmienić na dowolny kolor obrysu */
-  }
+}
