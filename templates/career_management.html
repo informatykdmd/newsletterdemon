@@ -1260,9 +1260,8 @@
             }
 
             // Wyciągnięcie post_id z identyfikatora pickera
-            const postId = picker.id.includes('more130') 
-                ? picker.id.split('_')[2] + '_more130' 
-                : picker.id.split('_')[2]; // Dodanie 'more130' dla odpowiedniego id
+            const idParts = picker.id.split('_');
+            const postId = idParts.length > 2 ? idParts[2] : null; // Uzyskanie prawidłowego post_id
 
             // Sprawdzanie, czy postId jest prawidłowe
             if (!postId) {
@@ -1297,6 +1296,7 @@
             });
         });
     });
+
 
 
 </script>
