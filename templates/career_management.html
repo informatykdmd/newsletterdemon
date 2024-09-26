@@ -801,7 +801,12 @@
                                             </div>
 
                                             <div class="more130" id="fbgroup_more130_{{post_id}}" style="display: none;">
-                                            Tekst ma więcej niż 130 znaków.
+                                                <!-- Divy dla wyboru koloru -->
+                                                <div class="color-picker" id="color_picker_{{post_id}}">
+                                                    <div class="color-box" data-color="0" id="color_box_0_{{post_id}}" style="background-color: transparent;"></div> <!-- Opcja bez wypełnienia -->
+                                                    <div class="color-box" data-color="8" id="color_box_8_{{post_id}}" style="background-image: url('static/img/fb-short-8.png');"></div>
+                                                    <div class="color-box" data-color="9" id="color_box_9_{{post_id}}" style="background-image: url('static/img/fb-short-9.png');"></div>
+                                                </div>
                                             </div>
 
                                             <!-- Skrypt do uruchomienia dla każdego posta -->
@@ -1167,33 +1172,82 @@
     }
 
 
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     // Pobranie wszystkich elementów typu color-picker
+    //     const allPickers = document.querySelectorAll('.color-picker');
+        
+    //     allPickers.forEach(function(picker) {
+    //         const postId = picker.id.split('_')[2]; // Wyciągnięcie post_id z identyfikatora
+    //         console.log('picker postId', picker.id, postId);
+    //         // Pobieranie ukrytego inputa dla tego postu
+    //         const hiddenInput = document.getElementById(`color_choice_${postId}`);
+            
+    //         // Pobranie wszystkich boxów wewnątrz danego picker-a
+    //         const colorBoxes = picker.querySelectorAll('.color-box');
+            
+    //         colorBoxes.forEach(function(box) {
+    //         box.addEventListener('click', function() {
+    //             // Usunięcie klasy 'selected' z każdego boxa w danym pickerze
+    //             colorBoxes.forEach(b => b.classList.remove('selected'));
+                
+    //             // Dodanie klasy 'selected' do wybranego boxa
+    //             box.classList.add('selected');
+                
+    //             // Ustawienie wartości ukrytego inputa na numer wybranego koloru
+    //             hiddenInput.value = box.getAttribute('data-color');
+    //         });
+    //         });
+    //     });
+    // });
+
     document.addEventListener('DOMContentLoaded', function() {
         // Pobranie wszystkich elementów typu color-picker
         const allPickers = document.querySelectorAll('.color-picker');
         
         allPickers.forEach(function(picker) {
-            const postId = picker.id.split('_')[2]; // Wyciągnięcie post_id z identyfikatora
+            // Sprawdzenie, czy picker ma prawidłowe id
+            if (!picker.id) {
+                console.error('Color picker does not have a valid ID:', picker);
+                return; // Pomiń, jeśli ID jest puste
+            }
+
+            // Wyciągnięcie post_id z identyfikatora pickera
+            const postId = picker.id.split('_')[2]; // Sprawdzenie podzielonego ID
+
+            // Sprawdzanie, czy postId jest prawidłowe
+            if (!postId) {
+                console.error('Post ID not found:', picker.id);
+                return; // Pomiń, jeśli postId nie istnieje
+            }
+
             console.log('picker postId', picker.id, postId);
-            // Pobieranie ukrytego inputa dla tego postu
+
+            // Pobranie ukrytego inputa dla tego postu
             const hiddenInput = document.getElementById(`color_choice_${postId}`);
             
+            if (!hiddenInput) {
+                console.error('Hidden input not found for postId:', postId);
+                return; // Pomiń, jeśli ukryty input nie istnieje
+            }
+
             // Pobranie wszystkich boxów wewnątrz danego picker-a
             const colorBoxes = picker.querySelectorAll('.color-box');
             
             colorBoxes.forEach(function(box) {
-            box.addEventListener('click', function() {
-                // Usunięcie klasy 'selected' z każdego boxa w danym pickerze
-                colorBoxes.forEach(b => b.classList.remove('selected'));
-                
-                // Dodanie klasy 'selected' do wybranego boxa
-                box.classList.add('selected');
-                
-                // Ustawienie wartości ukrytego inputa na numer wybranego koloru
-                hiddenInput.value = box.getAttribute('data-color');
-            });
+                box.addEventListener('click', function() {
+                    // Usunięcie klasy 'selected' z każdego boxa w danym pickerze
+                    colorBoxes.forEach(b => b.classList.remove('selected'));
+                    
+                    // Dodanie klasy 'selected' do wybranego boxa
+                    box.classList.add('selected');
+                    
+                    // Ustawienie wartości ukrytego inputa na numer wybranego koloru
+                    hiddenInput.value = box.getAttribute('data-color');
+                });
             });
         });
     });
+
 </script>
 {% endblock %}
 {% block footer %}
