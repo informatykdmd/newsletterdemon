@@ -11113,21 +11113,21 @@ def fb_groups_sender():
     if None in formatted_schedule:
         return jsonify({'success': False, 'message': 'Błąd w przekształcaniu dat'}), 400
 
-    # przygotowywanie list jednej długości
-
-    if not wznawiaj:
-        less_index  = [None, None, None, None, None, None, None, None, None, None]
+    # Przygotowywanie list jednej długości
+    less_index = []
+    [None, None, None, None, None, None, None, None, None, None]
+    if not wznawiaj: less_index  = [None for _ in range(10)]
+    else:
+        if 'ponow2razy' in repeats and 'ponow5razy' in repeats\
+            and 'ponow8razy' in repeats and 'ponow10razy' in repeats\
+                and wznawiaj:
+            if repeats['ponow2razy']: less_index = [None for _ in range(8)]
+            elif repeats['ponow5razy']: less_index = [None for _ in range(5)]
+            elif repeats['ponow8razy']: less_index = [None for _ in range(2)]
+            elif repeats['ponow10razy']: less_index = []
+        else:
+            return jsonify({'success': False, 'message': 'Błąd w przygotowywaniu list hramonogramów'}), 400
     
-    if 'ponow2razy' in repeats and 'ponow5razy' in repeats and 'ponow8razy' in repeats and 'ponow10razy' in repeats and wznawiaj:
-        if repeats['ponow2razy']:
-            less_index  = [None, None, None, None, None, None, None, None]
-        elif repeats['ponow5razy']:
-            less_index  = [None, None, None, None, None]
-        elif repeats['ponow8razy']:
-            less_index  = [None, None]
-        elif repeats['ponow10razy']:
-            less_index  = []
-
     prepareded_schedule = formatted_schedule + less_index
     print(f'formatted_schedule: {formatted_schedule}')
     print(f'less_index: {less_index}')
