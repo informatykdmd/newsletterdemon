@@ -883,6 +883,27 @@ def generator_jobs():
         daneList.append(theme)
     return daneList
 
+
+# Funkcja do przekształcania dat z formatu opisowego
+def format_date_pl(date_str):
+    months_pl = {
+        'styczeń': '01', 'luty': '02', 'marzec': '03', 'kwiecień': '04', 'maj': '05', 'czerwiec': '06',
+        'lipiec': '07', 'sierpień': '08', 'wrzesień': '09', 'październik': '10', 'listopad': '11', 'grudzień': '12'
+    }
+    try:
+        # Podziel tekst na poszczególne części
+        date_parts = date_str.split()
+        day = date_parts[0]
+        month = months_pl[date_parts[1]]
+        year = date_parts[2]
+        time = date_parts[4]  # 'godzina HH:MM'
+        
+        # Zwracamy datę w formacie 'YYYY-MM-DD HH:MM:SS'
+        return f'{year}-{month}-{day.zfill(2)} {time}:00'
+    except Exception as e:
+        print(f'Błąd podczas przekształcania daty: {e}')
+        return None
+
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 newsletterSettingDB = generator_newsletterSettingDB()
@@ -11070,19 +11091,27 @@ def remove_fbgroup():
 
 @app.route('/fb-groups-sender', methods=['POST'])
 def fb_groups_sender():
-    data = request.json  # Odbieramy dane w formacie JSON
-    post_id = data.get('post_id')
-    content = data.get('content')
-    color_choice = data.get('color_choice')
-    wznawiaj = data.get('wznawiaj')
-    schedule = data.get('schedule')  # Lista harmonogramu (dat)
-    frequency = data.get('frequency')
-    repeats = data.get('repeats')
+    data = request.json  # Odbieramy dane JSON
 
-    # Tutaj dodaj logikę zapisu do bazy danych lub innych operacji
-    print(f"Post ID: {post_id}, Content: {content}, Harmonogram: {schedule}, all: {data}")
+    # Pobieranie harmonogramu
+    schedule = data.get('schedule', [])
 
-    return jsonify({'success': True})
+    # Przekształcanie każdej daty w harmonogramie na standardowy format
+    formatted_schedule = [format_date_pl(date_str) for date_str in schedule]
+
+    # Debugging: sprawdź sformatowane daty
+    print(f'Sformatowane daty: {formatted_schedule}')
+
+    # Sprawdzamy, czy wszystkie daty są poprawnie sformatowane
+    if None in formatted_schedule:
+        return jsonify({'success': False, 'message': 'Błąd w przekształcaniu dat'}), 400
+
+    # Można teraz zapisać dane do bazy danych
+    # Tutaj kod do zapisu w bazie danych...
+    print(formatted_schedule)
+    print(data)
+    # Zwracamy sukces
+    return jsonify({'success': True, 'formatted_schedule': formatted_schedule})
 
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
