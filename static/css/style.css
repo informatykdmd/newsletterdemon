@@ -905,6 +905,6 @@ color:#969696;
     color: #555; /* Przyciemnienie koloru szczegółów daty */
     font-size: 0.9em;
     display: block; /* Ustawienie wiersza dla daty */
-    margin-bottom: 5px;
+    margin-bottom: 2px;
     margin-left: 10px;
 }

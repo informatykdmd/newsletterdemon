@@ -1321,7 +1321,7 @@
             const minutes = date.getMinutes().toString().padStart(2, '0');
 
             // Tworzymy element listy z datą i godziną
-            let formattedDate = `<li class="shedule-list-config">${dayOfWeek}`;
+            let formattedDate = `<li class="shedule-list-config"><i class="bi bi-compass" style="color: orange;"></i> ${dayOfWeek}`;
 
             if (date.getDate() === (new Date()).getDate()) {
                 formattedDate += ' (dzisiaj)';
