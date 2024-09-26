@@ -896,6 +896,7 @@ color:#969696;
 /* Styl dla listy dni tygodnia */
 .shedule-list-config {
     font-weight: 600;
+    font-size: 13px;
     margin-bottom: 0;
     list-style-type: none; /* Usuwa kropki z listy */
 }
@@ -903,7 +904,7 @@ color:#969696;
 /* Styl dla szczegółów daty */
 .shedule-date-details {
     color: #555; /* Przyciemnienie koloru szczegółów daty */
-    font-size: 0.9em;
+    font-size: 13px;
     display: block; /* Ustawienie wiersza dla daty */
     margin-bottom: 0px;
     margin-left: 10px;
