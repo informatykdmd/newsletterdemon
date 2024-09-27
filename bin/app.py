@@ -87,7 +87,7 @@ def make_fbgroups_task(data):
     status = 4
     active_task = 0
 
-
+    # Zapisuję i synchronizuję bazy waitnig_list i automatu
     if prepare_shedule.insert_to_database(
         f"""
             UPDATE waitinglist_fbgroups SET
@@ -95,8 +95,7 @@ def make_fbgroups_task(data):
                 schedule_{poziom_harmonogramu}_status = %s
             WHERE id = %s;""",
             (id_zadania, status, waitnig_list_id)
-        ):
-        return prepare_shedule.insert_to_database(
+        ): return prepare_shedule.insert_to_database(
             f"""INSERT INTO ogloszenia_fbgroups
                     (id_ogloszenia, waitnig_list_id, kategoria_ogloszenia, sekcja_ogloszenia, tresc_ogloszenia, 
                     styl_ogloszenia, poziom_harmonogramu, linkigrup_string, zdjecia_string, 
@@ -107,8 +106,7 @@ def make_fbgroups_task(data):
             styl_ogloszenia, poziom_harmonogramu, linkigrup_string, zdjecia_string, 
             id_zadania, status, active_task)
             )
-    else:
-        return False
+    else: return False
 
 
 def main():
