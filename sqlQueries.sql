@@ -266,7 +266,7 @@ CREATE TABLE facebook_gropus (
 );
 
 -- tabela poczekalnia zlecen fbgroups 
-CREATE TABLE waitinglist_fbgropus (
+CREATE TABLE waitinglist_fbgroups (
     id INT AUTO_INCREMENT PRIMARY KEY,
     post_id INT,
     content TEXT,
@@ -323,8 +323,11 @@ CREATE TABLE waitinglist_fbgropus (
     data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+ALTER TABLE waitinglist_fbgroups
+ADD COLUMN id_gallery INT AFTER section;
+
 -- tabela fb groups
-CREATE TABLE ogloszenia_fbgropus (
+CREATE TABLE ogloszenia_fbgroups (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_ogloszenia INT,
     kategoria_ogloszenia TEXT,
@@ -332,7 +335,7 @@ CREATE TABLE ogloszenia_fbgropus (
     tresc_ogloszenia TEXT,
     styl_ogloszenia INT,
     poziom_harmonogramu INT,
-    grupy_string TEXT,
+    linkigrup_string TEXT,
     zdjecia_string TEXT,
     id_zadania INT,
     status INT,
