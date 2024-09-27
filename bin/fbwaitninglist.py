@@ -121,7 +121,7 @@ def give_me_curently_tasks():
         new_repeats_left_int = repeats_left_int - 1
         new_repeats_last_int = repeats_last_int + 1 
 
-        date_took = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+        date_took = date_str# datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
 
         # Weryfikacja czy już czas
         if today > date_took and (today - date_took) <= max_delay:
@@ -133,7 +133,7 @@ def give_me_curently_tasks():
                 'color_choice': item['color_choice'],
                 'category': item['category'],
                 'section': item['section'],
-                'section': item['id_gallery']
+                'id_gallery': item['id_gallery']
             }
             export_ids.append(exportDataDict)
             zapytanie_sql = """
