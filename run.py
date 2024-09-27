@@ -11097,7 +11097,7 @@ def fb_groups_sender():
     # Pobieranie harmonogramu
     schedule = data.get('schedule', [])
     wznawiaj = data.get('wznawiaj', False)
-    repeats = data.get('repeats', {})
+    repeats_dict = data.get('repeats', {})
     content = data.get('content')
     color_choice = data.get('color_choice')
     post_id = data.get('post_id')
@@ -11115,37 +11115,40 @@ def fb_groups_sender():
 
     # Przygotowywanie list jednej długości
     less_index = []
-    raiser = 0
     repeater = 0
     if not wznawiaj: 
         less_index  = [None for _ in range(10)]
-        raiser = 0
         repeater = 0
     else:
-        if 'ponow2razy' in repeats and 'ponow5razy' in repeats\
-            and 'ponow8razy' in repeats and 'ponow10razy' in repeats\
+        if 'ponow2razy' in repeats_dict and 'ponow5razy' in repeats_dict\
+            and 'ponow8razy' in repeats_dict and 'ponow10razy' in repeats_dict\
                 and wznawiaj:
-            if repeats['ponow2razy']: 
+            if repeats_dict['ponow2razy']: 
                 less_index = [None for _ in range(8)]
-                raiser = 1
                 repeater = 2
-            elif repeats['ponow5razy']: 
+            elif repeats_dict['ponow5razy']: 
                 less_index = [None for _ in range(5)]
-                raiser = 1
                 repeater = 5
-            elif repeats['ponow8razy']: 
+            elif repeats_dict['ponow8razy']: 
                 less_index = [None for _ in range(2)]
-                raiser = 1
                 repeater = 8
-            elif repeats['ponow10razy']: 
+            elif repeats_dict['ponow10razy']: 
                 less_index = []
-                raiser = 1
                 repeater = 10
         else:
             return jsonify({'success': False, 'message': 'Błąd w przygotowywaniu list hramonogramów'}), 400
         
+    repeats_left = repeater + 1
+    repeats_last = None
+    repeats = repeater + 1
+
     # Gotowa lista prepareded_schedule
     prepareded_schedule = formatted_schedule + less_index
+
+    schedule_0_datetime, schedule_1_datetime, schedule_2_datetime, \
+        schedule_3_datetime, schedule_4_datetime, schedule_5_datetime, \
+            schedule_6_datetime, schedule_7_datetime, schedule_8_datetime, \
+                schedule_9_datetime, schedule_10_datetime = prepareded_schedule
 
     print(f'formatted_schedule: {formatted_schedule}')
     print(f'less_index: {less_index}')
@@ -11153,8 +11156,47 @@ def fb_groups_sender():
 
     print(len(prepareded_schedule))
 
+    zapytanie_sql = '''
+                INSERT INTO waitinglist_fbgroups
+                    (post_id, content, color_choice,
+                    repeats, repeats_left, repeats_last, 
+                    schedule_0_datetime, schedule_1_datetime, 
+                    schedule_2_datetime, schedule_3_datetime, 
+                    schedule_4_datetime, schedule_5_datetime, 
+                    schedule_6_datetime, schedule_7_datetime, 
+                    schedule_8_datetime, schedule_9_datetime, 
+                    schedule_10_datetime, 
+                    category, section)
+                VALUES 
+                    (%s, %s, %s, 
+                    %s, %s, %s, 
+                    %s, %s,  
+                    %s, %s,  
+                    %s, %s,  
+                    %s, %s,  
+                    %s, %s,  
+                    %s, 
+                    %s, %s);
+            '''
+    dane = (post_id, content, color_choice,
+            repeats, repeats_left, repeats_last, 
+            schedule_0_datetime, schedule_1_datetime, 
+            schedule_2_datetime, schedule_3_datetime, 
+            schedule_4_datetime, schedule_5_datetime, 
+            schedule_6_datetime, schedule_7_datetime, 
+            schedule_8_datetime, schedule_9_datetime, 
+            schedule_10_datetime, 
+            category, section)
+
+    print(dane)
+    if msq.insert_to_database(zapytanie_sql, dane):
+        flash(f'Zmiany zostały zapisane!', 'success')
+        return jsonify({'success': True, 'message': f'Zmiany zostały zapisane!'})
+    else:
+        return jsonify({'success': False, 'message': 'Błąd zapisu bazy danych'}), 400
+
     # Zwracamy sukces
-    return jsonify({'success': True, 'formatted_schedule': formatted_schedule})
+    
 
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
