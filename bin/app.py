@@ -77,7 +77,7 @@ def make_fbgroups_task(data):
     zdjecia_string = fotolinkigrup_string
 
     # Pobieramy bieżący czas w formacie UNIX
-    unix_time = int(time.time()) % 1000000
+    unix_time = int(time()) % 1000000
     # Generujemy losowe cyfry (np. 5-cyfrowy numer)
     random_digits = random.randint(100, 999)
 
