@@ -344,3 +344,6 @@ CREATE TABLE ogloszenia_fbgroups (
     data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     action_before_errors INT
 );
+
+ALTER TABLE ogloszenia_fbgroups
+ADD COLUMN waitnig_list_id INT AFTER id_ogloszenia;

@@ -110,7 +110,7 @@ def give_me_curently_tasks():
             """
             data = (item['id'],)
             insert_to_database(zapytanie_sql, data)
-            print("procedura zakończenia kamanii")
+            print("Procedura zakończenia kampanii")
             continue
         else:
             date_str = item['shedules'][str(int(item['repeats_last']) + 1)]['datetime']

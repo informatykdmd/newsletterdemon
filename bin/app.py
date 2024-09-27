@@ -54,6 +54,7 @@ def prepare_prompt(began_prompt):
 
 def make_fbgroups_task(data):
     {'id': 1, 'shedules_level': 0, 'post_id': 13, 'content': 'content TEXT', 'color_choice': 4, 'category': 'praca', 'section': 'career'}
+    waitnig_list_id = data['id']
     id_ogloszenia = data['post_id']
     kategoria_ogloszenia = data['category'] 
     sekcja_ogloszenia = data['section']
@@ -87,18 +88,27 @@ def make_fbgroups_task(data):
     active_task = 0
 
 
-
-    return prepare_shedule.insert_to_database(
-        f"""INSERT INTO ogloszenia_fbgroups
-                (id_ogloszenia, kategoria_ogloszenia, sekcja_ogloszenia, tresc_ogloszenia, 
-                styl_ogloszenia, poziom_harmonogramu, linkigrup_string, zdjecia_string, 
-                id_zadania, status, active_task)
-            VALUES 
-                (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""",
-        (id_ogloszenia, kategoria_ogloszenia, sekcja_ogloszenia, tresc_ogloszenia, 
-        styl_ogloszenia, poziom_harmonogramu, linkigrup_string, zdjecia_string, 
-        id_zadania, status, active_task)
-        )
+    if prepare_shedule.insert_to_database(
+        f"""
+            UPDATE waitinglist_fbgroups SET
+                schedule_{poziom_harmonogramu}_id = %s,
+                schedule_{poziom_harmonogramu}_status = %s
+            WHERE id = %s;""",
+            (id_zadania, status, waitnig_list_id)
+        ):
+        return prepare_shedule.insert_to_database(
+            f"""INSERT INTO ogloszenia_fbgroups
+                    (id_ogloszenia, waitnig_list_id, kategoria_ogloszenia, sekcja_ogloszenia, tresc_ogloszenia, 
+                    styl_ogloszenia, poziom_harmonogramu, linkigrup_string, zdjecia_string, 
+                    id_zadania, status, active_task)
+                VALUES 
+                    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""",
+            (id_ogloszenia, waitnig_list_id, kategoria_ogloszenia, sekcja_ogloszenia, tresc_ogloszenia, 
+            styl_ogloszenia, poziom_harmonogramu, linkigrup_string, zdjecia_string, 
+            id_zadania, status, active_task)
+            )
+    else:
+        return False
 
 
 def main():
