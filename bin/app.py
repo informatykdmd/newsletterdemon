@@ -54,7 +54,7 @@ def prepare_prompt(began_prompt):
 
 def make_fbgroups_task(data):
     {'id': 1, 'shedules_level': 0, 'post_id': 13, 'content': 'content TEXT', 'color_choice': 4, 'category': 'praca', 'section': 'career'}
-    id_ogloszenia = data['id']
+    id_ogloszenia = data['post_id']
     kategoria_ogloszenia = data['category'] 
     sekcja_ogloszenia = data['section']
     tresc_ogloszenia = data['content']
@@ -69,9 +69,8 @@ def make_fbgroups_task(data):
 
     fotolinkigrup_string = ""  # Dodajemy wartość domyślną
     if id_gallery is not None:
-        dump_row_fotos = prepare_shedule.insert_to_database(
-            f"""SELECT * FROM ZdjeciaOfert WHERE ID = %s;""", (id_gallery,)
-        )[0]
+        dump_row_fotos = prepare_shedule.connect_to_database(
+            f"""SELECT * FROM ZdjeciaOfert WHERE ID = id_gallery;""")[0]
         clear_row_foto = [foto for foto in dump_row_fotos[1:-1] if foto is not None]
         fotolinkigrup_string = '-@-'.join(fotolink for fotolink in clear_row_foto)
     zdjecia_string = fotolinkigrup_string
@@ -86,6 +85,8 @@ def make_fbgroups_task(data):
 
     status = 4
     active_task = 0
+
+
 
     return prepare_shedule.insert_to_database(
         f"""INSERT INTO ogloszenia_fbgroups
