@@ -104,7 +104,7 @@ def give_me_curently_tasks():
             date_str = item['shedules']["0"]['datetime']
             repeats_last_int = -1
             
-        elif item['repeats_last'] == item['repeats']:
+        elif item['repeats_left'] == 0:
             zapytanie_sql = """
                 DELETE FROM waitinglist_fbgroups WHERE id = %s;
             """
