@@ -120,8 +120,10 @@ def give_me_curently_tasks():
 
         new_repeats_left_int = repeats_left_int - 1
         new_repeats_last_int = repeats_last_int + 1 
-
-        date_took = date_str# datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+        if date_str is not None:
+            date_took = date_str # datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+        else:
+            continue
 
         # Weryfikacja czy już czas
         if today > date_took and (today - date_took) <= max_delay:
