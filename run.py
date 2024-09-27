@@ -11188,6 +11188,7 @@ def fb_groups_sender():
             schedule_10_datetime, 
             category, section)
 
+    print(zapytanie_sql)
     print(dane)
     if msq.insert_to_database(zapytanie_sql, dane):
         flash(f'Zmiany zostały zapisane!', 'success')
