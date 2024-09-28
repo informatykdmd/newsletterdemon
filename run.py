@@ -318,6 +318,45 @@ def checkLentoStatus(kind, id):
     except IndexError:
         return (None, None, None, None, None)
     
+def checkFbGroupstatus(section, post_id):
+    try:
+        return msq.connect_to_database(
+            f'''
+                SELECT 
+                    id, post_id, content, color_choice, repeats, repeats_left, repeats_last, 
+                    schedule_0_id, schedule_0_datetime, schedule_0_status, schedule_0_errors, 
+                    schedule_1_id, schedule_1_datetime, schedule_1_status, schedule_1_errors, 
+                    schedule_2_id, schedule_2_datetime, schedule_2_status, schedule_2_errors, 
+                    schedule_3_id, schedule_3_datetime, schedule_3_status, schedule_3_errors, 
+                    schedule_4_id, schedule_4_datetime, schedule_4_status, schedule_4_errors, 
+                    schedule_5_id, schedule_5_datetime, schedule_5_status, schedule_5_errors, 
+                    schedule_6_id, schedule_6_datetime, schedule_6_status, schedule_6_errors, 
+                    schedule_7_id, schedule_7_datetime, schedule_7_status, schedule_7_errors, 
+                    schedule_8_id, schedule_8_datetime, schedule_8_status, schedule_8_errors, 
+                    schedule_9_id, schedule_9_datetime, schedule_9_status, schedule_9_errors, 
+                    schedule_10_id, schedule_10_datetime, schedule_10_status, schedule_10_errors, 
+                    category, section, id_gallery, data_aktualizacji
+                FROM waitinglist_fbgroups 
+                WHERE section="{section}" 
+                AND post_id={post_id};
+            ''')[0]
+    except IndexError:
+        return (
+            None, None, None, None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None,
+            None, None, None, None
+            )
+    
 def takeLentoResumeStatus(lento_id):
     try:
         return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_lento WHERE id="{lento_id}";')[0][0]
@@ -3269,7 +3308,82 @@ def career():
     
     ads_career_got = generator_jobs()
 
-    all_career = ads_career_got
+    new_all_career = []
+    for item in ads_career_got:
+        if 'fbgroups' not in item:
+            item['fbgroups'] = {}
+        fbgroupsIDstatus = checkFbGroupstatus(section="career", post_id=item['ID'])
+        item['fbgroups']['id'] = fbgroupsIDstatus[0]
+        item['fbgroups']['post_id'] = fbgroupsIDstatus[1]
+        item['fbgroups']['content'] = fbgroupsIDstatus[2]
+        item['fbgroups']['color_choice'] = fbgroupsIDstatus[3]
+        item['fbgroups']['repeats'] = fbgroupsIDstatus[4]
+        item['fbgroups']['repeats_left'] = fbgroupsIDstatus[5]
+        item['fbgroups']['repeats_last'] = fbgroupsIDstatus[6]
+
+        item['fbgroups']['schedule_0_id'] = fbgroupsIDstatus[7]
+        item['fbgroups']['schedule_0_datetime'] = fbgroupsIDstatus[8]
+        item['fbgroups']['schedule_0_status'] = fbgroupsIDstatus[9]
+        item['fbgroups']['schedule_0_errors'] = fbgroupsIDstatus[10]
+
+        item['fbgroups']['schedule_1_id'] = fbgroupsIDstatus[11]
+        item['fbgroups']['schedule_1_datetime'] = fbgroupsIDstatus[12]
+        item['fbgroups']['schedule_1_status'] = fbgroupsIDstatus[13]
+        item['fbgroups']['schedule_1_errors'] = fbgroupsIDstatus[14]
+
+        item['fbgroups']['schedule_2_id'] = fbgroupsIDstatus[15]
+        item['fbgroups']['schedule_2_datetime'] = fbgroupsIDstatus[16]
+        item['fbgroups']['schedule_2_status'] = fbgroupsIDstatus[17]
+        item['fbgroups']['schedule_2_errors'] = fbgroupsIDstatus[18]
+
+        item['fbgroups']['schedule_3_id'] = fbgroupsIDstatus[19]
+        item['fbgroups']['schedule_3_datetime'] = fbgroupsIDstatus[20]
+        item['fbgroups']['schedule_3_status'] = fbgroupsIDstatus[21]
+        item['fbgroups']['schedule_3_errors'] = fbgroupsIDstatus[22]
+
+        item['fbgroups']['schedule_4_id'] = fbgroupsIDstatus[23]
+        item['fbgroups']['schedule_4_datetime'] = fbgroupsIDstatus[24]
+        item['fbgroups']['schedule_4_status'] = fbgroupsIDstatus[25]
+        item['fbgroups']['schedule_4_errors'] = fbgroupsIDstatus[26]
+
+        item['fbgroups']['schedule_5_id'] = fbgroupsIDstatus[27]
+        item['fbgroups']['schedule_5_datetime'] = fbgroupsIDstatus[28]
+        item['fbgroups']['schedule_5_status'] = fbgroupsIDstatus[29]
+        item['fbgroups']['schedule_5_errors'] = fbgroupsIDstatus[30]
+
+        item['fbgroups']['schedule_6_id'] = fbgroupsIDstatus[31]
+        item['fbgroups']['schedule_6_datetime'] = fbgroupsIDstatus[32]
+        item['fbgroups']['schedule_6_status'] = fbgroupsIDstatus[33]
+        item['fbgroups']['schedule_6_errors'] = fbgroupsIDstatus[34]
+
+        item['fbgroups']['schedule_7_id'] = fbgroupsIDstatus[35]
+        item['fbgroups']['schedule_7_datetime'] = fbgroupsIDstatus[36]
+        item['fbgroups']['schedule_7_status'] = fbgroupsIDstatus[37]
+        item['fbgroups']['schedule_7_errors'] = fbgroupsIDstatus[38]
+
+        item['fbgroups']['schedule_8_id'] = fbgroupsIDstatus[39]
+        item['fbgroups']['schedule_8_datetime'] = fbgroupsIDstatus[40]
+        item['fbgroups']['schedule_8_status'] = fbgroupsIDstatus[41]
+        item['fbgroups']['schedule_8_errors'] = fbgroupsIDstatus[42]
+
+        item['fbgroups']['schedule_9_id'] = fbgroupsIDstatus[43]
+        item['fbgroups']['schedule_9_datetime'] = fbgroupsIDstatus[44]
+        item['fbgroups']['schedule_9_status'] = fbgroupsIDstatus[45]
+        item['fbgroups']['schedule_9_errors'] = fbgroupsIDstatus[46]
+
+        item['fbgroups']['schedule_10_id'] = fbgroupsIDstatus[47]
+        item['fbgroups']['schedule_10_datetime'] = fbgroupsIDstatus[48]
+        item['fbgroups']['schedule_10_status'] = fbgroupsIDstatus[49]
+        item['fbgroups']['schedule_10_errors'] = fbgroupsIDstatus[50]
+
+        item['fbgroups']['category'] = fbgroupsIDstatus[51]
+        item['fbgroups']['section'] = fbgroupsIDstatus[52]
+        item['fbgroups']['id_gallery'] = fbgroupsIDstatus[53]
+        item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[54]
+
+        new_all_career.append(item)
+
+    all_career = new_all_career
 
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -11105,6 +11219,7 @@ def fb_groups_sender():
     # Flagi konfigruracyjne deamona
     category = 'praca'
     section = 'career'
+    id_gallery = None
 
     # Przekształcanie każdej daty w harmonogramie na standardowy format
     formatted_schedule = [format_date_pl(date_str) for date_str in schedule]
@@ -11145,16 +11260,17 @@ def fb_groups_sender():
     # Gotowa lista prepareded_schedule
     prepareded_schedule = formatted_schedule + less_index
 
+    # Przyporzadkowuję daty do zmiennych exportowych
     schedule_0_datetime, schedule_1_datetime, schedule_2_datetime, \
         schedule_3_datetime, schedule_4_datetime, schedule_5_datetime, \
             schedule_6_datetime, schedule_7_datetime, schedule_8_datetime, \
                 schedule_9_datetime, schedule_10_datetime = prepareded_schedule
 
-    print(f'formatted_schedule: {formatted_schedule}')
-    print(f'less_index: {less_index}')
-    print(f'prepareded_schedule: {prepareded_schedule}', len(prepareded_schedule))
+    # print(f'formatted_schedule: {formatted_schedule}')
+    # print(f'less_index: {less_index}')
+    # print(f'prepareded_schedule: {prepareded_schedule}', len(prepareded_schedule))
 
-    print(len(prepareded_schedule))
+    # print(len(prepareded_schedule))
 
     zapytanie_sql = '''
                 INSERT INTO waitinglist_fbgroups

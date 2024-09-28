@@ -751,6 +751,7 @@
                                     
                                     
                                 </div>
+                                {% if post_data['fbgroups']['id'] == None %}
                                 <form action="" id="form_karieraFB_{{post_id}}" method="POST" enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="col-lg-5 col-sm-12">
@@ -1059,7 +1060,10 @@
                                         </div>
                                     </div>
                                 </form>
-                                
+                                {% else %}
+                                    Monitoring publiacji
+                                    {{item['fbgroups']}}
+                                {% endif %}
 
                             </div>
 
