@@ -3312,7 +3312,7 @@ def career():
     for item in ads_career_got:
         if 'fbgroups' not in item:
             item['fbgroups'] = {}
-        fbgroupsIDstatus = checkFbGroupstatus(section="career", post_id=item['ID'])
+        fbgroupsIDstatus = checkFbGroupstatus(section="career", post_id=item['id'])
         item['fbgroups']['id'] = fbgroupsIDstatus[0]
         item['fbgroups']['post_id'] = fbgroupsIDstatus[1]
         item['fbgroups']['content'] = fbgroupsIDstatus[2]
