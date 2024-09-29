@@ -932,10 +932,12 @@ color:#969696;
 
 .completed {
     background-color: green;
+    color:#121212;
 }
 
 .in-progress {
     background-color: orange;
+    color:#121212;
 }
 
 .error {
@@ -944,4 +946,5 @@ color:#969696;
 
 .waiting {
     background-color: gray;
+    color:#000000;
 }
