@@ -971,3 +971,15 @@ color:#969696;
     color: gray;
     font-size: 24px;
 }
+
+.fbgroups-requirements-description-preview {
+    color: #c2c2c2;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 400px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative; /* Umożliwia pozycjonowanie licznika znaków */
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 22px;
+}
