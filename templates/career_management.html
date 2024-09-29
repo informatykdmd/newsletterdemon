@@ -1085,16 +1085,24 @@
                                                                     <p>
                                                                         {% if schedule_status == 1 %}
                                                                             <!-- Zrealizowane bez błędów -->
-                                                                            <i class="bi bi-check-circle completed-icon"></i>
+                                                                             <span class="completed-icon">
+                                                                                 <i class="bi bi-check-circle"></i>
+                                                                             </span>
                                                                         {% elif schedule_status == 4 %}
                                                                             <!-- W trakcie realizacji -->
-                                                                            <i class="bi bi-hourglass-split in-progress-icon"></i>
+                                                                            <span class="in-progress-icon">
+                                                                                <i class="bi bi-hourglass-split "></i>
+                                                                            </span>
                                                                         {% elif schedule_status == 2 %}
                                                                             <!-- Zrealizowane z błędami -->
-                                                                            <i class="bi bi-exclamation-triangle error-icon"></i>
+                                                                            <span class="error-icon">
+                                                                                <i class="bi bi-exclamation-triangle"></i>
+                                                                            </span>
                                                                         {% else %}
                                                                             <!-- Oczekuje -->
-                                                                            <i class="bi bi-clock waiting-icon"></i>
+                                                                             <span class="waiting-icon">
+                                                                                 <i class="bi bi-clock"></i>
+                                                                             </span>
                                                                         {% endif %}
                                                                     </p>
                                                                     <div class=" squerecircle

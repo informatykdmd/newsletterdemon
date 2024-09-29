@@ -920,14 +920,15 @@ color:#969696;
 }
 
 .squerecircle {
-    width: 80px;
-    height: 120px;
+    width: 120px;
+    height: 70px;
     border-radius: 8px;
 
     border: #1e2124 1px solid;
     justify-content: center;
     align-items: center;
-    font-size: 12px;
+    font-size: 10px;
+    font-weight: 800;
 }
 
 .completed {
