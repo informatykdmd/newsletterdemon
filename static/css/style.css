@@ -920,7 +920,9 @@ color:#969696;
 }
 
 .squerecircle {
-    width: 120px;
+    width: 110px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     border-radius: 8px;
 
     border: #1e2124 1px solid;
@@ -952,20 +954,20 @@ color:#969696;
 
 .completed-icon {
     color: green;
-    font-size: 5.5em;
+    font-size: 24px;
 }
 
 .in-progress-icon {
     color: orange;
-    font-size: 5.5em;
+    font-size: 24px;
 }
 
 .error-icon {
     color: red;
-    font-size: 5.5em;
+    font-size: 24px;
 }
 
 .waiting-icon {
     color: gray;
-    font-size: 5.5em;
+    font-size: 24px;
 }
