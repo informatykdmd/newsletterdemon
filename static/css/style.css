@@ -952,20 +952,20 @@ color:#969696;
 
 .completed-icon {
     color: green;
-    font-size: 1.5em;
+    font-size: 5.5em;
 }
 
 .in-progress-icon {
     color: orange;
-    font-size: 1.5em;
+    font-size: 5.5em;
 }
 
 .error-icon {
     color: red;
-    font-size: 1.5em;
+    font-size: 5.5em;
 }
 
 .waiting-icon {
     color: gray;
-    font-size: 1.5em;
+    font-size: 5.5em;
 }
