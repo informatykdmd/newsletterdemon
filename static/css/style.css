@@ -912,6 +912,7 @@ color:#969696;
 .campaign-checkpoints {
     /* display: flex; */
     justify-content: space-between;
+    color:#121212;
 }
 
 .checkpoint {
