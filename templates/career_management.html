@@ -1082,20 +1082,24 @@
                                                             {% if schedule_datetime %}
                                                             <div class="col-3">
                                                                 <div class="checkpoint">
-                                                                    <div class="circle 
+                                                                    <div class=" 
                                                                         {% if schedule_status == 1 %}completed{% elif schedule_status == 4 %}in-progress
                                                                         {% elif schedule_status == 2 %}error{% else %}waiting{% endif %}">
                                                                         <span class="checkpoint-date">{{ schedule_datetime.strftime('%Y-%m-%d %H:%M') }}</span>
                                                                     </div>
                                                                     <p>Status: 
                                                                         {% if schedule_status == 1 %}
-                                                                            Zrealizowane bez błędów
+                                                                            <!-- Zrealizowane bez błędów -->
+                                                                            <i class="bi bi-check-circle"></i>
                                                                         {% elif schedule_status == 4 %}
-                                                                            W trakcie realizacji
+                                                                            <!-- W trakcie realizacji -->
+                                                                            <i class="bi bi-hourglass-split"></i>
                                                                         {% elif schedule_status == 2 %}
-                                                                            Zrealizowane z błędami
+                                                                            <!-- Zrealizowane z błędami -->
+                                                                            <i class="bi bi-exclamation-triangle"></i>
                                                                         {% else %}
-                                                                            Oczekuje
+                                                                            <!-- Oczekuje -->
+                                                                            <i class="bi bi-clock"></i>
                                                                         {% endif %}
                                                                     </p>
                                                                 </div>
