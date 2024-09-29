@@ -1062,6 +1062,56 @@
                                         </div>
                                     </form>
                                     {% else %}
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="">
+                                                    Podgląd
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <div class="">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <h5>Harmonogram</h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row-cols-3">
+                                                        {% for i in range(11) %}
+                                                            {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
+                                                            {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
+                                                            {% if schedule_datetime %}
+                                                            <div class="col">
+                                                                <div class="checkpoint">
+                                                                    <div class="circle 
+                                                                        {% if schedule_status == 1 %}completed{% elif schedule_status == 4 %}in-progress
+                                                                        {% elif schedule_status == 2 %}error{% else %}waiting{% endif %}">
+                                                                        <span class="checkpoint-date">{{ schedule_datetime.strftime('%Y-%m-%d %H:%M') }}</span>
+                                                                    </div>
+                                                                    <p>Status: 
+                                                                        {% if schedule_status == 1 %}
+                                                                            Zrealizowane bez błędów
+                                                                        {% elif schedule_status == 4 %}
+                                                                            W trakcie realizacji
+                                                                        {% elif schedule_status == 2 %}
+                                                                            Zrealizowane z błędami
+                                                                        {% else %}
+                                                                            Oczekuje
+                                                                        {% endif %}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <div class="col">
+                                                            <h5>Harmonogram</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="">
+                                                    Opcje strony
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="campaign-monitoring">
                                             <h3>Monitoring publikacji</h3>
                                             <div class="campaign-info">

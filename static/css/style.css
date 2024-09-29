@@ -910,7 +910,7 @@ color:#969696;
 }
 
 .campaign-checkpoints {
-    display: flex;
+    /* display: flex; */
     justify-content: space-between;
 }
 
@@ -923,7 +923,7 @@ color:#969696;
     height: 50px;
     border-radius: 50%;
     margin: 0 auto;
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     font-size: 12px;
