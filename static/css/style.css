@@ -919,32 +919,51 @@ color:#969696;
     text-align: center;
 }
 
-.circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin: 0 auto;
-    /* display: flex; */
+.squerecircle {
+    width: 80px;
+    height: 120px;
+    border-radius: 8px;
+
+    border: #1e2124 1px solid;
     justify-content: center;
     align-items: center;
     font-size: 12px;
 }
 
 .completed {
-    background-color: green;
+    background-color: #b7fab7;
     color:#121212;
 }
 
 .in-progress {
-    background-color: orange;
+    background-color: #ffe1a9;
     color:#121212;
 }
 
 .error {
-    background-color: red;
+    background-color: #ffc9c9;
+    color:#ff0000;
 }
 
 .waiting {
-    background-color: gray;
+    background-color: #a3a3a3;
     color:#000000;
+}
+
+.completed-icon {
+    color: green;
+    color:#121212;
+}
+
+.in-progress-icon {
+    color: orange;
+    color:#121212;
+}
+
+.error-icon {
+    color: red;
+}
+
+.waiting-icon {
+    color: gray;
 }

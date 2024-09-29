@@ -1082,33 +1082,30 @@
                                                             {% if schedule_datetime %}
                                                             <div class="col-3">
                                                                 <div class="checkpoint">
-                                                                    <div class=" 
+                                                                    <p>
+                                                                        {% if schedule_status == 1 %}
+                                                                            <!-- Zrealizowane bez błędów -->
+                                                                            <i class="bi bi-check-circle completed-icon"></i>
+                                                                        {% elif schedule_status == 4 %}
+                                                                            <!-- W trakcie realizacji -->
+                                                                            <i class="bi bi-hourglass-split in-progress-icon"></i>
+                                                                        {% elif schedule_status == 2 %}
+                                                                            <!-- Zrealizowane z błędami -->
+                                                                            <i class="bi bi-exclamation-triangle error-icon"></i>
+                                                                        {% else %}
+                                                                            <!-- Oczekuje -->
+                                                                            <i class="bi bi-clock waiting-icon"></i>
+                                                                        {% endif %}
+                                                                    </p>
+                                                                    <div class=" squerecircle
                                                                         {% if schedule_status == 1 %}completed{% elif schedule_status == 4 %}in-progress
                                                                         {% elif schedule_status == 2 %}error{% else %}waiting{% endif %}">
                                                                         <span class="checkpoint-date">{{ schedule_datetime.strftime('%Y-%m-%d %H:%M') }}</span>
                                                                     </div>
-                                                                    <p>Status: 
-                                                                        {% if schedule_status == 1 %}
-                                                                            <!-- Zrealizowane bez błędów -->
-                                                                            <i class="bi bi-check-circle"></i>
-                                                                        {% elif schedule_status == 4 %}
-                                                                            <!-- W trakcie realizacji -->
-                                                                            <i class="bi bi-hourglass-split"></i>
-                                                                        {% elif schedule_status == 2 %}
-                                                                            <!-- Zrealizowane z błędami -->
-                                                                            <i class="bi bi-exclamation-triangle"></i>
-                                                                        {% else %}
-                                                                            <!-- Oczekuje -->
-                                                                            <i class="bi bi-clock"></i>
-                                                                        {% endif %}
-                                                                    </p>
                                                                 </div>
                                                             </div>
                                                             {% endif %}
                                                         {% endfor %}
-                                                        <div class="col">
-                                                            <h5>Harmonogram</h5>
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="">
