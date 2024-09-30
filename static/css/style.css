@@ -916,20 +916,21 @@ color:#969696;
 }
 
 .checkpoint {
-    text-align: center;
-}
-
-.squerecircle {
     width: 110px;
     padding-top: 15px;
     padding-bottom: 15px;
     border-radius: 8px;
 
     border: #1e2124 1px solid;
+    text-align: center;
+}
+
+.squerecircle {
     justify-content: center;
     align-items: center;
     font-size: 10px;
     font-weight: 800;
+    width: 100%;
 }
 
 .completed {
@@ -938,7 +939,7 @@ color:#969696;
 }
 
 .in-progress {
-    background-color: #ffe1a9;
+    background-color: #decbaa;
     color:#121212;
 }
 
