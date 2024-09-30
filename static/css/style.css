@@ -929,47 +929,49 @@ color:#969696;
     align-items: center;
     font-size: 10px;
     font-weight: 800;
+    color: #e7e7e7;
+    background-color: #050505;
     width: 100%;
 }
 
 .completed {
-    background-color: #b7fab7;
+    background-color: #d8fbd8;
     color:#121212;
 }
 
 .in-progress {
-    background-color: #decbaa;
+    background-color: #fff2db;
     color:#121212;
 }
 
 .error {
-    background-color: #ffc9c9;
+    background-color: #f9d4d4;
     color:#ff0000;
 }
 
 .waiting {
-    background-color: #a3a3a3;
+    background-color: #dedede;
     color:#000000;
 }
 
 .completed-icon {
     color: green;
-    font-size: 24px;
+    font-size: 26px;
 }
 
 .in-progress-icon {
     color: orange;
-    font-size: 24px;
+    font-size: 26px;
 }
 
 .error-icon {
     color: red;
-    font-size: 24px;
+    font-size: 26px;
 }
 
 .waiting-icon {
     color: gray;
-    font-size: 24px;
+    font-size: 26px;
 }
 
 .fbgroups-requirements-description-preview {
