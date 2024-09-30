@@ -11369,7 +11369,7 @@ def remove_career_fbgroups():
 
         try: form_data['waitnig_list_id']
         except KeyError: return redirect(url_for('index'))
-        set_wl_id = int(form_data['PostID'])
+        set_wl_id = int(form_data['waitnig_list_id'])
         
         msq.delete_row_from_database(
                 """
