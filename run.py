@@ -11333,18 +11333,52 @@ def remove_career_fbgroups():
     # Obsługa formularza POST
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        try: form_data['PostID']
+        schedule_0_id = form_data.get('schedule_0_id', None)
+        schedule_1_id = form_data.get('schedule_1_id', None)
+        schedule_2_id = form_data.get('schedule_2_id', None)
+        schedule_3_id = form_data.get('schedule_3_id', None)
+        schedule_4_id = form_data.get('schedule_4_id', None)
+        schedule_5_id = form_data.get('schedule_5_id', None)
+        schedule_6_id = form_data.get('schedule_6_id', None)
+        schedule_7_id = form_data.get('schedule_7_id', None)
+        schedule_8_id = form_data.get('schedule_8_id', None)
+        schedule_9_id = form_data.get('schedule_9_id', None)
+        schedule_10_id = form_data.get('schedule_10_id', None)
+
+        schedule_id_list = [x for x in [
+                                schedule_0_id, 
+                                schedule_1_id, 
+                                schedule_2_id, 
+                                schedule_3_id, 
+                                schedule_4_id, 
+                                schedule_5_id, 
+                                schedule_6_id, 
+                                schedule_7_id, 
+                                schedule_8_id, 
+                                schedule_9_id, 
+                                schedule_10_id
+                                ] if x is not None]
+        
+        for deleter_id in schedule_id_list:
+            zapytanie_sql = """
+                DELETE FROM ogloszenia_fbgroups WHERE id_zadania = %s;
+            """
+            data = (deleter_id,)
+            try: msq.insert_to_database(zapytanie_sql, data)
+            except Exception as e: print(f"Błąd w usunięciu kampanii: {e}")
+
+        try: form_data['waitnig_list_id']
         except KeyError: return redirect(url_for('index'))
-        set_post_id = int(form_data['PostID'])
+        set_wl_id = int(form_data['PostID'])
         
         msq.delete_row_from_database(
                 """
-                    DELETE FROM waitinglist_fbgroups WHERE ID = %s;
+                    DELETE FROM waitinglist_fbgroups WHERE id = %s;
                 """,
-                (set_post_id,)
+                (set_wl_id,)
             )
 
-        flash("Oferta pracy została usunięta.", "success")
+        flash("Kampania została usunięta.", "success")
         return redirect(url_for('career'))
     
     return redirect(url_for('index'))
