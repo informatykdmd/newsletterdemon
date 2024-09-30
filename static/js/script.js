@@ -1053,7 +1053,13 @@ function collectAndSendfbgroupsform(postId) {
     // Sprawdzamy, czy treść ogłoszenia nie jest pusta
     if (!content) {
         contentDiv.style.border = '2px solid red'; // Podświetlenie na czerwono
-        alert('Treść ogłoszenia nie może być pusta!');
+        // Znajdź element diva na podstawie dynamicznego ID
+        const komunikatDiv = document.getElementById(`komunikat_z_serwera_${postId}`);
+            
+        // Wyświetl komunikat o błędzie w divie
+        if (komunikatDiv) {
+            komunikatDiv.innerHTML = '<p class="alert alert-danger" role="alert">Treść ogłoszenia nie może być pusta!</p>';
+        }
         return; // Zatrzymujemy wysyłkę
     } else {
         contentDiv.style.border = ''; // Usuwamy czerwone podświetlenie, jeśli pole jest wypełnione
