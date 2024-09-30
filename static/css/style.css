@@ -990,3 +990,129 @@ color:#969696;
     border-radius: 5px; /* Zakrąglone rogi */
     font-size: 22px;
 }
+.fbgroups-requirements-description-preview-0 {
+    color: #c2c2c2;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 15px;
+}
+
+.fbgroups-requirements-description-preview-1 {
+    color: #ffffff;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 25px;
+    font-weight: 700;
+    background-color: #c600ff;
+}
+
+.fbgroups-requirements-description-preview-2 {
+    color: #ffffff;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 25px;
+    font-weight: 700;
+    background-color: #e2013b;
+}
+
+.fbgroups-requirements-description-preview-3 {
+    color: #ffffff;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 25px;
+    font-weight: 700;
+    background-color: #000000;
+}
+
+
+.fbgroups-requirements-description-preview-4 {
+    color: #ffffff;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 25px;
+    font-weight: 700;
+    background: linear-gradient(45deg, #dd085c, #462db7);
+}
+
+.fbgroups-requirements-description-preview-5 {
+    color: #000000;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 25px;
+    font-weight: 700;
+    background: linear-gradient(45deg, #783de0, #e537f8);
+}
+
+.fbgroups-requirements-description-preview-6 {
+    color: #000000;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 25px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #be2ba3, #fdb63e);
+}
+
+.fbgroups-requirements-description-preview-7 {
+    color: #ffffff;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 25px;
+    font-weight: 700;
+    background: linear-gradient(45deg, #535968, #22232a);
+}
+
+.fbgroups-requirements-description-preview-8 {
+    color: #ffffff;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.fbgroups-requirements-description-preview-9 {
+    color: #ffffff;
+    border: #6a6a6a solid 1px;
+    padding: 10px;
+    min-height: 300px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 5px; /* Zakrąglone rogi */
+    font-size: 25px;
+    font-weight: 700;
+}
