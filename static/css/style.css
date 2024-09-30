@@ -937,24 +937,24 @@ color:#969696;
 }
 
 .completed {
-    background: linear-gradient(45deg, #8ef88e, white);
+    background: linear-gradient(45deg, #b9ffb9, white);
     /* background-color: #d8fbd8; */
     color:#121212;
 }
 
 .in-progress {
-    background: linear-gradient(45deg, #fff2db, white);
+    background: linear-gradient(45deg, #fce7c4, white);
     /* background-color: #fff2db; */
     color:#121212;
 }
 
 .error {
-    background: linear-gradient(45deg, #f9d4d4, white);
+    background: linear-gradient(45deg, #ffc6c6, white);
     color:#ff0000;
 }
 
 .waiting {
-    background: linear-gradient(45deg, #dedede, white);
+    background: linear-gradient(45deg, #9b9b9b, white);
     /* background-color: #dedede; */
     color:#000000;
 }
