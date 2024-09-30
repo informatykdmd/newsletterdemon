@@ -1004,7 +1004,7 @@ color:#969696;
 .fbgroups-requirements-description-preview-1 {
     display: flex;
     justify-content: center;
-    align-items: center;
+    text-align: center;
     color: #ffffff;
     border: #6a6a6a solid 1px;
     padding: 10px;
@@ -1020,7 +1020,7 @@ color:#969696;
 .fbgroups-requirements-description-preview-2 {
     display: flex;
     justify-content: center;
-    align-items: center;
+    text-align: center;
     color: #ffffff;
     border: #6a6a6a solid 1px;
     padding: 10px;
@@ -1036,7 +1036,7 @@ color:#969696;
 .fbgroups-requirements-description-preview-3 {
     display: flex;
     justify-content: center;
-    align-items: center;
+    text-align: center;
     color: #ffffff;
     border: #6a6a6a solid 1px;
     padding: 10px;
@@ -1053,7 +1053,7 @@ color:#969696;
 .fbgroups-requirements-description-preview-4 {
     display: flex;
     justify-content: center;
-    align-items: center;
+    text-align: center;
     color: #ffffff;
     border: #6a6a6a solid 1px;
     padding: 10px;
@@ -1069,7 +1069,7 @@ color:#969696;
 .fbgroups-requirements-description-preview-5 {
     display: flex;
     justify-content: center;
-    align-items: center;
+    text-align: center;
     color: #000000;
     border: #6a6a6a solid 1px;
     padding: 10px;
@@ -1085,7 +1085,7 @@ color:#969696;
 .fbgroups-requirements-description-preview-6 {
     display: flex;
     justify-content: center;
-    align-items: center;
+    text-align: center;
     color: #000000;
     border: #6a6a6a solid 1px;
     padding: 10px;
@@ -1095,13 +1095,13 @@ color:#969696;
     border-radius: 5px; /* Zakrąglone rogi */
     font-size: 25px;
     font-weight: 700;
-    background: linear-gradient(90deg, #be2ba3, #fdb63e);
+    background: linear-gradient(0deg, #be2ba3, #fdb63e);
 }
 
 .fbgroups-requirements-description-preview-7 {
     display: flex;
     justify-content: center;
-    align-items: center;
+    text-align: center;
     color: #ffffff;
     border: #6a6a6a solid 1px;
     padding: 10px;
