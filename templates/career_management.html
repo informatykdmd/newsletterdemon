@@ -1085,8 +1085,10 @@
                                                             {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
                                                             {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
                                                             {% if schedule_datetime %}
-                                                            <div class="col-3 mb-3">
-                                                                <div class="checkpoint">
+                                                            <div class="col-3 mb-3 mt-3">
+                                                                <div class="checkpoint
+                                                                            {% if schedule_status == 1 %}completed{% elif schedule_status == 4 %}in-progress
+                                                                            {% elif schedule_status == 2 %}error{% else %}waiting{% endif %}">
                                                                     <p>
                                                                         {% if schedule_status == 1 %}
                                                                             <!-- Zrealizowane bez błędów -->
@@ -1110,9 +1112,7 @@
                                                                              </span>
                                                                         {% endif %}
                                                                     </p>
-                                                                    <div class=" squerecircle mb-1
-                                                                        {% if schedule_status == 1 %}completed{% elif schedule_status == 4 %}in-progress
-                                                                        {% elif schedule_status == 2 %}error{% else %}waiting{% endif %}">
+                                                                    <div class=" squerecircle mb-1">
                                                                         <span class="checkpoint-date">{{ schedule_datetime.strftime('%Y-%m-%d %H:%M') }}</span>
                                                                     </div>
                                                                 </div>
