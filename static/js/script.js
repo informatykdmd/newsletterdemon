@@ -1103,7 +1103,7 @@ function collectAndSendfbgroupsform(postId) {
             
             // Wyświetl komunikat o sukcesie w divie
             if (komunikatDiv) {
-                komunikatDiv.innerHTML = '<p>Ogłoszenie zostało wysłane!</p>';
+                komunikatDiv.innerHTML = '<p class="success">Ogłoszenie zostało wysłane!</p>';
                 // Odśwież stronę po 5 sekundach
                 setTimeout(function() {
                     window.location.href = '/career';
@@ -1115,7 +1115,7 @@ function collectAndSendfbgroupsform(postId) {
             
             // Wyświetl komunikat o błędzie w divie
             if (komunikatDiv) {
-                komunikatDiv.innerHTML = '<p>Wystąpił błąd podczas wysyłania ogłoszenia.</p>';
+                komunikatDiv.innerHTML = '<p class="danger">Wystąpił błąd podczas wysyłania ogłoszenia.</p>';
             }
         }
     })
