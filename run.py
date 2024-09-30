@@ -3572,6 +3572,11 @@ def update_career_offer_status():
         set_post_id = int(form_data['PostID'])
         set_post_status = int(form_data['Status'])
 
+        statusCareer = checkFbGroupstatus(section="career", post_id=set_post_id)
+        if statusCareer[0] != None:
+            flash("Status oferty nie został zmieniony. Przewij kampanię na grupach Facebooka", "danger")
+            return redirect(url_for('career'))
+
         zapytanie_sql = f'''
                 UPDATE job_offers
                 SET status = %s
