@@ -937,22 +937,25 @@ color:#969696;
 }
 
 .completed {
-    background-color: #d8fbd8;
+    background: linear-gradient(45deg, #d8fbd8, white);
+    /* background-color: #d8fbd8; */
     color:#121212;
 }
 
 .in-progress {
-    background-color: #fff2db;
+    background: linear-gradient(45deg, #fff2db, white);
+    /* background-color: #fff2db; */
     color:#121212;
 }
 
 .error {
-    background-color: #f9d4d4;
+    background: linear-gradient(45deg, #f9d4d4, white);
     color:#ff0000;
 }
 
 .waiting {
-    background-color: #dedede;
+    background: linear-gradient(45deg, #dedede, white);
+    /* background-color: #dedede; */
     color:#000000;
 }
 
