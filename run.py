@@ -11222,9 +11222,13 @@ def fb_groups_sender():
     post_id = data.get('post_id')
 
     # Flagi konfigruracyjne deamona
-    category = 'praca'
-    section = 'career'
-    id_gallery = None
+    category = data.get('category')
+    section = data.get('section')
+    get_id_gallery = data.get('id_gallery')
+    if get_id_gallery == "None":
+        id_gallery = None
+    else:
+        id_gallery = int(get_id_gallery)
 
     # Przekształcanie każdej daty w harmonogramie na standardowy format
     formatted_schedule = [format_date_pl(date_str) for date_str in schedule]
@@ -11287,7 +11291,7 @@ def fb_groups_sender():
                     schedule_6_datetime, schedule_7_datetime, 
                     schedule_8_datetime, schedule_9_datetime, 
                     schedule_10_datetime, 
-                    category, section)
+                    category, section, id_gallery)
                 VALUES 
                     (%s, %s, %s, 
                     %s, %s, %s, 
@@ -11297,7 +11301,7 @@ def fb_groups_sender():
                     %s, %s,  
                     %s, %s,  
                     %s, 
-                    %s, %s);
+                    %s, %s, %s);
             '''
     dane = (post_id, content, color_choice,
             repeats, repeats_left, repeats_last, 
@@ -11307,7 +11311,7 @@ def fb_groups_sender():
             schedule_6_datetime, schedule_7_datetime, 
             schedule_8_datetime, schedule_9_datetime, 
             schedule_10_datetime, 
-            category, section)
+            category, section, id_gallery)
 
     # print(zapytanie_sql)
     # print(dane)

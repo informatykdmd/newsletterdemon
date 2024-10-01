@@ -1077,6 +1077,12 @@ function collectAndSendfbgroupsform(postId) {
         post_id: postId,
         content: content,  // Treść ogłoszenia
         color_choice: document.getElementById(`color_choice_${postId}`).value,
+
+        category: document.getElementById(`category_${postId}`).value,
+        section: document.getElementById(`section_${postId}`).value,
+        
+        id_gallery: document.getElementById(`id_gallery_${postId}`).value,
+
         wznawiaj: document.getElementById(`wznawiaj_${postId}`).checked,
         schedule: scheduleDates,  // Harmonogram jako lista dat
         frequency: {
