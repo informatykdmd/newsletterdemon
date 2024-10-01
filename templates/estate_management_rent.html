@@ -1488,6 +1488,401 @@
                                     
                                 </div>
                                 <div class="row">
+                                    {% if post_data['StatusOferty'] != 0 %}
+                                        {% if post_data['fbgroups']['id'] == None %}
+                                        <form action="" id="form_estateAdsRent_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div class="col-lg-5 col-sm-12">
+                                                    <div class="mb-2 mt-2">
+                                                        <h5>Treść Ogłoszenia na Grupach FB</h5>
+                                                    </div>
+                                                    <div 
+                                                        id="fbgroups_estateAdsRentDescription_{{post_id}}" 
+                                                        class="fbgroups-requirements-description content-editable formatuj-maly-font" 
+                                                        contenteditable="true">
+                                                        {% for item in post_data['Opis'] %}
+                                                            {% for key, val in item.items() %}
+                                                                {% if key=='li' %}
+                                                                    
+                                                                        {% for li_item in val %}
+                                                                            {{li_item|decode_html_entities_filter|update_new_line_chars}}
+                                                                        {% endfor %}
+                                                                    
+                                                                {% else %}
+                                                                    {% set decoded_val = val|decode_html_entities_filter|update_new_line_chars %}
+                                                                    {% if key=='p' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='strong' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h1' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h1-strong' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h2' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h2-strong' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h3' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h3-strong' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                        <div id="char_count_{{post_id}}" class="char-count"></div></div>
+
+                                                    <!-- Ukryte pole do przechowywania wartości wybranego koloru -->
+                                                    <input type="hidden" id="color_choice_{{post_id}}" name="color_choice" value="0">
+                                                    
+                                                    <!-- Div dla opcji wyświetlanych w zależności od liczby znaków -->
+                                                    <div class="minus130" id="fbgroup_minus130_{{post_id}}" style="display: none;">
+                                                        
+                                                        <!-- Divy dla wyboru koloru -->
+                                                        <div class="color-picker" id="color_picker_minus130_{{post_id}}">
+                                                            <div class="color-box" data-color="0" id="color_box_0_{{post_id}}" style="background-color: transparent;"></div> <!-- Opcja bez wypełnienia -->
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="more130" id="fbgroup_more130_{{post_id}}" style="display: none;">
+                                                        <!-- Divy dla wyboru koloru -->
+                                                        <div class="color-picker" id="color_picker_more130_{{post_id}}">
+                                                            <div class="color-box" data-color="0" id="color_box_0_{{post_id}}" style="background-color: transparent;"></div> <!-- Opcja bez wypełnienia -->
+                                                            <div class="color-box" data-color="8" id="color_box_8_{{post_id}}" style="background-image: url('static/img/fb-short-8.png');"></div>
+                                                            <div class="color-box" data-color="9" id="color_box_9_{{post_id}}" style="background-image: url('static/img/fb-short-9.png');"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Skrypt do uruchomienia dla każdego posta -->
+                                                    <script>
+                                                        document.addEventListener('DOMContentLoaded', function () {
+                                                            new CharCounter('{{post_id}}');
+                                                            }
+                                                        );
+                                                    </script>
+
+                                                </div>
+                                                <div class="col-lg-3 col-sm-12">
+                                                    <div> 
+                                                        
+                                                        <div class="mb-2 mt-2">
+                                                            <h5>FACEBOOK GRUPY</h5>
+                                                            
+                                                            <p>Status: Pierwsza publikacja na grupach facebook</p>
+                                                        </div>
+
+                                                        <div class="row row-cols-auto mb-3">
+                                                            <div class="col">
+                                                                    <input type="hidden" id="category_{{post_id}}" name="category" value="nieruchomosci" />
+                                                                    <input type="hidden" id="section_{{post_id}}" name="section" value="estateAdsRent" />
+                                                                    <input type="hidden" id="id_gallery_{{post_id}}" name="id_gallery" value="{{post_data['id_gallery']}}" />
+
+                                                                    <div class="col me-1 mb-1">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="wznawiaj_{{post_id}}" name="wznawiaj">
+                                                                                    <label class="form-check-label" for="wznawiaj_{{post_id}}">Wznawiaj ogłoszenie automatycznie</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <!-- block -->
+                                                                                <div class="row">
+                                                                                    <div class="col">
+                                                                                        Częstotliwość co:
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col">
+                                                                                        <div class="form-check form-switch">
+                                                                                            <input class="form-check-input" type="checkbox" role="switch" id="codwatygodnie_{{post_id}}" name="codwatygodnie" value="1" checked>
+                                                                                            <label class="form-check-label" for="codwatygodnie_{{post_id}}">14 dni</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <div class="form-check form-switch">
+                                                                                            <input class="form-check-input" type="checkbox" role="switch" id="cotydzien_{{post_id}}" name="cotydzien" value="1" >
+                                                                                            <label class="form-check-label" for="cotydzien_{{post_id}}">7 dni</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col">
+                                                                                        <div class="form-check form-switch">
+                                                                                            <input class="form-check-input" type="checkbox" role="switch" id="coczterydni_{{post_id}}" name="coczterydni" value="1">
+                                                                                            <label class="form-check-label" for="coczterydni_{{post_id}}">4 dni</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <div class="form-check form-switch">
+                                                                                            <input class="form-check-input" type="checkbox" role="switch" id="codwadni_{{post_id}}" name="codwadni" value="1">
+                                                                                            <label class="form-check-label" for="codwadni_{{post_id}}">2 dni</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <!-- block -->
+                                                                                <div class="row">
+                                                                                    <div class="col">
+                                                                                        Iloś ponowień:
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col">
+                                                                                        <div class="form-check form-switch">
+                                                                                            <input class="form-check-input" type="checkbox" role="switch" id="ponow2razy_{{post_id}}" name="ponow2razy" value="1" checked>
+                                                                                            <label class="form-check-label" for="ponow2razy_{{post_id}}">x 2</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <div class="form-check form-switch">
+                                                                                            <input class="form-check-input" type="checkbox" role="switch" id="ponow5razy_{{post_id}}" name="ponow5razy" value="1" >
+                                                                                            <label class="form-check-label" for="ponow5razy_{{post_id}}">x 5</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col">
+                                                                                        <div class="form-check form-switch">
+                                                                                            <input class="form-check-input" type="checkbox" role="switch" id="ponow8razy_{{post_id}}" name="ponow8razy" value="1">
+                                                                                            <label class="form-check-label" for="ponow8razy_{{post_id}}">x 8</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <div class="form-check form-switch">
+                                                                                            <input class="form-check-input" type="checkbox" role="switch" id="ponow10razy_{{post_id}}" name="ponow10razy" value="1">
+                                                                                            <label class="form-check-label" for="ponow10razy_{{post_id}}">x 10</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <button type="button" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick="collectAndSendfbgroupsformestateAdsRent('{{post_id}}')"> 
+                                                                            Publikuj grupach
+                                                                        </button>
+                                                                        <div class="form-message mt-3" id="komunikat_z_serwera_{{post_id}}"></div>
+                                                                    </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <script>
+                                                            document.addEventListener('DOMContentLoaded', function(){
+                                                                checkboxControlDisable(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'wznawiaj_{{post_id}}', 
+                                                                    [
+                                                                        'codwatygodnie_{{post_id}}', 
+                                                                        'cotydzien_{{post_id}}', 
+                                                                        'coczterydni_{{post_id}}', 
+                                                                        'codwadni_{{post_id}}',
+                                                                        'ponow2razy_{{post_id}}',
+                                                                        'ponow5razy_{{post_id}}',
+                                                                        'ponow8razy_{{post_id}}',
+                                                                        'ponow10razy_{{post_id}}'
+                                                                    ]
+                                                                );
+
+                                                                checkboxControlEnabled(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'wznawiaj_{{post_id}}', 
+                                                                    [
+                                                                        'codwatygodnie_{{post_id}}', 
+                                                                        'cotydzien_{{post_id}}', 
+                                                                        'coczterydni_{{post_id}}',
+                                                                        'codwadni_{{post_id}}',
+                                                                        'ponow2razy_{{post_id}}',
+                                                                        'ponow5razy_{{post_id}}',
+                                                                        'ponow8razy_{{post_id}}',
+                                                                        'ponow10razy_{{post_id}}'
+                                                                    ]
+                                                                );
+
+                                                                checkboxControlOffOther(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'codwatygodnie_{{post_id}}', 
+                                                                    [
+                                                                        'cotydzien_{{post_id}}',
+                                                                        'coczterydni_{{post_id}}',
+                                                                        'codwadni_{{post_id}}'
+                                                                    ]
+                                                                );
+                                                                checkboxControlOffOther(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'cotydzien_{{post_id}}', 
+                                                                    [
+                                                                        'codwatygodnie_{{post_id}}',
+                                                                        'coczterydni_{{post_id}}',
+                                                                        'codwadni_{{post_id}}'
+                                                                    ]
+                                                                );
+                                                                checkboxControlOffOther(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'coczterydni_{{post_id}}', 
+                                                                    [
+                                                                        'codwatygodnie_{{post_id}}',
+                                                                        'cotydzien_{{post_id}}',
+                                                                        'codwadni_{{post_id}}'
+                                                                    ]
+                                                                );
+                                                                checkboxControlOffOther(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'codwadni_{{post_id}}', 
+                                                                    [
+                                                                        'codwatygodnie_{{post_id}}',
+                                                                        'cotydzien_{{post_id}}',
+                                                                        'coczterydni_{{post_id}}'
+                                                                    ]
+                                                                );
+                                                                checkboxControlOffOther(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'ponow2razy_{{post_id}}', 
+                                                                    [
+                                                                        'ponow5razy_{{post_id}}',
+                                                                        'ponow8razy_{{post_id}}',
+                                                                        'ponow10razy_{{post_id}}'
+                                                                    ]
+                                                                );
+                                                                checkboxControlOffOther(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'ponow5razy_{{post_id}}', 
+                                                                    [
+                                                                        'ponow2razy_{{post_id}}',
+                                                                        'ponow8razy_{{post_id}}',
+                                                                        'ponow10razy_{{post_id}}'
+                                                                    ]
+                                                                );
+                                                                checkboxControlOffOther(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'ponow8razy_{{post_id}}', 
+                                                                    [
+                                                                        'ponow2razy_{{post_id}}',
+                                                                        'ponow5razy_{{post_id}}',
+                                                                        'ponow10razy_{{post_id}}'
+                                                                    ]
+                                                                );
+                                                                checkboxControlOffOther(
+                                                                    'estateAdsRent_{{post_id}}', 
+                                                                    'ponow10razy_{{post_id}}', 
+                                                                    [
+                                                                        'ponow2razy_{{post_id}}',
+                                                                        'ponow5razy_{{post_id}}',
+                                                                        'ponow8razy_{{post_id}}'
+                                                                    ]
+                                                                );
+                                                                
+                                                            });
+                                                            
+                                                        </script>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-12">
+                                                    <div id="fbgroups_shedule_{{post_id}}" class="schedule-output"></div>
+                                                    <script>
+                                                        document.addEventListener('DOMContentLoaded', function(){
+                                                            setupSchedule('{{post_id}}');
+                                                        });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        {% else %}
+                                        <form method="POST" id="remove_career_fbgroups_{{post_id}}" action="{{ url_for('remove_career_fbgroups') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz zatrzymać tę kampanię na grupach facebooka?');">
+                                            <div class="row">
+                                                <div class="col-lg-12 col-sm-12 mb-3 mt-3">
+                                                    <h3>Monitoring Kampanii Na grupach FB</h3>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <div class="row">
+                                                        <div class="col-12 mb-3">
+                                                            <h5>Podgląd Posta</h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fbgroups-requirements-description-preview-{{post_data['fbgroups']['color_choice']}}">
+                                                        {{ post_data['fbgroups']['content'] }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <div class="">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h5>Harmonogram</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            {% for i in range(11) %}
+                                                                {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
+                                                                {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
+                                                                {% if schedule_datetime %}
+                                                                    <div class="col-3 mb-3 mt-3">
+                                                                        <div class="checkpoint
+                                                                                    {% if schedule_status == 1 %}completed{% elif schedule_status == 4 %}in-progress
+                                                                                    {% elif schedule_status == 2 %}error{% else %}waiting{% endif %}">
+                                                                            <p>
+                                                                                {% if schedule_status == 1 %}
+                                                                                    <!-- Zrealizowane bez błędów -->
+                                                                                    <span class="completed-icon">
+                                                                                        <i class="bi bi-check-circle"></i>
+                                                                                    </span>
+                                                                                {% elif schedule_status == 4 %}
+                                                                                    <!-- W trakcie realizacji -->
+                                                                                    <span class="in-progress-icon">
+                                                                                        <i class="bi bi-hourglass-split "></i>
+                                                                                    </span>
+                                                                                {% elif schedule_status == 2 %}
+                                                                                    <!-- Zrealizowane z błędami -->
+                                                                                    <span class="error-icon">
+                                                                                        <i class="bi bi-exclamation-triangle"></i>
+                                                                                    </span>
+                                                                                {% else %}
+                                                                                    <!-- Oczekuje -->
+                                                                                    <span class="waiting-icon">
+                                                                                        <i class="bi bi-clock"></i>
+                                                                                    </span>
+                                                                                {% endif %}
+                                                                            </p>
+                                                                            <div class=" squerecircle mb-1">
+                                                                                <span class="checkpoint-date">{{ schedule_datetime.strftime('%Y-%m-%d %H:%M') }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% if post_data['fbgroups']['schedule_' ~ i ~ '_id'] %}
+                                                                        <input type="hidden" value="{{post_data['fbgroups']['schedule_' ~ i ~ '_id']}}" name="schedule_{{i}}_id" id="schedule_id_{{i}}_{{post_id}}"/>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-30">
+                                                        <input type="hidden" value="{{post_data['fbgroups']['id']}}" name="waitnig_list_id" id="waitnig_list_id_{{post_id}}"/>
+                                                        <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Zatrzymaj Kampanię</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        {% endif %}
+
+                                    {% endif %}
+                                </div>
+                                <div class="row">
                                     <div class="col-lg-4 col-sm-12">
                                         <div> 
                                                     
@@ -5086,6 +5481,209 @@
             fetchOptions_otodom('loaded', select_id);
         });
     });
+
+    class CharCounter {
+        constructor(postId) {
+            this.postId = postId;
+
+            // Pobranie elementów dynamicznie na podstawie postId
+            this.contentDiv = document.getElementById(`fbgroups_estateAdsRentDescription_${postId}`);
+            this.charCountDiv = document.getElementById(`char_count_${postId}`);
+            this.divMinus130 = document.getElementById(`fbgroup_minus130_${postId}`);
+            this.divMore130 = document.getElementById(`fbgroup_more130_${postId}`);
+
+            // Ukryty input dla koloru
+            this.hiddenInput = document.getElementById(`color_choice_${postId}`);
+
+            // Pobranie wszystkich boxów dla minus130 i more130
+            this.colorPickerMinus130 = document.getElementById(`color_picker_minus130_${postId}`);
+            this.colorPickerMore130 = document.getElementById(`color_picker_more130_${postId}`);
+
+            // Inicjalna aktualizacja licznika znaków
+            this.updateCharCount();
+
+            // Nasłuchiwanie zmian w treści contentEditable
+            this.contentDiv.addEventListener('keyup', () => this.updateCharCount());
+        }
+
+        // Metoda do resetowania zaznaczeń i ukrytego inputa
+        resetColorSelection() {
+            // Resetujemy wartość ukrytego inputa na 0
+            this.hiddenInput.value = '0';
+
+            // Usuwamy zaznaczenie (klasę 'selected') ze wszystkich boxów w obu pickerach
+            const allColorBoxes = this.colorPickerMinus130.querySelectorAll('.color-box');
+            const moreColorBoxes = this.colorPickerMore130.querySelectorAll('.color-box');
+
+            // Usuwanie 'selected' z minus130
+            allColorBoxes.forEach(box => box.classList.remove('selected'));
+
+            // Usuwanie 'selected' z more130
+            moreColorBoxes.forEach(box => box.classList.remove('selected'));
+        }
+
+        // Metoda do liczenia znaków i aktualizowania stanu
+        updateCharCount() {
+            const text = this.contentDiv.innerText || this.contentDiv.textContent;
+            const charCount = text.length;
+
+            // Aktualizacja licznika znaków
+            this.charCountDiv.textContent = `${charCount} znaków`;
+
+            // Przełączanie między trybami
+            if (charCount > 1) {
+                this.divMore130.style.display = 'block';
+                this.divMinus130.style.display = 'none';
+
+                // Dodajemy klasę dla więcej niż 130 znaków
+                this.contentDiv.classList.remove('mainDiv-minus130');
+                this.contentDiv.classList.add('mainDiv-more130');
+
+                // Resetowanie zaznaczenia po przejściu do more130
+                this.resetColorSelection();
+
+            } else {
+                this.divMore130.style.display = 'none';
+                this.divMinus130.style.display = 'block';
+
+                // Dodajemy klasę dla mniej niż 130 znaków
+                this.contentDiv.classList.remove('mainDiv-more130');
+                this.contentDiv.classList.add('mainDiv-minus130');
+
+                // Resetowanie zaznaczenia po przejściu do minus130
+                this.resetColorSelection();
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Pobranie wszystkich elementów typu color-picker
+        const allPickers = document.querySelectorAll('.color-picker');
+        
+        allPickers.forEach(function(picker) {
+            // Sprawdzenie, czy picker ma prawidłowe id
+            if (!picker.id) {
+                console.error('Color picker does not have a valid ID:', picker);
+                return; // Pomiń, jeśli ID jest puste
+            }
+
+            // Wyciągnięcie post_id z identyfikatora pickera
+            const idParts = picker.id.split('_');
+            const postId = idParts.length > 2 ? idParts[3] : null; // Uzyskanie prawidłowego post_id
+
+            // Sprawdzanie, czy postId jest prawidłowe
+            if (!postId) {
+                console.error('Post ID not found:', picker.id);
+                return; // Pomiń, jeśli postId nie istnieje
+            }
+
+            // console.log('picker postId', picker.id, postId);
+
+            // Pobranie ukrytego inputa dla tego postu
+            const hiddenInput = document.getElementById(`color_choice_${postId}`);
+            
+            if (!hiddenInput) {
+                console.error('Hidden input not found for postId:', postId);
+                return; // Pomiń, jeśli ukryty input nie istnieje
+            }
+
+            // Pobranie wszystkich boxów wewnątrz danego picker-a
+            const colorBoxes = picker.querySelectorAll('.color-box');
+            
+            colorBoxes.forEach(function(box) {
+                box.addEventListener('click', function() {
+                    // Usunięcie klasy 'selected' z każdego boxa w danym pickerze
+                    colorBoxes.forEach(b => b.classList.remove('selected'));
+                    
+                    // Dodanie klasy 'selected' do wybranego boxa
+                    box.classList.add('selected');
+                    
+                    // Ustawienie wartości ukrytego inputa na numer wybranego koloru
+                    hiddenInput.value = box.getAttribute('data-color');
+                });
+            });
+        });
+    });
+
+
+    function setupSchedule(postId) {
+        const wznawiajSwitch = document.getElementById(`wznawiaj_${postId}`);
+        const scheduleOutput = document.getElementById(`fbgroups_shedule_${postId}`);
+        const freqSwitches = {
+            "2": document.getElementById(`codwadni_${postId}`),
+            "4": document.getElementById(`coczterydni_${postId}`),
+            "7": document.getElementById(`cotydzien_${postId}`),
+            "14": document.getElementById(`codwatygodnie_${postId}`)
+        };
+        const repeatSwitches = {
+            "2": document.getElementById(`ponow2razy_${postId}`),
+            "5": document.getElementById(`ponow5razy_${postId}`),
+            "8": document.getElementById(`ponow8razy_${postId}`),
+            "10": document.getElementById(`ponow10razy_${postId}`)
+        };
+
+        // Funkcja do generowania harmonogramu
+        function generateSchedule() {
+            const today = new Date();
+            let schedule = '<div class="mb-2"><h5>HARMONOGRAM</h5></div>'; // Dodaj nagłówek na początku
+
+            schedule += '<ul>'; // Tworzymy element ul
+
+            if (!wznawiajSwitch.checked) {
+                // Tylko jedna publikacja dzisiaj
+                schedule += formatSchedule(today);
+            } else {
+                // Liczba powtórzeń
+                const selectedRepeat = Object.keys(repeatSwitches).find(key => repeatSwitches[key]?.checked);
+                const repeatCount = selectedRepeat ? parseInt(selectedRepeat) : 1;
+                
+                // Częstotliwość (co ile dni)
+                const selectedFreq = Object.keys(freqSwitches).find(key => freqSwitches[key]?.checked);
+                const frequency = selectedFreq ? parseInt(selectedFreq) : 1;
+
+                // Generowanie harmonogramu
+                for (let i = 0; i <= repeatCount; i++) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() + i * frequency);
+                    schedule += formatSchedule(date);
+                }
+            }
+            schedule += '</ul>'; // Zamykamy ul
+            // console.log('schedule', schedule);
+            scheduleOutput.innerHTML = schedule;
+        }
+
+        // Funkcja formatująca datę na czytelny format
+        function formatSchedule(date) {
+            const daysOfWeek = ["niedziela", "poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota"];
+            const months = ["styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"];
+
+            const dayOfWeek = daysOfWeek[date.getDay()];
+            const dayOfMonth = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+
+            // Tworzymy element listy z datą i godziną
+            let formattedDate = `<li class="shedule-list-config"><i class="bi bi-compass" style="color: orange;"></i> ${dayOfWeek}`;
+
+            if (date.getDate() === (new Date()).getDate()) {
+                formattedDate += ' (dzisiaj)';
+            }
+            formattedDate += `</li><span class="shedule-date-details"> <i class="bi bi-three-dots-vertical" style="color: green;"></i> ${dayOfMonth} ${month} ${year} godzina ${hours}:${minutes}</span>`;
+
+            return formattedDate;
+        }
+
+        // Nasłuchuj zmian na przełącznikach i generuj harmonogram
+        wznawiajSwitch.addEventListener('change', generateSchedule);
+        Object.values(freqSwitches).forEach(switchElement => switchElement?.addEventListener('change', generateSchedule));
+        Object.values(repeatSwitches).forEach(switchElement => switchElement?.addEventListener('change', generateSchedule));
+
+        // Inicjalne wyświetlenie harmonogramu
+        generateSchedule();
+    }
 
 </script>
 {% endblock %}

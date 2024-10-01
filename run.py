@@ -454,6 +454,7 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
             'LiczbaPokoi': 0 if data[6] is None else data[6],
             'Metraz': 0 if data[7] is None else data[7],
             'Zdjecia': [foto for foto in fotoList if foto is not None],
+            'id_gallery': data[8],
             'DataPublikacjiOlx': None if data[9] is None else format_date(data[9]),
             'DataPublikacjiAllegro': None if data[10] is None else format_date(data[10]),
             'DataPublikacjiOtoDom': None if data[11] is None else format_date(data[11]),
@@ -3730,6 +3731,77 @@ def estateAdsRent():
 
             item['otodom']['error_message'] = otodom_IDstatus[3]
         
+        if 'fbgroups' not in item:
+            item['fbgroups'] = {}
+        fbgroupsIDstatus = checkFbGroupstatus(section="estateAdsRent", post_id=item['ID'])
+        item['fbgroups']['id'] = fbgroupsIDstatus[0]
+        item['fbgroups']['post_id'] = fbgroupsIDstatus[1]
+        item['fbgroups']['content'] = fbgroupsIDstatus[2]
+        item['fbgroups']['color_choice'] = fbgroupsIDstatus[3]
+        item['fbgroups']['repeats'] = fbgroupsIDstatus[4]
+        item['fbgroups']['repeats_left'] = fbgroupsIDstatus[5]
+        item['fbgroups']['repeats_last'] = fbgroupsIDstatus[6]
+
+        item['fbgroups']['schedule_0_id'] = fbgroupsIDstatus[7]
+        item['fbgroups']['schedule_0_datetime'] = fbgroupsIDstatus[8]
+        item['fbgroups']['schedule_0_status'] = fbgroupsIDstatus[9]
+        item['fbgroups']['schedule_0_errors'] = fbgroupsIDstatus[10]
+
+        item['fbgroups']['schedule_1_id'] = fbgroupsIDstatus[11]
+        item['fbgroups']['schedule_1_datetime'] = fbgroupsIDstatus[12]
+        item['fbgroups']['schedule_1_status'] = fbgroupsIDstatus[13]
+        item['fbgroups']['schedule_1_errors'] = fbgroupsIDstatus[14]
+
+        item['fbgroups']['schedule_2_id'] = fbgroupsIDstatus[15]
+        item['fbgroups']['schedule_2_datetime'] = fbgroupsIDstatus[16]
+        item['fbgroups']['schedule_2_status'] = fbgroupsIDstatus[17]
+        item['fbgroups']['schedule_2_errors'] = fbgroupsIDstatus[18]
+
+        item['fbgroups']['schedule_3_id'] = fbgroupsIDstatus[19]
+        item['fbgroups']['schedule_3_datetime'] = fbgroupsIDstatus[20]
+        item['fbgroups']['schedule_3_status'] = fbgroupsIDstatus[21]
+        item['fbgroups']['schedule_3_errors'] = fbgroupsIDstatus[22]
+
+        item['fbgroups']['schedule_4_id'] = fbgroupsIDstatus[23]
+        item['fbgroups']['schedule_4_datetime'] = fbgroupsIDstatus[24]
+        item['fbgroups']['schedule_4_status'] = fbgroupsIDstatus[25]
+        item['fbgroups']['schedule_4_errors'] = fbgroupsIDstatus[26]
+
+        item['fbgroups']['schedule_5_id'] = fbgroupsIDstatus[27]
+        item['fbgroups']['schedule_5_datetime'] = fbgroupsIDstatus[28]
+        item['fbgroups']['schedule_5_status'] = fbgroupsIDstatus[29]
+        item['fbgroups']['schedule_5_errors'] = fbgroupsIDstatus[30]
+
+        item['fbgroups']['schedule_6_id'] = fbgroupsIDstatus[31]
+        item['fbgroups']['schedule_6_datetime'] = fbgroupsIDstatus[32]
+        item['fbgroups']['schedule_6_status'] = fbgroupsIDstatus[33]
+        item['fbgroups']['schedule_6_errors'] = fbgroupsIDstatus[34]
+
+        item['fbgroups']['schedule_7_id'] = fbgroupsIDstatus[35]
+        item['fbgroups']['schedule_7_datetime'] = fbgroupsIDstatus[36]
+        item['fbgroups']['schedule_7_status'] = fbgroupsIDstatus[37]
+        item['fbgroups']['schedule_7_errors'] = fbgroupsIDstatus[38]
+
+        item['fbgroups']['schedule_8_id'] = fbgroupsIDstatus[39]
+        item['fbgroups']['schedule_8_datetime'] = fbgroupsIDstatus[40]
+        item['fbgroups']['schedule_8_status'] = fbgroupsIDstatus[41]
+        item['fbgroups']['schedule_8_errors'] = fbgroupsIDstatus[42]
+
+        item['fbgroups']['schedule_9_id'] = fbgroupsIDstatus[43]
+        item['fbgroups']['schedule_9_datetime'] = fbgroupsIDstatus[44]
+        item['fbgroups']['schedule_9_status'] = fbgroupsIDstatus[45]
+        item['fbgroups']['schedule_9_errors'] = fbgroupsIDstatus[46]
+
+        item['fbgroups']['schedule_10_id'] = fbgroupsIDstatus[47]
+        item['fbgroups']['schedule_10_datetime'] = fbgroupsIDstatus[48]
+        item['fbgroups']['schedule_10_status'] = fbgroupsIDstatus[49]
+        item['fbgroups']['schedule_10_errors'] = fbgroupsIDstatus[50]
+
+        item['fbgroups']['category'] = fbgroupsIDstatus[51]
+        item['fbgroups']['section'] = fbgroupsIDstatus[52]
+        item['fbgroups']['id_gallery'] = fbgroupsIDstatus[53]
+        item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[54]
+
         new_all_rents.append(item)
     # flash(f"{str(len(new_all_rents))}", 'dnager')
 
@@ -11228,6 +11300,8 @@ def fb_groups_sender():
     if get_id_gallery == "None":
         id_gallery = None
     else:
+        try: int(get_id_gallery)
+        except ValueError: return jsonify({'success': False, 'message': 'Błąd w przekształcaniu na int id_gallery!'}), 400
         id_gallery = int(get_id_gallery)
 
     # Przekształcanie każdej daty w harmonogramie na standardowy format
