@@ -11422,6 +11422,8 @@ def remove_career_fbgroups():
         schedule_8_id = form_data.get('schedule_8_id', None)
         schedule_9_id = form_data.get('schedule_9_id', None)
         schedule_10_id = form_data.get('schedule_10_id', None)
+        section = form_data.get('section', 'career')
+
 
         schedule_id_list = [x for x in [
                                 schedule_0_id, 
@@ -11446,7 +11448,7 @@ def remove_career_fbgroups():
             except Exception as e: print(f"Błąd w usunięciu kampanii: {e}")
 
         try: form_data['waitnig_list_id']
-        except KeyError: return redirect(url_for('index'))
+        except KeyError: return redirect(url_for(f'{section}'))
         set_wl_id = int(form_data['waitnig_list_id'])
         
         msq.delete_row_from_database(
@@ -11457,7 +11459,7 @@ def remove_career_fbgroups():
             )
 
         flash("Kampania została usunięta.", "success")
-        return redirect(url_for('career'))
+        return redirect(url_for(f'{section}'))
     
     return redirect(url_for('index'))
 
