@@ -1850,6 +1850,7 @@
                                                             {% for i in range(11) %}
                                                                 {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
                                                                 {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
+                                                                {% set schedule_errors = post_data['fbgroups']['schedule_' ~ i ~ '_errors'] %}
                                                                 {% if schedule_datetime %}
                                                                     <div class="col-3 mb-3 mt-3">
                                                                         <div class="checkpoint
@@ -1880,6 +1881,9 @@
                                                                             </p>
                                                                             <div class=" squerecircle mb-1">
                                                                                 <span class="checkpoint-date">{{ schedule_datetime.strftime('%Y-%m-%d %H:%M') }}</span>
+                                                                            </div>
+                                                                            <div class="mb-1">
+                                                                                <span class="checkpoint-date">{{ schedule_errors }}</span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
