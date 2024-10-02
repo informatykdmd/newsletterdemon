@@ -1237,3 +1237,103 @@ function collectAndSendfbgroupsformestateAdsRent(postId) {
         alert('Wystąpił błąd podczas wysyłania ogłoszenia.');
     });
 }
+
+function collectAndSendfbgroupsformestateAdsSell(postId) {
+    // Zbieramy treść ogłoszenia i usuwamy element z liczbą znaków
+    const contentDiv = document.getElementById(`fbgroups_estateAdsSellDescription_${postId}`);
+    
+    // Usuwamy div z liczbą znaków
+    const charCountDiv = document.getElementById(`char_count_${postId}`);
+    if (charCountDiv) {
+        charCountDiv.remove();
+    }
+
+    // Zbieramy treść po usunięciu licznika znaków
+    const content = contentDiv.innerText.trim();
+
+    // Sprawdzamy, czy treść ogłoszenia nie jest pusta
+    if (!content) {
+        contentDiv.style.border = '2px solid red'; // Podświetlenie na czerwono
+        // Znajdź element diva na podstawie dynamicznego ID
+        const komunikatDiv = document.getElementById(`komunikat_z_serwera_${postId}`);
+            
+        // Wyświetl komunikat o błędzie w divie
+        if (komunikatDiv) {
+            komunikatDiv.innerHTML = '<p class="alert alert-danger" role="alert">Treść ogłoszenia nie może być pusta!</p>';
+        }
+        return; // Zatrzymujemy wysyłkę
+    } else {
+        contentDiv.style.border = ''; // Usuwamy czerwone podświetlenie, jeśli pole jest wypełnione
+    }
+
+    // Zbieramy harmonogram jako listę dat
+    const scheduleDates = [];
+    const scheduleItems = document.querySelectorAll(`#fbgroups_shedule_${postId} .shedule-date-details`);
+    scheduleItems.forEach(item => {
+        scheduleDates.push(item.textContent.trim());
+    });
+
+    // Tworzymy obiekt z danymi do wysłania
+    const dataToSend = {
+        post_id: postId,
+        content: content,  // Treść ogłoszenia
+        color_choice: document.getElementById(`color_choice_${postId}`).value,
+
+        category: document.getElementById(`category_${postId}`).value,
+        section: document.getElementById(`section_${postId}`).value,
+
+        id_gallery: document.getElementById(`id_gallery_${postId}`).value,
+
+        wznawiaj: document.getElementById(`wznawiaj_${postId}`).checked,
+        schedule: scheduleDates,  // Harmonogram jako lista dat
+        frequency: {
+            codwatygodnie: document.getElementById(`codwatygodnie_${postId}`).checked,
+            cotydzien: document.getElementById(`cotydzien_${postId}`).checked,
+            coczterydni: document.getElementById(`coczterydni_${postId}`).checked,
+            codwadni: document.getElementById(`codwadni_${postId}`).checked
+        },
+        repeats: {
+            ponow2razy: document.getElementById(`ponow2razy_${postId}`).checked,
+            ponow5razy: document.getElementById(`ponow5razy_${postId}`).checked,
+            ponow8razy: document.getElementById(`ponow8razy_${postId}`).checked,
+            ponow10razy: document.getElementById(`ponow10razy_${postId}`).checked
+        }
+    };
+
+    // Wysyłanie danych AJAX
+    fetch('/fb-groups-sender', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Znajdź element diva na podstawie dynamicznego ID
+            const komunikatDiv = document.getElementById(`komunikat_z_serwera_${postId}`);
+            
+            // Wyświetl komunikat o sukcesie w divie
+            if (komunikatDiv) {
+                komunikatDiv.innerHTML = '<p class="alert alert-info" role="alert">Ogłoszenie zostało wysłane!</p>';
+                // Odśwież stronę po 5 sekundach
+                setTimeout(function() {
+                    window.location.href = '/estate-ads-sell';
+                }, 5000);
+            }
+        } else {
+            // Znajdź element diva na podstawie dynamicznego ID
+            const komunikatDiv = document.getElementById(`komunikat_z_serwera_${postId}`);
+            
+            // Wyświetl komunikat o błędzie w divie
+            if (komunikatDiv) {
+                komunikatDiv.innerHTML = '<p class="alert alert-danger" role="alert">Wystąpił błąd podczas wysyłania ogłoszenia.</p>';
+            }
+        }
+    })
+    .catch((error) => {
+        console.error('Błąd:', error);
+        alert('Wystąpił błąd podczas wysyłania ogłoszenia.');
+    });
+}
