@@ -71,10 +71,10 @@ def make_fbgroups_task(data):
     fotolinkigrup_string = ""  # Dodajemy wartość domyślną
     if id_gallery is not None:
         dump_row_fotos = prepare_shedule.connect_to_database(
-            f"""SELECT * FROM ZdjeciaOfert WHERE ID = id_gallery;""")[0]
+            f"""SELECT * FROM ZdjeciaOfert WHERE ID = {id_gallery};""")[0]
         clear_row_foto = [foto for foto in dump_row_fotos[1:-1] if foto is not None]
         fotolinkigrup_string = '-@-'.join(fotolink for fotolink in clear_row_foto)
-    if fotolinkigrup_string !="":
+    if fotolinkigrup_string !="": 
         zdjecia_string = fotolinkigrup_string
     else:
         zdjecia_string = None
