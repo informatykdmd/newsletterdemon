@@ -1864,7 +1864,7 @@
                                                                                 <span class="checkpoint-date">{{ schedule_datetime.strftime('%Y-%m-%d %H:%M') }}</span>
                                                                             </div>
                                                                             <div class="mb-1">
-                                                                                <span class="checkpoint-date">{{ schedule_errors }}</span>
+                                                                                <span class="checkpoint-date">{% if schedule_errors %}{{ schedule_errors }}{% endif %}</span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
