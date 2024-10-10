@@ -661,6 +661,7 @@
                                         {% endfor %}
 
                                         <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
+                                        {{last_action_status}}
                                         {% if last_action_status is not none %}
                                             {% if last_action_status == 1 %}
                                                 {% if last_action_index < last_action_planned %}
