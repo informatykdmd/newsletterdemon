@@ -663,9 +663,6 @@
                                             {% endif %}
                                         {% endfor %}
 
-                                        <!-- Debugowanie wyników pętli -->
-                                        <p>Ostatnia wykonana akcja: {{ ns.last_action_index }}, status: {{ ns.last_action_status }}, ostatnia zaplanowana: {{ ns.last_action_planned }}</p>
-
                                         <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
                                         {% if ns.last_action_status is not none and ns.last_action_status != '' %}
                                             {% if ns.last_action_status == 1 %}
