@@ -16,7 +16,6 @@ import adminSmtpSender as mails
 from googletrans import Translator
 import json
 import html
-from datetime import datetime, timedelta
 from markupsafe import Markup
 import subprocess
 import regions
@@ -39,7 +38,7 @@ app.config['SECRET_KEY'] = secrets.token_hex(16)
 # Ustawienia dla Flask-Session
 app.config['SESSION_TYPE'] = 'filesystem'  # Można użyć np. 'redis', 'sqlalchemy'
 app.config['SESSION_PERMANENT'] = True  # Sesja ma być permanentna
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)  # Czas wygaśnięcia sesji (10 minut)
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=10)  # Czas wygaśnięcia sesji (10 minut)
 
 Session(app)
 
