@@ -645,26 +645,25 @@
                                         {% set last_action_status = None %}
                                         {% set last_action_planned = None %}
 
-                                        <!-- Debugowanie pętli - wyświetlanie statusów i dat -->
+                                        <!-- Szukanie ostatniej wykonanej akcji i zliczanie zaplanowanych akcji -->
                                         {% for i in range(11) %}
                                             {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
                                             {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
                                             
-                                            <!-- Debugowanie odczytu danych -->
-                                            {{ "Akcja " ~ i ~ ": " ~ schedule_datetime ~ ", status: " ~ schedule_status }}
-                                            
+                                            <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
                                             {% if schedule_datetime is not none %}
                                                 {% set last_action_planned = i %}
                                             {% endif %}
 
-                                            {% if schedule_status is not none %}
+                                            <!-- Sprawdzenie, czy akcja ma status różny od None i jest wykonana -->
+                                            {% if schedule_status is not none and schedule_status != "" %}
                                                 {% set last_action_index = i %}
                                                 {% set last_action_status = schedule_status %}
                                             {% endif %}
                                         {% endfor %}
 
                                         <!-- Debugowanie wyników pętli -->
-                                        {{ "Ostatnia akcja: " ~ last_action_index ~ ", status: " ~ last_action_status ~ ", ostatnia zaplanowana: " ~ last_action_planned }}
+                                        {{ "Ostatnia wykonana akcja: " ~ last_action_index ~ ", status: " ~ last_action_status ~ ", ostatnia zaplanowana: " ~ last_action_planned }}
 
                                         <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
                                         {% if last_action_status is not none %}
@@ -680,6 +679,7 @@
                                                 <img src="static/img/facebookgroups-inprogress.png" alt=""/>
                                             {% endif %}
                                         {% endif %}
+
 
 
 
