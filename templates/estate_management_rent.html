@@ -647,10 +647,7 @@
                                         {% for i in range(11) %}
                                             {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
                                             {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
-                                            
-                                            <!-- Wyświetlanie debugowania dla każdej akcji -->
-                                            <p>Akcja {{ i }}: datetime={{ schedule_datetime }}, status={{ schedule_status }}</p>
-                                            
+                                                                                        
                                             <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
                                             {% if schedule_datetime is not none and schedule_datetime != '' %}
                                                 {% set ns.last_action_planned = i %}
