@@ -16,7 +16,7 @@ import adminSmtpSender as mails
 from googletrans import Translator
 import json
 import html
-# from jinja2 import Markup
+from datetime import datetime, timedelta
 from markupsafe import Markup
 import subprocess
 import regions
@@ -35,7 +35,12 @@ różnymi aspektami stron.
 """
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex(16)
-app.config['SESSION_TYPE'] = 'filesystem'  # Możesz wybrać inny backend, np. 'redis', 'sqlalchemy', itp.
+
+# Ustawienia dla Flask-Session
+app.config['SESSION_TYPE'] = 'filesystem'  # Można użyć np. 'redis', 'sqlalchemy'
+app.config['SESSION_PERMANENT'] = True  # Sesja ma być permanentna
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=10)  # Czas wygaśnięcia sesji (10 minut)
+
 Session(app)
 
 class LoginForm(FlaskForm):
