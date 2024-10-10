@@ -3676,7 +3676,7 @@ def estateAdsRent():
         if item['adresowo']['status'] is not None:
             start_date = item['adresowo']['data_aktualizacji']
             # Oblicz datę końca promocji
-            end_date = start_date + datetime.timedelta(days=30)
+            end_date = start_date + datetime.timedelta(days=90)
             # Oblicz liczbę dni pozostałych do końca promocji
             days_left = (end_date - datetime.datetime.now()).days
 
@@ -4372,7 +4372,7 @@ def estateAdsSell():
         if item['adresowo']['status'] is not None:
             start_date = item['adresowo']['data_aktualizacji']
             # Oblicz datę końca promocji
-            end_date = start_date + datetime.timedelta(days=30)
+            end_date = start_date + datetime.timedelta(days=90)
             # Oblicz liczbę dni pozostałych do końca promocji
             days_left = (end_date - datetime.datetime.now()).days
 
