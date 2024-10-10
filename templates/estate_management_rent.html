@@ -651,12 +651,12 @@
                                             {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
                                             
                                             <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
-                                            {% if schedule_datetime is not None %}
+                                            {% if schedule_datetime is not none %}
                                                 {% set last_action_planned = i %}
                                             {% endif %}
 
                                             <!-- Sprawdzenie, czy akcja ma status różny od None i jest wykonana -->
-                                            {% if schedule_status is not None and schedule_status != "" %}
+                                            {% if schedule_status is not none and schedule_status != "" %}
                                                 {% set last_action_index = i %}
                                                 {% set last_action_status = schedule_status %}
                                             {% endif %}
