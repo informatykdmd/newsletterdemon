@@ -41,7 +41,7 @@
                                     Status
                                 </div>
                                 <div  class="d-none d-xl-block" style="max-width: 250px;">
-                                    Operator
+                                    Portale
                                 </div>
                                 <div  class="d-none d-lg-block" style="max-width: 150px;">
                                     Data publikacji
@@ -569,15 +569,12 @@
                                         </a>
                                     </div>
                                     <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {% if post_data['EmailKontaktowy'] != '' %}
-                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="text-secondary formatuj-maly-font">{{post_data['EmailKontaktowy']}}</span>
-                                        </a>
-                                        {% else %}
-                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="text-secondary">Brak</span>
-                                        </a>
-                                        {% endif %}
+                                        <button type="button" class="btn btn-primary position-relative">
+                                            <i class="bi bi-facebook"></i>
+                                            <span class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+                                                <span class="visually-hidden">Groups</span>
+                                            </span>
+                                        </button>
                                     </div>
                                     <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -1196,6 +1193,9 @@
                                             {% endfor %}
                                         {% endfor %}
                                         <p class="h3 mb-3"><i class="bi bi-database-fill-check text-warning"></i> {{post_data['Cena']}} PLN</p>
+                                        {% if post_data['EmailKontaktowy'] %}
+                                            <p class="text-secondary formatuj-maly-font">Operator ogłoszenia: {{post_data['EmailKontaktowy']}}</p>
+                                        {% endif %}
                                         <div class="ms-2">
                                             <div class="row row-cols-auto ">
                                                 

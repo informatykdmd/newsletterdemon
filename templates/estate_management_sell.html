@@ -41,7 +41,7 @@
                                     Status
                                 </div>
                                 <div  class="d-none d-xl-block" style="max-width: 250px;">
-                                    Operator
+                                    Portale
                                 </div>
                                 <div  class="d-none d-lg-block" style="max-width: 150px;">
                                     Data publikacji
@@ -1212,6 +1212,9 @@
                                             {% endfor %}
                                         {% endfor %}
                                         <p class="h3"><i class="bi bi-database-fill-check text-warning"></i> {{post_data['Cena']}} PLN</p>
+                                        {% if post_data['EmailKontaktowy'] %}
+                                            <p class="text-secondary formatuj-maly-font">Operator ogłoszenia: {{post_data['EmailKontaktowy']}}</p>
+                                        {% endif %}
                                         <div class="ms-2">
                                             <div class="row row-cols-auto ">
                                                 
@@ -1246,19 +1249,7 @@
                                                         {% endif %}
                                                     {% endif %}
                                                 </form>
-                                                
-                                                <!-- <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Marketplace</button>
-                                                </div>
-                                                <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Usuń z OLX</button>
-                                                </div>
-                                                <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na OTO DOM</button>
-                                                </div>
-                                                <div class="col formatuj-padding">
-                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Publikuj na Allegro Lokalnie</button>
-                                                </div> -->
+
                                             </div>
                                             
                                         </div>
