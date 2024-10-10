@@ -1144,3 +1144,22 @@ color:#969696;
     font-size: 25px;
     font-weight: 700;
 }
+
+.ico-facebookgroups-active {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px; /* Zakrąglone rogi */
+    outline: 1px solid #005e00; /* Szary outline */
+    background-image: url('../img/facebookgroups-active.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; /* Wyłączenie powtarzania tła */
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-facebookgroups-active:hover {
+    outline-color: #02ff02; /* Zmiana koloru outline na zielony */
+    transform: scale(1.1); /* Powiększenie elementu do 22x22px */
+  }
+  
