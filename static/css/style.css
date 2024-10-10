@@ -1148,6 +1148,8 @@ color:#969696;
 .ico-facebookgroups-active {
     width: 20px;
     height: 20px;
+    max-width: 20px;
+    max-height: 20px;
     border-radius: 5px; /* Zakrąglone rogi */
     outline: 1px solid #005e00; /* Szary outline */
     background-image: url('../img/facebookgroups-active.png'); /* Tło z pliku */
