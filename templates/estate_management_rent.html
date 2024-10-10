@@ -641,9 +641,7 @@
                                         {% endif %}
 
                                         <!-- FaceBook Groups -->
-                                        {% set last_action_index = None %}
-                                        {% set last_action_status = None %}
-                                        {% set last_action_planned = None %}
+                                        {% set ns = namespace(last_action_index=None, last_action_status=None, last_action_planned=None) %}
 
                                         <!-- Szukanie ostatniej wykonanej akcji i zliczanie zaplanowanych akcji -->
                                         {% for i in range(11) %}
@@ -655,30 +653,30 @@
                                             
                                             <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
                                             {% if schedule_datetime is not none and schedule_datetime != '' %}
-                                                {% set last_action_planned = i %}
+                                                {% set ns.last_action_planned = i %}
                                             {% endif %}
 
                                             <!-- Sprawdzenie, czy akcja ma status różny od None i jest wykonana -->
                                             {% if schedule_status is not none and schedule_status != '' %}
-                                                {% set last_action_index = i %}
-                                                {% set last_action_status = schedule_status %}
+                                                {% set ns.last_action_index = i %}
+                                                {% set ns.last_action_status = schedule_status %}
                                             {% endif %}
                                         {% endfor %}
 
                                         <!-- Debugowanie wyników pętli -->
-                                        <p>Ostatnia wykonana akcja: {{ last_action_index }}, status: {{ last_action_status }}, ostatnia zaplanowana: {{ last_action_planned }}</p>
+                                        <p>Ostatnia wykonana akcja: {{ ns.last_action_index }}, status: {{ ns.last_action_status }}, ostatnia zaplanowana: {{ ns.last_action_planned }}</p>
 
                                         <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
-                                        {% if last_action_status is not none and last_action_status != '' %}
-                                            {% if last_action_status == 1 %}
-                                                {% if last_action_index < last_action_planned %}
+                                        {% if ns.last_action_status is not none and ns.last_action_status != '' %}
+                                            {% if ns.last_action_status == 1 %}
+                                                {% if ns.last_action_index < ns.last_action_planned %}
                                                     <img src="static/img/facebookgroups-active.png" alt=""/>
                                                 {% else %}
                                                     <img src="static/img/facebookgroups-warning.png" alt=""/>
                                                 {% endif %}
-                                            {% elif last_action_status == 2 %}
+                                            {% elif ns.last_action_status == 2 %}
                                                 <img src="static/img/facebookgroups-error.png" alt=""/>
-                                            {% elif last_action_status == 4 %}
+                                            {% elif ns.last_action_status == 4 %}
                                                 <img src="static/img/facebookgroups-inprogress.png" alt=""/>
                                             {% endif %}
                                         {% endif %}
