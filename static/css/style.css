@@ -813,7 +813,7 @@ color:#969696;
     width: 100%;
     box-sizing: border-box;
     position: relative; /* Umożliwia pozycjonowanie licznika znaków */
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
 }
 
 
@@ -987,7 +987,7 @@ color:#969696;
     width: 100%;
     box-sizing: border-box;
     position: relative; /* Umożliwia pozycjonowanie licznika znaków */
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 22px;
 }
 .fbgroups-requirements-description-preview-0 {
@@ -997,7 +997,7 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 15px;
 }
 
@@ -1012,7 +1012,7 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 25px;
     font-weight: 700;
     background-color: #c600ff;
@@ -1029,7 +1029,7 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 25px;
     font-weight: 700;
     background-color: #e2013b;
@@ -1046,7 +1046,7 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 25px;
     font-weight: 700;
     background-color: #000000;
@@ -1064,7 +1064,7 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 25px;
     font-weight: 700;
     background: linear-gradient(45deg, #dd085c, #462db7);
@@ -1081,7 +1081,7 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 25px;
     font-weight: 700;
     background: linear-gradient(45deg, #783de0, #e537f8);
@@ -1098,7 +1098,7 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 25px;
     font-weight: 700;
     background: linear-gradient(0deg, #be2ba3, #fdb63e);
@@ -1115,7 +1115,7 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 25px;
     font-weight: 700;
     background: linear-gradient(45deg, #535968, #22232a);
@@ -1128,7 +1128,7 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 15px;
     font-weight: 800;
 }
@@ -1140,28 +1140,568 @@ color:#969696;
     min-height: 300px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px; /* Zakrąglone rogi */
+    border-radius: 5px; 
     font-size: 25px;
     font-weight: 700;
 }
 
+/* facebookgroups active warning error inprogress */
 .ico-facebookgroups-active {
     width: 20px;
     height: 20px;
     max-width: 20px;
     max-height: 20px;
-    border-radius: 5px; /* Zakrąglone rogi */
-    outline: 1px solid #005e00; /* Szary outline */
+    border-radius: 5px; 
+    outline: 1px solid #005e00; 
     background-image: url('../img/facebookgroups-active.png'); /* Tło z pliku */
     background-size: cover; /* Dopasowanie tła */
     background-position: center; /* Wyśrodkowanie tła */
-    background-repeat: no-repeat; /* Wyłączenie powtarzania tła */
+    background-repeat: no-repeat; 
     transition: all 0.3s ease; /* Płynna zmiana */
     transform: scale(1); /* Początkowa skala */
   }
   
   .ico-facebookgroups-active:hover {
-    outline-color: #02ff02; /* Zmiana koloru outline na zielony */
-    transform: scale(1.1); /* Powiększenie elementu do 22x22px */
+    outline-color: #02ff02; 
+    transform: scale(1.1); 
+  }
+
+  .ico-facebookgroups-warning {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #ffbb00; 
+    background-image: url('../img/facebookgroups-warning.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
   }
   
+  .ico-facebookgroups-warning:hover {
+    outline-color: #fffb1f; 
+    transform: scale(1.1); 
+  }
+
+  .ico-facebookgroups-error {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #c60000; 
+    background-image: url('../img/facebookgroups-error.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-facebookgroups-error:hover {
+    outline-color: #ff4242; 
+    transform: scale(1.1); 
+  }
+
+
+  .ico-facebookgroups-inprogress {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #007387; 
+    background-image: url('../img/facebookgroups-inprogress.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-facebookgroups-inprogress:hover {
+    outline-color: #00e5ff; 
+    transform: scale(1.1); 
+  }
+
+
+  
+/* adresowo active warning error inprogress hold */
+.ico-adresowo-active {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #005e00; 
+    background-image: url('../img/adresowo-active.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-adresowo-active:hover {
+    outline-color: #02ff02; 
+    transform: scale(1.1); 
+  }
+
+  .ico-adresowo-warning {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #ffbb00; 
+    background-image: url('../img/adresowo-warning.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-adresowo-warning:hover {
+    outline-color: #fffb1f; 
+    transform: scale(1.1); 
+  }
+
+  .ico-adresowo-error {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #c60000; 
+    background-image: url('../img/adresowo-error.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-adresowo-error:hover {
+    outline-color: #ff4242; 
+    transform: scale(1.1); 
+  }
+
+
+  .ico-adresowo-inprogress {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #007387; 
+    background-image: url('../img/adresowo-inprogress.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-adresowo-inprogress:hover {
+    outline-color: #00e5ff; 
+    transform: scale(1.1); 
+  }
+
+
+  .ico-adresowo-hold {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #4b5259; 
+    background-image: url('../img/adresowo-hold.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-adresowo-hold:hover {
+    outline-color: #aaaeb2; 
+    transform: scale(1.1); 
+  }
+  
+  
+  /* facebookmarket active warning error inprogress hold */
+.ico-facebookmarket-active {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #005e00; 
+    background-image: url('../img/facebookmarket-active.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-facebookmarket-active:hover {
+    outline-color: #02ff02; 
+    transform: scale(1.1); 
+  }
+
+  .ico-facebookmarket-warning {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #ffbb00; 
+    background-image: url('../img/facebookmarket-warning.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-facebookmarket-warning:hover {
+    outline-color: #fffb1f; 
+    transform: scale(1.1); 
+  }
+
+  .ico-facebookmarket-error {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #c60000; 
+    background-image: url('../img/facebookmarket-error.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-facebookmarket-error:hover {
+    outline-color: #ff4242; 
+    transform: scale(1.1); 
+  }
+
+
+  .ico-facebookmarket-inprogress {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #007387; 
+    background-image: url('../img/facebookmarket-inprogress.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-facebookmarket-inprogress:hover {
+    outline-color: #00e5ff; 
+    transform: scale(1.1); 
+  }
+
+
+  .ico-facebookmarket-hold {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #4b5259; 
+    background-image: url('../img/facebookmarket-hold.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-facebookmarket-hold:hover {
+    outline-color: #aaaeb2; 
+    transform: scale(1.1); 
+  }
+
+  /* lento active warning error inprogress hold */
+.ico-lento-active {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #005e00; 
+    background-image: url('../img/lento-active.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-lento-active:hover {
+    outline-color: #02ff02; 
+    transform: scale(1.1); 
+  }
+
+  .ico-lento-warning {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #ffbb00; 
+    background-image: url('../img/lento-warning.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-lento-warning:hover {
+    outline-color: #fffb1f; 
+    transform: scale(1.1); 
+  }
+
+  .ico-lento-error {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #c60000; 
+    background-image: url('../img/lento-error.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-lento-error:hover {
+    outline-color: #ff4242; 
+    transform: scale(1.1); 
+  }
+
+
+  .ico-lento-inprogress {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #007387; 
+    background-image: url('../img/lento-inprogress.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-lento-inprogress:hover {
+    outline-color: #00e5ff; 
+    transform: scale(1.1); 
+  }
+
+
+  .ico-lento-hold {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #4b5259; 
+    background-image: url('../img/lento-hold.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-lento-hold:hover {
+    outline-color: #aaaeb2; 
+    transform: scale(1.1); 
+  }
+
+
+  /* otodom active warning error inprogress */
+.ico-otodom-active {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #005e00; 
+    background-image: url('../img/otodom-active.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-otodom-active:hover {
+    outline-color: #02ff02; 
+    transform: scale(1.1); 
+  }
+
+  .ico-otodom-warning {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #ffbb00; 
+    background-image: url('../img/otodom-warning.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-otodom-warning:hover {
+    outline-color: #fffb1f; 
+    transform: scale(1.1); 
+  }
+
+  .ico-otodom-error {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #c60000; 
+    background-image: url('../img/otodom-error.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-otodom-error:hover {
+    outline-color: #ff4242; 
+    transform: scale(1.1); 
+  }
+
+
+  .ico-otodom-inprogress {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #007387; 
+    background-image: url('../img/otodom-inprogress.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-otodom-inprogress:hover {
+    outline-color: #00e5ff; 
+    transform: scale(1.1); 
+  }
+
+
+  /* allegro active warning error inprogress  */
+.ico-allegro-active {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #005e00; 
+    background-image: url('../img/allegro-active.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-allegro-active:hover {
+    outline-color: #02ff02; 
+    transform: scale(1.1); 
+  }
+
+  .ico-allegro-warning {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #ffbb00; 
+    background-image: url('../img/allegro-warning.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-allegro-warning:hover {
+    outline-color: #fffb1f; 
+    transform: scale(1.1); 
+  }
+
+  .ico-allegro-error {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #c60000; 
+    background-image: url('../img/allegro-error.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-allegro-error:hover {
+    outline-color: #ff4242; 
+    transform: scale(1.1); 
+  }
+
+
+  .ico-allegro-inprogress {
+    width: 20px;
+    height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    border-radius: 5px; 
+    outline: 1px solid #007387; 
+    background-image: url('../img/allegro-inprogress.png'); /* Tło z pliku */
+    background-size: cover; /* Dopasowanie tła */
+    background-position: center; /* Wyśrodkowanie tła */
+    background-repeat: no-repeat; 
+    transition: all 0.3s ease; /* Płynna zmiana */
+    transform: scale(1); /* Początkowa skala */
+  }
+  
+  .ico-allegro-inprogress:hover {
+    outline-color: #00e5ff; 
+    transform: scale(1.1); 
+  }
+

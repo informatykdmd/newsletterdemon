@@ -569,114 +569,178 @@
                                         </a>
                                     </div>
                                     <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        <!-- ALLEGRO -->
-                                        {% if post_data['allegro']['status'] == 1 %}
-                                            {% if post_data['allegro']['zostalo_dni'] > 7 %}
-                                                <img src="static/img/allegro-active.png" alt=""/>
-                                            {% else %}
-                                                <img src="static/img/allegro-warning.png" alt=""/>
-                                            {% endif %}
-                                        {% elif post_data['allegro']['status'] == 2 %}
-                                            <img src="static/img/allegro-error.png" alt=""/>
-                                        {% elif post_data['allegro']['status'] == 4 or post_data['allegro']['status'] == 5 or post_data['allegro']['status'] == 6 %}
-                                            <img src="static/img/allegro-inprogress.png" alt=""/>
-                                        {% endif %}
-
-                                        <!-- OTODOM -->
-                                        {% if post_data['otodom']['status'] == 1 %}
-                                            {% if post_data['otodom']['zostalo_dni'] > 7 %}
-                                                <img src="static/img/otodom-active.png" alt=""/>
-                                            {% else %}
-                                                <img src="static/img/otodom-warning.png" alt=""/>
-                                            {% endif %}
-                                        {% elif post_data['otodom']['status'] == 2 %}
-                                            <img src="static/img/otodom-error.png" alt=""/>
-                                        {% elif post_data['otodom']['status'] == 4 or post_data['otodom']['status'] == 5 or post_data['otodom']['status'] == 6 %}
-                                            <img src="static/img/otodom-inprogress.png" alt=""/>
-                                        {% endif %}
-
-                                        <!-- LENTO -->
-                                        {% if post_data['lento']['status'] == 1 %}
-                                            {% if post_data['lento']['zostalo_dni'] > 7 %}
-                                                <img src="static/img/lento-active.png" alt=""/>
-                                            {% else %}
-                                                <img src="static/img/lento-warning.png" alt=""/>
-                                            {% endif %}
-                                        {% elif post_data['lento']['status'] == 0 %}
-                                            <img src="static/img/lento-hold.png" alt=""/>
-                                        {% elif post_data['lento']['status'] == 2 %}
-                                            <img src="static/img/lento-error.png" alt=""/>
-                                        {% elif post_data['lento']['status'] == 4 or post_data['lento']['status'] == 5 or post_data['lento']['status'] == 6 or post_data['lento']['status'] == 7 or post_data['lento']['status'] == 8 %}
-                                            <img src="static/img/lento-inprogress.png" alt=""/>
-                                        {% endif %}
-
-                                        <!-- FaceBook MP -->
-                                        {% if post_data['facebook']['status'] == 1 %}
-                                            {% if post_data['facebook']['zostalo_dni'] > 7 %}
-                                                <img src="static/img/facebookmarket-active.png" alt=""/>
-                                            {% else %}
-                                                <img src="static/img/facebookmarket-warning.png" alt=""/>
-                                            {% endif %}
-                                        {% elif post_data['facebook']['status'] == 0 %}
-                                            <img src="static/img/facebookmarket-hold.png" alt=""/>
-                                        {% elif post_data['facebook']['status'] == 2 %}
-                                            <img src="static/img/facebookmarket-error.png" alt=""/>
-                                        {% elif post_data['facebook']['status'] == 4 or post_data['facebook']['status'] == 5 or post_data['facebook']['status'] == 6 or post_data['facebook']['status'] == 7 or post_data['facebook']['status'] == 8 %}
-                                            <img src="static/img/facebookmarket-inprogress.png" alt=""/>
-                                        {% endif %}
-
-                                        <!-- Adresowo -->
-                                        {% if post_data['adresowo']['status'] == 1 %}
-                                            {% if post_data['adresowo']['zostalo_dni'] > 7 %}
-                                                <img src="static/img/adresowo-active.png" alt=""/>
-                                            {% else %}
-                                                <img src="static/img/adresowo-warning.png" alt=""/>
-                                            {% endif %}
-                                        {% elif post_data['adresowo']['status'] == 0 %}
-                                            <img src="static/img/adresowo-hold.png" alt=""/>
-                                        {% elif post_data['adresowo']['status'] == 2 %}
-                                            <img src="static/img/adresowo-error.png" alt=""/>
-                                        {% elif post_data['adresowo']['status'] == 4 or post_data['adresowo']['status'] == 5 or post_data['adresowo']['status'] == 6 or post_data['adresowo']['status'] == 7 or post_data['adresowo']['status'] == 8 %}
-                                            <img src="static/img/adresowo-inprogress.png" alt=""/>
-                                        {% endif %}
-
-                                        <!-- FaceBook Groups -->
-                                        {% set ns = namespace(last_action_index=None, last_action_status=None, last_action_planned=None) %}
-
-                                        <!-- Szukanie ostatniej wykonanej akcji i zliczanie zaplanowanych akcji -->
-                                        {% for i in range(11) %}
-                                            {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
-                                            {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
-                                                                                        
-                                            <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
-                                            {% if schedule_datetime is not none and schedule_datetime != '' %}
-                                                {% set ns.last_action_planned = i %}
+                                        <div class="row">
+                                            <!-- ALLEGRO -->
+                                            {% if post_data['allegro']['status'] == 1 %}
+                                                <div class="col-1">
+                                                    {% if post_data['allegro']['zostalo_dni'] > 7 %}
+                                                        <div class="ico-allegro-active"></div>
+                                                        <!-- <img src="static/img/allegro-active.png" alt=""/> -->
+                                                    {% else %}
+                                                        <div class="ico-allegro-warning"></div>
+                                                        <!-- <img src="static/img/allegro-warning.png" alt=""/> -->
+                                                    {% endif %}
+                                                </div>
+                                            {% elif post_data['allegro']['status'] == 2 %}
+                                                <div class="col-1">
+                                                    <div class="ico-allegro-error"></div>
+                                                </div>
+                                                <!-- <img src="static/img/allegro-error.png" alt=""/> -->
+                                            {% elif post_data['allegro']['status'] == 4 or post_data['allegro']['status'] == 5 or post_data['allegro']['status'] == 6 %}
+                                                <div class="col-1">
+                                                    <div class="ico-allegro-inprogress"></div>
+                                                </div>
+                                                <!-- <img src="static/img/allegro-inprogress.png" alt=""/> -->
                                             {% endif %}
 
-                                            <!-- Sprawdzenie, czy akcja ma status różny od None i jest wykonana -->
-                                            {% if schedule_status is not none and schedule_status != '' %}
-                                                {% set ns.last_action_index = i %}
-                                                {% set ns.last_action_status = schedule_status %}
+                                            <!-- OTODOM -->
+                                            {% if post_data['otodom']['status'] == 1 %}
+                                                <div class="col-1">
+                                                    {% if post_data['otodom']['zostalo_dni'] > 7 %}
+                                                        <div class="ico-otodom-active"></div>
+                                                        <!-- <img src="static/img/otodom-active.png" alt=""/> -->
+                                                    {% else %}
+                                                        <div class="ico-otodom-warning"></div>
+                                                        <!-- <img src="static/img/otodom-warning.png" alt=""/> -->
+                                                    {% endif %}
+                                                </div>
+                                            {% elif post_data['otodom']['status'] == 2 %}
+                                                <div class="col-1">
+                                                    <div class="ico-otodom-error"></div>
+                                                </div>
+                                                <!-- <img src="static/img/otodom-error.png" alt=""/> -->
+                                            {% elif post_data['otodom']['status'] == 4 or post_data['otodom']['status'] == 5 or post_data['otodom']['status'] == 6 %}
+                                                <div class="col-1">
+                                                    <div class="ico-otodom-inprogress"></div>
+                                                </div>
+                                                <!-- <img src="static/img/otodom-inprogress.png" alt=""/> -->
                                             {% endif %}
-                                        {% endfor %}
 
-                                        <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
-                                        {% if ns.last_action_status is not none and ns.last_action_status != '' %}
-                                            {% if ns.last_action_status == 1 %}
-                                                {% if ns.last_action_index < ns.last_action_planned %}
-                                                    <div class="ico-facebookgroups-active">
+                                            <!-- LENTO -->
+                                            {% if post_data['lento']['status'] == 1 %}
+                                                <div class="col-1">
+                                                    {% if post_data['lento']['zostalo_dni'] > 7 %}
+                                                        <div class="ico-lento-active"></div>
+                                                        <!-- <img src="static/img/lento-active.png" alt=""/> -->
+                                                    {% else %}
+                                                        <div class="ico-lento-warning"></div>
+                                                        <!-- <img src="static/img/lento-warning.png" alt=""/> -->
+                                                    {% endif %}
+                                                </div>
+                                            {% elif post_data['lento']['status'] == 0 %}
+                                                <div class="col-1">
+                                                    <div class="ico-lento-hold"></div>
+                                                </div>
+                                                <!-- <img src="static/img/lento-hold.png" alt=""/> -->
+                                            {% elif post_data['lento']['status'] == 2 %}
+                                                <!-- <img src="static/img/lento-error.png" alt=""/> -->
+                                                <div class="col-1">
+                                                    <div class="ico-lento-error"></div>
+                                                </div>
+                                            {% elif post_data['lento']['status'] == 4 or post_data['lento']['status'] == 5 or post_data['lento']['status'] == 6 or post_data['lento']['status'] == 7 or post_data['lento']['status'] == 8 %}
+                                                <!-- <img src="static/img/lento-inprogress.png" alt=""/> -->
+                                                <div class="col-1">
+                                                    <div class="ico-lento-inprogress"></div>
+                                                </div>
+                                            {% endif %}
 
-                                                    </div>
-                                                    <!-- <img src="static/img/facebookgroups-active.png" alt=""/> -->
-                                                {% else %}
-                                                    <img src="static/img/facebookgroups-warning.png" alt=""/>
+                                            <!-- FaceBook MP -->
+                                            {% if post_data['facebook']['status'] == 1 %}
+                                                <div class="col-1">
+                                                    {% if post_data['facebook']['zostalo_dni'] > 7 %}
+                                                        <div class="ico-facebookmarket-active"></div>
+                                                        <!-- <img src="static/img/facebookmarket-active.png" alt=""/> -->
+                                                    {% else %}
+                                                        <!-- <img src="static/img/facebookmarket-warning.png" alt=""/> -->
+                                                        <div class="ico-facebookmarket-warning"></div>
+                                                    {% endif %}
+                                                </div>
+                                            {% elif post_data['facebook']['status'] == 0 %}
+                                                <!-- <img src="static/img/facebookmarket-hold.png" alt=""/> -->
+                                                <div class="col-1">
+                                                    <div class="ico-facebookmarket-hold"></div>
+                                                </div>
+                                            {% elif post_data['facebook']['status'] == 2 %}
+                                                <!-- <img src="static/img/facebookmarket-error.png" alt=""/> -->
+                                                <div class="col-1">
+                                                    <div class="ico-facebookmarket-error"></div>
+                                                </div>
+                                            {% elif post_data['facebook']['status'] == 4 or post_data['facebook']['status'] == 5 or post_data['facebook']['status'] == 6 or post_data['facebook']['status'] == 7 or post_data['facebook']['status'] == 8 %}
+                                                <!-- <img src="static/img/facebookmarket-inprogress.png" alt=""/> -->
+                                                <div class="col-1">
+                                                    <div class="ico-facebookmarket-inprogress"></div>
+                                                </div>
+                                            {% endif %}
+
+                                            <!-- Adresowo -->
+                                            {% if post_data['adresowo']['status'] == 1 %}
+                                                <div class="col-1">
+                                                    {% if post_data['adresowo']['zostalo_dni'] > 7 %}
+                                                        <!-- <img src="static/img/adresowo-active.png" alt=""/> -->
+                                                        <div class="ico-adresowo-active"></div>
+                                                    {% else %}
+                                                        <!-- <img src="static/img/adresowo-warning.png" alt=""/> -->
+                                                        <div class="ico-adresowo-warning"></div>
+                                                    {% endif %}
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 0 %}
+                                                <!-- <img src="static/img/adresowo-hold.png" alt=""/> -->
+                                                <div class="col-1">
+                                                    <div class="ico-adresowo-hold"></div>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 2 %}
+                                                <!-- <img src="static/img/adresowo-error.png" alt=""/> -->
+                                                <div class="col-1">
+                                                    <div class="ico-adresowo-error"></div>
+                                                </div>
+                                            {% elif post_data['adresowo']['status'] == 4 or post_data['adresowo']['status'] == 5 or post_data['adresowo']['status'] == 6 or post_data['adresowo']['status'] == 7 or post_data['adresowo']['status'] == 8 %}
+                                                <!-- <img src="static/img/adresowo-inprogress.png" alt=""/> -->
+                                                <div class="col-1">
+                                                    <div class="ico-adresowo-inprogress"></div>
+                                                </div>
+                                            {% endif %}
+
+                                            <!-- FaceBook Groups -->
+                                            {% set ns = namespace(last_action_index=None, last_action_status=None, last_action_planned=None) %}
+
+                                            <!-- Szukanie ostatniej wykonanej akcji i zliczanie zaplanowanych akcji -->
+                                            {% for i in range(11) %}
+                                                {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
+                                                {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
+                                                                                            
+                                                <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
+                                                {% if schedule_datetime is not none and schedule_datetime != '' %}
+                                                    {% set ns.last_action_planned = i %}
                                                 {% endif %}
-                                            {% elif ns.last_action_status == 2 %}
-                                                <img src="static/img/facebookgroups-error.png" alt=""/>
-                                            {% elif ns.last_action_status == 4 %}
-                                                <img src="static/img/facebookgroups-inprogress.png" alt=""/>
+
+                                                <!-- Sprawdzenie, czy akcja ma status różny od None i jest wykonana -->
+                                                {% if schedule_status is not none and schedule_status != '' %}
+                                                    {% set ns.last_action_index = i %}
+                                                    {% set ns.last_action_status = schedule_status %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
+                                            {% if ns.last_action_status is not none and ns.last_action_status != '' %}
+                                                <div class="col-1">
+                                                    {% if ns.last_action_status == 1 %}
+                                                        {% if ns.last_action_index < ns.last_action_planned %}
+                                                            <div class="ico-facebookgroups-active"></div>
+                                                            <!-- <img src="static/img/facebookgroups-active.png" alt=""/> -->
+                                                            {% else %}
+                                                            <div class="ico-facebookgroups-warning"></div>
+                                                            <!-- <img src="static/img/facebookgroups-warning.png" alt=""/> -->
+                                                        {% endif %}
+                                                    {% elif ns.last_action_status == 2 %}
+                                                        <div class="ico-facebookgroups-error"></div>
+                                                        <!-- <img src="static/img/facebookgroups-error.png" alt=""/> -->
+                                                    {% elif ns.last_action_status == 4 %}
+                                                        <div class="ico-facebookgroups-inprogress"></div>
+                                                        <!-- <img src="static/img/facebookgroups-inprogress.png" alt=""/> -->
+                                                    {% endif %}
+                                                </div>
                                             {% endif %}
-                                        {% endif %}
+                                        </div>
                                     </div>
                                     <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
