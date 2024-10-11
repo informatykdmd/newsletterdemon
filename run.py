@@ -11192,7 +11192,7 @@ def settings():
     instalacje = settingsDB['instalacje']
     smtpAdmin = settingsDB['smtp_admin']
 
-    last_logs = get_last_logs('logs/errors.log', 50)
+    last_logs = get_last_logs('logs/errors.log', 250)
 
     return render_template(
                             "setting_management.html", 
