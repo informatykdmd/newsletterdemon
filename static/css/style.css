@@ -1218,11 +1218,13 @@ color:#969696;
     background-size: cover; /* Dopasowanie tła */
     background-position: center; /* Wyśrodkowanie tła */
     background-repeat: no-repeat; 
-    transition: all 0.3s ease; /* Płynna zmiana */
-    transform: scale(1); /* Początkowa skala */
+    display: inline-block;
+    animation: pulsate 1.5s infinite; /* Animacja pulsowania */
+    transition: all 0.3s ease-in-out; /* Płynna zmiana na hover */
   }
   
   .ico-facebookgroups-inprogress:hover {
+    animation: none; /* Zatrzymanie animacji */
     outline-color: #00e5ff; 
     transform: scale(1.1); 
   }
@@ -1302,11 +1304,13 @@ color:#969696;
     background-size: cover; /* Dopasowanie tła */
     background-position: center; /* Wyśrodkowanie tła */
     background-repeat: no-repeat; 
-    transition: all 0.3s ease; /* Płynna zmiana */
-    transform: scale(1); /* Początkowa skala */
+    display: inline-block;
+    animation: pulsate 1.5s infinite; /* Animacja pulsowania */
+    transition: all 0.3s ease-in-out; /* Płynna zmiana na hover */
   }
   
   .ico-adresowo-inprogress:hover {
+    animation: none; /* Zatrzymanie animacji */
     outline-color: #00e5ff; 
     transform: scale(1.1); 
   }
@@ -1406,11 +1410,13 @@ color:#969696;
     background-size: cover; /* Dopasowanie tła */
     background-position: center; /* Wyśrodkowanie tła */
     background-repeat: no-repeat; 
-    transition: all 0.3s ease; /* Płynna zmiana */
-    transform: scale(1); /* Początkowa skala */
+    display: inline-block;
+    animation: pulsate 1.5s infinite; /* Animacja pulsowania */
+    transition: all 0.3s ease-in-out; /* Płynna zmiana na hover */
   }
   
   .ico-facebookmarket-inprogress:hover {
+    animation: none; /* Zatrzymanie animacji */
     outline-color: #00e5ff; 
     transform: scale(1.1); 
   }
@@ -1509,11 +1515,13 @@ color:#969696;
     background-size: cover; /* Dopasowanie tła */
     background-position: center; /* Wyśrodkowanie tła */
     background-repeat: no-repeat; 
-    transition: all 0.3s ease; /* Płynna zmiana */
-    transform: scale(1); /* Początkowa skala */
+    display: inline-block;
+    animation: pulsate 1.5s infinite; /* Animacja pulsowania */
+    transition: all 0.3s ease-in-out; /* Płynna zmiana na hover */
   }
   
   .ico-lento-inprogress:hover {
+    animation: none; /* Zatrzymanie animacji */
     outline-color: #00e5ff; 
     transform: scale(1.1); 
   }
@@ -1613,11 +1621,13 @@ color:#969696;
     background-size: cover; /* Dopasowanie tła */
     background-position: center; /* Wyśrodkowanie tła */
     background-repeat: no-repeat; 
-    transition: all 0.3s ease; /* Płynna zmiana */
-    transform: scale(1); /* Początkowa skala */
+    display: inline-block;
+    animation: pulsate 1.5s infinite; /* Animacja pulsowania */
+    transition: all 0.3s ease-in-out; /* Płynna zmiana na hover */
   }
   
   .ico-otodom-inprogress:hover {
+    animation: none; /* Zatrzymanie animacji */
     outline-color: #00e5ff; 
     transform: scale(1.1); 
   }
@@ -1685,7 +1695,7 @@ color:#969696;
   }
 
 
-  .ico-allegro-inprogress {
+.ico-allegro-inprogress {
     width: 15px;
     height: 15px;
     max-width: 15px;
@@ -1696,12 +1706,26 @@ color:#969696;
     background-size: cover; /* Dopasowanie tła */
     background-position: center; /* Wyśrodkowanie tła */
     background-repeat: no-repeat; 
-    transition: all 0.3s ease; /* Płynna zmiana */
-    transform: scale(1); /* Początkowa skala */
-  }
+    display: inline-block;
+    animation: pulsate 1.5s infinite; /* Animacja pulsowania */
+    transition: all 0.3s ease-in-out; /* Płynna zmiana na hover */
+}
   
-  .ico-allegro-inprogress:hover {
-    outline-color: #00e5ff; 
-    transform: scale(1.1); 
-  }
+.ico-allegro-inprogress:hover {
+    animation: none; /* Zatrzymanie animacji */
+    outline-color: #00e5ff; /* Zmiana koloru obramowania na hover */
+    transform: scale(1.1); /* Powiększenie na hover */
+}
 
+/* Definicja animacji pulsowania */
+@keyframes pulsate {
+  0% {
+      transform: scale(1);
+  }
+  50% {
+      transform: scale(1.2);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
