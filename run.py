@@ -3679,13 +3679,15 @@ def estateAdsRent():
 
         if item['adresowo']['status'] is not None:
             start_date = item['adresowo']['data_aktualizacji']
-            # Oblicz datę końca promocji
-            end_date = start_date + datetime.timedelta(days=90)
-            # Oblicz liczbę dni pozostałych do końca promocji
-            days_left = (end_date - datetime.datetime.now()).days
+            
+            # Oblicz liczbę miesięcy aktywności
+            current_date = datetime.datetime.now()
+            months_active = (current_date.year - start_date.year) * 12 + current_date.month - start_date.month
 
-            item['adresowo']['zostalo_dni'] = days_left
+            # Przypisz liczbę aktywnych miesięcy do item['adresowo']['aktywne_miesiecy']
+            item['adresowo']['aktywne_miesiecy'] = months_active
 
+            # Przypisz error_message
             item['adresowo']['error_message'] = adresowoIDstatus[3]
 
         if 'allegro' not in item:
@@ -4375,12 +4377,13 @@ def estateAdsSell():
 
         if item['adresowo']['status'] is not None:
             start_date = item['adresowo']['data_aktualizacji']
-            # Oblicz datę końca promocji
-            end_date = start_date + datetime.timedelta(days=90)
-            # Oblicz liczbę dni pozostałych do końca promocji
-            days_left = (end_date - datetime.datetime.now()).days
 
-            item['adresowo']['zostalo_dni'] = days_left
+            # Oblicz liczbę miesięcy aktywności
+            current_date = datetime.datetime.now()
+            months_active = (current_date.year - start_date.year) * 12 + current_date.month - start_date.month
+
+            # Przypisz liczbę aktywnych miesięcy do item['adresowo']['aktywne_miesiecy']
+            item['adresowo']['aktywne_miesiecy'] = months_active
 
             item['adresowo']['error_message'] = facebookIDstatus[3]
 

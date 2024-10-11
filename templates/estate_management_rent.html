@@ -674,15 +674,15 @@
 
                                             <!-- Adresowo -->
                                             {% if post_data['adresowo']['status'] == 1 %}
-                                                <div class="col-1 me-1">
-                                                    {% if post_data['adresowo']['zostalo_dni'] > 7 %}
-                                                        <!-- <img src="static/img/adresowo-active.png" alt=""/> -->
-                                                        <div class="ico-adresowo-active"></div>
-                                                    {% else %}
-                                                        <!-- <img src="static/img/adresowo-warning.png" alt=""/> -->
-                                                        <div class="ico-adresowo-warning"></div>
-                                                    {% endif %}
-                                                </div>
+                                            <div class="col-1 me-1">
+                                                {% if post_data['adresowo']['aktywne_miesiecy'] > 3 %}
+                                                    <!-- <img src="static/img/adresowo-warning.png" alt=""/> -->
+                                                    <div class="ico-adresowo-warning"></div>
+                                                {% else %}
+                                                    <!-- <img src="static/img/adresowo-active.png" alt=""/> -->
+                                                    <div class="ico-adresowo-active"></div>
+                                                {% endif %}
+                                            </div>
                                             {% elif post_data['adresowo']['status'] == 0 %}
                                                 <!-- <img src="static/img/adresowo-hold.png" alt=""/> -->
                                                 <div class="col-1 me-1">
@@ -4293,7 +4293,7 @@
                                                     <div class="mb-2 mt-2">
                                                                         
                                                         <h5>ADRESOWO</h5>
-                                                        <p>Status: Opublikowano (pozostało {{post_data['adresowo']['zostalo_dni']}} dni)</p>
+                                                        <p>Status: Opublikowano (aktywne od {{post_data['adresowo']['aktywne_miesiecy']}} miesięcy)</p>
                                                     </div>
                                                     <div class="row row-cols-auto "> 
                                                         <div class="col">
