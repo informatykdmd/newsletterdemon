@@ -928,6 +928,20 @@ def generator_jobs():
         daneList.append(theme)
     return daneList
 
+def get_last_20_lines(file_path: str) -> list:
+    """
+    Pobiera 20 ostatnich linii z pliku i zwraca je jako listę stringów.
+    
+    file_path: ścieżka do pliku, z którego pobieramy dane.
+    """
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()  # Wczytuje wszystkie linie z pliku
+            return lines[-20:]  # Zwraca 20 ostatnich linii
+    except Exception as e:
+        print(f"Błąd podczas odczytu pliku: {e}")
+        return []
+
 
 # Funkcja do przekształcania dat z formatu opisowego
 def format_date_pl(date_str):
@@ -11175,6 +11189,8 @@ def settings():
     instalacje = settingsDB['instalacje']
     smtpAdmin = settingsDB['smtp_admin']
 
+    last_logs = get_last_20_lines('logs/errors.log')
+
     return render_template(
                             "setting_management.html", 
                             username=session['username'],
@@ -11193,7 +11209,8 @@ def settings():
                             inwestycje=inwestycje,
                             instalacje=instalacje,
                             smtpAdmin=smtpAdmin,
-                            etate_logo_png=etate_logo_png
+                            etate_logo_png=etate_logo_png,
+                            last_logs=last_logs
                             )
 
 @app.route('/fb-groups')

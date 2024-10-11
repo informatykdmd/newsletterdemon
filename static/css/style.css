@@ -1723,3 +1723,33 @@ color:#969696;
       transform: scale(1);
   }
 }
+
+.unix-log-style {
+  list-style-type: none; /* Usuwa znaczniki listy */
+  padding: 0;
+  margin: 0;
+  background-color: #1e1e1e; /* Ciemne tło w stylu dark mode */
+  border-radius: 5px; /* Zaokrąglone rogi kontenera, dopasowane do klasy "rogi" */
+  font-family: "Courier New", Courier, monospace; /* Monospace czcionka typowa dla logów */
+  color: #c5c6c7; /* Dopasowany kolor tekstu */
+  max-height: 300px; /* Ograniczona wysokość */
+  overflow-y: auto; /* Pionowe przewijanie, jeśli jest za dużo logów */
+}
+
+.unix-log-style li {
+  padding: 10px;
+  border-bottom: 1px solid #333; /* Dodaje delikatną linię między logami */
+  transition: all 0.3s ease; /* Płynne przejście na hover */
+  cursor: pointer; /* Zmienia kursor na wskaźnik */
+}
+
+.unix-log-style li:last-child {
+  border-bottom: none; /* Usuwa dolną linię dla ostatniego elementu */
+}
+
+.unix-log-style li:hover {
+  background-color: #282828; /* Zmienia tło na ciemniejsze na hover */
+  border: 1px solid #00e5ff; /* Dodaje podświetlenie na hover */
+  border-radius: 5px; /* Dopasowuje rogi na hover */
+  color: #fff; /* Zmienia kolor tekstu na biały na hover */
+}
