@@ -928,7 +928,7 @@ def generator_jobs():
         daneList.append(theme)
     return daneList
 
-def get_last_20_lines(file_path: str) -> list:
+def get_last_logs(file_path: str, logs = 20) -> list:
     """
     Pobiera 20 ostatnich linii z pliku, ignorując puste linie, 
     zwraca je w odwrotnej kolejności, aby najnowsze były pierwsze.
@@ -940,7 +940,7 @@ def get_last_20_lines(file_path: str) -> list:
             lines = file.readlines()
             # Filtrujemy puste linie i usuwamy te, które zawierają tylko spacje
             lines = [line.strip() for line in lines if line.strip()]
-            return lines[-20:][::-1]   # Zwraca ostatnie 20 niepustych linii
+            return lines[-logs:][::-1]   # Zwraca ostatnie 20 niepustych linii
     except Exception as e:
         print(f"Błąd podczas odczytu pliku: {e}")
         return []
@@ -11192,7 +11192,7 @@ def settings():
     instalacje = settingsDB['instalacje']
     smtpAdmin = settingsDB['smtp_admin']
 
-    last_logs = get_last_20_lines('logs/errors.log')
+    last_logs = get_last_logs('logs/errors.log', 50)
 
     return render_template(
                             "setting_management.html", 
