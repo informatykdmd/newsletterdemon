@@ -931,7 +931,7 @@ def generator_jobs():
 def get_last_20_lines(file_path: str) -> list:
     """
     Pobiera 20 ostatnich linii z pliku, ignorując puste linie, 
-    i zwraca je jako listę stringów.
+    zwraca je w odwrotnej kolejności, aby najnowsze były pierwsze.
     
     file_path: ścieżka do pliku, z którego pobieramy dane.
     """
@@ -940,7 +940,7 @@ def get_last_20_lines(file_path: str) -> list:
             lines = file.readlines()
             # Filtrujemy puste linie i usuwamy te, które zawierają tylko spacje
             lines = [line.strip() for line in lines if line.strip()]
-            return lines[-20:]  # Zwraca ostatnie 20 niepustych linii
+            return lines[-20:][::-1]   # Zwraca ostatnie 20 niepustych linii
     except Exception as e:
         print(f"Błąd podczas odczytu pliku: {e}")
         return []
