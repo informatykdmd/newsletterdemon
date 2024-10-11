@@ -7,6 +7,7 @@ import random
 from archiveSents import archive_sents
 from appslib import handle_error
 from fbwaitninglist import give_me_curently_tasks
+from ExpiryMonitor import check_all_tables_for_expiry, insert_to_database, delete_row_from_database
 
 def get_messages(flag='all'):
     # WHERE status != 1
@@ -198,6 +199,41 @@ def main():
             if make_fbgroups_task(task_data):
                 sleep(300)
 
+        ################################################################
+        # Obsługa automatycznego wygaszania zakończonych ogłoszeń na 
+        # ALLEGRO OTODOM LENTO
+        ################################################################
+
+        expired_records = check_all_tables_for_expiry()
+
+        for record in expired_records:
+            table_name = record.get('table', None)
+            record_id = record.get('id', None)
+            status = record.get('status', None)
+            
+            if table_name is None or record_id is None or status is None:
+                handle_error(f"Pominięto rekord z brakującymi danymi: {record}.\n")
+                continue
+
+            # Jeżeli status jest 1 lub 0 -> Zmieniamy status na 6 (Trwa proces usuwania ogłoszenia)
+            if status in [0, 1]:
+                query_update_status = f"UPDATE {table_name} SET status = %s, active_task = %s WHERE id = %s"
+                values = (6, 0, record_id)
+                try:
+                    insert_to_database(query_update_status, values)  # Zakładam, że insert_to_database obsługuje także update
+                    handle_error(f"Wygaszanie ogłoszenia o ID {record_id} w tabeli {table_name}.\n")
+                except Exception as e:
+                    handle_error(f"Błąd przy aktualizacji rekordu o ID {record_id} w tabeli {table_name}: {e}.\n")
+            
+            # Jeżeli status jest 2 -> Usuwamy rekord
+            elif status == 2:
+                query_delete_record = f"DELETE FROM {table_name} WHERE id = %s"
+                values = (record_id,)
+                try:
+                    delete_row_from_database(query_delete_record, values)
+                    handle_error(f"Usunięto rekord o ID {record_id} z tabeli {table_name}.\n")
+                except Exception as e:
+                    handle_error(f"Błąd przy usuwaniu rekordu o ID {record_id} z tabeli {table_name}: {e}.\n")
 
         handle_error(f'{datetime.now()} - {__name__} is working...\n')
         sleep(60)
