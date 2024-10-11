@@ -1,5 +1,6 @@
 from connectAndQuery import connect_to_database, safe_connect_to_database, insert_to_database, delete_row_from_database
 from datetime import datetime, timedelta
+from appslib import handle_error
 
 def get_table_data(table_name: str, column_id: str, column_date: str, column_status: str) -> list:
     """
@@ -15,7 +16,7 @@ def get_table_data(table_name: str, column_id: str, column_date: str, column_sta
         data = connect_to_database(query)
         return data
     except Exception as e:
-        print(f"Błąd podczas pobierania danych z tabeli {table_name}: {e}")
+        handle_error(f"Błąd podczas pobierania danych z tabeli {table_name}: {e}")
         return []
 
 
