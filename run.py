@@ -11407,6 +11407,7 @@ def fb_groups_sender():
 
     # Sprawdzamy, czy wszystkie daty są poprawnie sformatowane
     if None in formatted_schedule:
+        msq.handle_error(f"Błąd w przekształcaniu dat. \n", log_path='./logs/errors.log')
         return jsonify({'success': False, 'message': 'Błąd w przekształcaniu dat'}), 400
     
     def get_actions_dates():
@@ -11438,12 +11439,12 @@ def fb_groups_sender():
 
                         # Warunki kolizji
                         if new_start_date < scheduled_end_date and new_end_date > scheduled_start_date:
-                            print(f"\nKolizja! Kampania {new_start_date} koliduje z kampanią {scheduled_start_date}.")
+                            msq.handle_error(f"\nKolizja! Kampania {new_start_date} koliduje z kampanią {scheduled_start_date}.", log_path='./logs/errors.log')
                             # Jeśli kolizja, przesuń nową kampanię o interwał do przodu
                             new_start_date += interval
                             new_end_date = new_start_date + interval
                             formatted_schedule[i] = new_start_date
-                            print(f"Nowa data kampanii {i+1}: {new_start_date}")
+                            msq.handle_error(f"Nowa data kampanii {i+1}: {new_start_date}", log_path='./logs/errors.log')
                             break  # Wyjdź z pętli, jeśli znaleziono kolizję i przesunięto
 
         # Konwersja datetime -> string
@@ -11477,6 +11478,7 @@ def fb_groups_sender():
                 less_index = []
                 repeater = 10
         else:
+            msq.handle_error(f"Błąd w przygotowywaniu list hramonogramów. \n", log_path='./logs/errors.log')
             return jsonify({'success': False, 'message': 'Błąd w przygotowywaniu list hramonogramów'}), 400
         
     repeats_left = repeater + 1
@@ -11530,6 +11532,7 @@ def fb_groups_sender():
     if msq.insert_to_database(zapytanie_sql, dane):
         return jsonify({'success': True, 'message': f'Zmiany zostały zapisane!'})
     else:
+        msq.handle_error(f"Błąd zapisu bazy danych dla id: {post_id}\n", log_path='./logs/errors.log')
         return jsonify({'success': False, 'message': 'Błąd zapisu bazy danych'}), 400
 
     
