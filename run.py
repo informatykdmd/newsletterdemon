@@ -562,8 +562,6 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
         except IndexError: print("Błąd: Próba dostępu do indeksu, który nie istnieje w liście")
         except TypeError as e: print(f"Błąd typu danych: {e}")
         except Exception as e: print(f"Nieoczekiwany błąd: {e}")
-        
-            
 
         theme = {
             'ID': int(data[0]),
@@ -609,6 +607,7 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
         sellOffer.append(theme)
 
     return sellOffer
+
 def generator_sellOffert_raw(): # surowe dane
     took_sellOffer = take_data_table('*', 'OfertySprzedazy')
     sellOffer = []
@@ -652,6 +651,7 @@ def generator_sellOffert_raw(): # surowe dane
         sellOffer.append(theme)
 
     return sellOffer
+
 def generator_specialOffert(lang='pl', status='aktywna'): # status='aktywna', 'nieaktywna', 'wszystkie'
     took_specOffer = take_data_table('*', 'OfertySpecjalne')
     
@@ -852,6 +852,7 @@ def restart_pm2_tasks():
         print("Output:", e.stdout.decode())
         print("Errors:", e.stderr.decode())
         return False
+
 def restart_pm2_tasks_signal():
     try:
         # Utworzenie pliku sygnału
@@ -944,7 +945,6 @@ def get_last_logs(file_path: str, logs = 20) -> list:
     except Exception as e:
         print(f"Błąd podczas odczytu pliku: {e}")
         return []
-
 
 # Funkcja do przekształcania dat z formatu opisowego
 def format_date_pl(date_str):
@@ -2324,7 +2324,6 @@ def users(router=True):
             )
     else:
         return users, session['username'], session['userperm'], pagination
-    
 
 @app.route('/newsletter')
 def newsletter():
@@ -3004,7 +3003,6 @@ def team_development():
                             instalacje=instalacje
                             )
 
-
 @app.route('/team-inwestycje', methods=['GET', 'POST'])
 def team_inwestycje():
     """Strona zespołu inwestycje."""
@@ -3543,7 +3541,6 @@ def save_career_offer():
             'success': False
         }), 500
 
-
 @app.route('/remove-career-offer', methods=["POST"])
 def remove_career_offer():
     """Usuwanie ofertę najmu"""
@@ -3573,7 +3570,6 @@ def remove_career_offer():
         return redirect(url_for('career'))
     
     return redirect(url_for('index'))
-
 
 @app.route('/update-career-offer-status', methods=['POST'])
 def update_career_offer_status():
@@ -4689,7 +4685,6 @@ def update_sell_offer_status():
     
     return redirect(url_for('index'))
 
-
 @app.route('/save-sell-offer', methods=["POST"])
 def save_sell_offer():
     # Odczytanie danych formularza
@@ -5004,7 +4999,6 @@ def save_sell_offer():
                 'message': 'Bład zapisu! Oferta wynajmu nie została zapisana!',
                 'success': True
                 }), 200
-
 
 @app.route('/set-as-specOffer', methods=['POST'])
 def set_as_specOffer():
@@ -7082,7 +7076,6 @@ def public_on_facebook():
         
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
-
 
 @app.route('/get-region-data', methods=['GET'])
 def get_region_data():
@@ -11051,7 +11044,6 @@ def public_on_otodom():
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
 
-
 @app.route('/estate-ads-special')
 def estateAdsspecial():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
@@ -11270,8 +11262,6 @@ def fbGroups():
                             sort_by=sort_by, 
                             sort_type=sort_type
                             )
-
-
 
 @app.route('/add-fb-group', methods=["POST"])
 def add_fb_group():
@@ -11534,8 +11524,6 @@ def fb_groups_sender():
     else:
         msq.handle_error(f"Błąd zapisu bazy danych dla id: {post_id}\n", log_path='./logs/errors.log')
         return jsonify({'success': False, 'message': 'Błąd zapisu bazy danych'}), 400
-
-    
 
 @app.route('/remove-career-fbgroups', methods=["POST"])
 def remove_career_fbgroups():
