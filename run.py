@@ -11403,11 +11403,56 @@ def fb_groups_sender():
         id_gallery = int(get_id_gallery)
 
     # Przekształcanie każdej daty w harmonogramie na standardowy format
-    formatted_schedule = [format_date_pl(date_str) for date_str in schedule]
+    formatted_schedule_org = [format_date_pl(date_str) for date_str in schedule]
 
     # Sprawdzamy, czy wszystkie daty są poprawnie sformatowane
     if None in formatted_schedule:
         return jsonify({'success': False, 'message': 'Błąd w przekształcaniu dat'}), 400
+    
+    def get_actions_dates():
+        existing_campaigns_query = '''
+            SELECT schedule_0_datetime, schedule_1_datetime, 
+                schedule_2_datetime, schedule_3_datetime, 
+                schedule_4_datetime, schedule_5_datetime, 
+                schedule_6_datetime, schedule_7_datetime, 
+                schedule_8_datetime, schedule_9_datetime, 
+                schedule_10_datetime
+            FROM waitinglist_fbgroups
+        '''
+        return msq.connect_to_database(existing_campaigns_query)
+    
+    # Funkcja przesuwająca harmonogram jeśli występuje kolizja, konwertuje daty string → datetime → string
+    def znajdz_wolny_termin(formatted_schedule, existing_campaigns, interval_seconds=10800):
+        interval = datetime.timedelta(seconds=interval_seconds)
+        
+        # Konwersja string -> datetime
+        formatted_schedule = [datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S') for date_str in formatted_schedule]
+        
+        for i, new_start_date in enumerate(formatted_schedule):
+            new_end_date = new_start_date + interval  # Oblicz koniec kampanii na podstawie jej długości (np. 3h)
+            
+            for campaign in existing_campaigns:
+                for scheduled_start_date in campaign:
+                    if scheduled_start_date:
+                        scheduled_end_date = scheduled_start_date + interval  # Oblicz koniec istniejącej kampanii
+
+                        # Warunki kolizji
+                        if new_start_date < scheduled_end_date and new_end_date > scheduled_start_date:
+                            print(f"\nKolizja! Kampania {new_start_date} koliduje z kampanią {scheduled_start_date}.")
+                            # Jeśli kolizja, przesuń nową kampanię o interwał do przodu
+                            new_start_date += interval
+                            new_end_date = new_start_date + interval
+                            formatted_schedule[i] = new_start_date
+                            print(f"Nowa data kampanii {i+1}: {new_start_date}")
+                            break  # Wyjdź z pętli, jeśli znaleziono kolizję i przesunięto
+
+        # Konwersja datetime -> string
+        formatted_schedule = [date.strftime('%Y-%m-%d %H:%M:%S') for date in formatted_schedule]
+        return formatted_schedule
+
+
+    existing_campaigns = get_actions_dates()
+    formatted_schedule = znajdz_wolny_termin(formatted_schedule_org, existing_campaigns)
 
     # Przygotowywanie list jednej długości
     less_index = []
@@ -11447,11 +11492,6 @@ def fb_groups_sender():
             schedule_6_datetime, schedule_7_datetime, schedule_8_datetime, \
                 schedule_9_datetime, schedule_10_datetime = prepareded_schedule
 
-    # print(f'formatted_schedule: {formatted_schedule}')
-    # print(f'less_index: {less_index}')
-    # print(f'prepareded_schedule: {prepareded_schedule}', len(prepareded_schedule))
-
-    # print(len(prepareded_schedule))
 
     zapytanie_sql = '''
                 INSERT INTO waitinglist_fbgroups
@@ -11492,7 +11532,6 @@ def fb_groups_sender():
     else:
         return jsonify({'success': False, 'message': 'Błąd zapisu bazy danych'}), 400
 
-    # Zwracamy sukces
     
 
 @app.route('/remove-career-fbgroups', methods=["POST"])
