@@ -11396,7 +11396,7 @@ def fb_groups_sender():
     formatted_schedule_org = [format_date_pl(date_str) for date_str in schedule]
 
     # Sprawdzamy, czy wszystkie daty są poprawnie sformatowane
-    if None in formatted_schedule:
+    if None in formatted_schedule_org:
         msq.handle_error(f"Błąd w przekształcaniu dat. \n", log_path='./logs/errors.log')
         return jsonify({'success': False, 'message': 'Błąd w przekształcaniu dat'}), 400
     
@@ -11413,16 +11413,16 @@ def fb_groups_sender():
         return msq.connect_to_database(existing_campaigns_query)
     
     # Funkcja przesuwająca harmonogram jeśli występuje kolizja, konwertuje daty string → datetime → string
-    def znajdz_wolny_termin(formatted_schedule, existing_campaigns, interval_seconds=10800):
+    def znajdz_wolny_termin(formatted_schedule_stringlist, existing_campaigns_dateobiectlist, interval_seconds=10800):
         interval = datetime.timedelta(seconds=interval_seconds)
         
         # Konwersja string -> datetime
-        formatted_schedule = [datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S') for date_str in formatted_schedule]
+        formatted_schedule_stringlist = [datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S') for date_str in formatted_schedule_stringlist]
         
-        for i, new_start_date in enumerate(formatted_schedule):
+        for i, new_start_date in enumerate(formatted_schedule_stringlist):
             new_end_date = new_start_date + interval  # Oblicz koniec kampanii na podstawie jej długości (np. 3h)
             
-            for campaign in existing_campaigns:
+            for campaign in existing_campaigns_dateobiectlist:
                 for scheduled_start_date in campaign:
                     if scheduled_start_date:
                         scheduled_end_date = scheduled_start_date + interval  # Oblicz koniec istniejącej kampanii
@@ -11433,13 +11433,13 @@ def fb_groups_sender():
                             # Jeśli kolizja, przesuń nową kampanię o interwał do przodu
                             new_start_date += interval
                             new_end_date = new_start_date + interval
-                            formatted_schedule[i] = new_start_date
+                            formatted_schedule_stringlist[i] = new_start_date
                             msq.handle_error(f"Nowa data kampanii {i+1}: {new_start_date}", log_path='./logs/errors.log')
                             break  # Wyjdź z pętli, jeśli znaleziono kolizję i przesunięto
 
         # Konwersja datetime -> string
-        formatted_schedule = [date.strftime('%Y-%m-%d %H:%M:%S') for date in formatted_schedule]
-        return formatted_schedule
+        formatted_schedule_stringlist = [date.strftime('%Y-%m-%d %H:%M:%S') for date in formatted_schedule_stringlist]
+        return formatted_schedule_stringlist
 
 
     existing_campaigns = get_actions_dates()
