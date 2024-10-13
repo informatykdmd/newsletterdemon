@@ -4448,7 +4448,7 @@ def estateAdsSell():
 
         if 'fbgroups' not in item:
             item['fbgroups'] = {}
-        fbgroupsIDstatus = checkFbGroupstatus(section="estateAdsRent", post_id=item['ID'])
+        fbgroupsIDstatus = checkFbGroupstatus(section="estateAdsSell", post_id=item['ID'])
         item['fbgroups']['id'] = fbgroupsIDstatus[0]
         item['fbgroups']['post_id'] = fbgroupsIDstatus[1]
         item['fbgroups']['content'] = fbgroupsIDstatus[2]
