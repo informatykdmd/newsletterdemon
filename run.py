@@ -966,6 +966,105 @@ def format_date_pl(date_str):
         print(f'Błąd podczas przekształcania daty: {e}')
         return None
 
+# Funkcja przesuwająca harmonogram jeśli występuje kolizja, konwertuje daty string → datetime → string
+def znajdz_wolny_termin(nowe_kampanie, istniejące_kampanie, interval_seconds=10800):
+    interval = datetime.timedelta(seconds=interval_seconds)
+
+    if not istniejące_kampanie:
+        return nowe_kampanie
+    
+    termin_export_list = []
+    obraz_harmonogramu = {}
+
+    for checkPointDate in nowe_kampanie:
+        checkPointDate_objDT = datetime.datetime.strptime(checkPointDate, '%Y-%m-%d %H:%M:%S')
+
+        wszystkie_datetimes = []
+
+        for kampania in istniejące_kampanie:
+            for start_kampanii in kampania:
+                if start_kampanii is not None:
+                    end_kampanii = start_kampanii + interval
+                    valid = start_kampanii >= checkPointDate_objDT  # valid=False dla przeszłości, True dla przyszłości
+                    
+                    # Wpis do harmonogramu
+                    obraz_harmonogramu[str(start_kampanii)] = {
+                        'start': start_kampanii,
+                        'end': end_kampanii,
+                        'type': 'kampania',
+                        'valid': valid
+                    }
+                    wszystkie_datetimes.append(start_kampanii)
+
+        # Sortujemy daty kampanii chronologicznie
+        wszystkie_datetimes = sorted(wszystkie_datetimes)
+
+        # Znajdujemy najdalszą datę
+        najdalsza_data = wszystkie_datetimes[-1]
+
+        # Dodajemy rok do najdalszej daty
+        # Tworzymy "kampanię widmo" oddaloną o rok, która zapewni dużo miejsca
+        nowa_data_start = najdalsza_data + datetime.timedelta(days=365)
+        wszystkie_datetimes.append(nowa_data_start)
+
+        # Tworzenie "wolnych miejsc" i "pustych miejsc" między kampaniami
+        for i in range(1, len(wszystkie_datetimes)):
+            poprzednia_end = wszystkie_datetimes[i-1] + interval
+            aktualna_start = wszystkie_datetimes[i]
+            
+            # Jeśli jest przerwa między kampaniami
+            while poprzednia_end < aktualna_start:
+                wolny_start = poprzednia_end
+                wolny_end = wolny_start + interval
+                
+                # Jeśli kolejny wolny segment wykracza poza start kampanii
+                if wolny_end > aktualna_start:
+                    wolny_end = aktualna_start
+                    type_key = 'puste-miejsce'
+                    valid = False  # Puste miejsca zawsze mają 'valid': False
+                else:
+                    type_key = 'wolne-miejsce'
+                    valid = wolny_start >= checkPointDate_objDT  # Sprawdzamy, czy wolne miejsce jest w przeszłości czy przyszłości
+                
+                # Dodajemy segment o długości interwału
+                obraz_harmonogramu[str(wolny_start)] = {
+                    'start': wolny_start,
+                    'end': wolny_end,
+                    'type': type_key,
+                    'valid': valid
+                }
+                
+                # Aktualizujemy poprzednia_end na koniec dodanego segmentu
+                poprzednia_end = wolny_end
+        
+        # Znajdujemy pierwszy wolny termin dla tej daty checkPointDate_objDT
+        nowy_key = None
+        for key, value in obraz_harmonogramu.items():
+            if value['type'] == 'wolne-miejsce' and value['valid']:
+                # Konwertujemy datetime na string i dodajemy do listy
+                termin_export_list.append(key)
+                nowy_key = key
+                break
+
+        # Sprawdzamy, czy key zostało znalezione w pętli
+        if nowy_key is not None:
+            start_kampanii = datetime.datetime.strptime(nowy_key, '%Y-%m-%d %H:%M:%S')
+            end_kampanii = start_kampanii + interval
+
+            # Wpis do harmonogramu
+            obraz_harmonogramu[nowy_key] = {
+                'start': start_kampanii,
+                'end': end_kampanii,
+                'type': 'kampania',
+                'valid': True
+            }
+            msq.handle_error(f"Kampania z dnia {checkPointDate} została przypisana do terminu: {nowy_key}\n", log_path = "./logs/errors.log")
+        else:
+            msq.handle_error(f"Nie znaleziono wolnego miejsca dla kampanii z dnia {checkPointDate}\n", log_path = "./logs/errors.log")
+
+    # Zwracamy listę nowych dat umieszczonych na wolnych miejscach (w formacie string)
+    return termin_export_list
+
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
 newsletterSettingDB = generator_newsletterSettingDB()
@@ -11370,9 +11469,12 @@ def remove_fbgroup():
 
 @app.route('/fb-groups-sender', methods=['POST'])
 def fb_groups_sender():
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        return redirect(url_for('index'))
+
     data = request.json  # Odbieramy dane JSON
 
-    # print(data)
     # Pobieranie harmonogramu
     schedule = data.get('schedule', [])
     wznawiaj = data.get('wznawiaj', False)
@@ -11412,79 +11514,6 @@ def fb_groups_sender():
         '''
         return msq.connect_to_database(existing_campaigns_query)
     
-    # Funkcja przesuwająca harmonogram jeśli występuje kolizja, konwertuje daty string → datetime → string
-    def znajdz_wolny_termin(nowe_kampanie, istniejące_kampanie, interval_seconds=10800):
-        interval = datetime.timedelta(seconds=interval_seconds)
-
-        if not istniejące_kampanie:
-            return nowe_kampanie
-        
-        termin_export_list = []
-
-        for checkPointDate in nowe_kampanie:
-            checkPointDate_objDT = datetime.datetime.strptime(checkPointDate, '%Y-%m-%d %H:%M:%S')
-
-            obraz_harmonogramu = {}
-
-            wszystkie_datetimes = []
-
-            for kampania in istniejące_kampanie:
-                for start_kampanii in kampania:
-                    if start_kampanii is not None:
-                        end_kampanii = start_kampanii + interval
-                        valid = start_kampanii >= checkPointDate_objDT  # valid=False dla przeszłości, True dla przyszłości
-                        
-                        # Wpis do harmonogramu
-                        obraz_harmonogramu[str(start_kampanii)] = {
-                            'start': start_kampanii,
-                            'end': end_kampanii,
-                            'type': 'kampania',
-                            'valid': valid
-                        }
-                        wszystkie_datetimes.append(start_kampanii)
-
-            # Sortujemy daty kampanii chronologicznie
-            wszystkie_datetimes = sorted(wszystkie_datetimes)
-
-            # Tworzenie "wolnych miejsc" i "pustych miejsc" między kampaniami
-            for i in range(1, len(wszystkie_datetimes)):
-                poprzednia_end = wszystkie_datetimes[i-1] + interval
-                aktualna_start = wszystkie_datetimes[i]
-                
-                # Jeśli jest przerwa między kampaniami
-                while poprzednia_end < aktualna_start:
-                    wolny_start = poprzednia_end
-                    wolny_end = wolny_start + interval
-                    
-                    # Jeśli kolejny wolny segment wykracza poza start kampanii
-                    if wolny_end > aktualna_start:
-                        wolny_end = aktualna_start
-                        type_key = 'puste-miejsce'
-                        valid = False  # Puste miejsca zawsze mają 'valid': False
-                    else:
-                        type_key = 'wolne-miejsce'
-                        valid = wolny_start >= checkPointDate_objDT  # Sprawdzamy, czy wolne miejsce jest w przeszłości czy przyszłości
-                    
-                    # Dodajemy segment o długości interwału
-                    obraz_harmonogramu[str(wolny_start)] = {
-                        'start': wolny_start,
-                        'end': wolny_end,
-                        'type': type_key,
-                        'valid': valid
-                    }
-                    
-                    # Aktualizujemy poprzednia_end na koniec dodanego segmentu
-                    poprzednia_end = wolny_end
-            
-            # Znajdujemy pierwszy wolny termin dla tej daty checkPointDate_objDT
-            for key, value in obraz_harmonogramu.items():
-                if value['type'] == 'wolne-miejsce' and value['valid']:
-                    termin_export_list.append(key)
-                    break
-
-        # Zwracamy listę nowych dat umieszczonych na wolnych miejscach (w formacie string)
-        return termin_export_list
-
 
     existing_campaigns = get_actions_dates()
     formatted_schedule = znajdz_wolny_termin(formatted_schedule_org, existing_campaigns)
