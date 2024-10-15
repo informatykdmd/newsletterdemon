@@ -2298,9 +2298,11 @@ def set_plan():
     """Usuwanie planu"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /set-newsletter-plan bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['newsletter'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /set-newsletter-plan bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -2315,6 +2317,7 @@ def set_plan():
             '''
         dane = (PLAN_NAME, 1)
         if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Plan {PLAN_NAME} został aktywowany przez {session["username"]}!', log_path=logFileName)
             flash('Plan został aktywowany!', 'success')
             return redirect(url_for('newsletter'))
 
@@ -2325,15 +2328,17 @@ def set_sender():
     """Usuwanie planu"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /set-newsletter-sender bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['newsletter'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /set-newsletter-sender bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
+        # print(form_data)
         SENDER_EMAIL = form_data['sender_email']
         SENDER_URL = form_data['sender_url']
         SENDER_PORT = int(form_data['sender_port'])
@@ -2350,9 +2355,11 @@ def set_sender():
         dane = (SENDER_URL, SENDER_PORT, SENDER_EMAIL, SENDER_PASSWORD, 1)
         
         if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Nadawca został ustawiony przez {session["username"]}!', log_path=logFileName)
             flash('Nadawca został ustawiony!', 'success')
             return redirect(url_for('newsletter'))
-        
+    
+    msq.handle_error(f'UWAGA! Błąd nadawca nie został ustawiony przez {session["username"]}!', log_path=logFileName)
     flash('Błąd! Nadawca nie został ustawiony!', 'danger')
     return redirect(url_for('newsletter'))
 
@@ -2361,9 +2368,11 @@ def set_settings():
     """settings"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /set-settings bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['settings'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /set-settings bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -2478,9 +2487,11 @@ def set_settings():
                     ADMIN_REALLOC,
                     ADMIN_ESTATE, 1)
         if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Ustawienia zapisane przez {session["username"]}!', log_path=logFileName)
             flash('Ustawienia zapisane!', 'success')
             return redirect(url_for('settings'))
-        
+    
+    msq.handle_error(f'UWAGA! Błąd podczas zapisu ustawień przez {session["username"]}!', log_path=logFileName)
     flash('Błąd podczas zapisu ustawień!', 'danger')
     return redirect(url_for('settings'))
 
@@ -2489,9 +2500,11 @@ def users(router=True):
     """Strona z zarządzaniem użytkownikami."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /user bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /user bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -2542,9 +2555,11 @@ def newsletter():
     """Strona Newslettera."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /newsletter bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['newsletter'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /newsletter bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -2592,9 +2607,11 @@ def team_domy():
     """Strona zespołu domy."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-domy bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-domy bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -2702,12 +2719,15 @@ def team_domy():
                         row['STATUS'], 
                     )
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
         else:
+            msq.handle_error(f'UWAGA! Błąd zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_domy'))
-        print('dane:', ready_exportDB)
+        
+        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
         flash('Zespół został pomyślnie zmieniony.', 'success')
 
 
@@ -2749,9 +2769,11 @@ def team_elitehome():
     """Strona zespołu elitehome."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-elitehome bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-elitehome bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -2859,12 +2881,15 @@ def team_elitehome():
                         row['STATUS'], 
                     )
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
         else:
+            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_elitehome'))
-        print('dane:', ready_exportDB)
+        
+        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
         flash('Zespół został pomyślnie zmieniony.', 'success')
 
 
@@ -2906,9 +2931,11 @@ def team_budownictwo():
     """Strona zespołu budownictwo."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-budownictwo bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-budownictwo bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -3016,12 +3043,15 @@ def team_budownictwo():
                         row['STATUS'], 
                     )
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
         else:
+            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_budownictwo'))
-        print('dane:', ready_exportDB)
+        
+        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
         flash('Zespół został pomyślnie zmieniony.', 'success')
 
 
@@ -3063,9 +3093,11 @@ def team_development():
     """Strona zespołu development."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-development bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-development bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -3173,12 +3205,15 @@ def team_development():
                         row['STATUS'], 
                     )
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
         else:
+            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_development'))
-        print('dane:', ready_exportDB)
+        
+        msq.handle_error(f'Subskryber został usunięty przez {session["username"]}!', log_path=logFileName)
         flash('Zespół został pomyślnie zmieniony.', 'success')
 
 
@@ -3220,9 +3255,11 @@ def team_inwestycje():
     """Strona zespołu inwestycje."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-inwestycje bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-inwestycje bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -3330,12 +3367,15 @@ def team_inwestycje():
                         row['STATUS'], 
                     )
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
         else:
+            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_inwestycje'))
-        print('dane:', ready_exportDB)
+        
+        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
         flash('Zespół został pomyślnie zmieniony.', 'success')
 
 
@@ -3377,10 +3417,11 @@ def team_instalacje():
     """Strona zespołu instalacje."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-instalacje bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['team'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-instalacje bez uprawnień przez {session["username"]}!', log_path=logFileName)
         return redirect(url_for('index'))
     
     users_atributes = {}
@@ -3486,12 +3527,15 @@ def team_instalacje():
                         row['STATUS'], 
                     )
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
         else:
+            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash('Błąd! Zespół nie został zmieniony.', 'danger')
             return redirect(url_for('team_instalacje'))
-        print('dane:', ready_exportDB)
+        
+        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
         flash('Zespół został pomyślnie zmieniony.', 'success')
 
 
@@ -3652,6 +3696,16 @@ def career():
 
 @app.route('/save-career-offer', methods=["POST"])
 def save_career_offer():
+    # Sprawdzenie czy użytkownik jest zalogowany i ma uprawnienia
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /save-career-offer bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['career'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /save-career-offer bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
     # Odczytanie danych z formularza
     title = request.form.get('title')
     start_date = request.form.get('startdate') + ' 07:00:00'
@@ -3668,21 +3722,13 @@ def save_career_offer():
     offerID = request.form.get('OfferID')
     try: offerID_int = int(offerID)
     except ValueError:
+        msq.handle_error(f'UWAGA! Błąd z id oferty {title} wywołany przez {session["username"]}!', log_path=logFileName)
         flash('Błąd z id oferty. Skontaktuj się z administratorem!', 'danger')
-        return redirect(url_for('index'))
-
-    # print(f'title: {title} | start_date: {start_date} | salary: {salary} | employment_type: {employment_type} | location: {location} | brand: {brand} | contact_email: {contact_email} | description: {description} | requirements_description: {requirements_description} | requirements: {requirements} | benefits: {benefits} | offerID: {offerID} |')
-
-    # Sprawdzenie czy użytkownik jest zalogowany i ma uprawnienia
-    if 'username' not in session or 'userperm' not in session:
-        return redirect(url_for('index'))
-    
-    if session['userperm']['career'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
         return redirect(url_for('index'))
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     if not all([title, start_date, salary, employment_type, location, contact_email]):
+        msq.handle_error(f'UWAGA! Nie wszystkie wymagane dane zostały przekazane przez {session["username"]}!', log_path=logFileName)
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
     # Przygotowanie zapytania SQL w zależności od tego, czy jest to nowy wpis, czy aktualizacja
@@ -3741,12 +3787,14 @@ def save_career_offer():
 
     # Wykonanie zapytania
     if msq.insert_to_database(zapytanie_sql, dane):
+        msq.handle_error(f'SOferta pracy została pomyślnie zapisana przez {session["username"]}!', log_path=logFileName)
         flash(f'Oferta pracy została zapisana pomyślnie!', 'success')
         return jsonify({
             'message': 'Oferta pracy została zapisana pomyślnie!',
             'success': True
         }), 200
     else:
+        msq.handle_error(f'UWAGA! Błąd zapisu! Oferta pracy nie została zapisana przez {session["username"]}!', log_path=logFileName)
         flash(f'Błąd zapisu! Oferta pracy nie została zapisana!', 'danger')
         return jsonify({
             'message': 'Błąd zapisu! Oferta pracy nie została zapisana!',
@@ -3758,9 +3806,11 @@ def remove_career_offer():
     """Usuwanie ofertę najmu"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /remove-career-offer bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['career'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /remove-career-offer bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -3777,7 +3827,7 @@ def remove_career_offer():
                 """,
                 (set_post_id,)
             )
-
+        msq.handle_error(f'Oferta pracy o id:{set_post_id} została usunięta przez {session["username"]}!', log_path=logFileName)
         flash("Oferta pracy została usunięta.", "success")
         return redirect(url_for('career'))
     
@@ -3787,9 +3837,11 @@ def remove_career_offer():
 def update_career_offer_status():
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /update-career-offer-status bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['career'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /update-career-offer-status bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -3805,6 +3857,7 @@ def update_career_offer_status():
 
         statusCareer = checkFbGroupstatus(section="career", post_id=set_post_id)
         if statusCareer[0] != None:
+            msq.handle_error(f'UWAGA! Status oferty nie został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Przewij kampanię na grupach Facebooka", "danger")
             return redirect(url_for('career'))
 
@@ -3815,6 +3868,7 @@ def update_career_offer_status():
                 '''
         dane = (set_post_status, set_post_id)
         if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Status oferty został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash("Status oferty został zmieniony.", "success")
             return redirect(url_for('career'))
     
@@ -3834,9 +3888,11 @@ def estateAdsRent():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /estate-ads-rent bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /estate-ads-rent bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -4087,9 +4143,11 @@ def remove_rent_offer():
     """Usuwanie ofertę najmu"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /remove-rent-offer bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /remove-rent-offer bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -4102,11 +4160,13 @@ def remove_rent_offer():
         # pobieram id galerii
         try: id_galerry = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', set_post_id )[0][0]
         except IndexError: 
+            msq.handle_error(f'UWAGA! Wpis nie został usunięty przez {session["username"]}. Wystąpił błąd struktury danych galerii!', log_path=logFileName)
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
             return redirect(url_for('estateAdsRent'))
         
         try: current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
         except IndexError: 
+            msq.handle_error(f'UWAGA! Wpis nie został usunięty przez {session["username"]}. Wystąpił błąd struktury danych galerii!', log_path=logFileName)
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
             return redirect(url_for('estateAdsRent'))
         
@@ -4148,7 +4208,8 @@ def remove_rent_offer():
                         print(f"File {file_path} not found.")
                 except Exception as e:
                     print(f"Error removing file {file_path}: {e}")
-
+        
+        msq.handle_error(f'Wpis został usunięty przez {session["username"]}!', log_path=logFileName)
         flash("Wpis został usunięty.", "success")
         return redirect(url_for('estateAdsRent'))
     
@@ -4158,9 +4219,11 @@ def remove_rent_offer():
 def update_rent_offer_status():
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /update-rent-offer-status bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /update-rent-offer-status bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -4176,21 +4239,25 @@ def update_rent_offer_status():
 
         statusNaLento = checkLentoStatus('r', set_post_id)
         if statusNaLento[0] != None:
+            msq.handle_error(f'UWAGA! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Lento.pl', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Lento.pl", "danger")
             return redirect(url_for('estateAdsRent'))
         
         statusNaFacebooku = checkFacebookStatus('r', set_post_id)
         if statusNaFacebooku[0] != None:
+            msq.handle_error(f'UWAGA! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Facebooka', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Facebooka", "danger")
             return redirect(url_for('estateAdsRent'))
         
         statusNaAdresowo = checkAdresowoStatus('r', set_post_id)
         if statusNaAdresowo[0] != None:
+            msq.handle_error(f'UWAGA! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Adresowo', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Adresowo", "danger")
             return redirect(url_for('estateAdsRent'))
         
         statusNaAllegro = checkAllegroStatus('r', set_post_id)
         if statusNaAllegro[0] != None:
+            msq.handle_error(f'UWAGA! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Allegro', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Allegro", "danger")
             return redirect(url_for('estateAdsRent'))
         
@@ -4203,6 +4270,7 @@ def update_rent_offer_status():
                 '''
         dane = (set_post_status, set_post_id)
         if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Status oferty najmu o id:{set_post_id} został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash("Status oferty został zmieniony.", "success")
             return redirect(url_for('estateAdsRent'))
     
@@ -4213,9 +4281,11 @@ def save_rent_offer():
     # Odczytanie danych formularza
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /save-rent-offer bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /save-rent-offer bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -4307,6 +4377,7 @@ def save_rent_offer():
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     if not all([title, rodzaj_nieruchomosci, lokalizacja, cena, testOpisu]):
+        msq.handle_error(f'UWAGA! Nie wszystkie wymagane dane zostały przekazane do endpointa /save-rent-offer przez {session["username"]}!', log_path=logFileName)
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
     settingsDB = generator_settingsDB()
@@ -4330,17 +4401,12 @@ def save_rent_offer():
             try:
                 photo.save(full_path)
                 
-                # if not first_photo_processed:
-                #     logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
-                #     output_path = full_path  # Zapisujemy z nałożonym logo pod tym samym adresem
-                #     apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
-                #     first_photo_processed = True
-
                 saved_photos.append(complete_URL_PIC)
                 if secure_filename(photo.filename) in allPhotos:
                     pobrany_index = allPhotos.index(secure_filename(photo.filename))
                     allPhotos[pobrany_index] = filename
             except Exception as e:
+                msq.handle_error(f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', log_path=logFileName)
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
     # print(allPhotos)
     if offerID_int == 9999999:
@@ -4367,18 +4433,21 @@ def save_rent_offer():
                             SELECT * FROM ZdjeciaOfert ORDER BY ID DESC;
                         ''')[0][0]
                 except Exception as err:
+                    msq.handle_error(f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', log_path=logFileName)
                     flash(f'Błąd podczas tworzenia galerii! \n {err}', 'danger')
                     return jsonify({
                         'message': f'Błąd podczas tworzenia galerii! \n {err}',
                         'success': True
                         }), 200
             else:
+                msq.handle_error(f'UWAGA! Błąd podczas zapisywania galerii w bazie przez {session["username"]}!', log_path=logFileName)
                 flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
                 return jsonify({
                     'message': 'Błąd podczas zapisywania galerii w bazie!',
                     'success': True
                     }), 200
         else:
+            msq.handle_error(f'UWAGA! BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie przez {session["username"]}!', log_path=logFileName)
             flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
             return jsonify({
                     'message': 'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!',
@@ -4395,6 +4464,7 @@ def save_rent_offer():
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', offerID_int)[0][0]
         except IndexError: 
+            msq.handle_error(f'UWAGA! Nie udało się pobrać ID galerii!', log_path=logFileName)
             flash(f"Nie udało się pobrać ID galerii!", "danger")
             return jsonify({
                     'message': 'Nie udało się pobrać ID galerii!',
@@ -4405,6 +4475,7 @@ def save_rent_offer():
             current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', gallery_id)[0]
             current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
         except IndexError: 
+            msq.handle_error(f'UWAGA! Nie udało się pobrać galerii!', log_path=logFileName)
             flash(f"Nie udało się pobrać galerii!", "danger")
             return jsonify({
                     'message': 'Nie udało się pobrać galerii!',
@@ -4432,6 +4503,7 @@ def save_rent_offer():
                     else:
                         print(f"File {file_path} not found.")
                 except Exception as e:
+                    msq.handle_error(f'UWAGA! Error removing file {file_path}: {e}', log_path=logFileName)
                     print(f"Error removing file {file_path}: {e}")
 
         oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
@@ -4467,8 +4539,10 @@ def save_rent_offer():
 
             # print(zapytanie_sql, dane)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Galeria została pomyslnie zaktualizowana przez {session["username"]}!', log_path=logFileName)
                 print('update_galerii_udany')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu galerii! Oferta wynajmu nie została zapisana przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
                 return jsonify({
                         'message': 'xxx',
@@ -4518,12 +4592,14 @@ def save_rent_offer():
     if msq.insert_to_database(zapytanie_sql, dane):
         if offerID_int != 9999999 and checkSpecOffer(offerID_int, 'r') == 'aktywna':
             addSpecOffer(offerID, 's')
+        msq.handle_error(f'Oferta wynajmu została zapisana pomyślnie przez {session["username"]}!', log_path=logFileName)
         flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
         return jsonify({
             'message': 'Oferta wynajmu została zapisana pomyślnie!',
             'success': True
             }), 200
     else:
+        msq.handle_error(f'UWAGA! Bład zapisu! Oferta wynajmu nie została zapisana!', log_path=logFileName)
         flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
         return jsonify({
                 'message': 'Bład zapisu! Oferta wynajmu nie została zapisana!',
@@ -4535,9 +4611,11 @@ def estateAdsSell():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /estate-ads-sell bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /estate-ads-sell bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -4776,9 +4854,11 @@ def remove_sell_offer():
     """Usuwanie ofertę najmu"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /remove-sell-offer bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /remove-sell-offer bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -4791,11 +4871,13 @@ def remove_sell_offer():
         # pobieram id galerii
         try: id_galerry = take_data_where_ID('Zdjecia', 'OfertySprzedazy', 'ID', set_post_id )[0][0]
         except IndexError: 
+            msq.handle_error(f'UWAGA! Wpis nie został usunięty przez {session["username"]}! Wystąpił błąd struktury danych galerii!', log_path=logFileName)
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
             return redirect(url_for('estateAdsSell'))
         
         try: current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
         except IndexError: 
+            msq.handle_error(f'UWAGA! Wpis nie został usunięty przez {session["username"]}! Wystąpił błąd struktury danych galerii!', log_path=logFileName)
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
             return redirect(url_for('estateAdsSell'))
         
@@ -4836,8 +4918,10 @@ def remove_sell_offer():
                     else:
                         print(f"File {file_path} not found.")
                 except Exception as e:
+                    msq.handle_error(f'UWAGA! Error removing file {file_path}: {e}', log_path=logFileName)
                     print(f"Error removing file {file_path}: {e}")
 
+        msq.handle_error(f'Wpis został usunięty przez {session["username"]}!', log_path=logFileName)
         flash("Wpis został usunięty.", "success")
         return redirect(url_for('estateAdsSell'))
     
@@ -4847,9 +4931,11 @@ def remove_sell_offer():
 def update_sell_offer_status():
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /update-sell-offer-status bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /update-sell-offer-status bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -4865,21 +4951,25 @@ def update_sell_offer_status():
 
         statusNaLento = checkLentoStatus('s', set_post_id)
         if statusNaLento[0] != None:
+            msq.handle_error(f'UWAGA! Błąd! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Lento.pl', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Lento.pl", "danger")
             return redirect(url_for('estateAdsSell'))
         
         statusNaFacebooku = checkFacebookStatus('s', set_post_id)
         if statusNaFacebooku[0] != None:
+            msq.handle_error(f'UWAGA! Błąd! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Facebooka', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Facebooka", "danger")
             return redirect(url_for('estateAdsSell'))
         
         statusNaAdresowo = checkAdresowoStatus('s', set_post_id)
         if statusNaAdresowo[0] != None:
+            msq.handle_error(f'UWAGA! Błąd! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Adresowo', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Adresowo", "danger")
             return redirect(url_for('estateAdsSell'))
         
         statusNaAllegro = checkAllegroStatus('s', set_post_id)
         if statusNaAllegro[0] != None:
+            msq.handle_error(f'UWAGA! Błąd! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Allegro', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Allegro", "danger")
             return redirect(url_for('estateAdsSell'))
         
@@ -4892,6 +4982,7 @@ def update_sell_offer_status():
                 '''
         dane = (set_post_status, set_post_id)
         if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Status oferty został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash("Status oferty został zmieniony.", "success")
             return redirect(url_for('estateAdsSell'))
     
@@ -4902,9 +4993,11 @@ def save_sell_offer():
     # Odczytanie danych formularza
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /save-sell-offer bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /save-sell-offer bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -4993,6 +5086,7 @@ def save_sell_offer():
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     if not all([title, typ_nieruchomosci, lokalizacja, cena, testOpisu]):
+        msq.handle_error(f'UWAGA! Błąd! Nie wszystkie wymagane dane zostały przekazane do endointa /save-sell-offer przez {session["username"]}!', log_path=logFileName)
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
     settingsDB = generator_settingsDB()
@@ -5046,18 +5140,21 @@ def save_sell_offer():
                             SELECT * FROM ZdjeciaOfert ORDER BY ID DESC;
                         ''')[0][0]
                 except Exception as err:
+                    msq.handle_error(f'UWAGA! Błąd podczas tworzenia galerii! przez {session["username"]}! {err}', log_path=logFileName)
                     flash(f'Błąd podczas tworzenia galerii! \n {err}', 'danger')
                     return jsonify({
                         'message': f'Błąd podczas tworzenia galerii! \n {err}',
                         'success': True
                         }), 200
             else:
+                msq.handle_error(f'UWAGA! Błąd podczas zapisywania galerii w bazie przez {session["username"]}!', log_path=logFileName)
                 flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
                 return jsonify({
                     'message': 'Błąd podczas zapisywania galerii w bazie!',
                     'success': True
                     }), 200
         else:
+            msq.handle_error(f'UWAGA! BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie przez {session["username"]}!', log_path=logFileName)
             flash(f'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!', 'danger')
             return jsonify({
                     'message': 'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!',
@@ -5074,6 +5171,7 @@ def save_sell_offer():
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertySprzedazy', 'ID', offerID_int)[0][0]
         except IndexError: 
+            msq.handle_error(f'UWAGA! Nie udało się pobrać ID galerii przez {session["username"]}!', log_path=logFileName)
             flash(f"Nie udało się pobrać ID galerii!", "danger")
             return jsonify({
                     'message': 'Nie udało się pobrać ID galerii!',
@@ -5084,6 +5182,7 @@ def save_sell_offer():
             current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', gallery_id)[0]
             current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
         except IndexError: 
+            msq.handle_error(f'UWAGA! Nie udało się pobrać galerii przez {session["username"]}!', log_path=logFileName)
             flash(f"Nie udało się pobrać galerii!", "danger")
             return jsonify({
                     'message': 'Nie udało się pobrać galerii!',
@@ -5146,8 +5245,10 @@ def save_sell_offer():
 
             # print(zapytanie_sql, dane)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Galeria o id:{gallery_id} została zaktualizowana przez {session["username"]}!', log_path=logFileName)
                 print('update_galerii_udany')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu galerii id:{gallery_id}! Oferta wynajmu nie została zapisana przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
                 return jsonify({
                         'message': 'xxx',
@@ -5200,15 +5301,17 @@ def save_sell_offer():
     if msq.insert_to_database(zapytanie_sql, dane):
         if offerID_int != 9999999 and checkSpecOffer(offerID_int, 's') == 'aktywna':
             addSpecOffer(offerID, 's')
-        flash(f'Oferta wynajmu została zapisana pomyślnie!', 'success')
+        msq.handle_error(f'Oferta sprzedaży została zapisana pomyślnie przez {session["username"]}!', log_path=logFileName)
+        flash(f'Oferta sprzedaży została zapisana pomyślnie!', 'success')
         return jsonify({
-            'message': 'Oferta wynajmu została zapisana pomyślnie!',
+            'message': 'Oferta sprzedaży została zapisana pomyślnie!',
             'success': True
             }), 200
     else:
-        flash(f'Bład zapisu! Oferta wynajmu nie została zapisana!', 'danger')
+        msq.handle_error(f'UWAGA! Bład zapisu! Oferta sprzedaży nie została zapisana przez {session["username"]}!', log_path=logFileName)
+        flash(f'Bład zapisu! Oferta sprzedaży nie została zapisana!', 'danger')
         return jsonify({
-                'message': 'Bład zapisu! Oferta wynajmu nie została zapisana!',
+                'message': 'Bład zapisu! Oferta sprzedaży nie została zapisana!',
                 'success': True
                 }), 200
 
@@ -5217,9 +5320,11 @@ def set_as_specOffer():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /set-as-specOffer bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /set-as-specOffer bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -5235,14 +5340,18 @@ def set_as_specOffer():
         
         if status == '0':
             if removeSpecOffer(postID, parent):
+                msq.handle_error(f'Zmiany oferty specjalnej zotały zastosowane z sukcesem przez {session["username"]}!', log_path=logFileName)
                 flash('Zmiany zotały zastosowane z sukcesem!', 'success')
             else:
+                msq.handle_error(f'UWAGA! Błąd! Zmiany oferty specjalnej nie zotały zastosowane przez {session["username"]}!', log_path=logFileName)
                 flash('Błąd! Zmiany nie zotały zastosowane!', 'danger')
         
         if status == '1':
             if addSpecOffer(postID, parent):
+                msq.handle_error(f'Zmiany oferty specjalnej zotały zastosowane z sukcesem przez {session["username"]}!', log_path=logFileName)
                 flash('Zmiany zotały zastosowane z sukcesem!', 'success')
             else:
+                msq.handle_error(f'UWAGA! Błąd! Zmiany oferty specjalnej nie zotały zastosowane przez {session["username"]}!', log_path=logFileName)
                 flash('Błąd! Zmiany nie zotały zastosowane!', 'danger')
 
         return redirect(url_for(redirectGoal))
@@ -5253,9 +5362,11 @@ def public_on_lento():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /public-on-lento bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /public-on-lento bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -5669,8 +5780,10 @@ def public_on_lento():
                         4)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta wynajmu została pomyślnie wysłana do realizacji na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta wynajmu została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta wynajmu nie została wysłana do realizacji na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta wynajmu nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Publikuj' and rodzaj_ogloszenia == 's':
@@ -6081,8 +6194,10 @@ def public_on_lento():
             # print(zapytanie_sql)
             # print(dane)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta wynajmu została pomyślnie wysłana do realizacji na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta sprzedaży została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta wynajmu nie została wysłana do realizacji na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta wynajmu nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Wstrzymaj':
@@ -6096,8 +6211,10 @@ def public_on_lento():
             dane = (0, 7, lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta wynajmu została pomyślnie wysłana do wstrzymania na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta wynajmu nie została wysłana do wstrzymania na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Wznow':
@@ -6111,8 +6228,10 @@ def public_on_lento():
             dane = (0, 8, lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta wynajmu została pomyślnie wysłana do wznowienia na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta wynajmu nie została wysłana do wznowienia na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 'r':
@@ -6381,8 +6500,10 @@ def public_on_lento():
                         lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta wynajmu została pomyślnie wysłana do aktualizacji na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta wynajmu nie została wysłana do aktualizacji na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 's':
@@ -6664,8 +6785,10 @@ def public_on_lento():
                         lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta sprzedaży została pomyślnie wysłana do aktualizacji na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta sprzedaży nie została wysłana do aktualizacji na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Promuj':
@@ -6781,8 +6904,10 @@ def public_on_lento():
             dane = (0, 6, lento_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do usunięcia z lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta wynajmu nie została wysłana do usunięcia z lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         
         if task_kind == 'Ponow_zadanie':
@@ -6797,8 +6922,10 @@ def public_on_lento():
             dane = (0, oldStatus, lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
-                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuta.', 'success')
+                msq.handle_error(f'Oferta została pomyślnie wysłana do ponowienia na lento.pl przez {session["username"]}!', log_path=logFileName)
+                flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do ponowienia na lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Anuluj_zadanie':
@@ -6833,8 +6960,10 @@ def public_on_lento():
                 dane = (0, 0, lento_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Zadanie zostało anulowane w lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Zadanie zostało anulowane!', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Zadanie nie zostało anulowane w lento.pl przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Zadanie nie zostało anulowane!', 'danger')
 
         return redirect(url_for(redirectGoal))
@@ -6844,9 +6973,11 @@ def public_on_lento():
 def public_on_facebook():
 
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /public-on-facebook bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /public-on-facebook bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -7014,10 +7145,11 @@ def public_on_facebook():
             # flash(f'{dane}', 'success')
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
-
 
         if task_kind == 'Aktualizuj':
             picked_offer = {}
@@ -7157,11 +7289,11 @@ def public_on_facebook():
             # flash(f'{dane}', 'success')
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do aktualizacji na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
-
-
 
         if task_kind == 'Wstrzymaj':
             zapytanie_sql = '''
@@ -7174,10 +7306,11 @@ def public_on_facebook():
             dane = (0, 7, facebook_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do wstrzymania na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do wstrzymania na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
-
 
         if task_kind == 'Wznow':
             zapytanie_sql = '''
@@ -7190,10 +7323,11 @@ def public_on_facebook():
             dane = (0, 8, facebook_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do wznowienia na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do wznowienia na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
-
 
         if task_kind == 'Usun':
             zapytanie_sql = '''
@@ -7206,14 +7340,14 @@ def public_on_facebook():
             dane = (0, 6, facebook_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do usunięcia z facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do usunięcia z facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
-
 
         if task_kind == 'Promuj':
             pass
-
 
         if task_kind == 'Ponow_zadanie':
             oldStatus = takeFacebookResumeStatus(facebook_id)
@@ -7227,8 +7361,10 @@ def public_on_facebook():
             dane = (0, oldStatus, facebook_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie ponowiona na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została ponowiona na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         
         if task_kind == 'Anuluj_zadanie':
@@ -7263,14 +7399,14 @@ def public_on_facebook():
                 dane = (0, 0, facebook_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Zadanie zostało anulowane pomyślnie na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Zadanie zostało anulowane!', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Zadanie nie zostało anulowane na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Zadanie nie zostało anulowane!', 'danger')
         
-
         if task_kind == 'Odswiez':
              flash(f'Oferta została odświeżona pomyślnie!', 'success')
-
 
         if task_kind == 'Ponow':
             zapytanie_sql = '''
@@ -7282,8 +7418,10 @@ def public_on_facebook():
             dane = (0, facebook_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie ponowiona na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została ponowiona na facebook przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         
         return redirect(url_for(redirectGoal))
@@ -7308,14 +7446,15 @@ def get_region_data():
 def public_on_adresowo():
 
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /public-on-adresowo bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /public-on-adresowo bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     if request.method == 'POST':
-        print(request.form)
         adresowo_id = request.form.get('adresowo_id')
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
@@ -7347,6 +7486,7 @@ def public_on_adresowo():
 
         if task_kind == 'Publikuj' and rodzaj_ogloszenia == 'r':
             if not region:
+                msq.handle_error(f'UWAGA! Błąd braku regionu przez {session["username"]}!', log_path=logFileName)
                 flash('Wybierz region!', 'danger')
                 return redirect(url_for(redirectGoal))
 
@@ -7427,6 +7567,7 @@ def public_on_adresowo():
                 kategoria_ogloszenia = 'komercyjne'
 
             else:
+                msq.handle_error(f'UWAGA! Nie rozpoznano typu nieruchomości, dane wysłane przez {session["username"]} są niejednoznaczne!', log_path=logFileName)
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
             
@@ -7484,8 +7625,10 @@ def public_on_adresowo():
                 # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
                 
             if kategoria_ogloszenia == 'mieszkanie':
@@ -7539,13 +7682,14 @@ def public_on_adresowo():
                         winda, powierzchnia, rok_budowy, stan, typ_budynku, zdjecia_string, 
                         osoba_kontaktowa, nr_telefonu, 
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
             if kategoria_ogloszenia == 'dzialka':
                 # region, ulica, typ_budynku, powierzchnia
                 if str(picked_offer['InformacjeDodatkowe']).lower().count('budowlana') > 0: rodzaj_dzialki = 'Budowlana'
@@ -7580,8 +7724,10 @@ def public_on_adresowo():
                 # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'komercyjne':
@@ -7611,16 +7757,17 @@ def public_on_adresowo():
                         opis_ogloszenia, ulica, powierzchnia, przeznaczenie_lokalu, zdjecia_string, osoba_kontaktowa, 
                         nr_telefonu, 
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Publikuj' and rodzaj_ogloszenia == 's':
             if not region:
+                msq.handle_error(f'UWAGA! Błąd braku regionu przez {session["username"]}!', log_path=logFileName)
                 flash('Wybierz region!', 'danger')
                 return redirect(url_for(redirectGoal))
 
@@ -7700,6 +7847,7 @@ def public_on_adresowo():
                 kategoria_ogloszenia = 'komercyjne'
 
             else:
+                msq.handle_error(f'UWAGA! Nie rozpoznano typu nieruchomości, dane wysłane przez {session["username"]} są niejednoznaczne!', log_path=logFileName)
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
 
@@ -7754,8 +7902,10 @@ def public_on_adresowo():
                         stan, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu,
                         4)
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
                 
             if kategoria_ogloszenia == 'mieszkanie':
@@ -7800,6 +7950,7 @@ def public_on_adresowo():
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('udział') > 0: forma_wlasnosci = 'Udział'
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('tbs') > 0: forma_wlasnosci = 'TBS'
                 else: 
+                    msq.handle_error(f'UWAGA! Nie rozpoznano formy własności przez {session["username"]}, która jest wymagana w kategorii mieszkanie na sprzedaż! Wpisz formę własności (spółdzielcze własnościowe, pełna własność, udział, tbs) w polu informacje dodatkowe!!', log_path=logFileName)
                     flash('Nie rozpoznano formy własności, która jest wymagana w kategorii mieszkanie na sprzedaż! Wpisz formę własności (spółdzielcze własnościowe, pełna własność, udział, tbs) w polu informacje dodatkowe!', 'danger')
                     return redirect(url_for(redirectGoal))
                 
@@ -7823,8 +7974,10 @@ def public_on_adresowo():
                         osoba_kontaktowa, nr_telefonu, 
                         4)
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka':
@@ -7857,12 +8010,12 @@ def public_on_adresowo():
                         opis_ogloszenia, ulica, powierzchnia, rodzaj_dzialki, zdjecia_string, osoba_kontaktowa, 
                         nr_telefonu, 
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'komercyjne':
@@ -7892,12 +8045,12 @@ def public_on_adresowo():
                         opis_ogloszenia, ulica, powierzchnia, przeznaczenie_lokalu, zdjecia_string, osoba_kontaktowa, 
                         nr_telefonu, 
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 'r':
@@ -7978,6 +8131,7 @@ def public_on_adresowo():
                 kategoria_ogloszenia = 'komercyjne'
 
             else:
+                msq.handle_error(f'UWAGA! Nie rozpoznano typu nieruchomości, dane wysłane przez {session["username"]} są niejednoznaczne!', log_path=logFileName)
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
             
@@ -8074,12 +8228,12 @@ def public_on_adresowo():
                             osoba_kontaktowa, nr_telefonu,
                             5, 0,
                         adresowo_id)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
                 
             if kategoria_ogloszenia == 'mieszkanie':
@@ -8181,9 +8335,12 @@ def public_on_adresowo():
                 # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
             if kategoria_ogloszenia == 'dzialka':
                 # region, ulica, typ_budynku, powierzchnia
                 if str(picked_offer['InformacjeDodatkowe']).lower().count('budowlana') > 0: rodzaj_dzialki = 'Budowlana'
@@ -8249,8 +8406,10 @@ def public_on_adresowo():
                         adresowo_id)
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'komercyjne':
@@ -8314,11 +8473,11 @@ def public_on_adresowo():
                             5, 0,
                         adresowo_id)
 
-                print(zapytanie_sql, dane)
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 's':
@@ -8397,6 +8556,7 @@ def public_on_adresowo():
                 kategoria_ogloszenia = 'komercyjne'
 
             else:
+                msq.handle_error(f'UWAGA! Nie rozpoznano typu nieruchomości, dane wysłane przez {session["username"]} są niejednoznaczne!', log_path=logFileName)
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
 
@@ -8491,11 +8651,12 @@ def public_on_adresowo():
                             osoba_kontaktowa, nr_telefonu,
                             5, 0,
                         adresowo_id)
-                # print(dane)
-                # flash(f'{dane}', 'success')
+
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
                 
             if kategoria_ogloszenia == 'mieszkanie':
@@ -8540,6 +8701,7 @@ def public_on_adresowo():
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('udział') > 0: forma_wlasnosci = 'Udział'
                 elif str(picked_offer['InformacjeDodatkowe']).lower().count('tbs') > 0: forma_wlasnosci = 'TBS'
                 else: 
+                    msq.handle_error(f'UWAGA! Nie rozpoznano formy własności, która jest wymagana w kategorii mieszkanie na sprzedaż, wysłanej przez {session["username"]}! Wpisz formę własności (spółdzielcze własnościowe, pełna własność, udział, tbs) w polu informacje dodatkowe!', log_path=logFileName)
                     flash('Nie rozpoznano formy własności, która jest wymagana w kategorii mieszkanie na sprzedaż! Wpisz formę własności (spółdzielcze własnościowe, pełna własność, udział, tbs) w polu informacje dodatkowe!', 'danger')
                     return redirect(url_for(redirectGoal))
                 
@@ -8606,8 +8768,10 @@ def public_on_adresowo():
                             5, 0,
                         adresowo_id)
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka':
@@ -8670,12 +8834,12 @@ def public_on_adresowo():
                             osoba_kontaktowa, nr_telefonu,
                             5, 0,
                         adresowo_id)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'komercyjne':
@@ -8738,8 +8902,10 @@ def public_on_adresowo():
                         adresowo_id)
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do aktualizacji na adresowo przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Wstrzymaj':
@@ -8753,8 +8919,10 @@ def public_on_adresowo():
             dane = (0, 7, adresowo_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do wstrzymania na adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do wstrzymania na adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
 
@@ -8769,8 +8937,10 @@ def public_on_adresowo():
             dane = (0, 8, adresowo_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do wznowienia na adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do wznowienia na adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
 
@@ -8785,8 +8955,10 @@ def public_on_adresowo():
             dane = (0, 6, adresowo_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do usunięcia na adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do usunięcia na adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
 
@@ -8806,8 +8978,10 @@ def public_on_adresowo():
             dane = (0, oldStatus, adresowo_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Zadanie zostało pomyślnie ponowione dla adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA!Zadanie nie zostało ponowione dla adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         
         if task_kind == 'Anuluj_zadanie':
@@ -8842,8 +9016,10 @@ def public_on_adresowo():
                 dane = (0, 0, adresowo_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Zadanie zostało pomyślnie anulowane dla adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Zadanie zostało anulowane!', 'success')
             else:
+                msq.handle_error(f'UWAGA!Zadanie nie zostało anulowane dla adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Zadanie nie zostało anulowane!', 'danger')
         
 
@@ -8861,8 +9037,10 @@ def public_on_adresowo():
             dane = (0, adresowo_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do ponowienia na adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do ponowienia na adresowo przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         
         return redirect(url_for(redirectGoal))
@@ -8871,14 +9049,15 @@ def public_on_adresowo():
 @app.route('/public-on-allegro', methods=['POST'])
 def public_on_allegro():
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /public-on-allegro bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /public-on-allegro bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     if request.method == 'POST':
-        print(request.form)
         allegro_id = request.form.get('allegro_id')
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
@@ -8935,6 +9114,7 @@ def public_on_allegro():
 
         if task_kind == 'Publikuj' and rodzaj_ogloszenia == 'r':
             if not region:
+                msq.handle_error(f'UWAGA! Błąd wyboru regionu dla allegro przez {session["username"]}!', log_path=logFileName)
                 flash('Wybierz region!', 'danger')
                 return redirect(url_for(redirectGoal))
 
@@ -9018,6 +9198,7 @@ def public_on_allegro():
                 # kategoria na adresowo dla magazyn
                 kategoria_ogloszenia = 'magazyn'
             else:
+                msq.handle_error(f'UWAGA! Nie rozpoznano typu nieruchomości, dane wysłane przez {session["username"]} są niejednoznaczne!', log_path=logFileName)
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
             
@@ -9059,12 +9240,12 @@ def public_on_allegro():
                         typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, pakiet,
                         extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
 
@@ -9098,8 +9279,10 @@ def public_on_allegro():
                 # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka': 
@@ -9133,12 +9316,12 @@ def public_on_allegro():
                         kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
                         pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'lokal': 
@@ -9172,48 +9355,50 @@ def public_on_allegro():
                 # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'magazyn':
-                    if str(picked_offer['InformacjeDodatkowe']).lower().count('dystrybucja') > 0: typ_komercyjny = 'Centrum dystrybucyjne'
-                    elif str(picked_offer['InformacjeDodatkowe']).lower().count('logistyk') > 0: typ_komercyjny = 'Centrum dystrybucyjne'
-                    elif str(picked_offer['InformacjeDodatkowe']).lower().count('hal') > 0: typ_komercyjny = 'Hala'
-                    elif str(picked_offer['InformacjeDodatkowe']).lower().count('magazyn') > 0: typ_komercyjny = 'Magazyn'
-                    else: typ_komercyjny = 'Magazyn'
+                if str(picked_offer['InformacjeDodatkowe']).lower().count('dystrybucja') > 0: typ_komercyjny = 'Centrum dystrybucyjne'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('logistyk') > 0: typ_komercyjny = 'Centrum dystrybucyjne'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('hal') > 0: typ_komercyjny = 'Hala'
+                elif str(picked_offer['InformacjeDodatkowe']).lower().count('magazyn') > 0: typ_komercyjny = 'Magazyn'
+                else: typ_komercyjny = 'Magazyn'
 
 
-                    zapytanie_sql = '''
-                            INSERT INTO ogloszenia_allegrolokalnie
-                                (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
-                                opis_ogloszenia, ulica, powierzchnia, typ_komercyjny, 
-                                kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
-                                pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
-                                status)
-                            VALUES 
-                                (%s, %s, %s, %s, %s, %s,
-                                %s, %s, %s, %s, 
-                                %s, %s, %s, %s, %s, 
-                                %s, %s, %s, %s,
-                                %s);
-                        '''
-                    dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                zapytanie_sql = '''
+                        INSERT INTO ogloszenia_allegrolokalnie
+                            (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                             opis_ogloszenia, ulica, powierzchnia, typ_komercyjny, 
                             kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
                             pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
-                            4)
-                    # print(dane)
-                    # flash(f'{dane}', 'success')
+                            status)
+                        VALUES 
+                            (%s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, 
+                            %s, %s, %s, %s, %s, 
+                            %s, %s, %s, %s,
+                            %s);
+                    '''
+                dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
+                        opis_ogloszenia, ulica, powierzchnia, typ_komercyjny, 
+                        kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
+                        pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
+                        4)
 
-                    if msq.insert_to_database(zapytanie_sql, dane):
-                        flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
-                    else:
-                        flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')   
-
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
+                    flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+                else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na allgero przez {session["username"]}!', log_path=logFileName)
+                    flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')   
 
         if task_kind == 'Publikuj' and rodzaj_ogloszenia == 's':
             if not region:
+                msq.handle_error(f'UWAGA! Błąd wyboru regionu dla allegro przez {session["username"]}!', log_path=logFileName)
                 flash('Wybierz region!', 'danger')
                 return redirect(url_for(redirectGoal))
 
@@ -9295,6 +9480,7 @@ def public_on_allegro():
                 # kategoria na adresowo dla magazyn
                 kategoria_ogloszenia = 'magazyn'
             else:
+                msq.handle_error(f'UWAGA! Nie rozpoznano typu nieruchomości, dane wysłane przez {session["username"]} są niejednoznaczne!', log_path=logFileName)
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
             
@@ -9336,12 +9522,12 @@ def public_on_allegro():
                         typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, pakiet,
                         extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro, rynek,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
 
@@ -9371,12 +9557,12 @@ def public_on_allegro():
                         kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
                         pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka': 
@@ -9410,12 +9596,12 @@ def public_on_allegro():
                         kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
                         pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'lokal': 
@@ -9445,12 +9631,12 @@ def public_on_allegro():
                         kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
                         pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'magazyn':
@@ -9480,12 +9666,12 @@ def public_on_allegro():
                         kod_pocztowy, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email, 
                         pakiet, extra_wyroznienie, extra_wznawianie, id_ogloszenia_na_allegro,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 'r': 
@@ -9540,6 +9726,7 @@ def public_on_allegro():
             kategoria_ogloszenia = checkAllegroStatus('r', id_ogloszenia)[8]
             # print(kategoria_ogloszenia)
             if kategoria_ogloszenia == None:
+                msq.handle_error(f'UWAGA! Bład kategorii! Oferta nie została wysłana do aktualizacji przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład kategorii! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dom': 
@@ -9583,13 +9770,12 @@ def public_on_allegro():
                         typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email,
                         5, 0,
                     allegro_id)
-                
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
 
@@ -9621,13 +9807,12 @@ def public_on_allegro():
                         powierzchnia, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email,
                         5, 0,
                     allegro_id)
-                
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka': 
@@ -9663,12 +9848,11 @@ def public_on_allegro():
                         5, 0,
                     allegro_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'lokal': 
@@ -9702,13 +9886,11 @@ def public_on_allegro():
                         5, 0,
                     allegro_id)
 
-
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'magazyn':
@@ -9740,13 +9922,11 @@ def public_on_allegro():
                         5, 0,
                     allegro_id)
 
-
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 's': 
@@ -9798,6 +9978,7 @@ def public_on_allegro():
             kategoria_ogloszenia = checkAllegroStatus('s', id_ogloszenia)[8]
             # print(kategoria_ogloszenia)
             if kategoria_ogloszenia == None:
+                msq.handle_error(f'UWAGA! Bład kategorii allegro! Oferta nie została wysłana przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład kategorii! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dom': 
@@ -9840,13 +10021,12 @@ def public_on_allegro():
                         typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, adres_email,
                         5, 0,
                     allegro_id)
-                
-                # print(dane)
-                flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
 
@@ -9884,8 +10064,10 @@ def public_on_allegro():
                 # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka': 
@@ -9921,12 +10103,11 @@ def public_on_allegro():
                         5, 0,
                     allegro_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'lokal': 
@@ -9960,13 +10141,11 @@ def public_on_allegro():
                         5, 0,
                     allegro_id)
 
-
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'magazyn':
@@ -9998,13 +10177,11 @@ def public_on_allegro():
                         5, 0,
                     allegro_id)
 
-
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na allgero przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Usun': 
@@ -10018,8 +10195,10 @@ def public_on_allegro():
             dane = (0, 6, allegro_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do usunięcia na allgero przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana usunięcia na allgero przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Ponow_zadanie':
@@ -10034,8 +10213,10 @@ def public_on_allegro():
             dane = (0, oldStatus, allegro_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została ponowiona dla allgero przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została ponowiona dla allgero przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
         
         if task_kind == 'Anuluj_zadanie':
@@ -10060,11 +10241,12 @@ def public_on_allegro():
 
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Zadanie zostało anulowane przez {session["username"]}!', log_path=logFileName)
                 flash(f'Zadanie zostało anulowane!', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Zadanie nie zostało anulowane przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Zadanie nie zostało anulowane!', 'danger')
         
-
         if task_kind == 'Odswiez':
             flash(f'Oferta została odświeżona pomyślnie!', 'success')
 
@@ -10078,8 +10260,10 @@ def public_on_allegro():
             dane = (0, allegro_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została ponowiona dla allgero przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została ponowiona dla allgero przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
 
@@ -10089,14 +10273,15 @@ def public_on_allegro():
 @app.route('/public-on-otodom', methods=['POST'])
 def public_on_otodom():
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /public-on-otodom bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /public-on-otodom bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     if request.method == 'POST':
-        print(request.form)
         otodom_id = request.form.get('otodom_id')
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
@@ -10186,6 +10371,7 @@ def public_on_otodom():
 
         if task_kind == 'Publikuj' and rodzaj_ogloszenia == 'r': 
             if not region:
+                msq.handle_error(f'UWAGA! Błąd wyboru regionu dla otodom przez {session["username"]}!', log_path=logFileName)
                 flash('Wybierz region!', 'danger')
                 return redirect(url_for(redirectGoal))
 
@@ -10266,6 +10452,7 @@ def public_on_otodom():
                 # kategoria na adresowo dla magazyn
                 kategoria_ogloszenia = 'magazyn'
             else:
+                msq.handle_error(f'UWAGA! Nie rozpoznano typu nieruchomości, dane wysłane przez {session["username"]} są niejednoznaczne!', log_path=logFileName)
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
             
@@ -10312,12 +10499,12 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'mieszkanie': 
@@ -10344,12 +10531,12 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka': 
@@ -10381,12 +10568,12 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'lokal': 
@@ -10409,12 +10596,12 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'magazyn': 
@@ -10444,16 +10631,17 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Publikuj' and rodzaj_ogloszenia == 's': 
             if not region:
+                msq.handle_error(f'UWAGA! Błąd wyboru regionu dla otodom przez {session["username"]}!', log_path=logFileName)
                 flash('Wybierz region!', 'danger')
                 return redirect(url_for(redirectGoal))
 
@@ -10532,6 +10720,7 @@ def public_on_otodom():
                 # kategoria na adresowo dla magazyn
                 kategoria_ogloszenia = 'magazyn'
             else:
+                msq.handle_error(f'UWAGA! Nie rozpoznano typu nieruchomości, dane wysłane przez {session["username"]} są niejednoznaczne!', log_path=logFileName)
                 flash('Nie rozpoznano typu nieruchomości, dane są niejednoznaczne!', 'danger')
                 return redirect(url_for(redirectGoal))
             
@@ -10576,12 +10765,12 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'mieszkanie': 
@@ -10608,12 +10797,12 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka': 
@@ -10645,12 +10834,12 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'lokal': 
@@ -10673,12 +10862,12 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'magazyn': 
@@ -10708,12 +10897,12 @@ def public_on_otodom():
                         promo, auto_refresh, extra_top, extra_home, export_olx, extra_raise, 
                         mega_raise, pakiet_olx_mini, pakiet_olx_midi, pakiet_olx_maxi, pick_olx, auto_refresh_olx,
                         4)
-                # print(dane)
-                # flash(f'{dane}', 'success')
 
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana realizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 'r': 
@@ -10804,12 +10993,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'mieszkanie': 
@@ -10838,12 +11026,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka': 
@@ -10876,12 +11063,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'lokal': 
@@ -10904,12 +11090,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'magazyn': 
@@ -10940,12 +11125,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Aktualizuj' and rodzaj_ogloszenia == 's': 
@@ -11033,12 +11217,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'mieszkanie': 
@@ -11067,12 +11250,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'dzialka': 
@@ -11105,12 +11287,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'lokal': 
@@ -11134,12 +11315,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
             if kategoria_ogloszenia == 'magazyn': 
@@ -11171,12 +11351,11 @@ def public_on_otodom():
                         5, 0,
                     otodom_id)
 
-                # print(dane)
-                # flash(f'{dane}', 'success')
-
                 if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Oferta została pomyślnie wysłana do aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
                 else:
+                    msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana aktualizacji na otodom przez {session["username"]}!', log_path=logFileName)
                     flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Usun': 
@@ -11190,8 +11369,10 @@ def public_on_otodom():
             dane = (0, 6, otodom_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do usunięcia na otodom przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 1 minuta.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do usunięcia na otodom przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Ponow_zadanie': 
@@ -11206,8 +11387,10 @@ def public_on_otodom():
             dane = (0, oldStatus, otodom_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Oferta została pomyślnie wysłana do ponowienia na otodom przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Oferta nie została wysłana do ponowienia na otodom przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         if task_kind == 'Anuluj_zadanie': 
@@ -11232,8 +11415,10 @@ def public_on_otodom():
 
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Zadanie zostało anulowane przez {session["username"]}!', log_path=logFileName)
                 flash(f'Zadanie zostało anulowane!', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Zadanie nie zostało anulowane przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Zadanie nie zostało anulowane!', 'danger')
 
         if task_kind == 'Odswiez': 
@@ -11249,8 +11434,10 @@ def public_on_otodom():
             dane = (0, otodom_id)
             
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Ponowiono zadanie dla otodom przez {session["username"]}!', log_path=logFileName)
                 flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
             else:
+                msq.handle_error(f'UWAGA! Nie ponowiono zadania dla otodom przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Oferta nie została wysłana do realizacji!', 'danger')
 
         return redirect(url_for(redirectGoal))
@@ -11261,9 +11448,11 @@ def estateAdsspecial():
     """Strona zawierająca listę z ogłoszeniami nieruchomości."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /estate-ads-special bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /estate-ads-special bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -11304,9 +11493,11 @@ def subscribers(router=True):
     """Strona zawierająca listę subskrybentów Newslettera."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /subscriber bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['subscribers'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /subscriber bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -11372,9 +11563,11 @@ def settings():
     """Strona z ustawieniami."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /setting bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['settings'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /setting bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -11396,7 +11589,7 @@ def settings():
     instalacje = settingsDB['instalacje']
     smtpAdmin = settingsDB['smtp_admin']
 
-    last_logs = get_last_logs('logs/errors.log', 250)
+    last_logs = get_last_logs('logs/errors.log', 1250)
 
     return render_template(
                             "setting_management.html", 
@@ -11425,9 +11618,11 @@ def fbGroups():
     """Zarządzanie grupami FB"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /fb-groups bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['settings'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /fb-groups bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -11458,7 +11653,6 @@ def fbGroups():
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
 
-
     return render_template(
                             "fb-groups_management.html", 
                             username=session['username'],
@@ -11480,16 +11674,17 @@ def add_fb_group():
     """Usuwanie ofertę najmu"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /add-fb-group bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['settings'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /add-fb-group bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     # Obsługa formularza POST
     if request.method == 'POST':
         form_data = request.form.to_dict()
-        print(form_data)
         try: form_data['PostID']
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
@@ -11526,8 +11721,10 @@ def add_fb_group():
             dane = (name, category, link)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Dodano grupę FB {name} do kategorii {category} przez {session["username"]}!', log_path=logFileName)
                 flash(f'Grupa została dodana!', 'success')
             else:
+                msq.handle_error(f'UWAGA! Bład zapisu! Grupa FB {name} z kategorii {category} nie została dodana przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu! Grupa nie została dodana!', 'danger')
 
         else:
@@ -11542,9 +11739,11 @@ def add_fb_group():
             dane = (name, category, link, set_post_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Zaktualizowano grupę FB {name} do kategorii {category} przez {session["username"]}!', log_path=logFileName)
                 flash(f'Zmiany zostały zapisane!', 'success')
             else:
-                flash(f'Bład zapisu! Grupa nie została zmodyfikowana!', 'danger')
+                msq.handle_error(f'UWAGA! Bład zapisu! Grupa nie została zaktualizowana przez {session["username"]}!', log_path=logFileName)
+                flash(f'Bład zapisu! Grupa FB {name} z kategorii {category} nie została zmodyfikowana!', 'danger')
 
         return redirect(url_for('fbGroups'))
     
@@ -11555,9 +11754,11 @@ def remove_fbgroup():
     """Usuwanie bloga"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /remove-fbgroup bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['settings'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /remove-fbgroup bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -11573,8 +11774,10 @@ def remove_fbgroup():
                 """,
                 (set_post_id,)
             ):
+            msq.handle_error(f'Grupa została usunięta przez {session["username"]}!', log_path=logFileName)
             flash("Grupa została usunięta.", "success")
         else:
+            msq.handle_error(f'UWAGA! Błąd usunięcia grupy przez {session["username"]}!', log_path=logFileName)
             flash("Błąd usunięcia grupy.", "danger")
         return redirect(url_for('fbGroups'))
     
@@ -11584,6 +11787,7 @@ def remove_fbgroup():
 def fb_groups_sender():
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /fb-groups-sender bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
 
     data = request.json  # Odbieramy dane JSON
@@ -11612,7 +11816,7 @@ def fb_groups_sender():
 
     # Sprawdzamy, czy wszystkie daty są poprawnie sformatowane
     if None in formatted_schedule_org:
-        msq.handle_error(f"Błąd w przekształcaniu dat. \n", log_path='./logs/errors.log')
+        msq.handle_error(f"Błąd w przekształcaniu dat.", log_path=logFileName)
         return jsonify({'success': False, 'message': 'Błąd w przekształcaniu dat'}), 400
     
     def get_actions_dates():
@@ -11654,7 +11858,7 @@ def fb_groups_sender():
                 less_index = []
                 repeater = 10
         else:
-            msq.handle_error(f"Błąd w przygotowywaniu list hramonogramów. \n", log_path='./logs/errors.log')
+            msq.handle_error(f"Błąd w przygotowywaniu list hramonogramów.", log_path=logFileName)
             return jsonify({'success': False, 'message': 'Błąd w przygotowywaniu list hramonogramów'}), 400
         
     repeats_left = repeater + 1
@@ -11703,12 +11907,11 @@ def fb_groups_sender():
             schedule_10_datetime, 
             category, section, id_gallery)
 
-    # print(zapytanie_sql)
-    # print(dane)
     if msq.insert_to_database(zapytanie_sql, dane):
+        msq.handle_error(f"Harmonogram kampanii dla {section}, id:{post_id} zsotał poprawnie zapisany przez {session["username"]}.", log_path=logFileName)
         return jsonify({'success': True, 'message': f'Zmiany zostały zapisane!'})
     else:
-        msq.handle_error(f"Błąd zapisu bazy danych dla id: {post_id}\n", log_path='./logs/errors.log')
+        msq.handle_error(f"Błąd zapisu bazy danych dla {section}, id:{post_id}", log_path=logFileName)
         return jsonify({'success': False, 'message': 'Błąd zapisu bazy danych'}), 400
 
 @app.route('/remove-career-fbgroups', methods=["POST"])
@@ -11716,11 +11919,12 @@ def remove_career_fbgroups():
     """Usuwanie kampanii fbgroups career"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /remove-career-fbgroups bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
-    if session['userperm']['career'] == 0:
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
-        return redirect(url_for('index'))
+    # if session['userperm']['career'] == 0:
+    #     flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+    #     return redirect(url_for('index'))
     
     # Obsługa formularza POST
     if request.method == 'POST':
@@ -11759,7 +11963,9 @@ def remove_career_fbgroups():
             """
             data = (deleter_id,)
             try: msq.insert_to_database(zapytanie_sql, data)
-            except Exception as e: print(f"Błąd w usunięciu kampanii: {e}")
+            except Exception as e: 
+                msq.handle_error(f'UWAGA! Błąd w usunięciu kampanii: {e}!', log_path=logFileName)
+                print(f"Błąd w usunięciu kampanii: {e}")
 
         try: form_data['waitnig_list_id']
         except KeyError: return redirect(url_for(f'{section}'))
@@ -11771,7 +11977,7 @@ def remove_career_fbgroups():
                 """,
                 (set_wl_id,)
             )
-
+        msq.handle_error(f'Kampania została usunięta przez {session["username"]}!', log_path=logFileName)
         flash("Kampania została usunięta.", "success")
         return redirect(url_for(f'{section}'))
     
