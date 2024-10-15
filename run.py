@@ -40,7 +40,7 @@ app.config['SECRET_KEY'] = secrets.token_hex(16)
 # Ustawienia dla Flask-Session
 app.config['SESSION_TYPE'] = 'filesystem'  # Można użyć np. 'redis', 'sqlalchemy'
 app.config['SESSION_PERMANENT'] = True  # Sesja ma być permanentna
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=10)  # Czas wygaśnięcia sesji (10 minut)
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=120)  # Czas wygaśnięcia sesji (120 minut)
 
 Session(app)
 
@@ -11908,7 +11908,7 @@ def fb_groups_sender():
             category, section, id_gallery)
 
     if msq.insert_to_database(zapytanie_sql, dane):
-        msq.handle_error(f"Harmonogram kampanii dla {section}, id:{post_id} zsotał poprawnie zapisany przez {session["username"]}.", log_path=logFileName)
+        msq.handle_error(f'Harmonogram kampanii dla {section}, id:{post_id} zsotał poprawnie zapisany przez {session["username"]}.', log_path=logFileName)
         return jsonify({'success': True, 'message': f'Zmiany zostały zapisane!'})
     else:
         msq.handle_error(f"Błąd zapisu bazy danych dla {section}, id:{post_id}", log_path=logFileName)
