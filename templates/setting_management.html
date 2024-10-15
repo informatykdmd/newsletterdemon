@@ -204,11 +204,19 @@
     });
 
     function copyToClipboard(logText) {
-        navigator.clipboard.writeText(logText).then(function() {
+        // Tworzymy tymczasowy element <textarea> do skopiowania tekstu
+        const tempTextArea = document.createElement("textarea");
+        tempTextArea.value = logText;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        try {
+            document.execCommand("copy");
             alert('Log copied to clipboard: ' + logText);
-        }).catch(function(error) {
-            alert('Failed to copy log: ', error);
-        });
+        } catch (err) {
+            alert('Failed to copy log: ', err);
+        }
+        // Usuwamy tymczasowy element
+        document.body.removeChild(tempTextArea);
     }
 </script>
 {% endblock %}
