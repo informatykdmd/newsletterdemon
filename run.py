@@ -21,6 +21,8 @@ import subprocess
 import regions
 from flask_session import Session
 from PIL import Image
+import logging
+from appStatistic import log_stats
 
 
 """
@@ -41,6 +43,27 @@ app.config['SESSION_PERMANENT'] = True  # Sesja ma być permanentna
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=10)  # Czas wygaśnięcia sesji (10 minut)
 
 Session(app)
+
+logFileName = '/home/johndoe/app/newsletterdemon/logs/errors.log'
+# Konfiguracja loggera
+logging.basicConfig(filename=logFileName, level=logging.INFO,
+                    format='%(asctime)s - %(message)s', filemode='a')
+
+# Funkcja do logowania informacji o zapytaniu
+def log_request():
+    ip_address = request.remote_addr  # Adres IP
+    date_time = datetime.datetime.now()  # Data i czas zapytania
+    endpoint = request.endpoint  # Endpoint zapytania
+    method = request.method  # Metoda zapytania (GET, POST itd.)
+    
+    # Logowanie do pliku
+    logging.info(f'IP: {ip_address}, Time: {date_time}, Endpoint: {endpoint}, Method: {method}')
+
+
+@app.before_request
+def before_request_logging():
+    log_request()  # Loguj przed każdym zapytaniem
+
 
 class LoginForm(FlaskForm):
     username = StringField('Nazwa użytkownika', validators=[DataRequired()])
@@ -1073,6 +1096,7 @@ teamDB = generator_teamDB()
 subsDataDB = generator_subsDataDB()
 daneDBList = generator_daneDBList()
 
+
 @app.route('/')
 def index():
     if 'username' in session:
@@ -1142,6 +1166,17 @@ def logout():
     session.pop('user_data', None)
 
     return redirect(url_for('index'))
+
+
+@app.route('/log-stats')
+def logStats():
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej    
+    if 'username' not in session:
+        return redirect(url_for('index'))
+    
+    # Pobieranie statystyk z logów
+    stats = log_stats(logFileName)
+    return jsonify(stats)  # Zwracanie statystyk jako JSON
 
 @app.route('/home')
 def home():
