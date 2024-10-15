@@ -1152,7 +1152,7 @@ def login():
             session['brands'] = brands_data[username]
             msq.handle_error(f'Udane logowanie użytkownika {username}', log_path=logFileName)
             return redirect(url_for('index'))
-        elif int(users_data[username]['status']) == 0:
+        elif username in users_data and users_data.get(username, {}).get('status') == '0':
             msq.handle_error(f'Nie udane logowanie. Konto nie aktywne!', log_path=logFileName)
             flash('Konto nie aktywne!', 'danger')
         else:
