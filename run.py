@@ -1150,13 +1150,14 @@ def login():
             session['userperm'] = permTempDict[username]
             session['user_data'] = users_data[username]
             session['brands'] = brands_data[username]
-
+            msq.handle_error(f'Udane logowanie użytkownika {username}', log_path=logFileName)
             return redirect(url_for('index'))
         elif int(users_data[username]['status']) == 0:
+            msq.handle_error(f'Nie udane logowanie. Konto nie aktywne!', log_path=logFileName)
             flash('Konto nie aktywne!', 'danger')
         else:
+            msq.handle_error(f'Nie udane logowanie. Błędne nazwa użytkownika lub hasło.', log_path=logFileName)
             flash('Błędne nazwa użytkownika lub hasło', 'danger')
-
     return render_template('gateway.html', form=form)
 
 @app.route('/logout')
@@ -1183,6 +1184,7 @@ def home():
     """Strona główna."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej    
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /home bez autoryzacji.', log_path=logFileName)
         return redirect(url_for('index'))
     
     settingsDB = generator_settingsDB()
@@ -1208,6 +1210,9 @@ def home():
 
 @app.route('/fetch-messages')
 def fetch_messages():
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /fetch-messages bez autoryzacji.', log_path=logFileName)
+        return redirect(url_for('index'))
     messages = get_messages('last')
     return jsonify(messages)
 
@@ -1216,13 +1221,16 @@ def send_chat_message():
     """Strona z zarządzaniem czatem."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /send-chat-message bez autoryzacji.', log_path=logFileName)
         return redirect(url_for('index'))
     data = request.get_json()
     
     new_message = save_chat_message(user_name=session['username'], content=data['content'], status=0)
     if new_message:
+        msq.handle_error(f'Wysłano nowe wiadomość do chatu.', log_path=logFileName)
         return jsonify({"status": "success"}), 201
     else:
+        msq.handle_error(f'Błąd wysyłania wiadomość do chatu.', log_path=logFileName)
         return jsonify({"status": "error"}), 500
 
 @app.route('/blog')
@@ -1230,10 +1238,12 @@ def blog(router=True):
     """Strona z zarządzaniem blogiem."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Nieautoryzowana próba dostępu do endpointa /blog.', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['blog'] == 0:
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /blog bez uprawnień do zarządzania.', log_path=logFileName)
         return redirect(url_for('index'))
     
     # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
@@ -1278,6 +1288,7 @@ def update_password_user():
 
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /update-password-user bez Autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     # Pobierz id usera z formularza
@@ -1293,11 +1304,13 @@ def update_password_user():
                 verificated_old_password = hash.hash_password(form_data['old_Password'], salt_old)
 
                 if verificated_old_password != password_old:
+                    msq.handle_error(f'UWAGA! Nieudana próba zmiany hasła dla przez {session["username"]}! Nieprawidłowe stare hasło.', log_path=logFileName)
                     flash('Nieprawidłowe stare hasło', 'danger')
                     return redirect(url_for('index'))
                 
             if PAGE == 'users':
                 if session['userperm']['users'] == 0:
+                    msq.handle_error(f'UWAGA! Nieudana próba zmiany hasła dla przez {session["username"]} bez uprawnień.', log_path=logFileName)
                     flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
                     return redirect(url_for('index'))
                 
@@ -1328,6 +1341,7 @@ def update_password_user():
                                     ID
                                 )
                             if msq.insert_to_database(zapytanie_sql, dane):
+                                msq.handle_error(f'UWAGA! Hasło zostało pomyślnie zmienione przez {session["username"]} użytkownikowi o id: {ID}.', log_path=logFileName)
                                 flash('Hasło zostało pomyślnie zmienione.', 'success')
                                 if PAGE == 'users':
                                     return redirect(url_for('users'))
@@ -1354,6 +1368,7 @@ def update_data_user():
 
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /update-data-user bez Autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
         
     # Pobierz id usera z formularza
@@ -1403,10 +1418,12 @@ def update_data_user():
                         'avatar': un['avatar']
                     }
                 session['user_data'] = users_data[session['username']]
+                msq.handle_error(f'Aktualizacja danych przez {session["username"]}.', log_path=logFileName)
                 return redirect(url_for('home'))
             
         if form_data['page'] == 'users':
             if session['userperm']['users'] == 0:
+                msq.handle_error(f'UWAGA! Nieudana próba dostepu do aktualizacji informacji o użytkownikach przez {session["username"]} bez uprawnień do zarządzania.', log_path=logFileName)
                 flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
                 return redirect(url_for('index'))
             zapytanie_sql = '''
@@ -1435,6 +1452,7 @@ def update_data_user():
                 int(form_data['id'])
             )
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Dane użytkownika {form_data["name"]} zostały pomyślnie zaktualizowane przez {session["username"]}.', log_path=logFileName)
                 flash('Dane zostały pomyślnie zaktualizowane.', 'success')
             return redirect(url_for('users'))
     return redirect(url_for('index'))
@@ -1445,6 +1463,7 @@ def update_avatar():
 
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /update-avatar bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
         
     # Pobierz id usera z formularza
@@ -1456,6 +1475,7 @@ def update_avatar():
 
         if set_page == 'users':
             if session['userperm']['users'] == 0:
+                msq.handle_error(f'UWAGA! Próba zarządzania /update-avatar bez uprawnień przez {session["username"]}!', log_path=logFileName)
                 flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
                 return redirect(url_for('index'))
 
@@ -1489,10 +1509,13 @@ def update_avatar():
                     'avatar': un['avatar']
                 }
             session['user_data'] = users_data[session['username']]
+            msq.handle_error(f'Avatar został zmieniony przez {session["username"]}!', log_path=logFileName)
             flash('Avatar został zmieniony ','success')
         else:
+            msq.handle_error(f'Nieprawidłowy format pliku avatara!', log_path=logFileName)
             flash('Nieprawidłowy format pliku! ','danger')
     else:
+        msq.handle_error(f'Błąd metody w /update-avatar', log_path=logFileName)
         print('Błąd metody w /update-avatar')
 
     if set_page == 'home':
@@ -1506,9 +1529,11 @@ def remove_user():
 
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /delete-user bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /delete-user bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     # Pobierz id usera z formularza
@@ -1527,6 +1552,7 @@ def remove_user():
             """,
             (ID, ADMIN_NAME, LOGIN)
         )
+        msq.handle_error(f'Usunieto użytkownika {ADMIN_NAME} o loginie {LOGIN} z bazy admins!', log_path=logFileName)
         print(f'Usunieto użytkownika {ADMIN_NAME} o loginie {LOGIN} z bazy admins.')
         # Usuwanie danych z workers_team
         msq.delete_row_from_database(
@@ -1535,6 +1561,7 @@ def remove_user():
             """,
             (ADMIN_NAME, EMAIL)
         )
+        msq.handle_error(f'Usunieto użytkownika {ADMIN_NAME} o emailu {EMAIL} z bazy workers_team!', log_path=logFileName)
         print(f'Usunieto użytkownika {ADMIN_NAME} o emailu {EMAIL} z bazy workers_team.')
         flash(f'Pomyślnie usunięto użytkownika {ADMIN_NAME}.', 'success')
         return redirect(url_for('users'))
@@ -1545,9 +1572,11 @@ def remove_user():
 def update_permission():
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /update-permission bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /update-permission bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     data = request.json
@@ -1580,6 +1609,7 @@ def update_permission():
 
     if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16, 17]:
         if session['userperm']['permissions'] == 0:
+            msq.handle_error(f'UWAGA! Próba zarządzania uprawnieniami bez uprawnień przez {session["username"]}!', log_path=logFileName)
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
             return redirect(url_for('users'))
         #Aktualizacja uprawnienia
@@ -1590,6 +1620,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
 
         if perm_id == 2:
@@ -1599,6 +1630,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 3: 
             'Zarządzanie Blogiem'
@@ -1607,6 +1639,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 4: 
             'Zarządzanie Subskrybentami'
@@ -1615,6 +1648,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 5: 
             'Zarządzanie Komentarzami'
@@ -1623,6 +1657,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 6: 
             'Zarządzanie Personelem'
@@ -1631,6 +1666,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 7: 
             'Zarządzanie Uprawnieniami'
@@ -1639,6 +1675,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 8: 
             'Zarządzanie Newsletterem'
@@ -1647,6 +1684,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 9: 
             'Zarządzanie Ustawieniami'
@@ -1655,6 +1693,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         
         if perm_id == 16: 
@@ -1664,6 +1703,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         
         if perm_id == 17: 
@@ -1673,10 +1713,12 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
     
     if perm_id in [10, 11, 12, 13, 14, 15]:
         if session['userperm']['brands'] == 0:
+            msq.handle_error(f'UWAGA! Próba zarządzania brendami bez uprawnień przez {session["username"]}!', log_path=logFileName)
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
             return redirect(url_for('users'))
         #Aktualizacja przynależności
@@ -1687,6 +1729,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 11: 
             'Przynależność do DMD Budownictwo'
@@ -1695,6 +1738,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 12: 
             'Przynależność do DMD EliteHome'
@@ -1703,6 +1747,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 13: 
             'Przynależność do DMD Inwestycje'
@@ -1711,6 +1756,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 14: 
             'Przynależność do DMD Instalacje'
@@ -1719,6 +1765,7 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         if perm_id == 15: 
             'Przynależność do DMD Development'
@@ -1727,17 +1774,21 @@ def update_permission():
             else: onOff = 0
             dane = (onOff, user_id)
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
                 return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
 
+    msq.handle_error(f'UWAGA! Błąd zarządzania uprawnieniami użytkowników wywołany przez {session["username"]}!', log_path=logFileName)
     return jsonify({'success': False, 'message': 'Coś poszło nie tak, zgłoś to Administratorowi', 'user_id': user_id})
 
 @app.route('/update-user-status', methods=['GET', 'POST'])
 def update_user_status():
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /update-user-status bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /update-user-status bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     # Pobierz id usera z formularza
@@ -1750,7 +1801,10 @@ def update_user_status():
         zapytanie_sql = '''UPDATE admins SET ADMIN_STATUS = %s WHERE ID = %s;'''
         dane = (onOff, user_id)
         if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Udana zmiana statusu użytkownika wykonywana przez {session["username"]}!', log_path=logFileName)
             return redirect(url_for('users'))
+        
+    msq.handle_error(f'UWAGA! Zmiana statusu wykonywana przez {session["username"]} nie powiodła się!', log_path=logFileName)
     flash('Zmiana statusu nie powiodła się, skontaktuj się z Administratorem Systemu!', 'danger')
     return redirect(url_for('users'))
 
@@ -1760,9 +1814,11 @@ def save_new_user():
     
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /add-new-user bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['users'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /add-new-user bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -1879,9 +1935,11 @@ def save_new_user():
                         """
                 to_email = EMAIL
                 mails.send_html_email(subject, html_body, to_email)
+                msq.handle_error(f'Dodanie nowego administratora przez {session["username"]}!', log_path=logFileName)
                 flash('Administrator został dodany', 'success')
                 return redirect(url_for('users'))
             else:
+                msq.handle_error(f'UWAGA! Nie udało się dodać administratora użytkownikowi {session["username"]}!', log_path=logFileName)
                 flash('Nie udało się dodać administratora', 'danger')
                 return redirect(url_for('users'))
     return redirect(url_for('users'))
@@ -1892,9 +1950,11 @@ def save_post():
        
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /save-blog-post bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['blog'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /save-blog-post bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -1914,6 +1974,7 @@ def save_post():
 
         # Sprawdzenie czy udało się ustalić id posta
         if not set_form_id:
+            msq.handle_error(f'Błąd! Ustalenie id posta okazało się niemożliwe!', log_path=logFileName)
             flash('Ustalenie id posta okazało się niemożliwe', 'danger')
             return redirect(url_for('blog'))
         
@@ -2036,9 +2097,11 @@ def save_post():
                             SELECT * FROM contents ORDER BY ID DESC;
                         ''')[0][0]
                 except Exception as err:
+                    msq.handle_error(f'Błąd podczas tworzenia nowego posta: {err}', log_path=logFileName)
                     flash(f'Błąd podczas tworzenia nowego posta! \n {err}', 'danger')
                     return redirect(url_for('blog'))
             else:
+                msq.handle_error(f'Błąd podczas tworzenia nowego posta {TYTUL}!', log_path=logFileName)
                 flash(f'Błąd podczas tworzenia nowego posta', 'danger')
                 return redirect(url_for('blog'))
             if msq.insert_to_database(
@@ -2046,9 +2109,11 @@ def save_post():
                         INSERT INTO blog_posts (CONTENT_ID, AUTHOR_ID) VALUES(%s, %s);
                     ''', 
                     (ID_NEW_POST_CONTENT, ID_AUTHOR)):
+                msq.handle_error(f'Dane zostały zapisane poprawnie w tablei blog_posts!', log_path=logFileName)
                 flash('Dane zostały zapisane poprawnie!', 'success')
                 return redirect(url_for('blog'))
             else:
+                msq.handle_error(f'Błąd podczas tworzenia nowego posta!', log_path=logFileName)
                 flash(f'Błąd podczas tworzenia nowego posta', 'danger')
                 return redirect(url_for('blog'))
         else:
@@ -2105,6 +2170,7 @@ def save_post():
                     '''
                 dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Post {TYTUL} został poprawnie zapisany w bazie!', log_path=logFileName)
                 flash('Dane zostały zapisane poprawnie!', 'success')
                 return redirect(url_for('blog'))
         
@@ -2112,6 +2178,7 @@ def save_post():
             print('Dane zostały zapisane poprawnie!')
             
             return redirect(url_for('blog'))
+    msq.handle_error(f'BŁĄD! Post {TYTUL} nie został poprawnie zapisany w bazie!', log_path=logFileName)
     flash('Błąd!', 'danger')
     return redirect(url_for('index'))
 
@@ -2120,9 +2187,11 @@ def remove_post():
     """Usuwanie bloga"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /remove-post bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['blog'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /remove-post bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -2145,6 +2214,7 @@ def remove_post():
                 """,
                 (set_post_id,)
             )
+        msq.handle_error(f'Post o id: {set_post_id} został usuniety przez {session["username"]}!', log_path=logFileName)
         flash("Wpis został usunięty.", "success")
         return redirect(url_for('blog'))
     
@@ -2155,9 +2225,11 @@ def remove_comment():
     """Usuwanie komentarza"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /remove-comment bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['commnets'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /remove-comment bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -2168,14 +2240,15 @@ def remove_comment():
         except KeyError: return redirect(url_for('index'))
         set_comm_id = int(form_data['comment_id'])
 
-        print(set_comm_id)
+        # print(set_comm_id)
         msq.delete_row_from_database(
                 """
                     DELETE FROM comments WHERE ID = %s;
                 """,
                 (set_comm_id,)
             )
-
+        
+        msq.handle_error(f'Komentarz o id:{set_comm_id} został usunięty przez {session["username"]}!', log_path=logFileName)
         if form_data['page'] == 'subs':
             flash("Wpis został usunięty.", "success")
             return redirect(url_for('subscribers'))
@@ -2190,9 +2263,11 @@ def remove_subscriber():
     """Usuwanie subscribera"""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /remove-subscriber bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
     
     if session['userperm']['subscribers'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /remove-subscriber bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
@@ -2210,8 +2285,11 @@ def remove_subscriber():
             '''
         dane = ('john@doe.removed.user', 404, 'REMOVED404', set_subs_id)
         if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Subskryber został usunięty przez {session["username"]}!', log_path=logFileName)
             flash('Subskryber został usunięty!', 'success')
             return redirect(url_for('subscribers'))
+        
+    msq.handle_error(f'UWAGA! Błąd usuwania Subskrybenta przez {session["username"]}!', log_path=logFileName)
     flash('Błąd usuwania Subskrybenta!', 'danger')
     return redirect(url_for('subscribers'))
 
