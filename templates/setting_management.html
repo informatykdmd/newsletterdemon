@@ -151,25 +151,23 @@
         <ul class="unix-log-style">
             {% for log in last_logs %}
                 {% if log.count("UWAGA!") > 0 %} 
-                    <li style="color: #ff9898;">{{ log }}</li>
-                {% elif log.count("IP:") > 0 and log.count("Endpoint: None") > 0 %}
-                    <li style="color: #92bea6;">{{ log }}</li>
+                    <li style="color: #ff9898;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
                 {% elif log.count("IP:") > 0 and log.count("Endpoint: static") > 0 %}
-                    <li style="display: none;">{{ log }}</li>
+                    <li style="display: none;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
                 {% elif log.count("IP:") > 0 and log.count("Endpoint: get_region_data") > 0 %}
-                    <li style="display: none;">{{ log }}</li>
+                    <li style="display: none;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
                 {% elif log.count("IP:") > 0 and log.count("Endpoint: fetch_messages") > 0 %}
-                    <li style="display: none;">{{ log }}</li>
+                    <li style="display: none;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
                 {% elif log.count("Udane logowanie użytkownika") > 0 %}
-                    <li style="color: #00b3ff;">{{ log }}</li>
+                    <li style="color: #00b3ff;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
                 {% elif log.count("Nie udane logowanie") > 0 %}
-                    <li style="color: #ff0000;">{{ log }}</li>
-                {% elif log.count("IP:") > 0 and log.count("Endpoint: static") == 0 %}
-                    <li style="color: greenyellow;">{{ log }}</li>
+                    <li style="color: #ff0000;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
                 {% elif log.count("__main__") > 0 %}
-                    <li style="color: #ff6dc9;">{{ log }}</li>
+                    <li style="color: #ff6dc9;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
+                {% elif log.count("IP:") > 0 and log.count("Endpoint: static") == 0 %}
+                    <li style="color: greenyellow;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
                 {% else %}
-                    <li>{{ log }}</li>
+                    <li onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
                 {% endif %}
             {% endfor %}
         </ul>
@@ -204,6 +202,14 @@
             alert('Nie udało się zrestartować aplikacji.');
         });
     });
+
+    function copyToClipboard(logText) {
+        navigator.clipboard.writeText(logText).then(function() {
+            alert('Log copied to clipboard: ' + logText);
+        }).catch(function(error) {
+            alert('Failed to copy log: ', error);
+        });
+    }
 </script>
 {% endblock %}
 
