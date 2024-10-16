@@ -1111,6 +1111,7 @@ def login():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
+        msq.handle_error(f'Próba logowania loginu: {username}', log_path=logFileName)
 
         usersTempDict = {}
         permTempDict = {}
@@ -1162,6 +1163,7 @@ def login():
 
 @app.route('/logout')
 def logout():
+    msq.handle_error(f'Wylogowano użytkownika: {session["'username'"]}', log_path=logFileName)
     session.pop('username', None)
     session.pop('userperm', None)
     session.pop('user_data', None)
