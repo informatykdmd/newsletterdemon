@@ -1,4 +1,3 @@
-# log_stats.py
 import re
 
 def log_stats(log_file_path):

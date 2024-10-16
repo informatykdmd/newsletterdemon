@@ -876,11 +876,13 @@ def restart_pm2_tasks():
         print("Errors:", e.stderr.decode())
         return False
 
-def restart_pm2_tasks_signal():
+def restart_pm2_tasks_signal(logsFilePath):
     try:
         # Utworzenie pliku sygnału
         with open('/tmp/restart_pm2.signal', 'w') as f:
             f.write('restart')
+        with open(logsFilePath, 'w+', encoding='utf-8') as fl:
+            fl.write('')
         return True
     except Exception as e:
         print(f"Błąd podczas restartu tasków PM2: {e}")
@@ -11539,7 +11541,7 @@ def subscribers(router=True):
 @app.route('/restart', methods=['POST'])
 def restart():
     try:
-        if restart_pm2_tasks_signal():
+        if restart_pm2_tasks_signal(logFileName):
             zapytanie_sql = f'''
                     UPDATE admin_settings 
                     SET 
@@ -11548,15 +11550,18 @@ def restart():
             dane = (datetime.datetime.now(), 1)
 
             if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Aplikacja została zrestartowana przez {session["username"]}', log_path=logFileName)
                 flash("Aplikacja została zrestartowana", 'success')
                 return jsonify({"message": "Aplikacja została zrestartowana"}), 200
             else:
+                msq.handle_error(f'UWAGA! Błąd podczas restartu aplikacji przez {session["username"]}!', log_path=logFileName)
                 flash("Błąd podczas restartu aplikacji!", 'danger')
                 return jsonify({"message": f"Błąd podczas restartu aplikacji!"}), 500
         else:
             flash("Błąd podczas restartu aplikacji!", 'danger')
             return jsonify({"message": f"Błąd podczas restartu aplikacji!"}), 500
     except Exception as e:
+        msq.handle_error(f'UWAGA! Błąd podczas restartu aplikacji: {e}', log_path=logFileName)
         flash(f"Błąd podczas restartu aplikacji: {e}", 'danger')
         return jsonify({"message": f"Błąd podczas restartu aplikacji: {e}"}), 500
 
