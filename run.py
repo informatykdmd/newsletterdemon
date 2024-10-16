@@ -883,6 +883,7 @@ def restart_pm2_tasks_signal(logsFilePath):
             f.write('restart')
         with open(logsFilePath, 'w+', encoding='utf-8') as fl:
             fl.write('')
+        os.system('pm2 restart all')
         return True
     except Exception as e:
         print(f"Błąd podczas restartu tasków PM2: {e}")
