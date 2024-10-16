@@ -1163,7 +1163,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    msq.handle_error(f'Wylogowano użytkownika: {session["'username'"]}', log_path=logFileName)
+    msq.handle_error(f'Wylogowano użytkownika: {session["username"]}', log_path=logFileName)
     session.pop('username', None)
     session.pop('userperm', None)
     session.pop('user_data', None)
