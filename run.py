@@ -1612,7 +1612,7 @@ def update_permission():
     if perm_id == 14: perm_name = 'Przynależność do DMD Instalacje'
     if perm_id == 15: perm_name = 'Przynależność do DMD Development'
 
-    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16, 17]:
+    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16, 17, 18]:
         if session['userperm']['permissions'] == 0:
             msq.handle_error(f'UWAGA! Próba zarządzania uprawnieniami bez uprawnień przez {session["username"]}!', log_path=logFileName)
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
@@ -1714,6 +1714,16 @@ def update_permission():
         if perm_id == 17: 
             'Zarządzanie Karierą'
             zapytanie_sql = '''UPDATE admins SET PERM_CAREER = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        
+        if perm_id == 18: 
+            'Zarządzanie Anonimowymi Kampaniami'
+            zapytanie_sql = '''UPDATE admins SET PERM_FBHIDDEN = %s WHERE ID = %s;'''
             if permission: onOff = 1
             else: onOff = 0
             dane = (onOff, user_id)
