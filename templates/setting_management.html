@@ -229,6 +229,7 @@
                 success: function(data) {
                     let logList = $('#log-list');
                     logList.empty();
+                    foundMainLog = false;  // Resetujemy flagę przy każdym nowym fetchu logów
                     data.forEach(function(log) {
                         let logColor = '';
 
@@ -246,12 +247,13 @@
                             logColor = 'style="color: #00b3ff;"';
                         } else if (log.includes("Nie udane logowanie")) {
                             logColor = 'style="color: #ff0000;"';
-                        } else if (log.includes("__main__")) {
-                            // Pobieramy czas z logu i formatujemy komunikat
+                        } else if (log.includes("__main__") && !foundMainLog) {
+                            // Tylko pierwsza iteracja przetwarza log "__main__"
                             const logParts = log.split(" ");
                             const lastDatestamp = logParts[0];  // Pobieramy datę
                             const lastTimestamp = logParts[1];  // Pobieramy drugi timestamp
                             lastMainLog = `Deamon is working<br />Last: ${lastDatestamp} ${lastTimestamp}`;
+                            foundMainLog = true;  // Ustawiamy flagę, aby kolejne logi "__main__" były ignorowane
                             return;  // Nie wyświetlamy tego logu w liście logów
                         } else if (log.includes("IP:") && !log.includes("Endpoint: static")) {
                             logColor = 'style="color: greenyellow;"';
