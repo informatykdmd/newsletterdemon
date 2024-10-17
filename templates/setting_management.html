@@ -247,8 +247,10 @@
                         } else if (log.includes("Nie udane logowanie")) {
                             logColor = 'style="color: #ff0000;"';
                         } else if (log.includes("__main__")) {
-                            // Zapisujemy ostatni log "__main__"
-                            lastMainLog = log;
+                            // Pobieramy czas z logu i formatujemy komunikat
+                            const logParts = log.split(" ");
+                            const lastTimestamp = logParts[1];  // Pobieramy drugi timestamp
+                            lastMainLog = `Deamon is working\nLast: ${lastTimestamp}`;
                             return;  // Nie wyświetlamy tego logu w liście logów
                         } else if (log.includes("IP:") && !log.includes("Endpoint: static")) {
                             logColor = 'style="color: greenyellow;"';
