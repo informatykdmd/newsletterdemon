@@ -1604,6 +1604,7 @@ def update_permission():
 
     if perm_id == 16: perm_name = 'Zarządzanie Ogłoszeniami'
     if perm_id == 17: perm_name = 'Zarządzanie Karierą'
+    if perm_id == 18: perm_name = 'Zarządzanie Anonimowymi Kampaniami'
 
     if perm_id == 10: perm_name = 'Przynależność do DMD Domy'
     if perm_id == 11: perm_name = 'Przynależność do DMD Budownictwo'
