@@ -197,7 +197,8 @@ def main():
         
         for task_data in give_me_curently_tasks():
             if make_fbgroups_task(task_data):
-                sleep(300)
+                handle_error(f"Przygotowano kampanię FB w sekcji {task_data.get('section', None)} dla kategorii {task_data.get('category', None)} o id: {task_data.get('post_id', None)}.\n")
+                sleep(5)
 
         ################################################################
         # Obsługa automatycznego wygaszania zakończonych ogłoszeń na 
