@@ -134,6 +134,7 @@ def main():
                     if HTML != '':
                         sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
                         archive_sents(row[1])
+                handle_error(f"Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}\n")
 
         ################################################################
         # Aktywacja konta subskrybenta
@@ -148,6 +149,7 @@ def main():
                 f"UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
                 (3, data[0], data[2])
                 )
+            handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
             
         ################################################################
         # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
@@ -164,7 +166,7 @@ def main():
                 f"UPDATE contact SET DONE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
                 (0, data[0], data[2])
                 )
-            
+            handle_error(f"Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]} z podanym kontaktem {data[2]}\n")
         ################################################################
         # komentowanie chata przez serwer automatów
         ################################################################
