@@ -11622,6 +11622,22 @@ def settings():
                             last_logs=last_logs
                             )
 
+@app.route('/fetch-logs')
+def fetch_logs():
+    """Strona z ustawieniami."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /fetch-logs bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['settings'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /fetch-logs bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    last_logs = get_last_logs('logs/errors.log', 10250)
+    return jsonify(last_logs)
+
 @app.route('/fb-groups')
 def fbGroups():
     """Zarządzanie grupami FB"""

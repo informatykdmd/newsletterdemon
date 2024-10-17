@@ -145,7 +145,7 @@
         </div>
     </form>
 </div>
-<div class="jasne rogi formatyj-maly-wiersz">
+<!-- <div class="jasne rogi formatyj-maly-wiersz">
     <div class="rogi colapse-column-usual formatuj-left">
         <h5>Ostatnie Logi Systemowe</h5>
         <div id="copy-notification" style="display: none; position: fixed; bottom: 30px; right: 20px; background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px; z-index: 1000;">
@@ -177,7 +177,19 @@
         
         
     </div>
+</div> -->
+<div class="jasne rogi formatyj-maly-wiersz">
+    <div class="rogi colapse-column-usual formatuj-left">
+        <h5>Ostatnie Logi Systemowe</h5>
+        <div id="copy-notification" style="display: none; position: fixed; bottom: 30px; right: 20px; background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px; z-index: 1000;">
+            Log copied to clipboard!
+        </div>
+        <ul id="log-list" class="unix-log-style">
+            <!-- Logi będą tutaj dynamicznie dodawane przez JavaScript -->
+        </ul>
+    </div>
 </div>
+
 <script>
     document.getElementById('restartButton').addEventListener('click', function(event) {
         event.preventDefault();  // Zapobiega domyślnemu zachowaniu przycisku submit
@@ -235,6 +247,51 @@
             notification.style.display = "none";
         }, 2000);
     }
+
+    $(document).ready(function() {
+
+        function fetchLogs() {
+            $.ajax({
+                url: '/fetch-logs',  // Zmieniony endpoint
+                method: 'GET',
+                success: function(data) {
+                    let logList = $('#log-list');
+                    logList.empty();
+                    data.forEach(function(log) {
+                        let logColor = '';
+
+                        if (log.includes("UWAGA!")) {
+                            logColor = 'style="color: #ff9898;"';
+                        } else if (log.includes("IP:") && log.includes("Endpoint: static")) {
+                            logColor = 'style="display: none;"';
+                        } else if (log.includes("IP:") && log.includes("Endpoint: get_region_data")) {
+                            logColor = 'style="display: none;"';
+                        } else if (log.includes("IP:") && log.includes("Endpoint: fetch_messages")) {
+                            logColor = 'style="display: none;"';
+                        } else if (log.includes("Udane logowanie użytkownika")) {
+                            logColor = 'style="color: #00b3ff;"';
+                        } else if (log.includes("Nie udane logowanie")) {
+                            logColor = 'style="color: #ff0000;"';
+                        } else if (log.includes("__main__")) {
+                            logColor = 'style="color: #ff6dc9;"';
+                        } else if (log.includes("IP:") && !log.includes("Endpoint: static")) {
+                            logColor = 'style="color: greenyellow;"';
+                        }
+
+                        logList.append(`<li ${logColor} onclick="copyToClipboard('${log}')">${log}</li>`);
+                    });
+
+                    
+                }
+            });
+        }
+
+        // Pobieranie logów co 3 sekundy
+        setInterval(fetchLogs, 3000);
+
+        // Początkowe pobranie logów
+        fetchLogs();
+    });
 </script>
 {% endblock %}
 
