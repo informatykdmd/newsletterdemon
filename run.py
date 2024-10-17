@@ -168,7 +168,8 @@ def generator_userDataDB():
                 'settings': data[30], # kolejne uprawnienie
                 'newsletter': data[23],
                 'estate': data[31], # kolejne uprawnienie wzz. dmd inwestycje
-                'career': data[32] # kolejne uprawnienie wzz. dmd budownictwo kariera
+                'career': data[32], # kolejne uprawnienie wzz. dmd budownictwo kariera
+                'fbhidden': data[33] # kolejne uprawnienie wzz. dmd budownictwo kariera
                 },
             'brands': {
                 'domy': (data[24]),
@@ -11598,7 +11599,7 @@ def settings():
     instalacje = settingsDB['instalacje']
     smtpAdmin = settingsDB['smtp_admin']
 
-    last_logs = get_last_logs('logs/errors.log', 10250)
+    # last_logs = get_last_logs('logs/errors.log', 10250)
 
     return render_template(
                             "setting_management.html", 
@@ -11619,7 +11620,7 @@ def settings():
                             instalacje=instalacje,
                             smtpAdmin=smtpAdmin,
                             etate_logo_png=etate_logo_png,
-                            last_logs=last_logs
+                            # last_logs=last_logs
                             )
 
 @app.route('/fetch-logs')
