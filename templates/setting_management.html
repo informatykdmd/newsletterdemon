@@ -76,6 +76,10 @@
                     <div class="formatuj-left formatuj-margin">                    
                         <input type="submit" class="btn btn-danger btn-sm" id="restartButton" value="Restaruj Aplikację"/>
                         <p class="jasny formatuj-padding" style="margin-top: 25px; max-width: 150px; color: #beddff">Ostatni restart aplikacji: {{restart}}</p>
+                        <!-- Dodajemy miejsce na ostatni log "__main__" -->
+                        <p id="last-main-log" class="jasny formatuj-padding" style="color: #ff6dc9; margin-top: 15px;">
+                            <!-- Ostatni log "__main__" zostanie tutaj wstawiony dynamicznie -->
+                        </p>
                     </div>
 
                 </div>
@@ -145,39 +149,7 @@
         </div>
     </form>
 </div>
-<!-- <div class="jasne rogi formatyj-maly-wiersz">
-    <div class="rogi colapse-column-usual formatuj-left">
-        <h5>Ostatnie Logi Systemowe</h5>
-        <div id="copy-notification" style="display: none; position: fixed; bottom: 30px; right: 20px; background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px; z-index: 1000;">
-            Log copied to clipboard!
-        </div>
-        <ul class="unix-log-style">
-            {% for log in last_logs %}
-                {% if log.count("UWAGA!") > 0 %} 
-                    <li style="color: #ff9898;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
-                {% elif log.count("IP:") > 0 and log.count("Endpoint: static") > 0 %}
-                    <li style="display: none;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
-                {% elif log.count("IP:") > 0 and log.count("Endpoint: get_region_data") > 0 %}
-                    <li style="display: none;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
-                {% elif log.count("IP:") > 0 and log.count("Endpoint: fetch_messages") > 0 %}
-                    <li style="display: none;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
-                {% elif log.count("Udane logowanie użytkownika") > 0 %}
-                    <li style="color: #00b3ff;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
-                {% elif log.count("Nie udane logowanie") > 0 %}
-                    <li style="color: #ff0000;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
-                {% elif log.count("__main__") > 0 %}
-                    <li style="color: #ff6dc9;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
-                {% elif log.count("IP:") > 0 and log.count("Endpoint: static") == 0 %}
-                    <li style="color: greenyellow;" onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
-                {% else %}
-                    <li onclick="copyToClipboard('{{ log }}')">{{ log }}</li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-        
-        
-    </div>
-</div> -->
+
 <div class="jasne rogi formatyj-maly-wiersz">
     <div class="rogi colapse-column-usual formatuj-left">
         <h5>Ostatnie Logi Systemowe</h5>
@@ -249,7 +221,7 @@
     }
 
     $(document).ready(function() {
-
+        let lastMainLog = '';  // Przechowywanie ostatniego logu "__main__"
         function fetchLogs() {
             $.ajax({
                 url: '/fetch-logs',  // Zmieniony endpoint
@@ -275,7 +247,9 @@
                         } else if (log.includes("Nie udane logowanie")) {
                             logColor = 'style="color: #ff0000;"';
                         } else if (log.includes("__main__")) {
-                            logColor = 'style="color: #ff6dc9;"';
+                            // Zapisujemy ostatni log "__main__"
+                            lastMainLog = log;
+                            return;  // Nie wyświetlamy tego logu w liście logów
                         } else if (log.includes("IP:") && !log.includes("Endpoint: static")) {
                             logColor = 'style="color: greenyellow;"';
                         }
@@ -283,7 +257,10 @@
                         logList.append(`<li ${logColor} onclick="copyToClipboard('${log}')">${log}</li>`);
                     });
 
-                    
+                    // Wyświetlanie ostatniego logu "__main__" w odpowiednim miejscu
+                    if (lastMainLog) {
+                        $('#last-main-log').text(lastMainLog);
+                    }
                 }
             });
         }
@@ -300,5 +277,5 @@
 
 
 {% block footer %}
- To jest stopka panelu administracyjnego. All right reserved &copy; 2024 by DMD Panel Administratora.<br/>
+    <p>All right reserved &copy; 2024 by DMD Panel Administratora.</p>
 {% endblock %}
