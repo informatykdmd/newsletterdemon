@@ -324,6 +324,135 @@ function joinToDynamicDescription(id, elementName="list-container") {
     return resultJsonList;
 }
 
+function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
+    let formIsValid = true;
+    // Funkcja pomocnicza do dodawania/usuwania klasy ostrzeżenia
+    function toggleWarning(elementId, condition) {
+        const element = document.getElementById(elementId);
+        if (condition) {
+            element.classList.add('input-warning');
+            formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+        } else {
+            element.classList.remove('input-warning');
+        }
+    }
+
+    // Pobieranie wartości z formularza
+    var title = document.getElementById('title_' + offerId).value;
+    var description = document.getElementById('description_' + careerId).innerText;
+    
+    var category = document.getElementById('category_' + offerId).value;
+    var offerIDbox = document.getElementById('OfferID_' + offerId).value;
+    var created_by = document.getElementById('created_by_' + offerId).value;
+    var author = document.getElementById('author_' + offerId).value;
+    var target = document.getElementById('target_' + offerId).value;
+
+    // Pobieranie zdjęć z listy
+    var fotoList = document.getElementById(offerId + '-fileList');
+    // console.log('fotoList: ', fotoList);
+    var zdjecia = [];
+    var oldFotos_list = [];
+
+    fotoList.childNodes.forEach(child => {
+        if (child.file) {  // Sprawdź, czy element li ma przypisany plik
+            zdjecia.push(child.file);
+        } else {
+            oldFotos_list.push(child.textContent);
+        }
+    });
+    // console.log('oldFotos_list', oldFotos_list);
+
+    // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
+    toggleWarning('title_' + offerId, !title);
+    toggleWarning('description_' + offerId, !description);
+    toggleWarning('category_' + offerId, !category);
+
+    // if (!oldFotos) {
+    //     if (zdjecia.length === 0) {
+    //         const elementzdjecia = document.getElementById(offerId+'-drop-area');
+    
+    //         elementzdjecia.classList.add('input-warning');
+    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+    
+    //         return;  // Zatrzymaj przesyłanie formularza
+    //     }
+    // } else {
+    //     if (zdjecia.length === 0 && oldFotos_list.length === 0) {
+    //         const elementzdjecia = document.getElementById(offerId+'-drop-area');
+    
+    //         elementzdjecia.classList.add('input-warning');
+    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
+    
+    //         return;  // Zatrzymaj przesyłanie formularza
+    //     }
+    // }
+    
+    
+    // Dodawanie zdjęć jako FormData
+    var formData = new FormData();
+    zdjecia.forEach(file => {
+        formData.append('photos[]', file);
+    });
+
+    // Dodawanie istniejących nazw zdjęć jako FormData
+    oldFotos_list.forEach(url => {
+        formData.append('oldPhotos[]', url);
+    });
+
+    // Dodawanie istniejących nazw zdjęć
+    fotoList.childNodes.forEach(child => {
+        if (child.textContent.includes('(')) {
+            formData.append('allPhotos[]', child.textContent.split(' (')[0]);
+        } else {
+            formData.append('allPhotos[]', child.textContent);
+        }
+    });
+
+    // Dodanie pozostałych danych do FormData
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('category', category);
+    formData.append('created_by', created_by);
+    formData.append('author', author);
+    formData.append('target', target);
+ 
+    formData.append('offerID', offerIDbox);
+
+    // Jeżeli którykolwiek z testów nie przeszedł, nie wysyłaj formularza
+    if (!formIsValid) {
+        return;
+    }
+
+    // Wysyłanie formularza za pomocą AJAX (fetch API)
+    fetch('/save-hidden-campaigns', {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        // console.log('response: ', response);
+        if (response.ok) {
+            // alert('Oferta została pomyślnie zapisana.');
+            // console.log('response: ', response);
+            return response.json();
+        } else {
+            // console.log('xxx:', data);
+
+            throw new Error('Problem z serwerem');
+        }
+    }).then(data => {
+        // console.log('data:', data);
+        // console.log('data.seccess:', data.success);
+        if (data.success == true) {
+            // console.log('xxx:', data);
+            var form = document.getElementById('hiddencampaigns_' + offerId);
+            form.reset();
+            window.location.href = '/hidden-campaigns';
+        } else if (data.error) {
+            
+        }
+    }).catch(error => {
+        alert('Wystąpił błąd: ' + error.message);
+    });
+}
 
 function prepareAndSubmitRentOfferForm(offerId, oldFotos=true) {
     let formIsValid = true;
@@ -1137,6 +1266,106 @@ function collectAndSendfbgroupsform(postId) {
     });
 }
 
+function collectAndSendHiddenFBform(postId) {
+    // Zbieramy treść ogłoszenia i usuwamy element z liczbą znaków
+    const contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
+    
+    // Usuwamy div z liczbą znaków
+    const charCountDiv = document.getElementById(`char_count_${postId}`);
+    if (charCountDiv) {
+        charCountDiv.remove();
+    }
+
+    // Zbieramy treść po usunięciu licznika znaków
+    const content = contentDiv.innerText.trim();
+
+    // Sprawdzamy, czy treść ogłoszenia nie jest pusta
+    if (!content) {
+        contentDiv.style.border = '2px solid red'; // Podświetlenie na czerwono
+        // Znajdź element diva na podstawie dynamicznego ID
+        const komunikatDiv = document.getElementById(`komunikat_z_serwera_${postId}`);
+            
+        // Wyświetl komunikat o błędzie w divie
+        if (komunikatDiv) {
+            komunikatDiv.innerHTML = '<p class="alert alert-danger" role="alert">Treść ogłoszenia nie może być pusta!</p>';
+        }
+        return; // Zatrzymujemy wysyłkę
+    } else {
+        contentDiv.style.border = ''; // Usuwamy czerwone podświetlenie, jeśli pole jest wypełnione
+    }
+
+    // Zbieramy harmonogram jako listę dat
+    const scheduleDates = [];
+    const scheduleItems = document.querySelectorAll(`#fbgroups_shedule_${postId} .shedule-date-details`);
+    scheduleItems.forEach(item => {
+        scheduleDates.push(item.textContent.trim());
+    });
+
+    // Tworzymy obiekt z danymi do wysłania
+    const dataToSend = {
+        post_id: postId,
+        content: content,  // Treść ogłoszenia
+        color_choice: document.getElementById(`color_choice_${postId}`).value,
+
+        category: document.getElementById(`category_${postId}`).value,
+        category: document.getElementById(`created_by_${postId}`).value,
+        section: document.getElementById(`section_${postId}`).value,
+
+        id_gallery: document.getElementById(`id_gallery_${postId}`).value,
+
+        wznawiaj: document.getElementById(`wznawiaj_${postId}`).checked,
+        schedule: scheduleDates,  // Harmonogram jako lista dat
+        frequency: {
+            codwatygodnie: document.getElementById(`codwatygodnie_${postId}`).checked,
+            cotydzien: document.getElementById(`cotydzien_${postId}`).checked,
+            coczterydni: document.getElementById(`coczterydni_${postId}`).checked,
+            codwadni: document.getElementById(`codwadni_${postId}`).checked
+        },
+        repeats: {
+            ponow2razy: document.getElementById(`ponow2razy_${postId}`).checked,
+            ponow5razy: document.getElementById(`ponow5razy_${postId}`).checked,
+            ponow8razy: document.getElementById(`ponow8razy_${postId}`).checked,
+            ponow10razy: document.getElementById(`ponow10razy_${postId}`).checked
+        }
+    };
+
+    // Wysyłanie danych AJAX
+    fetch('/fb-groups-sender', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Znajdź element diva na podstawie dynamicznego ID
+            const komunikatDiv = document.getElementById(`komunikat_z_serwera_${postId}`);
+            
+            // Wyświetl komunikat o sukcesie w divie
+            if (komunikatDiv) {
+                komunikatDiv.innerHTML = '<p class="alert alert-info" role="alert">Ogłoszenie zostało wysłane!</p>';
+                // Odśwież stronę po 5 sekundach
+                setTimeout(function() {
+                    window.location.href = '/hidden-campaigns';
+                }, 5000);
+            }
+        } else {
+            // Znajdź element diva na podstawie dynamicznego ID
+            const komunikatDiv = document.getElementById(`komunikat_z_serwera_${postId}`);
+            
+            // Wyświetl komunikat o błędzie w divie
+            if (komunikatDiv) {
+                komunikatDiv.innerHTML = '<p class="alert alert-danger" role="alert">Wystąpił błąd podczas wysyłania ogłoszenia.</p>';
+            }
+        }
+    })
+    .catch((error) => {
+        console.error('Błąd:', error);
+        alert('Wystąpił błąd podczas wysyłania ogłoszenia.');
+    });
+}
 
 function collectAndSendfbgroupsformestateAdsRent(postId) {
     // Zbieramy treść ogłoszenia i usuwamy element z liczbą znaków

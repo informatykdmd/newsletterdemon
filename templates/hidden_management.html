@@ -1,187 +1,69 @@
 {% extends 'base.html' %}
 
-{% block title %}DMD Panel Administratora - Zarządzanie Ogłoszeniami{% endblock %}
+{% block title %}DMD Panel Administratora - Zarządzanie Kampaniami Anonimowymi{% endblock %}
 
 {% block addButton %}
+
     <li style="margin-left: 15px;">
-        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(14, 144, 14) !important;"></i></a>
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(14, 144, 14) !important;"></i></a>
     </li>
 {% endblock %}
-{% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Zarządzanie Ofertami Pracy</a>{% endblock %}
+{% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Zarządzanie Kampaniami Anonimowymi</a>{% endblock %}
 
 {% block tableHeader %}
                         <div>
                             <div class="row klej formatuj-header">
-                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;">
+                                <div class="d-none d-lg-block" style="max-width: 30px;">
                                     #
                                 </div>
-                                <div  class="col-xl-8 col-lg-6 col-sm-8 formatuj-maly-font">
+                                <div  class="col-xl-8 col-lg-6 col-sm-8">
                                     Tytuł
                                 </div>
-                                <div  class="d-none d-lg-block formatuj-maly-font" style="max-width: 200px;">
-                                    Wynagrodzenie
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Autor Kampanii
                                 </div>
-                                <div  class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
-                                    Lokalizacja
+                                <div  class="d-none d-xl-block" style="max-width: 150px;">
+                                    Kategoria
                                 </div>
-                                <div  class="d-none d-lg-block formatuj-maly-font" style="max-width: 150px;">
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
                                     Status
                                 </div>
-                                <div  class="d-none d-xl-block formatuj-maly-font" style="max-width: 250px;">
-                                    Operator
+                                <div  class="d-none d-xl-block" style="max-width: 250px;">
+                                    Aktywność
                                 </div>
-                                <div  class="d-none d-lg-block formatuj-maly-font" style="max-width: 150px;">
-                                    Rozpoczęcie
+                                <div  class="d-none d-lg-block" style="max-width: 150px;">
+                                    Data publikacji
                                 </div>
-                                <div  class="text-end formatuj-maly-font" style="max-width: 80px;">
+                                <div  class="text-end" style="max-width: 80px;">
                                     <i class="bi bi-person-gear"></i> Akcja 
                                 </div>
                             </div>
                         </div>
 {% endblock %}
 {% block tableContent%}
-                        <!-- OFFCANVANSE RIGHT ADD NEW  -->
+                        <!-- OFFCANVANSE RIGHT ADD NEW POST -->
                         <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                             <div class="offcanvas-header">
-                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowej oferty pracy.</h4>
+                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowej kampanii anonimowej.</h4>
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form method="POST" id="jobOffer_9999999" action="{{ url_for('save_career_offer') }}" enctype="multipart/form-data" >
-                                    <!-- Tytuł Stanowisko -->
-                                    <div class="mb-3">
-                                        <label for="title_9999999" class="form-label">Stanowisko</label>
-                                        <input 
-                                                type="text" 
-                                                value=""
-                                                class="form-control bg-dark formatuj-maly-font" 
-                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                id="title_9999999" 
-                                                name="title_9999999" 
-                                                required>
-                                    </div>
-                                    <!-- Data rozpoczęcia -->
-                                    <div class="mb-3">
-                                        <label for="start_9999999" class="bg-dark formatuj-maly-font">Wybierz Datę Rozpoczęcia:</label>
-                                        <input 
-                                            type="date" 
-                                            id="start_9999999" 
-                                            name="startdate_9999999"
-                                            class="dark-mode-data-career" />
-                                    </div>
-                                    <script>
-                                        setCareerDateStart('start_9999999')
-                                    </script>
-
-                                    <!-- Wynagrodzenie -->
-                                    <div class="input-group ">
-                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                <form method="POST" id="hiddencampaigns_9999999" action="{{ url_for('save_hidden_campaigns') }}" enctype="multipart/form-data" >
+                                    <!-- title -->
+                                    <div class="form-floating mb-3">
                                         <input 
                                             type="text" 
                                             value=""
                                             class="form-control bg-dark formatuj-maly-font" 
                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                            id="salary_9999999" 
-                                            name="salary_9999999" 
-                                            placeholder="Wynagrodzenie" 
-                                            aria-label="Wynagrodzenie" />
-                                        
+                                            id="title_9999999" 
+                                            name="title" 
+                                            placeholder="Tytuł Kampanii"
+                                            required />
+                                        <label for="title_9999999">Tytuł Kampanii</label>
                                     </div>
-                                    <div class="no-border formatuj-maly-font fadeIn">
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '5000 zł - 8000 zł brutto');">5000 - 10000 brutto</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '8000 zł - 10000 zł brutto');">8000 - 10000 brutto</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '10000 zł - 12000 zł brutto');">10000 - 12000 brutto</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '100 zł/h brutto');">100 zł/h brutto</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '100 zł/h brutto');">150 zł/h netto</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', 'Do negocjacji');">Do negocjacji</a>
-                                    </div>
-
-                                    <!-- Forma zatrudnienia -->
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-file-earmark-richtext"></i></span>
-                                        <input 
-                                            type="text" 
-                                            value=""
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                            id="employmenttype_9999999" 
-                                            name="employmenttype_9999999" 
-                                            placeholder="Forma zatrudnienia" 
-                                            aria-label="Forma zatrudnienia" />
-                                        
-                                    </div>
-                                    <div class="no-border formatuj-maly-font fadeIn">
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_9999999', 'Umowa o pracę');">Umowa o pracę</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_9999999', 'Umowa zlecenie');">Umowa zlecenie</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_9999999', 'Kontrakt');">Kontrakt</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_9999999', 'Umowa o dzieło');">Umowa o dzieło</a>
-                                    </div>
-                                    
-                                    <!-- Lokalizacja -->
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-geo-alt"></i></span>
-                                        <input 
-                                            type="text" 
-                                            value=""
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                            id="lokalizacja_9999999" 
-                                            name="lokalizacja_9999999" 
-                                            placeholder="Lokalizacja" 
-                                            aria-label="Lokalizacja" />
-                                        
-                                    </div>
-                                    <div class="no-border formatuj-maly-font fadeIn">
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_9999999', 'Stare Babice');">Stare Babice</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_9999999', 'Izabelin');">Izabelin</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_9999999', 'Warszawa');">Warszawa</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_9999999', 'Cała Polska');">Cała Polska</a>
-                                    </div>
-
-                                    <!-- Dział -->
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-clipboard2-pulse-fill"></i></span>
-                                        <input 
-                                            type="text" 
-                                            value=""
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                            id="brand_9999999" 
-                                            name="brand_9999999" 
-                                            placeholder="Dział" 
-                                            aria-label="Dział" />
-                                        
-                                    </div>
-                                    <div class="no-border formatuj-maly-font fadeIn">
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_9999999', 'DMD Budownictwo');">DMD Budownictwo</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_9999999', 'DMD Domy');">DMD Domy</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_9999999', 'DMD Instalacje');">DMD Instalacje</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_9999999', 'DMD EliteHome');">DMD EliteHome</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_9999999', 'DMD Inwestycje');">DMD Inwestycje</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_9999999', 'DMD Development');">DMD Development</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_9999999', 'Księgowości');">Księgowości</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_9999999', 'Biuro');">Biuro</a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_9999999', 'Transportu');">Transportu</a>
-                                    </div>
-                                    
-                                    
-                                    <!-- Email -->
-                                    <div class="input-group mt-2">
-                                        <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-envelope-fill"></i></span>
-                                        <input 
-                                            type="email" 
-                                            value="{{useremail}}"
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                            id="email_9999999" 
-                                            name="email_9999999" 
-                                            placeholder="E-mail" 
-                                            aria-label="E-mail" />
-                                        
-                                    </div>
-                                    
-
-                                    <label class="form-label mt-2">Opis Stanowiska</label>
+                                    <!-- description -->
+                                    <label class="form-label mt-2">Treść ogłoszenia</label>
                                     <div 
                                         id="description_9999999" 
                                         contenteditable="true" 
@@ -189,141 +71,99 @@
                                         style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
                                     </div>
                                     <div class="no-border formatuj-maly-font fadeIn mb-3">
-                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_9999999', 'Jako [nazwa stanowiska] będziesz odpowiedzialny za [główne obowiązki]. Twoje zadania będą obejmować [krótkie przedstawienie codziennych obowiązków]. Praca na tym stanowisku wymaga [kluczowe umiejętności] oraz [pożądane cechy charakteru].');">
+                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_9999999', 'Szukamy [stanowisko]. Oferujemy [warunki zatrudnienia]. Kontakt: [forma kontaktu].');">
                                             Szablon Ogólny
                                         </a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_9999999', 'Na stanowisku [nazwa stanowiska] będziesz odpowiedzialny za realizację [główne obowiązki] zgodnie z harmonogramem oraz wytycznymi. Twoje codzienne zadania obejmą [krótkie przedstawienie codziennych obowiązków] oraz współpracę z innymi działami w celu [cel współpracy]. Idealny kandydat na to stanowisko musi posiadać [kluczowe umiejętności] oraz cechować się [pożądane cechy charakteru], aby efektywnie realizować swoje obowiązki.');">
+                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_9999999', 'Szukamy [stanowisko] z doświadczeniem w branży minimum [ilość lat] lat. Oferujemy [warunki zatrudnienia]. Kontakt: [forma kontaktu].');">
                                             Szablon Zadaniowiec
                                         </a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_9999999', 'Jako [nazwa stanowiska] będziesz odpowiedzialny za kierowanie zespołem [nazwa zespołu lub działu], nadzorowanie [główne obowiązki] oraz zapewnienie efektywnej współpracy między działami. W ramach tej roli będziesz zarządzać [krótkie przedstawienie codziennych obowiązków], a także wspierać rozwój członków zespołu poprzez [aspekt związany z mentoringiem]. Praca na tym stanowisku wymaga [kluczowe umiejętności] oraz [pożądane cechy charakteru], które umożliwią efektywne prowadzenie zespołu.');">
+                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_9999999', 'Szukamy Lidera Zespołu [rodzaj zespołu] z doświadczeniem w zarządzaniu. Oferujemy [warunki zatrudnienia]. Kontakt: [forma kontaktu].');">
                                             Szablon Lider Zespołu
                                         </a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_9999999', 'Na stanowisku [nazwa stanowiska] będziesz ekspertem odpowiedzialnym za [główne obowiązki], koncentrując się na [obszar specjalizacji]. Twoje główne zadania obejmują [krótkie przedstawienie codziennych obowiązków], w tym analizę, wdrażanie i optymalizację procesów. Aby osiągnąć sukces w tej roli, musisz posiadać [kluczowe umiejętności] oraz [pożądane cechy charakteru], które umożliwią skuteczne działanie w środowisku specjalistycznym.');">
+                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_9999999', 'Szukamy Eksperta Specjalistycznego w dziedzinie [dziedzina]. Oferujemy [warunki zatrudnienia]. Kontakt: [forma kontaktu].');">
                                             Szablon Ekspert Specjalistyczny
                                         </a>
-                                    </div>
-
-                                    <label class="form-label mt-2">Opis Wymagań</label>
-                                    <div 
-                                        id="requirementsDescription_9999999" 
-                                        contenteditable="true" 
-                                        class="form-control bg-dark formatuj-maly-font" 
-                                        style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
-                                    </div>
-                                    <div class="no-border formatuj-maly-font fadeIn mb-3">
-                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('requirementsDescription_9999999', 'Wymagane wykształcenie [szkoła] oraz [ilość lat doświadczenia] doświadczenie na stanowisku [stanowisko] w [branża].');">
-                                            Szablon Ogólny
+                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_9999999', 'Szukamy ekipy budowlanej z doświadczeniem. Oferujemy stałe zlecenia, dobre wynagrodzenie. Kontakt: [forma kontaktu].');">
+                                            Szablon Ekipa Budowlana
                                         </a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('requirementsDescription_9999999', 'Poszukujemy kandydatów z wykształceniem [szkoła] oraz minimum [ilość lat doświadczenia] doświadczeniem w pracy na stanowisku [stanowisko]. Doświadczenie w [branża] będzie dodatkowym atutem.');">
-                                            Szablon Specjalistyczny
-                                        </a>
-                                        <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('requirementsDescription_9999999', 'Wymagamy wykształcenia wyższego w dziedzinie [dziedzina] oraz [ilość lat doświadczenia] doświadczenia w zarządzaniu zespołem na stanowisku [stanowisko]. Doświadczenie w sektorze [branża] jest niezbędne.');">
-                                            Szablon Menedżerski
-                                        </a>                                        
                                     </div>
-
-                                    <!-- Additional List wymagania-->
+                                    
+                                    <!-- category -->
                                     <div class="mb-3">
-                                        <label for="additionaRequirementsList_9999999" class="form-label">Lista wymagań</label>
-                                        <div id="list-container_9999999" class="no-border">
-                                            <!-- Tutaj będą dynamicznie dodawane elementy listy -->
-                                        </div>
-                                        <div class="formatuj-right formatuj-margin">
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="addListItem(
-                                                '9999999', 
-                                                elementName='dynamicRequirementsList_',
-                                                spec='input', 
-                                                classes='form-control bg-dark formatuj-maly-font',
-                                                idName='additionaRequirementsList_',
-                                                rowsAmount='4',
-                                                styleColor='#c2c2c2',
-                                                styleBorders='#6a6a6a solid 1px',
-                                                req=true,
-                                                itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
-                                                extraID='list-container_',
-                                                removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
-                                                removeButtonTextContent='-' 
-                                                )"><i class="bi bi-plus-square-dotted"></i> Dodaj</button>
-                                        </div>
+                                        <select 
+                                            class="form-select dark-mode mb-2 mt-2" 
+                                            style="max-height: 30px; font-size: 12px;" 
+                                            id="category_9999999" 
+                                            name="category"
+                                            required>
+
+                                            <option value="">Kategoria grupy</option>
+                                            <option value="budowy">Budowy</option>
+                                            <option value="murarze">Murarze</option>
+                                            <option value="domy">Budowa domów</option>
+                                            <option value="ciesle">Cieśle</option>
+                                            <option value="szalunkowcy">Szalunkowcy</option>
+                                            <option value="dekarze">Dekarze</option>
+                                            <option value="ocieplenia">Ocieplenia</option>
+                                            <option value="ekipy">Ekipy budowlane</option>
+                                            <option value="praca">Praca</option>
+                                            <option value="zagranica">Praca za granicą</option>
+                                            <option value="nieruchomosci">Nieruchomości</option>
+                                            <option value="inne">Inne</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- created_by -->
+                                    <div class="mb-3">
+                                        <select 
+                                            class="form-select dark-mode mb-2 mt-2" 
+                                            style="max-height: 30px; font-size: 12px;" 
+                                            id="created_by_9999999" 
+                                            name="created_by"
+                                            required>
+
+                                            <option value="">Wybierz profil FB</option>
+                                            <option value="dmddomyy">DMD Domy</option>
+                                            <option value="fredgraf">Fred Graf</option>
+                                        </select>
+                                    </div>
+                                    
+
+                                    <!-- moduł dropboxa -->
+                                    <label class="form-label">Zdjęcia do ogłoszenia</label>
+                                    <div id="9999999-drop-area" class="drop-area">
+                                        <h3>Przeciągnij (max 10) zdjęcia tutaj</h3>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label ms-5">Pliki do wysłania:</label>
+                                        <ul id="9999999-fileList" class="list-group ms-5 me-5"></ul>
                                     </div>
                                     <script>
-                                        addListItem(
-                                            '9999999', 
-                                            elementName='dynamicRequirementsList_',
-                                            spec='input', 
-                                            classes='form-control bg-dark formatuj-maly-font',
-                                            idName='additionaRequirementsList_',
-                                            rowsAmount='4',
-                                            styleColor='#c2c2c2',
-                                            styleBorders='#6a6a6a solid 1px',
-                                            req=true,
-                                            itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
-                                            extraID='list-container_',
-                                            removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
-                                            removeButtonTextContent='-' 
-                                        );
+                                        document.addEventListener('DOMContentLoaded', () => {
+                                            const myFotoDropBox = new FotoDropBox('9999999');
+                                        });
                                     </script>
-
-                                    <!-- Additional List benefitów-->
-                                    <div class="mb-3">
-                                        <label for="additionaBenefitsList_9999999" class="form-label">Lista benefitów</label>
-                                        <div id="list-benefits-container_9999999" class="no-border">
-                                            <!-- Tutaj będą dynamicznie dodawane elementy listy -->
-                                        </div>
-                                        <div class="formatuj-right formatuj-margin">
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="addListItem(
-                                                '9999999', 
-                                                elementName='dynamicBenefitsList_',
-                                                spec='input', 
-                                                classes='form-control bg-dark formatuj-maly-font',
-                                                idName='additionaBenefitsList_',
-                                                rowsAmount='4',
-                                                styleColor='#c2c2c2',
-                                                styleBorders='#6a6a6a solid 1px',
-                                                req=true,
-                                                itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
-                                                extraID='list-benefits-container_',
-                                                removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
-                                                removeButtonTextContent='-' 
-                                                )"><i class="bi bi-plus-square-dotted"></i> Dodaj</button>
-                                        </div>
-                                    </div>
-                                    <script>
-                                        addListItem(
-                                            '9999999', 
-                                            elementName='dynamicBenefitsList_',
-                                            spec='input', 
-                                            classes='form-control bg-dark formatuj-maly-font',
-                                            idName='additionaBenefitsList_',
-                                            rowsAmount='4',
-                                            styleColor='#c2c2c2',
-                                            styleBorders='#6a6a6a solid 1px',
-                                            req=true,
-                                            itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
-                                            extraID='list-benefits-container_',
-                                            removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
-                                            removeButtonTextContent='-' 
-                                        );
-                                    </script>
-                                    
-                                    
                                     <input type="hidden" name="OfferID" id="OfferID_9999999" value="9999999"/>
+                                    
+                                    <input type="hidden" name="author" id="author_9999999" value="{{username}}"/>
+                                    <input type="hidden" name="target" id="target_9999999" value="anonymous"/>
                                     <!-- Przycisk Zapisz artykuł -->
                                     <button 
                                         type="button" 
                                         class="btn btn-success btn-sm" 
                                         style="max-height: 30px; font-size: 12px;" 
-                                        onclick="prepareAndSubmitCareerForm('9999999')"
+                                        onclick="prepareAndSubmitHiddenFBform('9999999', false)"
                                     >
-                                        Dodaj ogłoszenie o pracę
+                                        Dodaj kampanię anonimową
                                     </button>
                                 </form>
                             </div>
                         </div>
 
                         
-                        {% for post_data in ads_career %}
-                            {% set post_id  = post_data['id'] %}
+                        {% for post_data in ads_hidden_campaigns %}
+                            {% set post_id  = post_data['ID'] %}
                             <!-- linia contentu tabeli ciemna-->
                             <div>
                                 <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
@@ -343,17 +183,17 @@
                                         </a>
                                         
                                     </div>
-                                    <div  class="d-none d-lg-block"  style="max-width: 200px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <div  class="d-none d-lg-block"  style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="display-6 formatuj-maly-font">{{post_data['salary']}} PLN</span>
+                                            <span class="display-6 formatuj-maly-font">{{post_data['author']}}</span>
                                         </a>
                                     </div>
                                     <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="display-6 formatuj-maly-font">{{post_data['location'][:12]}}</span>
+                                            <span class="display-6 formatuj-maly-font">{{post_data['category'][:12]}}</span>
                                         </a>
                                     </div>
-                                    <div  class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                             {% if post_data['status'] == 1 %}
                                                 <span class="text-warning">Aktywna</span>
@@ -363,24 +203,53 @@
                                         </a>
                                     </div>
                                     <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {% if post_data['contact_email'] != '' %}
-                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="text-secondary formatuj-maly-font">{{post_data['contact_email']}}</span>
-                                        </a>
-                                        {% else %}
-                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="text-secondary">Brak</span>
-                                        </a>
-                                        {% endif %}
+                                        <div class="row">
+                                            <!-- FaceBook Groups -->
+                                            {% set ns = namespace(last_action_index=None, last_action_status=None, last_action_planned=None) %}
+
+                                            <!-- Szukanie ostatniej wykonanej akcji i zliczanie zaplanowanych akcji -->
+                                            {% for i in range(11) %}
+                                                {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
+                                                {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
+                                                                                            
+                                                <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
+                                                {% if schedule_datetime is not none and schedule_datetime != '' %}
+                                                    {% set ns.last_action_planned = i %}
+                                                {% endif %}
+
+                                                <!-- Sprawdzenie, czy akcja ma status różny od None i jest wykonana -->
+                                                {% if schedule_status is not none and schedule_status != '' %}
+                                                    {% set ns.last_action_index = i %}
+                                                    {% set ns.last_action_status = schedule_status %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
+                                            {% if ns.last_action_status is not none and ns.last_action_status != '' %}
+                                                <div class="col-1 me-1">
+                                                    {% if ns.last_action_status == 1 %}
+                                                        {% if ns.last_action_index < ns.last_action_planned %}
+                                                            <div class="ico-facebookgroups-active"></div>
+                                                            {% else %}
+                                                            <div class="ico-facebookgroups-warning"></div>
+                                                        {% endif %}
+                                                    {% elif ns.last_action_status == 2 %}
+                                                        <div class="ico-facebookgroups-error"></div>
+                                                    {% elif ns.last_action_status == 4 %}
+                                                        <div class="ico-facebookgroups-inprogress"></div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                     <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="display-6 formatuj-maly-font">{{post_data['start_date']}}</span>
+                                            <span class="display-6 formatuj-maly-font">{{post_data['data']}}</span>
                                         </a>
                                     </div>
                                     <div class="text-end" style="max-width: 80px;">
                                         
-                                        <form method="POST" id="remove_rent_offer_{{post_id}}" action="{{ url_for('remove_career_offer') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz usunąć ofertę pracy?');">
+                                        <form method="POST" id="remove_hidden_campaigns_{{post_id}}" action="{{ url_for('remove_hidden_campaigns') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Przed usunięciem kampanii upewnij się, że nie jest zaplanowana! Czy na pewno chcesz usunąć ofertę?');">
 
                                             <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
 
@@ -388,7 +257,6 @@
                                             <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/>
                                             <input type="hidden" name="PostID" id="PostID_{{post_id}}" value="{{post_id}}"/>
                                             <button type="submit" class="custom-icon-button"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></button>
-                                            <!-- <a href="#"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></a> -->
                                         </form>
                                     </div>
                                 </div>
@@ -396,293 +264,125 @@
                             <!-- offcanvanse left -->
                             <div class="offcanvas offcanvas-start bg-dark oc-width" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling_{{post_id}}" aria-labelledby="offcanvasScrollingLabel">
                                 <div class="offcanvas-header">
-                                <h4 class="offcanvas-title" id="offcanvasScrollingLabel">Edycja Ogłoszenia Najmu id: {{post_id}}</h4>
+                                <h4 class="offcanvas-title" id="offcanvasScrollingLabel">Edycja Kampanii Anonimowej o id: {{post_id}}</h4>
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                                 </div>
                                 <div class="offcanvas-body formatuj-maly-font">
                                     <div class="tylko-klej">
                                         <div style="color:#6a6a6a;">
-                                            <form method="POST" id="jobOffer_{{post_id}}" action="{{ url_for('save_career_offer') }}" enctype="multipart/form-data" >
-                                                <!-- Tytuł Stanowisko -->
-                                                <div class="mb-3">
-                                                    <label for="title_{{post_id}}" class="form-label">Stanowisko</label>
-                                                    <input 
-                                                            type="text" 
-                                                            value="{{post_data['title']}}"
-                                                            class="form-control bg-dark formatuj-maly-font" 
-                                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                            id="title_{{post_id}}" 
-                                                            name="title_{{post_id}}" 
-                                                            required>
-                                                </div>
-                                                <!-- Data rozpoczęcia -->
-                                                <div class="mb-3">
-                                                    <label for="start_{{post_id}}" class="bg-dark formatuj-maly-font">Wybierz Datę Rozpoczęcia:</label>
-                                                    <input 
-                                                        type="date" 
-                                                        id="start_{{post_id}}" 
-                                                        name="startdate_{{post_id}}"
-                                                        class="dark-mode-data-career" 
-                                                        value=""
-                                                        />
-                                                </div>
-                                                <script>
-                                                    setCareerDateStart('start_{{post_id}}', false, "{{post_data['start_data_string']}}")
-                                                </script>
-            
-                                                <!-- Wynagrodzenie -->
-                                                <div class="input-group ">
-                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-cash"></i></span>
+                                            <form method="POST" id="hiddencampaigns_{{post_id}}" action="{{ url_for('save_hidden_campaigns') }}" enctype="multipart/form-data" >
+                                                <!-- title -->
+                                                <div class="form-floating mb-3">
                                                     <input 
                                                         type="text" 
-                                                        value="{{post_data['salary']}}"
+                                                        value="{{post_data['title']}}"
                                                         class="form-control bg-dark formatuj-maly-font" 
                                                         style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                        id="salary_{{post_id}}" 
-                                                        name="salary_{{post_id}}" 
-                                                        placeholder="Wynagrodzenie" 
-                                                        aria-label="Wynagrodzenie" />
-                                                    
+                                                        id="title_{{post_id}}" 
+                                                        name="title" 
+                                                        placeholder="Tytuł Kampanii"
+                                                        required />
+                                                    <label for="title_{{post_id}}">Tytuł Kampanii</label>
                                                 </div>
-                                                <div class="no-border formatuj-maly-font fadeIn">
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '5000 zł - 8000 zł brutto');">5000 - 10000 brutto</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '8000 zł - 10000 zł brutto');">8000 - 10000 brutto</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '10000 zł - 12000 zł brutto');">10000 - 12000 brutto</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '100 zł/h brutto');">100 zł/h brutto</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', '100 zł/h brutto');">150 zł/h netto</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_{{post_id}}', 'Do negocjacji');">Do negocjacji</a>
-                                                </div>
-            
-                                                <!-- Forma zatrudnienia -->
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-file-earmark-richtext"></i></span>
-                                                    <input 
-                                                        type="text" 
-                                                        value="{{post_data['employment_type']}}"
-                                                        class="form-control bg-dark formatuj-maly-font" 
-                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                        id="employmenttype_{{post_id}}" 
-                                                        name="employmenttype_{{post_id}}" 
-                                                        placeholder="Forma zatrudnienia" 
-                                                        aria-label="Forma zatrudnienia" />
-                                                    
-                                                </div>
-                                                <div class="no-border formatuj-maly-font fadeIn">
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_{{post_id}}', 'Umowa o pracę');">Umowa o pracę</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_{{post_id}}', 'Umowa zlecenie');">Umowa zlecenie</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_{{post_id}}', 'Kontrakt');">Kontrakt</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('employmenttype_{{post_id}}', 'Umowa o dzieło');">Umowa o dzieło</a>
-                                                </div>
-                                                
-                                                <!-- Lokalizacja -->
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-geo-alt"></i></span>
-                                                    <input 
-                                                        type="text" 
-                                                        value="{{post_data['location']}}"
-                                                        class="form-control bg-dark formatuj-maly-font" 
-                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                        id="lokalizacja_{{post_id}}" 
-                                                        name="lokalizacja_{{post_id}}" 
-                                                        placeholder="Lokalizacja" 
-                                                        aria-label="Lokalizacja" />
-                                                    
-                                                </div>
-                                                <div class="no-border formatuj-maly-font fadeIn">
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_{{post_id}}', 'Stare Babice');">Stare Babice</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_{{post_id}}', 'Izabelin');">Izabelin</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_{{post_id}}', 'Warszawa');">Warszawa</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('lokalizacja_{{post_id}}', 'Cała Polska');">Cała Polska</a>
-                                                </div>
-            
-                                                <!-- Dział -->
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-clipboard2-pulse-fill"></i></span>
-                                                    <input 
-                                                        type="text" 
-                                                        value="{{post_data['brand']}}"
-                                                        class="form-control bg-dark formatuj-maly-font" 
-                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                        id="brand_{{post_id}}" 
-                                                        name="brand_{{post_id}}" 
-                                                        placeholder="Dział" 
-                                                        aria-label="Dział" />
-                                                    
-                                                </div>
-                                                <div class="no-border formatuj-maly-font fadeIn">
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Budownictwo');">DMD Budownictwo</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Domy');">DMD Domy</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Instalacje');">DMD Instalacje</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD EliteHome');">DMD EliteHome</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Inwestycje');">DMD Inwestycje</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'DMD Development');">DMD Development</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'Księgowości');">Księgowości</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'Biuro');">Biuro</a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="fillInput('brand_{{post_id}}', 'Transportu');">Transportu</a>
-                                                </div>
-                                                
-                                                
-                                                <!-- Email -->
-                                                <div class="input-group mt-2">
-                                                    <span class="input-group-text bg-dark" style="color:#c2c2c2; border:#6a6a6a solid 1px;"><i class="bi bi-envelope-fill"></i></span>
-                                                    <input 
-                                                        type="email" 
-                                                        value="{{post_data['contact_email']}}"
-                                                        class="form-control bg-dark formatuj-maly-font" 
-                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                        id="email_{{post_id}}" 
-                                                        name="email_{{post_id}}" 
-                                                        placeholder="E-mail" 
-                                                        aria-label="E-mail" />
-                                                    
-                                                </div>
-                                                
-            
-                                                <label class="form-label mt-2">Opis Stanowiska</label>
+                                                <!-- description -->
+                                                <label class="form-label mt-2">Treść ogłoszenia</label>
                                                 <div 
                                                     id="description_{{post_id}}" 
                                                     contenteditable="true" 
                                                     class="form-control bg-dark formatuj-maly-font" 
-                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
-                                                    {{post_data['description']}}
-                                                </div>
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">{{post_data['description']}}</div>
                                                 <div class="no-border formatuj-maly-font fadeIn mb-3">
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Jako [nazwa stanowiska] będziesz odpowiedzialny za [główne obowiązki]. Twoje zadania będą obejmować [krótkie przedstawienie codziennych obowiązków]. Praca na tym stanowisku wymaga [kluczowe umiejętności] oraz [pożądane cechy charakteru].');">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Szukamy [stanowisko]. Oferujemy [warunki zatrudnienia]. Kontakt: [forma kontaktu].');">
                                                         Szablon Ogólny
                                                     </a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Na stanowisku [nazwa stanowiska] będziesz odpowiedzialny za realizację [główne obowiązki] zgodnie z harmonogramem oraz wytycznymi. Twoje codzienne zadania obejmą [krótkie przedstawienie codziennych obowiązków] oraz współpracę z innymi działami w celu [cel współpracy]. Idealny kandydat na to stanowisko musi posiadać [kluczowe umiejętności] oraz cechować się [pożądane cechy charakteru], aby efektywnie realizować swoje obowiązki.');">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Szukamy [stanowisko] z doświadczeniem w branży minimum [ilość lat] lat. Oferujemy [warunki zatrudnienia]. Kontakt: [forma kontaktu].');">
                                                         Szablon Zadaniowiec
                                                     </a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Jako [nazwa stanowiska] będziesz odpowiedzialny za kierowanie zespołem [nazwa zespołu lub działu], nadzorowanie [główne obowiązki] oraz zapewnienie efektywnej współpracy między działami. W ramach tej roli będziesz zarządzać [krótkie przedstawienie codziennych obowiązków], a także wspierać rozwój członków zespołu poprzez [aspekt związany z mentoringiem]. Praca na tym stanowisku wymaga [kluczowe umiejętności] oraz [pożądane cechy charakteru], które umożliwią efektywne prowadzenie zespołu.');">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Szukamy Lidera Zespołu [rodzaj zespołu] z doświadczeniem w zarządzaniu. Oferujemy [warunki zatrudnienia]. Kontakt: [forma kontaktu].');">
                                                         Szablon Lider Zespołu
                                                     </a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Na stanowisku [nazwa stanowiska] będziesz ekspertem odpowiedzialnym za [główne obowiązki], koncentrując się na [obszar specjalizacji]. Twoje główne zadania obejmują [krótkie przedstawienie codziennych obowiązków], w tym analizę, wdrażanie i optymalizację procesów. Aby osiągnąć sukces w tej roli, musisz posiadać [kluczowe umiejętności] oraz [pożądane cechy charakteru], które umożliwią skuteczne działanie w środowisku specjalistycznym.');">
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Szukamy Eksperta Specjalistycznego w dziedzinie [dziedzina]. Oferujemy [warunki zatrudnienia]. Kontakt: [forma kontaktu].');">
                                                         Szablon Ekspert Specjalistyczny
                                                     </a>
-                                                </div>
-            
-                                                <label class="form-label mt-2">Opis Wymagań</label>
-                                                <div 
-                                                    id="requirementsDescription_{{post_id}}" 
-                                                    contenteditable="true" 
-                                                    class="form-control bg-dark formatuj-maly-font" 
-                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
-                                                    {{post_data['requirements_description']}}
-                                                </div>
-                                                <div class="no-border formatuj-maly-font fadeIn mb-3">
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('requirementsDescription_{{post_id}}', 'Wymagane wykształcenie [szkoła] oraz [ilość lat doświadczenia] doświadczenie na stanowisku [stanowisko] w [branża].');">
-                                                        Szablon Ogólny
+                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('description_{{post_id}}', 'Szukamy ekipy budowlanej z doświadczeniem. Oferujemy stałe zlecenia, dobre wynagrodzenie. Kontakt: [forma kontaktu].');">
+                                                        Szablon Ekipa Budowlana
                                                     </a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('requirementsDescription_{{post_id}}', 'Poszukujemy kandydatów z wykształceniem [szkoła] oraz minimum [ilość lat doświadczenia] doświadczeniem w pracy na stanowisku [stanowisko]. Doświadczenie w [branża] będzie dodatkowym atutem.');">
-                                                        Szablon Specjalistyczny
-                                                    </a>
-                                                    <a class="ms-2" href="javascript:void(0);" onClick="applyTemplate('requirementsDescription_{{post_id}}', 'Wymagamy wykształcenia wyższego w dziedzinie [dziedzina] oraz [ilość lat doświadczenia] doświadczenia w zarządzaniu zespołem na stanowisku [stanowisko]. Doświadczenie w sektorze [branża] jest niezbędne.');">
-                                                        Szablon Menedżerski
-                                                    </a>                                        
                                                 </div>
-            
-                                                <!-- Additional List wymagania-->
-                                                <div class="mb-3">
-                                                    <label for="additionaRequirementsList_{{post_id}}" class="form-label">Lista wymagań</label>
-                                                    <div id="list-container_{{post_id}}" class="no-border">
-                                                        <!-- Tutaj będą dynamicznie dodawane elementy listy -->
-                                                    </div>
-                                                    <div class="formatuj-right formatuj-margin">
-                                                        <button type="button" class="btn btn-warning btn-sm" onclick="addListItem(
-                                                            '{{post_id}}', 
-                                                            elementName='dynamicRequirementsList_',
-                                                            spec='input', 
-                                                            classes='form-control bg-dark formatuj-maly-font',
-                                                            idName='additionaRequirementsList_',
-                                                            rowsAmount='4',
-                                                            styleColor='#c2c2c2',
-                                                            styleBorders='#6a6a6a solid 1px',
-                                                            req=true,
-                                                            itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
-                                                            extraID='list-container_',
-                                                            removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
-                                                            removeButtonTextContent='-' 
-                                                            )"><i class="bi bi-plus-square-dotted"></i> Dodaj</button>
-                                                    </div>
-                                                </div>
-                                                <script>
-                                                    var additionalRequirementsList = "{{post_data['requirements_string']}}";
-                                                    var idAddionalRequirementsList = '{{post_id}}';
-                                                    addListFields(
-                                                                    additionalRequirementsList, 
-                                                                    idAddionalRequirementsList, 
-                                                                    "#splx#", 
-                                                                    "dynamicRequirementsList_",
-                                                                    'input', 
-                                                                    "form-control bg-dark formatuj-maly-font",
-                                                                    'additionaRequirementsList_', 
-                                                                    '4',
-                                                                    "#c2c2c2",
-                                                                    "#6a6a6a solid 1px",
-                                                                    true,
-                                                                    "no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej",
-                                                                    "list-container_",
-                                                                    "btn btn-outline-danger formatuj-maly-font formatuj-margin",
-                                                                    "-"
-                                                                    );
-                                                </script>
-            
-                                                <!-- Additional List benefitów-->
-                                                <div class="mb-3">
-                                                    <label for="additionaBenefitsList_{{post_id}}" class="form-label">Lista benefitów</label>
-                                                    <div id="list-benefits-container_{{post_id}}" class="no-border">
-                                                        <!-- Tutaj będą dynamicznie dodawane elementy listy -->
-                                                    </div>
-                                                    <div class="formatuj-right formatuj-margin">
-                                                        <button type="button" class="btn btn-warning btn-sm" onclick="addListItem(
-                                                            '{{post_id}}', 
-                                                            elementName='dynamicBenefitsList_',
-                                                            spec='input', 
-                                                            classes='form-control bg-dark formatuj-maly-font',
-                                                            idName='additionaBenefitsList_',
-                                                            rowsAmount='4',
-                                                            styleColor='#c2c2c2',
-                                                            styleBorders='#6a6a6a solid 1px',
-                                                            req=true,
-                                                            itemStyles='no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej',
-                                                            extraID='list-benefits-container_',
-                                                            removeButtonClass='btn btn-outline-danger formatuj-maly-font formatuj-margin',
-                                                            removeButtonTextContent='-' 
-                                                            )"><i class="bi bi-plus-square-dotted"></i> Dodaj</button>
-                                                    </div>
-                                                </div>
-                                                <script>
-                                                    var additionalBenefitsList = "{{post_data['benefits_string']}}";
-                                                    var idAddionalBenefitsList = '{{post_id}}';
-                                                    addListFields(
-                                                        additionalBenefitsList, 
-                                                        idAddionalBenefitsList, 
-                                                        "#splx#", 
-                                                        "dynamicBenefitsList_",
-                                                        'input', 
-                                                        "form-control bg-dark formatuj-maly-font",
-                                                        'additionaBenefitsList_', 
-                                                        '4',
-                                                        "#c2c2c2",
-                                                        "#6a6a6a solid 1px",
-                                                        true,
-                                                        "no-border formatuj-margin form-control bg-dark formatuj-right tylko-klej",
-                                                        "list-benefits-container_",
-                                                        "btn btn-outline-danger formatuj-maly-font formatuj-margin",
-                                                        "-"
-                                                        );
-                                                </script>
                                                 
+                                                <!-- category -->
+                                                <div class="mb-3">
+                                                    <select 
+                                                        class="form-select dark-mode mb-2 mt-2" 
+                                                        style="max-height: 30px; font-size: 12px;" 
+                                                        id="category_{{post_id}}" 
+                                                        name="category"
+                                                        required>
+
+                                                        <option value="">Kategoria grupy</option>
+                                                        <option value="praca" {{ 'selected' if post_data['category'] == 'praca' else '' }}>Praca</option>
+                                                        <option value="budowy" {{ 'selected' if post_data['category'] == 'budowy' else '' }}>Budowy</option>
+                                                        <option value="murarze" {{ 'selected' if post_data['category'] == 'murarze' else '' }}>Murarze</option>
+                                                        <option value="domy" {{ 'selected' if post_data['category'] == 'domy' else '' }}>Budowa domów</option>
+                                                        <option value="ciesle" {{ 'selected' if post_data['category'] == 'ciesle' else '' }}>Cieśle</option>
+                                                        <option value="szalunkowcy" {{ 'selected' if post_data['category'] == 'szalunkowcy' else '' }}>Szalunkowcy</option>
+                                                        <option value="dekarze" {{ 'selected' if post_data['category'] == 'dekarze' else '' }}>Dekarze</option>
+                                                        <option value="ocieplenia" {{ 'selected' if post_data['category'] == 'ocieplenia' else '' }}>Ocieplenia</option>
+                                                        <option value="ekipy" {{ 'selected' if post_data['category'] == 'ekipy' else '' }}>Ekipy budowlane</option>
+                                                        <option value="zagranica" {{ 'selected' if post_data['category'] == 'zagranica' else '' }}>Praca za granicą</option>
+                                                        <option value="inne" {{ 'selected' if post_data['category'] == 'inne' else '' }}>Inne</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <!-- created_by -->
+                                                <div class="mb-3">
+                                                    <select 
+                                                        class="form-select dark-mode mb-2 mt-2" 
+                                                        style="max-height: 30px; font-size: 12px;" 
+                                                        id="created_by_{{post_id}}" 
+                                                        name="created_by"
+                                                        required>
+
+                                                        <option value="">Wybierz profil FB</option>
+                                                        <option value="dmddomyy" {{ 'selected' if post_data['created_by'] == 'dmddomyy' else '' }}>DMD Domy</option>
+                                                        <option value="fredgraf" {{ 'selected' if post_data['created_by'] == 'fredgraf' else '' }}>Fred Graf</option>
+                                                    </select>
+                                                </div>
+            
+                                                <!-- moduł dropboxa -->
+                                                <label class="form-label">Zdjęcia Nieruchomości</label>
+                                                <div id="{{post_id}}-drop-area" class="drop-area">
+                                                    <h3>Przeciągnij (max 10) zdjęcia tutaj</h3>
+                                                </div>
+            
+                                                <div class="mb-3">
+                                                    <label class="form-label ms-5">Pliki do wysłania:</label>
+                                                    <ul id="{{post_id}}-fileList" class="list-group ms-5 me-5"></ul>
+                                                </div>
+                                                <script>
+                                                    document.addEventListener('DOMContentLoaded', () => {
+                                                        const myFotoDropBox = new FotoDropBox('{{post_id}}', 
+                                                        [
+                                                            //{% for foto in post_data['photos'] %}
+                                                            "{{foto}}",
+                                                            //{% endfor %}
+                                                        ]
+                                                        );
+                                                    });
+                                                </script>
                                                 
                                                 <input type="hidden" name="OfferID" id="OfferID_{{post_id}}" value="{{post_id}}"/>
+                                                
+                                                <input type="hidden" name="author" id="author_{{post_id}}" value="{{username}}"/>
+                                                <input type="hidden" name="target" id="target_{{post_id}}" value="{{post_data['target']}}"/>
+
                                                 <!-- Przycisk Zapisz artykuł -->
                                                 <button 
                                                     type="button" 
                                                     class="btn btn-success btn-sm" 
                                                     style="max-height: 30px; font-size: 12px;" 
-                                                    onclick="prepareAndSubmitCareerForm('{{post_id}}')"
+                                                    onclick="prepareAndSubmitHiddenFBform('{{post_id}}', true)"
                                                 >
-                                                    Zapisz ogłoszenie pracy
+                                                    Zapisz kampanię anonimową
                                                 </button>
                                             </form>
                                         </div>
@@ -696,18 +396,20 @@
 
                                 <div class="row">
                                     <div class="col-lg-5 col-sm-12">
-                                        <h1 class="career-properties-h1">{{post_data['title']}}</h1>
+                                        {% if post_data['photos'] %}
+                                        <img src="{{post_data['photos'][0]}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
+                                            {% if len(post_data['photos']) > 1 %}
+                                            <div class="row row-cols-4">
+                                                {% for foto in post_data['photos'][1:] %}
+                                                <div class="col mb-1">
+                                                    <img src="{{foto}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark" >
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                        {% endif %}
                                         <div class="career-properties">
-                                            <p><i class="bi bi-cash"></i> <span>Wynagrodzenie:</span> {{post_data['salary']}}</p>
-                                            <p><i class="bi bi-calendar-check"></i> <span>Rozpoczęcie pracy:</span> {{post_data['start_date']}}</p>
-                                            <p><i class="bi bi-geo-alt"></i> <span>Lokalizacja:</span> {{post_data['location']}}</p>
-                                            <p><i class="bi bi-list-check"></i> <span>Forma zatrudnienia:</span> {{post_data['employment_type']}}</p>
-                                            <p><i class="bi bi-file-earmark-arrow-down"></i> <span>Ogłoszenie z:</span> {{post_data['data']}}</p>
-                                            <p><i class="bi bi-building"></i> <span>Dział:</span> {{post_data['brand']}}</p>
-                                            <p><i class="bi bi-at"></i> <span>E-mail kontaktowy:</span> {{post_data['contact_email']}}</p>
-                                        </div>
-                                        <div class="career-properties">
-                                            <form action="{{ url_for('update_career_offer_status') }}" method="POST" enctype="multipart/form-data">
+                                            <form action="{{ url_for('update_hidden_campaigns_status') }}" method="POST" enctype="multipart/form-data">
                                                 <input type="hidden" name="PostID" value="{{post_id}}" />
                                                 {% if post_data['status'] == 1 %}
                                                     <div class="col me-1 mb-1">
@@ -723,37 +425,16 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-sm-12 career-properties-other">
-                                        <h5>Opis Stanowiska</h5>
+                                    <div class="col-lg-7 col-sm-12 career-properties-other">
+                                        <h5>Opis Kampanii</h5>
                                         <p>{{post_data['description']}}</p>
-
+                                        <p>Autor: {{post_data['author']}}</p>
+                                        <p>Kategoria: {{post_data['category']}}</p>
                                     </div>
-                                    <div class="col-lg-3 col-sm-12 career-properties-other">
-                                        <h5>Opis Wymagań</h5>
-                                        <p>{{post_data['requirements_description']}}</p>
-
-                                        <!-- lista wymagań -->
-                                         <h5>Lista Wymagań</h5>
-                                         <ul>
-                                            {% for requirement in post_data['requirements'] %}
-                                                <li>{{requirement}}</li>
-                                            {% endfor %}
-                                         </ul>
-
-                                        <h5>Benefity</h5>
-                                        <ul>
-                                            {% for benefit in post_data['benefits'] %}
-                                                <li>{{benefit}}</li>
-                                            {% endfor %}
-                                         </ul>
-                                        
-                                    </div>
-                                    
-                                    
                                 </div>
                                 {% if post_data['status'] != 0 %}
                                     {% if post_data['fbgroups']['id'] == None %}
-                                    <form action="" id="form_karieraFB_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                    <form action="" id="form_hiddenFB_{{post_id}}" method="POST" enctype="multipart/form-data">
                                         <div class="row">
                                             <div class="col-lg-5 col-sm-12">
                                                 <div class="mb-2 mt-2">
@@ -762,7 +443,7 @@
                                                 <div 
                                                     id="fbgroups_requirementsDescription_{{post_id}}" 
                                                     class="fbgroups-requirements-description content-editable formatuj-maly-font" 
-                                                    contenteditable="true">{{post_data['brand']}} poszukuje {{post_data['title']}}. Kontakt: {{post_data['contact_email']}}<div id="char_count_{{post_id}}" class="char-count"></div></div>
+                                                    contenteditable="true">{{post_data['description']}}<div id="char_count_{{post_id}}" class="char-count"></div></div>
 
                                                 <!-- Ukryte pole do przechowywania wartości wybranego koloru -->
                                                 <input type="hidden" id="color_choice_{{post_id}}" name="color_choice" value="0">
@@ -814,7 +495,7 @@
                                                 <!-- Skrypt do uruchomienia dla każdego posta -->
                                                 <script>
                                                     document.addEventListener('DOMContentLoaded', function () {
-                                                        new CharCounter('{{post_id}}');
+                                                        new CharCounterCheckGallery('{{post_id}}');
                                                         }
                                                     );
                                                 </script>
@@ -831,10 +512,9 @@
 
                                                     <div class="row row-cols-auto mb-3">
                                                         <div class="col">
-                                                                <input type="hidden" id="category_{{post_id}}" name="category" value="praca" />
-                                                                <input type="hidden" id="created_by_{{post_id}}" name="created_by" value="dmddomy" />
-                                                                <input type="hidden" id="section_{{post_id}}" name="section" value="career" />
-                                                                <input type="hidden" id="id_gallery_{{post_id}}" name="id_gallery" value="None" />
+                                                                <input type="hidden" id="category_{{post_id}}" name="category" value="{{post_data['category']}}" />
+                                                                <input type="hidden" id="section_{{post_id}}" name="section" value="hiddeCampaigns" />
+                                                                <input type="hidden" id="id_gallery_{{post_id}}" name="id_gallery" value="{{post_data['id_gallery']}}" />
 
                                                                 <div class="col me-1 mb-1">
                                                                     
@@ -930,7 +610,7 @@
                                                                     </div>
 
 
-                                                                    <button type="button" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick="collectAndSendfbgroupsform('{{post_id}}')"> 
+                                                                    <button type="button" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick="collectAndSendHiddenFBform('{{post_id}}')"> 
                                                                         Publikuj grupach
                                                                     </button>
                                                                     <div class="form-message mt-3" id="komunikat_z_serwera_{{post_id}}"></div>
@@ -941,7 +621,7 @@
                                                     <script>
                                                         document.addEventListener('DOMContentLoaded', function(){
                                                             checkboxControlDisable(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'wznawiaj_{{post_id}}', 
                                                                 [
                                                                     'codwatygodnie_{{post_id}}', 
@@ -956,7 +636,7 @@
                                                             );
 
                                                             checkboxControlEnabled(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'wznawiaj_{{post_id}}', 
                                                                 [
                                                                     'codwatygodnie_{{post_id}}', 
@@ -971,7 +651,7 @@
                                                             );
 
                                                             checkboxControlOffOther(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'codwatygodnie_{{post_id}}', 
                                                                 [
                                                                     'cotydzien_{{post_id}}',
@@ -980,7 +660,7 @@
                                                                 ]
                                                             );
                                                             checkboxControlOffOther(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'cotydzien_{{post_id}}', 
                                                                 [
                                                                     'codwatygodnie_{{post_id}}',
@@ -989,7 +669,7 @@
                                                                 ]
                                                             );
                                                             checkboxControlOffOther(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'coczterydni_{{post_id}}', 
                                                                 [
                                                                     'codwatygodnie_{{post_id}}',
@@ -998,7 +678,7 @@
                                                                 ]
                                                             );
                                                             checkboxControlOffOther(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'codwadni_{{post_id}}', 
                                                                 [
                                                                     'codwatygodnie_{{post_id}}',
@@ -1007,7 +687,7 @@
                                                                 ]
                                                             );
                                                             checkboxControlOffOther(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'ponow2razy_{{post_id}}', 
                                                                 [
                                                                     'ponow5razy_{{post_id}}',
@@ -1016,7 +696,7 @@
                                                                 ]
                                                             );
                                                             checkboxControlOffOther(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'ponow5razy_{{post_id}}', 
                                                                 [
                                                                     'ponow2razy_{{post_id}}',
@@ -1025,7 +705,7 @@
                                                                 ]
                                                             );
                                                             checkboxControlOffOther(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'ponow8razy_{{post_id}}', 
                                                                 [
                                                                     'ponow2razy_{{post_id}}',
@@ -1034,7 +714,7 @@
                                                                 ]
                                                             );
                                                             checkboxControlOffOther(
-                                                                'karieraFB_{{post_id}}', 
+                                                                'hiddenFB_{{post_id}}', 
                                                                 'ponow10razy_{{post_id}}', 
                                                                 [
                                                                     'ponow2razy_{{post_id}}',
@@ -1060,7 +740,7 @@
                                         </div>
                                     </form>
                                     {% else %}
-                                    <form method="POST" id="remove_career_fbgroups_{{post_id}}" action="{{ url_for('remove_career_fbgroups') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz zatrzymać tę kampanię na grupach facebooka?');">
+                                    <form method="POST" id="remove_hidden_campaigns_{{post_id}}" action="{{ url_for('remove_hidden_campaigns') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz zatrzymać tę kampanię na grupach facebooka?');">
                                         <div class="row">
                                             <div class="col-lg-12 col-sm-12 mb-3 mt-3">
                                                 <h3>Monitoring Kampanii Na grupach FB</h3>
@@ -1134,7 +814,7 @@
                                                 </div>
                                                 <div class="mt-30">
                                                     <input type="hidden" value="{{post_data['fbgroups']['id']}}" name="waitnig_list_id" id="waitnig_list_id_{{post_id}}"/>
-                                                    <input type="hidden" id="section_{{post_id}}" name="section" value="career" />
+                                                    <input type="hidden" id="section_{{post_id}}" name="section" value="hiddeCampaigns" />
                                                     <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Zatrzymaj Kampanię</button>
                                                 </div>
                                             </div>
@@ -1163,12 +843,229 @@
 <!-- sortowanie listy zdjęć dropbox estate -->
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script>
-    function fillInput(elementId, value) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.value = value; // Przypisz wartość do elementu
-        } else {
-            console.error('Element o ID ' + elementId + ' nie istnieje.');
+    class FotoDropBox { // v 2.1
+        constructor(formId, existingImageUrls = []) {
+            if (!this.checkDragAndDropSupport()) {
+                alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików.');
+                return;
+            }
+
+            this.dropArea = document.getElementById(`${formId}-drop-area`);
+            this.fileList = document.getElementById(`${formId}-fileList`);
+            this.accumulatedFiles = [];
+            this.accounter_accumulatedFiles = 0;
+            // v 2.1
+            this.existingImageUrls = existingImageUrls;
+
+            // v 2.0
+            this.fileInput = document.createElement('input');
+            this.fileInput.type = 'file';
+            this.fileInput.multiple = true; // jeśli chcesz obsługiwać wiele plików naraz
+            this.fileInput.style.display = 'none'; // ukryj element input
+            document.body.appendChild(this.fileInput); // dodaj input do DOM
+            this.dropArea.addEventListener('click', () => this.fileInput.click()); // po kliknięciu na dropArea, aktywuj input file
+            this.fileInput.addEventListener('change', (e) => this.handleFileInput(e)); // obsługa zdarzenia change
+            // v 2.0
+            this.initEventListeners();
+            // v 2.1
+            this.loadExistingImages();
+        }
+
+        loadExistingImages() {
+            this.existingImageUrls.forEach((url, index) => {
+                this.accounter_accumulatedFiles += 1;
+                const li = document.createElement('li');
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.height = '50px';
+                img.style.marginRight = '10px';
+                img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                li.appendChild(img);
+
+                const fileName = url.slice(url.lastIndexOf('/') + 1);
+                li.appendChild(document.createTextNode(fileName)); // Wyświetlanie nazwy pliku z URL
+                li.style.color = '#fff';
+
+                const closeButton = document.createElement('button');
+                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+                closeButton.setAttribute('aria-label', 'Close');
+                closeButton.addEventListener('click', () => this.removeFileFromURL(index, url));
+                li.appendChild(closeButton);
+
+                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+                this.fileList.appendChild(li);
+            });
+            // ver. 2.4
+            // Inicjalizacja Sortable po załadowaniu istniejących obrazów
+            this.initSortable();
+        }
+
+        removeFileFromURL(index, url) {
+            // Możesz dodać logikę do usuwania obrazu z serwera lub z aktualnej listy zdjęć
+            this.existingImageUrls.splice(index, 1); // Usuń URL z listy
+            this.accounter_accumulatedFiles -= 1;
+            this.displayFiles(); // Odśwież wyświetlaną listę
+        }
+  
+        checkDragAndDropSupport() {
+            const div = document.createElement('div');
+            return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+        }
+
+        initEventListeners() {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, (e) => this.preventDefaults(e), false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.highlight(), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.unhighlight(), false);
+            });
+
+            this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+        }
+
+        preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        highlight() {
+            this.dropArea.classList.add('highlight');
+        }
+
+        unhighlight() {
+            this.dropArea.classList.remove('highlight');
+        }
+
+        handleDrop(e) {
+            this.preventDefaults(e);
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            this.updateFileList(files);
+        }
+        
+        handleDropImg(event) {
+            event.preventDefault();
+            let files = event.dataTransfer.files; // Pobierz pliki z obiektu DataTransfer
+            let list = document.getElementById(formId + '-fileList');
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                let li = document.createElement('li');
+                li.textContent = file.name + " (" + (file.size / 1024).toFixed(1) + " KB)"; // Dodaj informacje o pliku
+                li.file = file; // Kluczowe: Przypisz obiekt File do elementu li
+                list.appendChild(li);
+            }
+        }
+
+        // Tuning po kliknieciu w dropbox tradycyjne okienko
+        handleFileInput(e) {
+            const files = e.target.files;
+            this.updateFileList(files);
+        }
+
+
+        updateFileList(newFiles) {
+            for (let file of newFiles) {
+                if (this.accumulatedFiles.length >= 10 - this.accounter_accumulatedFiles) {
+                    alert('Osiągnięto limit 10 plików.');
+                    break;
+                }
+                if (!this.isFileUnique(file)) {
+                    alert('Plik ' + file.name + ' jest już na liście.');
+                    continue;
+                }
+                this.accumulatedFiles.push(file);
+            }
+            this.displayFiles();
+        }
+
+        isFileUnique(newFile) {
+            return !this.accumulatedFiles.some(file => 
+                file.name === newFile.name &&
+                file.size === newFile.size &&
+                this.getFileExtension(file.name) === this.getFileExtension(newFile.name)
+            );
+        }
+
+        // ver. 2.4
+        displayFiles() {
+            this.fileList.innerHTML = '';  // Wyczyść istniejące wpisy
+            this.loadExistingImages();
+
+            this.accumulatedFiles.forEach((file, index) => {
+                const li = document.createElement('li');
+                li.file = file;  // Przypisz plik do elementu li dla łatwego dostępu
+
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.onload = () => { URL.revokeObjectURL(img.src); };
+                    img.style.height = '50px';
+                    img.style.marginRight = '10px';
+                    img.classList.add('img-thumbnail', 'object-fit-cover', 'rounded', 'bg-dark');
+                    li.appendChild(img);
+                } else {
+                    alert('Plik ' + file.name + ' nie jest zdjęciem.');
+                    return;  // Nie dodawaj plików, które nie są obrazami
+                }
+
+                li.appendChild(document.createTextNode(`${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB, ${this.getFileExtension(file.name)})`));
+                if (file.size > 2097200) {
+                    li.style.color = '#fd0f2b'; // czerwony, jeśli plik jest większy niż 2 MB
+                } else if (file.size > 1048576) {
+                    li.style.color = '#ff9900'; // pomarańczowy, jeśli plik jest większy niż 1 MB, ale mniejszy lub równy 2 MB
+                } else {
+                    li.style.color = '#00ff00'; // zielony, jeśli plik jest mniejszy niż 1 MB
+                }
+                li.classList.add('list-group-item', 'formatuj-bg-dropbox-list');
+                this.fileList.appendChild(li);
+
+                const closeButton = document.createElement('button');
+                closeButton.classList.add('drop-box-close-button', 'btn-close', 'btn-close-white', 'float-end');
+                closeButton.setAttribute('aria-label', 'Close');
+                closeButton.addEventListener('click', () => this.removeFile(index));
+                li.appendChild(closeButton);
+            });
+
+            // Zainicjuj Sortable.js po załadowaniu wszystkich elementów listy, nawet jeśli są tylko istniejące obrazy
+            this.initSortable();
+        }
+
+        initSortable() {
+            new Sortable(this.fileList, {
+                animation: 150,
+                onEnd: (evt) => {
+                    // Zaktualizuj kolejność plików na podstawie nowej kolejności elementów listy
+                    const newOrder = [];
+                    this.fileList.querySelectorAll('li').forEach((li, index) => {
+                        if (li.file) {
+                            newOrder.push(li.file);
+                        } else {
+                            const imgIndex = Array.from(this.fileList.children).indexOf(li);
+                            if (this.existingImageUrls[imgIndex]) {
+                                newOrder.push(this.existingImageUrls[imgIndex]);
+                            }
+                        }
+                    });
+                    this.accumulatedFiles = newOrder.filter(file => typeof file !== 'string');  // Przechowuj tylko obiekty File
+                    this.existingImageUrls = newOrder.filter(file => typeof file === 'string'); // Przechowuj tylko URL-e
+                }
+            });
+        }
+
+        
+        removeFile(index) {
+            this.accumulatedFiles.splice(index, 1); // Usuń element z tablicy
+            this.displayFiles(); // Ponownie wyświetl listę plików bez usuniętego elementu
+        }
+
+        getFileExtension(filename) {
+            return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
         }
     }
 
@@ -1190,21 +1087,16 @@
         }
     }
 
-
-    function sumWithInputValue(elementId, value) {
+    function fillInput(elementId, value) {
         const element = document.getElementById(elementId);
         if (element) {
-            if (element.value === '') {
-                element.value = value; // Jeśli input jest pusty, wpisz wartość
-            } else {
-                // Sumuj wartość z obecną wartością, przekształcając stringi na liczby
-                element.value = Number(element.value) + Number(value);
-            }
+            element.value = value; // Przypisz wartość do elementu
         } else {
             console.error('Element o ID ' + elementId + ' nie istnieje.');
         }
     }
 
+    
     function appendValueWithNewline(elementId, value) {
         const element = document.getElementById(elementId);
         if (element) {
@@ -1214,13 +1106,14 @@
         }
     }
 
+    
 
-    class CharCounter {
+    class CharCounterCheckGallery {
         constructor(postId) {
             this.postId = postId;
 
             // Pobranie elementów dynamicznie na podstawie postId
-            this.contentDiv = document.getElementById(`fbgroups_requirementsDescription_${postId}`);
+            this.contentDiv = document.getElementById(`fbgroups_estateAdsRentDescription_${postId}`);
             this.charCountDiv = document.getElementById(`char_count_${postId}`);
             this.divMinus130 = document.getElementById(`fbgroup_minus130_${postId}`);
             this.divMore130 = document.getElementById(`fbgroup_more130_${postId}`);
@@ -1232,11 +1125,35 @@
             this.colorPickerMinus130 = document.getElementById(`color_picker_minus130_${postId}`);
             this.colorPickerMore130 = document.getElementById(`color_picker_more130_${postId}`);
 
+            // Nowy input do sprawdzenia galerii
+            this.idGalleryInput = document.getElementById(`id_gallery_${postId}`);
+
             // Inicjalna aktualizacja licznika znaków
             this.updateCharCount();
 
+            // Sprawdzenie, czy `id_gallery` jest None
+            this.checkGallery();
+
             // Nasłuchiwanie zmian w treści contentEditable
             this.contentDiv.addEventListener('keyup', () => this.updateCharCount());
+        }
+
+        // Nowa metoda do sprawdzania id_gallery
+        checkGallery() {
+            const galleryValue = this.idGalleryInput.value;
+            console.log(galleryValue);  // Sprawdź, jaka jest wartość
+
+            // Jeśli galeria zawiera zdjęcia (wartość to liczba), to aktywuj more130
+            if (galleryValue !== 'None' && galleryValue !== '') {
+                this.divMore130.style.display = 'block';
+                this.divMinus130.style.display = 'none';
+
+                this.contentDiv.classList.remove('mainDiv-minus130');
+                this.contentDiv.classList.add('mainDiv-more130');
+
+                // Resetowanie zaznaczenia, gdy galeria zawiera zdjęcia
+                this.resetColorSelection();
+            }
         }
 
         // Metoda do resetowania zaznaczeń i ukrytego inputa
@@ -1264,7 +1181,7 @@
             this.charCountDiv.textContent = `${charCount} znaków`;
 
             // Przełączanie między trybami
-            if (charCount > 130) {
+            if (charCount > 1) {
                 this.divMore130.style.display = 'block';
                 this.divMinus130.style.display = 'none';
 
@@ -1418,12 +1335,8 @@
         generateSchedule();
     }
 
-    
-
-
-
 </script>
 {% endblock %}
 {% block footer %}
-<p>All right reserved &copy; 2024 by DMD Panel Administratora.<br/></p>
+ To jest stopka panelu administracyjnego. All right reserved &copy; 2024 by DMD Panel Administratora.<br/>
 {% endblock %}

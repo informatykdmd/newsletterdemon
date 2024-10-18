@@ -347,3 +347,18 @@ CREATE TABLE ogloszenia_fbgroups (
 
 ALTER TABLE ogloszenia_fbgroups
 ADD COLUMN waitnig_list_id INT AFTER id_ogloszenia;
+
+
+CREATE TABLE hidden_campaigns (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title TEXT,
+    description TEXT,
+    target TEXT,
+    category VARCHAR(255),
+    id_gallery TEXT,
+    created_by INT,
+    data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE dmd.hidden_campaigns 
+ADD author varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL AFTER category;

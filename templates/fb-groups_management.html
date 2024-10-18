@@ -47,7 +47,15 @@
                                         {% endif %}
                                     </a>
                                 </div>
-                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 200px;">
+                                    <a href="/fb-groups?sort=created_by&type={{ 'down' if sort_by == 'created_by' and sort_type == 'up' else 'up' }}">
+                                        Profil FB
+                                        {% if sort_by == 'created_by' %}
+                                            <i class="bi bi-arrow-{{ 'up' if sort_type == 'up' else 'down' }}"></i>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 50px;">
                                     Link
                                 </div>
                                 <div class="text-end formatuj-maly-font" style="max-width: 80px;">
@@ -91,7 +99,31 @@
                                             <option value="">Kategoria grupy</option>
                                             <option value="praca">Paraca</option>
                                             <option value="nieruchomosci">Nieruchomości</option>
+                                            <option value="budowy">Budowy</option>
+                                            <option value="murarze">Murarze</option>
+                                            <option value="domy">Budowa domów</option>
+                                            <option value="ciesle">Cieśle</option>
+                                            <option value="szalunkowcy">Szalunkowcy</option>
+                                            <option value="dekarze">Dekarze</option>
+                                            <option value="ocieplenia">Ocieplenia</option>
+                                            <option value="ekipy">Ekipy budowlane</option>
+                                            <option value="zagranica">Praca za granicą</option>
                                             <option value="inne">Inne</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- created_by -->
+                                    <div class="mb-3">
+                                        <select 
+                                            class="form-select dark-mode mb-2 mt-2" 
+                                            style="max-height: 30px; font-size: 12px;" 
+                                            id="created_by_9999999" 
+                                            name="created_by"
+                                            required>
+
+                                            <option value="">Wybierz profil FB</option>
+                                            <option value="dmddomyy">DMD Domy</option>
+                                            <option value="fredgraf">Fred Graf</option>
                                         </select>
                                     </div>
                                     <!-- Link -->
@@ -141,7 +173,12 @@
                                         <span class="display-6 formatuj-maly-font">{{post_data['category']}}</span>
                                     </a>
                                 </div>
-                                <div class="d-none d-xl-block"  style="max-width: 150px;">
+                                <div  class="d-none d-lg-block"  style="max-width: 100px;" >
+                                    <a >
+                                        <span class="display-6 formatuj-maly-font">{{post_data['created_by']}}</span>
+                                    </a>
+                                </div>
+                                <div class="d-none d-xl-block"  style="max-width: 50px;">
                                     <a href="{{post_data['link']}}" target="_blank">
                                         <span class="display-6 formatuj-maly-font" style="color: #e0ca03 !important;"><i class="bi bi-box-arrow-up-right"></i></span>
                                     </a>
@@ -193,8 +230,31 @@
                                                     
                                                     <option value="">Kategoria grupy</option>
                                                     <option value="praca" {{ 'selected' if post_data['category'] == 'praca' else '' }}>Praca</option>
-                                                    <option value="nieruchomości" {{ 'selected' if post_data['category'] == 'nieruchomości' else '' }}>Nieruchomości</option>
+                                                    <option value="nieruchomosci" {{ 'selected' if post_data['category'] == 'nieruchomosci' else '' }}>Nieruchomości</option>
+                                                    <option value="budowy" {{ 'selected' if post_data['category'] == 'budowy' else '' }}>Budowy</option>
+                                                    <option value="murarze" {{ 'selected' if post_data['category'] == 'murarze' else '' }}>Murarze</option>
+                                                    <option value="domy" {{ 'selected' if post_data['category'] == 'domy' else '' }}>Budowa domów</option>
+                                                    <option value="ciesle" {{ 'selected' if post_data['category'] == 'ciesle' else '' }}>Cieśle</option>
+                                                    <option value="szalunkowcy" {{ 'selected' if post_data['category'] == 'szalunkowcy' else '' }}>Szalunkowcy</option>
+                                                    <option value="dekarze" {{ 'selected' if post_data['category'] == 'dekarze' else '' }}>Dekarze</option>
+                                                    <option value="ocieplenia" {{ 'selected' if post_data['category'] == 'ocieplenia' else '' }}>Ocieplenia</option>
+                                                    <option value="ekipy" {{ 'selected' if post_data['category'] == 'ekipy' else '' }}>Ekipy budowlane</option>
+                                                    <option value="zagranica" {{ 'selected' if post_data['category'] == 'zagranica' else '' }}>Praca za granicą</option>
                                                     <option value="inne" {{ 'selected' if post_data['category'] == 'inne' else '' }}>Inne</option>
+                                                </select>
+                                            </div>
+                                            <!-- created_by -->
+                                            <div class="mb-3">
+                                                <select 
+                                                    class="form-select dark-mode mb-2 mt-2" 
+                                                    style="max-height: 30px; font-size: 12px;" 
+                                                    id="created_by_{{post_id}}" 
+                                                    name="created_by"
+                                                    required>
+
+                                                    <option value="">Wybierz profil FB</option>
+                                                    <option value="dmddomyy" {{ 'selected' if post_data['created_by'] == 'dmddomyy' else '' }}>DMD Domy</option>
+                                                    <option value="fredgraf" {{ 'selected' if post_data['created_by'] == 'fredgraf' else '' }}>Fred Graf</option>
                                                 </select>
                                             </div>
                                             <!-- Link -->

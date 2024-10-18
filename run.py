@@ -264,7 +264,8 @@ def generator_facebookGroups(cat='all'):
             'id': data[0], 
             'name': data[1],
             'category': data[2], 
-            'link': data[3]
+            'created_by': data[3], 
+            'link': data[4]
             }
         groupsData.append(theme)
     return groupsData
@@ -363,7 +364,7 @@ def checkFbGroupstatus(section, post_id):
                     schedule_8_id, schedule_8_datetime, schedule_8_status, schedule_8_errors, 
                     schedule_9_id, schedule_9_datetime, schedule_9_status, schedule_9_errors, 
                     schedule_10_id, schedule_10_datetime, schedule_10_status, schedule_10_errors, 
-                    category, section, id_gallery, data_aktualizacji
+                    category, created_by, section, id_gallery, data_aktualizacji
                 FROM waitinglist_fbgroups 
                 WHERE section="{section}" 
                 AND post_id={post_id};
@@ -382,7 +383,7 @@ def checkFbGroupstatus(section, post_id):
             None, None, None, None,
             None, None, None, None,
             None, None, None, None,
-            None, None, None, None
+            None, None, None, None, None
             )
     
 def takeLentoResumeStatus(lento_id):
@@ -952,6 +953,31 @@ def generator_jobs():
             'data': format_date(rec[11]),
             'brand': rec[12],
             'status': rec[13]
+        }
+        daneList.append(theme)
+    return daneList
+
+def generator_hidden_campaigns():
+    daneList = []
+    
+    try: took_allRecords = msq.connect_to_database(f'SELECT * FROM hidden_campaigns ORDER BY id DESC;') 
+    except: return []
+    
+    for rec in took_allRecords:
+        try: fotoList = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', rec[6])[0][1:-1]
+        except IndexError: fotoList = []
+        theme = {
+            'id': rec[0],
+            'title': rec[1],
+            'description': rec[2],
+            'target': rec[3],
+            'category': rec[4],
+            'author': rec[5],
+            'id_gallery': rec[6],
+            'photos': fotoList, #Lista zdjęć
+            'created_by': rec[7],
+            'status': rec[8],
+            'data': rec[9]
         }
         daneList.append(theme)
     return daneList
@@ -3672,9 +3698,10 @@ def career():
         item['fbgroups']['schedule_10_errors'] = fbgroupsIDstatus[50]
 
         item['fbgroups']['category'] = fbgroupsIDstatus[51]
-        item['fbgroups']['section'] = fbgroupsIDstatus[52]
-        item['fbgroups']['id_gallery'] = fbgroupsIDstatus[53]
-        item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[54]
+        item['fbgroups']['created_by'] = fbgroupsIDstatus[52]
+        item['fbgroups']['section'] = fbgroupsIDstatus[53]
+        item['fbgroups']['id_gallery'] = fbgroupsIDstatus[54]
+        item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[55]
 
         new_all_career.append(item)
 
@@ -4104,9 +4131,10 @@ def estateAdsRent():
         item['fbgroups']['schedule_10_errors'] = fbgroupsIDstatus[50]
 
         item['fbgroups']['category'] = fbgroupsIDstatus[51]
-        item['fbgroups']['section'] = fbgroupsIDstatus[52]
-        item['fbgroups']['id_gallery'] = fbgroupsIDstatus[53]
-        item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[54]
+        item['fbgroups']['created_by'] = fbgroupsIDstatus[52]
+        item['fbgroups']['section'] = fbgroupsIDstatus[53]
+        item['fbgroups']['id_gallery'] = fbgroupsIDstatus[54]
+        item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[55]
 
         new_all_rents.append(item)
     # flash(f"{str(len(new_all_rents))}", 'dnager')
@@ -4451,7 +4479,7 @@ def save_rent_offer():
                             SELECT * FROM ZdjeciaOfert ORDER BY ID DESC;
                         ''')[0][0]
                 except Exception as err:
-                    msq.handle_error(f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', log_path=logFileName)
+                    msq.handle_error(f'Błąd podczas tworzenia galerii: {err}!', log_path=logFileName)
                     flash(f'Błąd podczas tworzenia galerii! \n {err}', 'danger')
                     return jsonify({
                         'message': f'Błąd podczas tworzenia galerii! \n {err}',
@@ -4821,9 +4849,10 @@ def estateAdsSell():
         item['fbgroups']['schedule_10_errors'] = fbgroupsIDstatus[50]
 
         item['fbgroups']['category'] = fbgroupsIDstatus[51]
-        item['fbgroups']['section'] = fbgroupsIDstatus[52]
-        item['fbgroups']['id_gallery'] = fbgroupsIDstatus[53]
-        item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[54]
+        item['fbgroups']['created_by'] = fbgroupsIDstatus[52]
+        item['fbgroups']['section'] = fbgroupsIDstatus[53]
+        item['fbgroups']['id_gallery'] = fbgroupsIDstatus[54]
+        item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[55]
 
         new_all_sell.append(item)
 
@@ -11674,6 +11703,8 @@ def fbGroups():
         items_sorted = sorted(all_groups, key=lambda x: x['category'], reverse=(sort_type == 'down'))
     elif sort_by == 'id':
         items_sorted = sorted(all_groups, key=lambda x: x['id'], reverse=(sort_type == 'down'))
+    elif sort_by == 'created_by':
+        items_sorted = sorted(all_groups, key=lambda x: x['created_by'], reverse=(sort_type == 'down'))
 
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -11747,15 +11778,21 @@ def add_fb_group():
             return redirect(url_for('fbGroups'))
         else:
             link = form_data['link']
+        
+        if not form_data['created_by']or form_data['created_by'] == '':
+            flash("Musisz wybrać profil posiadacza grupy FB", "danger")
+            return redirect(url_for('fbGroups'))
+        else:
+            created_by = form_data['created_by']
 
         if set_post_id == 9999999:
             zapytanie_sql = '''
                         INSERT INTO facebook_gropus
-                            (name, category, link)
+                            (name, category, link, created_by)
                         VALUES 
-                            (%s, %s, %s);
+                            (%s, %s, %s, %s);
                     '''
-            dane = (name, category, link)
+            dane = (name, category, link, created_by)
 
             if msq.insert_to_database(zapytanie_sql, dane):
                 msq.handle_error(f'Dodano grupę FB {name} do kategorii {category} przez {session["username"]}!', log_path=logFileName)
@@ -11770,10 +11807,11 @@ def add_fb_group():
                     SET 
                         name = %s,
                         category = %s,
-                        link = %s
+                        link = %s,
+                        created_by = %s
                     WHERE id = %s;
                 '''
-            dane = (name, category, link, set_post_id)
+            dane = (name, category, link, created_by, set_post_id)
 
             if msq.insert_to_database(zapytanie_sql, dane):
                 msq.handle_error(f'Zaktualizowano grupę FB {name} do kategorii {category} przez {session["username"]}!', log_path=logFileName)
@@ -11841,6 +11879,7 @@ def fb_groups_sender():
     category = data.get('category')
     section = data.get('section')
     get_id_gallery = data.get('id_gallery')
+    created_by = data.get('id_gallecreated_byry')
     if get_id_gallery == "None":
         id_gallery = None
     else:
@@ -11922,7 +11961,7 @@ def fb_groups_sender():
                     schedule_6_datetime, schedule_7_datetime, 
                     schedule_8_datetime, schedule_9_datetime, 
                     schedule_10_datetime, 
-                    category, section, id_gallery)
+                    category, section, id_gallery, created_by)
                 VALUES 
                     (%s, %s, %s, 
                     %s, %s, %s, 
@@ -11932,7 +11971,7 @@ def fb_groups_sender():
                     %s, %s,  
                     %s, %s,  
                     %s, 
-                    %s, %s, %s);
+                    %s, %s, %s, %s);
             '''
     dane = (post_id, content, color_choice,
             repeats, repeats_left, repeats_last, 
@@ -11942,7 +11981,7 @@ def fb_groups_sender():
             schedule_6_datetime, schedule_7_datetime, 
             schedule_8_datetime, schedule_9_datetime, 
             schedule_10_datetime, 
-            category, section, id_gallery)
+            category, section, id_gallery, created_by)
 
     if msq.insert_to_database(zapytanie_sql, dane):
         msq.handle_error(f'Harmonogram kampanii dla {section}, id:{post_id} zsotał poprawnie zapisany przez {session["username"]}.', log_path=logFileName)
@@ -12017,6 +12056,490 @@ def remove_career_fbgroups():
         msq.handle_error(f'Kampania została usunięta przez {session["username"]}!', log_path=logFileName)
         flash("Kampania została usunięta.", "success")
         return redirect(url_for(f'{section}'))
+    
+    return redirect(url_for('index'))
+
+@app.route('/hidden-campaigns')
+def hiddeCampaigns():
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /hidden-campaigns bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['fbhidden'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /hidden-campaigns bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    ads_hidden_got = generator_hidden_campaigns()
+
+    new_all_hidden = []
+    for item in ads_hidden_got:
+        if 'fbgroups' not in item:
+            item['fbgroups'] = {}
+        fbgroupsIDstatus = checkFbGroupstatus(section="hidden", post_id=item['id'])
+        item['fbgroups']['id'] = fbgroupsIDstatus[0]
+        item['fbgroups']['post_id'] = fbgroupsIDstatus[1]
+        item['fbgroups']['content'] = fbgroupsIDstatus[2]
+        item['fbgroups']['color_choice'] = fbgroupsIDstatus[3]
+        item['fbgroups']['repeats'] = fbgroupsIDstatus[4]
+        item['fbgroups']['repeats_left'] = fbgroupsIDstatus[5]
+        item['fbgroups']['repeats_last'] = fbgroupsIDstatus[6]
+
+        item['fbgroups']['schedule_0_id'] = fbgroupsIDstatus[7]
+        item['fbgroups']['schedule_0_datetime'] = fbgroupsIDstatus[8]
+        item['fbgroups']['schedule_0_status'] = fbgroupsIDstatus[9]
+        item['fbgroups']['schedule_0_errors'] = fbgroupsIDstatus[10]
+
+        item['fbgroups']['schedule_1_id'] = fbgroupsIDstatus[11]
+        item['fbgroups']['schedule_1_datetime'] = fbgroupsIDstatus[12]
+        item['fbgroups']['schedule_1_status'] = fbgroupsIDstatus[13]
+        item['fbgroups']['schedule_1_errors'] = fbgroupsIDstatus[14]
+
+        item['fbgroups']['schedule_2_id'] = fbgroupsIDstatus[15]
+        item['fbgroups']['schedule_2_datetime'] = fbgroupsIDstatus[16]
+        item['fbgroups']['schedule_2_status'] = fbgroupsIDstatus[17]
+        item['fbgroups']['schedule_2_errors'] = fbgroupsIDstatus[18]
+
+        item['fbgroups']['schedule_3_id'] = fbgroupsIDstatus[19]
+        item['fbgroups']['schedule_3_datetime'] = fbgroupsIDstatus[20]
+        item['fbgroups']['schedule_3_status'] = fbgroupsIDstatus[21]
+        item['fbgroups']['schedule_3_errors'] = fbgroupsIDstatus[22]
+
+        item['fbgroups']['schedule_4_id'] = fbgroupsIDstatus[23]
+        item['fbgroups']['schedule_4_datetime'] = fbgroupsIDstatus[24]
+        item['fbgroups']['schedule_4_status'] = fbgroupsIDstatus[25]
+        item['fbgroups']['schedule_4_errors'] = fbgroupsIDstatus[26]
+
+        item['fbgroups']['schedule_5_id'] = fbgroupsIDstatus[27]
+        item['fbgroups']['schedule_5_datetime'] = fbgroupsIDstatus[28]
+        item['fbgroups']['schedule_5_status'] = fbgroupsIDstatus[29]
+        item['fbgroups']['schedule_5_errors'] = fbgroupsIDstatus[30]
+
+        item['fbgroups']['schedule_6_id'] = fbgroupsIDstatus[31]
+        item['fbgroups']['schedule_6_datetime'] = fbgroupsIDstatus[32]
+        item['fbgroups']['schedule_6_status'] = fbgroupsIDstatus[33]
+        item['fbgroups']['schedule_6_errors'] = fbgroupsIDstatus[34]
+
+        item['fbgroups']['schedule_7_id'] = fbgroupsIDstatus[35]
+        item['fbgroups']['schedule_7_datetime'] = fbgroupsIDstatus[36]
+        item['fbgroups']['schedule_7_status'] = fbgroupsIDstatus[37]
+        item['fbgroups']['schedule_7_errors'] = fbgroupsIDstatus[38]
+
+        item['fbgroups']['schedule_8_id'] = fbgroupsIDstatus[39]
+        item['fbgroups']['schedule_8_datetime'] = fbgroupsIDstatus[40]
+        item['fbgroups']['schedule_8_status'] = fbgroupsIDstatus[41]
+        item['fbgroups']['schedule_8_errors'] = fbgroupsIDstatus[42]
+
+        item['fbgroups']['schedule_9_id'] = fbgroupsIDstatus[43]
+        item['fbgroups']['schedule_9_datetime'] = fbgroupsIDstatus[44]
+        item['fbgroups']['schedule_9_status'] = fbgroupsIDstatus[45]
+        item['fbgroups']['schedule_9_errors'] = fbgroupsIDstatus[46]
+
+        item['fbgroups']['schedule_10_id'] = fbgroupsIDstatus[47]
+        item['fbgroups']['schedule_10_datetime'] = fbgroupsIDstatus[48]
+        item['fbgroups']['schedule_10_status'] = fbgroupsIDstatus[49]
+        item['fbgroups']['schedule_10_errors'] = fbgroupsIDstatus[50]
+
+        item['fbgroups']['category'] = fbgroupsIDstatus[51]
+        item['fbgroups']['created_by'] = fbgroupsIDstatus[52]
+        item['fbgroups']['section'] = fbgroupsIDstatus[53]
+        item['fbgroups']['id_gallery'] = fbgroupsIDstatus[54]
+        item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[55]
+
+        new_all_hidden.append(item)
+
+    all_hidden = new_all_hidden
+
+    # Ustawienia paginacji
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(all_hidden)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
+    ads_hidden_campaigns = all_hidden[offset: offset + per_page]
+    
+    settingsDB = generator_settingsDB()
+    domy = settingsDB['domy']
+    budownictwo = settingsDB['budownictwo']
+    development = settingsDB['development']
+    elitehome = settingsDB['elitehome']
+    inwestycje = settingsDB['inwestycje']
+    instalacje = settingsDB['instalacje']
+
+    return render_template(
+                            "hidden_management.html", 
+                            username=session['username'],
+                            useremail=session['user_data']['email'],
+                            userperm=session['userperm'], 
+                            user_brands=session['brands'], 
+                            ads_hidden_campaigns=ads_hidden_campaigns,
+                            pagination=pagination,
+                            domy=domy,
+                            budownictwo=budownictwo,
+                            development=development,
+                            elitehome=elitehome,
+                            inwestycje=inwestycje,
+                            instalacje=instalacje
+                            )
+
+
+@app.route('/save-hidden-campaigns')
+def save_hidden_campaigns():
+    # Sprawdzenie czy użytkownik jest zalogowany i ma uprawnienia
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /save-career-offer bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['fbhidden'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /save-career-offer bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Odczytanie danych z formularza
+    title = request.form.get('title')
+    description = request.form.get('jobDescription')
+    category = request.form.get('category')
+    offerID = request.form.get('OfferID')
+    created_by = request.form.get('created_by')
+    author = request.form.get('author')
+    target = request.form.get('target')
+    try: offerID_int = int(offerID)
+    except ValueError:
+        msq.handle_error(f'UWAGA! Błąd z id kampanii {title} wywołany przez {session["username"]}!', log_path=logFileName)
+        flash('Błąd z id kampanii. Skontaktuj się z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
+    if not all([title, description, category]):
+        msq.handle_error(f'UWAGA! Nie wszystkie wymagane dane zostały przekazane przez {session["username"]}!', log_path=logFileName)
+        return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
+
+    if offerID_int == 9999999:
+        oldPhotos = []
+        allPhotos = []
+    else:
+        oldPhotos = request.form.getlist('oldPhotos[]')
+        allPhotos = request.form.getlist('allPhotos[]')
+
+    settingsDB = generator_settingsDB()
+    real_loc_on_server = settingsDB['real-location-on-server']
+    domain = settingsDB['main-domain']
+    estate_pic_path = settingsDB['estate-pic-offer']
+
+    upload_path = f'{real_loc_on_server}{estate_pic_path}'
+    mainDomain_URL = f'{domain}{estate_pic_path}'
+
+    # Przetwarzanie przesłanych zdjęć
+    photos = request.files.getlist('photos[]')
+    saved_photos =[]
+    if photos:
+        for photo in photos:
+            if photo:
+                filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
+                # print(filename)
+                full_path = os.path.join(upload_path, filename)
+                complete_URL_PIC = f'{mainDomain_URL}{filename}'
+                try:
+                    photo.save(full_path)
+                    
+                    saved_photos.append(complete_URL_PIC)
+                    if secure_filename(photo.filename) in allPhotos:
+                        pobrany_index = allPhotos.index(secure_filename(photo.filename))
+                        allPhotos[pobrany_index] = filename
+                except Exception as e:
+                    msq.handle_error(f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', log_path=logFileName)
+                    print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
+
+    # print(allPhotos)
+    if offerID_int == 9999999:
+        gallery_id = None
+        # Obsługa zdjęć 
+        if len(saved_photos)>=1:
+            # dodaj zdjęcia do bazy i pobierz id galerii
+            dynamic_col_name = ''
+            dynamic_amount = ''
+            for i in range(len(saved_photos)):
+                dynamic_col_name += f'Zdjecie_{i + 1}, '
+                dynamic_amount += '%s, '
+            dynamic_col_name = dynamic_col_name[:-2]
+            dynamic_amount = dynamic_amount[:-2]
+
+            zapytanie_sql = f'''INSERT INTO ZdjeciaOfert ({dynamic_col_name}) VALUES ({dynamic_amount});'''
+            dane = tuple(a for a in saved_photos)
+
+            if msq.insert_to_database(zapytanie_sql, dane):
+                # Przykładowe dane
+                try:
+                    gallery_id = msq.connect_to_database(
+                        '''
+                            SELECT * FROM ZdjeciaOfert ORDER BY ID DESC;
+                        ''')[0][0]
+                except Exception as err:
+                    msq.handle_error(f'Błąd podczas tworzenia galerii przez {session["username"]}! {err}.', log_path=logFileName)
+                    flash(f'Błąd podczas tworzenia galerii! {err}.', 'danger')
+                    return jsonify({
+                        'message': f'Błąd podczas tworzenia galerii! \n {err}',
+                        'success': True
+                        }), 200
+            else:
+                msq.handle_error(f'UWAGA! Błąd podczas zapisywania galerii w bazie przez {session["username"]}!', log_path=logFileName)
+                flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
+                return jsonify({
+                    'message': 'Błąd podczas zapisywania galerii w bazie!',
+                    'success': True
+                    }), 200
+        
+
+    else:
+        try: gallery_id = take_data_where_ID('id_gallery', 'hidden_campaigns', 'id', offerID_int)[0][0]
+        except IndexError: 
+            msq.handle_error(f'UWAGA! Nie udało się pobrać ID galerii!', log_path=logFileName)
+            flash(f"Nie udało się pobrać ID galerii!", "danger")
+            return jsonify({
+                    'message': 'Nie udało się pobrać ID galerii!',
+                    'success': False
+                    }), 200
+        
+        if gallery_id is not None:
+            try: 
+                current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', gallery_id)[0]
+                current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
+            except IndexError: 
+                msq.handle_error(f'UWAGA! Nie udało się pobrać galerii!', log_path=logFileName)
+                flash(f"Nie udało się pobrać galerii!", "danger")
+                return jsonify({
+                        'message': 'Nie udało się pobrać galerii!',
+                        'success': False
+                        }), 200
+
+            aktualne_linkURL_set = set()
+            for linkUrl in current_gallery:
+                nazwaZdjecia = str(linkUrl).split('/')[-1]
+                aktualne_linkURL_set.add(nazwaZdjecia)
+
+            przeslane_nazwyZdjec_set = set()
+            for nazwaZdjecia in oldPhotos:
+                przeslane_nazwyZdjec_set.add(nazwaZdjecia)
+
+            zdjeciaDoUsuniecia = aktualne_linkURL_set.difference(przeslane_nazwyZdjec_set)
+            for delIt in zdjeciaDoUsuniecia:
+                complete_URL_PIC = f'{mainDomain_URL}{delIt}'
+                if complete_URL_PIC in current_gallery_list:
+                    current_gallery_list.remove(complete_URL_PIC)
+                    try:
+                        file_path = upload_path + delIt
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+                        else:
+                            print(f"File {file_path} not found.")
+                    except Exception as e:
+                        msq.handle_error(f'UWAGA! Error removing file {upload_path + delIt}: {e}', log_path=logFileName)
+                        print(f"Error removing file {upload_path + delIt}: {e}")
+
+            oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
+
+            index_map = {nazwa: index for index, nazwa in enumerate(allPhotos)}
+
+            # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w allPhotos
+            oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
+            # print(oldPhotos_plus_saved_photos_sorted)
+            
+            if len(oldPhotos_plus_saved_photos_sorted)>=1 and len(oldPhotos_plus_saved_photos_sorted) <=10:
+                # dodaj zdjęcia do bazy i pobierz id galerii
+                dynamic_col_name = ''
+                
+                for i in range(10):
+                    dynamic_col_name += f'Zdjecie_{i + 1} = %s, '
+
+                dynamic_col_name = dynamic_col_name[:-2]
+
+                zapytanie_sql = f'''
+                    UPDATE ZdjeciaOfert
+                    SET {dynamic_col_name} 
+                    WHERE ID = %s;
+                    '''
+                len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos_sorted)
+                if 10 - len_oldPhotos_plus_saved_photos == 0:
+                    dane = tuple(a for a in oldPhotos_plus_saved_photos_sorted + [gallery_id])
+                else:
+                    oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos_sorted
+                    for _ in  range(10 - len_oldPhotos_plus_saved_photos):
+                        oldPhotos_plus_saved_photos_plus_empyts += [None]
+                    dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
+
+                # print(zapytanie_sql, dane)
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Galeria została pomyslnie zaktualizowana przez {session["username"]}!', log_path=logFileName)
+                    print('update_galerii_udany')
+                else:
+                    msq.handle_error(f'UWAGA! Bład zapisu galerii! Oferta wynajmu nie została zapisana przez {session["username"]}!', log_path=logFileName)
+                    flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
+                    return jsonify({
+                            'message': 'xxx',
+                            'success': True
+                            }), 200
+
+
+    # Przygotowanie zapytania SQL w zależności od tego, czy jest to nowy wpis, czy aktualizacja
+    if offerID_int == 9999999:
+        # Nowe ogłoszenie
+        id_gallery = gallery_id
+        
+        zapytanie_sql = '''
+            INSERT INTO hidden_campaigns (title, description, target, category, author, id_gallery, created_by, status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+        '''
+        dane = (title, description, target, category, author, id_gallery, created_by, 1)
+    else:
+        # Aktualizacja istniejącego ogłoszenia
+        zapytanie_sql = '''
+            UPDATE hidden_campaigns 
+            SET 
+                title=%s, 
+                description=%s, 
+                target=%s, 
+                category=%s, 
+                created_by=%s,
+                author=%s,
+                id_gallery=%s
+            WHERE ID=%s;
+        '''
+        dane = (title, description, target, category, created_by, author, id_gallery, offerID_int)
+
+    # Wykonanie zapytania
+    if msq.insert_to_database(zapytanie_sql, dane):
+        msq.handle_error(f'SOferta pracy została pomyślnie zapisana przez {session["username"]}!', log_path=logFileName)
+        flash(f'Oferta pracy została zapisana pomyślnie!', 'success')
+        return jsonify({
+            'message': 'Oferta pracy została zapisana pomyślnie!',
+            'success': True
+        }), 200
+    else:
+        msq.handle_error(f'UWAGA! Błąd zapisu! Oferta pracy nie została zapisana przez {session["username"]}!', log_path=logFileName)
+        flash(f'Błąd zapisu! Oferta pracy nie została zapisana!', 'danger')
+        return jsonify({
+            'message': 'Błąd zapisu! Oferta pracy nie została zapisana!',
+            'success': False
+        }), 500
+
+@app.route('/remove-hidden-campaigns', methods=["POST"])
+def remove_hidden_campaigns():
+    """Usuwanie ofertę najmu"""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /remove-sell-offer bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['fbhidden'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /remove-sell-offer bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: form_data['PostID']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        # pobieram id galerii
+        try: id_galerry = take_data_where_ID('id_gallery', 'hidden_campaigns', 'id', set_post_id )[0][0]
+        except IndexError: 
+            msq.handle_error(f'UWAGA! Wpis nie został usunięty przez {session["username"]}! Wystąpił błąd struktury danych galerii!', log_path=logFileName)
+            flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
+            return redirect(url_for('hiddeCampaigns'))
+        
+        if id_galerry is not None:
+            try: current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
+            except IndexError: 
+                msq.handle_error(f'UWAGA! Wpis nie został usunięty przez {session["username"]}! Wystąpił błąd struktury danych galerii!', log_path=logFileName)
+                flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
+                return redirect(url_for('hiddeCampaigns'))
+
+            msq.delete_row_from_database(
+                    """
+                        DELETE FROM ZdjeciaOfert WHERE ID = %s;
+                    """,
+                    (id_galerry,)
+                )
+        # Usuwam wpis z tabeli kampani anonimowych
+        msq.delete_row_from_database(
+                """
+                    DELETE FROM hidden_campaigns WHERE ID = %s;
+                """,
+                (set_post_id,)
+            )
+        
+        if id_galerry is not None:
+            real_loc_on_server = settingsDB['real-location-on-server']
+            domain = settingsDB['main-domain']
+            estate_pic_path = settingsDB['estate-pic-offer']
+            upload_path = f'{real_loc_on_server}{estate_pic_path}'
+            mainDomain_URL = f'{domain}{estate_pic_path}'
+
+            
+            current_gallery_list = [p for p in current_gallery[1:-1] if p is not None]
+            # print(current_gallery_list)
+            for delIt in current_gallery_list:
+                delIt_clear = str(delIt).replace(mainDomain_URL, '')
+                # print(delIt)
+                # print(delIt_clear)
+                if delIt in current_gallery_list:
+                    try:
+                        file_path = upload_path + delIt_clear
+                        # print(file_path)
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+                        else:
+                            print(f"File {file_path} not found.")
+                    except Exception as e:
+                        msq.handle_error(f'UWAGA! Error removing file {file_path}: {e}', log_path=logFileName)
+                        print(f"Error removing file {file_path}: {e}")
+
+        msq.handle_error(f'Wpis został usunięty przez {session["username"]}!', log_path=logFileName)
+        flash("Wpis został usunięty.", "success")
+        return redirect(url_for('hiddeCampaigns'))
+    
+    return redirect(url_for('index'))
+
+@app.route('/update-hidden-campaigns-status', methods=['POST'])
+def update_hidden_campaigns_status():
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /update-career-offer-status bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['fbhidden'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /update-career-offer-status bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # Obsługa formularza POST
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        try: 
+            form_data['PostID']
+            form_data['Status']
+        except KeyError: return redirect(url_for('index'))
+        set_post_id = int(form_data['PostID'])
+        set_post_status = int(form_data['Status'])
+
+        statusHidden = checkFbGroupstatus(section="hidden", post_id=set_post_id)
+        if statusHidden[0] != None:
+            msq.handle_error(f'UWAGA! Status kampanii nie został zmieniony przez {session["username"]}!', log_path=logFileName)
+            flash("Status kampanii nie został zmieniony. Przewij kampanię na grupach Facebooka", "danger")
+            return redirect(url_for('hiddeCampaigns'))
+
+        zapytanie_sql = f'''
+                UPDATE hidden_campaigns
+                SET status = %s
+                WHERE ID = %s;
+                '''
+        dane = (set_post_status, set_post_id)
+        if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Status oferty został zmieniony przez {session["username"]}!', log_path=logFileName)
+            flash("Status oferty został zmieniony.", "success")
+            return redirect(url_for('hiddeCampaigns'))
     
     return redirect(url_for('index'))
 
