@@ -12198,7 +12198,7 @@ def save_hidden_campaigns():
     
     # Odczytanie danych z formularza
     title = request.form.get('title')
-    description = request.form.get('jobDescription')
+    description = request.form.get('description')
     category = request.form.get('category')
     offerID = request.form.get('OfferID')
     created_by = request.form.get('created_by')
