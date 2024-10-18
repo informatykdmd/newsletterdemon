@@ -339,7 +339,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
 
     // Pobieranie wartości z formularza
     var title = document.getElementById('title_' + offerId).value;
-    var description = document.getElementById('description_' + careerId).innerText;
+    var description = document.getElementById('description_' + offerId).innerText;
     
     var category = document.getElementById('category_' + offerId).value;
     var offerIDbox = document.getElementById('OfferID_' + offerId).value;
@@ -428,19 +428,19 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
         method: 'POST',
         body: formData
     }).then(response => {
-        // console.log('response: ', response);
+        console.log('response: ', response);
         if (response.ok) {
             // alert('Oferta została pomyślnie zapisana.');
             // console.log('response: ', response);
             return response.json();
         } else {
-            // console.log('xxx:', data);
+            console.log('xxx:', data);
 
             throw new Error('Problem z serwerem');
         }
     }).then(data => {
-        // console.log('data:', data);
-        // console.log('data.seccess:', data.success);
+        console.log('data:', data);
+        console.log('data.seccess:', data.success);
         if (data.success == true) {
             // console.log('xxx:', data);
             var form = document.getElementById('hiddencampaigns_' + offerId);
