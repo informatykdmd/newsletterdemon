@@ -349,7 +349,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
 
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
-    // console.log('fotoList: ', fotoList);
+    console.log('fotoList: ', fotoList);
     var zdjecia = [];
     var oldFotos_list = [];
 
@@ -423,6 +423,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
         return;
     }
 
+    console.log('formData: ', formData);
     // Wysyłanie formularza za pomocą AJAX (fetch API)
     fetch('/save-hidden-campaigns', {
         method: 'POST',
