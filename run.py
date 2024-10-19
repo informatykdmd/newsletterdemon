@@ -12201,8 +12201,8 @@ def save_hidden_campaigns():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    print(request.form)
-    print(request.files.getlist('photos[]'))
+    # print(request.form)
+    # print(request.files.getlist('photos[]'))
     # Odczytanie danych z formularza
     title = request.form.get('title')
     description = request.form.get('description')
@@ -12212,8 +12212,8 @@ def save_hidden_campaigns():
     author = request.form.get('author')
     target = request.form.get('target')
 
-    check = ('check 1', title, description, category,  offerID, created_by, author, target)
-    msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
+    # check = ('check 1', title, description, category,  offerID, created_by, author, target)
+    # msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
 
     try: offerID_int = int(offerID)
     except ValueError:
@@ -12221,16 +12221,16 @@ def save_hidden_campaigns():
         flash('Błąd z id kampanii. Skontaktuj się z administratorem!', 'danger')
         return jsonify({'error': 'Błąd z id kampanii. Skontaktuj się z administratorem!'}), 400
 
-    check = ('check 2', title, description, category,  offerID, created_by, author, target)
-    msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
+    # check = ('check 2', title, description, category,  offerID, created_by, author, target)
+    # msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     if not all([title, description, category]):
         msq.handle_error(f'UWAGA! Nie wszystkie wymagane dane zostały przekazane przez {session["username"]}!', log_path=logFileName)
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
     
-    check = ('check 3', title, description, category,  offerID, created_by, author, target)
-    msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
+    # check = ('check 3', title, description, category,  offerID, created_by, author, target)
+    # msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
 
     if offerID_int == 9999999:
         oldPhotos = []
@@ -12250,16 +12250,11 @@ def save_hidden_campaigns():
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
 
-    
-
     saved_photos =[]
     msq.handle_error(f'UWAGA! photos {photos}!', log_path=logFileName)
     if photos:
         for photo in photos:
             if photo:
-
-                msq.handle_error(f'UWAGA! photo {photo}!', log_path=logFileName)
-
                 filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
                 # print(filename)
                 full_path = os.path.join(upload_path, filename)
@@ -12269,7 +12264,7 @@ def save_hidden_campaigns():
                     
                     saved_photos.append(complete_URL_PIC)
 
-                    msq.handle_error(f'UWAGA! if secure_filename(photo.filename) in allPhotos:  photo.filename: {photo.filename} allPhotos: {allPhotos}!', log_path=logFileName)
+                    # msq.handle_error(f'UWAGA! if secure_filename(photo.filename) in allPhotos:  photo.filename: {photo.filename} allPhotos: {allPhotos}!', log_path=logFileName)
 
                     if secure_filename(photo.filename) in allPhotos:
                         pobrany_index = allPhotos.index(secure_filename(photo.filename))
@@ -12278,10 +12273,10 @@ def save_hidden_campaigns():
                     msq.handle_error(f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', log_path=logFileName)
                     print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
 
-    msq.handle_error(f'UWAGA! saved_photos {saved_photos}!', log_path=logFileName)
+    # msq.handle_error(f'UWAGA! saved_photos {saved_photos}!', log_path=logFileName)
     
-    msq.handle_error(f'UWAGA! oldPhotos {oldPhotos}!', log_path=logFileName)
-    msq.handle_error(f'UWAGA! allPhotos {allPhotos}!', log_path=logFileName)
+    # msq.handle_error(f'UWAGA! oldPhotos {oldPhotos}!', log_path=logFileName)
+    # msq.handle_error(f'UWAGA! allPhotos {allPhotos}!', log_path=logFileName)
 
     # print(allPhotos)
     if offerID_int == 9999999:
@@ -12379,7 +12374,7 @@ def save_hidden_campaigns():
         # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w allPhotos
         oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
         # print(oldPhotos_plus_saved_photos_sorted)
-        msq.handle_error(f'UWAGA! oldPhotos_plus_saved_photos_sorted: {oldPhotos_plus_saved_photos_sorted}!', log_path=logFileName)
+        # msq.handle_error(f'UWAGA! oldPhotos_plus_saved_photos_sorted: {oldPhotos_plus_saved_photos_sorted}!', log_path=logFileName)
         
         if len(oldPhotos_plus_saved_photos_sorted)>=1 and len(oldPhotos_plus_saved_photos_sorted) <=10:
             # dodaj zdjęcia do bazy i pobierz id galerii
@@ -12436,7 +12431,7 @@ def save_hidden_campaigns():
                     SET {dynamic_col_name} 
                     WHERE ID = %s;
                     '''
-            msq.handle_error(f'UWAGA! Po modyfikacji gallery_id ma wrtość: {gallery_id}!', log_path=logFileName)
+            # msq.handle_error(f'UWAGA! Po modyfikacji gallery_id ma wrtość: {gallery_id}!', log_path=logFileName)
 
             len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos_sorted)
             if 10 - len_oldPhotos_plus_saved_photos == 0:
@@ -12480,7 +12475,7 @@ def save_hidden_campaigns():
 
 
     id_gallery = gallery_id
-    msq.handle_error(f'UWAGA! id_gallery {id_gallery}!', log_path=logFileName)
+    # msq.handle_error(f'UWAGA! id_gallery {id_gallery}!', log_path=logFileName)
     # Przygotowanie zapytania SQL w zależności od tego, czy jest to nowy wpis, czy aktualizacja
     if offerID_int == 9999999:
         # Nowe ogłoszenie
@@ -12509,17 +12504,17 @@ def save_hidden_campaigns():
 
     # Wykonanie zapytania
     if msq.insert_to_database(zapytanie_sql, dane):
-        msq.handle_error(f'Oferta pracy została pomyślnie zapisana przez {session["username"]}!', log_path=logFileName)
-        flash(f'Oferta pracy została zapisana pomyślnie!', 'success')
+        msq.handle_error(f'Kampania została pomyślnie zapisana przez {session["username"]}!', log_path=logFileName)
+        flash(f'Kampania została zapisana pomyślnie!', 'success')
         return jsonify({
-            'message': 'Oferta pracy została zapisana pomyślnie!',
+            'message': 'Kampania została zapisana pomyślnie!',
             'success': True
         }), 200
     else:
-        msq.handle_error(f'UWAGA! Błąd zapisu! Oferta pracy nie została zapisana przez {session["username"]}!', log_path=logFileName)
-        flash(f'Błąd zapisu! Oferta pracy nie została zapisana!', 'danger')
+        msq.handle_error(f'UWAGA! Błąd zapisu! Kampania nie została zapisana przez {session["username"]}!', log_path=logFileName)
+        flash(f'Błąd zapisu! Kampania nie została zapisana!', 'danger')
         return jsonify({
-            'message': 'Błąd zapisu! Oferta pracy nie została zapisana!',
+            'message': 'Błąd zapisu! Kampania nie została zapisana!',
             'success': False
         }), 500
 
