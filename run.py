@@ -12184,7 +12184,7 @@ def hiddeCampaigns():
                             )
 
 
-@app.route('/save-hidden-campaigns')
+@app.route('/save-hidden-campaigns', methods=['POST'])
 def save_hidden_campaigns():
     # Sprawdzenie czy użytkownik jest zalogowany i ma uprawnienia
     if 'username' not in session or 'userperm' not in session:
