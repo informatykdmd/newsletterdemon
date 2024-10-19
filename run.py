@@ -12388,6 +12388,7 @@ def save_hidden_campaigns():
                             }), 200
 
     id_gallery = gallery_id
+    msq.handle_error(f'UWAGA! id_gallery {id_gallery}!', log_path=logFileName)
     # Przygotowanie zapytania SQL w zależności od tego, czy jest to nowy wpis, czy aktualizacja
     if offerID_int == 9999999:
         # Nowe ogłoszenie
