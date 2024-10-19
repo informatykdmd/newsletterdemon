@@ -12207,20 +12207,27 @@ def save_hidden_campaigns():
     created_by = request.form.get('created_by')
     author = request.form.get('author')
     target = request.form.get('target')
-    print('check 1', title, description, category,  offerID, created_by, author, target)
+
+    check = ('check 1', title, description, category,  offerID, created_by, author, target)
+    msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
+
     try: offerID_int = int(offerID)
     except ValueError:
         msq.handle_error(f'UWAGA! Błąd z id kampanii {title} wywołany przez {session["username"]}!', log_path=logFileName)
         flash('Błąd z id kampanii. Skontaktuj się z administratorem!', 'danger')
         return jsonify({'error': 'Błąd z id kampanii. Skontaktuj się z administratorem!'}), 400
 
-    print('check 2', title, description, category,  offerID, created_by, author, target)
+    check = ('check 2', title, description, category,  offerID, created_by, author, target)
+    msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
+
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     if not all([title, description, category]):
         msq.handle_error(f'UWAGA! Nie wszystkie wymagane dane zostały przekazane przez {session["username"]}!', log_path=logFileName)
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
+    
+    check = ('check 2', title, description, category,  offerID, created_by, author, target)
+    msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
 
-    print('check 3', title, description, category,  offerID, created_by, author, target)
     if offerID_int == 9999999:
         oldPhotos = []
         allPhotos = []
@@ -12238,7 +12245,9 @@ def save_hidden_campaigns():
 
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
-    print(photos)
+
+    msq.handle_error(f'UWAGA! photos {photos}!', log_path=logFileName)
+
     saved_photos =[]
     if photos:
         for photo in photos:
@@ -12257,6 +12266,11 @@ def save_hidden_campaigns():
                 except Exception as e:
                     msq.handle_error(f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', log_path=logFileName)
                     print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
+
+    msq.handle_error(f'UWAGA! saved_photos {saved_photos}!', log_path=logFileName)
+    
+    msq.handle_error(f'UWAGA! oldPhotos {oldPhotos}!', log_path=logFileName)
+    msq.handle_error(f'UWAGA! allPhotos {allPhotos}!', log_path=logFileName)
 
     # print(allPhotos)
     if offerID_int == 9999999:
