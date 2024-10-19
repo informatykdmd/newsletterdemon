@@ -12202,7 +12202,7 @@ def save_hidden_campaigns():
     title = request.form.get('title')
     description = request.form.get('description')
     category = request.form.get('category')
-    offerID = request.form.get('OfferID')
+    offerID = request.form.get('offerID')
     created_by = request.form.get('created_by')
     author = request.form.get('author')
     target = request.form.get('target')
