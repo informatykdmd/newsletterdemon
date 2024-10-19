@@ -11883,7 +11883,7 @@ def fb_groups_sender():
     category = data.get('category')
     section = data.get('section')
     get_id_gallery = data.get('id_gallery')
-    created_by = data.get('id_gallecreated_byry')
+    created_by = data.get('created_by')
     if get_id_gallery == "None":
         id_gallery = None
     else:
