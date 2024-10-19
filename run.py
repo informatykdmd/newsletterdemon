@@ -11884,7 +11884,7 @@ def fb_groups_sender():
     section = data.get('section')
     get_id_gallery = data.get('id_gallery')
     created_by = data.get('created_by')
-    msq.handle_error(f"created_by {created_by} category {category}  section {section}, id:{post_id}", log_path=logFileName)
+    # msq.handle_error(f"created_by {created_by} category {category}  section {section}, id:{post_id}", log_path=logFileName)
     if get_id_gallery == "None":
         id_gallery = None
     else:
@@ -12083,7 +12083,7 @@ def hiddeCampaigns():
     for item in ads_hidden_got:
         if 'fbgroups' not in item:
             item['fbgroups'] = {}
-        fbgroupsIDstatus = checkFbGroupstatus(section="hidden", post_id=item['id'])
+        fbgroupsIDstatus = checkFbGroupstatus(section="hiddeCampaigns", post_id=item['id'])
         item['fbgroups']['id'] = fbgroupsIDstatus[0]
         item['fbgroups']['post_id'] = fbgroupsIDstatus[1]
         item['fbgroups']['content'] = fbgroupsIDstatus[2]
