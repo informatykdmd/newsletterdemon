@@ -12407,6 +12407,25 @@ def save_hidden_campaigns():
                             'message': 'xxx',
                             'success': True
                             }), 200
+            else:
+                # Usuwam galerię jeżeli nie ma zdjęć
+                zapytanie_sql = f'''
+                    DELETE FROM ZdjeciaOfert WHERE ID = %s;
+                    '''
+                dane = (gallery_id, )
+
+                # print(zapytanie_sql, dane)
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Galeria została pomyslnie usunięta z powodu braku zdjęć przez {session["username"]}!', log_path=logFileName)
+                    gallery_id = None
+                else:
+                    msq.handle_error(f'UWAGA! Bład zapisu galerii! Oferta wynajmu nie została zapisana przez {session["username"]}!', log_path=logFileName)
+                    flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
+                    return jsonify({
+                            'message': 'xxx',
+                            'success': True
+                            }), 200
+
 
     id_gallery = gallery_id
     msq.handle_error(f'UWAGA! id_gallery {id_gallery}!', log_path=logFileName)
