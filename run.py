@@ -12249,6 +12249,7 @@ def save_hidden_campaigns():
     
 
     saved_photos =[]
+    msq.handle_error(f'UWAGA! photos {photos}!', log_path=logFileName)
     if photos:
         for photo in photos:
             if photo:
@@ -12265,7 +12266,7 @@ def save_hidden_campaigns():
                     saved_photos.append(complete_URL_PIC)
 
                     msq.handle_error(f'UWAGA! if secure_filename(photo.filename) in allPhotos:  photo.filename: {photo.filename} allPhotos: {allPhotos}!', log_path=logFileName)
-                    
+
                     if secure_filename(photo.filename) in allPhotos:
                         pobrany_index = allPhotos.index(secure_filename(photo.filename))
                         allPhotos[pobrany_index] = filename
