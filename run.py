@@ -12225,7 +12225,7 @@ def save_hidden_campaigns():
         msq.handle_error(f'UWAGA! Nie wszystkie wymagane dane zostały przekazane przez {session["username"]}!', log_path=logFileName)
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
     
-    check = ('check 2', title, description, category,  offerID, created_by, author, target)
+    check = ('check 3', title, description, category,  offerID, created_by, author, target)
     msq.handle_error(f'UWAGA! check {check}!', log_path=logFileName)
 
     if offerID_int == 9999999:
