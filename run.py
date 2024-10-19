@@ -12206,17 +12206,20 @@ def save_hidden_campaigns():
     created_by = request.form.get('created_by')
     author = request.form.get('author')
     target = request.form.get('target')
+    print('check 1', title, description, category,  offerID, created_by, author, target)
     try: offerID_int = int(offerID)
     except ValueError:
         msq.handle_error(f'UWAGA! Błąd z id kampanii {title} wywołany przez {session["username"]}!', log_path=logFileName)
         flash('Błąd z id kampanii. Skontaktuj się z administratorem!', 'danger')
         return redirect(url_for('index'))
 
+    print('check 2', title, description, category,  offerID, created_by, author, target)
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     if not all([title, description, category]):
         msq.handle_error(f'UWAGA! Nie wszystkie wymagane dane zostały przekazane przez {session["username"]}!', log_path=logFileName)
         return jsonify({'error': 'Nie wszystkie wymagane dane zostały przekazane'}), 400
 
+    print('check 3', title, description, category,  offerID, created_by, author, target)
     if offerID_int == 9999999:
         oldPhotos = []
         allPhotos = []
