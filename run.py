@@ -12072,6 +12072,7 @@ def hiddeCampaigns():
         return redirect(url_for('index'))
     
     ads_hidden_got = generator_hidden_campaigns()
+    print(ads_hidden_got)
 
     new_all_hidden = []
     for item in ads_hidden_got:
@@ -12551,4 +12552,4 @@ def update_hidden_campaigns_status():
 
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    app.run(debug=False, host='0.0.0.0', port=8000)
