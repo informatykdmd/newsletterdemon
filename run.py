@@ -12403,7 +12403,7 @@ def save_hidden_campaigns():
                 dynamic_amount_with_none = dynamic_amount_with_none[:-2]
 
                 zapytanie_sql_with_none = f'''INSERT INTO ZdjeciaOfert (Zdjecie_1) VALUES (%s);'''
-                dane = tuple(None,)
+                dane = tuple("",)
 
                 if msq.insert_to_database(zapytanie_sql_with_none, dane):
                     # Przykładowe dane
