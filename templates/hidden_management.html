@@ -396,7 +396,18 @@
 
                                 <div class="row">
                                     <div class="col-lg-5 col-sm-12">
-                                        {{len(post_data['photos'])}}
+                                        {% if post_data['photos'] | length > 0 %}
+                                            <img src="{{ post_data['photos'][0] }}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2">
+                                            {% if post_data['photos'] | length > 1 %}
+                                                <div class="row row-cols-4">
+                                                    {% for foto in post_data['photos'][1:] %}
+                                                        <div class="col mb-1">
+                                                            <img src="{{ foto }}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark">
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
                                         
                                         
                                         <div class="career-properties">
