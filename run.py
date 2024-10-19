@@ -12196,6 +12196,7 @@ def save_hidden_campaigns():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
         return redirect(url_for('index'))
     
+    print(request.form)
     # Odczytanie danych z formularza
     title = request.form.get('title')
     description = request.form.get('description')
