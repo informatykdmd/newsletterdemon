@@ -964,7 +964,11 @@ def generator_hidden_campaigns():
     except: return []
     
     for rec in took_allRecords:
-        try: fotoList = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', rec[6])[0][1:-1]
+        try: 
+            if rec[6] is not None:
+                fotoList = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', rec[6])[0][1:-1]
+            else:
+                fotoList = []
         except IndexError: fotoList = []
         theme = {
             'id': rec[0],
