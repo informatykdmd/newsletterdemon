@@ -12234,6 +12234,7 @@ def save_hidden_campaigns():
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
     print(request.files)
+    print(photos)
     saved_photos =[]
     if photos:
         for photo in photos:
