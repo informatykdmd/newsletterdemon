@@ -974,7 +974,7 @@ def generator_hidden_campaigns():
             'category': rec[4],
             'author': rec[5],
             'id_gallery': rec[6],
-            'photos': fotoList, #Lista zdjęć
+            'photos': [foto for foto in fotoList if foto is not None], #Lista zdjęć
             'created_by': rec[7],
             'status': rec[8],
             'data': rec[9]
