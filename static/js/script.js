@@ -343,7 +343,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     
     var category = document.getElementById('category_' + offerId).value;
     var offerIDbox = document.getElementById('OfferID_' + offerId).value;
-    var created_by = document.getElementById('created_by_' + offerId).value;
+    var created_by = document.getElementById('setCreated_by_' + offerId).value;
     var author = document.getElementById('author_' + offerId).value;
     var target = document.getElementById('target_' + offerId).value;
 
