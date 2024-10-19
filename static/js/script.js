@@ -1329,7 +1329,7 @@ function collectAndSendHiddenFBform(postId) {
             ponow10razy: document.getElementById(`ponow10razy_${postId}`).checked
         }
     };
-
+    console.log('dataToSend', dataToSend);
     // Wysyłanie danych AJAX
     fetch('/fb-groups-sender', {
         method: 'POST',
