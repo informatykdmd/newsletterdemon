@@ -12197,6 +12197,7 @@ def save_hidden_campaigns():
         return redirect(url_for('index'))
     
     print(request.form)
+    print(request.files.getlist('photos[]'))
     # Odczytanie danych z formularza
     title = request.form.get('title')
     description = request.form.get('description')
@@ -12211,7 +12212,6 @@ def save_hidden_campaigns():
         flash('Błąd z id kampanii. Skontaktuj się z administratorem!', 'danger')
         return redirect(url_for('index'))
 
-    print(request.files)
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
     if not all([title, description, category]):
         msq.handle_error(f'UWAGA! Nie wszystkie wymagane dane zostały przekazane przez {session["username"]}!', log_path=logFileName)
