@@ -1147,7 +1147,7 @@
             console.log(galleryValue);  // Sprawdź, jaka jest wartość
 
             // Jeśli galeria zawiera zdjęcia (wartość to liczba), to aktywuj more130
-            if (galleryValue !== 'None' && galleryValue !== '') {
+            if (galleryValue !== 'None' && galleryValue !== '' && galleryValue !== null) {
                 this.divMore130.style.display = 'block';
                 this.divMinus130.style.display = 'none';
 
