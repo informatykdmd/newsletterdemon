@@ -11991,7 +11991,7 @@ def fb_groups_sender():
         msq.handle_error(f'Harmonogram kampanii dla {section}, id:{post_id} zsotał poprawnie zapisany przez {session["username"]}.', log_path=logFileName)
         return jsonify({'success': True, 'message': f'Zmiany zostały zapisane!'})
     else:
-        msq.handle_error(f"Błąd zapisu bazy danych dla {section}, id:{post_id}", log_path=logFileName)
+        msq.handle_error(f"Błąd zapisu bazy danych dla {created_by} {section}, id:{post_id}", log_path=logFileName)
         return jsonify({'success': False, 'message': 'Błąd zapisu bazy danych'}), 400
 
 @app.route('/remove-career-fbgroups', methods=["POST"])
