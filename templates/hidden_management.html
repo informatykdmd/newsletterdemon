@@ -1135,6 +1135,7 @@
             this.updateCharCount();
 
             // Sprawdzenie, czy `id_gallery` jest None
+            this.galletyValue = false
             this.checkGallery();
 
             // Nasłuchiwanie zmian w treści contentEditable
@@ -1148,6 +1149,7 @@
 
             // Jeśli galeria zawiera zdjęcia (wartość to liczba), to aktywuj more130
             if (galleryValue !== 'None' && galleryValue !== '' && galleryValue !== null) {
+                this.galletyValue = false
                 this.divMore130.style.display = 'block';
                 this.divMinus130.style.display = 'none';
 
@@ -1157,6 +1159,7 @@
                 // Resetowanie zaznaczenia, gdy galeria zawiera zdjęcia
                 this.resetColorSelection();
             } else {
+                this.galletyValue = true
                 this.divMore130.style.display = 'none';
                 this.divMinus130.style.display = 'block';
 
@@ -1193,7 +1196,7 @@
             this.charCountDiv.textContent = `${charCount} znaków`;
 
             // Przełączanie między trybami
-            if (charCount > 130) {
+            if (charCount > 130 && this.galletyValue === true) {
                 this.divMore130.style.display = 'block';
                 this.divMinus130.style.display = 'none';
 
