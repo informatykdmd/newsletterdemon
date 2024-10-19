@@ -135,6 +135,7 @@ def give_me_curently_tasks():
                 'content': item['content'],
                 'color_choice': item['color_choice'],
                 'category': item['category'],
+                'created_by': item['created_by'],
                 'section': item['section'],
                 'id_gallery': item['id_gallery']
             }

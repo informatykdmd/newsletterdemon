@@ -58,6 +58,7 @@ def make_fbgroups_task(data):
     waitnig_list_id = data['id']
     id_ogloszenia = data['post_id']
     kategoria_ogloszenia = data['category'] 
+    created_by = data['created_by'] 
     sekcja_ogloszenia = data['section']
     tresc_ogloszenia = data['content']
     styl_ogloszenia = data['color_choice']
@@ -102,12 +103,12 @@ def make_fbgroups_task(data):
             f"""INSERT INTO ogloszenia_fbgroups
                     (id_ogloszenia, waitnig_list_id, kategoria_ogloszenia, sekcja_ogloszenia, tresc_ogloszenia, 
                     styl_ogloszenia, poziom_harmonogramu, linkigrup_string, zdjecia_string, 
-                    id_zadania, status, active_task)
+                    id_zadania, status, active_task, created_by)
                 VALUES 
-                    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""",
+                    (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);""",
             (id_ogloszenia, waitnig_list_id, kategoria_ogloszenia, sekcja_ogloszenia, tresc_ogloszenia, 
             styl_ogloszenia, poziom_harmonogramu, linkigrup_string, zdjecia_string, 
-            id_zadania, status, active_task)
+            id_zadania, status, active_task, created_by)
             )
     else: return False
 
