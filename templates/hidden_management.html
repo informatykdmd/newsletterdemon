@@ -432,6 +432,7 @@
                                         <p>{{post_data['description']}}</p>
                                         <p>Autor: {{post_data['author']}}</p>
                                         <p>Kategoria: {{post_data['category']}}</p>
+                                        <p>Profil FB: {{post_data['created_by']}}</p>
                                     </div>
                                 </div>
                                 {% if post_data['status'] != 0 %}
@@ -510,7 +511,7 @@
                                                         <h5>FACEBOOK GRUPY</h5>
                                                         
                                                         <p>Status: Pierwsza publikacja na grupach facebook</p>
-                                                        {{post_data['created_by']}}
+                                                        
                                                     </div>
 
                                                     <div class="row row-cols-auto mb-3">
