@@ -12340,91 +12340,94 @@ def save_hidden_campaigns():
                         'message': 'Nie udało się pobrać galerii!',
                         'success': False
                         }), 200
+        else:
+            current_gallery = ()
+            current_gallery_list = []
 
-            aktualne_linkURL_set = set()
-            for linkUrl in current_gallery:
-                nazwaZdjecia = str(linkUrl).split('/')[-1]
-                aktualne_linkURL_set.add(nazwaZdjecia)
+        aktualne_linkURL_set = set()
+        for linkUrl in current_gallery:
+            nazwaZdjecia = str(linkUrl).split('/')[-1]
+            aktualne_linkURL_set.add(nazwaZdjecia)
 
-            przeslane_nazwyZdjec_set = set()
-            for nazwaZdjecia in oldPhotos:
-                przeslane_nazwyZdjec_set.add(nazwaZdjecia)
+        przeslane_nazwyZdjec_set = set()
+        for nazwaZdjecia in oldPhotos:
+            przeslane_nazwyZdjec_set.add(nazwaZdjecia)
 
-            zdjeciaDoUsuniecia = aktualne_linkURL_set.difference(przeslane_nazwyZdjec_set)
-            for delIt in zdjeciaDoUsuniecia:
-                complete_URL_PIC = f'{mainDomain_URL}{delIt}'
-                if complete_URL_PIC in current_gallery_list:
-                    current_gallery_list.remove(complete_URL_PIC)
-                    try:
-                        file_path = upload_path + delIt
-                        if os.path.exists(file_path):
-                            os.remove(file_path)
-                        else:
-                            print(f"File {file_path} not found.")
-                    except Exception as e:
-                        msq.handle_error(f'UWAGA! Error removing file {upload_path + delIt}: {e}', log_path=logFileName)
-                        print(f"Error removing file {upload_path + delIt}: {e}")
+        zdjeciaDoUsuniecia = aktualne_linkURL_set.difference(przeslane_nazwyZdjec_set)
+        for delIt in zdjeciaDoUsuniecia:
+            complete_URL_PIC = f'{mainDomain_URL}{delIt}'
+            if complete_URL_PIC in current_gallery_list:
+                current_gallery_list.remove(complete_URL_PIC)
+                try:
+                    file_path = upload_path + delIt
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                    else:
+                        print(f"File {file_path} not found.")
+                except Exception as e:
+                    msq.handle_error(f'UWAGA! Error removing file {upload_path + delIt}: {e}', log_path=logFileName)
+                    print(f"Error removing file {upload_path + delIt}: {e}")
 
-            oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
+        oldPhotos_plus_saved_photos = current_gallery_list + saved_photos
 
-            index_map = {nazwa: index for index, nazwa in enumerate(allPhotos)}
+        index_map = {nazwa: index for index, nazwa in enumerate(allPhotos)}
 
-            # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w allPhotos
-            oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
-            # print(oldPhotos_plus_saved_photos_sorted)
+        # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w allPhotos
+        oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
+        # print(oldPhotos_plus_saved_photos_sorted)
+        
+        if len(oldPhotos_plus_saved_photos_sorted)>=1 and len(oldPhotos_plus_saved_photos_sorted) <=10:
+            # dodaj zdjęcia do bazy i pobierz id galerii
+            dynamic_col_name = ''
             
-            if len(oldPhotos_plus_saved_photos_sorted)>=1 and len(oldPhotos_plus_saved_photos_sorted) <=10:
-                # dodaj zdjęcia do bazy i pobierz id galerii
-                dynamic_col_name = ''
-                
-                for i in range(10):
-                    dynamic_col_name += f'Zdjecie_{i + 1} = %s, '
+            for i in range(10):
+                dynamic_col_name += f'Zdjecie_{i + 1} = %s, '
 
-                dynamic_col_name = dynamic_col_name[:-2]
+            dynamic_col_name = dynamic_col_name[:-2]
 
-                zapytanie_sql = f'''
-                    UPDATE ZdjeciaOfert
-                    SET {dynamic_col_name} 
-                    WHERE ID = %s;
-                    '''
-                len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos_sorted)
-                if 10 - len_oldPhotos_plus_saved_photos == 0:
-                    dane = tuple(a for a in oldPhotos_plus_saved_photos_sorted + [gallery_id])
-                else:
-                    oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos_sorted
-                    for _ in  range(10 - len_oldPhotos_plus_saved_photos):
-                        oldPhotos_plus_saved_photos_plus_empyts += [None]
-                    dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
-
-                # print(zapytanie_sql, dane)
-                if msq.insert_to_database(zapytanie_sql, dane):
-                    msq.handle_error(f'Galeria została pomyslnie zaktualizowana przez {session["username"]}!', log_path=logFileName)
-                    print('update_galerii_udany')
-                else:
-                    msq.handle_error(f'UWAGA! Bład zapisu galerii! Oferta wynajmu nie została zapisana przez {session["username"]}!', log_path=logFileName)
-                    flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
-                    return jsonify({
-                            'message': 'xxx',
-                            'success': True
-                            }), 200
+            zapytanie_sql = f'''
+                UPDATE ZdjeciaOfert
+                SET {dynamic_col_name} 
+                WHERE ID = %s;
+                '''
+            len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos_sorted)
+            if 10 - len_oldPhotos_plus_saved_photos == 0:
+                dane = tuple(a for a in oldPhotos_plus_saved_photos_sorted + [gallery_id])
             else:
-                # Usuwam galerię jeżeli nie ma zdjęć
-                zapytanie_sql = f'''
-                    DELETE FROM ZdjeciaOfert WHERE ID = %s;
-                    '''
-                dane = (gallery_id, )
+                oldPhotos_plus_saved_photos_plus_empyts = oldPhotos_plus_saved_photos_sorted
+                for _ in  range(10 - len_oldPhotos_plus_saved_photos):
+                    oldPhotos_plus_saved_photos_plus_empyts += [None]
+                dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
 
-                # print(zapytanie_sql, dane)
-                if msq.insert_to_database(zapytanie_sql, dane):
-                    msq.handle_error(f'Galeria została pomyslnie usunięta z powodu braku zdjęć przez {session["username"]}!', log_path=logFileName)
-                    gallery_id = None
-                else:
-                    msq.handle_error(f'UWAGA! Bład zapisu galerii! Oferta wynajmu nie została zapisana przez {session["username"]}!', log_path=logFileName)
-                    flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
-                    return jsonify({
-                            'message': 'xxx',
-                            'success': True
-                            }), 200
+            # print(zapytanie_sql, dane)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Galeria została pomyslnie zaktualizowana przez {session["username"]}!', log_path=logFileName)
+                print('update_galerii_udany')
+            else:
+                msq.handle_error(f'UWAGA! Bład zapisu galerii! Oferta wynajmu nie została zapisana przez {session["username"]}!', log_path=logFileName)
+                flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
+                return jsonify({
+                        'message': 'xxx',
+                        'success': True
+                        }), 200
+        else:
+            # Usuwam galerię jeżeli nie ma zdjęć
+            zapytanie_sql = f'''
+                DELETE FROM ZdjeciaOfert WHERE ID = %s;
+                '''
+            dane = (gallery_id, )
+
+            # print(zapytanie_sql, dane)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Galeria została pomyslnie usunięta z powodu braku zdjęć przez {session["username"]}!', log_path=logFileName)
+                gallery_id = None
+            else:
+                msq.handle_error(f'UWAGA! Bład zapisu galerii! Oferta wynajmu nie została zapisana przez {session["username"]}!', log_path=logFileName)
+                flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
+                return jsonify({
+                        'message': 'xxx',
+                        'success': True
+                        }), 200
 
 
     id_gallery = gallery_id
