@@ -12246,12 +12246,15 @@ def save_hidden_campaigns():
     # Przetwarzanie przesłanych zdjęć
     photos = request.files.getlist('photos[]')
 
-    msq.handle_error(f'UWAGA! photos {photos}!', log_path=logFileName)
+    
 
     saved_photos =[]
     if photos:
         for photo in photos:
             if photo:
+
+                msq.handle_error(f'UWAGA! photo {photo}!', log_path=logFileName)
+
                 filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
                 # print(filename)
                 full_path = os.path.join(upload_path, filename)
@@ -12260,6 +12263,9 @@ def save_hidden_campaigns():
                     photo.save(full_path)
                     
                     saved_photos.append(complete_URL_PIC)
+
+                    msq.handle_error(f'UWAGA! if secure_filename(photo.filename) in allPhotos:  photo.filename: {photo.filename} allPhotos: {allPhotos}!', log_path=logFileName)
+                    
                     if secure_filename(photo.filename) in allPhotos:
                         pobrany_index = allPhotos.index(secure_filename(photo.filename))
                         allPhotos[pobrany_index] = filename
