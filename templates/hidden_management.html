@@ -1156,6 +1156,15 @@
 
                 // Resetowanie zaznaczenia, gdy galeria zawiera zdjęcia
                 this.resetColorSelection();
+            } else {
+                this.divMore130.style.display = 'none';
+                this.divMinus130.style.display = 'block';
+
+                this.contentDiv.classList.remove('mainDiv-more130');
+                this.contentDiv.classList.add('mainDiv-minus130');
+
+                // Resetowanie zaznaczenia, gdy galeria zawiera zdjęcia
+                this.resetColorSelection();
             }
         }
 
