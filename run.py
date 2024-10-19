@@ -12386,11 +12386,53 @@ def save_hidden_campaigns():
 
             dynamic_col_name = dynamic_col_name[:-2]
 
-            zapytanie_sql = f'''
-                UPDATE ZdjeciaOfert
-                SET {dynamic_col_name} 
-                WHERE ID = %s;
-                '''
+            if gallery_id is not None:
+                zapytanie_sql = f'''
+                    UPDATE ZdjeciaOfert
+                    SET {dynamic_col_name} 
+                    WHERE ID = %s;
+                    '''
+            else:
+                # dodaj zdjęcia do bazy i pobierz id galerii
+                dynamic_col_name_with_none = ''
+                dynamic_amount_with_none = ''
+                for i in range(len(saved_photos)):
+                    dynamic_col_name_with_none += f'Zdjecie_{i + 1}, '
+                    dynamic_amount_with_none += '%s, '
+                dynamic_col_name_with_none = dynamic_col_name_with_none[:-2]
+                dynamic_amount_with_none = dynamic_amount_with_none[:-2]
+
+                zapytanie_sql_with_none = f'''INSERT INTO ZdjeciaOfert (Zdjecie_1) VALUES (%s);'''
+                dane = tuple(None,)
+
+                if msq.insert_to_database(zapytanie_sql_with_none, dane):
+                    # Przykładowe dane
+                    try:
+                        gallery_id = msq.connect_to_database(
+                            '''
+                                SELECT * FROM ZdjeciaOfert ORDER BY ID DESC;
+                            ''')[0][0]
+                    except Exception as err:
+                        msq.handle_error(f'Błąd podczas tworzenia galerii przez {session["username"]}! {err}.', log_path=logFileName)
+                        flash(f'Błąd podczas tworzenia galerii! {err}.', 'danger')
+                        return jsonify({
+                            'message': f'Błąd podczas tworzenia galerii! \n {err}',
+                            'success': True
+                            }), 200
+                else:
+                    msq.handle_error(f'UWAGA! Błąd podczas zapisywania galerii w bazie przez {session["username"]}!', log_path=logFileName)
+                    flash(f'Błąd podczas zapisywania galerii w bazie!', 'danger')
+                    return jsonify({
+                        'message': 'Błąd podczas zapisywania galerii w bazie!',
+                        'success': True
+                        }), 200
+
+                zapytanie_sql = f'''
+                    UPDATE ZdjeciaOfert
+                    SET {dynamic_col_name} 
+                    WHERE ID = %s;
+                    '''
+
             len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos_sorted)
             if 10 - len_oldPhotos_plus_saved_photos == 0:
                 dane = tuple(a for a in oldPhotos_plus_saved_photos_sorted + [gallery_id])
