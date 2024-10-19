@@ -12403,9 +12403,9 @@ def save_hidden_campaigns():
                 dynamic_amount_with_none = dynamic_amount_with_none[:-2]
 
                 zapytanie_sql_with_none = f'''INSERT INTO ZdjeciaOfert ({dynamic_col_name_with_none}) VALUES ({dynamic_amount_with_none});'''
-                dane = tuple(a for a in saved_photos)
+                dane_with_none = tuple(a for a in saved_photos)
 
-                if msq.insert_to_database(zapytanie_sql_with_none, dane):
+                if msq.insert_to_database(zapytanie_sql_with_none, dane_with_none):
                     # Przykładowe dane
                     try:
                         gallery_id = msq.connect_to_database(
@@ -12432,6 +12432,7 @@ def save_hidden_campaigns():
                     SET {dynamic_col_name} 
                     WHERE ID = %s;
                     '''
+            msq.handle_error(f'UWAGA! Po modyfikacji gallery_id ma wrtość: {gallery_id}!', log_path=logFileName)
 
             len_oldPhotos_plus_saved_photos = len(oldPhotos_plus_saved_photos_sorted)
             if 10 - len_oldPhotos_plus_saved_photos == 0:
@@ -12442,7 +12443,8 @@ def save_hidden_campaigns():
                     oldPhotos_plus_saved_photos_plus_empyts += [None]
                 dane = tuple(a for a in oldPhotos_plus_saved_photos_plus_empyts + [gallery_id])
 
-            # print(zapytanie_sql, dane)
+            msq.handle_error(f'UWAGA! zapytanie_sql : {gallery_id} dane: {dane}!', log_path=logFileName)
+
             if msq.insert_to_database(zapytanie_sql, dane):
                 msq.handle_error(f'Galeria została pomyslnie zaktualizowana przez {session["username"]}!', log_path=logFileName)
                 print('update_galerii_udany')
