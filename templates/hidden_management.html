@@ -745,7 +745,7 @@
                                         </div>
                                     </form>
                                     {% else %}
-                                    <form method="POST" id="remove_hidden_campaigns_{{post_id}}" action="{{ url_for('remove_hidden_campaigns') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz zatrzymać tę kampanię na grupach facebooka?');">
+                                    <form method="POST" id="remove_hidden_campaigns_{{post_id}}" action="{{ url_for('remove_career_fbgroups') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz zatrzymać tę kampanię na grupach facebooka?');">
                                         <div class="row">
                                             <div class="col-lg-12 col-sm-12 mb-3 mt-3">
                                                 <h3>Monitoring Kampanii Na grupach FB</h3>
@@ -820,6 +820,7 @@
                                                 <div class="mt-30">
                                                     <input type="hidden" value="{{post_data['fbgroups']['id']}}" name="waitnig_list_id" id="waitnig_list_id_{{post_id}}"/>
                                                     <input type="hidden" id="section_{{post_id}}" name="section" value="hiddeCampaigns" />
+                                                    <input type="hidden" id="postID_{{post_id}}" name="PostID" value="{{post_id}}" />
                                                     <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Zatrzymaj Kampanię</button>
                                                 </div>
                                             </div>

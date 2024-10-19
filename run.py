@@ -12536,8 +12536,8 @@ def remove_hidden_campaigns():
     if request.method == 'POST':
         form_data = request.form.to_dict()
 
-        msq.handle_error(f'form_data {form_data}!', log_path=logFileName)
         
+        msq.handle_error(f'form_data {form_data}!', log_path=logFileName)
         try: form_data['PostID']
         except KeyError: return redirect(url_for('index'))
         set_post_id = int(form_data['PostID'])
