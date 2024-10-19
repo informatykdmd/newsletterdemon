@@ -12072,7 +12072,7 @@ def hiddeCampaigns():
         return redirect(url_for('index'))
     
     ads_hidden_got = generator_hidden_campaigns()
-    print(ads_hidden_got)
+
 
     new_all_hidden = []
     for item in ads_hidden_got:
