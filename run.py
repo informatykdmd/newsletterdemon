@@ -12211,7 +12211,7 @@ def save_hidden_campaigns():
     except ValueError:
         msq.handle_error(f'UWAGA! Błąd z id kampanii {title} wywołany przez {session["username"]}!', log_path=logFileName)
         flash('Błąd z id kampanii. Skontaktuj się z administratorem!', 'danger')
-        return redirect(url_for('index'))
+        return jsonify({'error': 'Błąd z id kampanii. Skontaktuj się z administratorem!'}), 400
 
     print('check 2', title, description, category,  offerID, created_by, author, target)
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
