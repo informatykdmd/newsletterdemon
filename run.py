@@ -12416,7 +12416,7 @@ def save_hidden_campaigns():
 
     # Wykonanie zapytania
     if msq.insert_to_database(zapytanie_sql, dane):
-        msq.handle_error(f'SOferta pracy została pomyślnie zapisana przez {session["username"]}!', log_path=logFileName)
+        msq.handle_error(f'Oferta pracy została pomyślnie zapisana przez {session["username"]}!', log_path=logFileName)
         flash(f'Oferta pracy została zapisana pomyślnie!', 'success')
         return jsonify({
             'message': 'Oferta pracy została zapisana pomyślnie!',
