@@ -85,9 +85,10 @@ def get_waitnigfblist():
                     }
             },
             'category': data[51],
-            'section': data[52],
-            'id_gallery': data[53],
-            'data_aktualizacji': data[54]
+            'created_by': data[52],
+            'section': data[53],
+            'id_gallery': data[54],
+            'data_aktualizacji': data[55]
         }
         export_list.append(theme)
 
