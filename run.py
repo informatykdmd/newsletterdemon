@@ -12387,11 +12387,11 @@ def save_hidden_campaigns():
                             'success': True
                             }), 200
 
-
+    id_gallery = gallery_id
     # Przygotowanie zapytania SQL w zależności od tego, czy jest to nowy wpis, czy aktualizacja
     if offerID_int == 9999999:
         # Nowe ogłoszenie
-        id_gallery = gallery_id
+        
         
         zapytanie_sql = '''
             INSERT INTO hidden_campaigns (title, description, target, category, author, id_gallery, created_by, status)
