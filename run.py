@@ -12375,6 +12375,7 @@ def save_hidden_campaigns():
         # Sortowanie oldPhotos_plus_saved_photos na podstawie pozycji w allPhotos
         oldPhotos_plus_saved_photos_sorted = sorted(oldPhotos_plus_saved_photos, key=lambda x: index_map[x.split('/')[-1]])
         # print(oldPhotos_plus_saved_photos_sorted)
+        msq.handle_error(f'UWAGA! oldPhotos_plus_saved_photos_sorted: {oldPhotos_plus_saved_photos_sorted}!', log_path=logFileName)
         
         if len(oldPhotos_plus_saved_photos_sorted)>=1 and len(oldPhotos_plus_saved_photos_sorted) <=10:
             # dodaj zdjęcia do bazy i pobierz id galerii
