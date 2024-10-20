@@ -135,7 +135,7 @@ def main():
                     if HTML != '':
                         sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
                         archive_sents(row[1])
-                handle_error(f"Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}\n")
+                        handle_error(f"Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE} do {data[1]} \n")
 
         ################################################################
         # Aktywacja konta subskrybenta
