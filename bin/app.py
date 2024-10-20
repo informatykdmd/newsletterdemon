@@ -67,7 +67,7 @@ def make_fbgroups_task(data):
     
 
     dump_key_links = prepare_shedule.connect_to_database(
-            f"""SELECT link FROM facebook_gropus WHERE category = '{kategoria_ogloszenia} AND created_by = {created_by}';""")
+            f"""SELECT link FROM facebook_gropus WHERE category = '{kategoria_ogloszenia}' AND created_by = '{created_by}';""")
     linkigrup_string = '-@-'.join(link[0] for link in dump_key_links)
 
     fotolinkigrup_string = ""  # Dodajemy wartość domyślną
