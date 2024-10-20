@@ -2365,6 +2365,13 @@ def set_plan():
         if msq.insert_to_database(zapytanie_sql, dane):
             msq.handle_error(f'Plan {PLAN_NAME} został aktywowany przez {session["username"]}!', log_path=logFileName)
             flash('Plan został aktywowany!', 'success')
+            msq.connect_to_database(
+                """
+                    TRUNCATE TABLE schedule;
+                """
+            )
+            msq.handle_error(f'Tabela schedule został wyczysczona pod plan {PLAN_NAME} przez {session["username"]}!', log_path=logFileName)
+            flash('Tabela schedule została przygotowana dla planu {PLAN_NAME}!', 'success')
             return redirect(url_for('newsletter'))
 
     return redirect(url_for('newsletter'))
