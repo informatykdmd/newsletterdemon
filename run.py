@@ -2371,7 +2371,7 @@ def set_plan():
                 """
             )
             msq.handle_error(f'Tabela schedule został wyczysczona pod plan {PLAN_NAME} przez {session["username"]}!', log_path=logFileName)
-            flash('Tabela schedule została przygotowana dla planu {PLAN_NAME}!', 'success')
+            flash(f'Tabela schedule została przygotowana dla planu {PLAN_NAME}!', 'success')
             return redirect(url_for('newsletter'))
 
     return redirect(url_for('newsletter'))
