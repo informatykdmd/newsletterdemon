@@ -99,18 +99,18 @@
                                             required>
 
                                             <option value="">Kategoria grupy</option>
-                                            <option value="budowy">Budowy</option>
-                                            <option value="murarze">Murarze</option>
-                                            <option value="domy">Budowa domów</option>
-                                            <option value="ciesle">Cieśle</option>
-                                            <option value="szalunkowcy">Szalunkowcy</option>
-                                            <option value="dekarze">Dekarze</option>
-                                            <option value="ocieplenia">Ocieplenia</option>
-                                            <option value="ekipy">Ekipy budowlane</option>
-                                            <option value="praca">Praca</option>
-                                            <option value="zagranica">Praca za granicą</option>
-                                            <option value="nieruchomosci">Nieruchomości</option>
-                                            <option value="inne">Inne</option>
+                                            <option value="budowy">Budowy ({{categoryStats['budowy']}})</option>
+                                            <option value="murarze">Murarze ({{categoryStats['murarze']}})</option>
+                                            <option value="domy">Budowa domów ({{categoryStats['domy']}})</option>
+                                            <option value="ciesle">Cieśle ({{categoryStats['ciesle']}})</option>
+                                            <option value="szalunkowcy">Szalunkowcy ({{categoryStats['szalunkowcy']}})</option>
+                                            <option value="dekarze">Dekarze ({{categoryStats['dekarze']}})</option>
+                                            <option value="ocieplenia">Ocieplenia ({{categoryStats['ocieplenia']}})</option>
+                                            <option value="ekipy">Ekipy budowlane ({{categoryStats['ekipy']}})</option>
+                                            <option value="praca">Praca ({{categoryStats['praca']}})</option>
+                                            <option value="zagranica">Praca za granicą ({{categoryStats['zagranica']}})</option>
+                                            <option value="nieruchomosci">Nieruchomości ({{categoryStats['nieruchomosci']}})</option>
+                                            <option value="inne">Inne ({{categoryStats['inne']}})</option>
                                         </select>
                                     </div>
 
@@ -190,7 +190,7 @@
                                     </div>
                                     <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="display-6 formatuj-maly-font">{{post_data['category'][:12]}}</span>
+                                            <span class="display-6 formatuj-maly-font">{{post_data['category']}} ({{categoryStats[post_data['category']]}})</span>
                                         </a>
                                     </div>
                                     <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">

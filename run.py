@@ -270,6 +270,32 @@ def generator_facebookGroups(cat='all'):
         groupsData.append(theme)
     return groupsData
 
+def generator_FbGroupsStats(cat='all') -> dict:
+    groupsData = []
+    if cat == 'all':
+        took_groups = take_data_table('*', 'facebook_gropus')
+    else:
+        took_groups = take_data_where_ID('*', 'facebook_gropus', 'category', cat)
+    for data in took_groups:
+
+        theme = {
+            'id': data[0], 
+            'name': data[1],
+            'category': data[2], 
+            'created_by': data[3], 
+            'link': data[4]
+            }
+        groupsData.append(theme)
+
+    statsDict ={}
+    for group in groupsData:
+        if group['category'] not in statsDict:
+            statsDict[group['category']] = 0
+        statsDict[group['category']] += 1
+
+    return statsDict
+
+
 def generator_daneDBList():
     daneList = []
     took_allPost = msq.connect_to_database(f'SELECT * FROM blog_posts ORDER BY ID DESC;') # take_data_table('*', 'blog_posts')
@@ -12084,7 +12110,7 @@ def hiddeCampaigns():
         return redirect(url_for('index'))
     
     ads_hidden_got = generator_hidden_campaigns()
-
+    categoryStats = generator_FbGroupsStats()
 
     new_all_hidden = []
     for item in ads_hidden_got:
@@ -12187,6 +12213,7 @@ def hiddeCampaigns():
                             userperm=session['userperm'], 
                             user_brands=session['brands'], 
                             ads_hidden_campaigns=ads_hidden_campaigns,
+                            categoryStats=categoryStats,
                             pagination=pagination,
                             domy=domy,
                             budownictwo=budownictwo,
