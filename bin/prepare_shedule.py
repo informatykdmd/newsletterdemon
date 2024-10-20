@@ -31,7 +31,8 @@ def prepare_mailing_plan(posts, previous_mailings, set_start_time = None):
 
     # Ustaw odstęp czasowy między wysyłkami
     for i, mailing in enumerate(mailing_plan):
-        mailing['send_time'] += timedelta(minutes=i * time_interval_minutes)
+        # mailing['send_time'] += timedelta(minutes=i * time_interval_minutes)
+        mailing['send_time'] = set_start_time + timedelta(minutes=i * time_interval_minutes)
 
     return mailing_plan
 def save_shedule(shcedule):
