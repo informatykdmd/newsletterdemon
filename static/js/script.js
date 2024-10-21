@@ -357,8 +357,8 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     }
 
     // Dzielimy wartości
-    const category_splitted = category_value.split('/')[0];
-    const created_by_splitted = category_value.split('/')[1];
+    const category_splitted = category_value.split('/')[1];
+    const created_by_splitted = category_value.split('/')[0];
 
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
