@@ -300,33 +300,18 @@
 
                                                         <option value="">Kategoria grupy</option>
                                                         {% set selected_cateName = post_data['created_by'] ~ '/' ~ post_data['category'] %}
-                                                        {% for cateName in categoryStats.keys() %}
+                                                        {% for cateName, amount in categoryStats.items() %}
                                                             <option value="{{ cateName }}" 
                                                                 {% if selected_cateName == cateName %} 
                                                                     selected 
                                                                 {% endif %}>
-                                                                {{ cateName }}
+                                                                {{ cateName }} ({{ amount }})
                                                             </option>
                                                         {% endfor %}
                                                     </select>
                                                    
                                                 </div>
-                                                
-                                                <!-- created_by -->
-                                                <!-- <div class="mb-3">
-                                                    <select 
-                                                        class="form-select dark-mode mb-2 mt-2" 
-                                                        style="max-height: 30px; font-size: 12px;" 
-                                                        id="setCreated_by_{{post_id}}" 
-                                                        name="setCreated_by"
-                                                        required>
-
-                                                        <option value="">Wybierz profil FB</option>
-                                                        <option value="dmddomyy" {{ 'selected' if post_data['created_by'] == 'dmddomyy' else '' }}>DMD Domy</option>
-                                                        <option value="fredgraf" {{ 'selected' if post_data['created_by'] == 'fredgraf' else '' }}>Fred Graf</option>
-                                                    </select>
-                                                </div> -->
-            
+                                                            
                                                 <!-- moduł dropboxa -->
                                                 <label class="form-label">Zdjęcia Nieruchomości</label>
                                                 <div id="{{post_id}}-drop-area" class="drop-area">
