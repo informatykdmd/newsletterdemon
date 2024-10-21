@@ -725,7 +725,7 @@
                                             {% if ns.last_action_status is not none and ns.last_action_status != '' %}
                                                 <div class="col-1 me-1">
                                                     {% if ns.last_action_status == 1 %}
-                                                        {% if ns.last_action_index < ns.last_action_planned %}
+                                                        {% if ns.last_action_index + 1 <= ns.last_action_planned or ns.last_action_planned == 1 %}
                                                             <div class="ico-facebookgroups-active"></div>
                                                             <!-- <img src="static/img/facebookgroups-active.png" alt=""/> -->
                                                             {% else %}
