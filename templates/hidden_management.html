@@ -314,25 +314,17 @@
                                                         name="category"
                                                         required>
 
-                                                        <!-- <option value="">Kategoria grupy</option>
-                                                        <option value="praca" {{ 'selected' if post_data['category'] == 'praca' else '' }}>Praca</option>
-                                                        <option value="budowy" {{ 'selected' if post_data['category'] == 'budowy' else '' }}>Budowy</option>
-                                                        <option value="murarze" {{ 'selected' if post_data['category'] == 'murarze' else '' }}>Murarze</option>
-                                                        <option value="domy" {{ 'selected' if post_data['category'] == 'domy' else '' }}>Budowa domów</option>
-                                                        <option value="ciesle" {{ 'selected' if post_data['category'] == 'ciesle' else '' }}>Cieśle</option>
-                                                        <option value="szalunkowcy" {{ 'selected' if post_data['category'] == 'szalunkowcy' else '' }}>Szalunkowcy</option>
-                                                        <option value="dekarze" {{ 'selected' if post_data['category'] == 'dekarze' else '' }}>Dekarze</option>
-                                                        <option value="ocieplenia" {{ 'selected' if post_data['category'] == 'ocieplenia' else '' }}>Ocieplenia</option>
-                                                        <option value="ekipy" {{ 'selected' if post_data['category'] == 'ekipy' else '' }}>Ekipy budowlane</option>
-                                                        <option value="zagranica" {{ 'selected' if post_data['category'] == 'zagranica' else '' }}>Praca za granicą</option>
-                                                        <option value="inne" {{ 'selected' if post_data['category'] == 'inne' else '' }}>Inne</option> -->
-
                                                         <option value="">Kategoria grupy</option>
                                                         {% for cateName in categoryStats.keys() %}
-                                                            <option value="{{ cateName }}" {{ 'selected' if post_data['created_by'] ~ '/' ~ post_data['category'] == cateName else '' }}>{{ cateName }}</option>
+                                                            <option value="{{ cateName }}" 
+                                                                {% if (post_data['created_by'] ~ '/' ~ post_data['category']) == cateName %} 
+                                                                    selected 
+                                                                {% endif %}>
+                                                                {{ cateName }}
+                                                            </option>
                                                         {% endfor %}
                                                     </select>
-                                                    {{post_data['created_by'] ~ '/' ~ post_data['category'] | length}}
+                                                    {{post_data['created_by'] ~ '/' ~ post_data['category']}}
                                                 </div>
                                                 
                                                 <!-- created_by -->
