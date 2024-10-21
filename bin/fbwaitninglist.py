@@ -121,7 +121,7 @@ def give_me_curently_tasks():
             date_str = item['shedules']["0"]['datetime']
             repeats_last_int = -1
             
-        elif item['repeats_left'] == 0:
+        elif item['repeats_left'] == 0 and item['shedules'][f"{item['repeats_last']}"]['status'] != 4:
             all_ids_finished = getAllFinishedID(item['id'])
             for id_zadania in all_ids_finished:
                 if id_zadania is not None:
@@ -138,6 +138,8 @@ def give_me_curently_tasks():
             data = (item['id'],)
             insert_to_database(zapytanie_sql, data)
             handle_error(f"Usunięto zakończoną kampanię o id:{item['post_id']}!")
+            continue
+        elif item['repeats_left'] == 0:
             continue
         else:
             date_str = item['shedules'][str(int(item['repeats_last']) + 1)]['datetime']
