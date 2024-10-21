@@ -373,34 +373,13 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
             oldFotos_list.push(child.textContent);
         }
     });
-    // console.log('oldFotos_list', oldFotos_list);
 
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     toggleWarning('title_' + offerId, !title);
     toggleWarning('description_' + offerId, !description);
     toggleWarning('category_' + offerId, !category_splitted);
 
-    // if (!oldFotos) {
-    //     if (zdjecia.length === 0) {
-    //         const elementzdjecia = document.getElementById(offerId+'-drop-area');
-    
-    //         elementzdjecia.classList.add('input-warning');
-    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
-    
-    //         return;  // Zatrzymaj przesyłanie formularza
-    //     }
-    // } else {
-    //     if (zdjecia.length === 0 && oldFotos_list.length === 0) {
-    //         const elementzdjecia = document.getElementById(offerId+'-drop-area');
-    
-    //         elementzdjecia.classList.add('input-warning');
-    //         formIsValid = false; // Ustawiamy, że formularz jest niepoprawny
-    
-    //         return;  // Zatrzymaj przesyłanie formularza
-    //     }
-    // }
-    
-    
+
     // Dodawanie zdjęć jako FormData
     var formData = new FormData();
     zdjecia.forEach(file => {
