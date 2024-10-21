@@ -99,27 +99,11 @@
                                             required>
 
                                             <option value="">Kategoria grupy</option>
-                                            {% for cateName in categoryStats.keys() %}
-                                                <option value="{{ cateName }}">{{ cateName }}</option>
+                                            {% for cateName, amount in categoryStats.items() %}
+                                                <option value="{{ cateName }}">{{ cateName }} ({{ amount }})</option>
                                             {% endfor %}
                                         </select>
                                     </div>
-
-                                    <!-- created_by -->
-                                    <!-- <div class="mb-3">
-                                        <select 
-                                            class="form-select dark-mode mb-2 mt-2" 
-                                            style="max-height: 30px; font-size: 12px;" 
-                                            id="setCreated_by_9999999" 
-                                            name="setCreated_by"
-                                            required>
-
-                                            <option value="">Wybierz profil FB</option>
-                                            <option value="dmddomyy">DMD Domy</option>
-                                            <option value="fredgraf">Fred Graf</option>
-                                        </select>
-                                    </div> -->
-                                    
 
                                     <!-- moduł dropboxa -->
                                     <label class="form-label">Zdjęcia do ogłoszenia</label>
