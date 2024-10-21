@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from connectAndQuery import connect_to_database, insert_to_database
+from connectAndQuery import connect_to_database, insert_to_database, safe_connect_to_database, handle_error
 def get_waitnigfblist():
     
     zrzut_z_bazy = connect_to_database(
@@ -94,6 +94,22 @@ def get_waitnigfblist():
 
     return export_list
 
+def getAllFinishedID(id_on_waitninglist) -> tuple:
+    zrzut_z_bazy = safe_connect_to_database(
+        """
+            SELECT 
+                schedule_0_id, schedule_1_id, schedule_2_id,
+                schedule_3_id, schedule_4_id, schedule_5_id,
+                schedule_6_id, schedule_7_id, schedule_8_id,
+                schedule_9_id, schedule_10_id
+            FROM waitinglist_fbgroups WHERE id=%s;
+        """,
+        (id_on_waitninglist,)
+        )
+    if zrzut_z_bazy:
+        return zrzut_z_bazy[0]
+    else:
+        return ()
 def give_me_curently_tasks():
     schedules_data = get_waitnigfblist()
     export_ids = []
@@ -106,12 +122,22 @@ def give_me_curently_tasks():
             repeats_last_int = -1
             
         elif item['repeats_left'] == 0:
+            all_ids_finished = getAllFinishedID(item['id'])
+            for id_zadania in all_ids_finished:
+                if id_zadania is not None:
+                    zapytanie_sql = """
+                        DELETE FROM ogloszenia_fbgroups WHERE id_zadania = %s;
+                    """
+                    data = (id_zadania,)
+                    insert_to_database(zapytanie_sql, data)
+                    handle_error(f"Usunięto zadania z zakończonej kampanii o id:{item['post_id']} z zadań o id_zadania: {id_zadania}")
+
             zapytanie_sql = """
                 DELETE FROM waitinglist_fbgroups WHERE id = %s;
             """
             data = (item['id'],)
             insert_to_database(zapytanie_sql, data)
-            print("Procedura zakończenia kampanii")
+            handle_error(f"Usunięto zakończoną kampanię o id:{item['post_id']}!")
             continue
         else:
             date_str = item['shedules'][str(int(item['repeats_last']) + 1)]['datetime']
