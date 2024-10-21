@@ -89,7 +89,7 @@
                                         </a>
                                     </div>
                                     
-                                    <!-- category -->
+                                    <!-- created_by/category -->
                                     <div class="mb-3">
                                         <select 
                                             class="form-select dark-mode mb-2 mt-2" 
@@ -102,23 +102,11 @@
                                             {% for cateName in categoryStats.keys() %}
                                                 <option value="{{ cateName }}">{{ cateName }}</option>
                                             {% endfor %}
-                                            <option value="budowy">Budowy ({{categoryStats['budowy']}})</option>
-                                            <option value="murarze">Murarze ({{categoryStats['murarze']}})</option>
-                                            <option value="domy">Budowa domów ({{categoryStats['domy']}})</option>
-                                            <option value="ciesle">Cieśle ({{categoryStats['ciesle']}})</option>
-                                            <option value="szalunkowcy">Szalunkowcy ({{categoryStats['szalunkowcy']}})</option>
-                                            <option value="dekarze">Dekarze ({{categoryStats['dekarze']}})</option>
-                                            <option value="ocieplenia">Ocieplenia ({{categoryStats['ocieplenia']}})</option>
-                                            <option value="ekipy">Ekipy budowlane ({{categoryStats['ekipy']}})</option>
-                                            <option value="praca">Praca ({{categoryStats['praca']}})</option>
-                                            <option value="zagranica">Praca za granicą ({{categoryStats['zagranica']}})</option>
-                                            <option value="nieruchomosci">Nieruchomości ({{categoryStats['nieruchomosci']}})</option>
-                                            <option value="inne">Inne ({{categoryStats['inne']}})</option>
                                         </select>
                                     </div>
 
                                     <!-- created_by -->
-                                    <div class="mb-3">
+                                    <!-- <div class="mb-3">
                                         <select 
                                             class="form-select dark-mode mb-2 mt-2" 
                                             style="max-height: 30px; font-size: 12px;" 
@@ -130,7 +118,7 @@
                                             <option value="dmddomyy">DMD Domy</option>
                                             <option value="fredgraf">Fred Graf</option>
                                         </select>
-                                    </div>
+                                    </div> -->
                                     
 
                                     <!-- moduł dropboxa -->
@@ -326,7 +314,7 @@
                                                         name="category"
                                                         required>
 
-                                                        <option value="">Kategoria grupy</option>
+                                                        <!-- <option value="">Kategoria grupy</option>
                                                         <option value="praca" {{ 'selected' if post_data['category'] == 'praca' else '' }}>Praca</option>
                                                         <option value="budowy" {{ 'selected' if post_data['category'] == 'budowy' else '' }}>Budowy</option>
                                                         <option value="murarze" {{ 'selected' if post_data['category'] == 'murarze' else '' }}>Murarze</option>
@@ -337,12 +325,17 @@
                                                         <option value="ocieplenia" {{ 'selected' if post_data['category'] == 'ocieplenia' else '' }}>Ocieplenia</option>
                                                         <option value="ekipy" {{ 'selected' if post_data['category'] == 'ekipy' else '' }}>Ekipy budowlane</option>
                                                         <option value="zagranica" {{ 'selected' if post_data['category'] == 'zagranica' else '' }}>Praca za granicą</option>
-                                                        <option value="inne" {{ 'selected' if post_data['category'] == 'inne' else '' }}>Inne</option>
+                                                        <option value="inne" {{ 'selected' if post_data['category'] == 'inne' else '' }}>Inne</option> -->
+
+                                                        <option value="">Kategoria grupy</option>
+                                                        {% for cateName in categoryStats.keys() %}
+                                                        <option value="{{ cateName }}" {{ 'selected' if post_data['category'] ~ '/' ~ post_data['created_by'] == cateName else '' }}>{{ cateName }}</option>
+                                                        {% endfor %}
                                                     </select>
                                                 </div>
                                                 
                                                 <!-- created_by -->
-                                                <div class="mb-3">
+                                                <!-- <div class="mb-3">
                                                     <select 
                                                         class="form-select dark-mode mb-2 mt-2" 
                                                         style="max-height: 30px; font-size: 12px;" 
@@ -354,7 +347,7 @@
                                                         <option value="dmddomyy" {{ 'selected' if post_data['created_by'] == 'dmddomyy' else '' }}>DMD Domy</option>
                                                         <option value="fredgraf" {{ 'selected' if post_data['created_by'] == 'fredgraf' else '' }}>Fred Graf</option>
                                                     </select>
-                                                </div>
+                                                </div> -->
             
                                                 <!-- moduł dropboxa -->
                                                 <label class="form-label">Zdjęcia Nieruchomości</label>

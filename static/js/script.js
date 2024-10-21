@@ -1202,14 +1202,28 @@ function collectAndSendfbgroupsform(postId) {
         scheduleDates.push(item.textContent.trim());
     });
 
+    // Pobieramy wartości
+    const category_value = document.getElementById(`category_${postId}`).value;
+
+    // Sprawdzamy, czy obie wartości zawierają znak '/', bo tylko wtedy możemy je podzielić
+    if (!category_value.includes('/')) {
+        console.error("Niepoprawny format wartości!");
+        return; // Zatrzymujemy wysyłkę, jeśli któraś z wartości nie zawiera '/'
+    }
+
+    // Dzielimy wartości
+    const category_splitted = category_value.split('/')[0];
+    const created_by_splitted = category_value.split('/')[1];
+
+
     // Tworzymy obiekt z danymi do wysłania
     const dataToSend = {
         post_id: postId,
         content: content,  // Treść ogłoszenia
         color_choice: document.getElementById(`color_choice_${postId}`).value,
 
-        category: document.getElementById(`category_${postId}`).value,
-        created_by: document.getElementById(`created_by_${postId}`).value,
+        category: category_splitted,
+        created_by: created_by_splitted,
         section: document.getElementById(`section_${postId}`).value,
 
         id_gallery: document.getElementById(`id_gallery_${postId}`).value,
