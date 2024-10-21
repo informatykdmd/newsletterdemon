@@ -12248,6 +12248,10 @@ def save_hidden_campaigns():
     author = request.form.get('author')
     target = request.form.get('target')
 
+
+    msq.handle_error(f'UWAGA! created_by {created_by} category {category}!', log_path=logFileName)
+
+
     try: offerID_int = int(offerID)
     except ValueError:
         msq.handle_error(f'UWAGA! Błąd z id kampanii {title} wywołany przez {session["username"]}!', log_path=logFileName)

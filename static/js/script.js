@@ -400,6 +400,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
         }
     });
 
+
     // Dodanie pozostałych danych do FormData
     formData.append('title', title);
     formData.append('description', description);
@@ -409,6 +410,8 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     formData.append('target', target);
  
     formData.append('offerID', offerIDbox);
+
+    console.log('formData', formData);
 
     // Jeżeli którykolwiek z testów nie przeszedł, nie wysyłaj formularza
     if (!formIsValid) {
