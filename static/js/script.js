@@ -341,11 +341,24 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     var title = document.getElementById('title_' + offerId).value;
     var description = document.getElementById('description_' + offerId).innerText;
     
-    var category = document.getElementById('category_' + offerId).value;
+    // var category = document.getElementById('category_' + offerId).value;
     var offerIDbox = document.getElementById('OfferID_' + offerId).value;
-    var created_by = document.getElementById('setCreated_by_' + offerId).value;
+    // var created_by = document.getElementById('setCreated_by_' + offerId).value;
     var author = document.getElementById('author_' + offerId).value;
     var target = document.getElementById('target_' + offerId).value;
+
+    // Pobieramy wartości
+    const category_value = document.getElementById(`category_${postId}`).value;
+
+    // Sprawdzamy, czy obie wartości zawierają znak '/', bo tylko wtedy możemy je podzielić
+    if (!category_value.includes('/')) {
+        console.error("Niepoprawny format wartości!");
+        return; // Zatrzymujemy wysyłkę, jeśli któraś z wartości nie zawiera '/'
+    }
+
+    // Dzielimy wartości
+    const category_splitted = category_value.split('/')[0];
+    const created_by_splitted = category_value.split('/')[1];
 
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
@@ -365,7 +378,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     toggleWarning('title_' + offerId, !title);
     toggleWarning('description_' + offerId, !description);
-    toggleWarning('category_' + offerId, !category);
+    toggleWarning('category_' + offerId, !category_splitted);
 
     // if (!oldFotos) {
     //     if (zdjecia.length === 0) {
@@ -411,8 +424,8 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     // Dodanie pozostałych danych do FormData
     formData.append('title', title);
     formData.append('description', description);
-    formData.append('category', category);
-    formData.append('created_by', created_by);
+    formData.append('category', category_splitted);
+    formData.append('created_by', created_by_splitted);
     formData.append('author', author);
     formData.append('target', target);
  
@@ -1202,19 +1215,6 @@ function collectAndSendfbgroupsform(postId) {
         scheduleDates.push(item.textContent.trim());
     });
 
-    // Pobieramy wartości
-    const category_value = document.getElementById(`category_${postId}`).value;
-
-    // Sprawdzamy, czy obie wartości zawierają znak '/', bo tylko wtedy możemy je podzielić
-    if (!category_value.includes('/')) {
-        console.error("Niepoprawny format wartości!");
-        return; // Zatrzymujemy wysyłkę, jeśli któraś z wartości nie zawiera '/'
-    }
-
-    // Dzielimy wartości
-    const category_splitted = category_value.split('/')[0];
-    const created_by_splitted = category_value.split('/')[1];
-
 
     // Tworzymy obiekt z danymi do wysłania
     const dataToSend = {
@@ -1222,8 +1222,8 @@ function collectAndSendfbgroupsform(postId) {
         content: content,  // Treść ogłoszenia
         color_choice: document.getElementById(`color_choice_${postId}`).value,
 
-        category: category_splitted,
-        created_by: created_by_splitted,
+        category: document.getElementById(`category_${postId}`).value,
+        created_by: document.getElementById(`created_by_${postId}`).value,
         section: document.getElementById(`section_${postId}`).value,
 
         id_gallery: document.getElementById(`id_gallery_${postId}`).value,
