@@ -1209,6 +1209,7 @@ function collectAndSendfbgroupsform(postId) {
         color_choice: document.getElementById(`color_choice_${postId}`).value,
 
         category: document.getElementById(`category_${postId}`).value,
+        created_by: document.getElementById(`created_by_${postId}`).value,
         section: document.getElementById(`section_${postId}`).value,
 
         id_gallery: document.getElementById(`id_gallery_${postId}`).value,
