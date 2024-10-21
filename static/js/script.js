@@ -350,6 +350,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     // Pobieramy wartości
     var category_value = document.getElementById('to_splitted_category_' + offerId).value;
 
+
     // Sprawdzamy, czy obie wartości zawierają znak '/', bo tylko wtedy możemy je podzielić
     if (!category_value.includes('/')) {
         console.error("Niepoprawny format wartości!");
@@ -377,7 +378,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     // Sprawdzanie, czy wszystkie wymagane pola są wypełnione
     toggleWarning('title_' + offerId, !title);
     toggleWarning('description_' + offerId, !description);
-    toggleWarning('category_' + offerId, !category_splitted);
+    toggleWarning('to_splitted_category_' + offerId, !category_splitted);
 
 
     // Dodawanie zdjęć jako FormData
