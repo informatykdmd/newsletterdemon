@@ -208,7 +208,7 @@
                                             {% if ns.last_action_status is not none and ns.last_action_status != '' %}
                                                 <div class="col-1 me-1">
                                                     {% if ns.last_action_status == 1 %}
-                                                        {% if ns.last_action_index < ns.last_action_planned %}
+                                                        {% if ns.last_action_index + 1 < ns.last_action_planned or ns.last_action_planned == 1 %}
                                                             <div class="ico-facebookgroups-active"></div>
                                                             {% else %}
                                                             <div class="ico-facebookgroups-warning"></div>
@@ -220,6 +220,11 @@
                                                     {% endif %}
                                                 </div>
                                             {% endif %}
+                                            <div class="col-1 me-1">
+                                                {% if post_data['photos'] | length > 0 %}
+                                                    <i class="bi bi-card-image text-success"></i>
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
