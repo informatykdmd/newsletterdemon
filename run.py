@@ -11918,7 +11918,7 @@ def fb_groups_sender():
     section = data.get('section')
     get_id_gallery = data.get('id_gallery')
     created_by = data.get('created_by')
-    # msq.handle_error(f"created_by {created_by} category {category}  section {section}, id:{post_id}", log_path=logFileName)
+    msq.handle_error(f"created_by {created_by} category {category}  section {section}, id:{post_id}", log_path=logFileName)
     if get_id_gallery == "None":
         id_gallery = None
     else:
@@ -12249,7 +12249,7 @@ def save_hidden_campaigns():
     target = request.form.get('target')
 
 
-    msq.handle_error(f'UWAGA! created_by {created_by} category {category}!', log_path=logFileName)
+    # msq.handle_error(f'UWAGA! created_by {created_by} category {category}!', log_path=logFileName)
 
 
     try: offerID_int = int(offerID)

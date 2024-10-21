@@ -411,7 +411,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
  
     formData.append('offerID', offerIDbox);
 
-    console.log('formData', formData);
+    // console.log('formData', formData);
 
     // Jeżeli którykolwiek z testów nie przeszedł, nie wysyłaj formularza
     if (!formIsValid) {
