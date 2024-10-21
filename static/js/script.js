@@ -348,7 +348,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     var target = document.getElementById('target_' + offerId).value;
 
     // Pobieramy wartości
-    const category_value = document.getElementById(`category_${postId}`).value;
+    const category_value = document.getElementById(`category_${offerId}`).value;
 
     // Sprawdzamy, czy obie wartości zawierają znak '/', bo tylko wtedy możemy je podzielić
     if (!category_value.includes('/')) {
