@@ -315,9 +315,10 @@
                                                         required>
 
                                                         <option value="">Kategoria grupy</option>
+                                                        {% set selected_cateName = post_data['created_by'] ~ '/' ~ post_data['category'] %}
                                                         {% for cateName in categoryStats.keys() %}
                                                             <option value="{{ cateName }}" 
-                                                                {% if (post_data['created_by'] ~ '/' ~ post_data['category']) == (cateName) %} 
+                                                                {% if selected_cateName == cateName %} 
                                                                     selected 
                                                                 {% endif %}>
                                                                 {{ cateName }}
