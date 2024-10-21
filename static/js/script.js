@@ -348,7 +348,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
     var target = document.getElementById('target_' + offerId).value;
 
     // Pobieramy wartości
-    var category_value = document.getElementById('category_' + offerId).value;
+    var category_value = document.getElementById('to_splitted_category_' + offerId).value;
 
     // Sprawdzamy, czy obie wartości zawierają znak '/', bo tylko wtedy możemy je podzielić
     if (!category_value.includes('/')) {
@@ -1305,7 +1305,7 @@ function collectAndSendHiddenFBform(postId) {
         content: content,  // Treść ogłoszenia
         color_choice: document.getElementById(`color_choice_${postId}`).value,
 
-        category: document.getElementById(`splitcategory_${postId}`).value,
+        category: document.getElementById(`category_${postId}`).value,
         created_by: document.getElementById(`created_by_${postId}`).value,
         section: document.getElementById(`section_${postId}`).value,
 

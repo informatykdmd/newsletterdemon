@@ -94,7 +94,7 @@
                                         <select 
                                             class="form-select dark-mode mb-2 mt-2" 
                                             style="max-height: 30px; font-size: 12px;" 
-                                            id="category_9999999" 
+                                            id="to_splitted_category_9999999" 
                                             name="category"
                                             required>
 
@@ -299,7 +299,7 @@
                                                     <select 
                                                         class="form-select dark-mode mb-2 mt-2" 
                                                         style="max-height: 30px; font-size: 12px;" 
-                                                        id="category_{{post_id}}" 
+                                                        id="to_splitted_category_{{post_id}}" 
                                                         name="category"
                                                         required>
 
@@ -485,7 +485,7 @@
 
                                                     <div class="row row-cols-auto mb-3">
                                                         <div class="col">
-                                                                <input type="hidden" id="splitcategory_{{post_id}}" name="splitcategory" value="{{post_data['category']}}" />
+                                                                <input type="hidden" id="category_{{post_id}}" name="category" value="{{post_data['category']}}" />
                                                                 <input type="hidden" id="created_by_{{post_id}}" name="created_by" value="{{post_data['created_by']}}" />
                                                                 <input type="hidden" id="section_{{post_id}}" name="section" value="hiddeCampaigns" />
                                                                 <input type="hidden" id="id_gallery_{{post_id}}" name="id_gallery" value="{{post_data['id_gallery']}}" />
