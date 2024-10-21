@@ -1305,7 +1305,7 @@ function collectAndSendHiddenFBform(postId) {
         content: content,  // Treść ogłoszenia
         color_choice: document.getElementById(`color_choice_${postId}`).value,
 
-        category: document.getElementById(`category_${postId}`).value,
+        category: document.getElementById(`splitcategory_${postId}`).value,
         created_by: document.getElementById(`created_by_${postId}`).value,
         section: document.getElementById(`section_${postId}`).value,
 
