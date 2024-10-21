@@ -320,7 +320,7 @@
                                                                 {% if (post_data['created_by'] ~ '/' ~ post_data['category']) == (cateName) %} 
                                                                     selected 
                                                                 {% endif %}>
-                                                                [{{ cateName }}] [{{ post_data['created_by'] ~ '/' ~ post_data['category'] }}]
+                                                                {{ cateName }}
                                                             </option>
                                                         {% endfor %}
                                                     </select>
