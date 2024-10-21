@@ -99,6 +99,9 @@
                                             required>
 
                                             <option value="">Kategoria grupy</option>
+                                            {% for cateName in categoryStats.keys() %}
+                                                <option value="{{ cateName }}">{{ cateName }}</option>
+                                            {% endfor %}
                                             <option value="budowy">Budowy ({{categoryStats['budowy']}})</option>
                                             <option value="murarze">Murarze ({{categoryStats['murarze']}})</option>
                                             <option value="domy">Budowa domów ({{categoryStats['domy']}})</option>
@@ -191,9 +194,9 @@
                                     <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                             <span class="display-6 formatuj-maly-font">{{post_data['category']}}</span>
-                                            {% if categoryStats[post_data['category']] > 0 %}
+                                            {% if categoryStats[post_data['created_by'] ~ '/' ~ post_data['category']] > 0 %}
                                                 <span style="font-size: 12px !important; color: #696969 !important; font-family: monospace !important;"> 
-                                                    ({{categoryStats[post_data['category']]}})
+                                                    ({{categoryStats[post_data['created_by'] ~ '/' ~ post_data['category']]}})
                                                 </span>
                                             {% endif %}
                                         </a>

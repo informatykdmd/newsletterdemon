@@ -289,9 +289,10 @@ def generator_FbGroupsStats(cat='all') -> dict:
 
     statsDict ={}
     for group in groupsData:
-        if group['category'] not in statsDict:
-            statsDict[group['category']] = 0
-        statsDict[group['category']] += 1
+        if f"{group['created_by']}/{group['category']}" not in statsDict:
+            statsDict[f"{group['created_by']}/{group['category']}"] = 0
+        
+        statsDict[f"{group['created_by']}/{group['category']}"] += 1
 
     return statsDict
 
