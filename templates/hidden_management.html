@@ -20,10 +20,13 @@
                                     Tytuł
                                 </div>
                                 <div  class="d-none d-lg-block" style="max-width: 120px;">
-                                    Autor Kampanii
+                                    Autor
                                 </div>
                                 <div  class="d-none d-xl-block" style="max-width: 150px;">
                                     Kategoria
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 150px;">
+                                    Profil FB
                                 </div>
                                 <div  class="d-none d-lg-block" style="max-width: 120px;">
                                     Status
@@ -171,6 +174,11 @@
                                                     ({{categoryStats[post_data['created_by'] ~ '/' ~ post_data['category']]}})
                                                 </span>
                                             {% endif %}
+                                        </a>
+                                    </div>
+                                    <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            <span class="display-6 formatuj-maly-font">{{post_data['created_by']}}</span>
                                         </a>
                                     </div>
                                     <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
