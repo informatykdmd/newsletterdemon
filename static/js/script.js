@@ -141,7 +141,7 @@ function joinListFields(id, sep, elementName="dynamicField",) {
     var resultString = values.join(sep);
 
     // Wyświetl wynik w konsoli (możesz zmienić to na zapis do bazy danych)
-    console.log(resultString);
+    // console.log(resultString);
     return resultString;
 }
 
@@ -161,7 +161,7 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     var tagsFieldData = joinListFields(postId, ', ', 'dynamicTagsField');
     
 
-    console.log("tags Field Data: " + tagsFieldData, "Dynamic field data: " + dynamicFieldData);
+    // console.log("tags Field Data: " + tagsFieldData, "Dynamic field data: " + dynamicFieldData);
 
     if (!oldFotos) {
         if (!title || !introduction || !highlight || !mainFoto || !contentFoto || !tagsFieldData || !dynamicFieldData || !category ) {
@@ -363,7 +363,7 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
 
     // Pobieranie zdjęć z listy
     var fotoList = document.getElementById(offerId + '-fileList');
-    console.log('fotoList: ', fotoList);
+    // console.log('fotoList: ', fotoList);
     var zdjecia = [];
     var oldFotos_list = [];
 
@@ -419,25 +419,25 @@ function prepareAndSubmitHiddenFBform(offerId, oldFotos=true) {
         return;
     }
 
-    console.log('formData: ', formData);
+    // console.log('formData: ', formData);
     // Wysyłanie formularza za pomocą AJAX (fetch API)
     fetch('/save-hidden-campaigns', {
         method: 'POST',
         body: formData
     }).then(response => {
-        console.log('response: ', response);
+        // console.log('response: ', response);
         if (response.ok) {
             // alert('Oferta została pomyślnie zapisana.');
             // console.log('response: ', response);
             return response.json();
         } else {
-            console.log('xxx:', data);
+            // console.log('xxx:', data);
 
             throw new Error('Problem z serwerem');
         }
     }).then(data => {
-        console.log('data:', data);
-        console.log('data.seccess:', data.success);
+        // console.log('data:', data);
+        // console.log('data.seccess:', data.success);
         if (data.success == true) {
             // console.log('xxx:', data);
             var form = document.getElementById('hiddencampaigns_' + offerId);
@@ -980,7 +980,7 @@ function usunPracownikaZListy(sekcja, pracownikImie) {
 function pobierzKolejnosc(sekcja) {
     const elementy = sekcja.querySelectorAll('div');
     const kolejnosc = Array.from(elementy).map(element => element.textContent);
-    console.log(`Kolejność w sekcji ${sekcja}:`, kolejnosc);
+    // console.log(`Kolejność w sekcji ${sekcja}:`, kolejnosc);
     return kolejnosc;
 }
 
@@ -989,7 +989,7 @@ function pobierzIKonsolujKolejnosc(sekcjaId) {
     const elementy = sekcja.querySelectorAll('div');
     const kolejnosc = Array.from(elementy).map(element => element.textContent);
     
-    console.log(`Kolejność w sekcji ${sekcjaId}:`, kolejnosc);
+    // console.log(`Kolejność w sekcji ${sekcjaId}:`, kolejnosc);
 }
 
 function addCustomElement(id, elementType, elementContent) {
@@ -1327,7 +1327,7 @@ function collectAndSendHiddenFBform(postId) {
             ponow10razy: document.getElementById(`ponow10razy_${postId}`).checked
         }
     };
-    console.log('dataToSend', dataToSend);
+    // console.log('dataToSend', dataToSend);
     // Wysyłanie danych AJAX
     fetch('/fb-groups-sender', {
         method: 'POST',

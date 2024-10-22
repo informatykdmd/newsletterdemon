@@ -1114,7 +1114,7 @@
 
             // Nowy input do sprawdzenia galerii
             this.idGalleryInput = document.getElementById(`id_gallery_${postId}`);
-            console.log('this.idGalleryInput', this.idGalleryInput);
+            // console.log('this.idGalleryInput', this.idGalleryInput);
 
             // Inicjalna aktualizacja licznika znaków
             this.updateCharCount();
@@ -1130,7 +1130,7 @@
         // Nowa metoda do sprawdzania id_gallery
         checkGallery() {
             const galleryValue = this.idGalleryInput.value;
-            console.log(galleryValue);  // Sprawdź, jaka jest wartość
+            // console.log(galleryValue);  // Sprawdź, jaka jest wartość
 
             // Jeśli galeria zawiera zdjęcia (wartość to liczba), to aktywuj more130
             if (galleryValue !== 'None' && galleryValue !== '' && galleryValue !== null) {
