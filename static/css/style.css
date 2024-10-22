@@ -490,7 +490,7 @@ body {
 
   /* Dostosuj kolor tła i kolor tekstu dla paginacji */
 .pagination {
-    background-color: none; /* Kolor tła */
+    background-color: transparent ; /* Kolor tła */
 }
 
 .pagination a, .pagination span {
@@ -654,7 +654,7 @@ color:#969696;
   }
 
   .formatuj-hover {
-    background-color: none;
+    background-color: transparent;
   }
 
   .formatuj-hover:hover {
