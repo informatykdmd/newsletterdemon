@@ -2,21 +2,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}DMD Panel Administratora{% endblock %}</title>
-  <!-- Dodanie Bootstrapa -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <!-- Dodanie Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <!-- Dodatkowe stylizacje -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <script src="/static/js/script.js"></script>
-  <!-- jquery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  {% block scripts%}{% endblock %}
-  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DMD Panel Administratora{% endblock %}</title>
+    <!-- Dodanie Bootstrapa -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Dodanie Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Dodatkowe stylizacje -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/script.js"></script>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% block scripts%}{% endblock %}
+    <link rel="preload" href="../static/img/logo_domy.png" as="image">
+    <link rel="preload" href="../static/img/logo_budownictwo.png" as="image">
+    <link rel="preload" href="../static/img/logo_elitehome.png" as="image">
+    <link rel="preload" href="../static/img/logo_instalacje.png" as="image">
+    <link rel="preload" href="../static/img/logo_investment.png" as="image">
+    <link rel="preload" href="../static/img/logo_development.png" as="image">
+
 </head>
 <body>
     {% block header %}
@@ -70,7 +76,7 @@
                 <div class="card formatuj-margin bg-dark">
                     <div class="card-body klej">
                         <div class="column-usual formatuj-maly-font">
-                            <img src="../static/img/logo_budownictwo.png" style="max-width: 150px; margin-bottom: 5px;" loading="lazy"/>
+                            <img src="../static/img/logo_budownictwo.png" style="max-width: 150px; margin-bottom: 5px;"/>
                             <p><strong>Budujemy jutro już dzisiaj!</strong><br />
                             Projekty budowlane na miarę Twoich ambicji, od domów po hale! </p>
                         </div>
@@ -84,7 +90,7 @@
                 <div class="card formatuj-margin bg-dark">
                     <div class="card-body klej">
                         <div class="column-usual formatuj-maly-font">
-                            <img src="../static/img/logo_elitehome.png" style="max-width: 150px; margin-bottom: 5px;" loading="lazy"/>
+                            <img src="../static/img/logo_elitehome.png" style="max-width: 150px; margin-bottom: 5px;"/>
                             <p><strong>Indywidualne podejście, Twój wymarzony świat!</strong><br />
                                 Spełniamy marzenia z pasją i zaangażowaniem. </p>
                         </div>
@@ -96,7 +102,7 @@
                 <div class="card formatuj-margin bg-dark">
                     <div class="card-body klej">
                         <div class="column-usual formatuj-maly-font">
-                            <img src="../static/img/logo_instalacje.png" style="max-width: 150px; margin-bottom: 5px;" loading="lazy"/>
+                            <img src="../static/img/logo_instalacje.png" style="max-width: 150px; margin-bottom: 5px;"/>
                             <p><strong>Bezpieczeństwo i efektywność!</strong><br />
                                 Z nami wnętrza i otoczenie zyskują nowy wymiar. </p>
                         </div>
@@ -110,7 +116,7 @@
                 <div class="card formatuj-margin bg-dark">
                     <div class="card-body klej">
                         <div class="column-usual formatuj-maly-font">
-                            <img src="../static/img/logo_investment.png" style="max-width: 150px; margin-bottom: 5px;" loading="lazy"/>
+                            <img src="../static/img/logo_investment.png" style="max-width: 150px; margin-bottom: 5px;"/>
                             <p><strong>Inwestycja z myślą o jutrze!</strong><br />
                                 Tworzymy wartość dla Ciebie i społeczności. </p>
                         </div>
@@ -122,7 +128,7 @@
                 <div class="card formatuj-margin bg-dark">
                     <div class="card-body klej">
                         <div class="column-usual formatuj-maly-font">
-                            <img src="../static/img/logo_development.png" style="max-width: 150px; margin-bottom: 5px;" loading="lazy"/>
+                            <img src="../static/img/logo_development.png" style="max-width: 150px; margin-bottom: 5px;"/>
                             <p><strong>Inwestycje na Twoją miarę!</strong><br />
                                 Budujemy, wynajmujemy i dzierżawimy, spełniając Twoje oczekiwania!  </p>
                         </div>
