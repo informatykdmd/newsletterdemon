@@ -1173,7 +1173,7 @@
             this.charCountDiv.textContent = `${charCount} znaków`;
 
             // Przełączanie między trybami
-            if (charCount > 130 && this.galletyValue === false) {
+            if (charCount > 130 || this.galletyValue === false) {
                 this.divMore130.style.display = 'block';
                 this.divMinus130.style.display = 'none';
 
