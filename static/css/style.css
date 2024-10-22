@@ -48,7 +48,7 @@ body {
       border: none !important;
   }
   .no-fill {
-      background-color: none !important;
+      background-color: transparent !important;
   }
   .sidebar a:hover {
     background-color: #9da2a8; /* Nowy kolor tła dla linku po najechaniu myszką */
