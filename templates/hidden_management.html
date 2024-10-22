@@ -584,7 +584,11 @@
                                                                     </div>
 
 
-                                                                    <button type="button" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick="collectAndSendHiddenFBform('{{post_id}}')"> 
+                                                                    <button 
+                                                                        type="button" 
+                                                                        class="btn btn-outline-info btn-sm" 
+                                                                        style="max-height: 30px; font-size: 12px;" 
+                                                                        onclick="collectAndSendHiddenFBform('{{post_id}}')"> 
                                                                         Publikuj grupach
                                                                     </button>
                                                                     <div class="form-message mt-3" id="komunikat_z_serwera_{{post_id}}"></div>
@@ -1169,7 +1173,7 @@
             this.charCountDiv.textContent = `${charCount} znaków`;
 
             // Przełączanie między trybami
-            if (charCount > 130 && this.galletyValue === true) {
+            if (charCount > 130 && this.galletyValue === false) {
                 this.divMore130.style.display = 'block';
                 this.divMinus130.style.display = 'none';
 
