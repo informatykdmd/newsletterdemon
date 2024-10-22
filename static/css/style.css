@@ -18,7 +18,7 @@
     margin: 20px;
     border: 1px solid rgba(0, 0, 0, 0.2); /* ramka 1 piksel z przezroczystym kolorem */
     border-radius: 10px; /* zaokrąglone rogi */
-    filter: blur border(1px); /* efekt rozmycia */
+    /* filter: blur border(1px);  */
     color: #6d6d6d;
 }
 
