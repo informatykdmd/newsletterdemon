@@ -16,6 +16,11 @@
                                 <div class="d-none d-lg-block" style="max-width: 30px;">
                                     #
                                 </div>
+                                <!-- responsywny start -->
+                                <div class="d-lg-none" style="max-width: 30px;">
+                                    <i class="bi bi-incognito"></i>
+                                </div>
+                                <!-- responsywny koniec -->
                                 <div  class="col-xl-8 col-lg-6 col-sm-8">
                                     Tytuł
                                 </div>
@@ -149,10 +154,47 @@
                                         {{post_id}}
                                     </div>
                                     <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {% if post_data['status'] == 1 %}
-                                            <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
+                                        <!-- FaceBook Groups -->
+                                        {% set ns = namespace(last_action_index=None, last_action_status=None, last_action_planned=None) %}
+
+                                        <!-- Szukanie ostatniej wykonanej akcji i zliczanie zaplanowanych akcji -->
+                                        {% for i in range(11) %}
+                                            {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
+                                            {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
+                                                                                        
+                                            <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
+                                            {% if schedule_datetime is not none and schedule_datetime != '' %}
+                                                {% set ns.last_action_planned = i %}
+                                            {% endif %}
+
+                                            <!-- Sprawdzenie, czy akcja ma status różny od None i jest wykonana -->
+                                            {% if schedule_status is not none and schedule_status != '' %}
+                                                {% set ns.last_action_index = i %}
+                                                {% set ns.last_action_status = schedule_status %}
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
+                                        {% if ns.last_action_status is not none and ns.last_action_status != '' %}
+                                            <div class="col-1 me-1">
+                                                {% if ns.last_action_status == 1 %}
+                                                    {% if ns.last_action_index + 1 < ns.last_action_planned or ns.last_action_planned == 1 %}
+                                                        <div class="ico-facebookgroups-active"></div>
+                                                        {% else %}
+                                                        <div class="ico-facebookgroups-warning"></div>
+                                                    {% endif %}
+                                                {% elif ns.last_action_status == 2 %}
+                                                    <div class="ico-facebookgroups-error"></div>
+                                                {% elif ns.last_action_status == 4 %}
+                                                    <div class="ico-facebookgroups-inprogress"></div>
+                                                {% endif %}
+                                            </div>
                                         {% else %}
+                                            {% if post_data['status'] == 1 %}
+                                            <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
+                                            {% else %}
                                             <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-secondary"></i></span>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                     <div  class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
