@@ -140,7 +140,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-5 col-xl-5 formatuj-left">
+        <div class="col-sm-5 col-lg-5 col-xl-5 formatuj-left">
             <!-- informacje o Użytkowniku -->
             <div class="user-data">
                 <!-- d-block d-sm-none tylko na małym -sm -->
@@ -164,29 +164,71 @@
                     <h5 class="fw-bold">Informacje o użytkowniku</h5>
                 </div>
                 <!-- d-block d-sm-none tylko na małym -sm -->
-                <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
+                <div class="d-block d-sm-none">
+                    <a href="mailto:{{users_data['email']}}">
+                        <i class="bi bi-envelope-at-fill"></i>
+                    </a>
+                </div>
                 <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
+                <div class="row d-none d-sm-block d-lg-none">
+                    <div class="col-lg-3 col-sm-9 profil-info text-warning">
+                        Email:
+                    </div>
+                    <div class="col-lg-9 col-sm-9 profil-content text-body-tertiary">
+                        <a href="mailto:{{users_data['email']}}">
+                            <i class="bi bi-envelope-at-fill"></i>
+                        </a>
+                    </div>
+                </div>
                 <!-- d-none d-lg-block tylko na pełnym lg+ -->
                 <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
 
-                <div class="row">
+                <div class="row d-none d-lg-block">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Email:
                     </div>
                     <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
                         <a href="mailto:{{users_data['email']}}">
-                            {{users_data['email']}}
+                            {{users_data['email']}} <i class="bi bi-envelope-at-fill"></i>
                         </a>
                     </div>
                 </div>
                 <!-- d-block d-sm-none tylko na małym -sm -->
-                <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
+                <div class="row d-block d-sm-none">
+                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                        {% if users_data['phone'] %}
+                        <a href="tel:{{users_data['phone']}}">
+                            <i class="bi bi-telephone-outbound-fill text-success"></i>
+                        </a>
+                        <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
+                            <i class="bi bi-whatsapp text-success"></i>
+                        </a>
+                        {% else %}
+                        <i class="bi bi-dash-lg text-danger"></i>
+                        {% endif %}
+                    </div>
+                </div>
                 <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
+                <div class="row d-none d-sm-block d-lg-none">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                        Telefon:
+                    </div>
+                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                        {% if users_data['phone'] %}
+                        <a href="tel:{{users_data['phone']}}">
+                            <i class="bi bi-telephone-outbound-fill text-success"></i>
+                        </a>
+                        <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
+                            <i class="bi bi-whatsapp text-success"></i>
+                        </a>
+                        {% else %}
+                        <i class="bi bi-dash-lg text-danger"></i>
+                        {% endif %}
+                    </div>
+                </div>
                 <!-- d-none d-lg-block tylko na pełnym lg+ -->
                 <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
-                <div class="row">
+                <div class="row d-none d-lg-block">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Telefon:
                     </div>
