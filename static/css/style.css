@@ -190,12 +190,35 @@ body {
     min-height: 120px !important;
 }
 
-  .avatar {
-      max-height: 150px;
-      min-width:  150px;
-      max-width: 100%;
-      border-radius: 50%;
-  }
+.avatar {
+    max-height: 150px;
+    min-width:  150px;
+    max-width: 100%;
+    border-radius: 50%;
+}
+
+.avatar-sm {
+  max-height: 50px;
+  min-width:  50px;
+  max-width: 100%;
+  border-radius: 50%;
+}
+
+.avatar-lg {
+  max-height: 100px;
+  min-width:  100px;
+  max-width: 100%;
+  border-radius: 50%;
+}
+
+.avatar-xl {
+  max-height: 150px;
+  min-width:  150px;
+  max-width: 100%;
+  border-radius: 50%;
+}
+
+
   .avatar-mini {
     max-height: 25px;
     min-width:  25px;

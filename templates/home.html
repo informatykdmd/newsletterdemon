@@ -12,13 +12,76 @@
 <div class="jasne rogi formatyj-maly-wiersz">
     <div class="row p-3">
         <div class="col-lg-3 col-sm-12 p-12"  style="max-width: 220px;">
-            <div style="text-align: right;">
-                <a data-bs-toggle="collapse" href="#collapse_id_0_{{username}}" role="button" aria-expanded="false" aria-controls="collapse_id_0_{{username}}" style="color: rgb(202, 236, 253) !important;">
-                    <i class="bi bi-pencil-square"></i>
-                </a>
+            <!-- d-lg-none tylko na małym -sm -->
+             <div class="row d-lg-none">
+                <div class="col-6 p-1">
+                    <div style="text-align: right;">
+                        <a 
+                            data-bs-toggle="collapse" 
+                            href="#collapse_id_0_{{username}}" 
+                            role="button" 
+                            aria-expanded="false" 
+                            aria-controls="collapse_id_0_{{username}}" 
+                            style="color: rgb(202, 236, 253) !important;"
+                            >
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 p-1">
+                    <!-- puste miejsce -->
+                </div>
             </div>
-            <div>
-                <img class="avatar" src="{{users_data['avatar']}}" alt=""/>
+            
+            <!-- d-none d-lg-block tylko na średnim lg+ -->
+            <div class="row d-none d-lg-block">
+                <div class="col-9 p-1">
+                    <div style="text-align: right;">
+                        <a 
+                            data-bs-toggle="collapse" 
+                            href="#collapse_id_0_{{username}}" 
+                            role="button" 
+                            aria-expanded="false" 
+                            aria-controls="collapse_id_0_{{username}}" 
+                            style="color: rgb(202, 236, 253) !important;"
+                            >
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-3 p-1">
+                    <!-- puste miejsce -->
+                </div>
+            </div>
+            <!-- d-none d-xl-block tylko na pełnym xl+ -->
+            <div class="row d-none d-lg-block">
+                <div class="col-12 p-1">
+                    <div style="text-align: right;">
+                        <a 
+                            data-bs-toggle="collapse" 
+                            href="#collapse_id_0_{{username}}" 
+                            role="button" 
+                            aria-expanded="false" 
+                            aria-controls="collapse_id_0_{{username}}" 
+                            style="color: rgb(202, 236, 253) !important;"
+                            >
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- d-lg-none tylko na małym -sm -->
+            <div class="d-lg-none">
+                <img class="avatar-sm" src="{{users_data['avatar']}}" alt=""/>
+            </div>
+            <!-- d-none d-lg-block tylko na średnim lg+ -->
+            <div class="d-none d-lg-block">
+                <img class="avatar-lg" src="{{users_data['avatar']}}" alt=""/>
+            </div>
+            <!-- d-none d-xl-block tylko na pełnym xl+ -->
+            <div class="d-none d-xl-block">
+                <img class="avatar-xl" src="{{users_data['avatar']}}" alt=""/>
             </div>
             <!-- collapse wewnętrzny -->
             <div class="collapse" style="max-width: 400px;" id="collapse_id_0_{{username}}">
@@ -26,17 +89,28 @@
                     <div>
                         {% set user_id = users_data['id'] %}
                         <form method="POST" id="avatarUser_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
-                            <div>
+                            <!-- d-none d-lg-block tylko na średnim lg+ -->
+                            <div class="d-none d-lg-block">
+                                <p style="font-size: 15px; font-weight: 400;">Zmień</p>
+                            </div>
+                            <!-- d-none d-xl-block tylko na pełnym xl+ -->
+                            <div class="d-none d-xl-block">
                                 <h7>Podmień avatar</h7>
                             </div>
                             <div class="formatuj formatuj-maly-font">
-                                <div style="margin-bottom: 10px;">
+                                <!-- d-lg-none tylko na małym -sm -->
+                                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                                <!-- d-none d-xl-block tylko na pełnym xl+ -->
+                                <div class="d-none d-xl-block" style="margin-bottom: 10px;">
                                     Wybierz plik: 
                                 </div>
                                 <input type="hidden" value="{{user_id}}_home" name="user_id" />
                                 
                                 <div class="file-upload-wrapper" id="upload_wrapper_{{user_id}}">
-                                    <div class="file-upload-content" id="file_upload_content_{{user_id}}">
+                                    <!-- d-lg-none tylko na małym -sm -->
+                                    <!-- d-none d-lg-block tylko na średnim lg+ -->
+                                    <!-- d-none d-xl-block tylko na pełnym xl+ -->
+                                    <div class="file-upload-content d-none d-xl-block" id="file_upload_content_{{user_id}}">
                                         <i class="bi bi-plus-square-dotted"></i>
                                         <span class="file-name" id="file_name_{{user_id}}">Dodaj plik</span>
                                     </div>
@@ -69,11 +143,18 @@
         <div class="col-lg-5 col-sm-12 p-12 formatuj-left">
             <!-- informacje o Użytkowniku -->
             <div class="user-data">
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
                 <div class="row">
-
-                    <h5 class="fw-bold">Informacje o użytkowniku</h5>
-
+                    <h5 class="fw-bold">Informacje</h5>
                 </div>
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
+                <div class="row">
+                    <h5 class="fw-bold">Informacje o użytkowniku</h5>
+                </div>
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Email:
@@ -84,6 +165,9 @@
                         </a>
                     </div>
                 </div>
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Telefon:
@@ -101,6 +185,9 @@
                         {% endif %}
                     </div>
                 </div>
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Facebook:
@@ -115,6 +202,9 @@
                         {% endif %}
                     </div>
                 </div>
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Linkedin:
@@ -129,6 +219,9 @@
                         {% endif %}
                     </div>
                 </div>
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Instagram:
@@ -143,6 +236,9 @@
                         {% endif %}
                     </div>
                 </div>
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Twitter:
@@ -157,6 +253,9 @@
                         {% endif %}
                     </div>
                 </div>
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Nazwisko:
@@ -173,6 +272,9 @@
                         @{{users_data['username']}}
                     </div>
                 </div>
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Stanowisko:
@@ -189,6 +291,9 @@
                         {{users_data['opis']}}
                     </div>
                 </div>
+                <!-- d-lg-none tylko na małym -sm -->
+                <!-- d-none d-lg-block tylko na średnim lg+ -->
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="row">
                     <div class="col-3 profil-info text-info">
                         ACTIONS:
