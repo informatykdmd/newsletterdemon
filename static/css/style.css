@@ -1843,6 +1843,10 @@ color:#969696;
   margin-right: 10px;
 }
 
+.file-upload-wrapper i:hover {
+  color: #3f8509;
+}
+
 .file-input {
   position: absolute;
   width: 100%;
@@ -1858,5 +1862,5 @@ color:#969696;
 }
 
 .file-upload-wrapper:hover .file-name {
-  color: #000;
+  color: #ffffff;
 }
