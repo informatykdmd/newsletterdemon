@@ -140,252 +140,252 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-7 col-lg-6 col-xl-7 formatuj-left">
+        <div class="col-sm-8 col-lg-6 col-xl-7 formatuj-left">
             <!-- informacje o Użytkowniku -->
-            <div class="user-data">
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <div class="row d-block d-sm-none">
-                    <div class="col-9 p-1">
-                        <p style="font-size: 13px; font-weight: 400;">
-                            <i class="bi bi-info-circle"></i> Informacje
-                        </p>
-                    </div>
-                    <div class="col-3 p-1">
-                        <!-- puste miejsce -->
-                    </div>
+            
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <div class="row d-block d-sm-none">
+                <div class="col-9 p-1">
+                    <p style="font-size: 13px; font-weight: 400;">
+                        <i class="bi bi-info-circle"></i> Informacje
+                    </p>
                 </div>
-                
-                <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
-                <div class="row d-none d-sm-block d-lg-none">
-                    <h5 class="fw-bold">Informacje</h5>
+                <div class="col-3 p-1">
+                    <!-- puste miejsce -->
                 </div>
-                <!-- d-none d-xl-block tylko na pełnym xl+ -->
-                <div class="row d-none d-lg-block">
-                    <h5 class="fw-bold">Informacje o użytkowniku</h5>
+            </div>
+            
+            <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+            <div class="row d-none d-sm-block d-lg-none">
+                <h5 class="fw-bold">Informacje</h5>
+            </div>
+            <!-- d-none d-xl-block tylko na pełnym xl+ -->
+            <div class="row d-none d-lg-block">
+                <h5 class="fw-bold">Informacje o użytkowniku</h5>
+            </div>
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <div class="d-block d-sm-none">
+                <a href="mailto:{{users_data['email']}}">
+                    <i class="bi bi-envelope-at-fill"></i>
+                </a>
+            </div>
+            <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
+            <div class="row d-none d-sm-block d-lg-none">
+                <div class="col-lg-3 col-sm-9 profil-info text-warning">
+                    Email:
                 </div>
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <div class="d-block d-sm-none">
+                <div class="col-lg-9 col-sm-9 profil-content text-body-tertiary">
                     <a href="mailto:{{users_data['email']}}">
                         <i class="bi bi-envelope-at-fill"></i>
                     </a>
                 </div>
-                <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <div class="row d-none d-sm-block d-lg-none">
-                    <div class="col-lg-3 col-sm-9 profil-info text-warning">
-                        Email:
-                    </div>
-                    <div class="col-lg-9 col-sm-9 profil-content text-body-tertiary">
-                        <a href="mailto:{{users_data['email']}}">
-                            <i class="bi bi-envelope-at-fill"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- d-none d-lg-block tylko na pełnym lg+ -->
-                <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
+            </div>
+            <!-- d-none d-lg-block tylko na pełnym lg+ -->
+            <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
 
-                <div class="row d-none d-lg-block">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Email:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
-                        <a href="mailto:{{users_data['email']}}">
-                            {{users_data['email']}} <i class="bi bi-envelope-at-fill"></i>
-                        </a>
-                    </div>
+            <div class="row d-none d-lg-block">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Email:
                 </div>
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <div class="row d-block d-sm-none">
-                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
-                        {% if users_data['phone'] %}
-                        <a href="tel:{{users_data['phone']}}">
-                            <i class="bi bi-telephone-outbound-fill text-success"></i>
-                        </a>
-                        <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
-                            <i class="bi bi-whatsapp text-success"></i>
-                        </a>
-                        {% else %}
-                        <i class="bi bi-dash-lg text-danger"></i>
-                        {% endif %}
-                    </div>
-                </div>
-                <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <div class="row d-none d-sm-block d-lg-none">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Telefon:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
-                        {% if users_data['phone'] %}
-                        <a href="tel:{{users_data['phone']}}">
-                            <i class="bi bi-telephone-outbound-fill text-success"></i>
-                        </a>
-                        <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
-                            <i class="bi bi-whatsapp text-success"></i>
-                        </a>
-                        {% else %}
-                        <i class="bi bi-dash-lg text-danger"></i>
-                        {% endif %}
-                    </div>
-                </div>
-                <!-- d-none d-lg-block tylko na pełnym lg+ -->
-                <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
-                <div class="row d-none d-lg-block">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Telefon:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
-                        {% if users_data['phone'] %}
-                        <a href="tel:{{users_data['phone']}}">
-                            {{users_data['phone']}} <i class="bi bi-telephone-outbound-fill text-success"></i>
-                        </a>
-                        <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
-                            <i class="bi bi-whatsapp text-success"></i>
-                        </a>
-                        {% else %}
-                        <i class="bi bi-dash-lg text-danger"></i>
-                        {% endif %}
-                    </div>
-                </div>
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
-                <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
-                <!-- d-none d-lg-block tylko na pełnym lg+ -->
-                <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
-                <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Facebook:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content">
-                        {% if users_data['facebook'] %}
-                        <a href="{{users_data['facebook']}}" target="_blank">
-                            <i class="bi bi-facebook text-body-tertiary"></i> <i class="bi bi-box-arrow-up-right text-info"></i>
-                        </a>
-                        {% else %}
-                        <i class="bi bi-dash-lg text-danger"></i>
-                        {% endif %}
-                    </div>
-                </div>
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
-                <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
-                <!-- d-none d-lg-block tylko na pełnym lg+ -->
-                <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
-                <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Linkedin:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content">
-                        {% if users_data['linkedin'] %}
-                        <a href="{{users_data['linkedin']}}" target="_blank">
-                            <i class="bi bi-linkedin text-body-tertiary"></i> <i class="bi bi-box-arrow-up-right text-info"></i>
-                        </a>
-                        {% else %}
-                        <i class="bi bi-dash-lg text-danger"></i>
-                        {% endif %}
-                    </div>
-                </div>
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
-                <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
-                <!-- d-none d-lg-block tylko na pełnym lg+ -->
-                <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
-                <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Instagram:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content">
-                        {% if users_data['instagram'] %}
-                        <a href="{{users_data['instagram']}}" target="_blank">
-                            <i class="bi bi-instagram text-body-tertiary"></i> <i class="bi bi-box-arrow-up-right text-info"></i>
-                        </a>
-                        {% else %}
-                        <i class="bi bi-dash-lg text-danger"></i>
-                        {% endif %}
-                    </div>
-                </div>
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
-                <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
-                <!-- d-none d-lg-block tylko na pełnym lg+ -->
-                <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
-                <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Twitter:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content">
-                        {% if users_data['twiter'] %}
-                        <a href="{{users_data['twiter']}}" target="_blank">
-                            <i class="bi bi-twitter-x text-body-tertiary"></i> <i class="bi bi-box-arrow-up-right text-info"></i>
-                        </a>
-                        {% else %}
-                        <i class="bi bi-dash-lg text-danger"></i>
-                        {% endif %}
-                    </div>
-                </div>
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
-                <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
-                <!-- d-none d-lg-block tylko na pełnym lg+ -->
-                <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
-                <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Nazwisko:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
-                        {{users_data['name']}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Login:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
-                        @{{users_data['username']}}
-                    </div>
-                </div>
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
-                <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
-                <!-- d-none d-lg-block tylko na pełnym lg+ -->
-                <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
-                <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Stanowisko:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
-                        {{users_data['stanowisko']}}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
-                        Opis:
-                    </div>
-                    <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
-                        {{users_data['opis']}}
-                    </div>
-                </div>
-                <!-- d-block d-sm-none tylko na małym -sm -->
-                <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
-                <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
-                <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
-                <!-- d-none d-lg-block tylko na pełnym lg+ -->
-                <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
-                <div class="row">
-                    <div class="col-3 profil-info text-info">
-                        ACTIONS:
-                    </div>
-                    <div class="col-9 profil-content">
-                        <!-- <a data-bs-toggle="collapse" href="#collapse_id_00" role="button" aria-expanded="false" aria-controls="collapse_id_00"><i class="bi bi-info-square" style="color: rgb(0, 196, 49) !important;"></i></a> -->
-                        <a data-bs-toggle="collapse" href="#collapse_id_3_{{username}}" role="button" aria-expanded="false" aria-controls="collapse_id_3_{{username}}"><i class="bi bi-pencil-square" style="color: rgb(25, 101, 22) !important;"></i></a>
-                        <a data-bs-toggle="collapse" href="#collapse_id_1_{{username}}" role="button" aria-expanded="false" aria-controls="collapse_id_1_{{username}}"><i class="bi bi-key-fill" style="color: rgb(179, 116, 34) !important;"></i></a>
-                    </div>
+                <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                    <a href="mailto:{{users_data['email']}}">
+                        {{users_data['email']}} <i class="bi bi-envelope-at-fill"></i>
+                    </a>
                 </div>
             </div>
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <div class="row d-block d-sm-none">
+                <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                    {% if users_data['phone'] %}
+                    <a href="tel:{{users_data['phone']}}">
+                        <i class="bi bi-telephone-outbound-fill text-success"></i>
+                    </a>
+                    <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
+                        <i class="bi bi-whatsapp text-success"></i>
+                    </a>
+                    {% else %}
+                    <i class="bi bi-dash-lg text-danger"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
+            <div class="row d-none d-sm-block d-lg-none">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Telefon:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                    {% if users_data['phone'] %}
+                    <a href="tel:{{users_data['phone']}}">
+                        <i class="bi bi-telephone-outbound-fill text-success"></i>
+                    </a>
+                    <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
+                        <i class="bi bi-whatsapp text-success"></i>
+                    </a>
+                    {% else %}
+                    <i class="bi bi-dash-lg text-danger"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- d-none d-lg-block tylko na pełnym lg+ -->
+            <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
+            <div class="row d-none d-lg-block">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Telefon:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                    {% if users_data['phone'] %}
+                    <a href="tel:{{users_data['phone']}}">
+                        {{users_data['phone']}} <i class="bi bi-telephone-outbound-fill text-success"></i>
+                    </a>
+                    <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
+                        <i class="bi bi-whatsapp text-success"></i>
+                    </a>
+                    {% else %}
+                    <i class="bi bi-dash-lg text-danger"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
+            <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
+            <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
+            <!-- d-none d-lg-block tylko na pełnym lg+ -->
+            <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
+            <div class="row">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Facebook:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content">
+                    {% if users_data['facebook'] %}
+                    <a href="{{users_data['facebook']}}" target="_blank">
+                        <i class="bi bi-facebook text-body-tertiary"></i> <i class="bi bi-box-arrow-up-right text-info"></i>
+                    </a>
+                    {% else %}
+                    <i class="bi bi-dash-lg text-danger"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
+            <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
+            <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
+            <!-- d-none d-lg-block tylko na pełnym lg+ -->
+            <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
+            <div class="row">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Linkedin:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content">
+                    {% if users_data['linkedin'] %}
+                    <a href="{{users_data['linkedin']}}" target="_blank">
+                        <i class="bi bi-linkedin text-body-tertiary"></i> <i class="bi bi-box-arrow-up-right text-info"></i>
+                    </a>
+                    {% else %}
+                    <i class="bi bi-dash-lg text-danger"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
+            <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
+            <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
+            <!-- d-none d-lg-block tylko na pełnym lg+ -->
+            <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
+            <div class="row">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Instagram:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content">
+                    {% if users_data['instagram'] %}
+                    <a href="{{users_data['instagram']}}" target="_blank">
+                        <i class="bi bi-instagram text-body-tertiary"></i> <i class="bi bi-box-arrow-up-right text-info"></i>
+                    </a>
+                    {% else %}
+                    <i class="bi bi-dash-lg text-danger"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
+            <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
+            <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
+            <!-- d-none d-lg-block tylko na pełnym lg+ -->
+            <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
+            <div class="row">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Twitter:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content">
+                    {% if users_data['twiter'] %}
+                    <a href="{{users_data['twiter']}}" target="_blank">
+                        <i class="bi bi-twitter-x text-body-tertiary"></i> <i class="bi bi-box-arrow-up-right text-info"></i>
+                    </a>
+                    {% else %}
+                    <i class="bi bi-dash-lg text-danger"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
+            <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
+            <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
+            <!-- d-none d-lg-block tylko na pełnym lg+ -->
+            <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
+            <div class="row">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Nazwisko:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                    {{users_data['name']}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Login:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                    @{{users_data['username']}}
+                </div>
+            </div>
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
+            <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
+            <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
+            <!-- d-none d-lg-block tylko na pełnym lg+ -->
+            <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
+            <div class="row">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Stanowisko:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                    {{users_data['stanowisko']}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-sm-12 profil-info text-warning">
+                    Opis:
+                </div>
+                <div class="col-lg-9 col-sm-12 profil-content text-body-tertiary">
+                    {{users_data['opis']}}
+                </div>
+            </div>
+            <!-- d-block d-sm-none tylko na małym -sm -->
+            <!-- <div class="d-block d-sm-none">Tylko na małym</div> -->
+            <!-- d-none d-sm-block d-lg-none tylko na średnim -md -->
+            <!-- <div class="d-none d-sm-block d-lg-none">Tylko na średnim</div> -->
+            <!-- d-none d-lg-block tylko na pełnym lg+ -->
+            <!-- <div class="d-none d-lg-block">Tylko na pełnym</div> -->
+            <div class="row">
+                <div class="col-3 profil-info text-info">
+                    ACTIONS:
+                </div>
+                <div class="col-9 profil-content">
+                    <!-- <a data-bs-toggle="collapse" href="#collapse_id_00" role="button" aria-expanded="false" aria-controls="collapse_id_00"><i class="bi bi-info-square" style="color: rgb(0, 196, 49) !important;"></i></a> -->
+                    <a data-bs-toggle="collapse" href="#collapse_id_3_{{username}}" role="button" aria-expanded="false" aria-controls="collapse_id_3_{{username}}"><i class="bi bi-pencil-square" style="color: rgb(25, 101, 22) !important;"></i></a>
+                    <a data-bs-toggle="collapse" href="#collapse_id_1_{{username}}" role="button" aria-expanded="false" aria-controls="collapse_id_1_{{username}}"><i class="bi bi-key-fill" style="color: rgb(179, 116, 34) !important;"></i></a>
+                </div>
+            </div>
+            
         </div>
         <div class="col-sm-12 col-lg-4 col-xl-4 p-12 colapse-column-usual formatuj-left">
             <!-- informacje o Użytkowniku -->
