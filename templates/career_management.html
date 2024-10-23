@@ -15,6 +15,11 @@
                                 <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;">
                                     #
                                 </div>
+                                <!-- responsywny start -->
+                                <div class="d-lg-none" style="max-width: 30px;">
+                                    <i class="bi bi-incognito"></i>
+                                </div>
+                                <!-- responsywny koniec -->
                                 <div  class="col-xl-8 col-lg-6 col-sm-8 formatuj-maly-font">
                                     Tytuł
                                 </div>
@@ -24,8 +29,11 @@
                                 <div  class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
                                     Lokalizacja
                                 </div>
-                                <div  class="d-none d-lg-block formatuj-maly-font" style="max-width: 150px;">
+                                <div  class="d-none d-lg-block formatuj-maly-font" style="max-width: 100px;">
                                     Status
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 50px;">
+                                    <i class="bi bi-incognito"></i>
                                 </div>
                                 <div  class="d-none d-xl-block formatuj-maly-font" style="max-width: 250px;">
                                     Operator
@@ -88,7 +96,7 @@
                                         
                                     </div>
                                     <div class="no-border formatuj-maly-font fadeIn">
-                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '5000 zł - 8000 zł brutto');">5000 - 10000 brutto</a>
+                                        <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '5000 zł - 8000 zł brutto');">5000 - 8000 brutto</a>
                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '8000 zł - 10000 zł brutto');">8000 - 10000 brutto</a>
                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '10000 zł - 12000 zł brutto');">10000 - 12000 brutto</a>
                                         <a class="ms-2" href="javascript:void(0);" onClick="fillInput('salary_9999999', '100 zł/h brutto');">100 zł/h brutto</a>
@@ -331,10 +339,47 @@
                                         {{post_id}}
                                     </div>
                                     <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {% if post_data['status'] == 1 %}
-                                            <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
+                                        <!-- FaceBook Groups -->
+                                        {% set ns = namespace(last_action_index=None, last_action_status=None, last_action_planned=None) %}
+
+                                        <!-- Szukanie ostatniej wykonanej akcji i zliczanie zaplanowanych akcji -->
+                                        {% for i in range(11) %}
+                                            {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
+                                            {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
+                                                                                        
+                                            <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
+                                            {% if schedule_datetime is not none and schedule_datetime != '' %}
+                                                {% set ns.last_action_planned = i %}
+                                            {% endif %}
+
+                                            <!-- Sprawdzenie, czy akcja ma status różny od None i jest wykonana -->
+                                            {% if schedule_status is not none and schedule_status != '' %}
+                                                {% set ns.last_action_index = i %}
+                                                {% set ns.last_action_status = schedule_status %}
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
+                                        {% if ns.last_action_status is not none and ns.last_action_status != '' %}
+                                            <div class="col-1 me-1">
+                                                {% if ns.last_action_status == 1 %}
+                                                    {% if ns.last_action_index + 1 < ns.last_action_planned or ns.last_action_planned == 1 %}
+                                                        <div class="ico-facebookgroups-active"></div>
+                                                        {% else %}
+                                                        <div class="ico-facebookgroups-warning"></div>
+                                                    {% endif %}
+                                                {% elif ns.last_action_status == 2 %}
+                                                    <div class="ico-facebookgroups-error"></div>
+                                                {% elif ns.last_action_status == 4 %}
+                                                    <div class="ico-facebookgroups-inprogress"></div>
+                                                {% endif %}
+                                            </div>
                                         {% else %}
+                                            {% if post_data['status'] == 1 %}
+                                            <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
+                                            {% else %}
                                             <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-secondary"></i></span>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                     <div  class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -353,14 +398,54 @@
                                             <span class="display-6 formatuj-maly-font">{{post_data['location'][:12]}}</span>
                                         </a>
                                     </div>
-                                    <div  class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <div  class="d-none d-lg-block" style="max-width: 100px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                             {% if post_data['status'] == 1 %}
-                                                <span class="text-warning">Aktywna</span>
+                                                <span class="text-warning formatuj-maly-font">Aktywna</span>
                                             {% else %}
-                                                <span class="text-secondary">Nieaktywna</span>
+                                                <span class="text-secondary formatuj-maly-font">Nieaktywna</span>
                                             {% endif %}
                                         </a>
+                                    </div>
+                                    <div  class="d-none d-xl-block" style="max-width: 50px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <div class="row">
+                                            <!-- FaceBook Groups -->
+                                            {% set ns = namespace(last_action_index=None, last_action_status=None, last_action_planned=None) %}
+
+                                            <!-- Szukanie ostatniej wykonanej akcji i zliczanie zaplanowanych akcji -->
+                                            {% for i in range(11) %}
+                                                {% set schedule_datetime = post_data['fbgroups']['schedule_' ~ i ~ '_datetime'] %}
+                                                {% set schedule_status = post_data['fbgroups']['schedule_' ~ i ~ '_status'] %}
+                                                                                            
+                                                <!-- Sprawdzenie, czy akcja jest zaplanowana (ma datę) -->
+                                                {% if schedule_datetime is not none and schedule_datetime != '' %}
+                                                    {% set ns.last_action_planned = i %}
+                                                {% endif %}
+
+                                                <!-- Sprawdzenie, czy akcja ma status różny od None i jest wykonana -->
+                                                {% if schedule_status is not none and schedule_status != '' %}
+                                                    {% set ns.last_action_index = i %}
+                                                    {% set ns.last_action_status = schedule_status %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            <!-- Wyświetlanie odpowiedniej ikonki dla ostatnio wykonanej akcji -->
+                                            {% if ns.last_action_status is not none and ns.last_action_status != '' %}
+                                                <div class="col-1 me-1">
+                                                    {% if ns.last_action_status == 1 %}
+                                                        {% if ns.last_action_index + 1 < ns.last_action_planned or ns.last_action_planned == 1 %}
+                                                            <div class="ico-facebookgroups-active"></div>
+                                                            {% else %}
+                                                            <div class="ico-facebookgroups-warning"></div>
+                                                        {% endif %}
+                                                    {% elif ns.last_action_status == 2 %}
+                                                        <div class="ico-facebookgroups-error"></div>
+                                                    {% elif ns.last_action_status == 4 %}
+                                                        <div class="ico-facebookgroups-inprogress"></div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                     <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {% if post_data['contact_email'] != '' %}
@@ -691,9 +776,7 @@
                             </div>
                         
                             <!-- collapse start -->
-
                             <div class="sub-panel rogi collapse formatyj-maly-wiersz p-2" id="collapse_id_{{post_id}}">
-
                                 <div class="row">
                                     <div class="col-lg-5 col-sm-12">
                                         <h1 class="career-properties-h1">{{post_data['title']}}</h1>
@@ -746,10 +829,7 @@
                                                 <li>{{benefit}}</li>
                                             {% endfor %}
                                          </ul>
-                                        
                                     </div>
-                                    
-                                    
                                 </div>
                                 {% if post_data['status'] != 0 %}
                                     {% if post_data['fbgroups']['id'] == None %}
@@ -831,110 +911,111 @@
 
                                                     <div class="row row-cols-auto mb-3">
                                                         <div class="col">
-                                                                <input type="hidden" id="category_{{post_id}}" name="category" value="praca" />
-                                                                <input type="hidden" id="created_by_{{post_id}}" name="created_by" value="dmddomy" />
-                                                                <input type="hidden" id="section_{{post_id}}" name="section" value="career" />
-                                                                <input type="hidden" id="id_gallery_{{post_id}}" name="id_gallery" value="None" />
+                                                            <!-- Ukryte zmienne -->
+                                                            <input type="hidden" id="category_{{post_id}}" name="category" value="praca" />
+                                                            <input type="hidden" id="created_by_{{post_id}}" name="created_by" value="dmddomy" />
+                                                            <input type="hidden" id="section_{{post_id}}" name="section" value="career" />
+                                                            <input type="hidden" id="id_gallery_{{post_id}}" name="id_gallery" value="None" />
 
-                                                                <div class="col me-1 mb-1">
-                                                                    
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Publikuj" />
-                                                                    
+                                                            <div class="col me-1 mb-1">
+                                                                
+                                                                <input type="hidden" name="Status" value="0" />
+                                                                <input type="hidden" name="task_kind" value="Publikuj" />
+                                                                
 
-                                                                    <!-- block -->
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="wznawiaj_{{post_id}}" name="wznawiaj">
-                                                                                <label class="form-check-label" for="wznawiaj_{{post_id}}">Wznawiaj ogłoszenie automatycznie</label>
-                                                                            </div>
+                                                                <!-- block -->
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-check form-switch">
+                                                                            <input class="form-check-input" type="checkbox" role="switch" id="wznawiaj_{{post_id}}" name="wznawiaj">
+                                                                            <label class="form-check-label" for="wznawiaj_{{post_id}}">Wznawiaj ogłoszenie automatycznie</label>
                                                                         </div>
                                                                     </div>
-
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Częstotliwość co:
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="codwatygodnie_{{post_id}}" name="codwatygodnie" value="1" checked>
-                                                                                        <label class="form-check-label" for="codwatygodnie_{{post_id}}">14 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="cotydzien_{{post_id}}" name="cotydzien" value="1" >
-                                                                                        <label class="form-check-label" for="cotydzien_{{post_id}}">7 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="coczterydni_{{post_id}}" name="coczterydni" value="1">
-                                                                                        <label class="form-check-label" for="coczterydni_{{post_id}}">4 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="codwadni_{{post_id}}" name="codwadni" value="1">
-                                                                                        <label class="form-check-label" for="codwadni_{{post_id}}">2 dni</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <!-- block -->
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    Iloś ponowień:
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="ponow2razy_{{post_id}}" name="ponow2razy" value="1" checked>
-                                                                                        <label class="form-check-label" for="ponow2razy_{{post_id}}">x 2</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="ponow5razy_{{post_id}}" name="ponow5razy" value="1" >
-                                                                                        <label class="form-check-label" for="ponow5razy_{{post_id}}">x 5</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="ponow8razy_{{post_id}}" name="ponow8razy" value="1">
-                                                                                        <label class="form-check-label" for="ponow8razy_{{post_id}}">x 8</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <div class="form-check form-switch">
-                                                                                        <input class="form-check-input" type="checkbox" role="switch" id="ponow10razy_{{post_id}}" name="ponow10razy" value="1">
-                                                                                        <label class="form-check-label" for="ponow10razy_{{post_id}}">x 10</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-
-                                                                    <button type="button" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick="collectAndSendfbgroupsform('{{post_id}}')"> 
-                                                                        Publikuj grupach
-                                                                    </button>
-                                                                    <div class="form-message mt-3" id="komunikat_z_serwera_{{post_id}}"></div>
                                                                 </div>
+
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Częstotliwość co:
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="codwatygodnie_{{post_id}}" name="codwatygodnie" value="1" checked>
+                                                                                    <label class="form-check-label" for="codwatygodnie_{{post_id}}">14 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="cotydzien_{{post_id}}" name="cotydzien" value="1" >
+                                                                                    <label class="form-check-label" for="cotydzien_{{post_id}}">7 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="coczterydni_{{post_id}}" name="coczterydni" value="1">
+                                                                                    <label class="form-check-label" for="coczterydni_{{post_id}}">4 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="codwadni_{{post_id}}" name="codwadni" value="1">
+                                                                                    <label class="form-check-label" for="codwadni_{{post_id}}">2 dni</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <!-- block -->
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                Iloś ponowień:
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="ponow2razy_{{post_id}}" name="ponow2razy" value="1" checked>
+                                                                                    <label class="form-check-label" for="ponow2razy_{{post_id}}">x 2</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="ponow5razy_{{post_id}}" name="ponow5razy" value="1" >
+                                                                                    <label class="form-check-label" for="ponow5razy_{{post_id}}">x 5</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="ponow8razy_{{post_id}}" name="ponow8razy" value="1">
+                                                                                    <label class="form-check-label" for="ponow8razy_{{post_id}}">x 8</label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-check form-switch">
+                                                                                    <input class="form-check-input" type="checkbox" role="switch" id="ponow10razy_{{post_id}}" name="ponow10razy" value="1">
+                                                                                    <label class="form-check-label" for="ponow10razy_{{post_id}}">x 10</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <button type="button" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick="collectAndSendfbgroupsform('{{post_id}}')"> 
+                                                                    Publikuj grupach
+                                                                </button>
+                                                                <div class="form-message mt-3" id="komunikat_z_serwera_{{post_id}}"></div>
+                                                            </div>
                                                             
                                                         </div>
                                                     </div>
