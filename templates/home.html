@@ -62,87 +62,87 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Email:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
+                    <div class="col-lg-9 col-sm-12 profil-content">
                         {{users_data['email']}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Telefon:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
+                    <div class="col-lg-9 col-sm-12 profil-content">
                         {{users_data['phone']}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Facebook:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
-                        {{users_data['facebook'][:15]}} ...
+                    <div class="col-lg-9 col-sm-12 profil-content">
+                        {{users_data['facebook'][:30]}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Linkedin:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
-                        {{users_data['linkedin'][:15]}} ...
+                    <div class="col-lg-9 col-sm-12 profil-content">
+                        {{users_data['linkedin'][:30]}} ...
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Instagram:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
-                        {{users_data['instagram'][:15]}} ...
+                    <div class="col-lg-9 col-sm-12 profil-content">
+                        {{users_data['instagram'][:30]}} ...
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Twitter:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
-                        {{users_data['twiter'][:15]}} ...
+                    <div class="col-lg-9 col-sm-12 profil-content">
+                        {{users_data['twiter'][:30]}} ...
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Nazwisko:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
+                    <div class="col-lg-9 col-sm-12 profil-content">
                         {{users_data['name']}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Login:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
+                    <div class="col-lg-9 col-sm-12 profil-content">
                         {{users_data['username']}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Stanowisko:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
+                    <div class="col-lg-9 col-sm-12 profil-content">
                         {{users_data['stanowisko']}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-3 col-sm-12 profil-info">
+                    <div class="col-lg-3 col-sm-12 profil-info text-warning">
                         Opis:
                     </div>
-                    <div class="col-lg-9 col-sm-12 profil-info">
+                    <div class="col-lg-9 col-sm-12 profil-content">
                         {{users_data['opis']}}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-3 profil-info">
+                    <div class="col-3 profil-info text-info">
                         ACTIONS:
                     </div>
                     <div class="col-9 profil-content">
@@ -250,7 +250,7 @@
                     let chatBox = $('#chat-box');
                     chatBox.empty();
                     data.forEach(function(message) {
-                        chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-4">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
+                        chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-3">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
                     });
                     if (autoScrollEnabled) {
                         // Przewijanie na dół po załadowaniu wiadomości
