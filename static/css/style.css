@@ -27,7 +27,7 @@ body {
     background-color: #1e2124; /* Nowy kolor tła */
     color: #c7c7c7; /* Nowy kolor tekstu */
     cursor: default;
-    padding-bottom: 100px;
+    padding-bottom: 150px;
   }
   button:hover {
       cursor: default;
