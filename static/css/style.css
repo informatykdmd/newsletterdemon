@@ -1753,3 +1753,47 @@ color:#969696;
   border-radius: 5px; /* Dopasowuje rogi na hover */
   color: #fff; /* Zmienia kolor tekstu na biały na hover */
 }
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 10px;
+}
+
+.chat-bubble {
+  background-color: #212529;
+  color: white;
+  border-radius: 15px;
+  padding: 10px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.chat-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  border: 2px solid white;
+}
+
+.chat-username {
+  font-weight: bold;
+  margin-right: 50px;
+  display: inline-block;
+}
+
+.chat-message-content {
+  margin-top: 10px;
+}
+
+.chat-message-date {
+  font-size: 12px;
+  color: #aaa;
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+}
