@@ -1781,6 +1781,9 @@ color:#969696;
   background-color: #02ff02;
   font-size: small;
   color:#000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .chat-username {
