@@ -1777,14 +1777,16 @@ color:#969696;
   position: absolute;
   top: -10px;
   right: -10px;
-  border: 2px solid white;
+  border: 2px solid #76ff76;
+  background-color: #02ff02;
 }
 
 .chat-username {
-  font-weight: bold;
+  font-weight: 750;
   margin-right: 50px;
   display: inline-block;
   font-size: 17px;
+  color: #0098a9;
 }
 
 .chat-message-content {
