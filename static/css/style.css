@@ -1812,3 +1812,50 @@ color:#969696;
   margin-top: 5px;
   right: 10px;
 }
+
+
+.file-upload-wrapper {
+  width: 200px;
+  height: 100px;
+  border: 2px dashed #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 10px;
+  position: relative;
+  text-align: center;
+}
+
+.file-upload-wrapper:hover {
+  border-color: #888;
+}
+
+.file-upload-content {
+  font-size: 16px;
+  color: #666;
+}
+
+.file-upload-wrapper i {
+  font-size: 24px;
+  color: #666;
+  margin-right: 10px;
+}
+
+.file-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #333;
+  display: inline-block;
+}
+
+.file-upload-wrapper:hover .file-name {
+  color: #000;
+}

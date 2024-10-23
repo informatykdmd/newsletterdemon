@@ -35,7 +35,22 @@
                                 </div>
                                 <input type="hidden" value="{{user_id}}_home" name="user_id" />
 
-                                <input type="file" class="form-control" style="max-height: 30px; font-size: 12px;" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
+                                <!-- <input type="file" class="form-control" style="max-height: 30px; font-size: 12px;" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" /> -->
+                                
+                                <div class="file-upload-wrapper" id="upload_wrapper_{{user_id}}">
+                                    <div class="file-upload-content" id="file_upload_content_{{user_id}}">
+                                        <i class="bi bi-plus-lg"></i>
+                                        <span class="file-name" id="file_name_{{user_id}}">Dodaj plik</span>
+                                    </div>
+                                    <input type="file" class="file-input" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
+                                </div>
+                                <script>
+                                    document.getElementById('upload_{{user_id}}').addEventListener('change', function() {
+                                        var fileName = this.files[0].name;
+                                        document.getElementById('file_name_{{user_id}}').textContent = fileName;
+                                    });
+                                </script>
+
                             </div>
                             <div class="m-2">
                                 <div class="formatuj formatuj-left" style="margin-bottom: 10px;">
