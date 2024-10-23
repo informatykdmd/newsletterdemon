@@ -12,8 +12,8 @@
 <div class="jasne rogi formatyj-maly-wiersz">
     <div class="row p-3">
         <div class="col-lg-3 col-sm-12 p-12"  style="max-width: 220px;">
-            <!-- d-lg-none tylko na małym -sm -->
-             <div class="row d-lg-none">
+            <!--  d-block d-sm-none tylko na małym -sm -->
+             <div class="row d-block d-sm-none">
                 <div class="col-6 p-1">
                     <div style="text-align: right;">
                         <a 
@@ -33,8 +33,8 @@
                 </div>
             </div>
             
-            <!-- d-none d-lg-block tylko na średnim lg+ -->
-            <div class="row d-none d-lg-block">
+            <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+            <div class="row d-none d-sm-block d-lg-none">
                 <div class="col-9 p-1">
                     <div style="text-align: right;">
                         <a 
@@ -71,16 +71,16 @@
                 </div>
             </div>
             
-            <!-- d-lg-none tylko na małym -sm -->
-            <div class="d-lg-none">
+            <!--  d-block d-sm-none tylko na małym -sm -->
+            <div class=" d-block d-sm-none">
                 <img class="avatar-sm" src="{{users_data['avatar']}}" alt=""/>
             </div>
-            <!-- d-none d-lg-block tylko na średnim lg+ -->
-            <div class="d-none d-lg-block">
+            <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+            <div class="d-none d-sm-block d-lg-none">
                 <img class="avatar-lg" src="{{users_data['avatar']}}" alt=""/>
             </div>
             <!-- d-none d-xl-block tylko na pełnym xl+ -->
-            <div class="d-none d-xl-block">
+            <div class="row d-none d-lg-block">
                 <img class="avatar-xl" src="{{users_data['avatar']}}" alt=""/>
             </div>
             <!-- collapse wewnętrzny -->
@@ -89,12 +89,12 @@
                     <div>
                         {% set user_id = users_data['id'] %}
                         <form method="POST" id="avatarUser_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
-                            <!-- d-none d-lg-block tylko na średnim lg+ -->
-                            <div class="d-none d-lg-block">
+                            <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+                            <div class="d-none d-sm-block d-lg-none">
                                 <p style="font-size: 15px; font-weight: 400;">Zmień</p>
                             </div>
                             <!-- d-none d-xl-block tylko na pełnym xl+ -->
-                            <div class="d-none d-xl-block">
+                            <div class="row d-none d-lg-block">
                                 <h7>Podmień avatar</h7>
                             </div>
                             <div class="formatuj formatuj-maly-font">
@@ -110,7 +110,7 @@
                                     <!-- d-lg-none tylko na małym -sm -->
                                     <!-- d-none d-lg-block tylko na średnim lg+ -->
                                     <!-- d-none d-xl-block tylko na pełnym xl+ -->
-                                    <div class="file-upload-content d-none d-xl-block" id="file_upload_content_{{user_id}}">
+                                    <div class="file-upload-content row d-none d-lg-block" id="file_upload_content_{{user_id}}">
                                         <i class="bi bi-plus-square-dotted"></i>
                                         <span class="file-name" id="file_name_{{user_id}}">Dodaj plik</span>
                                     </div>
