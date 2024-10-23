@@ -198,15 +198,15 @@ body {
 }
 
 .avatar-sm {
-  max-height: 50px;
-  min-width:  50px;
+  max-height: 120px;
+  min-width:  120px;
   max-width: 100%;
   border-radius: 50%;
 }
 
 .avatar-lg {
-  max-height: 100px;
-  min-width:  100px;
+  max-height: 1350px;
+  min-width:  135px;
   max-width: 100%;
   border-radius: 50%;
 }
