@@ -1771,14 +1771,15 @@ color:#969696;
 }
 
 .chat-avatar {
-  width: 4px;
-  height: 4px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   position: absolute;
   top: -10px;
   right: -10px;
   border: 2px solid #76ff76;
   background-color: #02ff02;
+  font-size: small;
   color:#000000;
 }
 
