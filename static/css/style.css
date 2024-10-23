@@ -1829,7 +1829,7 @@ color:#969696;
 }
 
 .file-upload-wrapper:hover {
-  border-color: #7e7e7e;
+  border-color: #4c4c4c;
 }
 
 .file-upload-content {
@@ -1838,13 +1838,9 @@ color:#969696;
 }
 
 .file-upload-wrapper i {
-  font-size: 24px;
-  color: #6fff00;
+  font-size: 20px;
+  color: #54bf02;
   margin-right: 10px;
-}
-
-.file-upload-wrapper i:hover {
-  color: #3f8509;
 }
 
 .file-input {
