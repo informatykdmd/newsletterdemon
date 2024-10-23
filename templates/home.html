@@ -66,7 +66,9 @@
                         Email:
                     </div>
                     <div class="col-lg-9 col-sm-12 profil-content">
-                        {{users_data['email']}}
+                        <a href="mailto:{{users_data['email']}}">
+                            {{users_data['email']}}
+                        </a>
                     </div>
                 </div>
                 <div class="row">
@@ -74,7 +76,13 @@
                         Telefon:
                     </div>
                     <div class="col-lg-9 col-sm-12 profil-content">
-                        {{users_data['phone']}}
+                        {% if {{users_data['phone']}} %}
+                        <a href="tel:{{users_data['phone']}}">
+                            {{users_data['phone']}}
+                        </a>
+                        {% else %}
+                        <i class="bi bi-dash-lg"></i>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -82,7 +90,13 @@
                         Facebook:
                     </div>
                     <div class="col-lg-9 col-sm-12 profil-content">
-                        {{users_data['facebook'][:30]}}
+                        {% if {{users_data['facebook']}} %}
+                        <a href="{{users_data['facebook']}}" target="_blank">
+                            <i class="bi bi-box-arrow-up-right text-warning"></i>
+                        </a>
+                        {% else %}
+                        <i class="bi bi-dash-lg"></i>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -90,7 +104,13 @@
                         Linkedin:
                     </div>
                     <div class="col-lg-9 col-sm-12 profil-content">
-                        {{users_data['linkedin'][:30]}} ...
+                        {% if {{users_data['linkedin']}} %}
+                        <a href="{{users_data['linkedin']}}" target="_blank">
+                            <i class="bi bi-box-arrow-up-right text-warning"></i>
+                        </a>
+                        {% else %}
+                        <i class="bi bi-dash-lg"></i>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -98,7 +118,13 @@
                         Instagram:
                     </div>
                     <div class="col-lg-9 col-sm-12 profil-content">
-                        {{users_data['instagram'][:30]}} ...
+                        {% if {{users_data['instagram']}} %}
+                        <a href="{{users_data['instagram']}}" target="_blank">
+                            <i class="bi bi-box-arrow-up-right text-warning"></i>
+                        </a>
+                        {% else %}
+                        <i class="bi bi-dash-lg"></i>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -106,7 +132,13 @@
                         Twitter:
                     </div>
                     <div class="col-lg-9 col-sm-12 profil-content">
-                        {{users_data['twiter'][:30]}} ...
+                        {% if {{users_data['twiter']}} %}
+                        <a href="{{users_data['twiter']}}" target="_blank">
+                            <i class="bi bi-box-arrow-up-right text-warning"></i>
+                        </a>
+                        {% else %}
+                        <i class="bi bi-dash-lg"></i>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">
@@ -122,7 +154,7 @@
                         Login:
                     </div>
                     <div class="col-lg-9 col-sm-12 profil-content">
-                        {{users_data['username']}}
+                        @{{users_data['username']}}
                     </div>
                 </div>
                 <div class="row">
