@@ -1800,12 +1800,13 @@ color:#969696;
   padding-bottom: 15px;
   padding-left: 15px;
   font-size: 15px;
+  font-weight: 150;
   color: #afafaf;
 }
 
 .chat-message-date {
   font-size: 12px;
-  color: #aaa;
+  color: #828282;
   position: absolute;
   bottom: 5px;
   margin-top: 5px;
