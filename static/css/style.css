@@ -1757,17 +1757,17 @@ color:#969696;
 .chat-container {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
-  margin: 10px;
+  max-width: 100%;
+  margin: 5px;
 }
 
 .chat-bubble {
   background-color: #212529;
   color: white;
-  border-radius: 15px;
-  padding: 10px;
+  border-radius: 5px;
+  padding: 7px;
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .chat-avatar {
@@ -1788,6 +1788,7 @@ color:#969696;
 
 .chat-message-content {
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .chat-message-date {
@@ -1795,5 +1796,6 @@ color:#969696;
   color: #aaa;
   position: absolute;
   bottom: 5px;
+  margin-top: 5px;
   right: 10px;
 }
