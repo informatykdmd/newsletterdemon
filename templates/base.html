@@ -32,7 +32,121 @@
     </div>
     <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
     <div class="d-none d-sm-block d-lg-none">
-
+        <div class="offcanvas offcanvas-top oc-height jasne" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+            
+            <!-- Górny pasek nawigacji Bootstrapa -->
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top p-3 dropdown-menu-dark">
+                <a class="navbar-brand" href="#" data-bs-dismiss="offcanvas" aria-label="Close">
+                    <img 
+                        src="../static/img/logotypy_dmd_domy.png" 
+                        alt="DMD" style="padding-right: 10px; max-height: 35px;"/>
+                    
+                    Panel Administratora
+                </a>
+                <div class="bg-dark">
+                    <div class="input-group mb-3" style="margin-top: 10px;">
+                        <input type="text" class="form-control bg-dark" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" placeholder="Wyszukaj" aria-label="Wyszukaj" aria-describedby="button-addon2">
+                        <button class="btn btn-outline-secondary bg-dark" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" type="button" id="button-addon2">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="przyklejone-divy">
+                    <div class="klej">
+                        <div class="formatuj-maly-logout">
+                            Zalogowany jako: <span style="color: #61ff59"><i class="bi bi-person-circle"></i> {{username}}</span>
+                        </div> 
+                        <div class="formatuj">
+                            <a href="/logout">
+                                Wyloguj się
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="no-alpha" style="margin-top: 85px;">
+                <div class="tylko-klej">
+                    <div class="card formatuj-margin bg-dark">
+                        <div class="card-body klej">
+                            <div class="column-usual formatuj-maly-font">
+                                <img src="../static/img/logo_domy.png" style="max-width: 150px; margin-bottom: 5px;" alt="Domy Logo" loading="lazy" fetchpriority="high"/>
+                                <p><strong>Twój dom, Twoje marzenie, nasza pasja!</strong><br />
+                                    Sprawdzone technologie, solidne wykonanie. </p>
+                            </div>
+                            <div class="formatuj-right formatuj-margin column-id">
+                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{domy}}'">Sprawdź</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card formatuj-margin bg-dark">
+                        <div class="card-body klej">
+                            <div class="column-usual formatuj-maly-font">
+                                <img src="../static/img/logo_budownictwo.png" style="max-width: 150px; margin-bottom: 5px;" alt="Budownictwo Logo" loading="lazy" fetchpriority="high"/>
+                                <p><strong>Budujemy jutro już dzisiaj!</strong><br />
+                                Projekty budowlane na miarę Twoich ambicji, od domów po hale! </p>
+                            </div>
+                            <div class="formatuj-right formatuj-margin column-id">
+                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{budownictwo}}'">Sprawdź</button>
+                            </div>
+                        </div>
+                    </div>          
+                </div>
+                <div class="tylko-klej">
+                    <div class="card formatuj-margin bg-dark">
+                        <div class="card-body klej">
+                            <div class="column-usual formatuj-maly-font">
+                                <img src="../static/img/logo_elitehome.png" style="max-width: 150px; margin-bottom: 5px;" alt="EliteHome Logo" loading="lazy" fetchpriority="high"/>
+                                <p><strong>Indywidualne podejście, Twój wymarzony świat!</strong><br />
+                                    Spełniamy marzenia z pasją i zaangażowaniem. </p>
+                            </div>
+                            <div class="formatuj-right formatuj-margin column-id">
+                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{elitehome}}'">Sprawdź</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card formatuj-margin bg-dark">
+                        <div class="card-body klej">
+                            <div class="column-usual formatuj-maly-font">
+                                <img src="../static/img/logo_instalacje.png" style="max-width: 150px; margin-bottom: 5px;" alt="Instalacje Logo" loading="lazy" fetchpriority="high"/>
+                                <p><strong>Bezpieczeństwo i efektywność!</strong><br />
+                                    Z nami wnętrza i otoczenie zyskują nowy wymiar. </p>
+                            </div>
+                            <div class="formatuj-right formatuj-margin column-id">
+                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{instalacje}}'">Sprawdź</button>
+                            </div>
+                        </div>
+                    </div>          
+                </div>
+                <div class="tylko-klej">
+                    <div class="card formatuj-margin bg-dark">
+                        <div class="card-body klej">
+                            <div class="column-usual formatuj-maly-font">
+                                <img src="../static/img/logo_investment.png" style="max-width: 150px; margin-bottom: 5px;" alt="Inwestycje Logo" loading="lazy" fetchpriority="high"/>
+                                <p><strong>Inwestycja z myślą o jutrze!</strong><br />
+                                    Tworzymy wartość dla Ciebie i społeczności. </p>
+                            </div>
+                            <div class="formatuj-right formatuj-margin column-id">
+                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{inwestycje}}'">Sprawdź</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card formatuj-margin bg-dark">
+                        <div class="card-body klej">
+                            <div class="column-usual formatuj-maly-font">
+                                <img src="../static/img/logo_development.png" style="max-width: 150px; margin-bottom: 5px;" alt="Development Logo" loading="lazy" fetchpriority="high"/>
+                                <p><strong>Inwestycje na Twoją miarę!</strong><br />
+                                    Budujemy, wynajmujemy i dzierżawimy, spełniając Twoje oczekiwania!  </p>
+                            </div>
+                            <div class="formatuj-right formatuj-margin column-id">
+                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{development}}'">Sprawdź</button>
+                            </div>
+                        </div>
+                    </div>          
+                </div>
+            </div>
+        </div>
+        
     </div>
     <!-- d-none d-xl-block tylko na pełnym xl+ -->
     <div class="d-none d-lg-block">
@@ -169,7 +283,63 @@
                 </div>
                 <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
                 <div class="d-none d-sm-block d-lg-none">
-
+                    <div class="tylko-klej">
+                        <div class="formatuj"> 
+                            <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
+                                <img 
+                                    src="../static/img/logotypy_dmd_domy.png" 
+                                    alt="DMD" style="margin-left: 10px !important; margin-top: 10px !important; padding-right: 10px; max-height: 35px;"/>
+                            </a>
+                        </div>
+                        <div class="">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item ">
+                                    {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Użytkownicy</a>{% endblock %}
+                                </li>
+                                <li class="nav-item dropdown" style="margin-left: 2px;">
+                                    <a class="nav-link dropdown-toggle link-light dark-mode" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="true">Opcje</a>
+        
+                                    <ul class="dropdown-menu dark-mode">
+                                        <li><a class="dropdown-item" href="/home">Strona Główna</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        {% if userperm['users'] == 1 %}
+                                            <li><a class="dropdown-item" href="/user">Zarządzaj Użytkownikami</a></li>
+                                        {% endif %}
+                                        {% if userperm['blog'] == 1 %}
+                                            <li><a class="dropdown-item" href="/blog">Zarządzaj Blogiem</a></li>
+                                        {% endif %}
+                                        {% if userperm['newsletter'] == 1 %}
+                                            <li><a class="dropdown-item" href="/newsletter">Zarządzaj Newsletterem</a></li>
+                                        {% endif %}
+                                        {% if userperm['subscribers'] == 1 %}
+                                            <li><a class="dropdown-item" href="/subscriber">Zarządzaj Subskrybentami</a></li>
+                                        {% endif %}
+                                        {% if userperm['team'] == 1 %}    
+                                            <li><a class="dropdown-item" href="/team-domy">Zarządzaj Kadrą</a></li>
+                                        {% endif %}
+                                        {% if userperm['career'] == 1 %}    
+                                            <li><a class="dropdown-item" href="/career">Zarządzaj Karierą</a></li>
+                                        {% endif %}
+                                        {% if userperm['estate'] == 1 %}
+                                            <li><a class="dropdown-item" href="/estate-ads-rent">Zarządzaj Ogłoszeniami</a></li>
+                                        {% endif %}
+                                        {% if userperm['fbhidden'] == 1 %}
+                                            <li><a class="dropdown-item" href="/hidden-campaigns">Zarządzaj Kampaniami</a></li>
+                                        {% endif %}
+                                        {% if userperm['settings'] == 1 %} 
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" href="/setting">Ustawienia</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
+                                {% block addButton %}
+                                <li style="margin-left: 15px;">
+                                    <a href="#"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(23, 209, 23) !important;"></i></a>
+                                </li>
+                                {% endblock %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <!-- d-none d-xl-block tylko na pełnym xl+ -->
                 <div class="d-none d-lg-block">
