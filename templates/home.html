@@ -76,6 +76,15 @@
             </div>
             <div class="col-6"><!-- Opcje -->
                 <div class="row row-cols-auto">
+                    <div class="col">
+                        <a 
+                          data-bs-toggle="collapse" 
+                          href="#collapse_id_4_{{username}}" 
+                          role="button" aria-expanded="false" 
+                          aria-controls="collapse_id_4_{{username}}">
+                            <i class="bi bi-info-circle" style="color: #ecc908 !important;"></i>
+                        </a>
+                    </div>
                     {% if users_data['email'] %}
                         <div class="col">
                             <a href="mailto:{{users_data['email']}}">
@@ -156,7 +165,10 @@
                 </div>
             </div>
             <div class="col-12">
-                <p style="font-size: 12px; color:#868788; margin: 2px;">{{users_data['opis']}}</p>
+                <!-- collapse wewnętrzny -->
+                <div class="collapse" id="collapse_id_4_{{username}}" data-bs-parent="#accordion_{{username}}">
+                    <p style="font-size: 12px; color:#868788; margin: 2px;">{{users_data['opis']}}</p>
+                </div>
             </div>
         </div>
         <div class="row">
