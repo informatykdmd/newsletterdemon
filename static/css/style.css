@@ -2041,6 +2041,7 @@ color:#969696;
 
 .search-lg {
   margin-top: 8px;
+  max-width: 150px;
   flex-grow: 1; /* Rozciąga logo na całą dostępną przestrzeń */
   text-align: left;
 }
