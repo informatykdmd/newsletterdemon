@@ -200,7 +200,7 @@ body {
 .avatar-sm {
   width: 100%; /* Avatar dopasowuje się do szerokości diva */
   height: auto; /* Automatycznie dostosowuje wysokość, zachowując proporcje */
-  max-width: 90px; /* Maksymalna szerokość 90px, aby nie przekraczała tego wymiaru */
+  max-width: 120px; /* Maksymalna szerokość 90px, aby nie przekraczała tego wymiaru */
   border-radius: 50%; /* Zaokrąglenie avatara */
 }
 
