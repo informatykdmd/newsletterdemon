@@ -1999,6 +1999,7 @@ color:#969696;
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 100px;
+  width: 100%;
 }
 
 .offcanvas-top-logo-lg {
@@ -2011,12 +2012,6 @@ color:#969696;
   margin-bottom: 10px;
 }
 
-.flex-container-sm {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
 
 .logo-sm {
   flex-grow: 1; /* Rozciąga logo na całą dostępną przestrzeń */
