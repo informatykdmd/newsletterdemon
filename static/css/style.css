@@ -1839,8 +1839,8 @@ color:#969696;
 
 .file-upload-wrapper {
   width: 100%;
-  height: 40px;
-  border: 2px dashed #848484;
+  height: 30px;
+  border: 1px dashed #bcc9ce;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1852,7 +1852,7 @@ color:#969696;
 }
 
 .file-upload-wrapper:hover {
-  border-color: #4c4c4c;
+  border-color: #646c70;
 }
 
 .file-upload-content {
