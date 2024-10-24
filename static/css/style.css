@@ -2041,13 +2041,14 @@ color:#969696;
 
 .search-lg {
   flex-grow: 1; /* Rozciąga logo na całą dostępną przestrzeń */
+  text-align: left;
 }
 
 .user-info-lg {
   margin-right: 25px;
   white-space: nowrap; /* Zapobiega łamaniu się tekstu */
   text-align: right;
-  font-size: 12px;
+  font-size: 15px;
   color: #6d6d6d;
 }
 
