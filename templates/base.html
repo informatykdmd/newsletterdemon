@@ -83,85 +83,20 @@
             
                 <!-- Informacja o zalogowanym użytkowniku -->
                 <div class="user-info-lg">
-                    Zalogowany jako: <span style="color: #61ff59">@</span>{{username}}
-                    <a href="/logout">
-                        <i class="bi bi-door-closed" style="color: #e32828"></i>
-                    </a>
-                </div>
-            </div>
-                        
-            <div class="no-alpha" style="margin-top: 85px;">
-                <div class="tylko-klej">
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_domy.png" style="max-width: 150px; margin-bottom: 5px;" alt="Domy Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Twój dom, Twoje marzenie, nasza pasja!</strong> </p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{domy}}'">Sprawdź</button>
-                            </div>
-                        </div>
+                    <div class="user-info-text-lg">
+                        Zalogowany jako: <span style="color: #61ff59">@</span>{{username}}
+                        <a href="/logout">
+                            <i class="bi bi-door-closed" style="color: #e32828"></i>
+                        </a>
                     </div>
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_budownictwo.png" style="max-width: 150px; margin-bottom: 5px;" alt="Budownictwo Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Budujemy jutro już dzisiaj!</strong></p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{budownictwo}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>          
-                </div>
-                <div class="tylko-klej">
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_elitehome.png" style="max-width: 150px; margin-bottom: 5px;" alt="EliteHome Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Indywidualne podejście, Twój wymarzony świat!</strong></p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{elitehome}}'">Sprawdź</button>
-                            </div>
-                        </div>
+                    <div class="brands-liks-text-lg">
+                        <div style="border-radius: 50%; padding: 3px; color: #17d117;" onclick="window.location.href='{{domy}}'"></div>
+                        <div style="border-radius: 50%; padding: 3px; color: #ff0000;" onclick="window.location.href='{{budownictwo}}'"></div>
+                        <div style="border-radius: 50%; padding: 3px; color: #7a8184;" onclick="window.location.href='{{elitehome}}'"></div>
+                        <div style="border-radius: 50%; padding: 3px; color: #ffcc00;" onclick="window.location.href='{{instalacje}}'"></div>
+                        <div style="border-radius: 50%; padding: 3px; color: #1b1b1d;" onclick="window.location.href='{{inwestycje}}'"></div>
+                        <div style="border-radius: 50%; padding: 3px; color: #00aaff;" onclick="window.location.href='{{development}}'"></div>
                     </div>
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_instalacje.png" style="max-width: 150px; margin-bottom: 5px;" alt="Instalacje Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Bezpieczeństwo i efektywność!</strong></p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{instalacje}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>          
-                </div>
-                <div class="tylko-klej">
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_investment.png" style="max-width: 150px; margin-bottom: 5px;" alt="Inwestycje Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Inwestycja z myślą o jutrze!</strong></p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{inwestycje}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_development.png" style="max-width: 150px; margin-bottom: 5px;" alt="Development Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Inwestycje na Twoją miarę!</strong></p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{development}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>          
                 </div>
             </div>
         </div>

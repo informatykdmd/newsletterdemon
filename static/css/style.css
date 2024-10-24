@@ -2047,7 +2047,15 @@ color:#969696;
   margin-right: 35px;
   white-space: nowrap; /* Zapobiega łamaniu się tekstu */
   text-align: right;
+}
+
+.user-info-text-lg {
   font-size: 15px;
   color: #6d6d6d;
+}
+
+.brands-liks-text-lg {
+  display: flex;
+  width: 100%;
 }
 
