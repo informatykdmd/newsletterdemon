@@ -28,7 +28,7 @@
     {% block header %}
     <!-- d-block d-sm-none tylko na średnim sm+ -->
     <div class="d-block d-sm-none">
-        
+
     </div>
     <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
     <div class="d-none d-sm-block d-lg-none">
@@ -163,7 +163,16 @@
         <main role="main" class="col-md-auto ml-sm-auto col-lg-auto px-md-auto main-content">
             <div class="mainContainer">
                 <!-- Navbar -->
-                <div class="p-2">
+                <!-- d-block d-sm-none tylko na średnim sm+ -->
+                <div class="d-block d-sm-none">
+                    
+                </div>
+                <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+                <div class="d-none d-sm-block d-lg-none">
+
+                </div>
+                <!-- d-none d-xl-block tylko na pełnym xl+ -->
+                <div class="d-none d-lg-block">
                     <ul class="nav nav-tabs">
                         <li class="nav-item ">
                             {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Użytkownicy</a>{% endblock %}
@@ -210,6 +219,7 @@
                         </li>
                         {% endblock %}
                     </ul>
+                </div>
                     
                     <div class="table-creator">
                         <!-- Kod do wyświetlania flash messages -->
