@@ -4,7 +4,38 @@
 
 {% block addButton %}{% endblock %}
 
-{% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Strona główna</a>{% endblock %}
+{% block navbarTitle %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none">
+    <a 
+      class="nav-link active dark-mode" 
+      style="max-height: 30px; font-size: 15px; font-weight: 100;"
+      aria-current="page" 
+      href="#">
+        Strona główna
+    </a>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none">
+    <a 
+      class="nav-link active dark-mode" 
+      aria-current="page" 
+      style="max-height: 50px; font-size: 15px; font-weight: 100;"
+      href="#">
+        Strona główna
+    </a>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block">
+    <a 
+    class="nav-link active dark-mode" 
+    aria-current="page" 
+    href="#">
+        Strona główna
+    </a>
+</div>
+<a class="nav-link active dark-mode " aria-current="page" href="#"></a>
+{% endblock %}
 
 {% block tableHeader %}{% endblock %}
 {% block tableContent%}
