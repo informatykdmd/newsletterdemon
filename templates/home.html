@@ -1005,7 +1005,7 @@
 {% endblock %}
 
 {% block footer %}
-<a id="toggle-scroll" style="max-width: 20px; max-height: 20px; background: none;">⬆️</a>
+<a id="toggle-scroll" style="color: rgb(0, 221, 255); max-width: 20px; max-height: 20px; background: none;"><i class="bi bi-arrow-up-circle"></i></a>
 <p style="font-size: 12px; font-weight: 100; color:#a0abb1; margin: 0px; font-family: 'Times New Roman', Times, serif;">
     All right reserved &copy; 2024 by DMD Panel Administratora.
 </p>
@@ -1054,9 +1054,9 @@
         $('#toggle-scroll').click(function() {
             autoScrollEnabled = !autoScrollEnabled;
             if (autoScrollEnabled) {
-                $(this).html('⬆️');
+                $(this).html('<i class="bi bi-arrow-up-circle"></i>');
             } else {
-                $(this).html('⬇️');
+                $(this).html('<i class="bi bi-arrow-down-circle"></i>');
             }
         });
     });
