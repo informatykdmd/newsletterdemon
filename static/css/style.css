@@ -2043,7 +2043,7 @@ color:#969696;
   margin-top: 8px;
   max-width: 150px;
   flex-grow: 1; /* Rozciąga logo na całą dostępną przestrzeń */
-  text-align: left;
+  justify-items: left;
 }
 
 .user-info-lg {
