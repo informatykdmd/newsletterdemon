@@ -13,8 +13,74 @@
     <div class="d-block d-sm-none">
         <div class="row">
             <div class="col-6"><!-- Pierwsza kolumna -->
-                <div style="background-color: #6a6a6a; min-width: 100%;">
-                    A SM
+                <div class="row">
+                    <div class="col-9">
+                        <img class="avatar-sm" src="{{users_data['avatar']}}" alt=""/>
+                    </div>
+                    <div class="col-3">
+                        <a 
+                            data-bs-toggle="collapse" 
+                            href="#collapse_id_0_{{username}}" 
+                            role="button" 
+                            aria-expanded="false" 
+                            aria-controls="collapse_id_0_{{username}}" 
+                            style="color: rgb(202, 236, 253) !important;"
+                            >
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Plik -->
+                        <!-- collapse wewnętrzny -->
+                        <div class="collapse" style="max-width: 400px;" id="collapse_id_0_{{username}}">
+                            <div class="m-2">
+                                <div>
+                                    {% set user_id = users_data['id'] %}
+                                    <form method="POST" id="avatarUser_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
+
+                                        <div>
+                                            <p style="font-size: 9px; font-weight: 200;">Zmień</p>
+                                        </div>
+
+                                        <div class="formatuj formatuj-maly-font">
+                                            <div style="margin-bottom: 10px;">
+                                                Wybierz plik: 
+                                            </div>
+                                            <input type="hidden" value="{{user_id}}_home" name="user_id" />
+                                            
+                                            <div class="file-upload-wrapper" id="upload_wrapper_{{user_id}}">
+                                                <div class="file-upload-content" id="file_upload_content_{{user_id}}">
+                                                    <i class="bi bi-plus-square-dotted"></i>
+                                                    <span class="file-name" id="file_name_{{user_id}}">Dodaj plik</span>
+                                                </div>
+                                                <input type="file" class="file-input" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
+                                            </div>
+                                            <script>
+                                                document.getElementById('upload_{{user_id}}').addEventListener('change', function() {
+                                                    var fileName = this.files[0].name;
+                                                    document.getElementById('file_name_{{user_id}}').textContent = fileName;
+                                                });
+                                            </script>
+        
+                                        </div>
+                                        <div class="m-2">
+                                            <div style="margin-bottom: 3px;">
+                                                <button 
+                                                        type="button" 
+                                                        class="btn btn-outline-secondary btn-sm" 
+                                                        style="max-height: 20px; font-size: 8px;" 
+                                                        onclick="justSubmitOneElementForm('upload_', '{{user_id}}', 'avatarUser_')">
+                                                    Zapisz
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-6"><!-- Druga kolumna -->
