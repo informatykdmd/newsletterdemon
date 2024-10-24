@@ -1005,8 +1005,10 @@
 {% endblock %}
 
 {% block footer %}
-<button id="toggle-scroll" class="btn btn-secondary m-2">⬆️ Wyłącz przewijanie</button>
-<p>All right reserved &copy; 2024 by DMD Panel Administratora.</p><br/>
+<button id="toggle-scroll" class="btn btn-secondary m-2">⬆️</button>
+<p style="font-size: 12px; font-weight: 100; color:#a0abb1; margin: 0px; font-family: 'Times New Roman', Times, serif;">
+    All right reserved &copy; 2024 by DMD Panel Administratora.
+</p>
 {% endblock %}
 
 {% block bottom_script %}
@@ -1052,9 +1054,9 @@
         $('#toggle-scroll').click(function() {
             autoScrollEnabled = !autoScrollEnabled;
             if (autoScrollEnabled) {
-                $(this).html('⬆️ Wyłącz przewijanie');
+                $(this).html('⬆️');
             } else {
-                $(this).html('⬇️ Włącz przewijanie');
+                $(this).html('⬇️');
             }
         });
     });
