@@ -10,151 +10,150 @@
 {% block tableContent%}
 <!-- collapse start -->
 <div class="jasne rogi">
-    <div class="container"> 
-        <div class="row">
-            <div class="col-4 col-sm-3 col-lg-3 col-xl-2"> <!-- Pierwsza kolumna -->
-                <div class="row">
-                    <div class="col-8">
-                        <!-- Avatar -->
-                        <!--  d-block d-sm-none tylko na małym -sm -->
-                        <div class=" d-block d-sm-none">
-                            <img class="avatar-sm" src="{{users_data['avatar']}}" alt=""/>
-                        </div>
-                        <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
-                        <div class="d-none d-sm-block d-lg-none">
-                            <img class="avatar-lg" src="{{users_data['avatar']}}" alt=""/>
-                        </div>
-                        <!-- d-none d-xl-block tylko na pełnym xl+ -->
-                        <div class="d-none d-lg-block">
-                            <img class="avatar-xl" src="{{users_data['avatar']}}" alt=""/>
+    <div class="row">
+        <div class="col-4 col-sm-3 col-lg-3 col-xl-2"> <!-- Pierwsza kolumna -->
+            <div class="row">
+                <div class="col-8">
+                    <!-- Avatar -->
+                    <!--  d-block d-sm-none tylko na małym -sm -->
+                    <div class=" d-block d-sm-none">
+                        <img class="avatar-sm" src="{{users_data['avatar']}}" alt=""/>
+                    </div>
+                    <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+                    <div class="d-none d-sm-block d-lg-none">
+                        <img class="avatar-lg" src="{{users_data['avatar']}}" alt=""/>
+                    </div>
+                    <!-- d-none d-xl-block tylko na pełnym xl+ -->
+                    <div class="d-none d-lg-block">
+                        <img class="avatar-xl" src="{{users_data['avatar']}}" alt=""/>
+                    </div>
+                </div>
+                <div class="col-4 ">
+                    <!-- Edit -->
+                    <!--  tylko na małym -sm -->
+                    <div class="row d-block d-sm-none">
+                        <div class="col-12 p-1">
+                            <div style="text-align: right;">
+                                <a 
+                                    data-bs-toggle="collapse" 
+                                    href="#collapse_id_0_{{username}}" 
+                                    role="button" 
+                                    aria-expanded="false" 
+                                    aria-controls="collapse_id_0_{{username}}" 
+                                    style="color: rgb(202, 236, 253) !important;"
+                                    >
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-4 ">
-                        <!-- Edit -->
-                        <!--  tylko na małym -sm -->
-                        <div class="row d-block d-sm-none">
-                            <div class="col-12 p-1">
-                                <div style="text-align: right;">
-                                    <a 
-                                        data-bs-toggle="collapse" 
-                                        href="#collapse_id_0_{{username}}" 
-                                        role="button" 
-                                        aria-expanded="false" 
-                                        aria-controls="collapse_id_0_{{username}}" 
-                                        style="color: rgb(202, 236, 253) !important;"
-                                        >
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                </div>
+                    
+                    <!-- tylko na średnim lg+ -->
+                    <div class="row d-none d-sm-block d-lg-none">
+                        <div class="col-12 p-1">
+                            <div style="text-align: right;">
+                                <a 
+                                    data-bs-toggle="collapse" 
+                                    href="#collapse_id_0_{{username}}" 
+                                    role="button" 
+                                    aria-expanded="false" 
+                                    aria-controls="collapse_id_0_{{username}}" 
+                                    style="color: rgb(202, 236, 253) !important;"
+                                    >
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
                             </div>
                         </div>
-                        
-                        <!-- tylko na średnim lg+ -->
-                        <div class="row d-none d-sm-block d-lg-none">
-                            <div class="col-12 p-1">
-                                <div style="text-align: right;">
-                                    <a 
-                                        data-bs-toggle="collapse" 
-                                        href="#collapse_id_0_{{username}}" 
-                                        role="button" 
-                                        aria-expanded="false" 
-                                        aria-controls="collapse_id_0_{{username}}" 
-                                        style="color: rgb(202, 236, 253) !important;"
-                                        >
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- tylko na pełnym xl+ -->
-                        <div class="row d-none d-lg-block">
-                            <div class="col-12 p-1">
-                                <div style="text-align: right;">
-                                    <a 
-                                        data-bs-toggle="collapse" 
-                                        href="#collapse_id_0_{{username}}" 
-                                        role="button" 
-                                        aria-expanded="false" 
-                                        aria-controls="collapse_id_0_{{username}}" 
-                                        style="color: rgb(202, 236, 253) !important;"
-                                        >
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                </div>
+                    </div>
+                    <!-- tylko na pełnym xl+ -->
+                    <div class="row d-none d-lg-block">
+                        <div class="col-12 p-1">
+                            <div style="text-align: right;">
+                                <a 
+                                    data-bs-toggle="collapse" 
+                                    href="#collapse_id_0_{{username}}" 
+                                    role="button" 
+                                    aria-expanded="false" 
+                                    aria-controls="collapse_id_0_{{username}}" 
+                                    style="color: rgb(202, 236, 253) !important;"
+                                    >
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-12">
-                    <!-- Plik -->
-                    <!-- collapse wewnętrzny -->
-                    <div class="collapse" style="max-width: 400px;" id="collapse_id_0_{{username}}">
-                        <div class="m-2">
-                            <div>
-                                {% set user_id = users_data['id'] %}
-                                <form method="POST" id="avatarUser_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
-                                    <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
-                                    <div class="d-none d-sm-block d-lg-none">
-                                        <p style="font-size: 15px; font-weight: 400;">Zmień</p>
-                                    </div>
+            <div class="col-12">
+                <!-- Plik -->
+                <!-- collapse wewnętrzny -->
+                <div class="collapse" style="max-width: 400px;" id="collapse_id_0_{{username}}">
+                    <div class="m-2">
+                        <div>
+                            {% set user_id = users_data['id'] %}
+                            <form method="POST" id="avatarUser_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
+                                <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+                                <div class="d-none d-sm-block d-lg-none">
+                                    <p style="font-size: 15px; font-weight: 400;">Zmień</p>
+                                </div>
+                                <!-- d-none d-xl-block tylko na pełnym xl+ -->
+                                <div class="row d-none d-lg-block">
+                                    <h7>Podmień avatar</h7>
+                                </div>
+                                <div class="formatuj formatuj-maly-font">
+                                    <!-- d-lg-none tylko na małym -sm -->
+                                    <!-- d-none d-lg-block tylko na średnim lg+ -->
                                     <!-- d-none d-xl-block tylko na pełnym xl+ -->
-                                    <div class="row d-none d-lg-block">
-                                        <h7>Podmień avatar</h7>
+                                    <div class="d-none d-xl-block" style="margin-bottom: 10px;">
+                                        Wybierz plik: 
                                     </div>
-                                    <div class="formatuj formatuj-maly-font">
+                                    <input type="hidden" value="{{user_id}}_home" name="user_id" />
+                                    
+                                    <div class="file-upload-wrapper" id="upload_wrapper_{{user_id}}">
                                         <!-- d-lg-none tylko na małym -sm -->
                                         <!-- d-none d-lg-block tylko na średnim lg+ -->
                                         <!-- d-none d-xl-block tylko na pełnym xl+ -->
-                                        <div class="d-none d-xl-block" style="margin-bottom: 10px;">
-                                            Wybierz plik: 
+                                        <div class="file-upload-content row d-none d-lg-block" id="file_upload_content_{{user_id}}">
+                                            <i class="bi bi-plus-square-dotted"></i>
+                                            <span class="file-name" id="file_name_{{user_id}}">Dodaj plik</span>
                                         </div>
-                                        <input type="hidden" value="{{user_id}}_home" name="user_id" />
-                                        
-                                        <div class="file-upload-wrapper" id="upload_wrapper_{{user_id}}">
-                                            <!-- d-lg-none tylko na małym -sm -->
-                                            <!-- d-none d-lg-block tylko na średnim lg+ -->
-                                            <!-- d-none d-xl-block tylko na pełnym xl+ -->
-                                            <div class="file-upload-content row d-none d-lg-block" id="file_upload_content_{{user_id}}">
-                                                <i class="bi bi-plus-square-dotted"></i>
-                                                <span class="file-name" id="file_name_{{user_id}}">Dodaj plik</span>
-                                            </div>
-                                            <input type="file" class="file-input" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
-                                        </div>
-                                        <script>
-                                            document.getElementById('upload_{{user_id}}').addEventListener('change', function() {
-                                                var fileName = this.files[0].name;
-                                                document.getElementById('file_name_{{user_id}}').textContent = fileName;
-                                            });
-                                        </script>
+                                        <input type="file" class="file-input" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
+                                    </div>
+                                    <script>
+                                        document.getElementById('upload_{{user_id}}').addEventListener('change', function() {
+                                            var fileName = this.files[0].name;
+                                            document.getElementById('file_name_{{user_id}}').textContent = fileName;
+                                        });
+                                    </script>
 
+                                </div>
+                                <div class="m-2">
+                                    <div class="formatuj formatuj-left" style="margin-bottom: 10px;">
+                                        <button 
+                                                type="button" 
+                                                class="btn btn-outline-secondary btn-sm" 
+                                                style="max-height: 30px; font-size: 12px;" 
+                                                onclick="justSubmitOneElementForm('upload_', '{{user_id}}', 'avatarUser_')">
+                                            Zmień Avatar
+                                        </button>
                                     </div>
-                                    <div class="m-2">
-                                        <div class="formatuj formatuj-left" style="margin-bottom: 10px;">
-                                            <button 
-                                                    type="button" 
-                                                    class="btn btn-outline-secondary btn-sm" 
-                                                    style="max-height: 30px; font-size: 12px;" 
-                                                    onclick="justSubmitOneElementForm('upload_', '{{user_id}}', 'avatarUser_')">
-                                                Zmień Avatar
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
+            </div>
 
-            </div>
-            <div class="col-4 col-sm-9 col-lg-4 col-xl-6"> <!-- Druga kolumna -->
-                Kolumna 2
-            </div>
-            <div class="col-12 col-sm-12 col-lg-4 col-xl-4"> <!-- Trzecia kolumna -->
-                Kolumna 3
-            </div>
+        </div>
+        <div class="col-4 col-sm-9 col-lg-4 col-xl-6"> <!-- Druga kolumna -->
+            Kolumna 2
+        </div>
+        <div class="col-12 col-sm-12 col-lg-4 col-xl-4"> <!-- Trzecia kolumna -->
+            Kolumna 3
         </div>
     </div>
+
     <div class="row">
         <div class="col-sm-6 col-lg-4 col-xl-4 p-2" style="max-width: 220px;">
             <!--  tylko na małym -sm -->
