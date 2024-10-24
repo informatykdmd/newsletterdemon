@@ -164,69 +164,68 @@
             <div class="mainContainer">
                 <!-- Navbar -->
                 
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item ">
-                            {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Użytkownicy</a>{% endblock %}
-                        </li>
-                        <li class="nav-item dropdown" style="margin-left: 2px;">
-                            <a class="nav-link dropdown-toggle link-light dark-mode" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="true">Opcje</a>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item ">
+                        {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Użytkownicy</a>{% endblock %}
+                    </li>
+                    <li class="nav-item dropdown" style="margin-left: 2px;">
+                        <a class="nav-link dropdown-toggle link-light dark-mode" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="true">Opcje</a>
 
-                            <ul class="dropdown-menu dark-mode">
-                                <li><a class="dropdown-item" href="/home">Strona Główna</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                {% if userperm['users'] == 1 %}
-                                    <li><a class="dropdown-item" href="/user">Zarządzaj Użytkownikami</a></li>
-                                {% endif %}
-                                {% if userperm['blog'] == 1 %}
-                                    <li><a class="dropdown-item" href="/blog">Zarządzaj Blogiem</a></li>
-                                {% endif %}
-                                {% if userperm['newsletter'] == 1 %}
-                                    <li><a class="dropdown-item" href="/newsletter">Zarządzaj Newsletterem</a></li>
-                                {% endif %}
-                                {% if userperm['subscribers'] == 1 %}
-                                    <li><a class="dropdown-item" href="/subscriber">Zarządzaj Subskrybentami</a></li>
-                                {% endif %}
-                                {% if userperm['team'] == 1 %}    
-                                    <li><a class="dropdown-item" href="/team-domy">Zarządzaj Kadrą</a></li>
-                                {% endif %}
-                                {% if userperm['career'] == 1 %}    
-                                    <li><a class="dropdown-item" href="/career">Zarządzaj Karierą</a></li>
-                                {% endif %}
-                                {% if userperm['estate'] == 1 %}
-                                    <li><a class="dropdown-item" href="/estate-ads-rent">Zarządzaj Ogłoszeniami</a></li>
-                                {% endif %}
-                                {% if userperm['fbhidden'] == 1 %}
-                                    <li><a class="dropdown-item" href="/hidden-campaigns">Zarządzaj Kampaniami</a></li>
-                                {% endif %}
-                                {% if userperm['settings'] == 1 %} 
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/setting">Ustawienia</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                        {% block addButton %}
-                        <li style="margin-left: 15px;">
-                            <a href="#"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(23, 209, 23) !important;"></i></a>
-                        </li>
-                        {% endblock %}
-                    </ul>
-                    <div class="table-creator">
-                        <!-- Kod do wyświetlania flash messages -->
-                        {% with messages = get_flashed_messages(with_categories=true) %}
-                            {% if messages %}
-                                <div>
-                                    {% for category, message in messages %}
-                                        <div class="alert alert-{{ category }} rogi table-creator formatuj-maly-font">
-                                            {{ message }}
-                                        </div>
-                                    {% endfor %}
-                                </div>
+                        <ul class="dropdown-menu dark-mode">
+                            <li><a class="dropdown-item" href="/home">Strona Główna</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            {% if userperm['users'] == 1 %}
+                                <li><a class="dropdown-item" href="/user">Zarządzaj Użytkownikami</a></li>
                             {% endif %}
-                        {% endwith %}
-                        <!-- linia headera tabeli -->
+                            {% if userperm['blog'] == 1 %}
+                                <li><a class="dropdown-item" href="/blog">Zarządzaj Blogiem</a></li>
+                            {% endif %}
+                            {% if userperm['newsletter'] == 1 %}
+                                <li><a class="dropdown-item" href="/newsletter">Zarządzaj Newsletterem</a></li>
+                            {% endif %}
+                            {% if userperm['subscribers'] == 1 %}
+                                <li><a class="dropdown-item" href="/subscriber">Zarządzaj Subskrybentami</a></li>
+                            {% endif %}
+                            {% if userperm['team'] == 1 %}    
+                                <li><a class="dropdown-item" href="/team-domy">Zarządzaj Kadrą</a></li>
+                            {% endif %}
+                            {% if userperm['career'] == 1 %}    
+                                <li><a class="dropdown-item" href="/career">Zarządzaj Karierą</a></li>
+                            {% endif %}
+                            {% if userperm['estate'] == 1 %}
+                                <li><a class="dropdown-item" href="/estate-ads-rent">Zarządzaj Ogłoszeniami</a></li>
+                            {% endif %}
+                            {% if userperm['fbhidden'] == 1 %}
+                                <li><a class="dropdown-item" href="/hidden-campaigns">Zarządzaj Kampaniami</a></li>
+                            {% endif %}
+                            {% if userperm['settings'] == 1 %} 
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/setting">Ustawienia</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% block addButton %}
+                    <li style="margin-left: 15px;">
+                        <a href="#"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(23, 209, 23) !important;"></i></a>
+                    </li>
+                    {% endblock %}
+                </ul>
+                <div class="table-creator">
+                    <!-- Kod do wyświetlania flash messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div>
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} rogi table-creator formatuj-maly-font">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <!-- linia headera tabeli -->
                     {% block tableHeader %} {% endblock %}
                     {% block tableContent%} {% endblock %}
-                    </div>
                 </div>
             </div>
         </main>
