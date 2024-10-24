@@ -53,38 +53,42 @@
     <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
     <div class="d-none d-sm-block d-lg-none">
         <div class="offcanvas offcanvas-top oc-height jasne" tabindex="-1" id="offcanvasTop_lg" aria-labelledby="offcanvasTopLabel_lg">
-            
-            <!-- Górny pasek nawigacji Bootstrapa -->
-            <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top p-3 dropdown-menu-dark">
-                <a class="navbar-brand" href="#" data-bs-dismiss="offcanvas" aria-label="Close">
-                    <img 
-                        src="../static/img/logotypy_dmd_domy.png" 
-                        alt="DMD" style="padding-right: 10px; max-height: 35px;"/>
-                    
-                    Panel Administratora
-                </a>
-                <div class="bg-dark">
-                    <div class="input-group mb-3" style="margin-top: 10px;">
-                        <input type="text" class="form-control bg-dark" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" placeholder="Wyszukaj" aria-label="Wyszukaj" aria-describedby="button-addon2">
-                        <button class="btn btn-outline-secondary bg-dark" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" type="button" id="button-addon2">
+            <div class="offcanvas-top-logo-sm flex-container-sm">
+                <!-- Logo -->
+                <div class="logo-lg">
+                    <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_lg" aria-controls="offcanvasTop_lg">
+                        <img 
+                            src="../static/img/logotypy_dmd_domy.png" 
+                            alt="DMD" 
+                            style="max-height: 35px;"/>
+                    </a>
+                </div>
+                <div class="bg-dark search-lg">
+                    <div class="input-group mb-3">
+                        <input 
+                            type="text" class="form-control bg-dark" 
+                            style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                            placeholder="Wyszukaj" aria-label="Wyszukaj" 
+                            aria-describedby="button-addon2">
+                        <button 
+                          class="btn btn-outline-secondary bg-dark" 
+                          style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                          type="button" 
+                          id="button-addon2">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
                 </div>
-                <div class="przyklejone-divy">
-                    <div class="klej">
-                        <div class="formatuj-maly-logout">
-                            Zalogowany jako: <span style="color: #61ff59"><i class="bi bi-person-circle"></i> {{username}}</span>
-                        </div> 
-                        <div class="formatuj">
-                            <a href="/logout">
-                                Wyloguj się
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
             
+                <!-- Informacja o zalogowanym użytkowniku -->
+                <div class="user-info-lg">
+                    Zalogowany jako: <span style="color: #61ff59">@</span>{{username}}
+                    <a href="/logout">
+                        <i class="bi bi-door-closed" style="color: #e32828"></i>
+                    </a>
+                </div>
+            </div>
+                        
             <div class="no-alpha" style="margin-top: 85px;">
                 <div class="tylko-klej">
                     <div class="card formatuj-margin bg-dark">
