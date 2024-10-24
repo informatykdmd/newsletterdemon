@@ -2010,3 +2010,23 @@ color:#969696;
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.flex-container-sm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo-sm {
+  flex-grow: 1; /* Rozciąga logo na całą dostępną przestrzeń */
+}
+
+.user-info-sm {
+  margin-right: 10px;
+  white-space: nowrap; /* Zapobiega łamaniu się tekstu */
+}
+
+.logout-sm {
+  white-space: nowrap; /* Zapobiega łamaniu się ikony logout */
+}

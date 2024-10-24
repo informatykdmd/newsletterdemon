@@ -29,6 +29,29 @@
     <!-- d-block d-sm-none tylko na średnim sm+ -->
     <div class="d-block d-sm-none">
         <div class="offcanvas offcanvas-top oc-height jasne" tabindex="-1" id="offcanvasTop_sm" aria-labelledby="offcanvasTopLabel_sm">
+            <div class="offcanvas-top-logo-sm flex-container-sm">
+                <!-- Logo -->
+                <div class="logo-sm">
+                    <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
+                        <img 
+                            src="../static/img/logotypy_dmd_domy.png" 
+                            alt="DMD" 
+                            style="max-height: 22px; margin-left: 14px; margin-top: 24px;"/>
+                    </a>
+                </div>
+            
+                <!-- Informacja o zalogowanym użytkowniku -->
+                <div class="user-info-sm formatuj-maly-logout">
+                    Zalogowany jako: <span style="color: #61ff59">@</span>{{username}}
+                </div>
+            
+                <!-- Przycisk logout -->
+                <div class="logout-sm formatuj">
+                    <a href="/logout">
+                        <i class="bi bi-door-closed" style="color: #e32828"></i>
+                    </a>
+                </div>
+            </div>
             <div class="offcanvas-top-logo-sm" style="display: flex; justify-content: space-between;">
                 <div>
                     <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
