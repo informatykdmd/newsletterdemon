@@ -139,7 +139,7 @@
                           href="#collapse_id_3_{{username}}" 
                           role="button" aria-expanded="false" 
                           aria-controls="collapse_id_3_{{username}}">
-                            <i class="bi bi-pencil-square" style="color: #09da02 !important;"></i>
+                            <i class="bi bi-save" style="color: #09da02 !important;"></i>
                         </a>
                     </div>
                     <div class="col">
@@ -308,7 +308,7 @@
                     <div class="col-3 "><!-- Edit-->
                         <a 
                           data-bs-toggle="collapse" 
-                          href="#collapse_id_0_{{username}}" 
+                          href="#collapse_id_0_lg_{{username}}" 
                           role="button" 
                           aria-expanded="false" 
                           aria-controls="collapse_id_0_{{username}}" 
@@ -320,11 +320,11 @@
                 <div class="row"> <!-- Plik -->
                     <div class="col-12 p-1">
                         <!-- collapse wewnętrzny -->
-                        <div class="collapse" style="max-width: 400px;" id="collapse_id_0_{{username}}">
+                        <div class="collapse" style="max-width: 400px;" id="collapse_id_0_lg_{{username}}">
                             <div class="m-2">
                                 <div>
                                     {% set user_id = users_data['id'] %}
-                                    <form method="POST" id="avatarUser_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
+                                    <form method="POST" id="avatarUser_lg_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
                                         <p style="font-size: 15px; font-weight: 400;">Wybierz Plik</p>
 
                                         <div class="formatuj formatuj-maly-font">
@@ -333,14 +333,14 @@
                                             <div class="file-upload-wrapper-lg" id="upload_wrapper_{{user_id}}">
                                                 <div class="file-upload-content-lg" id="file_upload_content_{{user_id}}">
                                                     <i class="bi bi-plus-square-dotted"></i>
-                                                    <span class="file-name-lg" id="file_name_{{user_id}}">Dodaj plik</span>
+                                                    <span class="file-name-lg" id="file_name_lg_{{user_id}}">Dodaj plik</span>
                                                 </div>
-                                                <input type="file" class="file-input-lg" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
+                                                <input type="file" class="file-input-lg" id="upload_lg_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
                                             </div>
                                             <script>
-                                                document.getElementById('upload_{{user_id}}').addEventListener('change', function() {
+                                                document.getElementById('upload_lg_{{user_id}}').addEventListener('change', function() {
                                                     var fileName = this.files[0].name;
-                                                    document.getElementById('file_name_{{user_id}}').textContent = fileName;
+                                                    document.getElementById('file_name_lg_{{user_id}}').textContent = fileName;
                                                 });
                                             </script>
         
@@ -351,7 +351,7 @@
                                                         type="button" 
                                                         class="btn btn-outline-secondary btn-sm" 
                                                         style="max-height: 30px; font-size: 12px;" 
-                                                        onclick="justSubmitOneElementForm('upload_', '{{user_id}}', 'avatarUser_')">
+                                                        onclick="justSubmitOneElementForm('upload_lg_', '{{user_id}}', 'avatarUser_lg_')">
                                                     Zapisz
                                                 </button>
                                             </div>
@@ -368,75 +368,75 @@
                     <div class="col">
                         <a 
                           data-bs-toggle="collapse" 
-                          href="#collapse_id_4_{{username}}" 
+                          href="#collapse_id_4_lg_{{username}}" 
                           role="button" aria-expanded="false" 
-                          aria-controls="collapse_id_4_{{username}}">
-                            <i class="bi bi-info-circle" style="color: #00eeff !important; font-size: 20px;"></i>
+                          aria-controls="collapse_id_4_lg_{{username}}">
+                            <i class="bi bi-info-circle" style="color: #00eeff !important; font-size: 27px;"></i>
                         </a>
                     </div>
                     {% if users_data['email'] %}
                         <div class="col">
                             <a href="mailto:{{users_data['email']}}">
-                                <i class="bi bi-envelope-at-fill" style="color: #ffe100 !important; font-size: 20px;"></i>
+                                <i class="bi bi-envelope-at-fill" style="color: #ffe100 !important; font-size: 27px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['phone'] %}
                         <div class="col">
                             <a href="tel:{{users_data['phone']}}">
-                                <i class="bi bi-telephone-outbound-fill" style="color: #d1eca8 !important; font-size: 20px;"></i>
+                                <i class="bi bi-telephone-outbound-fill" style="color: #d1eca8 !important; font-size: 27px;"></i>
                             </a>
                         </div>
                         <div class="col">
                             <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
-                                <i class="bi bi-whatsapp" style="color: #11ff00 !important; font-size: 20px;"></i>
+                                <i class="bi bi-whatsapp" style="color: #11ff00 !important; font-size: 27px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['facebook'] %}
                         <div class="col">
                             <a href="{{users_data['facebook']}}" target="_blank">
-                                <i class="bi bi-facebook text-body-tertiary" style="color: #00c8ff !important; font-size: 20px;"></i>
+                                <i class="bi bi-facebook text-body-tertiary" style="color: #00c8ff !important; font-size: 27px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['linkedin'] %}
                         <div class="col">
                             <a href="{{users_data['linkedin']}}" target="_blank">
-                                <i class="bi bi-linkedin text-body-tertiary" style="color: #2c77b9 !important; font-size: 20px;"></i>
+                                <i class="bi bi-linkedin text-body-tertiary" style="color: #2c77b9 !important; font-size: 27px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['instagram'] %}
                         <div class="col">
                             <a href="{{users_data['instagram']}}" target="_blank">
-                                <i class="bi bi-instagram text-body-tertiary" style="color: #d100e0 !important; font-size: 20px;"></i>
+                                <i class="bi bi-instagram text-body-tertiary" style="color: #d100e0 !important; font-size: 27px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['twiter'] %}
                         <div class="col">
                             <a href="{{users_data['twiter']}}" target="_blank">
-                                <i class="bi bi-twitter-x text-body-tertiary" style="color: #ffffff !important; font-size: 20px;"></i>
+                                <i class="bi bi-twitter-x text-body-tertiary" style="color: #ffffff !important; font-size: 27px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     <div class="col">
                         <a 
                           data-bs-toggle="collapse" 
-                          href="#collapse_id_3_{{username}}" 
+                          href="#collapse_id_3_lg_{{username}}" 
                           role="button" aria-expanded="false" 
-                          aria-controls="collapse_id_3_{{username}}">
-                            <i class="bi bi-pencil-square" style="color: #09da02 !important; font-size: 20px;"></i>
+                          aria-controls="collapse_id_3_lg_{{username}}">
+                            <i class="bi bi-save" style="color: #09da02 !important; font-size: 27px;"></i>
                         </a>
                     </div>
                     <div class="col">
                         <a 
                           data-bs-toggle="collapse" 
-                          href="#collapse_id_1_{{username}}" 
+                          href="#collapse_id_1_lg_{{username}}" 
                           role="button" aria-expanded="false" 
-                          aria-controls="collapse_id_1_{{username}}">
-                            <i class="bi bi-key-fill" style="color: #ecc908 !important; font-size: 20px;"></i>
+                          aria-controls="collapse_id_1_lg_{{username}}">
+                            <i class="bi bi-key-fill" style="color: #ecc908 !important; font-size: 27px;"></i>
                         </a>
                     </div>
                 </div>
@@ -450,23 +450,23 @@
                     <div class="col-12">
                         <p style="font-size: 12px; color:#616d65; margin: 0px;">{{users_data['stanowisko']}}</p>
                     </div>
-                    
+                    <div class="col-12">
+                        <!-- collapse wewnętrzny -->
+                        <div class="collapse" id="collapse_id_4_lg_{{username}}" data-bs-parent="#collapse_id_4_lg_{{username}}">
+                            <p style="font-size: 13px; color:#9c9fa2;">{{users_data['opis']}}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-12">
-                <!-- collapse wewnętrzny -->
-                <div class="collapse" id="collapse_id_4_{{username}}" data-bs-parent="#collapse_id_4_{{username}}">
-                    <p style="font-size: 13px; color:#9c9fa2; margin: 5px;">{{users_data['opis']}}</p>
-                </div>
-            </div>
+            
         </div>
         <div class="row">
             <div class="col-12"><!-- Trzecia kolumna -->
                 <!-- informacje o Użytkowniku -->
                 <div class="user-data">
-                    <div id="accordion_{{username}}">
+                    <div id="accordion_lg_{{username}}">
                         <!-- collapse wewnętrzny -->
-                        <div class="collapse" id="collapse_id_1_{{username}}" data-bs-parent="#accordion_{{username}}">
+                        <div class="collapse" id="collapse_id_1_lg_{{username}}" data-bs-parent="#accordion_lg_{{username}}">
                             <div class="tylko-klej col-auto">
                                 <div>
                                     <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -513,7 +513,7 @@
                         </div>
                         
                         <!-- collapse wewnętrzny -->
-                        <div class="collapse" id="collapse_id_3_{{username}}" data-bs-parent="#accordion_{{username}}">
+                        <div class="collapse" id="collapse_id_3_lg_{{username}}" data-bs-parent="#accordion_lg_{{username}}">
                             <div class="tylko-klej col-auto">
                                 <div>
                                     <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -525,7 +525,7 @@
                                         <input 
                                             type="text" value="{{users_data['name']}}" 
                                             class="form-control bg-dark formatuj" 
-                                            style="max-height: 30px; width: 100%; max-width: 2180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                            style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
                                             name="name" id="name_{{username}}" 
                                             placeholder="Imię i Nazwisko" />
                                         <input
@@ -563,8 +563,8 @@
                                                 <button 
                                                   type="submit" class="btn btn-secondary btn-sm" 
                                                   style="max-height: 30px; font-size: 12px;" 
-                                                  data-bs-toggle="collapse" data-bs-target="#collapse_id_3_{{username}}" a
-                                                  ria-expanded="false" aria-controls="collapse_id_3_{{username}}">
+                                                  data-bs-toggle="collapse" data-bs-target="#collapse_id_3_lg_{{username}}" a
+                                                  ria-expanded="false" aria-controls="collapse_id_3_lg_{{username}}">
                                                     Anuluj
                                                 </button>
                                             </div>
