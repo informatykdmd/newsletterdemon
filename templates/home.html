@@ -82,53 +82,53 @@
                           href="#collapse_id_4_{{username}}" 
                           role="button" aria-expanded="false" 
                           aria-controls="collapse_id_4_{{username}}">
-                            <i class="bi bi-info-circle" style="color: #ecc908 !important;"></i>
+                            <i class="bi bi-info-circle" style="color: #00eeff !important;"></i>
                         </a>
                     </div>
                     {% if users_data['email'] %}
                         <div class="col">
                             <a href="mailto:{{users_data['email']}}">
-                                <i class="bi bi-envelope-at-fill"></i>
+                                <i class="bi bi-envelope-at-fill" style="color: #ffe100 !important;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['phone'] %}
                         <div class="col">
                             <a href="tel:{{users_data['phone']}}">
-                                <i class="bi bi-telephone-outbound-fill text-success"></i>
+                                <i class="bi bi-telephone-outbound-fill" style="color: #d1eca8 !important;"></i>
                             </a>
                         </div>
                         <div class="col">
                             <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
-                                <i class="bi bi-whatsapp text-success"></i>
+                                <i class="bi bi-whatsapp" style="color: #11ff00 !important;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['facebook'] %}
                         <div class="col">
                             <a href="{{users_data['facebook']}}" target="_blank">
-                                <i class="bi bi-facebook text-body-tertiary"></i>
+                                <i class="bi bi-facebook text-body-tertiary" style="color: #00c8ff !important;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['linkedin'] %}
                         <div class="col">
                             <a href="{{users_data['linkedin']}}" target="_blank">
-                                <i class="bi bi-linkedin text-body-tertiary"></i>
+                                <i class="bi bi-linkedin text-body-tertiary" style="color: #2c77b9 !important;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['instagram'] %}
                         <div class="col">
                             <a href="{{users_data['instagram']}}" target="_blank">
-                                <i class="bi bi-instagram text-body-tertiary"></i>
+                                <i class="bi bi-instagram text-body-tertiary" style="color: #d100e0 !important;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['twiter'] %}
                         <div class="col">
                             <a href="{{users_data['twiter']}}" target="_blank">
-                                <i class="bi bi-twitter-x text-body-tertiary"></i>
+                                <i class="bi bi-twitter-x text-body-tertiary" style="color: #ffffff !important;"></i>
                             </a>
                         </div>
                     {% endif %}
@@ -153,13 +153,13 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <p style="font-size: 14px; color:#bdcbd3; margin: 0px;">{{users_data['name']}}</p>
+                        <p style="font-size: 15px; color:#a0abb1; margin: 0px;">{{users_data['name']}}</p>
                     </div>
                     <div class="col-12">
                         <p style="font-size: 10px; color:#ffff00; margin: 0px;">@{{users_data['username']}}</p>
                     </div>
                     <div class="col-12">
-                        <p style="font-size: 10px; color:#3a965a; margin: 0px;">{{users_data['stanowisko']}}</p>
+                        <p style="font-size: 10px; color:#616d65; margin: 0px;">{{users_data['stanowisko']}}</p>
                     </div>
                     
                 </div>
@@ -167,7 +167,7 @@
             <div class="col-12">
                 <!-- collapse wewnętrzny -->
                 <div class="collapse" id="collapse_id_4_{{username}}" data-bs-parent="#collapse_id_4_{{username}}">
-                    <p style="font-size: 12px; color:#868788; margin: 2px;">{{users_data['opis']}}</p>
+                    <p style="font-size: 12px; color:#9c9fa2; margin: 2px;">{{users_data['opis']}}</p>
                 </div>
             </div>
         </div>
@@ -186,9 +186,30 @@
                                         </div>
                                         <input type="hidden" name="id" value="{{user_id}}" />
                                         <input type="hidden" name="page" value="home" />
-                                        <input  input type="password" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="old_Password" id="inputPassword1" placeholder="Old Password" required />
-                                        <input  input type="password" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="new_Password" id="inputPassword2" placeholder="New Password" required />
-                                        <input  input type="password" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="repeat_Password" id="inputPassword3" placeholder="Repeat Password" required />
+                                        <input
+                                          type="password" 
+                                          class="form-control bg-dark formatuj" 
+                                          style="max-height: 30px; width: 100%; max-width: 200px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                          name="old_Password" 
+                                          id="inputPassword1" 
+                                          placeholder="Old Password" 
+                                          required />
+                                        <input
+                                          type="password" 
+                                          class="form-control bg-dark formatuj" 
+                                          style="max-height: 30px; width: 100%; max-width: 200px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                          name="new_Password" 
+                                          id="inputPassword2" 
+                                          placeholder="New Password" 
+                                          required />
+                                        <input 
+                                          type="password" 
+                                          class="form-control bg-dark formatuj" 
+                                          style="max-height: 30px; width: 100%; max-width: 200px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                          name="repeat_Password" 
+                                          id="inputPassword3" 
+                                          placeholder="Repeat Password" 
+                                          required />
                                         <div class="tylko-klej">
                                             <div style="padding-left: 8px; max-width:  80px;">
                                                 <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_1_{{username}}" aria-expanded="false" aria-controls="collapse_id_1_{{username}}">Anuluj</button>
