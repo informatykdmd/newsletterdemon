@@ -27,26 +27,23 @@
 <body>
     {% block header %}
     <!-- d-block d-sm-none tylko na średnim sm+ -->
-    <div class="d-block d-sm-none">
+    <div class="d-block d-sm-none mt-2">
         <div class="offcanvas offcanvas-top oc-height jasne" tabindex="-1" id="offcanvasTop_sm" aria-labelledby="offcanvasTopLabel_sm">
-            
+            <div style="display: flex; justify-content: space-between;">
+                <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
+                    <img 
+                        src="../static/img/logotypy_dmd_domy.png" 
+                        alt="DMD" 
+                        style="margin-left: 2px !important; padding-right: 10px; max-height: 22px;"/>
+                </a>
+            </div>
             <!-- Górny pasek nawigacji Bootstrapa -->
             <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top p-3 dropdown-menu-dark">
                 <a class="navbar-brand" href="#" data-bs-dismiss="offcanvas" aria-label="Close">
                     <img 
                         src="../static/img/logotypy_dmd_domy.png" 
                         alt="DMD" style="padding-right: 10px; max-height: 35px;"/>
-                    
-                    Panel Administratora
                 </a>
-                <div class="bg-dark">
-                    <div class="input-group mb-3" style="margin-top: 10px;">
-                        <input type="text" class="form-control bg-dark" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" placeholder="Wyszukaj" aria-label="Wyszukaj" aria-describedby="button-addon2">
-                        <button class="btn btn-outline-secondary bg-dark" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" type="button" id="button-addon2">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </div>
                 <div class="przyklejone-divy">
                     <div class="klej">
                         <div class="formatuj-maly-logout">
