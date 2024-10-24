@@ -198,10 +198,10 @@ body {
 }
 
 .avatar-sm {
-  width: 100%; /* Avatar dopasowuje się do szerokości diva */
+  width: 100%; 
   height: auto; /* Automatycznie dostosowuje wysokość, zachowując proporcje */
-  max-width: 120px; /* Maksymalna szerokość 90px, aby nie przekraczała tego wymiaru */
-  border-radius: 50%; /* Zaokrąglenie avatara */
+  max-width: 200px; 
+  border-radius: 50%; 
 }
 
 .avatar-lg {
