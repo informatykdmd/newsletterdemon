@@ -30,18 +30,20 @@
     <div class="d-block d-sm-none">
         <div class="offcanvas offcanvas-top oc-height jasne" tabindex="-1" id="offcanvasTop_sm" aria-labelledby="offcanvasTopLabel_sm">
             <div style="display: flex; justify-content: space-between;">
-                <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
-                    <img 
-                        src="../static/img/logotypy_dmd_domy.png" 
-                        alt="DMD" 
-                        style="margin-top: 24x; margin-left: 14px !important; max-height: 22px;"/>
-                </a>
+                <div>
+                    <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
+                        <img 
+                            src="../static/img/logotypy_dmd_domy.png" 
+                            alt="DMD" 
+                            style="margin-top: 24x; margin-left: 14px !important; max-height: 22px;"/>
+                    </a>
+                </div>
                 <div class="formatuj-maly-logout">
-                    Zalogowany jako: <span style="color: #61ff59"><i class="bi bi-person-circle"></i> {{username}}</span>
+                    Zalogowany jako: <span style="color: #61ff59">@</span>{{username}}
                 </div> 
-                <div class="formatuj">
+                <div>
                     <a href="/logout">
-                        Wyloguj się
+                        <i class="bi bi-door-closed " style="color: #fb0000"></i>
                     </a>
                 </div>
             </div>
