@@ -38,14 +38,7 @@
                                     {% set user_id = users_data['id'] %}
                                     <form method="POST" id="avatarUser_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
 
-                                        <div>
-                                            <p style="font-size: 9px; font-weight: 200;">Zmień</p>
-                                        </div>
-
                                         <div class="formatuj formatuj-maly-font">
-                                            <div style="margin-bottom: 10px;">
-                                                Wybierz plik: 
-                                            </div>
                                             <input type="hidden" value="{{user_id}}_home" name="user_id" />
                                             
                                             <div class="file-upload-wrapper" id="upload_wrapper_{{user_id}}">
