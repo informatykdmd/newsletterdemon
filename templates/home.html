@@ -14,24 +14,23 @@
         <div class="row">
             <div class="col-6"><!-- Pierwsza kolumna -->
                 <div class="row"><!-- Avatar i Edit -->
-                    <div class="col-9"><!-- Avatar-->
+                    <div class="col-9 p-1"><!-- Avatar-->
                         <img class="avatar-sm" src="{{users_data['avatar']}}" alt=""/>
                     </div>
-                    <div class="col-3"><!-- Edit-->
+                    <div class="col-3 "><!-- Edit-->
                         <a 
-                            data-bs-toggle="collapse" 
-                            href="#collapse_id_0_{{username}}" 
-                            role="button" 
-                            aria-expanded="false" 
-                            aria-controls="collapse_id_0_{{username}}" 
-                            style="color: rgb(202, 236, 253) !important;"
-                            >
+                          data-bs-toggle="collapse" 
+                          href="#collapse_id_0_{{username}}" 
+                          role="button" 
+                          aria-expanded="false" 
+                          aria-controls="collapse_id_0_{{username}}" 
+                          style="color: #caecfd !important;">
                             <i class="bi bi-pencil-square"></i>
                         </a>
                     </div>
                 </div>
                 <div class="row"> <!-- Plik -->
-                    <div class="col-12">
+                    <div class="col-12 p-1">
                         <!-- collapse wewnętrzny -->
                         <div class="collapse" style="max-width: 400px;" id="collapse_id_0_{{username}}">
                             <div class="m-2">
