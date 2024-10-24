@@ -53,7 +53,7 @@
     <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
     <div class="d-none d-sm-block d-lg-none">
         <div class="offcanvas offcanvas-top oc-height jasne" tabindex="-1" id="offcanvasTop_lg" aria-labelledby="offcanvasTopLabel_lg">
-            <div class="offcanvas-top-logo-sm flex-container-sm">
+            <div class="offcanvas-top-logo-lg flex-container-lg">
                 <!-- Logo -->
                 <div class="logo-lg">
                     <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_lg" aria-controls="offcanvasTop_lg">
@@ -90,12 +90,12 @@
                         </a>
                     </div>
                     <div class="brands-liks-text-lg">
-                        <div style="border-radius: 50%; padding: 7px; margin-right: 15px; margin-top: 5px; background-color: #17d117;" onclick="window.open('{{domy}}', '_blank')"> </div>
-                        <div style="border-radius: 50%; padding: 7px; margin-right: 15px; margin-top: 5px; background-color: #ff0000;" onclick="window.open('{{budownictwo}}', '_blank')"> </div>
-                        <div style="border-radius: 50%; padding: 7px; margin-right: 15px; margin-top: 5px; background-color: #7a8184;" onclick="window.open('{{elitehome}}', '_blank')"> </div>
-                        <div style="border-radius: 50%; padding: 7px; margin-right: 15px; margin-top: 5px; background-color: #ffcc00;" onclick="window.open('{{instalacje}}', '_blank')"> </div>
-                        <div style="border-radius: 50%; padding: 7px; margin-right: 15px; margin-top: 5px; background-color: #4c4c4f;" onclick="window.open('{{inwestycje}}', '_blank')"> </div>
-                        <div style="border-radius: 50%; padding: 7px; margin-right: 15px; margin-top: 5px; background-color: #00aaff;" onclick="window.open('{{development}}', '_blank')"> </div>
+                        <div class="brand-circle-lg" style="background-color: #17d117;" onclick="window.open('{{domy}}', '_blank')"> </div>
+                        <div class="brand-circle-lg" style="background-color: #ff0000;" onclick="window.open('{{budownictwo}}', '_blank')"> </div>
+                        <div class="brand-circle-lg" style="background-color: #7a8184;" onclick="window.open('{{elitehome}}', '_blank')"> </div>
+                        <div class="brand-circle-lg" style="background-color: #ffcc00;" onclick="window.open('{{instalacje}}', '_blank')"> </div>
+                        <div class="brand-circle-lg" style="background-color: #4c4c4f;" onclick="window.open('{{inwestycje}}', '_blank')"> </div>
+                        <div class="brand-circle-lg" style="background-color: #00aaff;" onclick="window.open('{{development}}', '_blank')"> </div>
                     </div>
                 </div>
             </div>
@@ -104,116 +104,50 @@
     <!-- d-none d-xl-block tylko na pełnym xl+ -->
     <div class="d-none d-lg-block">
         <div class="offcanvas offcanvas-top oc-height jasne" tabindex="-1" id="offcanvasTop_xl" aria-labelledby="offcanvasTopLabel_xl">
+            <div class="offcanvas-top-logo-xl flex-container-xl">
+                <!-- Logo -->
+                <div class="logo-xl">
+                    <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_xl" aria-controls="offcanvasTop_xl">
+                        <img 
+                            src="../static/img/logotypy_dmd_domy.png" 
+                            alt="DMD" 
+                            style="max-height: 40px;"/>
+                    </a>
+                </div>
+                <div class="search-xl">
+                    <div class="bg-dark">
+                        <div class="input-group mb-3">
+                            <input 
+                                type="text" class="form-control bg-dark" 
+                                style="max-height: 30px; max-width: 200px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                placeholder="Wyszukaj" aria-label="Wyszukaj" aria-describedby="button-addon2">
+
+                            <button 
+                              class="btn btn-outline-secondary bg-dark" 
+                              style="max-height: 30px; font-size: 12px; color: #ffbb01; border:#6a6a6a solid 1px;" 
+                              type="button" id="button-addon2">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             
-            <!-- Górny pasek nawigacji Bootstrapa -->
-            <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top p-3 dropdown-menu-dark">
-                <a class="navbar-brand" href="#" data-bs-dismiss="offcanvas" aria-label="Close">
-                    <img 
-                        src="../static/img/logotypy_dmd_domy.png" 
-                        alt="DMD" style="padding-right: 10px; max-height: 35px;"/>
-                    
-                    Panel Administratora
-                </a>
-                <div class="bg-dark">
-                    <div class="input-group mb-3" style="margin-top: 10px;">
-                        <input type="text" class="form-control bg-dark" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" placeholder="Wyszukaj" aria-label="Wyszukaj" aria-describedby="button-addon2">
-                        <button class="btn btn-outline-secondary bg-dark" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" type="button" id="button-addon2">
-                            <i class="bi bi-search"></i>
-                        </button>
+                <!-- Informacja o zalogowanym użytkowniku -->
+                <div class="user-info-xl">
+                    <div class="user-info-text-xl">
+                        Zalogowany jako: <span style="color: #61ff59">@</span>{{username}}
+                        <a href="/logout">
+                            <i class="bi bi-door-closed" style="color: #e32828"></i>
+                        </a>
                     </div>
-                </div>
-                <div class="przyklejone-divy">
-                    <div class="klej">
-                        <div class="formatuj-maly-logout">
-                            Zalogowany jako: <span style="color: #61ff59"><i class="bi bi-person-circle"></i> {{username}}</span>
-                        </div> 
-                        <div class="formatuj">
-                            <a href="/logout">
-                                Wyloguj się
-                            </a>
-                        </div>
+                    <div class="brands-liks-text-xl">
+                        <div class="brand-circle-xl" style="background-color: #17d117;" onclick="window.open('{{domy}}', '_blank')"> </div>
+                        <div class="brand-circle-xl" style="background-color: #ff0000;" onclick="window.open('{{budownictwo}}', '_blank')"> </div>
+                        <div class="brand-circle-xl" style="background-color: #7a8184;" onclick="window.open('{{elitehome}}', '_blank')"> </div>
+                        <div class="brand-circle-xl" style="background-color: #ffcc00;" onclick="window.open('{{instalacje}}', '_blank')"> </div>
+                        <div class="brand-circle-xl" style="background-color: #4c4c4f;" onclick="window.open('{{inwestycje}}', '_blank')"> </div>
+                        <div class="brand-circle-xl" style="background-color: #00aaff;" onclick="window.open('{{development}}', '_blank')"> </div>
                     </div>
-                </div>
-            </nav>
-            
-            <div class="no-alpha" style="margin-top: 85px;">
-                <div class="tylko-klej">
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_domy.png" style="max-width: 150px; margin-bottom: 5px;" alt="Domy Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Twój dom, Twoje marzenie, nasza pasja!</strong><br />
-                                    Sprawdzone technologie, solidne wykonanie. </p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{domy}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_budownictwo.png" style="max-width: 150px; margin-bottom: 5px;" alt="Budownictwo Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Budujemy jutro już dzisiaj!</strong><br />
-                                Projekty budowlane na miarę Twoich ambicji, od domów po hale! </p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{budownictwo}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>          
-                </div>
-                <div class="tylko-klej">
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_elitehome.png" style="max-width: 150px; margin-bottom: 5px;" alt="EliteHome Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Indywidualne podejście, Twój wymarzony świat!</strong><br />
-                                    Spełniamy marzenia z pasją i zaangażowaniem. </p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{elitehome}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_instalacje.png" style="max-width: 150px; margin-bottom: 5px;" alt="Instalacje Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Bezpieczeństwo i efektywność!</strong><br />
-                                    Z nami wnętrza i otoczenie zyskują nowy wymiar. </p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{instalacje}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>          
-                </div>
-                <div class="tylko-klej">
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_investment.png" style="max-width: 150px; margin-bottom: 5px;" alt="Inwestycje Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Inwestycja z myślą o jutrze!</strong><br />
-                                    Tworzymy wartość dla Ciebie i społeczności. </p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{inwestycje}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card formatuj-margin bg-dark">
-                        <div class="card-body klej">
-                            <div class="column-usual formatuj-maly-font">
-                                <img src="../static/img/logo_development.png" style="max-width: 150px; margin-bottom: 5px;" alt="Development Logo" loading="lazy" fetchpriority="high"/>
-                                <p><strong>Inwestycje na Twoją miarę!</strong><br />
-                                    Budujemy, wynajmujemy i dzierżawimy, spełniając Twoje oczekiwania!  </p>
-                            </div>
-                            <div class="formatuj-right formatuj-margin column-id">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="window.location.href='{{development}}'">Sprawdź</button>
-                            </div>
-                        </div>
-                    </div>          
                 </div>
             </div>
         </div>
