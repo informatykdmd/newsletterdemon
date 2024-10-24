@@ -163,11 +163,26 @@
         <main role="main" class="col-md-auto ml-sm-auto col-lg-auto px-md-auto main-content">
             <div class="mainContainer">
                 <!-- Navbar -->
-                
                 <ul class="nav nav-tabs">
-                    <li class="nav-item ">
-                        {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Użytkownicy</a>{% endblock %}
-                    </li>
+                    <!-- d-block d-sm-none tylko na średnim sm+ -->
+                    <div class="d-block d-sm-none">
+                        <li class="nav-item">
+                            {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Użytkownicy</a>{% endblock %}
+                        </li>
+                    </div>
+                    <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+                    <div class="d-none d-sm-block d-lg-none">
+                        <li class="nav-item ">
+                            {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Użytkownicy</a>{% endblock %}
+                        </li>
+                    </div>
+                    <!-- d-none d-xl-block tylko na pełnym xl+ -->
+                    <div class="d-none d-lg-block">
+                        <li class="nav-item ">
+                            {% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Użytkownicy</a>{% endblock %}
+                        </li>
+                    </div>
+                    
                     <li class="nav-item dropdown" style="margin-left: 2px;">
                         <a class="nav-link dropdown-toggle link-light dark-mode" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="true">Opcje</a>
 
