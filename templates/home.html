@@ -10,6 +10,7 @@
 {% block tableContent%}
 <!-- collapse start -->
 <div class="jasne rogi">
+    <!-- d-block d-sm-none tylko na średnim sm+ -->
     <div class="d-block d-sm-none">
         <div class="row formatuj-padding">
             <div class="col-6"><!-- Pierwsza kolumna -->
@@ -302,7 +303,7 @@
             <div class="col-4"><!-- Pierwsza kolumna -->
                 <div class="row"><!-- Avatar i Edit -->
                     <div class="col-9"><!-- Avatar-->
-                        <img class="avatar-sm" src="{{users_data['avatar']}}" alt=""/>
+                        <img class="avatar-lg" src="{{users_data['avatar']}}" alt=""/>
                     </div>
                     <div class="col-3 "><!-- Edit-->
                         <a 
@@ -324,16 +325,17 @@
                                 <div>
                                     {% set user_id = users_data['id'] %}
                                     <form method="POST" id="avatarUser_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
+                                        <p style="font-size: 15px; font-weight: 400;">Wybierz Plik</p>
 
                                         <div class="formatuj formatuj-maly-font">
                                             <input type="hidden" value="{{user_id}}_home" name="user_id" />
                                             
-                                            <div class="file-upload-wrapper" id="upload_wrapper_{{user_id}}">
-                                                <div class="file-upload-content" id="file_upload_content_{{user_id}}">
+                                            <div class="file-upload-wrapper-lg" id="upload_wrapper_{{user_id}}">
+                                                <div class="file-upload-content-lg" id="file_upload_content_{{user_id}}">
                                                     <i class="bi bi-plus-square-dotted"></i>
-                                                    <span class="file-name" id="file_name_{{user_id}}">Dodaj plik</span>
+                                                    <span class="file-name-lg" id="file_name_{{user_id}}">Dodaj plik</span>
                                                 </div>
-                                                <input type="file" class="file-input" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
+                                                <input type="file" class="file-input-lg" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
                                             </div>
                                             <script>
                                                 document.getElementById('upload_{{user_id}}').addEventListener('change', function() {
@@ -348,7 +350,7 @@
                                                 <button 
                                                         type="button" 
                                                         class="btn btn-outline-secondary btn-sm" 
-                                                        style="max-height: 20px; font-size: 8px;" 
+                                                        style="max-height: 30px; font-size: 12px;" 
                                                         onclick="justSubmitOneElementForm('upload_', '{{user_id}}', 'avatarUser_')">
                                                     Zapisz
                                                 </button>
@@ -369,53 +371,53 @@
                           href="#collapse_id_4_{{username}}" 
                           role="button" aria-expanded="false" 
                           aria-controls="collapse_id_4_{{username}}">
-                            <i class="bi bi-info-circle" style="color: #00eeff !important;"></i>
+                            <i class="bi bi-info-circle" style="color: #00eeff !important; font-size: 20px;"></i>
                         </a>
                     </div>
                     {% if users_data['email'] %}
                         <div class="col">
                             <a href="mailto:{{users_data['email']}}">
-                                <i class="bi bi-envelope-at-fill" style="color: #ffe100 !important;"></i>
+                                <i class="bi bi-envelope-at-fill" style="color: #ffe100 !important; font-size: 20px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['phone'] %}
                         <div class="col">
                             <a href="tel:{{users_data['phone']}}">
-                                <i class="bi bi-telephone-outbound-fill" style="color: #d1eca8 !important;"></i>
+                                <i class="bi bi-telephone-outbound-fill" style="color: #d1eca8 !important; font-size: 20px;"></i>
                             </a>
                         </div>
                         <div class="col">
                             <a href="https://wa.me/{{ users_data['phone'][1:] }}" target="_blank">
-                                <i class="bi bi-whatsapp" style="color: #11ff00 !important;"></i>
+                                <i class="bi bi-whatsapp" style="color: #11ff00 !important; font-size: 20px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['facebook'] %}
                         <div class="col">
                             <a href="{{users_data['facebook']}}" target="_blank">
-                                <i class="bi bi-facebook text-body-tertiary" style="color: #00c8ff !important;"></i>
+                                <i class="bi bi-facebook text-body-tertiary" style="color: #00c8ff !important; font-size: 20px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['linkedin'] %}
                         <div class="col">
                             <a href="{{users_data['linkedin']}}" target="_blank">
-                                <i class="bi bi-linkedin text-body-tertiary" style="color: #2c77b9 !important;"></i>
+                                <i class="bi bi-linkedin text-body-tertiary" style="color: #2c77b9 !important; font-size: 20px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['instagram'] %}
                         <div class="col">
                             <a href="{{users_data['instagram']}}" target="_blank">
-                                <i class="bi bi-instagram text-body-tertiary" style="color: #d100e0 !important;"></i>
+                                <i class="bi bi-instagram text-body-tertiary" style="color: #d100e0 !important; font-size: 20px;"></i>
                             </a>
                         </div>
                     {% endif %}
                     {% if users_data['twiter'] %}
                         <div class="col">
                             <a href="{{users_data['twiter']}}" target="_blank">
-                                <i class="bi bi-twitter-x text-body-tertiary" style="color: #ffffff !important;"></i>
+                                <i class="bi bi-twitter-x text-body-tertiary" style="color: #ffffff !important; font-size: 20px;"></i>
                             </a>
                         </div>
                     {% endif %}
@@ -425,7 +427,7 @@
                           href="#collapse_id_3_{{username}}" 
                           role="button" aria-expanded="false" 
                           aria-controls="collapse_id_3_{{username}}">
-                            <i class="bi bi-pencil-square" style="color: #09da02 !important;"></i>
+                            <i class="bi bi-pencil-square" style="color: #09da02 !important; font-size: 20px;"></i>
                         </a>
                     </div>
                     <div class="col">
@@ -434,19 +436,19 @@
                           href="#collapse_id_1_{{username}}" 
                           role="button" aria-expanded="false" 
                           aria-controls="collapse_id_1_{{username}}">
-                            <i class="bi bi-key-fill" style="color: #ecc908 !important;"></i>
+                            <i class="bi bi-key-fill" style="color: #ecc908 !important; font-size: 20px;"></i>
                         </a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <p style="font-size: 14px; color:#a0abb1; margin: 0px;">{{users_data['name']}}</p>
+                        <p style="font-size: 17px; color:#a0abb1; margin: 0px;">{{users_data['name']}}</p>
                     </div>
                     <div class="col-12">
-                        <p style="font-size: 10px; color:#ffff00; margin: 0px;">@{{users_data['username']}}</p>
+                        <p style="font-size: 12px; color:#ffff00; margin: 0px;">@{{users_data['username']}}</p>
                     </div>
                     <div class="col-12">
-                        <p style="font-size: 10px; color:#616d65; margin: 0px;">{{users_data['stanowisko']}}</p>
+                        <p style="font-size: 12px; color:#616d65; margin: 0px;">{{users_data['stanowisko']}}</p>
                     </div>
                     
                 </div>
@@ -454,7 +456,7 @@
             <div class="col-12">
                 <!-- collapse wewnętrzny -->
                 <div class="collapse" id="collapse_id_4_{{username}}" data-bs-parent="#collapse_id_4_{{username}}">
-                    <p style="font-size: 12px; color:#9c9fa2; margin: 2px;">{{users_data['opis']}}</p>
+                    <p style="font-size: 13px; color:#9c9fa2; margin: 5px;">{{users_data['opis']}}</p>
                 </div>
             </div>
         </div>
@@ -464,7 +466,7 @@
                 <div class="user-data">
                     <div id="accordion_{{username}}">
                         <!-- collapse wewnętrzny -->
-                        <div class="collapse" style="max-width: 250px;" id="collapse_id_1_{{username}}" data-bs-parent="#accordion_{{username}}">
+                        <div class="collapse" id="collapse_id_1_{{username}}" data-bs-parent="#accordion_{{username}}">
                             <div class="tylko-klej col-auto">
                                 <div>
                                     <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -476,7 +478,7 @@
                                         <input
                                           type="password" 
                                           class="form-control bg-dark formatuj" 
-                                          style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                          style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
                                           name="old_Password" 
                                           id="inputPassword1" 
                                           placeholder="Old Password" 
@@ -484,7 +486,7 @@
                                         <input
                                           type="password" 
                                           class="form-control bg-dark formatuj" 
-                                          style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                          style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
                                           name="new_Password" 
                                           id="inputPassword2" 
                                           placeholder="New Password" 
@@ -492,7 +494,7 @@
                                         <input 
                                           type="password" 
                                           class="form-control bg-dark formatuj" 
-                                          style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                          style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
                                           name="repeat_Password" 
                                           id="inputPassword3" 
                                           placeholder="Repeat Password" 
@@ -511,7 +513,7 @@
                         </div>
                         
                         <!-- collapse wewnętrzny -->
-                        <div class="collapse" style="max-width: 250px;" id="collapse_id_3_{{username}}" data-bs-parent="#accordion_{{username}}">
+                        <div class="collapse" id="collapse_id_3_{{username}}" data-bs-parent="#accordion_{{username}}">
                             <div class="tylko-klej col-auto">
                                 <div>
                                     <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -523,38 +525,38 @@
                                         <input 
                                             type="text" value="{{users_data['name']}}" 
                                             class="form-control bg-dark formatuj" 
-                                            style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                            style="max-height: 30px; width: 100%; max-width: 2180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
                                             name="name" id="name_{{username}}" 
                                             placeholder="Imię i Nazwisko" />
                                         <input
                                             type="email" value="{{users_data['email']}}" 
                                             class="form-control bg-dark formatuj" 
-                                            style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
+                                            style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
                                             name="email" id="email_{{username}}" placeholder="Adres e-mail" />
                                         <input 
                                             type="text" value="{{users_data['phone']}}" 
                                             class="form-control bg-dark formatuj" 
-                                            style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
+                                            style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
                                             name="phone" id="phone_{{username}}" placeholder="Telefon" />
                                         <input
                                             type="text" value="{{users_data['facebook']}}" 
                                             class="form-control bg-dark formatuj" 
-                                            style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
+                                            style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
                                             name="facebook" id="facebook_{{username}}" placeholder="Facebook" />
                                         <input
                                             type="text" value="{{users_data['linkedin']}}" 
                                             class="form-control bg-dark formatuj" 
-                                            style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
+                                            style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" 
                                             name="linkedin" id="linkedin_{{username}}" placeholder="Linkedin" />
                                         <input
                                             type="text" value="{{users_data['instagram']}}" 
                                             class="form-control bg-dark formatuj" 
-                                            style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
+                                            style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
                                             name="instagram" id="instagram_{{username}}" placeholder="Instagram" />
                                         <input
                                             type="text" value="{{users_data['twiter']}}" 
                                             class="form-control bg-dark formatuj" 
-                                            style="max-height: 30px; width: 100%; max-width: 180px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
+                                            style="max-height: 30px; width: 100%; max-width: 280px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;"  
                                             name="twitter" id="twiter_{{username}}" placeholder="Twiter X" />
                                         <div class="tylko-klej">
                                             <div style="padding-left: 8px; max-width:  80px;">
