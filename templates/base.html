@@ -170,7 +170,7 @@
                             <div class="d-block d-sm-none">
                                 <a 
                                   class="nav-link active dark-mode" 
-                                  style="max-height: 30px; font-size: 15px; font-weight: 100;"
+                                  style="max-height: 30px; font-size: 12px; font-weight: 100;"
                                   aria-current="page" 
                                   href="#">
                                     Użytkownicy
@@ -198,42 +198,134 @@
                         
                         {% endblock %}
                     </li>
-                    <li class="nav-item dropdown" style="margin-left: 2px;">
-                        <a class="nav-link dropdown-toggle link-light dark-mode" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="true">Opcje</a>
-
-                        <ul class="dropdown-menu dark-mode">
-                            <li><a class="dropdown-item" href="/home">Strona Główna</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            {% if userperm['users'] == 1 %}
-                                <li><a class="dropdown-item" href="/user">Zarządzaj Użytkownikami</a></li>
-                            {% endif %}
-                            {% if userperm['blog'] == 1 %}
-                                <li><a class="dropdown-item" href="/blog">Zarządzaj Blogiem</a></li>
-                            {% endif %}
-                            {% if userperm['newsletter'] == 1 %}
-                                <li><a class="dropdown-item" href="/newsletter">Zarządzaj Newsletterem</a></li>
-                            {% endif %}
-                            {% if userperm['subscribers'] == 1 %}
-                                <li><a class="dropdown-item" href="/subscriber">Zarządzaj Subskrybentami</a></li>
-                            {% endif %}
-                            {% if userperm['team'] == 1 %}    
-                                <li><a class="dropdown-item" href="/team-domy">Zarządzaj Kadrą</a></li>
-                            {% endif %}
-                            {% if userperm['career'] == 1 %}    
-                                <li><a class="dropdown-item" href="/career">Zarządzaj Karierą</a></li>
-                            {% endif %}
-                            {% if userperm['estate'] == 1 %}
-                                <li><a class="dropdown-item" href="/estate-ads-rent">Zarządzaj Ogłoszeniami</a></li>
-                            {% endif %}
-                            {% if userperm['fbhidden'] == 1 %}
-                                <li><a class="dropdown-item" href="/hidden-campaigns">Zarządzaj Kampaniami</a></li>
-                            {% endif %}
-                            {% if userperm['settings'] == 1 %} 
+                    <!-- d-block d-sm-none tylko na średnim sm+ -->
+                    <div class="d-block d-sm-none">
+                        <li class="nav-item dropdown" style="margin-left: 2px;">
+                            <a 
+                            class="nav-link dropdown-toggle link-light dark-mode" 
+                            data-bs-toggle="dropdown" href="#" 
+                            style="max-height: 30px; font-size: 12px; font-weight: 100;"
+                            role="button" aria-expanded="true">Opcje</a>
+    
+                            <ul class="dropdown-menu dark-mode">
+                                <li><a class="dropdown-item" href="/home" style="max-height: 30px; font-size: 12px; font-weight: 100;">Strona Główna</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/setting">Ustawienia</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
+                                {% if userperm['users'] == 1 %}
+                                    <li><a class="dropdown-item" href="/user" style="max-height: 30px; font-size: 12px; font-weight: 100;">Zarządzaj Użytkownikami</a></li>
+                                {% endif %}
+                                {% if userperm['blog'] == 1 %}
+                                    <li><a class="dropdown-item" href="/blog" style="max-height: 30px; font-size: 12px; font-weight: 100;">Zarządzaj Blogiem</a></li>
+                                {% endif %}
+                                {% if userperm['newsletter'] == 1 %}
+                                    <li><a class="dropdown-item" href="/newsletter" style="max-height: 30px; font-size: 12px; font-weight: 100;">Zarządzaj Newsletterem</a></li>
+                                {% endif %}
+                                {% if userperm['subscribers'] == 1 %}
+                                    <li><a class="dropdown-item" href="/subscriber" style="max-height: 30px; font-size: 12px; font-weight: 100;">Zarządzaj Subskrybentami</a></li>
+                                {% endif %}
+                                {% if userperm['team'] == 1 %}    
+                                    <li><a class="dropdown-item" href="/team-domy" style="max-height: 30px; font-size: 12px; font-weight: 100;">Zarządzaj Kadrą</a></li>
+                                {% endif %}
+                                {% if userperm['career'] == 1 %}    
+                                    <li><a class="dropdown-item" href="/career" style="max-height: 30px; font-size: 12px; font-weight: 100;">Zarządzaj Karierą</a></li>
+                                {% endif %}
+                                {% if userperm['estate'] == 1 %}
+                                    <li><a class="dropdown-item" href="/estate-ads-rent" style="max-height: 30px; font-size: 12px; font-weight: 100;">Zarządzaj Ogłoszeniami</a></li>
+                                {% endif %}
+                                {% if userperm['fbhidden'] == 1 %}
+                                    <li><a class="dropdown-item" href="/hidden-campaigns" style="max-height: 30px; font-size: 12px; font-weight: 100;">Zarządzaj Kampaniami</a></li>
+                                {% endif %}
+                                {% if userperm['settings'] == 1 %} 
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/setting" style="max-height: 30px; font-size: 12px; font-weight: 100;">Ustawienia</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </div>
+                    <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+                    <div class="d-none d-sm-block d-lg-none">
+                        <li class="nav-item dropdown" style="margin-left: 2px;">
+                            <a 
+                                class="nav-link dropdown-toggle link-light dark-mode" 
+                                data-bs-toggle="dropdown" href="#" role="button" 
+                                style="max-height: 30px; font-size: 15px; font-weight: 100;"
+                                aria-expanded="true">
+                                Opcje
+                            </a>
+    
+                            <ul class="dropdown-menu dark-mode">
+                                <li><a class="dropdown-item" href="/home" style="max-height: 30px; font-size: 15px; font-weight: 100;">Strona Główna</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                {% if userperm['users'] == 1 %}
+                                    <li><a class="dropdown-item" href="/user" style="max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Użytkownikami</a></li>
+                                {% endif %}
+                                {% if userperm['blog'] == 1 %}
+                                    <li><a class="dropdown-item" href="/blog" style="max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Blogiem</a></li>
+                                {% endif %}
+                                {% if userperm['newsletter'] == 1 %}
+                                    <li><a class="dropdown-item" href="/newsletter" style="max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Newsletterem</a></li>
+                                {% endif %}
+                                {% if userperm['subscribers'] == 1 %}
+                                    <li><a class="dropdown-item" href="/subscriber" style="max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Subskrybentami</a></li>
+                                {% endif %}
+                                {% if userperm['team'] == 1 %}    
+                                    <li><a class="dropdown-item" href="/team-domy" style="max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Kadrą</a></li>
+                                {% endif %}
+                                {% if userperm['career'] == 1 %}    
+                                    <li><a class="dropdown-item" href="/career" style="max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Karierą</a></li>
+                                {% endif %}
+                                {% if userperm['estate'] == 1 %}
+                                    <li><a class="dropdown-item" href="/estate-ads-rent" style="max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Ogłoszeniami</a></li>
+                                {% endif %}
+                                {% if userperm['fbhidden'] == 1 %}
+                                    <li><a class="dropdown-item" href="/hidden-campaigns" style="max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Kampaniami</a></li>
+                                {% endif %}
+                                {% if userperm['settings'] == 1 %} 
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/setting" style="max-height: 30px; font-size: 15px; font-weight: 100;">Ustawienia</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </div>
+                    <!-- d-none d-xl-block tylko na pełnym xl+ -->
+                    <div class="d-none d-lg-block">
+                        <li class="nav-item dropdown" style="margin-left: 2px;">
+                            <a class="nav-link dropdown-toggle link-light dark-mode" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="true">Opcje</a>
+    
+                            <ul class="dropdown-menu dark-mode">
+                                <li><a class="dropdown-item" href="/home">Strona Główna</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                {% if userperm['users'] == 1 %}
+                                    <li><a class="dropdown-item" href="/user">Zarządzaj Użytkownikami</a></li>
+                                {% endif %}
+                                {% if userperm['blog'] == 1 %}
+                                    <li><a class="dropdown-item" href="/blog">Zarządzaj Blogiem</a></li>
+                                {% endif %}
+                                {% if userperm['newsletter'] == 1 %}
+                                    <li><a class="dropdown-item" href="/newsletter">Zarządzaj Newsletterem</a></li>
+                                {% endif %}
+                                {% if userperm['subscribers'] == 1 %}
+                                    <li><a class="dropdown-item" href="/subscriber">Zarządzaj Subskrybentami</a></li>
+                                {% endif %}
+                                {% if userperm['team'] == 1 %}    
+                                    <li><a class="dropdown-item" href="/team-domy">Zarządzaj Kadrą</a></li>
+                                {% endif %}
+                                {% if userperm['career'] == 1 %}    
+                                    <li><a class="dropdown-item" href="/career">Zarządzaj Karierą</a></li>
+                                {% endif %}
+                                {% if userperm['estate'] == 1 %}
+                                    <li><a class="dropdown-item" href="/estate-ads-rent">Zarządzaj Ogłoszeniami</a></li>
+                                {% endif %}
+                                {% if userperm['fbhidden'] == 1 %}
+                                    <li><a class="dropdown-item" href="/hidden-campaigns">Zarządzaj Kampaniami</a></li>
+                                {% endif %}
+                                {% if userperm['settings'] == 1 %} 
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/setting">Ustawienia</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </div>
+                    
                     {% block addButton %}
                     <li style="margin-left: 15px;">
                         <a href="#"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(23, 209, 23) !important;"></i></a>
