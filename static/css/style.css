@@ -2015,5 +2015,7 @@ color:#969696;
 .user-info-sm {
   margin-right: 10px;
   white-space: nowrap; /* Zapobiega łamaniu się tekstu */
+  text-align: right;
+  color: #6d6d6d;
 }
 
