@@ -455,11 +455,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12" onclick="copyToClipboard(`{{users_data['phone']}}`)">
-                        <p style="font-size: 17px; color:#d1eca8; margin: 0px;">{{users_data['phone']}}</p>
-                    </div>
                     <div class="col-12">
                         <p style="font-size: 24px; color:#a0abb1; margin: 0px;">{{users_data['name']}}</p>
+                    </div>
+                    <div class="col-12" onclick="copyToClipboard(`{{users_data['phone']}}`)">
+                        <p style="font-size: 15px; color:#d1eca8; margin: 0px;"><i class="bi bi-phone"></i> {{users_data['phone']}}</p>
                     </div>
                     <div class="col-12">
                         <p style="font-size: 15px; color:#ffff00; margin: 0px;">@{{users_data['username']}}</p>
