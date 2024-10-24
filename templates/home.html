@@ -10,6 +10,20 @@
 {% block tableContent%}
 <!-- collapse start -->
 <div class="jasne rogi">
+    <div 
+      id="copy-notification" 
+      style="
+        display: none; 
+        position: fixed; 
+        bottom: 30px; 
+        right: 20px; 
+        background-color: #4CAF50; 
+        color: white; 
+        padding: 10px; 
+        border-radius: 5px; 
+        z-index: 1000;">
+        Copied to clipboard!
+    </div>
     <!-- d-block d-sm-none tylko na średnim sm+ -->
     <div class="d-block d-sm-none">
         <div class="row formatuj-padding">
@@ -441,19 +455,22 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12">
-                        <p style="font-size: 17px; color:#a0abb1; margin: 0px;">{{users_data['name']}}</p>
+                    <div class="col-12" onclick="copyToClipboard(`{{{users_data['phone']}}}`)">
+                        <p style="font-size: 17px; color:#d1eca8; margin: 0px;">{{users_data['phone']}}</p>
                     </div>
                     <div class="col-12">
-                        <p style="font-size: 12px; color:#ffff00; margin: 0px;">@{{users_data['username']}}</p>
+                        <p style="font-size: 24px; color:#a0abb1; margin: 0px;">{{users_data['name']}}</p>
                     </div>
                     <div class="col-12">
-                        <p style="font-size: 12px; color:#616d65; margin: 0px;">{{users_data['stanowisko']}}</p>
+                        <p style="font-size: 15px; color:#ffff00; margin: 0px;">@{{users_data['username']}}</p>
+                    </div>
+                    <div class="col-12">
+                        <p style="font-size: 15px; color:#616d65; margin: 0px;">{{users_data['stanowisko']}}</p>
                     </div>
                     <div class="col-12">
                         <!-- collapse wewnętrzny -->
                         <div class="collapse" id="collapse_id_4_lg_{{username}}" data-bs-parent="#collapse_id_4_lg_{{username}}">
-                            <p style="font-size: 13px; color:#9c9fa2;">{{users_data['opis']}}</p>
+                            <p style="font-size: 15px; color:#9c9fa2;">{{users_data['opis']}}</p>
                         </div>
                     </div>
                 </div>
@@ -1421,6 +1438,36 @@
             xhr.send(data);
         }
     });
+
+    function copyToClipboard(logText) {
+        // Tworzymy tymczasowy element <textarea> do skopiowania tekstu
+        const tempTextArea = document.createElement("textarea");
+        tempTextArea.value = logText;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        try {
+            document.execCommand("copy");
+
+            // Pokazujemy powiadomienie o skopiowaniu
+            showNotification();
+
+        } catch (err) {
+            alert('Failed to copy: ', err);
+        }
+        // Usuwamy tymczasowy element
+        document.body.removeChild(tempTextArea);
+    }
+
+    // Funkcja do wyświetlenia powiadomienia
+    function showNotification() {
+        const notification = document.getElementById("copy-notification");
+        notification.style.display = "block";
+
+        // Ukryj powiadomienie po 2 sekundach
+        setTimeout(function() {
+            notification.style.display = "none";
+        }, 2000);
+    }
 
 </script>
 {% endblock %}
