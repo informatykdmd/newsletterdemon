@@ -1999,19 +1999,14 @@ color:#969696;
   margin-top: 10px;
   margin-bottom: 10px;
   margin-right: 100px;
+}
+
+.flex-container-sm {
+  display: flex;
+  /* justify-content: space-between;
+  align-items: center; */
   width: 100%;
 }
-
-.offcanvas-top-logo-lg {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.offcanvas-top-logo-xl {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
 
 .logo-sm {
   flex-grow: 1; /* Rozciąga logo na całą dostępną przestrzeń */
@@ -2022,6 +2017,3 @@ color:#969696;
   white-space: nowrap; /* Zapobiega łamaniu się tekstu */
 }
 
-.logout-sm {
-  white-space: nowrap; /* Zapobiega łamaniu się ikony logout */
-}

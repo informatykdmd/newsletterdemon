@@ -29,7 +29,7 @@
     <!-- d-block d-sm-none tylko na średnim sm+ -->
     <div class="d-block d-sm-none">
         <div class="offcanvas offcanvas-top oc-height jasne" tabindex="-1" id="offcanvasTop_sm" aria-labelledby="offcanvasTopLabel_sm">
-            <div class="offcanvas-top-logo-sm">
+            <div class="offcanvas-top-logo-sm flex-container-sm">
                 <!-- Logo -->
                 <div class="logo-sm">
                     <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
@@ -43,10 +43,6 @@
                 <!-- Informacja o zalogowanym użytkowniku -->
                 <div class="user-info-sm formatuj-maly-logout">
                     Zalogowany jako: <span style="color: #61ff59">@</span>{{username}}
-                </div>
-            
-                <!-- Przycisk logout -->
-                <div class="logout-sm formatuj">
                     <a href="/logout">
                         <i class="bi bi-door-closed" style="color: #e32828"></i>
                     </a>
