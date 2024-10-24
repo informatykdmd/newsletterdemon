@@ -287,6 +287,20 @@ body {
     padding-right: 5px;
   }
 
+  .formatuj-padding-lg{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .formatuj-padding-xl{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
   .formatuj-inputs {
     max-height: 30px; 
     font-size: 12px;
