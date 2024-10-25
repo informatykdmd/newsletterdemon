@@ -99,22 +99,36 @@
     </button>
     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
         {% if user_brands['domy'] == 1 %}
-            <li><a class="dropdown-item" href="/team-domy">Domy</a></li>
+            <li><a class="dropdown-item" href="/team-domy" style="max-height: 45px; font-size: 20px; font-weight: 100;">Domy</a></li>
         {% endif%}
         {% if user_brands['budownictwo'] == 1 %}
-            <li><a class="dropdown-item" href="/team-budownictwo">Budownictwo</a></li>
+            <li><a class="dropdown-item" href="/team-budownictwo" style="max-height: 45px; font-size: 20px; font-weight: 100;">Budownictwo</a></li>
         {% endif%}
         {% if user_brands['elitehome'] == 1 %}
-            <li><a class="dropdown-item" href="/team-elitehome">EliteHome</a></li>
+            <li><a class="dropdown-item" href="/team-elitehome" style="max-height: 45px; font-size: 20px; font-weight: 100;">EliteHome</a></li>
         {% endif%}
         {% if user_brands['instalacje'] == 1 %}
-            <li><a class="dropdown-item" href="/team-instalacje">Instalacje</a></li>
+            <li><a class="dropdown-item" href="/team-instalacje" style="max-height: 45px; font-size: 20px; font-weight: 100;">Instalacje</a></li>
         {% endif%}
         {% if user_brands['development'] == 1 %}
-            <li><a class="dropdown-item" href="/team-development">Development</a></li>
+            <li>
+                <a 
+                    class="dropdown-item" 
+                    style="max-height: 45px; font-size: 20px; font-weight: 100;"
+                    href="/team-development">
+                    Development
+                </a>
+            </li>
         {% endif%}
         {% if user_brands['inwestycje'] == 1 %}
-            <li><a class="team_button_inwestycje dropdown-item active" href="/team-inwestycje">Inwestycje</a></li>
+            <li>
+                <a 
+                    class="team_button_inwestycje dropdown-item active" 
+                    style="max-height: 45px; font-size: 20px; font-weight: 100;"
+                    href="/team-inwestycje">
+                    Inwestycje
+                </a>
+            </li>
         {% endif%}
 
 
