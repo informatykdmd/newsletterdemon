@@ -627,8 +627,8 @@ color:#969696;
 }
 
 .dostepnyPracownik {
-    max-width: 100px;
-    height: auto;
+    width: 100px;
+    height: 100px;
     margin-top: 5px;
     margin-bottom: 5px;
     margin-left: 5px;
@@ -654,21 +654,24 @@ color:#969696;
 /* Small screens (sm) - 576px and up */
 @media (min-width: 576px) {
   .dostepnyPracownik {
-      max-width: 60px;
+      width: 60px;
+      height: 60px;
   }
 }
 
 /* Medium screens (md) - 768px and up */
 @media (min-width: 768px) {
   .dostepnyPracownik {
-      max-width: 75px;
+      width: 75px;
+      height: 75px;
   }
 }
 
 /* Large screens (lg) - 992px and up */
 @media (min-width: 992px) {
   .dostepnyPracownik {
-      max-width: 100px;
+      width: 100px;
+      height: 100px;
   }
 }
 
