@@ -75,7 +75,7 @@
         <button 
             class="nav-link dropdown-toggle link-light dark-mode" 
             type="button" id="dropdownMenuButton2" 
-            style="max-height: 29px; font-size: 12px; font-weight: 100;"
+            style="max-height: 29px; font-size: 20px;"
             data-bs-toggle="dropdown" aria-expanded="false">
             {% if user_brands['inwestycje'] == 0 %}
                 {% if user_brands['domy'] == 1 %}
@@ -100,7 +100,7 @@
                     {% endif %}
                 {% endif %}
             {% else %}
-                <i class="bi bi-buildings" style="color: #64a4c7;"></i>
+                <i class="bi bi-buildings" style="color: #64a4c7; position: relative; top: -10px;"></i>
             {% endif %}
         </button>
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
