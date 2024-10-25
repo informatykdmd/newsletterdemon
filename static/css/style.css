@@ -307,6 +307,7 @@ body {
 
   .formatuj-inputs {
     max-height: 30px; 
+    width: fit-content;
     font-size: 12px;
     background-color: #1e2124;
     color: #9da2a8; 
