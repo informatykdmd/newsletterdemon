@@ -448,19 +448,19 @@
                             {% for comment in post_data['comments'].values() %}
                             <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj">
                                 <div class="row" style="width: 100%;">
-                                    <div class="col-11 col-lg-7 formatuj-maly-font formatuj-max-height">
+                                    <div class="col-xl-10 col-lg-10 col-sm-11 formatuj-maly-font">
                                         {{comment['message']}}
                                     </div>
-                                    <div class="d-none d-lg-block col-lg-2 formatuj-maly-font formatuj-max-height" style="max-width: 100px;">
+                                    <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 100px;">
                                         {{comment['user']}}
                                     </div>
-                                    <div class="d-none d-lg-block col-lg-3 formatuj-maly-font formatuj-max-height"style="max-width: 200px;">
+                                    <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;">
                                         {{comment['e-mail']}}
                                     </div>
-                                    <div class="d-none d-xl-block col-xl-2 formatuj-maly-font formatuj-max-heightt" style="max-width: 150px;">
+                                    <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
                                         {{comment['data-time']}}
                                     </div>
-                                    <div class="col-1 d-flex justify-content-end formatuj-maly-font" style="max-width: 50px;">
+                                    <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 30px;">
                                         <form method="POST" id="removeComment_{{post_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
                                             <input type="hidden" name="page" id="CommName_{{post_id}}" value="blog"/>
                                             <input type="hidden" name="comment_id" id="CommName_{{post_id}}" value="{{comment['id']}}"/>
