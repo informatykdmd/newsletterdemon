@@ -4,3 +4,93 @@
 <div class="d-none d-sm-block d-lg-none mt-2"></div>
 <!-- d-none d-xl-block tylko na pełnym xl+ -->
 <div class="d-none d-lg-block mt-2"></div>
+
+<style>
+
+    #home, #team {
+        margin-bottom: 20px;
+    }
+    
+    #home div, #team div, .dostepnyPracownik {
+        width: 100px !important;
+        height: 100px !important;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        cursor: move;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 50%;
+        background-color: #000000;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end; /* Zmieniono z 'center' na 'flex-end' */
+        position: relative;
+        padding-top: 50px;
+        font-weight: bold; /* Pogrubienie tekstu */
+        text-decoration: underline; /* Opcjonalne: dodanie podkreślenia (przykładowa dekoracja) */
+        font-size: medium;
+    }
+    
+    
+    #home div::after,
+    #team div::after,
+    .dostepnyPracownik::after {
+        content: "";
+        height: 3px;
+        width: 100%;
+    }
+    
+    .dostepnyPracownik {
+        width: 100px;
+        height: 100px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
+        cursor: move;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 50%;
+        background-color: #000000;
+        background-size: cover; /* Dodaj to */
+        background-position: center;
+        background-repeat: no-repeat;
+        color:#ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content:  flex-end;
+        position: relative;
+        padding-top: 50px;
+        font-weight: bold; /* Pogrubienie tekstu */
+        text-decoration: underline; /* Opcjonalne: dodanie podkreślenia (przykładowa dekoracja) */
+    }
+    /* Small screens (sm) - 576px and up */
+    @media (min-width: 576px) {
+      .dostepnyPracownik {
+          width: 60px;
+          height: 60px;
+      }
+    }
+    
+    /* Medium screens (md) - 768px and up */
+    @media (min-width: 768px) {
+      .dostepnyPracownik {
+          width: 75px;
+          height: 75px;
+      }
+    }
+    
+    /* Large screens (lg) - 992px and up */
+    @media (min-width: 992px) {
+      .dostepnyPracownik {
+          width: 100px;
+          height: 100px;
+      }
+    }
+</style>

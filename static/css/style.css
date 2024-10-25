@@ -589,68 +589,38 @@ color:#969696;
 }
 
 #home, #team {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 #home div, #team div, .dostepnyPracownik {
-    width: 100px !important;
-    height: 100px !important;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    cursor: move;
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 50%;
-    background-color: #000000;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end; /* Zmieniono z 'center' na 'flex-end' */
-    position: relative;
-    padding-top: 50px;
-    font-weight: bold; /* Pogrubienie tekstu */
-    text-decoration: underline; /* Opcjonalne: dodanie podkreślenia (przykładowa dekoracja) */
-    font-size: medium;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  cursor: move;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: #000000;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  padding-top: 50px;
+  font-weight: bold;
+  text-decoration: underline;
 }
 
-
-#home div::after,
-#team div::after,
-.dostepnyPracownik::after {
-    content: "";
-    height: 3px;
-    width: 100%;
-}
-
+/* Extra Small screens (xs) */
 .dostepnyPracownik {
-    width: 100px;
-    height: 100px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-    cursor: move;
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 50%;
-    background-color: #000000;
-    background-size: cover; /* Dodaj to */
-    background-position: center;
-    background-repeat: no-repeat;
-    color:#ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content:  flex-end;
-    position: relative;
-    padding-top: 50px;
-    font-weight: bold; /* Pogrubienie tekstu */
-    text-decoration: underline; /* Opcjonalne: dodanie podkreślenia (przykładowa dekoracja) */
+  width: 50px; /* Domyślnie dla najmniejszych ekranów */
+  height: 50px;
+  margin: 5px;
 }
+
 /* Small screens (sm) - 576px and up */
 @media (min-width: 576px) {
   .dostepnyPracownik {
