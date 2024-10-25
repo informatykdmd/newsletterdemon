@@ -105,22 +105,22 @@
 {% block tableHeader %}
                         <div>
                             <div class="row klej formatuj-header">
-                                <div class="d-none d-lg-block" style="max-width: 30px;">
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;">
                                     #
                                 </div>
-                                <div  class="col-xl-10 col-lg-10 col-sm-11">
+                                <div class="col-xl-10 col-lg-10 col-sm-11 formatuj-maly-font">
                                     Nazwa użytkownika 
                                 </div>
-                                <div class="d-none d-xl-block" style="max-width: 150px;">
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
                                     E-mail
                                 </div>
-                                <div  class="d-none d-lg-block" style="max-width: 100px;">
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 100px;">
                                     Login
                                 </div>
-                                <div class="d-none d-xl-block" style="max-width: 100px;">
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 100px;">
                                     Status
                                 </div>
-                                <div class="d-none d-xl-block" style="max-width: 200px;">
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;">
                                     Stanowisko
                                 </div>
                                 <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 80px;">
@@ -230,28 +230,28 @@
                         {% for users_data in users %}
                             {% set user_id  = users_data['id'] %}
                         <!-- linia contentu tabeli ciemna-->
-                        <div class="row">
-                            <div class="klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
-                                <div class="column-id" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                        <div>
+                            <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                <div class="d-none d-lg-block" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                     <img class="avatar-mini" src="{{users_data['avatar']}}" alt=""/>
                                 </div>
-                                <div  class="column-expand" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                <div class="col-xl-10 col-lg-10 col-sm-11 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                         {{users_data['name']}}
                                     </a>
                                 </div>
                                 
-                                <div  class="column-expand" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
-                                        {{users_data['email'][:15]}} ...
+                                        {{users_data['email']}}
                                     </a>
                                 </div>
-                                <div  class="column-usual" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 100px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                         @{{users_data['username']}}
                                     </a>
                                 </div>
-                                <div  class="column-usual" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 100px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                         {% if users_data['status'] == '1' %}
                                             <span style="color: #46ff56 !important;">Aktywny</span>
@@ -260,12 +260,12 @@
                                         {% endif %}
                                     </a>
                                 </div>
-                                <div  class="column-usual" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
-                                        {{users_data['stanowisko'][:15]}} ...
+                                        {{users_data['stanowisko']}} ...
                                     </a>
                                 </div>
-                                <div class="column-ender">
+                                <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 80px;">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(196, 196, 196) !important;"></i></a>
                                 </div>
                             </div>
