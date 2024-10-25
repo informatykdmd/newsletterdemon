@@ -460,7 +460,7 @@
                                     <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
                                         {{comment['data-time']}}
                                     </div>
-                                    <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end">
+                                    <div class="col d-flex justify-content-end">
                                         <form method="POST" id="removeComment_{{post_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
                                             <input type="hidden" name="page" id="CommName_{{post_id}}" value="blog"/>
                                             <input type="hidden" name="comment_id" id="CommName_{{post_id}}" value="{{comment['id']}}"/>
