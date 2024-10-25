@@ -80,12 +80,12 @@
 {% endblock %}
 
 {% block tableHeader %}
-                        <div class="row">
-                            <div class="klej formatuj-header">
+                        <div>
+                            <div class="row klej formatuj-header">
                                 <div class="d-none d-lg-block" style="max-width: 30px;">
                                     #
                                 </div>
-                                <div  class="col-xl-10 col-lg-8 col-sm-11">
+                                <div  class="col-xl-10 col-lg-10 col-sm-11">
                                     Tytuł
                                 </div>
                                 <div  class="d-none d-xl-block" style="max-width: 250px;">
@@ -252,7 +252,7 @@
                                 <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {{post_id}}
                                 </div>
-                                <div class="col-xl-10 col-lg-8 col-sm-11 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="col-xl-10 col-lg-10 col-sm-11 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_data['title']}}
                                     </a>
@@ -450,10 +450,10 @@
                                 <div class="col-xl-8 col-lg-9 col-sm-11 formatuj-maly-font formatuj-max-height">
                                     {{comment['message']}}
                                 </div>
-                                <div class="d-none d-xl-block formatuj-maly-font formatuj-max-height" style="max-width: 100px;">
+                                <div class="d-none d-lg-block formatuj-maly-font formatuj-max-height" style="max-width: 100px;">
                                     {{comment['user']}}
                                 </div>
-                                <div class="d-none d-xl-block formatuj-maly-font formatuj-max-height"style="max-width: 200px;">
+                                <div class="d-none d-lg-block formatuj-maly-font formatuj-max-height"style="max-width: 200px;">
                                     {{comment['e-mail']}}
                                 </div>
                                 <div class="d-none d-xl-block formatuj-maly-font formatuj-max-height" style="max-width: 150px;">
