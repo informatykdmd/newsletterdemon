@@ -56,8 +56,8 @@
 
 {% block tableContent%}
 <div class="jasne rogi formatyj-maly-wiersz">
-    <div class="tylko-klej">
-        <div class="rogi colapse-column-usual formatuj-left">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 p-15 formatuj-left">
             <div class="formatuj-left">
                 <h5>Ustawienia Planu Newslettera:</h5>
             </div>
@@ -75,7 +75,7 @@
                   <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body bg-dark">
                         <div>
-                            <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
+                            <form action="{{ url_for('set_plan') }}" class="formatuj-padding-lg" id="Plan_data" method="POST" enctype="multipart/form-data">
                                 <p>Codzienna wysyłka newslettera - ciekawe rozwiązanie dla agresywnego marketingu.</p>
                                 <div class="formatuj-right">
                                     <input type="hidden" name="plan_name" id="Plan_1440" value="1440"/>
@@ -104,7 +104,7 @@
                     <div class="accordion-body bg-dark">
                         <div>
                             
-                            <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
+                            <form action="{{ url_for('set_plan') }}" class="formatuj-padding-lg" id="Plan_data" method="POST" enctype="multipart/form-data">
                                 <p>Wysyłka newslettera dwa razy w tygodniu - idealne rozwiązanie dla regularnej komunikacji z odbiorcami.</p>
                                 <div class="formatuj-right">
                                     <input type="hidden" name="plan_name" id="Plan_3600" value="3600"/>
@@ -133,7 +133,7 @@
                     <div class="accordion-body bg-dark">
                         <div>
                             
-                            <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
+                            <form action="{{ url_for('set_plan') }}" class="formatuj-padding-lg" id="Plan_data" method="POST" enctype="multipart/form-data">
                                 <p>Wysyłka newslettera raz w tygodniu - świetny sposób na utrzymanie regularnego kontaktu z odbiorcami.</p>
                                 <div class="formatuj-right">
                                     <input type="hidden" name="plan_name" id="Plan_10080" value="10080"/>
@@ -163,7 +163,7 @@
                         <div class="accordion-body bg-dark">
                             <div>
                                 
-                                <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
+                                <form action="{{ url_for('set_plan') }}" class="formatuj-padding-lg" id="Plan_data" method="POST" enctype="multipart/form-data">
                                     <p>Wysyłka newslettera raz w miesiącu - doskonała forma regularnych aktualizacji, zapowiedzi wydarzeń oraz podsumowań minionego miesiąca. To także sposób na utrzymanie kontaktu z odbiorcami bez nadmiernego przesyłania wiadomości.</p>
                                     <div class="formatuj-right">
                                         <input type="hidden" name="plan_name" id="Plan_40320" value="40320"/>
@@ -193,7 +193,7 @@
                         <div class="accordion-body bg-dark">
                             <div>
                                 
-                                <form action="{{ url_for('set_plan') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
+                                <form action="{{ url_for('set_plan') }}" class="formatuj-padding-lg" id="Plan_data" method="POST" enctype="multipart/form-data">
                                     <p>Wysyłka newslettera co kwartał - idealne rozwiązanie dla podsumowania działalności firmy, raportowania kluczowych wyników i prezentowania przyszłych planów na kolejne kwartały. Wysyłka tak rzadka zapewnia, że informacje są starannie wyselekcjonowane i istotne dla odbiorców.</p>
                                     <div class="formatuj-right">
                                         <input type="hidden" name="plan_name" id="Plan_100800" value="100800"/>
@@ -210,8 +210,8 @@
                 </div>
             </div>
         </div>
-        <div class="colapse-column-usual formatuj-left">
-            <form action="{{ url_for('set_sender') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
+        <div class="col-sm-12 col-md-6 col-lg-4 p-15 formatuj-left">
+            <form action="{{ url_for('set_sender') }}" class="formatuj-padding-lg" id="Plan_data" method="POST" enctype="multipart/form-data">
                 <div class="formatuj-left">
                     <h5>Ustawienia Adresu Newslettera:</h5>
                 </div>
@@ -235,7 +235,7 @@
                 </div>
             </form>
         </div>
-        <div class="colapse-column-ender formatuj-left">
+        <div class="col-sm-12 col-md-12 col-lg-4 p-15 formatuj-left">
             <div class="formatuj-left">
                 <h5>Ostation Dodani Subskrybenci</h5>
                 <div class="list-group">
