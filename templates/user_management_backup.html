@@ -1,0 +1,985 @@
+{% extends 'base.html' %}
+
+{% block title %}DMD Panel Administratora - Zarządzanie Subskrybentami{% endblock %}
+{% block scripts %}
+<script>
+    // Te literały szablonowe są używane do wstrzyknięcia JSON-a jako stringi.
+    var loginsString = `{{ logins | tojson }}`;
+    var emailsString = `{{ emails | tojson }}`;
+    var namesString = `{{ names | tojson }}`;
+
+    // Następnie, przekształcamy te stringi z powrotem na obiekty JavaScript.
+    var logins = JSON.parse(loginsString);
+    var emails = JSON.parse(emailsString);
+    var names = JSON.parse(namesString);
+
+</script>
+{% endblock %}
+{% block addButton %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div class="add-button-green ps-3">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 15pt; color: #0e900e !important;"></i>
+        </a>
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div class="add-button-green ps-3">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 15pt; color: #0e900e !important;"></i>
+        </a>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div class="add-button-green ps-3">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 20pt; color: #0e900e !important;"></i>
+        </a>
+    </div>
+</div>
+{% endblock %}
+{% block navbarTitle %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 2px !important; padding-right: 10px; max-height: 22px;"/>
+        </a>
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_lg" aria-controls="offcanvasTop_lg">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 5px !important; padding-right: 10px; max-height: 35px;"
+                />
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 40px; font-size: 15px; font-weight: 100;"
+            href="#">
+            Użytkownicy
+        </a>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_xl" aria-controls="offcanvasTop_xl">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 10px !important; padding-right: 10px; max-height: 40px;"/>
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 45px; font-size: 20px; font-weight: 100;"
+            href="#">
+            Zarządzanie Użytkownikami
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div style="color: #8bff4d;">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+{% block tableHeader %}
+                        <div>
+                            <div class="row klej formatuj-header">
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;">
+                                    #
+                                </div>
+                                <div class="col-xl-10 col-lg-10 col-sm-11 formatuj-maly-font">
+                                    Nazwa użytkownika 
+                                </div>
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
+                                    E-mail
+                                </div>
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 100px;">
+                                    Login
+                                </div>
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 100px;">
+                                    Status
+                                </div>
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;">
+                                    Stanowisko
+                                </div>
+                                <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 80px;">
+                                    <i class="bi bi-person-gear"></i> Akcja 
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}
+{% block tableContent%}
+                        <!-- OFFCANVANSE RIGHT ADD NEW USER -->
+                        <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowego użytkownika</h4>
+                                <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <form method="POST" id="new_user" action="{{ url_for('save_new_user') }}" enctype="multipart/form-data" >
+                                    <!-- Login -->
+                                    <div class="mb-3">
+                                        <label for="Login_new_user" class="form-label">Login</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#6d6d6d; border:#6a6a6a solid 1px;"
+                                                id="Login_new_user" 
+                                                name="Login_new_user" 
+                                                required />
+                                    </div>
+
+                                    <!-- Imię i Nazwisko -->
+                                    <div class="mb-3">
+                                        <label for="Name_new_user" class="form-label">Imię i Nazwisko</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#6d6d6d; border:#6a6a6a solid 1px;"
+                                                id="Name_new_user" 
+                                                name="Name_new_user" 
+                                                required />
+                                    </div>
+                                    
+
+                                    <!-- email -->
+                                    <div class="mb-3">
+                                        <label for="Email_new_user" class="form-label">E-mail</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#6d6d6d; border:#6a6a6a solid 1px;"
+                                                id="Email_new_user" 
+                                                name="Email_new_user" 
+                                                required />
+                                    </div>
+
+                                    <!-- Stanowsko -->
+                                    <div class="mb-3">
+                                        <label for="Stanowsko_new_user" class="form-label">Stanowsko</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#6d6d6d; border:#6a6a6a solid 1px;"
+                                                id="Stanowsko_new_user" 
+                                                name="Stanowsko_new_user" 
+                                                required />
+                                        </div>
+                                    
+                                    <!-- Opis -->
+                                    <div class="mb-3">
+                                        <label for="Description_new_user" class="form-label">Opis</label>
+                                        <textarea 
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#6d6d6d; border:#6a6a6a solid 1px;"
+                                            id="Description_new_user" 
+                                            name="Description_new_user" 
+                                            rows="4" required></textarea>
+                                        </div>
+
+                                    <!-- Avatar -->
+                                    <div class="mb-3">
+                                        <label for="Avatar_new_user" class="form-label">Avatar (460x460)</label>
+                                        <div>
+                                            <img src="" style="max-height: 100px; max-width: 400px; border-radius: 10px; margin-bottom: 10px;" id="Avatar_new_usr" />
+                                        </div>
+                                        <div>
+                                            <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#6d6d6d;" id="Avatar_new_user" name="Avatar_new_user" accept="image/*" onchange="previewImage(this, 'Avatar_new_usr', 460, 460, 100)">
+                                        </div>
+                                    </div>
+
+                                    <!-- Ukryte pola formularza -->
+                                    <!-- <input type="hidden" name="_new_user" id="_new_user" />
+                                    <input type="hidden" name="_new_user" id="_new_user" /> -->
+                                    <!-- Przycisk Dodaj Usera -->
+                                    <button 
+                                            type="button" 
+                                            class="btn btn-success btn-sm" 
+                                            style="max-height: 30px; font-size: 12px;" 
+                                            onclick="newUserSubmitForm(logins, emails, names)">
+                                        Dodaj użytkownika
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% for users_data in users %}
+                            {% set user_id  = users_data['id'] %}
+                        <!-- linia contentu tabeli ciemna-->
+                        <div>
+                            <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                <div class="d-none d-lg-block" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                    <img class="avatar-mini" src="{{users_data['avatar']}}" alt=""/>
+                                </div>
+                                <div class="col-xl-10 col-lg-10 col-sm-11 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                        {{users_data['name']}}
+                                    </a>
+                                </div>
+                                
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                        {{users_data['email']}}
+                                    </a>
+                                </div>
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 100px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                        @{{users_data['username']}}
+                                    </a>
+                                </div>
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 100px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                        {% if users_data['status'] == '1' %}
+                                            <span style="color: #46ff56 !important;">Aktywny</span>
+                                        {% else %}
+                                            <span style="color: #878787 !important;">Nieaktywny</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;" data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}">
+                                        {{users_data['stanowisko']}} ...
+                                    </a>
+                                </div>
+                                <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 80px;">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{user_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(196, 196, 196) !important;"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- collapse start -->
+                        <div class="jasne rogi collapse formatyj-maly-wiersz" id="collapse_id_{{user_id}}">
+                            <div class="tylko-klej">
+                                <div class="colapse-column-usual"  style="max-width: 220px;">
+                                    <div style="text-align: right;">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_0_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_0_{{user_id}}" style="color: rgb(202, 236, 253) !important;">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <img class="avatar" src="{{users_data['avatar']}}" alt=""/>
+                                    </div>
+                                    <!-- collapse wewnętrzny -->
+                                    <div class="collapse" style="max-width: 400px;" id="collapse_id_0_{{user_id}}">
+                                        <div class="tylko-klej">
+                                            <div>
+                                                <form method="POST" id="avatarUser_{{user_id}}" action="{{ url_for('update_avatar') }}" enctype="multipart/form-data">
+                                                    <div>
+                                                        <h7>Podmień avatar</h7>
+                                                    </div>
+                                                    <div class="formatuj formatuj-maly-font">
+                                                        <div style="margin-bottom: 10px;">
+                                                            Wybierz plik: 
+                                                        </div>
+                                                        <input type="hidden" value="{{user_id}}_users" name="user_id" />
+                                                        <input type="file" class="form-control" style="max-height: 30px; font-size: 12px;" id="upload_{{user_id}}" name="avatarFileByUser_{{user_id}}" />
+                                                    </div>
+                                                    <div class="tylko-klej">
+                                                        <div class="formatuj formatuj-left" style="margin-bottom: 10px;">
+                                                            <button 
+                                                                    type="button" 
+                                                                    class="btn btn-outline-secondary btn-sm" 
+                                                                    style="max-height: 30px; font-size: 12px;" 
+                                                                    onclick="justSubmitOneElementForm('upload_', '{{user_id}}', 'avatarUser_')">
+                                                                Zmień Avatar
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="colapse-column-expand formatuj-left">
+                                    <!-- informacje o Użytkowniku -->
+                                    <div class="user-data">
+                                        <div class="tylko-klej">
+                                            <div class="formatuj-bottom ">
+                                                <h5 class="fw-bold">Informacje o użytkowniku</h5>
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Email:
+                                            </div>
+                                            <div class="profil-content-email">
+                                                {{users_data['email']}}
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Telefon:
+                                            </div>
+                                            <div class="profil-content">
+                                                {{users_data['phone']}}
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Facebook:
+                                            </div>
+                                            <div class="profil-content">
+                                                {{users_data['facebook'][:15]}} ...
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Linedin:
+                                            </div>
+                                            <div class="profil-content">
+                                                {{users_data['linkedin'][:15]}} ...
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Instagram:
+                                            </div>
+                                            <div class="profil-content">
+                                                {{users_data['instagram'][:15]}} ...
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Twitter:
+                                            </div>
+                                            <div class="profil-content">
+                                                {{users_data['twiter'][:15]}} ...
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Imię i Nazwisko:
+                                            </div>
+                                            <div class="profil-content">
+                                                {{users_data['name']}}
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Login:
+                                            </div>
+                                            <div class="profil-content">
+                                                {{users_data['username']}}
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Stanowisko:
+                                            </div>
+                                            <div class="profil-content">
+                                                {{users_data['stanowisko']}}
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                Opis:
+                                            </div>
+                                            <div class="profil-info">
+                                                {{users_data['opis']}}
+                                            </div>
+                                        </div>
+                                        <div class="tylko-klej">
+                                            <div class="profil-desc">
+                                                ACTIONS:
+                                            </div>
+                                            <div class="profil-content">
+                                                <a data-bs-toggle="collapse" href="#collapse_id_3_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_3_{{user_id}}"><i class="bi bi-pencil-square" style="color: rgb(25, 101, 22) !important;"></i></a>
+                                                <a data-bs-toggle="collapse" href="#collapse_id_1_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_1_{{user_id}}"><i class="bi bi-key-fill" style="color: rgb(179, 116, 34) !important;"></i></a>
+                                                <a data-bs-toggle="collapse" href="#collapse_id_4_{{user_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_4_{{user_id}}"><i class="bi bi-x-square-fill" style="color: rgb(219, 59, 59) !important;"></i></a>
+                                            </div>
+                                        </div>
+                                        <div id="accordion_{{user_id}}">
+                                            <!-- collapse wewnętrzny -->
+                                            <div class="collapse" style="max-width: 250px;" id="collapse_id_1_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="tylko-klej col-auto">
+                                                    <div>
+                                                        <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <div class="table-creator">
+                                                                <h7>Zmień hasło</h7>
+                                                            </div>
+                                                            <input type="hidden" name="id" value="{{user_id}}" />
+                                                            <input type="hidden" name="page" value="users" />
+                                                            <input  input type="password" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="new_Password" id="inputPassword2" placeholder="New Password" />
+                                                            <input  input type="password" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="repeat_Password" id="inputPassword3" placeholder="Repeat Password" />
+                                                            <div class="tylko-klej">
+                                                                <div style="padding-left: 8px; max-width:  80px;">
+                                                                    <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_1_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_1_{{user_id}}">Anuluj</button>
+                                                                </div>
+                                                                <div class="formatuj-left">
+                                                                    <button type="submit" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Zapisz zmiany</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- collapse wewnętrzny -->
+                                            <div class="collapse" style="max-width: 250px;" id="collapse_id_3_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="tylko-klej col-auto">
+                                                    <div>
+                                                        <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <div class="table-creator">
+                                                                <h7>Zmień dane</h7>
+                                                            </div>
+                                                            <input type="hidden" name="id" value="{{user_id}}" />
+                                                            <input type="hidden" name="page" value="users" />
+                                                            <input  type="text" value="{{users_data['name']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="name" id="name_{{user_id}}" placeholder="Imię i Nazwisko" />
+                                                            <input  type="email" value="{{users_data['email']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="email" id="email_{{user_id}}" placeholder="Adres e-mail" />
+                                                            <input  type="text" value="{{users_data['phone']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="phone" id="phone_{{user_id}}" placeholder="Telefon" />
+                                                            <input  type="text" value="{{users_data['facebook']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="facebook" id="facebook_{{user_id}}" placeholder="Facebook" />
+                                                            <input  type="text" value="{{users_data['linkedin']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="linkedin" id="linkedin_{{user_id}}" placeholder="Linkedin" />
+                                                            <input  type="text" value="{{users_data['instagram']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="instagram" id="instagram_{{user_id}}" placeholder="Instagram" />
+                                                            <input  type="text" value="{{users_data['twiter']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="twitter" id="twiter_{{user_id}}" placeholder="Twiter X" />
+                                                            <input  type="text" value="{{users_data['stanowisko']}}" class="form-control bg-dark formatuj" style="max-height: 30px; font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="role" id="role_{{user_id}}" placeholder="Stanowisko" />
+                                                            <textarea  rows="4" cols="50" class="form-control bg-dark formatuj" style="font-size: 12px; color: #9da2a8; border:#6a6a6a solid 1px;" name="desc" id="desc_{{user_id}}" placeholder="Opis">{{users_data['opis']}}</textarea>
+                                                            
+                                                            <div class="tylko-klej">
+                                                                <div style="padding-left: 8px; max-width:  80px;">
+                                                                    <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_3_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_3_{{user_id}}">Anuluj</button>
+                                                                </div>
+                                                                <div class="formatuj-left">
+                                                                    <button type="submit" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Zapisz zmiany</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- collapse wewnętrzny -->
+                                            <div class="collapse" style="max-width: 250px;" id="collapse_id_4_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="tylko-klej col-auto">
+                                                    <div class="alert alert-danger  rogi" role="alert">
+                                                        <div class="table-creator formatuj-maly-font">
+                                                            <h5>Potwierdź usunięcie konta</h5>
+                                                            <p>
+                                                                Po wykonaniu tej operacji, użytkownik zostanie trwale usunięty z systemu. 
+                                                                Nie będzie możliwe cofnięcie tej operacji. 
+                                                                Czy na pewno chcesz kontynuować?
+                                                            </p>
+                                                        </div>
+                                                        <div class="tylko-klej">
+                                                            <div style="padding-left: 8px; max-width: 80px;">
+                                                                <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_4_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_4_{{user_id}}">Anuluj</button>
+                                                            </div>
+                                                            <div class="formatuj-left">
+                                                                <form action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
+                                                                    <input type="hidden" name="UserId" id="UserId_{{user_id}}" value="{{user_id}}"/>
+                                                                    <input type="hidden" name="UserName" id="UserName_{{user_id}}" value="{{users_data['username']}}"/>
+                                                                    <button type="submit" class="btn btn-danger btn-sm rogi" style="max-height: 30px; font-size: 12px;" onclick>Usuń konto</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="colapse-column-usual formatuj-left">
+                                    <div class="klej">
+                                        <div class="formatuj-bottom ">
+                                            <h5 class="fw-bold">Uprawnienia</h5>
+                                        </div>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['users'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}" disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}" checked disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['users'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}_0">Zarządzanie Użytkownikami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}_1" checked/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}_1">Zarządzanie Użytkownikami</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['brands'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_2_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_2_{{user_id}}">Zarządzanie Brendami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_2_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_2_{{user_id}}">Zarządzanie Brendami</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['brands'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_2_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_2_{{user_id}}_0">Zarządzanie Brendami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_2_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_2_{{user_id}}_1">Zarządzanie Brendami</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                        
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['blog'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_3_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_3_{{user_id}}">Zarządzanie Blogiem</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_3_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_3_{{user_id}}">Zarządzanie Blogiem</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['blog'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_3_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_3_{{user_id}}_0">Zarządzanie Blogiem</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_3_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_3_{{user_id}}_1">Zarządzanie Blogiem</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['subscribers'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}">Zarządzanie Subskrybentami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}">Zarządzanie Subskrybentami</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['subscribers'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}_0">Zarządzanie Subskrybentami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}_1">Zarządzanie Subskrybentami</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['commnets'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}">Zarządzanie Komentarzami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}">Zarządzanie Komentarzami</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['commnets'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}_0">Zarządzanie Komentarzami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}_1">Zarządzanie Komentarzami</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['team'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_6_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_6_{{user_id}}">Zarządzanie Personelem</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_6_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_6_{{user_id}}">Zarządzanie Personelem</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['team'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_6_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_6_{{user_id}}_0">Zarządzanie Personelem</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_6_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_6_{{user_id}}_1">Zarządzanie Personelem</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['newsletter'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_8_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_8_{{user_id}}">Zarządzanie Newsletterem</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_8_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_8_{{user_id}}">Zarządzanie Newsletterem</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['newsletter'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_8_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_8_{{user_id}}_0">Zarządzanie Newsletterem</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_8_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_8_{{user_id}}_1">Zarządzanie Newsletterem</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['team'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_7_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_7_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['team'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_7_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_7_{{user_id}}_0">Zarządzanie Uprawnieniami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_7_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_7_{{user_id}}_1">Zarządzanie Uprawnieniami</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <!-- kolejne uprawnienia estate id 16-->
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['estate'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_16_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_16_{{user_id}}">Zarządzanie Ogłoszeniami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_16_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_16_{{user_id}}">Zarządzanie Ogłoszeniami</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['estate'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_16_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_16_{{user_id}}_0">Zarządzanie Ogłoszeniami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_16_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_16_{{user_id}}_1">Zarządzanie Ogłoszeniami</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <!-- kolejne uprawnienia career id 17-->
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['career'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_17_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_17_{{user_id}}">Zarządzanie Karierą</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_17_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_17_{{user_id}}">Zarządzanie Karierą</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['career'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_17_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_17_{{user_id}}_0">Zarządzanie Karierą</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_17_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_17_{{user_id}}_1">Zarządzanie Karierą</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <!-- kolejne uprawnienia fbhidden id 18-->
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['fbhidden'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_18_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_18_{{user_id}}">Zarządzanie Anonimowymi Kampaniami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_18_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_18_{{user_id}}">Zarządzanie Anonimowymi Kampaniami</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['fbhidden'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_18_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_18_{{user_id}}_0">Zarządzanie Anonimowymi Kampaniami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_18_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_18_{{user_id}}_1">Zarządzanie Anonimowymi Kampaniami</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['permissions'] == 0 %}
+                                                {% if users_data['uprawnienia']['settings'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_9_{{user_id}}" disabled/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_9_{{user_id}}">Zarządzanie Ustawieniami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_9_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_9_{{user_id}}">Zarządzanie Ustawieniami</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['uprawnienia']['settings'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_9_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_9_{{user_id}}_0">Zarządzanie Ustawieniami</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_9_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_9_{{user_id}}_1">Zarządzanie Ustawieniami</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="colapse-column-usual-mini" style="color:#46ff56;" id="permissions_change_info_{{user_id}}"></div>
+                                </div>
+                                <div class="colapse-column-usual formatuj-left">
+                                    <div class="klej">
+                                        <div class="formatuj-bottom ">
+                                            <h5 class="fw-bold">DMD</h5>
+                                        </div>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['brands'] == 0 %}
+                                                {% if users_data['brands']['domy'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_10_{{user_id}}" disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_10_{{user_id}}">Domy</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_10_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_10_{{user_id}}">Domy</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['brands']['domy'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_10_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_10_{{user_id}}_0">Domy</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_10_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_10_{{user_id}}_1">Domy</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['brands'] == 0 %}
+                                                {% if users_data['brands']['budownictwo'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_11_{{user_id}}" disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_11_{{user_id}}">Budownictwo</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_11_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_11_{{user_id}}">Budownictwo</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['brands']['budownictwo'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_11_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_11_{{user_id}}_0">Budownictwo</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_11_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_11_{{user_id}}_1">Budownictwo</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['brands'] == 0 %}
+                                                {% if users_data['brands']['elitehome'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_12_{{user_id}}" disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_12_{{user_id}}">EliteHome</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_12_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_12_{{user_id}}">EliteHome</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['brands']['elitehome'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_12_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_12_{{user_id}}_0">EliteHome</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_12_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_12_{{user_id}}_1">EliteHome</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['brands'] == 0 %}
+                                                {% if users_data['brands']['inwestycje'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_13_{{user_id}}" disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_13_{{user_id}}">Inwestycje</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_13_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_13_{{user_id}}">Inwestycje</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['brands']['inwestycje'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_13_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_13_{{user_id}}_0">Inwestycje</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_13_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_13_{{user_id}}_1">Inwestycje</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['brands'] == 0 %}
+                                                {% if users_data['brands']['instalacje'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_14_{{user_id}}" disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_14_{{user_id}}">Instalacje</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_14_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_14_{{user_id}}">Instalacje</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['brands']['instalacje'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_14_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_14_{{user_id}}_0">Instalacje</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_14_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_14_{{user_id}}_1">Instalacje</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <form action="">
+                                            {% if userperm['brands'] == 0 %}
+                                                {% if users_data['brands']['development'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_15_{{user_id}}" disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_15_{{user_id}}">Development</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_15_{{user_id}}" checked disabled />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_15_{{user_id}}">Development</label>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if users_data['brands']['inwestycje'] == 0 %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_15_{{user_id}}_0" />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_15_{{user_id}}_0">Development</label>
+                                                {% else %}
+                                                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_15_{{user_id}}_1" checked />
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault_15_{{user_id}}_1">Development</label>
+                                                {% endif %}
+                                            {% endif %}
+                                        </form>
+                                    </div>
+                                    {% if users_data['status'] == '0' %}
+                                            <!-- <div class="formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Wyślij e-mail aktywacyjny ponownie</button>
+                                            </div> -->
+                                            <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" name="id" value="{{user_id}}" />
+                                                <input type="hidden" name="status" value="active" />
+                                                <div class="formatuj-padding">
+                                                    <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
+                                                </div>
+                                            </form>
+                                    {% endif %}
+                                    {% if users_data['status'] == '1' %}
+                                        <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                            <input type="hidden" name="id" value="{{user_id}}" />
+                                            <input type="hidden" name="status" value="deactive" />
+                                            <div class="formatuj-padding">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj Konto</button>
+                                            </div>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- collapse end -->
+                    {% endfor %}
+                        <!-- Paginacja -->
+                        <span class="formatuj-maly-logout">{{ pagination.info }}</span>
+                        <div class="pagination formatuj-margin-top">
+                            <nav aria-label="Page navigation example">                            
+                                <ul class="pagination justify-content-center dark-mode">
+                                    <li class="page-item">{{ pagination.prev }}</li>
+                                    <li class="page-item">{{ pagination.links }}</li>
+                                    <li class="page-item">{{ pagination.next }}</li>
+                                </ul>
+                            </nav>
+                        </div>
+{% endblock %}
+{% block footer %}
+ To jest stopka panelu administracyjnego. All right reserved &copy; 2024 by DMD Panel Administratora.<br/>
+{% endblock %}
+{% block bottom_script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.custom-checkbox').forEach(item => {
+            item.addEventListener('change', function(e) {
+                const perm_id = this.id.split('_')[1];
+                const user_id = this.id.split('_')[2];
+                const permissionType = this.id.split('_')[3]; // Dodano zmienną dla typu uprawnienia
+                
+                const permission = this.checked;
+
+                fetch('/update-permission', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        perm_id: perm_id,
+                        user_id: user_id, 
+                        permissionType: permissionType, 
+                        permission: permission })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+
+                    // Zaktualizuj interfejs użytkownika
+                    const permissionsChangeInfo = document.getElementById(`permissions_change_info_${data.user_id}`);
+                    if (permissionsChangeInfo) {
+                        permissionsChangeInfo.innerHTML = data.message;
+
+                        // Ukryj komunikat po 5 sekundach
+                        setTimeout(function() {
+                            permissionsChangeInfo.innerHTML = '';
+                        }, 5000);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    // Obsłuż błąd, na przykład, wyświetl komunikat dla użytkownika
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}
+
