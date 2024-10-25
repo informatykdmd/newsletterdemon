@@ -3,22 +3,82 @@
 {% block title %}DMD Panel Administratora - Zarządzanie Ogłoszeniami{% endblock %}
 
 {% block addButton %}
-<!-- dropdown -->
-<div class="dropdown">
-    <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-        Oferta Sprzedaży
-    </button>
-    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-        <li><a class="dropdown-item" href="/estate-ads-rent">Oferta Najmu</a></li>
-        <li><a class="estate_button dropdown-item active" href="/estate-ads-sell">Oferta Sprzedaży</a></li>
-        <li><a class="dropdown-item" href="/estate-ads-special">Oferta Specjalna</a></li>
-    </ul>
-</div>
-<!-- dropdown END -->
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" 
+            style="max-height: 29px; font-size: 12px; font-weight: 100;"
+            aria-expanded="false">
+            <i class="bi bi-cart-check" style="color: #7eb5cc;"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="dropdown-item" href="/estate-ads-rent" style="max-height: 29px; font-size: 12px; font-weight: 100;">Oferta Najmu</a></li>
+            <li><a class="estate_button dropdown-item active" href="/estate-ads-sell" style="max-height: 29px; font-size: 12px; font-weight: 100;">Oferta Sprzedaży</a></li>
+            <li><a class="dropdown-item" href="/estate-ads-special" style="max-height: 29px; font-size: 12px; font-weight: 100;">Oferta Specjalna</a></li>
+        </ul>
+    </div>
+    <!-- dropdown END -->
 
     <li style="margin-left: 15px;">
-        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(14, 144, 14) !important;"></i></a>
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 12pt; color: #0e900e !important;"></i>
+        </a>
     </li>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" 
+            style="max-height: 40px; font-size: 15px; font-weight: 100;"
+            aria-expanded="false">
+            Oferta Sprzedaży
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="dropdown-item" href="/estate-ads-rent" style="max-height: 40px; font-size: 15px; font-weight: 100;">Oferta Najmu</a></li>
+            <li><a class="estate_button dropdown-item active" href="/estate-ads-sell" style="max-height: 40px; font-size: 15px; font-weight: 100;">Oferta Sprzedaży</a></li>
+            <li><a class="dropdown-item" href="/estate-ads-special" style="max-height: 40px; font-size: 15px; font-weight: 100;">Oferta Specjalna</a></li>
+        </ul>
+    </div>
+    <!-- dropdown END -->
+
+    <li style="margin-left: 15px;">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 15pt; color: #0e900e !important;"></i>
+        </a>
+    </li>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" 
+            style="max-height: 45px; font-size: 20px; font-weight: 100;"
+            aria-expanded="false">
+            Oferta Sprzedaży
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="dropdown-item" href="/estate-ads-rent" style="max-height: 45px; font-size: 20px; font-weight: 100;">Oferta Najmu</a></li>
+            <li><a class="estate_button dropdown-item active" href="/estate-ads-sell" style="max-height: 45px; font-size: 20px; font-weight: 100;">Oferta Sprzedaży</a></li>
+            <li><a class="dropdown-item" href="/estate-ads-special" style="max-height: 45px; font-size: 20px; font-weight: 100;">Oferta Specjalna</a></li>
+        </ul>
+    </div>
+    <!-- dropdown END -->
+
+    <li style="margin-left: 15px;">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 20pt; color: #0e900e !important;"></i>
+        </a>
+    </li>
+</div>
+
 {% endblock %}
 {% block navbarTitle %}
 <!-- d-block d-sm-none tylko na średnim sm+ -->
