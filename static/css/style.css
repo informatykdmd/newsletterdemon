@@ -184,11 +184,16 @@ body {
     justify-content: center;
 }
 .team-drops-in {
-    display: flex; 
+    /* display: flex; 
     width: 100% !important; 
     min-width: 300px !important; 
-    min-height: 120px !important;
+    min-height: 120px !important; */
+    display: flex;
+    flex-wrap: wrap; /* Pozwala na zawijanie do następnej linii */
+    gap: 10px; /* Opcjonalnie: odstęp między elementami */
+    justify-content: flex-start; /* Wyrównanie elementów do lewej */
 }
+
 
 .avatar {
     max-height: 150px;
@@ -644,6 +649,7 @@ color:#969696;
       height: 100px;
   }
 }
+
 
 .ramka_tekstu {
     background-color: black;
