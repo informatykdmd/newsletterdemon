@@ -184,10 +184,9 @@ body {
     justify-content: center;
 }
 .team-drops-in {
-    /* display: flex; 
     width: 100% !important; 
     min-width: 300px !important; 
-    min-height: 120px !important; */
+    min-height: 120px !important;
     display: flex;
     flex-wrap: wrap; /* Pozwala na zawijanie do następnej linii */
     gap: 10px; /* Opcjonalnie: odstęp między elementami */
