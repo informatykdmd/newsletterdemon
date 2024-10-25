@@ -72,7 +72,11 @@
 <div class="d-block d-sm-none mt-2">
     <!-- dropdown -->
     <div class="dropdown">
-        <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            type="button" id="dropdownMenuButton2" 
+            style="max-height: 29px; font-size: 12px; font-weight: 100;"
+            data-bs-toggle="dropdown" aria-expanded="false">
             {% if user_brands['inwestycje'] == 0 %}
                 {% if user_brands['domy'] == 1 %}
                     <script>window.location.href = "/team-domy";</script>
@@ -96,7 +100,7 @@
                     {% endif %}
                 {% endif %}
             {% else %}
-                <span style="max-height: 29px; font-size: 12px; font-weight: 100;">Inwestycje</span>
+                Inwestycje
             {% endif %}
         </button>
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
@@ -208,7 +212,12 @@
 <div class="d-none d-lg-block mt-2">
     <!-- dropdown -->
     <div class="dropdown">
-        <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            type="button" id="dropdownMenuButton2" 
+            data-bs-toggle="dropdown" 
+            style="max-height: 45px; font-size: 20px; font-weight: 100;"
+            aria-expanded="false">
             {% if user_brands['inwestycje'] == 0 %}
                 {% if user_brands['domy'] == 1 %}
                     <script>window.location.href = "/team-domy";</script>
@@ -232,7 +241,7 @@
                     {% endif %}
                 {% endif %}
             {% else %}
-                <span style="max-height: 45px; font-size: 20px; font-weight: 100;">Inwestycje</span>
+                Inwestycje
             {% endif %}
         </button>
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
