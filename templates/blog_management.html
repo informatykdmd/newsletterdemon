@@ -447,7 +447,7 @@
                         <div class="sub-panel rogi podswietlaj collapse formatyj-maly-wiersz formatuj-padding-lg" id="collapse_id_{{post_id}}">
                             {% for comment in post_data['comments'].values() %}
                             <div class="row">
-                                <div class="col-xl-8 col-lg-9 col-sm-11 formatuj-maly-font formatuj-max-height">
+                                <div class="col-xl-8 col-lg-10 col-sm-11 formatuj-maly-font formatuj-max-height">
                                     {{comment['message']}}
                                 </div>
                                 <div class="d-none d-lg-block formatuj-maly-font formatuj-max-height" style="max-width: 100px;">
@@ -459,7 +459,7 @@
                                 <div class="d-none d-xl-block formatuj-maly-font formatuj-max-height" style="max-width: 150px;">
                                     {{comment['data-time']}}
                                 </div>
-                                <div class="col-xl-4 col-md-3 col-sm-1 d-flex justify-content-end" style="max-width: 50px;">
+                                <div class="col-xl-1 col-md-1 col-sm-1 d-flex justify-content-end" style="max-width: 50px;">
                                     <form method="POST" id="removeComment_{{post_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
                                         <input type="hidden" name="page" id="CommName_{{post_id}}" value="blog"/>
                                         <input type="hidden" name="comment_id" id="CommName_{{post_id}}" value="{{comment['id']}}"/>
