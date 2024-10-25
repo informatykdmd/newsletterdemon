@@ -144,7 +144,11 @@
 <div class="d-none d-sm-block d-lg-none mt-2">
     <!-- dropdown -->
     <div class="dropdown">
-        <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+        <button 
+        class="nav-link dropdown-toggle link-light dark-mode" 
+        type="button" id="dropdownMenuButton2" 
+        style="max-height: 40px; font-size: 15px; font-weight: 100;"
+        data-bs-toggle="dropdown" aria-expanded="false">
             {% if user_brands['inwestycje'] == 0 %}
                 {% if user_brands['domy'] == 1 %}
                     <script>window.location.href = "/team-domy";</script>
@@ -168,7 +172,7 @@
                     {% endif %}
                 {% endif %}
             {% else %}
-                <span style="max-height: 40px; font-size: 15px; font-weight: 100;">Inwestycje</span>
+                Inwestycje
             {% endif %}
         </button>
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
