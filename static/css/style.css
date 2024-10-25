@@ -307,12 +307,14 @@ body {
 
   .formatuj-inputs {
     max-height: 30px; 
-    width: fit-content;
+    width: 100%;
     font-size: 12px;
     background-color: #1e2124;
     color: #9da2a8; 
     border: #393939 solid 1px;
     border-radius: 5px;
+    margin-left: 20px;
+    margin-right: 35px;
     transition: background-color 0.3s;  /* Dodane przejście animacji dla płynnego efektu */
     }
     .formatuj-inputs-setting,
