@@ -446,7 +446,7 @@
                         {% if userperm['commnets'] == 1 and post_data['comments']|length > 0 %}
                         <div class="sub-panel rogi collapse" id="collapse_id_{{post_id}}">
                             {% for comment in post_data['comments'].values() %}
-                            <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi">
+                            <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin">
                                 <div class="row" style="width: 100%;">
                                     <div class="col-xl-7 col-lg-7 col-sm-8 formatuj-maly-font">
                                         {{comment['message']}}
