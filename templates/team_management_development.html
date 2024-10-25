@@ -68,59 +68,223 @@
 {% block title %}DMD Panel Administratora - Zarządzanie Kadrą{% endblock %}
 
 {% block addButton %}
-<!-- dropdown -->
-<div class="dropdown">
-    <button class="nav-link dropdown-toggle link-light dark-mode" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-        {% if user_brands['development'] == 0 %}
-            {% if user_brands['domy'] == 1 %}
-                <script>window.location.href = "/team-domy";</script>
-            {% else %}
-                {% if user_brands['budownictwo'] == 1 %}
-                    <script>window.location.href = "/team-budownictwo";</script>
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            type="button" id="dropdownMenuButton2" 
+            style="max-height: 29px; font-size: 12px; font-weight: 100;"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {% if user_brands['inwestycje'] == 0 %}
+                {% if user_brands['domy'] == 1 %}
+                    <script>window.location.href = "/team-domy";</script>
                 {% else %}
-                    {% if user_brands['instalacje'] == 1 %}
-                        <script>window.location.href = "/team-instalacje";</script>
+                    {% if user_brands['budownictwo'] == 1 %}
+                        <script>window.location.href = "/team-budownictwo";</script>
                     {% else %}
-                        {% if user_brands['elitehome'] == 1 %}
-                            <script>window.location.href = "/team-elitehome";</script>
+                        {% if user_brands['development'] == 1 %}
+                            <script>window.location.href = "/team-development";</script>
                         {% else %}
-                            {% if user_brands['inwestycje'] == 1 %}
-                                <script>window.location.href = "/team-inwestycje";</script>
+                            {% if user_brands['elitehome'] == 1 %}
+                                <script>window.location.href = "/team-elitehome";</script>
                             {% else %}
-                                <script>window.location.href = "/home";</script>
+                                {% if user_brands['instalacje'] == 1 %}
+                                    <script>window.location.href = "/team-instalacje";</script>
+                                {% else %}
+                                    <script>window.location.href = "/home";</script>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endif %}
+            {% else %}
+                <i class="bi bi-buildings" style="color: #64a4c7;"></i>
             {% endif %}
-        {% else %}
-            Development
-        {% endif %}
-    </button>
-    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-        {% if user_brands['domy'] == 1 %}
-            <li><a class="dropdown-item" href="/team-domy">Domy</a></li>
-        {% endif%}
-        {% if user_brands['budownictwo'] == 1 %}
-            <li><a class="dropdown-item" href="/team-budownictwo">Budownictwo</a></li>
-        {% endif%}
-        {% if user_brands['elitehome'] == 1 %}
-            <li><a class="dropdown-item" href="/team-elitehome">EliteHome</a></li>
-        {% endif%}
-        {% if user_brands['instalacje'] == 1 %}
-            <li><a class="dropdown-item" href="/team-instalacje">Instalacje</a></li>
-        {% endif%}
-        {% if user_brands['development'] == 1 %}
-            <li><a class="team_button_development dropdown-item active" href="/team-development">Development</a></li>
-        {% endif%}
-        {% if user_brands['inwestycje'] == 1 %}
-            <li><a class="dropdown-item" href="/team-inwestycje">Inwestycje</a></li>
-        {% endif%}
-
-
-    </ul>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            {% if user_brands['domy'] == 1 %}
+                <li><a class="dropdown-item" href="/team-domy" style="max-height: 29px; font-size: 12px; font-weight: 100;">Domy</a></li>
+            {% endif%}
+            {% if user_brands['budownictwo'] == 1 %}
+                <li><a class="dropdown-item" href="/team-budownictwo" style="max-height: 29px; font-size: 12px; font-weight: 100;">Budownictwo</a></li>
+            {% endif%}
+            {% if user_brands['elitehome'] == 1 %}
+                <li><a class="dropdown-item" href="/team-elitehome" style="max-height: 29px; font-size: 12px; font-weight: 100;">EliteHome</a></li>
+            {% endif%}
+            {% if user_brands['instalacje'] == 1 %}
+                <li><a class="dropdown-item" href="/team-instalacje" style="max-height: 29px; font-size: 12px; font-weight: 100;">Instalacje</a></li>
+            {% endif%}
+            {% if user_brands['development'] == 1 %}
+                <li>
+                    <a 
+                        class="team_button_development dropdown-item active" 
+                        style="max-height: 29px; font-size: 12px; font-weight: 100;"
+                        href="/team-development">
+                        Development
+                    </a>
+                </li>
+            {% endif%}
+            {% if user_brands['inwestycje'] == 1 %}
+                <li>
+                    <a 
+                        class="dropdown-item" 
+                        style="max-height: 29px; font-size: 12px; font-weight: 100;"
+                        href="/team-inwestycje">
+                        Inwestycje
+                    </a>
+                </li>
+            {% endif%}
+        </ul>
+    </div>
+    <!-- dropdown END -->
 </div>
-<!-- dropdown END -->
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button 
+        class="nav-link dropdown-toggle link-light dark-mode" 
+        type="button" id="dropdownMenuButton2" 
+        style="max-height: 40px; font-size: 15px; font-weight: 100;"
+        data-bs-toggle="dropdown" aria-expanded="false">
+            {% if user_brands['inwestycje'] == 0 %}
+                {% if user_brands['domy'] == 1 %}
+                    <script>window.location.href = "/team-domy";</script>
+                {% else %}
+                    {% if user_brands['budownictwo'] == 1 %}
+                        <script>window.location.href = "/team-budownictwo";</script>
+                    {% else %}
+                        {% if user_brands['development'] == 1 %}
+                            <script>window.location.href = "/team-development";</script>
+                        {% else %}
+                            {% if user_brands['elitehome'] == 1 %}
+                                <script>window.location.href = "/team-elitehome";</script>
+                            {% else %}
+                                {% if user_brands['instalacje'] == 1 %}
+                                    <script>window.location.href = "/team-instalacje";</script>
+                                {% else %}
+                                    <script>window.location.href = "/home";</script>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                Development
+            {% endif %}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            {% if user_brands['domy'] == 1 %}
+                <li><a class="dropdown-item" href="/team-domy" style="max-height: 40px; font-size: 15px; font-weight: 100;">Domy</a></li>
+            {% endif%}
+            {% if user_brands['budownictwo'] == 1 %}
+                <li><a class="dropdown-item" href="/team-budownictwo" style="max-height: 40px; font-size: 15px; font-weight: 100;">Budownictwo</a></li>
+            {% endif%}
+            {% if user_brands['elitehome'] == 1 %}
+                <li><a class="dropdown-item" href="/team-elitehome" style="max-height: 40px; font-size: 15px; font-weight: 100;">EliteHome</a></li>
+            {% endif%}
+            {% if user_brands['instalacje'] == 1 %}
+                <li><a class="dropdown-item" href="/team-instalacje" style="max-height: 40px; font-size: 15px; font-weight: 100;">Instalacje</a></li>
+            {% endif%}
+            {% if user_brands['development'] == 1 %}
+                <li>
+                    <a 
+                        class="team_button_development dropdown-item active" 
+                        style="max-height: 40px; font-size: 15px; font-weight: 100;"
+                        href="/team-development">
+                        Development
+                    </a>
+                </li>
+            {% endif%}
+            {% if user_brands['inwestycje'] == 1 %}
+                <li>
+                    <a 
+                        class="dropdown-item" 
+                        style="max-height: 40px; font-size: 15px; font-weight: 100;"
+                        href="/team-inwestycje">
+                        Inwestycje
+                    </a>
+                </li>
+            {% endif%}
+        </ul>
+    </div>
+    <!-- dropdown END -->
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            type="button" id="dropdownMenuButton2" 
+            data-bs-toggle="dropdown" 
+            style="max-height: 45px; font-size: 20px; font-weight: 100;"
+            aria-expanded="false">
+            {% if user_brands['inwestycje'] == 0 %}
+                {% if user_brands['domy'] == 1 %}
+                    <script>window.location.href = "/team-domy";</script>
+                {% else %}
+                    {% if user_brands['budownictwo'] == 1 %}
+                        <script>window.location.href = "/team-budownictwo";</script>
+                    {% else %}
+                        {% if user_brands['development'] == 1 %}
+                            <script>window.location.href = "/team-development";</script>
+                        {% else %}
+                            {% if user_brands['elitehome'] == 1 %}
+                                <script>window.location.href = "/team-elitehome";</script>
+                            {% else %}
+                                {% if user_brands['instalacje'] == 1 %}
+                                    <script>window.location.href = "/team-instalacje";</script>
+                                {% else %}
+                                    <script>window.location.href = "/home";</script>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                Development
+            {% endif %}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            {% if user_brands['domy'] == 1 %}
+                <li><a class="dropdown-item" href="/team-domy" style="max-height: 45px; font-size: 20px; font-weight: 100;">Domy</a></li>
+            {% endif%}
+            {% if user_brands['budownictwo'] == 1 %}
+                <li><a class="dropdown-item" href="/team-budownictwo" style="max-height: 45px; font-size: 20px; font-weight: 100;">Budownictwo</a></li>
+            {% endif%}
+            {% if user_brands['elitehome'] == 1 %}
+                <li><a class="dropdown-item" href="/team-elitehome" style="max-height: 45px; font-size: 20px; font-weight: 100;">EliteHome</a></li>
+            {% endif%}
+            {% if user_brands['instalacje'] == 1 %}
+                <li><a class="dropdown-item" href="/team-instalacje" style="max-height: 45px; font-size: 20px; font-weight: 100;">Instalacje</a></li>
+            {% endif%}
+            {% if user_brands['development'] == 1 %}
+                <li>
+                    <a 
+                        class="team_button_development dropdown-item active" 
+                        style="max-height: 45px; font-size: 20px; font-weight: 100;"
+                        href="/team-development">
+                        Development
+                    </a>
+                </li>
+            {% endif%}
+            {% if user_brands['inwestycje'] == 1 %}
+                <li>
+                    <a 
+                        class="dropdown-item" 
+                        style="max-height: 45px; font-size: 20px; font-weight: 100;"
+                        href="/team-inwestycje">
+                        Inwestycje
+                    </a>
+                </li>
+            {% endif%}
+        </ul>
+    </div>
+    <!-- dropdown END -->
+</div>
 {% endblock %}
 {% block navbarTitle %}
 <!-- d-block d-sm-none tylko na średnim sm+ -->
