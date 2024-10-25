@@ -123,7 +123,63 @@
 </div>
 <!-- dropdown END -->
 {% endblock %}
-{% block navbarTitle %}<a class="nav-link active dark-mode " aria-current="page" href="#">Zarządzanie Kadrą</a>{% endblock %}
+{% block navbarTitle %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 2px !important; padding-right: 10px; max-height: 22px;"/>
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            style="max-height: 29px; font-size: 12px; font-weight: 100;"
+            aria-current="page" 
+            href="#">
+            Zarządzanie Kadrą
+        </a>
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_lg" aria-controls="offcanvasTop_lg">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 5px !important; padding-right: 10px; max-height: 35px;"
+                />
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 40px; font-size: 15px; font-weight: 100;"
+            href="#">
+            Zarządzanie Kadrą
+        </a>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_xl" aria-controls="offcanvasTop_xl">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 10px !important; padding-right: 10px; max-height: 40px;"/>
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 45px; font-size: 20px; font-weight: 100;"
+            href="#">
+            Zarządzanie Kadrą
+        </a>
+    </div>
+</div>
+{% endblock %}
 
 {% block tableHeader %}{% endblock %}
 {% block tableContent%}
