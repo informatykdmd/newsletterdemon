@@ -16,9 +16,30 @@
 </script>
 {% endblock %}
 {% block addButton %}
-    <li style="margin-left: 15px;">
-        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="bi bi-plus-square-fill" style="font-size: 18pt; color: rgb(14, 144, 14) !important;"></i></a>
-    </li>
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div class="add-button-green ps-3">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 15pt; color: #0e900e !important;"></i>
+        </a>
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div class="add-button-green ps-3">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 15pt; color: #0e900e !important;"></i>
+        </a>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div class="add-button-green ps-3">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 20pt; color: #0e900e !important;"></i>
+        </a>
+    </div>
+</div>
 {% endblock %}
 {% block navbarTitle %}
 <!-- d-block d-sm-none tylko na średnim sm+ -->
@@ -47,7 +68,7 @@
             aria-current="page" 
             style="max-height: 40px; font-size: 15px; font-weight: 100;"
             href="#">
-            Zarządzanie Użytkownikami
+            Użytkownicy
         </a>
     </div>
 </div>

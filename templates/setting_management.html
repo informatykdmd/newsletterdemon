@@ -91,7 +91,7 @@
             aria-current="page" 
             style="max-height: 40px; font-size: 15px; font-weight: 100;"
             href="#">
-            Zarządzanie Aplikacją
+            Aplikacja
         </a>
     </div>
 </div>
@@ -120,9 +120,9 @@
 {% block tableContent%}
 <div class="jasne rogi formatyj-maly-wiersz">
     <form action="{{ url_for('set_settings') }}" id="Plan_data" method="POST" enctype="multipart/form-data">
-        <div class="tylko-klej">
+        <div class="row">
             <!-- calość formularza -->
-            <div class="rogi colapse-column-usual formatuj-left">
+            <div class="col-sm-12  col-md-6 col-lg-3 p-2 formatuj-left">
                 <div class="formatuj-left">
                     <h5>Ustawienia Domeny Obrazów:</h5>
                 </div>
@@ -148,7 +148,7 @@
                 </div>
                 
             </div>
-            <div class="colapse-column-usual formatuj-left">
+            <div class="col-sm-12 col-md-6 col-lg-3 p-2 formatuj-left">
                 <div class="formatuj-left">
                     <h5>Ustawienia Stronicowania:</h5>
                 </div>
@@ -182,7 +182,7 @@
 
                 </div>
             </div>
-            <div class="colapse-column-usual formatuj-left">
+            <div class="col-sm-12  col-md-6 col-lg-3 p-2 formatuj-left">
                 <div class="formatuj-left">
                     <h5>Ustawienia Adresu Admina:</h5>
                 </div>
@@ -214,7 +214,7 @@
                 
                 
             </div>
-            <div class="colapse-column-usual formatuj-left">
+            <div class="col-sm-12 col-md-6 col-lg-3 p-2 formatuj-left">
                 <div class="formatuj-left">
                     <h5>Ustawienia witryn:</h5>
                     <div class="form-floating mb-3">
