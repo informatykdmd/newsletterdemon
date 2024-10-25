@@ -131,7 +131,7 @@ body {
       color: #2c2f33;
   }
 
-  .podswietlaj-plus-rogi :hover {
+  .podswietlaj-plus-rogi:hover {
     background-color: #d2d2d2;
     color: #2c2f33;
     border-radius: 10px;
@@ -274,6 +274,10 @@ body {
   }
   .formatuj-margin-top {
     margin-top: 10px;
+}
+
+.formatuj-margin-left {
+  margin-left: 10px;
 }
   .formatuj-left {
       text-align: left;
