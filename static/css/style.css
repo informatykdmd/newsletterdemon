@@ -130,9 +130,16 @@ body {
       background-color: #d2d2d2;
       color: #2c2f33;
   }
+
+  .podswietlaj-plus-rogi :hover {
+    background-color: #d2d2d2;
+    color: #2c2f33;
+    border-radius: 10px;
+}
   .rogi > div{
       border-radius: 10px;
   }
+
   .sub-panel {
       background-color: #1a1a1a;
       border-radius: 5px;
