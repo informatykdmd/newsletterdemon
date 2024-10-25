@@ -82,22 +82,22 @@
 {% block tableHeader %}
                         <div class="row">
                             <div class="klej formatuj-header">
-                                <div class="column-id">
+                                <div class="d-none d-lg-block" style="max-width: 30px;">
                                     #
                                 </div>
-                                <div  class="column-expand">
-                                    Tytuł Artykułu
+                                <div  class="col-xl-8 col-lg-6 col-sm-8">
+                                    Tytuł
                                 </div>
-                                <div  class="column-usual">
+                                <div  class="d-none d-xl-block" style="max-width: 150px;">
                                     Kategoria
                                 </div>
-                                <div  class="column-usual">
+                                <div class="d-none d-xl-block" style="max-width: 150px;">
                                     Autor
                                 </div>
-                                <div  class="column-usual">
-                                    Data publikacji
+                                <div  class="d-none d-lg-block" style="max-width: 150px;">
+                                    Data
                                 </div>
-                                <div  class="column-ender">
+                                <div class="column-ender">
                                     <i class="bi bi-person-gear"></i> Akcja 
                                 </div>
                             </div>
@@ -249,25 +249,25 @@
                         <!-- linia contentu tabeli ciemna-->
                         <div class="row">
                             <div class="klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
-                                <div class="column-id" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="d-none d-lg-block formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {{post_id}}
                                 </div>
-                                <div  class="column-expand" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {{post_data['title'][:25]}}
+                                        {{post_data['title']}}
                                     </a>
                                 </div>
-                                <div  class="column-usual" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="d-none d-xl-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_data['category']}}
                                     </a>
                                 </div>
-                                <div  class="column-usual" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="d-none d-xl-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_data['author']}}
                                     </a>
                                 </div>
-                                <div class="column-usual" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_data['data']}}
                                     </a>
@@ -447,16 +447,16 @@
                         <div class="sub-panel podswietlaj rogi collapse formatyj-maly-wiersz" id="collapse_id_{{post_id}}">
                             {% for comment in post_data['comments'].values() %}
                             <div class="tylko-klej">
-                                <div class="colapse-column-expand-mini formatuj-max-height">
+                                <div class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font formatuj-max-height">
                                     {{comment['message']}}
                                 </div>
-                                <div class="colapse-column-usual-mini formatuj-max-height">
+                                <div class="d-none d-xl-block formatuj-maly-font formatuj-max-height">
                                     {{comment['user']}}
                                 </div>
-                                <div class="colapse-column-usual-mini formatuj-max-height">
+                                <div class="d-none d-xl-block formatuj-maly-font formatuj-max-height">
                                     {{comment['e-mail']}}
                                 </div>
-                                <div class="colapse-column-usual-mini formatuj-max-height">
+                                <div class="d-none d-xl-block formatuj-maly-font formatuj-max-height">
                                     {{comment['data-time']}}
                                 </div>
                                 <div  class="colapse-column-ender-mini">
