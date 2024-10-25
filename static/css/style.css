@@ -592,7 +592,7 @@ color:#969696;
     margin-bottom: 20px;
 }
 
-#home_old div, #team_old div, .dostepnyPracownik_old {
+#home div, #team div, .dostepnyPracownik {
     width: 100px !important;
     height: 100px !important;
     margin-top: 5px;
@@ -616,32 +616,7 @@ color:#969696;
     text-decoration: underline; /* Opcjonalne: dodanie podkreślenia (przykładowa dekoracja) */
     font-size: medium;
 }
-#home div, #team div, .dostepnyPracownik {
-  width: 80%; /* Zmienia szerokość do 80% rozmiaru rodzica */
-  height: auto; /* Automatyczna wysokość, aby zachować proporcje */
-  max-width: 100px; /* Ustaw maksymalny rozmiar dla limitu */
-  max-height: 100px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  cursor: move;
-  border: 1px solid #ccc;
-  padding: 5px;
-  border-radius: 50%;
-  background-color: #000000;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  position: relative;
-  padding-top: 50px;
-  font-weight: bold;
-  text-decoration: underline;
-  font-size: medium;
-}
+
 
 #home div::after,
 #team div::after,
@@ -652,8 +627,8 @@ color:#969696;
 }
 
 .dostepnyPracownik {
-    width: 100px !important;
-    height: 100px !important;
+    max-width: 100px;
+    height: auto;
     margin-top: 5px;
     margin-bottom: 5px;
     margin-left: 5px;
@@ -675,6 +650,26 @@ color:#969696;
     padding-top: 50px;
     font-weight: bold; /* Pogrubienie tekstu */
     text-decoration: underline; /* Opcjonalne: dodanie podkreślenia (przykładowa dekoracja) */
+}
+/* Small screens (sm) - 576px and up */
+@media (min-width: 576px) {
+  .dostepnyPracownik {
+      max-width: 60px;
+  }
+}
+
+/* Medium screens (md) - 768px and up */
+@media (min-width: 768px) {
+  .dostepnyPracownik {
+      max-width: 75px;
+  }
+}
+
+/* Large screens (lg) - 992px and up */
+@media (min-width: 992px) {
+  .dostepnyPracownik {
+      max-width: 100px;
+  }
 }
 
 .ramka_tekstu {
