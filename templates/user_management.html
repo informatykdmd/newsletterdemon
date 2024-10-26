@@ -483,7 +483,7 @@
                                         <div class="user-data">
                                             <div id="accordion_{{user_id}}">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_hasla_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse"  id="collapse_hasla_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -508,7 +508,7 @@
                                                 </div>
                                                 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_dane_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse"  id="collapse_dane_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -541,7 +541,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_usun_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse"  id="collapse_usun_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div class="alert alert-danger  rogi" role="alert">
                                                             <div class="table-creator formatuj-maly-font">
@@ -569,7 +569,39 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_uprawnienia_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse"  id="collapse_aktywacja_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                    <div class="tylko-klej col-auto">
+                                                        <div>
+                                                            {% if users_data['status'] == '0' %}
+                                                                <p style="font-size: 15px; color: #2c77b9;">
+                                                                    Aktywacja konta przywróci pełny dostęp do systemu i wszystkich jego funkcji.
+                                                                </p>
+                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                    <input type="hidden" name="id" value="{{user_id}}" />
+                                                                    <input type="hidden" name="status" value="active" />
+                                                                    <div class="formatuj-padding">
+                                                                        <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
+                                                                    </div>
+                                                                </form>
+                                                            {% endif %}
+                                                            {% if users_data['status'] == '1' %}
+                                                                <p style="font-size: 15px; color: #a7d6ff;">
+                                                                    Dezaktywacja konta zablokuje wszelki dostęp do systemu, uniemożliwiając korzystanie z jego funkcji.
+                                                                </p>
+                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                    <input type="hidden" name="id" value="{{user_id}}" />
+                                                                    <input type="hidden" name="status" value="deactive" />
+                                                                    <div class="formatuj-padding">
+                                                                        <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj Konto</button>
+                                                                    </div>
+                                                                </form>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- collapse wewnętrzny -->
+                                                <div class="collapse"  id="collapse_uprawnienia_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -841,7 +873,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_marki_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse"  id="collapse_marki_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -1208,7 +1240,7 @@
                                         <div class="user-data">
                                             <div id="accordion_lg_{{user_id}}">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_hasla_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
+                                                <div class="collapse"  id="collapse_hasla_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -1233,7 +1265,7 @@
                                                 </div>
                                                 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_dane_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
+                                                <div class="collapse"  id="collapse_dane_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -1266,7 +1298,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_usun_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
+                                                <div class="collapse"  id="collapse_usun_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div class="alert alert-danger  rogi" role="alert">
                                                             <div class="table-creator formatuj-maly-font">
@@ -1294,7 +1326,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_uprawnienia_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
+                                                <div class="collapse"  id="collapse_uprawnienia_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -1566,7 +1598,39 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_marki_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
+                                                <div class="collapse"  id="collapse_aktywacja_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
+                                                    <div class="tylko-klej col-auto">
+                                                        <div>
+                                                            {% if users_data['status'] == '0' %}
+                                                                <p style="font-size: 15px; color: #2c77b9;">
+                                                                    Aktywacja konta przywróci pełny dostęp do systemu i wszystkich jego funkcji.
+                                                                </p>
+                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                    <input type="hidden" name="id" value="{{user_id}}" />
+                                                                    <input type="hidden" name="status" value="active" />
+                                                                    <div class="formatuj-padding">
+                                                                        <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
+                                                                    </div>
+                                                                </form>
+                                                            {% endif %}
+                                                            {% if users_data['status'] == '1' %}
+                                                                <p style="font-size: 15px; color: #a7d6ff;">
+                                                                    Dezaktywacja konta zablokuje wszelki dostęp do systemu, uniemożliwiając korzystanie z jego funkcji.
+                                                                </p>
+                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                    <input type="hidden" name="id" value="{{user_id}}" />
+                                                                    <input type="hidden" name="status" value="deactive" />
+                                                                    <div class="formatuj-padding">
+                                                                        <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj Konto</button>
+                                                                    </div>
+                                                                </form>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- collapse wewnętrzny -->
+                                                <div class="collapse"  id="collapse_marki_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -1701,27 +1765,6 @@
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                {% if users_data['status'] == '0' %}
-                                                                        <!-- <div class="formatuj-padding">
-                                                                            <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Wyślij e-mail aktywacyjny ponownie</button>
-                                                                        </div> -->
-                                                                        <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
-                                                                            <input type="hidden" name="id" value="{{user_id}}" />
-                                                                            <input type="hidden" name="status" value="active" />
-                                                                            <div class="formatuj-padding">
-                                                                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
-                                                                            </div>
-                                                                        </form>
-                                                                {% endif %}
-                                                                {% if users_data['status'] == '1' %}
-                                                                    <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
-                                                                        <input type="hidden" name="id" value="{{user_id}}" />
-                                                                        <input type="hidden" name="status" value="deactive" />
-                                                                        <div class="formatuj-padding">
-                                                                            <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj Konto</button>
-                                                                        </div>
-                                                                    </form>
-                                                                {% endif %}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1895,6 +1938,15 @@
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
+                                                href="#collapse_aktywacja_xl_{{user_id}}" 
+                                                role="button" aria-expanded="false" 
+                                                aria-controls="collapse_aktywacja_xl_{{user_id}}">
+                                                    <i class="bi bi-lock" style="color: #db3b3b !important;"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col">
+                                                <a 
+                                                data-bs-toggle="collapse" 
                                                 href="#collapse_usun_xl_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
                                                 aria-controls="collapse_usun_xl_{{user_id}}">
@@ -1943,7 +1995,7 @@
                                         <div class="user-data">
                                             <div id="accordion_xl_{{user_id}}">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_hasla_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
+                                                <div class="collapse"  id="collapse_hasla_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -1968,7 +2020,7 @@
                                                 </div>
                                                 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_dane_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
+                                                <div class="collapse"  id="collapse_dane_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -2001,7 +2053,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_usun_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
+                                                <div class="collapse"  id="collapse_usun_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div class="alert alert-danger  rogi" role="alert">
                                                             <div class="table-creator formatuj-maly-font">
@@ -2029,7 +2081,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_uprawnienia_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
+                                                <div class="collapse"  id="collapse_uprawnienia_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -2301,7 +2353,43 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_marki_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
+                                                <div class="collapse"  id="collapse_aktywacja_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
+                                                    <div class="tylko-klej col-auto">
+                                                        <div>
+                                                            {% if users_data['status'] == '0' %}
+                                                                <p style="font-size: 15px; color: #2c77b9;">
+                                                                    Aktywacja konta przywróci pełny dostęp do systemu i wszystkich jego funkcji.
+                                                                </p>
+                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                    <input type="hidden" name="id" value="{{user_id}}" />
+                                                                    <input type="hidden" name="status" value="active" />
+                                                                    <div class="formatuj-padding">
+                                                                        <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
+                                                                    </div>
+                                                                </form>
+                                                            {% endif %}
+                                                            {% if users_data['status'] == '1' %}
+                                                                <p style="font-size: 15px; color: #a7d6ff;">
+                                                                    Dezaktywacja konta zablokuje wszelki dostęp do systemu, uniemożliwiając korzystanie z jego funkcji.
+                                                                </p>
+                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                    <input type="hidden" name="id" value="{{user_id}}" />
+                                                                    <input type="hidden" name="status" value="deactive" />
+                                                                    <div class="formatuj-padding">
+                                                                        <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj Konto</button>
+                                                                    </div>
+                                                                </form>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                
+
+
+
+                                                <!-- collapse wewnętrzny -->
+                                                <div class="collapse"  id="collapse_marki_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -2435,28 +2523,7 @@
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>
-                                                                </div>
-                                                                {% if users_data['status'] == '0' %}
-                                                                        <!-- <div class="formatuj-padding">
-                                                                            <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Wyślij e-mail aktywacyjny ponownie</button>
-                                                                        </div> -->
-                                                                        <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
-                                                                            <input type="hidden" name="id" value="{{user_id}}" />
-                                                                            <input type="hidden" name="status" value="active" />
-                                                                            <div class="formatuj-padding">
-                                                                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
-                                                                            </div>
-                                                                        </form>
-                                                                {% endif %}
-                                                                {% if users_data['status'] == '1' %}
-                                                                    <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
-                                                                        <input type="hidden" name="id" value="{{user_id}}" />
-                                                                        <input type="hidden" name="status" value="deactive" />
-                                                                        <div class="formatuj-padding">
-                                                                            <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj Konto</button>
-                                                                        </div>
-                                                                    </form>
-                                                                {% endif %}
+                                                                </div>                                                                
                                                             </div>
                                                         </div>
                                                     </div>
