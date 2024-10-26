@@ -29,9 +29,19 @@ def prepare_prompt(began_prompt):
     ready_prompt = f'{began_prompt}\n\n'
     count_ready = 0
     for dump in dump_key:
+        if dump[1] != "aifa":
+            try:
+                user_about, user_descrition = prepare_shedule.connect_to_database(
+                    f"""SELECT ADMIN_ROLE, ABOUT_ADMIN FROM admins WHERE LOGIN='{dump[1]}';""")[0]
+            except IndexError:
+                user_about, user_descrition = ('Szaregowy pracownik', 'Brak opisu')
+        else:
+            user_about, user_descrition = ('Operator Moderacji i Ekspert nowych technologii', 'Sztuczna inteligencja na usługach DMD.')
         theme = {
             "id": dump[0],
             "user_name": dump[1],
+            "description": user_descrition,
+            "user_about": user_about,
             "content": dump[2],
             "timestamp": dump[3],
             "status": dump[4],
@@ -45,7 +55,7 @@ def prepare_prompt(began_prompt):
         if prepare_shedule.insert_to_database(
                 f"UPDATE Messages SET status = %s WHERE id = %s",
                 (1, theme["id"])):
-            ready_prompt += f'{theme["user_name"]}\n{theme["content"]}\n\n'
+            ready_prompt += f'{theme["user_name"]}: ({theme["description"]}) [{theme["user_about"]}] \n{theme["content"]}\n\n'
             count_ready += 1
 
     if count_ready > 0:
