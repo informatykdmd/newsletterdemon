@@ -6,6 +6,7 @@ from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
 import secrets
 import app.utils.passwordSalt as hash
+from bin.app import add_aifaLog
 import mysqlDB as msq
 import time
 import datetime
@@ -1213,6 +1214,7 @@ def login():
             session['user_data'] = users_data[username]
             session['brands'] = brands_data[username]
             msq.handle_error(f'Udane logowanie użytkownika {username}', log_path=logFileName)
+            add_aifaLog(f'Udane logowanie użytkownika {username}')
             return redirect(url_for('index'))
         elif username in users_data and users_data.get(username, {}).get('status') == '0':
             msq.handle_error(f'Nie udane logowanie. Konto nie aktywne!', log_path=logFileName)
@@ -1225,6 +1227,7 @@ def login():
 @app.route('/logout')
 def logout():
     msq.handle_error(f'Wylogowano użytkownika: {session["username"]}', log_path=logFileName)
+    add_aifaLog(f'Wylogowano użytkownika: {session["username"]}')
     session.pop('username', None)
     session.pop('userperm', None)
     session.pop('user_data', None)
@@ -1256,6 +1259,8 @@ def home():
     elitehome = settingsDB['elitehome']
     inwestycje = settingsDB['inwestycje']
     instalacje = settingsDB['instalacje']
+
+    add_aifaLog(f'Użytkownik {session["username"]} wszedł na stronę czatu.')
     
     return render_template(
                             "home.html", 
@@ -2244,6 +2249,7 @@ def save_post():
                 dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
             if msq.insert_to_database(zapytanie_sql, dane):
                 msq.handle_error(f'Post {TYTUL} został poprawnie zapisany w bazie!', log_path=logFileName)
+                add_aifaLog(f'Dodano nowy post o tytule: {TYTUL}. Na temat: {AKAPIT}\nPost został poprawnie zapisany w bazie!')
                 flash('Dane zostały zapisane poprawnie!', 'success')
                 return redirect(url_for('blog'))
         

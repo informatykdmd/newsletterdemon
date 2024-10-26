@@ -4,6 +4,8 @@ import prepare_shedule
 import messagerCreator 
 import sendEmailBySmtp
 import random
+import os
+import json
 from archiveSents import archive_sents
 from appslib import handle_error
 from fbwaitninglist import give_me_curently_tasks
@@ -62,6 +64,42 @@ def prepare_prompt(began_prompt):
         return ready_prompt
     else:
         return None
+
+def get_lastAifaLog(systemInfoFilePath='/home/johndoe/app/newsletterdemon/logs/logsForAifa.json'):
+    # Utwórz plik JSON, jeśli nie istnieje
+    if not os.path.exists(systemInfoFilePath):
+        with open(systemInfoFilePath, 'w') as file:
+            json.dump({"logs": []}, file)
+    
+    # Wczytaj logi z pliku
+    with open(systemInfoFilePath, 'r+', encoding='utf-8') as file:
+        data = json.load(file)
+        
+        # Znajdź pierwszy nieoddany log
+        for log in data["logs"]:
+            if not log.get("oddany", False):  # jeśli nie został oznaczony jako oddany
+                log["oddany"] = True  # oznacz jako oddany
+                file.seek(0)  # wróć na początek pliku
+                json.dump(data, file, indent=4)  # zapisz zmiany
+                file.truncate()  # obetnij zawartość do nowej długości
+                return log["message"]
+    
+    return None
+
+def add_aifaLog(message: str, systemInfoFilePath='/home/johndoe/app/newsletterdemon/logs/logsForAifa.json') -> None:
+    # Utwórz plik JSON, jeśli nie istnieje
+    if not os.path.exists(systemInfoFilePath):
+        with open(systemInfoFilePath, 'w') as file:
+            json.dump({"logs": []}, file)
+    
+    # Dodaj nowy log do pliku
+    with open(systemInfoFilePath, 'r+', encoding='utf-8') as file:
+        data = json.load(file)
+        data["logs"].append({"message": message, "oddany": False})  # dodaj nowy log jako nieoddany
+        file.seek(0)  # wróć na początek pliku
+        json.dump(data, file, indent=4)  # zapisz zmiany
+        file.truncate()  # obetnij zawartość do nowej długości
+
 
 def make_fbgroups_task(data):
     {'id': 1, 'shedules_level': 0, 'post_id': 13, 'content': 'content TEXT', 'color_choice': 4, 'category': 'praca', 'section': 'career'}
@@ -139,6 +177,7 @@ def main():
             if row[2] < current_time:
                 TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
                 nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=1;')
+                add_aifaLog(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}')
                 for data in nesletterDB:
                     hashes = data[2]
                     HTML = messagerCreator.create_html_message(row[1], data[0], hashes)
@@ -161,6 +200,7 @@ def main():
                 (3, data[0], data[2])
                 )
             handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
+            add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
             
         ################################################################
         # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
@@ -177,7 +217,25 @@ def main():
                 f"UPDATE contact SET DONE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
                 (0, data[0], data[2])
                 )
+            
             handle_error(f"Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]} z podanym kontaktem {data[2]}\n")
+            add_aifaLog(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}')
+
+        ################################################################
+        # Przekazywanie logów systemowych 
+        # do systemu sztucznej inteligencji
+        ################################################################
+        lastAifaLog = get_lastAifaLog()
+        if lastAifaLog is not None:
+            final_prompt = f'SYSTEM INFO DISPATCH: {lastAifaLog}.\n\nUżyj tych informacji jako kontekstu swojej rozmowy z użytownikami.'
+            prepare_shedule.insert_to_database(
+                f"""INSERT INTO chat_task
+                        (question, status)
+                    VALUES 
+                        (%s, %s)""",
+                (final_prompt, 4)
+                )
+
         ################################################################
         # komentowanie chata przez serwer automatów
         ################################################################
