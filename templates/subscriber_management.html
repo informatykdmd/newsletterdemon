@@ -55,21 +55,21 @@
 {% endblock %}
 
 {% block tableHeader %}
-                        <div class="row">
-                            <div class="klej formatuj-header">
-                                <div class="column-id">
+                        <div>
+                            <div class="row klej formatuj-header">
+                                <div class="d-none d-lg-block" style="max-width: 30px;">
                                     #
                                 </div>
-                                <div  class="column-expand">
+                                <div  class="col-xl-10 col-lg-10 col-sm-11">
                                     Imię
                                 </div>
-                                <div  class="column-usual">
+                                <div  class="d-none d-xl-block" style="max-width: 100%;">
                                     Email
                                 </div>
-                                <div  class="column-usual">
+                                <div  class="d-none d-xl-block" style="max-width: 100px;">
                                     Status
                                 </div>
-                                <div  class="column-ender">
+                                <div  class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end">
                                     <i class="bi bi-person-gear"></i> Akcja 
                                 </div>
                             </div>
@@ -80,22 +80,22 @@
                         {% for subs_data in subs %}
                             {% set subs_id  = subs_data['id'] %}
                         <!-- linia contentu tabeli ciemna-->
-                        <div class="row">
-                            <div class="klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
-                                <div class="column-id" data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
+                        <div>
+                            <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                <div class="d-none d-lg-block" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
                                     {{subs_id}}
                                 </div>
-                                <div  class="column-expand" data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
+                                <div class="col-xl-10 col-lg-10 col-sm-11" data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
                                         {{subs_data['name']}}
                                     </a>
                                 </div>
-                                <div  class="column-usual" data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
+                                <div  class="d-none d-xl-block" style="max-width: 100%;" data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
                                         {{subs_data['email']}}
                                     </a>
                                 </div>
-                                <div  class="column-usual" data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
+                                <div class="d-none d-xl-block" style="max-width: 100px;" data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{subs_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{subs_id}}">
                                         {% if subs_data['status'] == '1' %}
                                             <span style="color: #46ff56 !important;">Aktywny</span>
@@ -104,7 +104,7 @@
                                         {% endif %}
                                     </a>
                                 </div>
-                                <div class="column-ender">
+                                <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end">
                                     
                                     <form method="POST" id="subs_{{subs_id}}" action="{{ url_for('remove_subscriber') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć subskrybenta?');">
                                         {% if userperm['commnets'] == 1 and subs_data['comments']|length > 0 %}
@@ -119,24 +119,26 @@
                         </div>
                         <!-- collapse start -->
                         {% if userperm['commnets'] == 1 and subs_data['comments']|length > 0 %}
-                        <div class="sub-panel podswietlaj rogi collapse formatyj-maly-wiersz" id="collapse_id_{{subs_id}}">
+                        <div class="sub-panel rogi collapse" id="collapse_id_{{subs_id}}">
                             {% for comment in subs_data['comments'].values() %}
-                            <div class="tylko-klej">
-                                <div class="colapse-column-expand-mini formatuj-max-height">
-                                    {{comment['message']}}
-                                </div>
-                                <div class="colapse-column-usual-mini formatuj-max-height">
-                                    {{comment['post_title']}}
-                                </div>
-                                <div class="colapse-column-usual-mini formatuj-max-height">
-                                    {{comment['data-time']}}
-                                </div>
-                                <div  class="colapse-column-ender-mini">
-                                    <form method="POST" id="removeComment_{{subs_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
-                                        <input type="hidden" name="page" id="CommName_{{subs_id}}" value="subs"/>
-                                        <input type="hidden" name="comment_id" id="CommName_{{subs_id}}" value="{{comment['id']}}"/>
-                                        <button type="submit" class="custom-icon-button"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></button>
-                                    </form>
+                            <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin-left">
+                                <div class="row" style="width: 100%;">
+                                    <div class="col-xl-7 col-lg-7 col-sm-8 formatuj-maly-font">
+                                        {{comment['message']}}
+                                    </div>
+                                    <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 100%;">
+                                        {{comment['post_title']}}
+                                    </div>
+                                    <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
+                                        {{comment['data-time']}}
+                                    </div>
+                                    <div class="col d-flex justify-content-end">
+                                        <form method="POST" id="removeComment_{{subs_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
+                                            <input type="hidden" name="page" id="CommName_{{subs_id}}" value="subs"/>
+                                            <input type="hidden" name="comment_id" id="CommName_{{subs_id}}" value="{{comment['id']}}"/>
+                                            <button type="submit" class="custom-icon-button"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
