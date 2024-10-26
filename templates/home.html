@@ -509,12 +509,14 @@
                     <div class="col-12">
                         <p style="font-size: 24px; font-weight: 100; color:#a0abb1; margin: 0px; font-family: 'Times New Roman', Times, serif;">{{users_data['name']}}</p>
                     </div>
+                    {% if users_data['phone'] %}
                     <div class="col-12" onclick="copyToClipboard(`{{users_data['phone']}}`)">
                         <p style="font-size: 15px; color:#898f91; margin: 0px;">
                             <i class="bi bi-phone" style="font-size: 12px; color:#58e706; margin: 0px;"></i> 
                             {{users_data['phone']}}
                         </p>
                     </div>
+                    {% endif %}
                     <div class="col-2">
                         <p style="font-size: 15px; color:#50ff06; margin: 0px;">@{{users_data['username']}}</p>
                     </div>
@@ -812,18 +814,22 @@
                     <div class="col-12">
                         <p style="font-size: 30px; font-weight: 100; color:#a0abb1; margin: 0px; font-family: 'Times New Roman', Times, serif;">{{users_data['name']}}</p>
                     </div>
+                    {% if users_data['phone'] %}
                     <div class="col-12" onclick="copyToClipboard(`{{users_data['phone']}}`)">
                         <p style="font-size: 15px; color:#898f91; margin: 0px;">
                             <i class="bi bi-phone" style="font-size: 12px; color:#58e706; margin: 0px;"></i> 
                             {{users_data['phone']}}
                         </p>
                     </div>
+                    {% endif %}
+                    {% if users_data['email'] %}
                     <div class="col-12" onclick="copyToClipboard(`{{users_data['email']}}`)">
                         <p style="font-size: 12px; color:#898f91; margin: 0px;">
                             <i class="bi bi-at" style="font-size: 15px; color:#ffdd00; margin-right: 5px;"></i> 
                             {{users_data['email']}}
                         </p>
                     </div>
+                    {% endif %}
                     <div class="col-2 mt-2">
                         <p style="font-size: 10px; color:#7f878a; margin: 0px;">Login</p>
                     </div>
