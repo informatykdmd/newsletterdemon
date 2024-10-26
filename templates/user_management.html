@@ -227,6 +227,20 @@
                                 </form>
                             </div>
                         </div>
+                        <div 
+                            id="copy-notification" 
+                            style="
+                                display: none; 
+                                position: fixed; 
+                                bottom: 30px; 
+                                right: 20px; 
+                                background-color: #4CAF50; 
+                                color: white; 
+                                padding: 10px; 
+                                border-radius: 5px; 
+                                z-index: 1000;">
+                                Copied to clipboard!
+                        </div>
                         {% for users_data in users %}
                             {% set user_id = users_data['id'] %}
                         <!-- linia contentu tabeli ciemna-->
@@ -272,20 +286,7 @@
                         </div>
                         <!-- collapse start -->
                         <div class="jasne rogi collapse" id="collapse_id_{{user_id}}">
-                            <div 
-                            id="copy-notification" 
-                            style="
-                                display: none; 
-                                position: fixed; 
-                                bottom: 30px; 
-                                right: 20px; 
-                                background-color: #4CAF50; 
-                                color: white; 
-                                padding: 10px; 
-                                border-radius: 5px; 
-                                z-index: 1000;">
-                                Copied to clipboard!
-                            </div>
+                            
                             <!-- d-block d-sm-none tylko na średnim sm+ -->
                             <div class="d-block d-sm-none">
                                 <div class="row formatuj-padding">
