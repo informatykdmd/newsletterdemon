@@ -1588,7 +1588,7 @@
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                <div class="colapse-column-usual-mini" style="color:#46ff56;" id="permissions_change_info_{{user_id}}"></div>
+                                                                <div class="colapse-column-usual-mini" style="color:#46ff56;" id="permissions_change_info_LG_{{user_id}}"></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2343,7 +2343,7 @@
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                <div class="colapse-column-usual-mini" style="color:#46ff56;" id="permissions_change_info_{{user_id}}"></div>
+                                                                <div class="colapse-column-usual-mini" style="color:#46ff56;" id="permissions_change_info_XL_{{user_id}}"></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2571,14 +2571,21 @@
 
                     // Zaktualizuj interfejs użytkownika
                     const permissionsChangeInfo = document.getElementById(`permissions_change_info_${data.user_id}`);
-                    if (permissionsChangeInfo) {
+                    const permissionsChangeInfoLG = document.getElementById(`permissions_change_info_LG_${data.user_id}`);
+                    const permissionsChangeInfoXL = document.getElementById(`permissions_change_info_XL_${data.user_id}`);
+                    if (permissionsChangeInfo || permissionsChangeInfoLG || permissionsChangeInfoXL) {
                         permissionsChangeInfo.innerHTML = data.message;
+                        permissionsChangeInfoLG.innerHTML = data.message;
+                        permissionsChangeInfoXL.innerHTML = data.message;
 
                         // Ukryj komunikat po 5 sekundach
                         setTimeout(function() {
                             permissionsChangeInfo.innerHTML = '';
+                            permissionsChangeInfoLG.innerHTML = '';
+                            permissionsChangeInfoXL.innerHTML = '';
                         }, 5000);
                     }
+
                 })
                 .catch((error) => {
                     console.error('Error:', error);
