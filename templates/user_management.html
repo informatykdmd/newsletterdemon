@@ -449,6 +449,15 @@
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
+                                                href="#collapse_aktywacja_sml_{{user_id}}" 
+                                                role="button" aria-expanded="false" 
+                                                aria-controls="collapse_aktywacja_am_{{user_id}}">
+                                                    <i class="bi bi-lock" style="color: #ffe629 !important;"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col">
+                                                <a 
+                                                data-bs-toggle="collapse" 
                                                 href="#collapse_usun_sm_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
                                                 aria-controls="collapse_usun_sm_{{user_id}}">
@@ -1008,27 +1017,6 @@
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                {% if users_data['status'] == '0' %}
-                                                                        <!-- <div class="formatuj-padding">
-                                                                            <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Wyślij e-mail aktywacyjny ponownie</button>
-                                                                        </div> -->
-                                                                        <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
-                                                                            <input type="hidden" name="id" value="{{user_id}}" />
-                                                                            <input type="hidden" name="status" value="active" />
-                                                                            <div class="formatuj-padding">
-                                                                                <button type="submit" class="btn btn-outline-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Aktywuj ręcznie</button>
-                                                                            </div>
-                                                                        </form>
-                                                                {% endif %}
-                                                                {% if users_data['status'] == '1' %}
-                                                                    <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
-                                                                        <input type="hidden" name="id" value="{{user_id}}" />
-                                                                        <input type="hidden" name="status" value="deactive" />
-                                                                        <div class="formatuj-padding">
-                                                                            <button type="submit" class="btn btn-outline-danger btn-sm" style="max-height: 30px; font-size: 12px;" onclick>Dezaktywuj Konto</button>
-                                                                        </div>
-                                                                    </form>
-                                                                {% endif %}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1197,6 +1185,15 @@
                                                 aria-controls="collapse_marki_lg_{{user_id}}">
                                                     <i class="bi bi-tags" style="color: #00eaff !important; font-size: 29px;"></i>
 
+                                                </a>
+                                            </div>
+                                            <div class="col">
+                                                <a 
+                                                data-bs-toggle="collapse" 
+                                                href="#collapse_aktywacja_lg_{{user_id}}" 
+                                                role="button" aria-expanded="false" 
+                                                aria-controls="collapse_aktywacja_lg_{{user_id}}">
+                                                    <i class="bi bi-lock" style="color: #ffe629 !important;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
@@ -1941,7 +1938,7 @@
                                                 href="#collapse_aktywacja_xl_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
                                                 aria-controls="collapse_aktywacja_xl_{{user_id}}">
-                                                    <i class="bi bi-lock" style="color: #db3b3b !important;"></i>
+                                                    <i class="bi bi-lock" style="color: #ffe629 !important;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
