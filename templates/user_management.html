@@ -2598,6 +2598,36 @@
             });
         });
     });
+
+    function copyToClipboard(logText) {
+        // Tworzymy tymczasowy element <textarea> do skopiowania tekstu
+        const tempTextArea = document.createElement("textarea");
+        tempTextArea.value = logText;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        try {
+            document.execCommand("copy");
+
+            // Pokazujemy powiadomienie o skopiowaniu
+            showNotification();
+
+        } catch (err) {
+            alert('Failed to copy: ', err);
+        }
+        // Usuwamy tymczasowy element
+        document.body.removeChild(tempTextArea);
+    }
+
+    // Funkcja do wyświetlenia powiadomienia
+    function showNotification() {
+        const notification = document.getElementById("copy-notification");
+        notification.style.display = "block";
+
+        // Ukryj powiadomienie po 2 sekundach
+        setTimeout(function() {
+            notification.style.display = "none";
+        }, 2000);
+    }
 </script>
 {% endblock %}
 
