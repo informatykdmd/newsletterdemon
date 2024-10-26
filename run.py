@@ -6,7 +6,6 @@ from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
 import secrets
 import app.utils.passwordSalt as hash
-from bin.app import add_aifaLog
 import mysqlDB as msq
 import time
 import datetime
@@ -65,6 +64,19 @@ def log_request():
 def before_request_logging():
     log_request()  # Loguj przed każdym zapytaniem
 
+def add_aifaLog(message: str, systemInfoFilePath='/home/johndoe/app/newsletterdemon/logs/logsForAifa.json') -> None:
+    # Utwórz plik JSON, jeśli nie istnieje
+    if not os.path.exists(systemInfoFilePath):
+        with open(systemInfoFilePath, 'w') as file:
+            json.dump({"logs": []}, file)
+    
+    # Dodaj nowy log do pliku
+    with open(systemInfoFilePath, 'r+', encoding='utf-8') as file:
+        data = json.load(file)
+        data["logs"].append({"message": message, "oddany": False})  # dodaj nowy log jako nieoddany
+        file.seek(0)  # wróć na początek pliku
+        json.dump(data, file, indent=4)  # zapisz zmiany
+        file.truncate()  # obetnij zawartość do nowej długości
 
 class LoginForm(FlaskForm):
     username = StringField('Nazwa użytkownika', validators=[DataRequired()])
