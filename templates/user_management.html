@@ -356,9 +356,9 @@
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_4_{{user_id}}" 
+                                                href="#collapse_opis_sm_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_4_{{user_id}}">
+                                                aria-controls="collapse_opis_sm_{{user_id}}">
                                                     <i class="bi bi-info-circle" style="color: #00eeff !important;"></i>
                                                 </a>
                                             </div>
@@ -412,40 +412,50 @@
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_3_{{user_id}}" 
+                                                href="#collapse_dane_sm_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_3_{{user_id}}">
+                                                aria-controls="collapse_dane_sm_{{user_id}}">
                                                     <i class="bi bi-save" style="color: #09da02 !important;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_1_{{user_id}}" 
+                                                href="#collapse_hasla_sm_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_1_{{user_id}}">
+                                                aria-controls="collapse_hasla_sm_{{user_id}}">
                                                     <i class="bi bi-key-fill" style="color: #ecc908 !important;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_5_{{user_id}}" 
+                                                href="#collapse_uprawnienia_sm_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_5_{{user_id}}">
+                                                aria-controls="collapse_uprawnienia_sm_{{user_id}}">
                                                     <i class="bi bi-shield-lock-fill" style="color: #00f2ff !important;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_6_{{user_id}}" 
+                                                href="#collapse_marki_sm_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_6_{{user_id}}">
+                                                aria-controls="collapse_marki_sm_{{user_id}}">
                                                     <i class="bi bi-tags" style="color: #00eaff !important;"></i>
 
                                                 </a>
                                             </div>
+                                            <div class="col">
+                                                <a 
+                                                data-bs-toggle="collapse" 
+                                                href="#collapse_usun_sm_{{user_id}}" 
+                                                role="button" aria-expanded="false" 
+                                                aria-controls="collapse_usun_sm_{{user_id}}">
+                                                    <i class="bi bi-x-square-fill" style="color: #db3b3b !important;"></i>
+                                                </a>
+                                            </div>
+                                            
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
@@ -462,7 +472,7 @@
                                     </div>
                                     <div class="col-12">
                                         <!-- collapse wewnętrzny -->
-                                        <div class="collapse" id="collapse_id_4_{{user_id}}" data-bs-parent="#collapse_id_4_{{user_id}}">
+                                        <div class="collapse" id="collapse_opis_sm_{{user_id}}" data-bs-parent="#collapse_opis_sm_{{user_id}}">
                                             <p style="font-size: 12px; color:#9c9fa2; margin: 2px;">{{users_data['opis']}}</p>
                                         </div>
                                     </div>
@@ -473,7 +483,7 @@
                                         <div class="user-data">
                                             <div id="accordion_{{user_id}}">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_1_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_hasla_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -498,7 +508,7 @@
                                                 </div>
                                                 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_3_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_dane_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -531,7 +541,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_4_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_usun_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div class="alert alert-danger  rogi" role="alert">
                                                             <div class="table-creator formatuj-maly-font">
@@ -559,7 +569,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_5_{{username}}" data-bs-parent="#accordion_{{username}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_uprawnienia_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -831,7 +841,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_6_{{username}}" data-bs-parent="#accordion_{{username}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_marki_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -1007,10 +1017,10 @@
                                             <div class="col-3 "><!-- Edit-->
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_0_lg_{{username}}" 
+                                                href="#collapse_id_0_lg_{{user_id}}" 
                                                 role="button" 
                                                 aria-expanded="false" 
-                                                aria-controls="collapse_id_0_{{username}}" 
+                                                aria-controls="collapse_id_0_{{user_id}}" 
                                                 style="color: #caecfd !important;">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
@@ -1019,7 +1029,7 @@
                                         <div class="row"> <!-- Plik -->
                                             <div class="col-12 p-1">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 275px;" id="collapse_id_0_lg_{{username}}">
+                                                <div class="collapse" style="max-width: 275px;" id="collapse_id_0_lg_{{user_id}}">
                                                     <div class="m-2">
                                                         <div>
                                                             
@@ -1067,9 +1077,9 @@
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_4_lg_{{username}}" 
+                                                href="#collapse_opis_lg_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_4_lg_{{username}}">
+                                                aria-controls="collapse_opis_lg_{{user_id}}">
                                                     <i class="bi bi-info-circle" style="color: #00eeff !important; font-size: 29px;"></i>
                                                 </a>
                                             </div>
@@ -1123,38 +1133,47 @@
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_3_lg_{{username}}" 
+                                                href="#collapse_dane_lg_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_3_lg_{{username}}">
+                                                aria-controls="collapse_dane_lg_{{user_id}}">
                                                     <i class="bi bi-save" style="color: #09da02 !important; font-size: 29px;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_1_lg_{{username}}" 
+                                                href="#collapse_hasla_lg_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_1_lg_{{username}}">
+                                                aria-controls="collapse_hasla_lg_{{user_id}}">
                                                     <i class="bi bi-key-fill" style="color: #ecc908 !important; font-size: 29px;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_5_lg_{{username}}" 
+                                                href="#collapse_uprawnienia_lg_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_5_lg_{{username}}">
+                                                aria-controls="collapse_uprawnienia_lg_{{user_id}}">
                                                     <i class="bi bi-shield-lock-fill" style="color: #00f2ff !important; font-size: 29px;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_6_lg_{{username}}" 
+                                                href="#collapse_marki_lg_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_6_lg_{{username}}">
+                                                aria-controls="collapse_marki_lg_{{user_id}}">
                                                     <i class="bi bi-tags" style="color: #00eaff !important; font-size: 29px;"></i>
 
+                                                </a>
+                                            </div>
+                                            <div class="col">
+                                                <a 
+                                                data-bs-toggle="collapse" 
+                                                href="#collapse_usun_lg_{{user_id}}" 
+                                                role="button" aria-expanded="false" 
+                                                aria-controls="collapse_usun_lg_{{user_id}}">
+                                                    <i class="bi bi-x-square-fill" style="color: #db3b3b !important;"></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -1176,7 +1195,7 @@
                                             </div>
                                             <div class="col-12">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" id="collapse_id_4_lg_{{username}}" data-bs-parent="#collapse_id_4_lg_{{username}}">
+                                                <div class="collapse" id="collapse_opis_lg_{{user_id}}" data-bs-parent="#collapse_opis_lg_{{user_id}}">
                                                     <p style="font-size: 15px; color:#9c9fa2;">{{users_data['opis']}}</p>
                                                 </div>
                                             </div>
@@ -1189,7 +1208,7 @@
                                         <div class="user-data">
                                             <div id="accordion_{{user_id}}">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_1_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_hasla_lg_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -1214,7 +1233,7 @@
                                                 </div>
                                                 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_3_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_dane_lg_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -1247,7 +1266,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_4_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_usun_lg_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div class="alert alert-danger  rogi" role="alert">
                                                             <div class="table-creator formatuj-maly-font">
@@ -1275,7 +1294,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_5_{{username}}" data-bs-parent="#accordion_{{username}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_uprawnienia_lg_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -1547,7 +1566,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_6_{{username}}" data-bs-parent="#accordion_{{username}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_marki_lg_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -1723,10 +1742,10 @@
                                             <div class="col-3 "><!-- Edit-->
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_0_xl_{{username}}" 
+                                                href="#collapse_id_0_xl_{{user_id}}" 
                                                 role="button" 
                                                 aria-expanded="false" 
-                                                aria-controls="collapse_id_0_xl_{{username}}" 
+                                                aria-controls="collapse_id_0_xl_{{user_id}}" 
                                                 style="color: #caecfd !important;">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
@@ -1735,7 +1754,7 @@
                                         <div class="row"> <!-- Plik -->
                                             <div class="col-12 p-1">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 275px;" id="collapse_id_0_xl_{{username}}">
+                                                <div class="collapse" style="max-width: 275px;" id="collapse_id_0_xl_{{user_id}}">
                                                     <div class="m-2">
                                                         <div>
                                                             
@@ -1783,9 +1802,9 @@
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_4_xl_{{username}}" 
+                                                href="#collapse_opis_xl_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_4_xl_{{username}}">
+                                                aria-controls="collapse_opis_xl_{{user_id}}">
                                                     <i class="bi bi-info-circle" style="color: #00eeff !important; font-size: 32px;"></i>
                                                 </a>
                                             </div>
@@ -1839,38 +1858,47 @@
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_3_xl_{{username}}" 
+                                                href="#collapse_dane_xl_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_3_xl_{{username}}">
+                                                aria-controls="collapse_dane_xl_{{user_id}}">
                                                     <i class="bi bi-save" style="color: #09da02 !important; font-size: 32px;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_1_xl_{{username}}" 
+                                                href="#collapse_hasla_xl_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_1_xl_{{username}}">
+                                                aria-controls="collapse_hasla_xl_{{user_id}}">
                                                     <i class="bi bi-key-fill" style="color: #ecc908 !important; font-size: 32px;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_5_xl_{{username}}" 
+                                                href="#collapse_uprawnienia_xl_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_5_xl_{{username}}">
+                                                aria-controls="collapse_uprawnienia_xl_{{user_id}}">
                                                     <i class="bi bi-shield-lock-fill" style="color: #00f2ff !important; font-size: 32px;"></i>
                                                 </a>
                                             </div>
                                             <div class="col">
                                                 <a 
                                                 data-bs-toggle="collapse" 
-                                                href="#collapse_id_6_xl_{{username}}" 
+                                                href="#collapse_marki_xl_{{user_id}}" 
                                                 role="button" aria-expanded="false" 
-                                                aria-controls="collapse_id_6_xl_{{username}}">
+                                                aria-controls="collapse_marki_xl_{{user_id}}">
                                                     <i class="bi bi-tags" style="color: #00eaff !important; font-size: 32px;"></i>
 
+                                                </a>
+                                            </div>
+                                            <div class="col">
+                                                <a 
+                                                data-bs-toggle="collapse" 
+                                                href="#collapse_usun_xl_{{user_id}}" 
+                                                role="button" aria-expanded="false" 
+                                                aria-controls="collapse_usun_xl_{{user_id}}">
+                                                    <i class="bi bi-x-square-fill" style="color: #db3b3b !important;"></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -1904,7 +1932,7 @@
                                             </div>
                                             <div class="col-12 mt-2">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" id="collapse_id_4_xl_{{username}}" data-bs-parent="#collapse_id_4_xl_{{username}}">
+                                                <div class="collapse" id="collapse_opis_xl_{{user_id}}" data-bs-parent="#collapse_opis_xl_{{user_id}}">
                                                     <p style="font-size: 15px; color:#9c9fa2;">{{users_data['opis']}}</p>
                                                 </div>
                                             </div>
@@ -1915,7 +1943,7 @@
                                         <div class="user-data">
                                             <div id="accordion_{{user_id}}">
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_1_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_hasla_xl_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -1940,7 +1968,7 @@
                                                 </div>
                                                 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_3_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_dane_xl_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
@@ -1973,7 +2001,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_4_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_usun_xl_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div class="alert alert-danger  rogi" role="alert">
                                                             <div class="table-creator formatuj-maly-font">
@@ -2001,7 +2029,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_5_{{username}}" data-bs-parent="#accordion_{{username}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_uprawnienia_xl_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
@@ -2273,7 +2301,7 @@
                                                 </div>
 
                                                 <!-- collapse wewnętrzny -->
-                                                <div class="collapse" style="max-width: 250px;" id="collapse_id_6_{{username}}" data-bs-parent="#accordion_{{username}}">
+                                                <div class="collapse" style="max-width: 250px;" id="collapse_marki_xl_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
                                                             <div class="colapse-column-usual formatuj-left">
