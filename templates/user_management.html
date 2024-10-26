@@ -137,7 +137,7 @@
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form method="POST" id="new_user" action="{{ url_for('save_new_user') }}" enctype="multipart/form-data" >
+                                <form class="formatuj-padding-lg" method="POST" id="new_user" action="{{ url_for('save_new_user') }}" enctype="multipart/form-data" >
                                     <!-- Login -->
                                     <div class="mb-3">
                                         <label for="Login_new_user" class="form-label">Login</label>
@@ -496,7 +496,7 @@
                                                 <div class="collapse"  id="collapse_hasla_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
-                                                            <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <form class="formatuj-padding-lg" action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                 <div class="table-creator">
                                                                     <h7>Zmień hasło</h7>
                                                                 </div>
@@ -521,7 +521,7 @@
                                                 <div class="collapse"  id="collapse_dane_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
-                                                            <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <form class="formatuj-padding-lg" action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                 <div class="table-creator">
                                                                     <h7>Zmień dane</h7>
                                                                 </div>
@@ -567,7 +567,7 @@
                                                                     <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_4_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_4_{{user_id}}">Anuluj</button>
                                                                 </div>
                                                                 <div class="formatuj-left">
-                                                                    <form action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
+                                                                    <form class="formatuj-padding-lg" action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
                                                                         <input type="hidden" name="UserId" id="UserId_{{user_id}}" value="{{user_id}}"/>
                                                                         <input type="hidden" name="UserName" id="UserName_{{user_id}}" value="{{users_data['username']}}"/>
                                                                         <button type="submit" class="btn btn-danger btn-sm rogi" style="max-height: 30px; font-size: 12px;" onclick>Usuń konto</button>
@@ -586,7 +586,7 @@
                                                                 <p style="font-size: 15px; color: #2c77b9;">
                                                                     Aktywacja konta przywróci pełny dostęp do systemu i wszystkich jego funkcji.
                                                                 </p>
-                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                <form class="formatuj-padding-lg" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="id" value="{{user_id}}" />
                                                                     <input type="hidden" name="status" value="active" />
                                                                     <div class="formatuj-padding">
@@ -598,7 +598,7 @@
                                                                 <p style="font-size: 15px; color: #a7d6ff;">
                                                                     Dezaktywacja konta zablokuje wszelki dostęp do systemu, uniemożliwiając korzystanie z jego funkcji.
                                                                 </p>
-                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                <form class="formatuj-padding-lg" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="id" value="{{user_id}}" />
                                                                     <input type="hidden" name="status" value="deactive" />
                                                                     <div class="formatuj-padding">
@@ -621,7 +621,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['users'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}" disabled />
@@ -642,7 +642,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['brands'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_2_{{user_id}}" disabled/>
@@ -664,7 +664,7 @@
                                                                     
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['blog'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_3_{{user_id}}" disabled/>
@@ -685,7 +685,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['subscribers'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}" disabled/>
@@ -706,7 +706,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['commnets'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}" disabled/>
@@ -727,7 +727,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['team'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_6_{{user_id}}" disabled/>
@@ -748,7 +748,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['newsletter'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_8_{{user_id}}" disabled/>
@@ -769,7 +769,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['team'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_7_{{user_id}}" disabled/>
@@ -791,7 +791,7 @@
                                                                 </div>
                                                                 <!-- kolejne uprawnienia estate id 16-->
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['estate'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_16_{{user_id}}" disabled/>
@@ -813,7 +813,7 @@
                                                                 </div>
                                                                 <!-- kolejne uprawnienia career id 17-->
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['career'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_17_{{user_id}}" disabled/>
@@ -835,7 +835,7 @@
                                                                 </div>
                                                                 <!-- kolejne uprawnienia fbhidden id 18-->
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['fbhidden'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_18_{{user_id}}" disabled/>
@@ -856,7 +856,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['settings'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_9_{{user_id}}" disabled/>
@@ -893,7 +893,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['domy'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_10_{{user_id}}" disabled />
@@ -914,7 +914,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['budownictwo'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_11_{{user_id}}" disabled />
@@ -935,7 +935,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['elitehome'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_12_{{user_id}}" disabled />
@@ -956,7 +956,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['inwestycje'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_13_{{user_id}}" disabled />
@@ -977,7 +977,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['instalacje'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_14_{{user_id}}" disabled />
@@ -998,7 +998,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['development'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_15_{{user_id}}" disabled />
@@ -1242,7 +1242,7 @@
                                                 <div class="collapse"  id="collapse_hasla_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
-                                                            <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <form class="formatuj-padding-lg" action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                 <div class="table-creator">
                                                                     <h7>Zmień hasło</h7>
                                                                 </div>
@@ -1267,7 +1267,7 @@
                                                 <div class="collapse"  id="collapse_dane_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
-                                                            <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <form class="formatuj-padding-lg" action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                 <div class="table-creator">
                                                                     <h7>Zmień dane</h7>
                                                                 </div>
@@ -1313,7 +1313,7 @@
                                                                     <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_4_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_4_{{user_id}}">Anuluj</button>
                                                                 </div>
                                                                 <div class="formatuj-left">
-                                                                    <form action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
+                                                                    <form class="formatuj-padding-lg" action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
                                                                         <input type="hidden" name="UserId" id="UserId_{{user_id}}" value="{{user_id}}"/>
                                                                         <input type="hidden" name="UserName" id="UserName_{{user_id}}" value="{{users_data['username']}}"/>
                                                                         <button type="submit" class="btn btn-danger btn-sm rogi" style="max-height: 30px; font-size: 12px;" onclick>Usuń konto</button>
@@ -1335,7 +1335,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['users'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_1_{{user_id}}" disabled />
@@ -1356,7 +1356,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['brands'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_2_{{user_id}}" disabled/>
@@ -1378,7 +1378,7 @@
                                                                     
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['blog'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_3_{{user_id}}" disabled/>
@@ -1399,7 +1399,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['subscribers'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_4_{{user_id}}" disabled/>
@@ -1420,7 +1420,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['commnets'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_5_{{user_id}}" disabled/>
@@ -1441,7 +1441,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['team'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_6_{{user_id}}" disabled/>
@@ -1462,7 +1462,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['newsletter'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_8_{{user_id}}" disabled/>
@@ -1483,7 +1483,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['team'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}" disabled/>
@@ -1505,7 +1505,7 @@
                                                                 </div>
                                                                 <!-- kolejne uprawnienia estate id 16-->
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['estate'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_16_{{user_id}}" disabled/>
@@ -1527,7 +1527,7 @@
                                                                 </div>
                                                                 <!-- kolejne uprawnienia career id 17-->
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['career'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_17_{{user_id}}" disabled/>
@@ -1549,7 +1549,7 @@
                                                                 </div>
                                                                 <!-- kolejne uprawnienia fbhidden id 18-->
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['fbhidden'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}" disabled/>
@@ -1570,7 +1570,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['settings'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_9_{{user_id}}" disabled/>
@@ -1604,7 +1604,7 @@
                                                                 <p style="font-size: 15px; color: #2c77b9;">
                                                                     Aktywacja konta przywróci pełny dostęp do systemu i wszystkich jego funkcji.
                                                                 </p>
-                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                <form class="formatuj-padding-lg" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="id" value="{{user_id}}" />
                                                                     <input type="hidden" name="status" value="active" />
                                                                     <div class="formatuj-padding">
@@ -1616,7 +1616,7 @@
                                                                 <p style="font-size: 15px; color: #a7d6ff;">
                                                                     Dezaktywacja konta zablokuje wszelki dostęp do systemu, uniemożliwiając korzystanie z jego funkcji.
                                                                 </p>
-                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                <form class="formatuj-padding-lg" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="id" value="{{user_id}}" />
                                                                     <input type="hidden" name="status" value="deactive" />
                                                                     <div class="formatuj-padding">
@@ -1639,7 +1639,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['domy'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_10_{{user_id}}" disabled />
@@ -1660,7 +1660,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['budownictwo'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_11_{{user_id}}" disabled />
@@ -1681,7 +1681,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['elitehome'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_12_{{user_id}}" disabled />
@@ -1702,7 +1702,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['inwestycje'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_13_{{user_id}}" disabled />
@@ -1723,7 +1723,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['instalacje'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_14_{{user_id}}" disabled />
@@ -1744,7 +1744,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['development'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_15_{{user_id}}" disabled />
@@ -1998,7 +1998,7 @@
                                                 <div class="collapse"  id="collapse_hasla_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
-                                                            <form action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <form class="formatuj-padding-lg" action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                 <div class="table-creator">
                                                                     <h7>Zmień hasło</h7>
                                                                 </div>
@@ -2023,7 +2023,7 @@
                                                 <div class="collapse"  id="collapse_dane_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
                                                     <div class="tylko-klej col-auto">
                                                         <div>
-                                                            <form action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <form class="formatuj-padding-lg" action="{{ url_for('update_data_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                 <div class="table-creator">
                                                                     <h7>Zmień dane</h7>
                                                                 </div>
@@ -2069,7 +2069,7 @@
                                                                     <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_4_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_4_{{user_id}}">Anuluj</button>
                                                                 </div>
                                                                 <div class="formatuj-left">
-                                                                    <form action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
+                                                                    <form class="formatuj-padding-lg" action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
                                                                         <input type="hidden" name="UserId" id="UserId_{{user_id}}" value="{{user_id}}"/>
                                                                         <input type="hidden" name="UserName" id="UserName_{{user_id}}" value="{{users_data['username']}}"/>
                                                                         <button type="submit" class="btn btn-danger btn-sm rogi" style="max-height: 30px; font-size: 12px;" onclick>Usuń konto</button>
@@ -2091,7 +2091,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['users'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_1_{{user_id}}" disabled />
@@ -2112,7 +2112,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['brands'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_2_{{user_id}}" disabled/>
@@ -2134,7 +2134,7 @@
                                                                     
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['blog'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_3_{{user_id}}" disabled/>
@@ -2155,7 +2155,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['subscribers'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_4_{{user_id}}" disabled/>
@@ -2176,7 +2176,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['commnets'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_5_{{user_id}}" disabled/>
@@ -2197,7 +2197,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['team'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_6_{{user_id}}" disabled/>
@@ -2218,7 +2218,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['newsletter'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_8_{{user_id}}" disabled/>
@@ -2239,7 +2239,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['team'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}" disabled/>
@@ -2261,7 +2261,7 @@
                                                                 </div>
                                                                 <!-- kolejne uprawnienia estate id 16-->
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['estate'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_16_{{user_id}}" disabled/>
@@ -2283,7 +2283,7 @@
                                                                 </div>
                                                                 <!-- kolejne uprawnienia career id 17-->
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['career'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_17_{{user_id}}" disabled/>
@@ -2305,7 +2305,7 @@
                                                                 </div>
                                                                 <!-- kolejne uprawnienia fbhidden id 18-->
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['fbhidden'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}" disabled/>
@@ -2326,7 +2326,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
                                                                             {% if users_data['uprawnienia']['settings'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_9_{{user_id}}" disabled/>
@@ -2360,7 +2360,7 @@
                                                                 <p style="font-size: 15px; color: #2c77b9;">
                                                                     Aktywacja konta przywróci pełny dostęp do systemu i wszystkich jego funkcji.
                                                                 </p>
-                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                <form class="formatuj-padding-lg" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="id" value="{{user_id}}" />
                                                                     <input type="hidden" name="status" value="active" />
                                                                     <div class="formatuj-padding">
@@ -2372,7 +2372,7 @@
                                                                 <p style="font-size: 15px; color: #a7d6ff;">
                                                                     Dezaktywacja konta zablokuje wszelki dostęp do systemu, uniemożliwiając korzystanie z jego funkcji.
                                                                 </p>
-                                                                <form action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                <form class="formatuj-padding-lg" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="id" value="{{user_id}}" />
                                                                     <input type="hidden" name="status" value="deactive" />
                                                                     <div class="formatuj-padding">
@@ -2395,7 +2395,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['domy'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_10_{{user_id}}" disabled />
@@ -2416,7 +2416,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['budownictwo'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_11_{{user_id}}" disabled />
@@ -2437,7 +2437,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['elitehome'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_12_{{user_id}}" disabled />
@@ -2458,7 +2458,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['inwestycje'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_13_{{user_id}}" disabled />
@@ -2479,7 +2479,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['instalacje'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_14_{{user_id}}" disabled />
@@ -2500,7 +2500,7 @@
                                                                     </form>
                                                                 </div>
                                                                 <div class="form-check form-switch">
-                                                                    <form action="">
+                                                                    <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
                                                                             {% if users_data['brands']['development'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_15_{{user_id}}" disabled />
