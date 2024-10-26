@@ -494,7 +494,7 @@
                                             <div id="accordion_{{user_id}}">
                                                 <!-- collapse wewnętrzny -->
                                                 <div class="collapse"  id="collapse_hasla_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
-                                                    <div class="tylko-klej col-auto">
+                                                    <div class="tylko-klej formatuj-padding-lg">
                                                         <div>
                                                             <form class="formatuj-padding-lg" action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                 <div class="table-creator">
@@ -552,7 +552,7 @@
 
                                                 <!-- collapse wewnętrzny -->
                                                 <div class="collapse"  id="collapse_usun_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
-                                                    <div class="tylko-klej col-auto">
+                                                    <div class="tylko-klej formatuj-padding-lg">
                                                         <div class="alert alert-danger  rogi" role="alert">
                                                             <div class="table-creator formatuj-maly-font">
                                                                 <h5>Potwierdź usunięcie konta</h5>
@@ -580,7 +580,7 @@
 
                                                 <!-- collapse wewnętrzny -->
                                                 <div class="collapse"  id="collapse_aktywacja_sm_{{user_id}}" data-bs-parent="#accordion_{{user_id}}">
-                                                    <div class="tylko-klej col-auto">
+                                                    <div class="tylko-klej formatuj-padding-lg">
                                                         <div>
                                                             {% if users_data['status'] == '0' %}
                                                                 <p style="font-size: 15px; color: #2c77b9;">
@@ -1240,7 +1240,7 @@
                                             <div id="accordion_lg_{{user_id}}">
                                                 <!-- collapse wewnętrzny -->
                                                 <div class="collapse"  id="collapse_hasla_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
-                                                    <div class="tylko-klej col-auto">
+                                                    <div class="tylko-klej formatuj-padding-lg">
                                                         <div>
                                                             <form class="formatuj-padding-lg" action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                 <div class="table-creator">
@@ -1298,7 +1298,7 @@
 
                                                 <!-- collapse wewnętrzny -->
                                                 <div class="collapse"  id="collapse_usun_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
-                                                    <div class="tylko-klej col-auto">
+                                                    <div class="tylko-klej formatuj-padding-lg">
                                                         <div class="alert alert-danger  rogi" role="alert">
                                                             <div class="table-creator formatuj-maly-font">
                                                                 <h5>Potwierdź usunięcie konta</h5>
@@ -1598,7 +1598,7 @@
 
                                                 <!-- collapse wewnętrzny -->
                                                 <div class="collapse"  id="collapse_aktywacja_lg_{{user_id}}" data-bs-parent="#accordion_lg_{{user_id}}">
-                                                    <div class="tylko-klej col-auto">
+                                                    <div class="tylko-klej formatuj-padding-lg">
                                                         <div>
                                                             {% if users_data['status'] == '0' %}
                                                                 <p style="font-size: 15px; color: #2c77b9;">
@@ -1996,9 +1996,9 @@
                                             <div id="accordion_xl_{{user_id}}">
                                                 <!-- collapse wewnętrzny -->
                                                 <div class="collapse"  id="collapse_hasla_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
-                                                    <div class="tylko-klej col-auto">
+                                                    <div class="tylko-klej formatuj-padding-xl">
                                                         <div>
-                                                            <form class="formatuj-padding-lg" action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                            <form class="formatuj-padding-xl" action="{{ url_for('update_password_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                 <div class="table-creator">
                                                                     <h7>Zmień hasło</h7>
                                                                 </div>
@@ -2054,7 +2054,7 @@
 
                                                 <!-- collapse wewnętrzny -->
                                                 <div class="collapse"  id="collapse_usun_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
-                                                    <div class="tylko-klej col-auto">
+                                                    <div class="tylko-klej formatuj-padding-xl">
                                                         <div class="alert alert-danger  rogi" role="alert">
                                                             <div class="table-creator formatuj-maly-font">
                                                                 <h5>Potwierdź usunięcie konta</h5>
@@ -2069,7 +2069,7 @@
                                                                     <button type="submit" class="btn btn-secondary btn-sm" style="max-height: 30px; font-size: 12px;" data-bs-toggle="collapse" data-bs-target="#collapse_id_4_{{user_id}}" aria-expanded="false" aria-controls="collapse_id_4_{{user_id}}">Anuluj</button>
                                                                 </div>
                                                                 <div class="formatuj-left">
-                                                                    <form class="formatuj-padding-lg" action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
+                                                                    <form class="formatuj-padding-xl" action="{{ url_for('remove_user') }}" id="datarUser_{{user_id}}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć użytkownika?');">
                                                                         <input type="hidden" name="UserId" id="UserId_{{user_id}}" value="{{user_id}}"/>
                                                                         <input type="hidden" name="UserName" id="UserName_{{user_id}}" value="{{users_data['username']}}"/>
                                                                         <button type="submit" class="btn btn-danger btn-sm rogi" style="max-height: 30px; font-size: 12px;" onclick>Usuń konto</button>
@@ -2354,13 +2354,13 @@
 
                                                 <!-- collapse wewnętrzny -->
                                                 <div class="collapse"  id="collapse_aktywacja_xl_{{user_id}}" data-bs-parent="#accordion_xl_{{user_id}}">
-                                                    <div class="tylko-klej col-auto">
+                                                    <div class="tylko-klej formatuj-padding-xl">
                                                         <div>
                                                             {% if users_data['status'] == '0' %}
                                                                 <p style="font-size: 15px; color: #2c77b9;">
                                                                     Aktywacja konta przywróci pełny dostęp do systemu i wszystkich jego funkcji.
                                                                 </p>
-                                                                <form class="formatuj-padding-lg" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                <form class="formatuj-padding-xl" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="id" value="{{user_id}}" />
                                                                     <input type="hidden" name="status" value="active" />
                                                                     <div class="formatuj-padding">
@@ -2372,7 +2372,7 @@
                                                                 <p style="font-size: 15px; color: #a7d6ff;">
                                                                     Dezaktywacja konta zablokuje wszelki dostęp do systemu, uniemożliwiając korzystanie z jego funkcji.
                                                                 </p>
-                                                                <form class="formatuj-padding-lg" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
+                                                                <form class="formatuj-padding-xl" action="{{ url_for('update_user_status') }}" id="statusUser_{{user_id}}" method="POST" enctype="multipart/form-data">
                                                                     <input type="hidden" name="id" value="{{user_id}}" />
                                                                     <input type="hidden" name="status" value="deactive" />
                                                                     <div class="formatuj-padding">
