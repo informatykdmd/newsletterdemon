@@ -2698,6 +2698,183 @@ def newsletter():
                             instalacje=instalacje
                             )
 
+@app.route('/team-test')
+def team_domy():
+    """Strona zespołu domy."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-domy bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-domy bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+
+    users_atributes = {}
+    assigned_dmddomy = []
+    
+    for usr_d in generator_userDataDB():
+        u_name = usr_d['name']
+        u_login = usr_d['username']
+        users_atributes[u_name] = usr_d
+        if usr_d['brands']['domy'] == 1:
+            assigned_dmddomy.append(u_login)
+
+    collections = {
+            'domy': {
+                'home': [],
+                'team': [],
+                'available': []
+            }
+        }
+
+    employee_photo_dict = {}
+
+    i_domy = 1 
+    for employees in generator_teamDB():
+        group = employees['EMPLOYEE_DEPARTMENT']
+        department = str(group).replace('dmd ', '')
+        employee = employees['EMPLOYEE_NAME']
+        employee_login = users_atributes[employee]['username']
+
+        employee_photo = users_atributes[employee]['avatar']
+        try: employee_photo_dict[employee_login]
+        except KeyError: employee_photo_dict[employee_login] = employee_photo
+        
+        if i_domy < 5 and department == "domy":
+            collections[department]['home'].append(employee_login)
+        elif i_domy >= 5 and department == "domy":
+            collections[department]['team'].append(employee_login)
+        if department == 'domy':
+            i_domy += 1
+        
+    for assign in assigned_dmddomy:
+        if assign not in collections['domy']['home'] + collections['domy']['team']:
+            collections['domy']['available'].append(assign)
+
+            for row in generator_userDataDB():
+                if row['username'] == assign:
+                    employee_photo = row['avatar']
+                    try: employee_photo_dict[assign]
+                    except KeyError: employee_photo_dict[assign] = employee_photo
+
+    
+
+
+    settingsDB = generator_settingsDB()
+    domy = settingsDB['domy']
+    budownictwo = settingsDB['budownictwo']
+    development = settingsDB['development']
+    elitehome = settingsDB['elitehome']
+    inwestycje = settingsDB['inwestycje']
+    instalacje = settingsDB['instalacje']
+
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
+    return render_template(
+                            "team_testy.html", 
+                            username=session['username'],
+                            userperm=session['userperm'], 
+                            user_brands=session['brands'], 
+                            members=collections['domy'], 
+                            photos_dict=employee_photo_dict,
+                            domy=domy,
+                            budownictwo=budownictwo,
+                            development=development,
+                            elitehome=elitehome,
+                            inwestycje=inwestycje,
+                            instalacje=instalacje
+                            )
+
+@app.route('/ustawieni_pracownicy', methods=['POST'])
+def ustawieni_pracownicy():
+    data = request.get_json()  # Pobranie danych JSON z żądania
+    if not data or 'pracownicy' not in data:
+        return jsonify({"error": "Nieprawidłowy format danych, oczekiwano klucza 'pracownicy'."}), 400
+    
+    pracownicy = data['pracownicy']  # Przechwycenie listy pracowników
+    
+    # Przetwarzanie listy, np. zapis do bazy danych lub dalsze operacje
+    print("Otrzymana lista pracowników:", pracownicy)
+
+    # Tutaj złapane dane
+    if request.method == 'POST' and 1==2:
+        data = request.get_json()
+        sequence_data = data.get('sequence', [])
+        sequence = []
+        for s in sequence_data:
+            clear_data = s.strip()
+            sequence.append(clear_data)
+
+        users_atributesByLogin = {}
+        for usr_d in generator_userDataDB():
+            u_login = usr_d['username']
+            users_atributesByLogin[u_login] = usr_d
+        
+        ready_exportDB = []
+        for u_login in sequence:
+            set_row = {
+                'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
+                'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
+                'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
+                'EMPLOYEE_DEPARTMENT': 'dmd domy',
+                'PHONE': users_atributesByLogin[u_login]['phone'],
+                'EMAIL': users_atributesByLogin[u_login]['email'],
+                'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
+                'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
+                'STATUS': 1
+            }
+            ready_exportDB.append(set_row)
+        if len(ready_exportDB):
+            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+            msq.delete_row_from_database(
+                """
+                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+                """,
+                ('dmd domy', )
+            )
+
+            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+            for i, row in enumerate(ready_exportDB):
+                zapytanie_sql = '''
+                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                    '''
+                dane = (
+                        row['EMPLOYEE_PHOTO'], 
+                        row['EMPLOYEE_NAME'], 
+                        row['EMPLOYEE_ROLE'], 
+                        row['EMPLOYEE_DEPARTMENT'], 
+                        row['PHONE'], 
+                        row['EMAIL'], 
+                        row['FACEBOOK'], 
+                        row['LINKEDIN'], 
+                        row['STATUS'], 
+                    )
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
+                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+
+        else:
+            msq.handle_error(f'UWAGA! Błąd zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
+            flash('Błąd! Zespół nie został zmieniony.', 'danger')
+            return redirect(url_for('team_domy'))
+        
+        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
+        flash('Zespół został pomyślnie zmieniony.', 'success')
+    
+    return jsonify({"status": "Sukces", "pracownicy": pracownicy}), 200
+
 @app.route('/team-domy', methods=['GET', 'POST'])
 def team_domy():
     """Strona zespołu domy."""
