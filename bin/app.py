@@ -57,7 +57,7 @@ def prepare_prompt(began_prompt):
         if prepare_shedule.insert_to_database(
                 f"UPDATE Messages SET status = %s WHERE id = %s",
                 (1, theme["id"])):
-            ready_prompt += f'{theme["user_name"]}: ({theme["description"]}) [{theme["user_about"]}] \n{theme["content"]}\n\n'
+            ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: ({theme["description"]})\nINFORMACJE O UŻYTKOWNIKU: [{theme["user_about"]}] WIADOMOŚĆ\n{theme["content"]}\nZwracaj się w tonie zgodnym z rangą uzytkownika*\n\n'
             count_ready += 1
 
     if count_ready > 0:
@@ -227,7 +227,7 @@ def main():
         ################################################################
         lastAifaLog = get_lastAifaLog()
         if lastAifaLog is not None:
-            final_prompt = f'SYSTEM INFO DISPATCH: {lastAifaLog}.\n\nUżyj tych informacji jako kontekstu swojej rozmowy z użytownikami.'
+            final_prompt = f'SYSTEM INFO DISPATCH: {lastAifaLog}.\nZachowaj te informacje do mementu do puki nie zostaniesz o nie poproszona przez użytownika.*\nMożesz wykorzystać te informacje do budowania wizerunku, bez podawania szczegółów.**\nInformacje o logowaniach i innych procesach systemowych są tylko do twojej informacji!***'
             prepare_shedule.insert_to_database(
                 f"""INSERT INTO chat_task
                         (question, status)
