@@ -328,7 +328,7 @@
           {% for member in members['available'] %}
           {% set member_photo = photos_dict[member] %}
           <div class="dostepnyPracownik" data-image-url="{{member_photo}}">
-            <div class="avatar"></div>
+            <div class="team-avatar"></div>
             <span>{{member}}</span>
           </div>
           {% endfor %}
@@ -341,7 +341,7 @@
           {% for member in members['home'] + members['team'] %}
           {% set member_photo = photos_dict[member] %}
           <div class="dostepnyPracownik" data-image-url="{{member_photo}}">
-            <div class="avatar"></div>
+            <div class="team-avatar"></div>
             <span>{{member}}</span>
           </div>
           {% endfor %}
