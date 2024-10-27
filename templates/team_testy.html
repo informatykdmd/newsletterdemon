@@ -66,6 +66,27 @@
       item.classList.toggle('highlight', index < highlightLimit);
     });
   }
+
+  // Funkcja zbierająca dane pracowników i wysyłająca do endpointa
+  function saveEmployees() {
+    const employeesOnPage = Array.from(document.getElementById('onPage').children).map(item => item.innerText.trim());
+    fetch('/ustawieni_pracownicy', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ pracownicy: employeesOnPage })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Odpowiedź z serwera:", data);
+      alert(data.status === "Sukces" ? "Lista została zapisana!" : "Wystąpił błąd przy zapisywaniu listy.");
+    })
+    .catch(error => {
+      console.error("Błąd:", error);
+      alert("Wystąpił błąd przy zapisywaniu listy.");
+    });
+  }
   
   document.addEventListener('DOMContentLoaded', assignImagesToElements);
 </script>
@@ -97,6 +118,7 @@
       </div>
       {% endfor %}
     </div>
+    <button class="btn btn-primary mt-3" onclick="saveEmployees()">Zapisz</button>
   </div>
 </div>
 
