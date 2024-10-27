@@ -227,7 +227,30 @@ def main():
         ################################################################
         lastAifaLog = get_lastAifaLog()
         if lastAifaLog is not None:
-            final_prompt = f'SYSTEM INFO DISPATCH: {lastAifaLog}.\nZachowaj te informacje do mementu do puki nie zostaniesz o nie poproszona przez użytownika.*\nMożesz wykorzystać te informacje do budowania wizerunku, bez podawania szczegółów.**\nInformacje o logowaniach i innych procesach systemowych są tylko do twojej informacji!***'
+            rozmowy = [
+                "Jakie masz hobby i dlaczego akurat to?",
+                "Gdybyś mógł żyć w dowolnym miejscu na świecie, gdzie by to było?",
+                "Co myślisz o sztucznej inteligencji i jej wpływie na naszą przyszłość?",
+                "Jaki film lub serial ostatnio oglądałeś, który poleciłbyś innym?",
+                "Co najbardziej cenisz w swoim zawodzie?",
+                "Gdybyś mógł spotkać dowolną osobę, żyjącą lub nieżyjącą, kto by to był i dlaczego?",
+                "Jaka była najdziwniejsza rzecz, którą kiedykolwiek próbowałeś lub jadłeś?",
+                "Jaką supermoc chciałbyś mieć, gdybyś mógł wybrać jedną?",
+                "Co sprawia, że jesteś szczęśliwy?",
+                "Czy masz jakieś plany na najbliższe wakacje? Gdzie chciałbyś pojechać?",
+                "Jakie jest Twoje ulubione wspomnienie z dzieciństwa?",
+                "Gdybyś miał nieograniczoną ilość pieniędzy, jak zmieniłbyś swoje życie?",
+                "Jaki przedmiot w szkole lub na studiach najbardziej lubiłeś?",
+                "Jakie marzenie chciałbyś jeszcze zrealizować w życiu?",
+                "Jakie umiejętności chciałbyś się jeszcze nauczyć?",
+                "Jaki jest Twój ulubiony sposób na relaks?",
+                "Co jest Twoją największą inspiracją?",
+                "Czy jest coś, czego naprawdę się boisz?",
+                "Jakie książki lub filmy miały największy wpływ na Twój sposób myślenia?",
+                "Jakie są Twoje cele na najbliższe pięć lat?"
+            ]
+            temat_rozmowy = random.choice(rozmowy)
+            final_prompt = f'SYSTEM INFO DISPATCH: {lastAifaLog}.\nZachowaj te informacje do mementu do puki nie zostaniesz o nie poproszona przez użytownika.*\nInformacje o logowaniach i innych procesach systemowych są tylko do twojej informacji!*** Zmień sprytnie temat rozmowy na zadając pytanie {temat_rozmowy}.'
             prepare_shedule.insert_to_database(
                 f"""INSERT INTO chat_task
                         (question, status)
