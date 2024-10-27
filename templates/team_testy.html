@@ -30,7 +30,7 @@
       },
       body: JSON.stringify({ 
         pracownicy: employeesOnPage,
-        dzial: department })
+        grupa: department })
     })
     .then(response => response.json())
     .then(data => {
@@ -354,7 +354,7 @@
           "Dostępni Pracownicy" a następnie umieścić w wybranej kolejności. Po dokonaniu zmian, zapisz 
           nowe ustawienia kolejności, zapewniając szybkie i intuicyjne zarządzanie prezentacją zespołu na stronie.
       </p>  
-        <button class="btn btn-primary mt-3" onclick="saveEmployees('dmd domy')">Zapisz</button>
+        <button class="btn btn-primary mt-3" onclick="saveEmployees('domy')">Zapisz</button>
       </div>
     </div>
 
