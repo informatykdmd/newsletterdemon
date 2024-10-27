@@ -7,7 +7,7 @@
       document.querySelectorAll('.dostepnyPracownik').forEach(pracownik => {
           const imageUrl = pracownik.getAttribute("data-image-url");
           if (imageUrl) {
-              pracownik.querySelector('.avatar').style.backgroundImage = `url('${imageUrl}')`;
+              pracownik.querySelector('.team-avatar').style.backgroundImage = `url('${imageUrl}')`;
           }
       });
   }
