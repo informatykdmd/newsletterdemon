@@ -3236,813 +3236,813 @@ def ustawieni_pracownicy():
 #                             instalacje=instalacje
 #                             )
 
-@app.route('/team-elitehome', methods=['GET', 'POST'])
-def team_elitehome():
-    """Strona zespołu elitehome."""
-    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
-    if 'username' not in session:
-        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-elitehome bez autoryzacji!', log_path=logFileName)
-        return redirect(url_for('index'))
+# @app.route('/team-elitehome', methods=['GET', 'POST'])
+# def team_elitehome():
+#     """Strona zespołu elitehome."""
+#     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+#     if 'username' not in session:
+#         msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-elitehome bez autoryzacji!', log_path=logFileName)
+#         return redirect(url_for('index'))
     
-    if session['userperm']['team'] == 0:
-        msq.handle_error(f'UWAGA! Próba zarządzania /team-elitehome bez uprawnień przez {session["username"]}!', log_path=logFileName)
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
-        return redirect(url_for('index'))
-    
-
-    users_atributes = {}
-    assigned_dmdelitehome = []
-    
-    for usr_d in generator_userDataDB():
-        u_name = usr_d['name']
-        u_login = usr_d['username']
-        users_atributes[u_name] = usr_d
-        if usr_d['brands']['elitehome'] == 1:
-            assigned_dmdelitehome.append(u_login)
-
-    collections = {
-            'elitehome': {
-                'home': [],
-                'team': [],
-                'available': []
-            }
-        }
-
-    employee_photo_dict = {}
-
-    i_elitehome = 1 
-    for employees in generator_teamDB():
-        group = employees['EMPLOYEE_DEPARTMENT']
-        department = str(group).replace('dmd ', '')
-        employee = employees['EMPLOYEE_NAME']
-        employee_login = users_atributes[employee]['username']
-
-        employee_photo = users_atributes[employee]['avatar']
-        try: employee_photo_dict[employee_login]
-        except KeyError: employee_photo_dict[employee_login] = employee_photo
-        
-        if i_elitehome < 5 and department == "elitehome":
-            collections[department]['home'].append(employee_login)
-        elif i_elitehome >= 5 and department == "elitehome":
-            collections[department]['team'].append(employee_login)
-        if department == 'elitehome':
-            i_elitehome += 1
-        
-    for assign in assigned_dmdelitehome:
-        if assign not in collections['elitehome']['home'] + collections['elitehome']['team']:
-            collections['elitehome']['available'].append(assign)
-
-            for row in generator_userDataDB():
-                if row['username'] == assign:
-                    employee_photo = row['avatar']
-                    try: employee_photo_dict[assign]
-                    except KeyError: employee_photo_dict[assign] = employee_photo
-
-    # Tutaj złapane dane
-    if request.method == 'POST':
-        data = request.get_json()
-        sequence_data = data.get('sequence', [])
-        sequence = []
-        for s in sequence_data:
-            clear_data = s.strip()
-            sequence.append(clear_data)
-
-        users_atributesByLogin = {}
-        for usr_d in generator_userDataDB():
-            u_login = usr_d['username']
-            users_atributesByLogin[u_login] = usr_d
-        
-        ready_exportDB = []
-        for u_login in sequence:
-            set_row = {
-                'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
-                'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
-                'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
-                'EMPLOYEE_DEPARTMENT': 'dmd elitehome',
-                'PHONE': users_atributesByLogin[u_login]['phone'],
-                'EMAIL': users_atributesByLogin[u_login]['email'],
-                'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
-                'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
-                'STATUS': 1
-            }
-            ready_exportDB.append(set_row)
-        if len(ready_exportDB):
-            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-            msq.delete_row_from_database(
-                """
-                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
-                """,
-                ('dmd elitehome', )
-            )
-
-            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-            for i, row in enumerate(ready_exportDB):
-                zapytanie_sql = '''
-                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-                    '''
-                dane = (
-                        row['EMPLOYEE_PHOTO'], 
-                        row['EMPLOYEE_NAME'], 
-                        row['EMPLOYEE_ROLE'], 
-                        row['EMPLOYEE_DEPARTMENT'], 
-                        row['PHONE'], 
-                        row['EMAIL'], 
-                        row['FACEBOOK'], 
-                        row['LINKEDIN'], 
-                        row['STATUS'], 
-                    )
-                if msq.insert_to_database(zapytanie_sql, dane):
-                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
-                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
-
-        else:
-            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
-            flash('Błąd! Zespół nie został zmieniony.', 'danger')
-            return redirect(url_for('team_elitehome'))
-        
-        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
-        flash('Zespół został pomyślnie zmieniony.', 'success')
-
-
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
-
-    # update sesji userperm brands
-    permTempDict = {}
-    brands_data = {}
-    for un in generator_userDataDB(): 
-        permTempDict[un['username']] = un['uprawnienia']
-        brands_data[un['username']] = un['brands']
-
-    session['userperm'] = permTempDict[session['username']]
-    session['brands'] = brands_data[session['username']]
-
-    return render_template(
-                            "team_management_elitehome.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=collections['elitehome'], 
-                            photos_dict=employee_photo_dict,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )
-
-@app.route('/team-budownictwo', methods=['GET', 'POST'])
-def team_budownictwo():
-    """Strona zespołu budownictwo."""
-    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
-    if 'username' not in session:
-        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-budownictwo bez autoryzacji!', log_path=logFileName)
-        return redirect(url_for('index'))
-    
-    if session['userperm']['team'] == 0:
-        msq.handle_error(f'UWAGA! Próba zarządzania /team-budownictwo bez uprawnień przez {session["username"]}!', log_path=logFileName)
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
-        return redirect(url_for('index'))
+#     if session['userperm']['team'] == 0:
+#         msq.handle_error(f'UWAGA! Próba zarządzania /team-elitehome bez uprawnień przez {session["username"]}!', log_path=logFileName)
+#         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+#         return redirect(url_for('index'))
     
 
-    users_atributes = {}
-    assigned_dmdbudownictwo = []
+#     users_atributes = {}
+#     assigned_dmdelitehome = []
     
-    for usr_d in generator_userDataDB():
-        u_name = usr_d['name']
-        u_login = usr_d['username']
-        users_atributes[u_name] = usr_d
-        if usr_d['brands']['budownictwo'] == 1:
-            assigned_dmdbudownictwo.append(u_login)
+#     for usr_d in generator_userDataDB():
+#         u_name = usr_d['name']
+#         u_login = usr_d['username']
+#         users_atributes[u_name] = usr_d
+#         if usr_d['brands']['elitehome'] == 1:
+#             assigned_dmdelitehome.append(u_login)
 
-    collections = {
-            'budownictwo': {
-                'home': [],
-                'team': [],
-                'available': []
-            }
-        }
+#     collections = {
+#             'elitehome': {
+#                 'home': [],
+#                 'team': [],
+#                 'available': []
+#             }
+#         }
 
-    employee_photo_dict = {}
+#     employee_photo_dict = {}
 
-    i_budownictwo = 1 
-    for employees in generator_teamDB():
-        group = employees['EMPLOYEE_DEPARTMENT']
-        department = str(group).replace('dmd ', '')
-        employee = employees['EMPLOYEE_NAME']
-        employee_login = users_atributes[employee]['username']
+#     i_elitehome = 1 
+#     for employees in generator_teamDB():
+#         group = employees['EMPLOYEE_DEPARTMENT']
+#         department = str(group).replace('dmd ', '')
+#         employee = employees['EMPLOYEE_NAME']
+#         employee_login = users_atributes[employee]['username']
 
-        employee_photo = users_atributes[employee]['avatar']
-        try: employee_photo_dict[employee_login]
-        except KeyError: employee_photo_dict[employee_login] = employee_photo
+#         employee_photo = users_atributes[employee]['avatar']
+#         try: employee_photo_dict[employee_login]
+#         except KeyError: employee_photo_dict[employee_login] = employee_photo
         
-        if i_budownictwo < 5 and department == "budownictwo":
-            collections[department]['home'].append(employee_login)
-        elif i_budownictwo >= 5 and department == "budownictwo":
-            collections[department]['team'].append(employee_login)
-        if department == 'budownictwo':
-            i_budownictwo += 1
+#         if i_elitehome < 5 and department == "elitehome":
+#             collections[department]['home'].append(employee_login)
+#         elif i_elitehome >= 5 and department == "elitehome":
+#             collections[department]['team'].append(employee_login)
+#         if department == 'elitehome':
+#             i_elitehome += 1
         
-    for assign in assigned_dmdbudownictwo:
-        if assign not in collections['budownictwo']['home'] + collections['budownictwo']['team']:
-            collections['budownictwo']['available'].append(assign)
+#     for assign in assigned_dmdelitehome:
+#         if assign not in collections['elitehome']['home'] + collections['elitehome']['team']:
+#             collections['elitehome']['available'].append(assign)
 
-            for row in generator_userDataDB():
-                if row['username'] == assign:
-                    employee_photo = row['avatar']
-                    try: employee_photo_dict[assign]
-                    except KeyError: employee_photo_dict[assign] = employee_photo
+#             for row in generator_userDataDB():
+#                 if row['username'] == assign:
+#                     employee_photo = row['avatar']
+#                     try: employee_photo_dict[assign]
+#                     except KeyError: employee_photo_dict[assign] = employee_photo
 
-    # Tutaj złapane dane
-    if request.method == 'POST':
-        data = request.get_json()
-        sequence_data = data.get('sequence', [])
-        sequence = []
-        for s in sequence_data:
-            clear_data = s.strip()
-            sequence.append(clear_data)
+#     # Tutaj złapane dane
+#     if request.method == 'POST':
+#         data = request.get_json()
+#         sequence_data = data.get('sequence', [])
+#         sequence = []
+#         for s in sequence_data:
+#             clear_data = s.strip()
+#             sequence.append(clear_data)
 
-        users_atributesByLogin = {}
-        for usr_d in generator_userDataDB():
-            u_login = usr_d['username']
-            users_atributesByLogin[u_login] = usr_d
+#         users_atributesByLogin = {}
+#         for usr_d in generator_userDataDB():
+#             u_login = usr_d['username']
+#             users_atributesByLogin[u_login] = usr_d
         
-        ready_exportDB = []
-        for u_login in sequence:
-            set_row = {
-                'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
-                'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
-                'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
-                'EMPLOYEE_DEPARTMENT': 'dmd budownictwo',
-                'PHONE': users_atributesByLogin[u_login]['phone'],
-                'EMAIL': users_atributesByLogin[u_login]['email'],
-                'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
-                'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
-                'STATUS': 1
-            }
-            ready_exportDB.append(set_row)
-        if len(ready_exportDB):
-            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-            msq.delete_row_from_database(
-                """
-                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
-                """,
-                ('dmd budownictwo', )
-            )
+#         ready_exportDB = []
+#         for u_login in sequence:
+#             set_row = {
+#                 'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
+#                 'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
+#                 'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
+#                 'EMPLOYEE_DEPARTMENT': 'dmd elitehome',
+#                 'PHONE': users_atributesByLogin[u_login]['phone'],
+#                 'EMAIL': users_atributesByLogin[u_login]['email'],
+#                 'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
+#                 'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
+#                 'STATUS': 1
+#             }
+#             ready_exportDB.append(set_row)
+#         if len(ready_exportDB):
+#             # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+#             msq.delete_row_from_database(
+#                 """
+#                     DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+#                 """,
+#                 ('dmd elitehome', )
+#             )
 
-            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-            for i, row in enumerate(ready_exportDB):
-                zapytanie_sql = '''
-                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-                    '''
-                dane = (
-                        row['EMPLOYEE_PHOTO'], 
-                        row['EMPLOYEE_NAME'], 
-                        row['EMPLOYEE_ROLE'], 
-                        row['EMPLOYEE_DEPARTMENT'], 
-                        row['PHONE'], 
-                        row['EMAIL'], 
-                        row['FACEBOOK'], 
-                        row['LINKEDIN'], 
-                        row['STATUS'], 
-                    )
-                if msq.insert_to_database(zapytanie_sql, dane):
-                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
-                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+#             # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+#             for i, row in enumerate(ready_exportDB):
+#                 zapytanie_sql = '''
+#                         INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+#                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+#                     '''
+#                 dane = (
+#                         row['EMPLOYEE_PHOTO'], 
+#                         row['EMPLOYEE_NAME'], 
+#                         row['EMPLOYEE_ROLE'], 
+#                         row['EMPLOYEE_DEPARTMENT'], 
+#                         row['PHONE'], 
+#                         row['EMAIL'], 
+#                         row['FACEBOOK'], 
+#                         row['LINKEDIN'], 
+#                         row['STATUS'], 
+#                     )
+#                 if msq.insert_to_database(zapytanie_sql, dane):
+#                     msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
+#                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
-        else:
-            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
-            flash('Błąd! Zespół nie został zmieniony.', 'danger')
-            return redirect(url_for('team_budownictwo'))
+#         else:
+#             msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
+#             flash('Błąd! Zespół nie został zmieniony.', 'danger')
+#             return redirect(url_for('team_elitehome'))
         
-        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
-        flash('Zespół został pomyślnie zmieniony.', 'success')
+#         msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
+#         flash('Zespół został pomyślnie zmieniony.', 'success')
 
 
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
+#     settingsDB = generator_settingsDB()
+#     domy = settingsDB['domy']
+#     budownictwo = settingsDB['budownictwo']
+#     development = settingsDB['development']
+#     elitehome = settingsDB['elitehome']
+#     inwestycje = settingsDB['inwestycje']
+#     instalacje = settingsDB['instalacje']
 
-    # update sesji userperm brands
-    permTempDict = {}
-    brands_data = {}
-    for un in generator_userDataDB(): 
-        permTempDict[un['username']] = un['uprawnienia']
-        brands_data[un['username']] = un['brands']
+#     # update sesji userperm brands
+#     permTempDict = {}
+#     brands_data = {}
+#     for un in generator_userDataDB(): 
+#         permTempDict[un['username']] = un['uprawnienia']
+#         brands_data[un['username']] = un['brands']
 
-    session['userperm'] = permTempDict[session['username']]
-    session['brands'] = brands_data[session['username']]
+#     session['userperm'] = permTempDict[session['username']]
+#     session['brands'] = brands_data[session['username']]
 
-    return render_template(
-                            "team_management_budownictwo.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=collections['budownictwo'], 
-                            photos_dict=employee_photo_dict,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )
+#     return render_template(
+#                             "team_management_elitehome.html", 
+#                             username=session['username'],
+#                             userperm=session['userperm'], 
+#                             user_brands=session['brands'], 
+#                             members=collections['elitehome'], 
+#                             photos_dict=employee_photo_dict,
+#                             domy=domy,
+#                             budownictwo=budownictwo,
+#                             development=development,
+#                             elitehome=elitehome,
+#                             inwestycje=inwestycje,
+#                             instalacje=instalacje
+#                             )
 
-@app.route('/team-development', methods=['GET', 'POST'])
-def team_development():
-    """Strona zespołu development."""
-    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
-    if 'username' not in session:
-        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-development bez autoryzacji!', log_path=logFileName)
-        return redirect(url_for('index'))
+# @app.route('/team-budownictwo', methods=['GET', 'POST'])
+# def team_budownictwo():
+#     """Strona zespołu budownictwo."""
+#     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+#     if 'username' not in session:
+#         msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-budownictwo bez autoryzacji!', log_path=logFileName)
+#         return redirect(url_for('index'))
     
-    if session['userperm']['team'] == 0:
-        msq.handle_error(f'UWAGA! Próba zarządzania /team-development bez uprawnień przez {session["username"]}!', log_path=logFileName)
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
-        return redirect(url_for('index'))
-    
-
-    users_atributes = {}
-    assigned_dmddevelopment = []
-    
-    for usr_d in generator_userDataDB():
-        u_name = usr_d['name']
-        u_login = usr_d['username']
-        users_atributes[u_name] = usr_d
-        if usr_d['brands']['development'] == 1:
-            assigned_dmddevelopment.append(u_login)
-
-    collections = {
-            'development': {
-                'home': [],
-                'team': [],
-                'available': []
-            }
-        }
-
-    employee_photo_dict = {}
-
-    i_development = 1 
-    for employees in generator_teamDB():
-        group = employees['EMPLOYEE_DEPARTMENT']
-        department = str(group).replace('dmd ', '')
-        employee = employees['EMPLOYEE_NAME']
-        employee_login = users_atributes[employee]['username']
-
-        employee_photo = users_atributes[employee]['avatar']
-        try: employee_photo_dict[employee_login]
-        except KeyError: employee_photo_dict[employee_login] = employee_photo
-        
-        if i_development < 5 and department == "development":
-            collections[department]['home'].append(employee_login)
-        elif i_development >= 5 and department == "development":
-            collections[department]['team'].append(employee_login)
-        if department == 'development':
-            i_development += 1
-        
-    for assign in assigned_dmddevelopment:
-        if assign not in collections['development']['home'] + collections['development']['team']:
-            collections['development']['available'].append(assign)
-
-            for row in generator_userDataDB():
-                if row['username'] == assign:
-                    employee_photo = row['avatar']
-                    try: employee_photo_dict[assign]
-                    except KeyError: employee_photo_dict[assign] = employee_photo
-
-    # Tutaj złapane dane
-    if request.method == 'POST':
-        data = request.get_json()
-        sequence_data = data.get('sequence', [])
-        sequence = []
-        for s in sequence_data:
-            clear_data = s.strip()
-            sequence.append(clear_data)
-
-        users_atributesByLogin = {}
-        for usr_d in generator_userDataDB():
-            u_login = usr_d['username']
-            users_atributesByLogin[u_login] = usr_d
-        
-        ready_exportDB = []
-        for u_login in sequence:
-            set_row = {
-                'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
-                'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
-                'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
-                'EMPLOYEE_DEPARTMENT': 'dmd development',
-                'PHONE': users_atributesByLogin[u_login]['phone'],
-                'EMAIL': users_atributesByLogin[u_login]['email'],
-                'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
-                'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
-                'STATUS': 1
-            }
-            ready_exportDB.append(set_row)
-        if len(ready_exportDB):
-            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-            msq.delete_row_from_database(
-                """
-                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
-                """,
-                ('dmd development', )
-            )
-
-            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-            for i, row in enumerate(ready_exportDB):
-                zapytanie_sql = '''
-                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-                    '''
-                dane = (
-                        row['EMPLOYEE_PHOTO'], 
-                        row['EMPLOYEE_NAME'], 
-                        row['EMPLOYEE_ROLE'], 
-                        row['EMPLOYEE_DEPARTMENT'], 
-                        row['PHONE'], 
-                        row['EMAIL'], 
-                        row['FACEBOOK'], 
-                        row['LINKEDIN'], 
-                        row['STATUS'], 
-                    )
-                if msq.insert_to_database(zapytanie_sql, dane):
-                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
-                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
-
-        else:
-            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
-            flash('Błąd! Zespół nie został zmieniony.', 'danger')
-            return redirect(url_for('team_development'))
-        
-        msq.handle_error(f'Subskryber został usunięty przez {session["username"]}!', log_path=logFileName)
-        flash('Zespół został pomyślnie zmieniony.', 'success')
-
-
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
-
-    # update sesji userperm brands
-    permTempDict = {}
-    brands_data = {}
-    for un in generator_userDataDB(): 
-        permTempDict[un['username']] = un['uprawnienia']
-        brands_data[un['username']] = un['brands']
-
-    session['userperm'] = permTempDict[session['username']]
-    session['brands'] = brands_data[session['username']]
-
-    return render_template(
-                            "team_management_development.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=collections['development'], 
-                            photos_dict=employee_photo_dict,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )
-
-@app.route('/team-inwestycje', methods=['GET', 'POST'])
-def team_inwestycje():
-    """Strona zespołu inwestycje."""
-    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
-    if 'username' not in session:
-        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-inwestycje bez autoryzacji!', log_path=logFileName)
-        return redirect(url_for('index'))
-    
-    if session['userperm']['team'] == 0:
-        msq.handle_error(f'UWAGA! Próba zarządzania /team-inwestycje bez uprawnień przez {session["username"]}!', log_path=logFileName)
-        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
-        return redirect(url_for('index'))
+#     if session['userperm']['team'] == 0:
+#         msq.handle_error(f'UWAGA! Próba zarządzania /team-budownictwo bez uprawnień przez {session["username"]}!', log_path=logFileName)
+#         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+#         return redirect(url_for('index'))
     
 
-    users_atributes = {}
-    assigned_dmdinwestycje = []
+#     users_atributes = {}
+#     assigned_dmdbudownictwo = []
     
-    for usr_d in generator_userDataDB():
-        u_name = usr_d['name']
-        u_login = usr_d['username']
-        users_atributes[u_name] = usr_d
-        if usr_d['brands']['inwestycje'] == 1:
-            assigned_dmdinwestycje.append(u_login)
+#     for usr_d in generator_userDataDB():
+#         u_name = usr_d['name']
+#         u_login = usr_d['username']
+#         users_atributes[u_name] = usr_d
+#         if usr_d['brands']['budownictwo'] == 1:
+#             assigned_dmdbudownictwo.append(u_login)
 
-    collections = {
-            'inwestycje': {
-                'home': [],
-                'team': [],
-                'available': []
-            }
-        }
+#     collections = {
+#             'budownictwo': {
+#                 'home': [],
+#                 'team': [],
+#                 'available': []
+#             }
+#         }
 
-    employee_photo_dict = {}
+#     employee_photo_dict = {}
 
-    i_inwestycje = 1 
-    for employees in generator_teamDB():
-        group = employees['EMPLOYEE_DEPARTMENT']
-        department = str(group).replace('dmd ', '')
-        employee = employees['EMPLOYEE_NAME']
-        employee_login = users_atributes[employee]['username']
+#     i_budownictwo = 1 
+#     for employees in generator_teamDB():
+#         group = employees['EMPLOYEE_DEPARTMENT']
+#         department = str(group).replace('dmd ', '')
+#         employee = employees['EMPLOYEE_NAME']
+#         employee_login = users_atributes[employee]['username']
 
-        employee_photo = users_atributes[employee]['avatar']
-        try: employee_photo_dict[employee_login]
-        except KeyError: employee_photo_dict[employee_login] = employee_photo
+#         employee_photo = users_atributes[employee]['avatar']
+#         try: employee_photo_dict[employee_login]
+#         except KeyError: employee_photo_dict[employee_login] = employee_photo
         
-        if i_inwestycje < 5 and department == "inwestycje":
-            collections[department]['home'].append(employee_login)
-        elif i_inwestycje >= 5 and department == "inwestycje":
-            collections[department]['team'].append(employee_login)
-        if department == 'inwestycje':
-            i_inwestycje += 1
+#         if i_budownictwo < 5 and department == "budownictwo":
+#             collections[department]['home'].append(employee_login)
+#         elif i_budownictwo >= 5 and department == "budownictwo":
+#             collections[department]['team'].append(employee_login)
+#         if department == 'budownictwo':
+#             i_budownictwo += 1
         
-    for assign in assigned_dmdinwestycje:
-        if assign not in collections['inwestycje']['home'] + collections['inwestycje']['team']:
-            collections['inwestycje']['available'].append(assign)
+#     for assign in assigned_dmdbudownictwo:
+#         if assign not in collections['budownictwo']['home'] + collections['budownictwo']['team']:
+#             collections['budownictwo']['available'].append(assign)
 
-            for row in generator_userDataDB():
-                if row['username'] == assign:
-                    employee_photo = row['avatar']
-                    try: employee_photo_dict[assign]
-                    except KeyError: employee_photo_dict[assign] = employee_photo
+#             for row in generator_userDataDB():
+#                 if row['username'] == assign:
+#                     employee_photo = row['avatar']
+#                     try: employee_photo_dict[assign]
+#                     except KeyError: employee_photo_dict[assign] = employee_photo
 
-    # Tutaj złapane dane
-    if request.method == 'POST':
-        data = request.get_json()
-        sequence_data = data.get('sequence', [])
-        sequence = []
-        for s in sequence_data:
-            clear_data = s.strip()
-            sequence.append(clear_data)
+#     # Tutaj złapane dane
+#     if request.method == 'POST':
+#         data = request.get_json()
+#         sequence_data = data.get('sequence', [])
+#         sequence = []
+#         for s in sequence_data:
+#             clear_data = s.strip()
+#             sequence.append(clear_data)
 
-        users_atributesByLogin = {}
-        for usr_d in generator_userDataDB():
-            u_login = usr_d['username']
-            users_atributesByLogin[u_login] = usr_d
+#         users_atributesByLogin = {}
+#         for usr_d in generator_userDataDB():
+#             u_login = usr_d['username']
+#             users_atributesByLogin[u_login] = usr_d
         
-        ready_exportDB = []
-        for u_login in sequence:
-            set_row = {
-                'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
-                'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
-                'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
-                'EMPLOYEE_DEPARTMENT': 'dmd inwestycje',
-                'PHONE': users_atributesByLogin[u_login]['phone'],
-                'EMAIL': users_atributesByLogin[u_login]['email'],
-                'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
-                'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
-                'STATUS': 1
-            }
-            ready_exportDB.append(set_row)
-        if len(ready_exportDB):
-            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-            msq.delete_row_from_database(
-                """
-                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
-                """,
-                ('dmd inwestycje', )
-            )
+#         ready_exportDB = []
+#         for u_login in sequence:
+#             set_row = {
+#                 'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
+#                 'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
+#                 'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
+#                 'EMPLOYEE_DEPARTMENT': 'dmd budownictwo',
+#                 'PHONE': users_atributesByLogin[u_login]['phone'],
+#                 'EMAIL': users_atributesByLogin[u_login]['email'],
+#                 'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
+#                 'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
+#                 'STATUS': 1
+#             }
+#             ready_exportDB.append(set_row)
+#         if len(ready_exportDB):
+#             # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+#             msq.delete_row_from_database(
+#                 """
+#                     DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+#                 """,
+#                 ('dmd budownictwo', )
+#             )
 
-            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-            for i, row in enumerate(ready_exportDB):
-                zapytanie_sql = '''
-                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-                    '''
-                dane = (
-                        row['EMPLOYEE_PHOTO'], 
-                        row['EMPLOYEE_NAME'], 
-                        row['EMPLOYEE_ROLE'], 
-                        row['EMPLOYEE_DEPARTMENT'], 
-                        row['PHONE'], 
-                        row['EMAIL'], 
-                        row['FACEBOOK'], 
-                        row['LINKEDIN'], 
-                        row['STATUS'], 
-                    )
-                if msq.insert_to_database(zapytanie_sql, dane):
-                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
-                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+#             # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+#             for i, row in enumerate(ready_exportDB):
+#                 zapytanie_sql = '''
+#                         INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+#                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+#                     '''
+#                 dane = (
+#                         row['EMPLOYEE_PHOTO'], 
+#                         row['EMPLOYEE_NAME'], 
+#                         row['EMPLOYEE_ROLE'], 
+#                         row['EMPLOYEE_DEPARTMENT'], 
+#                         row['PHONE'], 
+#                         row['EMAIL'], 
+#                         row['FACEBOOK'], 
+#                         row['LINKEDIN'], 
+#                         row['STATUS'], 
+#                     )
+#                 if msq.insert_to_database(zapytanie_sql, dane):
+#                     msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
+#                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
-        else:
-            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
-            flash('Błąd! Zespół nie został zmieniony.', 'danger')
-            return redirect(url_for('team_inwestycje'))
+#         else:
+#             msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
+#             flash('Błąd! Zespół nie został zmieniony.', 'danger')
+#             return redirect(url_for('team_budownictwo'))
         
-        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
-        flash('Zespół został pomyślnie zmieniony.', 'success')
+#         msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
+#         flash('Zespół został pomyślnie zmieniony.', 'success')
 
 
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
+#     settingsDB = generator_settingsDB()
+#     domy = settingsDB['domy']
+#     budownictwo = settingsDB['budownictwo']
+#     development = settingsDB['development']
+#     elitehome = settingsDB['elitehome']
+#     inwestycje = settingsDB['inwestycje']
+#     instalacje = settingsDB['instalacje']
 
-    # update sesji userperm brands
-    permTempDict = {}
-    brands_data = {}
-    for un in generator_userDataDB(): 
-        permTempDict[un['username']] = un['uprawnienia']
-        brands_data[un['username']] = un['brands']
+#     # update sesji userperm brands
+#     permTempDict = {}
+#     brands_data = {}
+#     for un in generator_userDataDB(): 
+#         permTempDict[un['username']] = un['uprawnienia']
+#         brands_data[un['username']] = un['brands']
 
-    session['userperm'] = permTempDict[session['username']]
-    session['brands'] = brands_data[session['username']]
+#     session['userperm'] = permTempDict[session['username']]
+#     session['brands'] = brands_data[session['username']]
 
-    return render_template(
-                            "team_management_inwestycje.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=collections['inwestycje'], 
-                            photos_dict=employee_photo_dict,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )
+#     return render_template(
+#                             "team_management_budownictwo.html", 
+#                             username=session['username'],
+#                             userperm=session['userperm'], 
+#                             user_brands=session['brands'], 
+#                             members=collections['budownictwo'], 
+#                             photos_dict=employee_photo_dict,
+#                             domy=domy,
+#                             budownictwo=budownictwo,
+#                             development=development,
+#                             elitehome=elitehome,
+#                             inwestycje=inwestycje,
+#                             instalacje=instalacje
+#                             )
 
-@app.route('/team-instalacje', methods=['GET', 'POST'])
-def team_instalacje():
-    """Strona zespołu instalacje."""
-    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
-    if 'username' not in session:
-        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-instalacje bez autoryzacji!', log_path=logFileName)
-        return redirect(url_for('index'))
+# @app.route('/team-development', methods=['GET', 'POST'])
+# def team_development():
+#     """Strona zespołu development."""
+#     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+#     if 'username' not in session:
+#         msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-development bez autoryzacji!', log_path=logFileName)
+#         return redirect(url_for('index'))
     
-    if session['userperm']['team'] == 0:
-        msq.handle_error(f'UWAGA! Próba zarządzania /team-instalacje bez uprawnień przez {session["username"]}!', log_path=logFileName)
-        return redirect(url_for('index'))
+#     if session['userperm']['team'] == 0:
+#         msq.handle_error(f'UWAGA! Próba zarządzania /team-development bez uprawnień przez {session["username"]}!', log_path=logFileName)
+#         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+#         return redirect(url_for('index'))
     
-    users_atributes = {}
-    assigned_dmdinstalacje = []
+
+#     users_atributes = {}
+#     assigned_dmddevelopment = []
     
-    for usr_d in generator_userDataDB():
-        u_name = usr_d['name']
-        u_login = usr_d['username']
-        users_atributes[u_name] = usr_d
-        if usr_d['brands']['instalacje'] == 1:
-            assigned_dmdinstalacje.append(u_login)
+#     for usr_d in generator_userDataDB():
+#         u_name = usr_d['name']
+#         u_login = usr_d['username']
+#         users_atributes[u_name] = usr_d
+#         if usr_d['brands']['development'] == 1:
+#             assigned_dmddevelopment.append(u_login)
 
-    collections = {
-            'instalacje': {
-                'home': [],
-                'team': [],
-                'available': []
-            }
-        }
+#     collections = {
+#             'development': {
+#                 'home': [],
+#                 'team': [],
+#                 'available': []
+#             }
+#         }
 
-    employee_photo_dict = {}
+#     employee_photo_dict = {}
 
-    i_instalacje = 1 
-    for employees in generator_teamDB():
-        group = employees['EMPLOYEE_DEPARTMENT']
-        department = str(group).replace('dmd ', '')
-        employee = employees['EMPLOYEE_NAME']
-        employee_login = users_atributes[employee]['username']
+#     i_development = 1 
+#     for employees in generator_teamDB():
+#         group = employees['EMPLOYEE_DEPARTMENT']
+#         department = str(group).replace('dmd ', '')
+#         employee = employees['EMPLOYEE_NAME']
+#         employee_login = users_atributes[employee]['username']
 
-        employee_photo = users_atributes[employee]['avatar']
-        try: employee_photo_dict[employee_login]
-        except KeyError: employee_photo_dict[employee_login] = employee_photo
+#         employee_photo = users_atributes[employee]['avatar']
+#         try: employee_photo_dict[employee_login]
+#         except KeyError: employee_photo_dict[employee_login] = employee_photo
         
-        if i_instalacje < 5 and department == "instalacje":
-            collections[department]['home'].append(employee_login)
-        elif i_instalacje >= 5 and department == "instalacje":
-            collections[department]['team'].append(employee_login)
-        if department == 'instalacje':
-            i_instalacje += 1
+#         if i_development < 5 and department == "development":
+#             collections[department]['home'].append(employee_login)
+#         elif i_development >= 5 and department == "development":
+#             collections[department]['team'].append(employee_login)
+#         if department == 'development':
+#             i_development += 1
         
-    for assign in assigned_dmdinstalacje:
-        if assign not in collections['instalacje']['home'] + collections['instalacje']['team']:
-            collections['instalacje']['available'].append(assign)
+#     for assign in assigned_dmddevelopment:
+#         if assign not in collections['development']['home'] + collections['development']['team']:
+#             collections['development']['available'].append(assign)
 
-            for row in generator_userDataDB():
-                if row['username'] == assign:
-                    employee_photo = row['avatar']
-                    try: employee_photo_dict[assign]
-                    except KeyError: employee_photo_dict[assign] = employee_photo
+#             for row in generator_userDataDB():
+#                 if row['username'] == assign:
+#                     employee_photo = row['avatar']
+#                     try: employee_photo_dict[assign]
+#                     except KeyError: employee_photo_dict[assign] = employee_photo
 
-    # Tutaj złapane dane
-    if request.method == 'POST':
-        data = request.get_json()
-        sequence_data = data.get('sequence', [])
-        sequence = []
-        for s in sequence_data:
-            clear_data = s.strip()
-            sequence.append(clear_data)
+#     # Tutaj złapane dane
+#     if request.method == 'POST':
+#         data = request.get_json()
+#         sequence_data = data.get('sequence', [])
+#         sequence = []
+#         for s in sequence_data:
+#             clear_data = s.strip()
+#             sequence.append(clear_data)
 
-        users_atributesByLogin = {}
-        for usr_d in generator_userDataDB():
-            u_login = usr_d['username']
-            users_atributesByLogin[u_login] = usr_d
+#         users_atributesByLogin = {}
+#         for usr_d in generator_userDataDB():
+#             u_login = usr_d['username']
+#             users_atributesByLogin[u_login] = usr_d
         
-        ready_exportDB = []
-        for u_login in sequence:
-            set_row = {
-                'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
-                'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
-                'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
-                'EMPLOYEE_DEPARTMENT': 'dmd instalacje',
-                'PHONE': users_atributesByLogin[u_login]['phone'],
-                'EMAIL': users_atributesByLogin[u_login]['email'],
-                'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
-                'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
-                'STATUS': 1
-            }
-            ready_exportDB.append(set_row)
-        if len(ready_exportDB):
-            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-            msq.delete_row_from_database(
-                """
-                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
-                """,
-                ('dmd instalacje', )
-            )
+#         ready_exportDB = []
+#         for u_login in sequence:
+#             set_row = {
+#                 'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
+#                 'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
+#                 'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
+#                 'EMPLOYEE_DEPARTMENT': 'dmd development',
+#                 'PHONE': users_atributesByLogin[u_login]['phone'],
+#                 'EMAIL': users_atributesByLogin[u_login]['email'],
+#                 'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
+#                 'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
+#                 'STATUS': 1
+#             }
+#             ready_exportDB.append(set_row)
+#         if len(ready_exportDB):
+#             # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+#             msq.delete_row_from_database(
+#                 """
+#                     DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+#                 """,
+#                 ('dmd development', )
+#             )
 
-            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-            for i, row in enumerate(ready_exportDB):
-                zapytanie_sql = '''
-                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-                    '''
-                dane = (
-                        row['EMPLOYEE_PHOTO'], 
-                        row['EMPLOYEE_NAME'], 
-                        row['EMPLOYEE_ROLE'], 
-                        row['EMPLOYEE_DEPARTMENT'], 
-                        row['PHONE'], 
-                        row['EMAIL'], 
-                        row['FACEBOOK'], 
-                        row['LINKEDIN'], 
-                        row['STATUS'], 
-                    )
-                if msq.insert_to_database(zapytanie_sql, dane):
-                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
-                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+#             # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+#             for i, row in enumerate(ready_exportDB):
+#                 zapytanie_sql = '''
+#                         INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+#                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+#                     '''
+#                 dane = (
+#                         row['EMPLOYEE_PHOTO'], 
+#                         row['EMPLOYEE_NAME'], 
+#                         row['EMPLOYEE_ROLE'], 
+#                         row['EMPLOYEE_DEPARTMENT'], 
+#                         row['PHONE'], 
+#                         row['EMAIL'], 
+#                         row['FACEBOOK'], 
+#                         row['LINKEDIN'], 
+#                         row['STATUS'], 
+#                     )
+#                 if msq.insert_to_database(zapytanie_sql, dane):
+#                     msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
+#                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
-        else:
-            msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
-            flash('Błąd! Zespół nie został zmieniony.', 'danger')
-            return redirect(url_for('team_instalacje'))
+#         else:
+#             msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
+#             flash('Błąd! Zespół nie został zmieniony.', 'danger')
+#             return redirect(url_for('team_development'))
         
-        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
-        flash('Zespół został pomyślnie zmieniony.', 'success')
+#         msq.handle_error(f'Subskryber został usunięty przez {session["username"]}!', log_path=logFileName)
+#         flash('Zespół został pomyślnie zmieniony.', 'success')
 
 
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
+#     settingsDB = generator_settingsDB()
+#     domy = settingsDB['domy']
+#     budownictwo = settingsDB['budownictwo']
+#     development = settingsDB['development']
+#     elitehome = settingsDB['elitehome']
+#     inwestycje = settingsDB['inwestycje']
+#     instalacje = settingsDB['instalacje']
 
-    # update sesji userperm brands
-    permTempDict = {}
-    brands_data = {}
-    for un in generator_userDataDB(): 
-        permTempDict[un['username']] = un['uprawnienia']
-        brands_data[un['username']] = un['brands']
+#     # update sesji userperm brands
+#     permTempDict = {}
+#     brands_data = {}
+#     for un in generator_userDataDB(): 
+#         permTempDict[un['username']] = un['uprawnienia']
+#         brands_data[un['username']] = un['brands']
 
-    session['userperm'] = permTempDict[session['username']]
-    session['brands'] = brands_data[session['username']]
+#     session['userperm'] = permTempDict[session['username']]
+#     session['brands'] = brands_data[session['username']]
 
-    return render_template(
-                            "team_management_instalacje.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=collections['instalacje'], 
-                            photos_dict=employee_photo_dict,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )
+#     return render_template(
+#                             "team_management_development.html", 
+#                             username=session['username'],
+#                             userperm=session['userperm'], 
+#                             user_brands=session['brands'], 
+#                             members=collections['development'], 
+#                             photos_dict=employee_photo_dict,
+#                             domy=domy,
+#                             budownictwo=budownictwo,
+#                             development=development,
+#                             elitehome=elitehome,
+#                             inwestycje=inwestycje,
+#                             instalacje=instalacje
+#                             )
+
+# @app.route('/team-inwestycje', methods=['GET', 'POST'])
+# def team_inwestycje():
+#     """Strona zespołu inwestycje."""
+#     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+#     if 'username' not in session:
+#         msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-inwestycje bez autoryzacji!', log_path=logFileName)
+#         return redirect(url_for('index'))
+    
+#     if session['userperm']['team'] == 0:
+#         msq.handle_error(f'UWAGA! Próba zarządzania /team-inwestycje bez uprawnień przez {session["username"]}!', log_path=logFileName)
+#         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+#         return redirect(url_for('index'))
+    
+
+#     users_atributes = {}
+#     assigned_dmdinwestycje = []
+    
+#     for usr_d in generator_userDataDB():
+#         u_name = usr_d['name']
+#         u_login = usr_d['username']
+#         users_atributes[u_name] = usr_d
+#         if usr_d['brands']['inwestycje'] == 1:
+#             assigned_dmdinwestycje.append(u_login)
+
+#     collections = {
+#             'inwestycje': {
+#                 'home': [],
+#                 'team': [],
+#                 'available': []
+#             }
+#         }
+
+#     employee_photo_dict = {}
+
+#     i_inwestycje = 1 
+#     for employees in generator_teamDB():
+#         group = employees['EMPLOYEE_DEPARTMENT']
+#         department = str(group).replace('dmd ', '')
+#         employee = employees['EMPLOYEE_NAME']
+#         employee_login = users_atributes[employee]['username']
+
+#         employee_photo = users_atributes[employee]['avatar']
+#         try: employee_photo_dict[employee_login]
+#         except KeyError: employee_photo_dict[employee_login] = employee_photo
+        
+#         if i_inwestycje < 5 and department == "inwestycje":
+#             collections[department]['home'].append(employee_login)
+#         elif i_inwestycje >= 5 and department == "inwestycje":
+#             collections[department]['team'].append(employee_login)
+#         if department == 'inwestycje':
+#             i_inwestycje += 1
+        
+#     for assign in assigned_dmdinwestycje:
+#         if assign not in collections['inwestycje']['home'] + collections['inwestycje']['team']:
+#             collections['inwestycje']['available'].append(assign)
+
+#             for row in generator_userDataDB():
+#                 if row['username'] == assign:
+#                     employee_photo = row['avatar']
+#                     try: employee_photo_dict[assign]
+#                     except KeyError: employee_photo_dict[assign] = employee_photo
+
+#     # Tutaj złapane dane
+#     if request.method == 'POST':
+#         data = request.get_json()
+#         sequence_data = data.get('sequence', [])
+#         sequence = []
+#         for s in sequence_data:
+#             clear_data = s.strip()
+#             sequence.append(clear_data)
+
+#         users_atributesByLogin = {}
+#         for usr_d in generator_userDataDB():
+#             u_login = usr_d['username']
+#             users_atributesByLogin[u_login] = usr_d
+        
+#         ready_exportDB = []
+#         for u_login in sequence:
+#             set_row = {
+#                 'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
+#                 'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
+#                 'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
+#                 'EMPLOYEE_DEPARTMENT': 'dmd inwestycje',
+#                 'PHONE': users_atributesByLogin[u_login]['phone'],
+#                 'EMAIL': users_atributesByLogin[u_login]['email'],
+#                 'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
+#                 'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
+#                 'STATUS': 1
+#             }
+#             ready_exportDB.append(set_row)
+#         if len(ready_exportDB):
+#             # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+#             msq.delete_row_from_database(
+#                 """
+#                     DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+#                 """,
+#                 ('dmd inwestycje', )
+#             )
+
+#             # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+#             for i, row in enumerate(ready_exportDB):
+#                 zapytanie_sql = '''
+#                         INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+#                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+#                     '''
+#                 dane = (
+#                         row['EMPLOYEE_PHOTO'], 
+#                         row['EMPLOYEE_NAME'], 
+#                         row['EMPLOYEE_ROLE'], 
+#                         row['EMPLOYEE_DEPARTMENT'], 
+#                         row['PHONE'], 
+#                         row['EMAIL'], 
+#                         row['FACEBOOK'], 
+#                         row['LINKEDIN'], 
+#                         row['STATUS'], 
+#                     )
+#                 if msq.insert_to_database(zapytanie_sql, dane):
+#                     msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
+#                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+
+#         else:
+#             msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
+#             flash('Błąd! Zespół nie został zmieniony.', 'danger')
+#             return redirect(url_for('team_inwestycje'))
+        
+#         msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
+#         flash('Zespół został pomyślnie zmieniony.', 'success')
+
+
+#     settingsDB = generator_settingsDB()
+#     domy = settingsDB['domy']
+#     budownictwo = settingsDB['budownictwo']
+#     development = settingsDB['development']
+#     elitehome = settingsDB['elitehome']
+#     inwestycje = settingsDB['inwestycje']
+#     instalacje = settingsDB['instalacje']
+
+#     # update sesji userperm brands
+#     permTempDict = {}
+#     brands_data = {}
+#     for un in generator_userDataDB(): 
+#         permTempDict[un['username']] = un['uprawnienia']
+#         brands_data[un['username']] = un['brands']
+
+#     session['userperm'] = permTempDict[session['username']]
+#     session['brands'] = brands_data[session['username']]
+
+#     return render_template(
+#                             "team_management_inwestycje.html", 
+#                             username=session['username'],
+#                             userperm=session['userperm'], 
+#                             user_brands=session['brands'], 
+#                             members=collections['inwestycje'], 
+#                             photos_dict=employee_photo_dict,
+#                             domy=domy,
+#                             budownictwo=budownictwo,
+#                             development=development,
+#                             elitehome=elitehome,
+#                             inwestycje=inwestycje,
+#                             instalacje=instalacje
+#                             )
+
+# @app.route('/team-instalacje', methods=['GET', 'POST'])
+# def team_instalacje():
+#     """Strona zespołu instalacje."""
+#     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+#     if 'username' not in session:
+#         msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-instalacje bez autoryzacji!', log_path=logFileName)
+#         return redirect(url_for('index'))
+    
+#     if session['userperm']['team'] == 0:
+#         msq.handle_error(f'UWAGA! Próba zarządzania /team-instalacje bez uprawnień przez {session["username"]}!', log_path=logFileName)
+#         return redirect(url_for('index'))
+    
+#     users_atributes = {}
+#     assigned_dmdinstalacje = []
+    
+#     for usr_d in generator_userDataDB():
+#         u_name = usr_d['name']
+#         u_login = usr_d['username']
+#         users_atributes[u_name] = usr_d
+#         if usr_d['brands']['instalacje'] == 1:
+#             assigned_dmdinstalacje.append(u_login)
+
+#     collections = {
+#             'instalacje': {
+#                 'home': [],
+#                 'team': [],
+#                 'available': []
+#             }
+#         }
+
+#     employee_photo_dict = {}
+
+#     i_instalacje = 1 
+#     for employees in generator_teamDB():
+#         group = employees['EMPLOYEE_DEPARTMENT']
+#         department = str(group).replace('dmd ', '')
+#         employee = employees['EMPLOYEE_NAME']
+#         employee_login = users_atributes[employee]['username']
+
+#         employee_photo = users_atributes[employee]['avatar']
+#         try: employee_photo_dict[employee_login]
+#         except KeyError: employee_photo_dict[employee_login] = employee_photo
+        
+#         if i_instalacje < 5 and department == "instalacje":
+#             collections[department]['home'].append(employee_login)
+#         elif i_instalacje >= 5 and department == "instalacje":
+#             collections[department]['team'].append(employee_login)
+#         if department == 'instalacje':
+#             i_instalacje += 1
+        
+#     for assign in assigned_dmdinstalacje:
+#         if assign not in collections['instalacje']['home'] + collections['instalacje']['team']:
+#             collections['instalacje']['available'].append(assign)
+
+#             for row in generator_userDataDB():
+#                 if row['username'] == assign:
+#                     employee_photo = row['avatar']
+#                     try: employee_photo_dict[assign]
+#                     except KeyError: employee_photo_dict[assign] = employee_photo
+
+#     # Tutaj złapane dane
+#     if request.method == 'POST':
+#         data = request.get_json()
+#         sequence_data = data.get('sequence', [])
+#         sequence = []
+#         for s in sequence_data:
+#             clear_data = s.strip()
+#             sequence.append(clear_data)
+
+#         users_atributesByLogin = {}
+#         for usr_d in generator_userDataDB():
+#             u_login = usr_d['username']
+#             users_atributesByLogin[u_login] = usr_d
+        
+#         ready_exportDB = []
+#         for u_login in sequence:
+#             set_row = {
+#                 'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
+#                 'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
+#                 'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
+#                 'EMPLOYEE_DEPARTMENT': 'dmd instalacje',
+#                 'PHONE': users_atributesByLogin[u_login]['phone'],
+#                 'EMAIL': users_atributesByLogin[u_login]['email'],
+#                 'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
+#                 'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
+#                 'STATUS': 1
+#             }
+#             ready_exportDB.append(set_row)
+#         if len(ready_exportDB):
+#             # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+#             msq.delete_row_from_database(
+#                 """
+#                     DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+#                 """,
+#                 ('dmd instalacje', )
+#             )
+
+#             # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+#             for i, row in enumerate(ready_exportDB):
+#                 zapytanie_sql = '''
+#                         INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+#                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+#                     '''
+#                 dane = (
+#                         row['EMPLOYEE_PHOTO'], 
+#                         row['EMPLOYEE_NAME'], 
+#                         row['EMPLOYEE_ROLE'], 
+#                         row['EMPLOYEE_DEPARTMENT'], 
+#                         row['PHONE'], 
+#                         row['EMAIL'], 
+#                         row['FACEBOOK'], 
+#                         row['LINKEDIN'], 
+#                         row['STATUS'], 
+#                     )
+#                 if msq.insert_to_database(zapytanie_sql, dane):
+#                     msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
+#                     flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+
+#         else:
+#             msq.handle_error(f'UWAGA! Błąd! Zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
+#             flash('Błąd! Zespół nie został zmieniony.', 'danger')
+#             return redirect(url_for('team_instalacje'))
+        
+#         msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
+#         flash('Zespół został pomyślnie zmieniony.', 'success')
+
+
+#     settingsDB = generator_settingsDB()
+#     domy = settingsDB['domy']
+#     budownictwo = settingsDB['budownictwo']
+#     development = settingsDB['development']
+#     elitehome = settingsDB['elitehome']
+#     inwestycje = settingsDB['inwestycje']
+#     instalacje = settingsDB['instalacje']
+
+#     # update sesji userperm brands
+#     permTempDict = {}
+#     brands_data = {}
+#     for un in generator_userDataDB(): 
+#         permTempDict[un['username']] = un['uprawnienia']
+#         brands_data[un['username']] = un['brands']
+
+#     session['userperm'] = permTempDict[session['username']]
+#     session['brands'] = brands_data[session['username']]
+
+#     return render_template(
+#                             "team_management_instalacje.html", 
+#                             username=session['username'],
+#                             userperm=session['userperm'], 
+#                             user_brands=session['brands'], 
+#                             members=collections['instalacje'], 
+#                             photos_dict=employee_photo_dict,
+#                             domy=domy,
+#                             budownictwo=budownictwo,
+#                             development=development,
+#                             elitehome=elitehome,
+#                             inwestycje=inwestycje,
+#                             instalacje=instalacje
+#                             )
 
 @app.route('/career', methods=['GET', 'POST'])
 def career():
