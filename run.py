@@ -2800,6 +2800,7 @@ def ustawieni_pracownicy():
     
     sequence_data = data['pracownicy']  # Przechwycenie listy pracowników
     department = str(data['grupa']).strip()
+    print(department, sequence_data)
     sequence = []
     for s in sequence_data:
         clear_data = s.strip()
@@ -2852,15 +2853,15 @@ def ustawieni_pracownicy():
                 )
             if msq.insert_to_database(zapytanie_sql, dane):
                 msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
-                flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+                # flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
 
     else:
         msq.handle_error(f'UWAGA! Błąd zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
-        flash('Błąd! Zespół nie został zmieniony.', 'danger')
+        # flash('Błąd! Zespół nie został zmieniony.', 'danger')
         return jsonify({"status": "Sukces", "pracownicy": sequence_data}), 200
     
     msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
-    flash('Zespół został pomyślnie zmieniony.', 'success')
+    # flash('Zespół został pomyślnie zmieniony.', 'success')
     
     # Przetwarzanie listy, np. zapis do bazy danych lub dalsze operacje
     print("Otrzymana lista pracowników:", sequence_data)
