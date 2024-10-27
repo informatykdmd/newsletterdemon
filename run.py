@@ -2802,79 +2802,73 @@ def ustawieni_pracownicy():
     if not data or 'pracownicy' not in data:
         return jsonify({"error": "Nieprawidłowy format danych, oczekiwano klucza 'pracownicy'."}), 400
     
-    pracownicy = data['pracownicy']  # Przechwycenie listy pracowników
+    sequence_data = data['pracownicy']  # Przechwycenie listy pracowników
+    sequence = []
+    for s in sequence_data:
+        clear_data = s.strip()
+        sequence.append(clear_data)
+
+    users_atributesByLogin = {}
+    for usr_d in generator_userDataDB():
+        u_login = usr_d['username']
+        users_atributesByLogin[u_login] = usr_d
+    
+    ready_exportDB = []
+    for u_login in sequence:
+        set_row = {
+            'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
+            'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
+            'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
+            'EMPLOYEE_DEPARTMENT': 'dmd domy',
+            'PHONE': users_atributesByLogin[u_login]['phone'],
+            'EMAIL': users_atributesByLogin[u_login]['email'],
+            'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
+            'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
+            'STATUS': 1
+        }
+        ready_exportDB.append(set_row)
+    if len(ready_exportDB):
+        # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
+        msq.delete_row_from_database(
+            """
+                DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
+            """,
+            ('dmd domy', )
+        )
+
+        # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
+        for i, row in enumerate(ready_exportDB):
+            zapytanie_sql = '''
+                    INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+                '''
+            dane = (
+                    row['EMPLOYEE_PHOTO'], 
+                    row['EMPLOYEE_NAME'], 
+                    row['EMPLOYEE_ROLE'], 
+                    row['EMPLOYEE_DEPARTMENT'], 
+                    row['PHONE'], 
+                    row['EMAIL'], 
+                    row['FACEBOOK'], 
+                    row['LINKEDIN'], 
+                    row['STATUS'], 
+                )
+            if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
+                flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
+
+    else:
+        msq.handle_error(f'UWAGA! Błąd zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
+        flash('Błąd! Zespół nie został zmieniony.', 'danger')
+        return redirect(url_for('team_domy'))
+    
+    msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
+    flash('Zespół został pomyślnie zmieniony.', 'success')
     
     # Przetwarzanie listy, np. zapis do bazy danych lub dalsze operacje
-    print("Otrzymana lista pracowników:", pracownicy)
-
-    # Tutaj złapane dane
-    if request.method == 'POST' and 1==2:
-        data = request.get_json()
-        sequence_data = data.get('sequence', [])
-        msq.handle_error(f'sequence_data: {sequence_data}!', log_path=logFileName)
-        sequence = []
-        for s in sequence_data:
-            clear_data = s.strip()
-            sequence.append(clear_data)
-
-        users_atributesByLogin = {}
-        for usr_d in generator_userDataDB():
-            u_login = usr_d['username']
-            users_atributesByLogin[u_login] = usr_d
-        
-        ready_exportDB = []
-        for u_login in sequence:
-            set_row = {
-                'EMPLOYEE_PHOTO': users_atributesByLogin[u_login]['avatar'],
-                'EMPLOYEE_NAME': users_atributesByLogin[u_login]['name'],
-                'EMPLOYEE_ROLE': users_atributesByLogin[u_login]['stanowisko'],
-                'EMPLOYEE_DEPARTMENT': 'dmd domy',
-                'PHONE': users_atributesByLogin[u_login]['phone'],
-                'EMAIL': users_atributesByLogin[u_login]['email'],
-                'FACEBOOK': users_atributesByLogin[u_login]['facebook'],
-                'LINKEDIN': users_atributesByLogin[u_login]['linkedin'],
-                'STATUS': 1
-            }
-            ready_exportDB.append(set_row)
-        if len(ready_exportDB):
-            # 1. usuń wszystkie pozycje dla EMPLOYEE_DEPARTMENT
-            msq.delete_row_from_database(
-                """
-                    DELETE FROM workers_team WHERE EMPLOYEE_DEPARTMENT = %s;
-                """,
-                ('dmd domy', )
-            )
-
-            # 2. wstaw nowe dane do bazy zachowując kolejność zapisu w bazie
-            for i, row in enumerate(ready_exportDB):
-                zapytanie_sql = '''
-                        INSERT INTO workers_team (EMPLOYEE_PHOTO, EMPLOYEE_NAME, EMPLOYEE_ROLE, EMPLOYEE_DEPARTMENT, PHONE, EMAIL, FACEBOOK, LINKEDIN, STATUS)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-                    '''
-                dane = (
-                        row['EMPLOYEE_PHOTO'], 
-                        row['EMPLOYEE_NAME'], 
-                        row['EMPLOYEE_ROLE'], 
-                        row['EMPLOYEE_DEPARTMENT'], 
-                        row['PHONE'], 
-                        row['EMAIL'], 
-                        row['FACEBOOK'], 
-                        row['LINKEDIN'], 
-                        row['STATUS'], 
-                    )
-                if msq.insert_to_database(zapytanie_sql, dane):
-                    msq.handle_error(f'Ustwiono {row["EMPLOYEE_NAME"]} przez {session["username"]}!', log_path=logFileName)
-                    flash(f'Ustwiono {row["EMPLOYEE_NAME"]}.', 'success')
-
-        else:
-            msq.handle_error(f'UWAGA! Błąd zespół nie został zmieniony przez {session["username"]}!', log_path=logFileName)
-            flash('Błąd! Zespół nie został zmieniony.', 'danger')
-            return redirect(url_for('team_domy'))
-        
-        msq.handle_error(f'Zespół został pomyślnie zmieniony przez {session["username"]}!', log_path=logFileName)
-        flash('Zespół został pomyślnie zmieniony.', 'success')
-    
-    return jsonify({"status": "Sukces", "pracownicy": pracownicy}), 200
+    print("Otrzymana lista pracowników:", sequence_data)
+ 
+    return jsonify({"status": "Sukces", "pracownicy": sequence_data}), 200
 
 @app.route('/team-domy', methods=['GET', 'POST'])
 def team_domy():
@@ -2942,7 +2936,7 @@ def team_domy():
     if request.method == 'POST':
         data = request.get_json()
         sequence_data = data.get('sequence', [])
-        msq.handle_error(f'sequence_data: {sequence_data}!', log_path=logFileName)
+        """sequence_data: ['\n darek\n ', '\n pawel\n ', '\n marek\n ', '\n radek\n ', '\n michal_p\n ']!"""
         sequence = []
         for s in sequence_data:
             clear_data = s.strip()
