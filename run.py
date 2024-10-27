@@ -2792,6 +2792,211 @@ def team_domy():
                             instalacje=settingsDB['instalacje']
                             )
 
+@app.route('/team-budownictwo')
+def team_budownictwo():
+    """Strona zespołu budownictwo."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-budownictwo bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-budownictwo bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    preparoator_team_dict = preparoator_team('budownictwo')
+    settingsDB = generator_settingsDB()
+
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
+    return render_template(
+                            "team_management_budownictwo.html", 
+                            username=session['username'],
+                            userperm=session['userperm'], 
+                            user_brands=session['brands'], 
+                            members=preparoator_team_dict['collections'], 
+                            photos_dict=preparoator_team_dict['employee_photo_dict'],
+                            domy=settingsDB['domy'],
+                            budownictwo=settingsDB['budownictwo'],
+                            development=settingsDB['development'],
+                            elitehome=settingsDB['elitehome'],
+                            inwestycje=settingsDB['inwestycje'],
+                            instalacje=settingsDB['instalacje']
+                            )
+
+@app.route('/team-development')
+def team_development():
+    """Strona zespołu development."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-development bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-development bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    preparoator_team_dict = preparoator_team('development')
+    settingsDB = generator_settingsDB()
+
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
+    return render_template(
+                            "team_management_development.html", 
+                            username=session['username'],
+                            userperm=session['userperm'], 
+                            user_brands=session['brands'], 
+                            members=preparoator_team_dict['collections'], 
+                            photos_dict=preparoator_team_dict['employee_photo_dict'],
+                            domy=settingsDB['domy'],
+                            budownictwo=settingsDB['budownictwo'],
+                            development=settingsDB['development'],
+                            elitehome=settingsDB['elitehome'],
+                            inwestycje=settingsDB['inwestycje'],
+                            instalacje=settingsDB['instalacje']
+                            )
+
+@app.route('/team-elitehome')
+def team_elitehome():
+    """Strona zespołu elitehome."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-elitehome bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-elitehome bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    preparoator_team_dict = preparoator_team('elitehome')
+    settingsDB = generator_settingsDB()
+
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
+    return render_template(
+                            "team_management_elitehome.html", 
+                            username=session['username'],
+                            userperm=session['userperm'], 
+                            user_brands=session['brands'], 
+                            members=preparoator_team_dict['collections'], 
+                            photos_dict=preparoator_team_dict['employee_photo_dict'],
+                            domy=settingsDB['domy'],
+                            budownictwo=settingsDB['budownictwo'],
+                            development=settingsDB['development'],
+                            elitehome=settingsDB['elitehome'],
+                            inwestycje=settingsDB['inwestycje'],
+                            instalacje=settingsDB['instalacje']
+                            )
+
+@app.route('/team-inwestycje')
+def team_inwestycje():
+    """Strona zespołu inwestycje."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-inwestycje bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-inwestycje bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    preparoator_team_dict = preparoator_team('inwestycje')
+    settingsDB = generator_settingsDB()
+
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
+    return render_template(
+                            "team_management_inwestycje.html", 
+                            username=session['username'],
+                            userperm=session['userperm'], 
+                            user_brands=session['brands'], 
+                            members=preparoator_team_dict['collections'], 
+                            photos_dict=preparoator_team_dict['employee_photo_dict'],
+                            domy=settingsDB['domy'],
+                            budownictwo=settingsDB['budownictwo'],
+                            development=settingsDB['development'],
+                            elitehome=settingsDB['elitehome'],
+                            inwestycje=settingsDB['inwestycje'],
+                            instalacje=settingsDB['instalacje']
+                            )
+
+@app.route('/team-instalacje')
+def team_instalacje():
+    """Strona zespołu instalacje."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /team-instalacje bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['team'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /team-instalacje bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    preparoator_team_dict = preparoator_team('instalacje')
+    settingsDB = generator_settingsDB()
+
+    # update sesji userperm brands
+    permTempDict = {}
+    brands_data = {}
+    for un in generator_userDataDB(): 
+        permTempDict[un['username']] = un['uprawnienia']
+        brands_data[un['username']] = un['brands']
+
+    session['userperm'] = permTempDict[session['username']]
+    session['brands'] = brands_data[session['username']]
+
+    return render_template(
+                            "team_management_instalacje.html", 
+                            username=session['username'],
+                            userperm=session['userperm'], 
+                            user_brands=session['brands'], 
+                            members=preparoator_team_dict['collections'], 
+                            photos_dict=preparoator_team_dict['employee_photo_dict'],
+                            domy=settingsDB['domy'],
+                            budownictwo=settingsDB['budownictwo'],
+                            development=settingsDB['development'],
+                            elitehome=settingsDB['elitehome'],
+                            inwestycje=settingsDB['inwestycje'],
+                            instalacje=settingsDB['instalacje']
+                            )
+
 @app.route('/ustawieni_pracownicy', methods=['POST'])
 def ustawieni_pracownicy():
     data = request.get_json()  # Pobranie danych JSON z żądania
@@ -2800,7 +3005,7 @@ def ustawieni_pracownicy():
     
     sequence_data = data['pracownicy']  # Przechwycenie listy pracowników
     department = str(data['grupa']).strip()
-    print(department, sequence_data)
+    # print(department, sequence_data)
     sequence = []
     for s in sequence_data:
         clear_data = s.strip()
