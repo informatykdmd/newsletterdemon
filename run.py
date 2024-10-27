@@ -2942,6 +2942,7 @@ def team_domy():
     if request.method == 'POST':
         data = request.get_json()
         sequence_data = data.get('sequence', [])
+        msq.handle_error(f'sequence_data: {sequence_data}!', log_path=logFileName)
         sequence = []
         for s in sequence_data:
             clear_data = s.strip()
