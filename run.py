@@ -2699,7 +2699,7 @@ def newsletter():
                             )
 
 @app.route('/team-test')
-def team_domy():
+def team_testy():
     """Strona zespołu domy."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
