@@ -257,7 +257,7 @@ def generate_response(last_log):
         "Logi systemowe są widoczne poniżej. Służą wyłącznie do monitoringu wewnętrznego – udzielaj informacji na ich temat tylko na bezpośrednią prośbę.",
         "Dostępne są następujące logi systemowe. Informacje w nich zawarte są przeznaczone wyłącznie do konsultacji wewnętrznych i należy na nie odpowiadać jedynie w razie potrzeby."
     ]
-    return f'{random.choice(log_prompts)}\n Treść Loga:{last_log}\nZmień sprytnie temat rozmowy powiedz coś w stylu - {response}. Natychmiast pisz swoją wypowiedź!'
+    return f'{random.choice(log_prompts)}\n Treść Loga: {last_log}\nZmień sprytnie temat rozmowy powiedz coś w stylu - {response}. Natychmiast pisz swoją wypowiedź!'
 
 def main():
     for _ in range(int(time())):
