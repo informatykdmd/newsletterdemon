@@ -323,7 +323,12 @@
 {% block tableContent%}
     <div class="row me-5 me-sm-0">
       <div class="col-lg-6 col-md-12">
-        <h3>Pracownicy dostępni</h3>
+        <!-- d-block d-sm-none tylko na średnim sm+ -->
+        <div class="d-block d-sm-none mt-2"><h7>Dostępni pracownicy</h7></div>
+        <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+        <div class="d-none d-sm-block d-lg-none mt-2"><h5>Dostępni pracownicy</h5></div>
+        <!-- d-none d-xl-block tylko na pełnym xl+ -->
+        <div class="d-none d-lg-block mt-2"><h3>Dostępni pracownicy</h3></div>   
         <div id="available" class="list border">
           {% for member in members['available'] %}
           {% set member_photo = photos_dict[member] %}
@@ -336,7 +341,12 @@
       </div>
 
       <div class="col-lg-6 col-md-12">
-        <h3>Pracownicy na stronie</h3>
+        <!-- d-block d-sm-none tylko na średnim sm+ -->
+        <div class="d-block d-sm-none mt-2"><h7>Pracownicy na stronie</h7></div>
+        <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+        <div class="d-none d-sm-block d-lg-none mt-2"><h5>Pracownicy na stronie</h5></div>
+        <!-- d-none d-xl-block tylko na pełnym xl+ -->
+        <div class="d-none d-lg-block mt-2"><h3>Pracownicy na stronie</h3></div>  
         <div id="onPage" class="list border">
             {% for member in members['home'] %}
             {% set member_photo = photos_dict[member] %}
