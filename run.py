@@ -2199,6 +2199,7 @@ def save_post():
                     (ID_NEW_POST_CONTENT, ID_AUTHOR)):
                 msq.handle_error(f'Dane zostały zapisane poprawnie w tablei blog_posts!', log_path=logFileName)
                 flash('Dane zostały zapisane poprawnie!', 'success')
+                add_aifaLog(f'Dodano nowy post o tytule: {TYTUL}. Na temat: {AKAPIT}\nPost został poprawnie zapisany w bazie!')
                 return redirect(url_for('blog'))
             else:
                 msq.handle_error(f'Błąd podczas tworzenia nowego posta!', log_path=logFileName)
@@ -2259,7 +2260,7 @@ def save_post():
                 dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
             if msq.insert_to_database(zapytanie_sql, dane):
                 msq.handle_error(f'Post {TYTUL} został poprawnie zapisany w bazie!', log_path=logFileName)
-                add_aifaLog(f'Dodano nowy post o tytule: {TYTUL}. Na temat: {AKAPIT}\nPost został poprawnie zapisany w bazie!')
+                add_aifaLog(f'Edytowano post na blogu o tytule: {TYTUL}. Na temat: {AKAPIT}\nPost został poprawnie zapisany w bazie!')
                 flash('Dane zostały zapisane poprawnie!', 'success')
                 return redirect(url_for('blog'))
         
