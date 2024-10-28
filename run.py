@@ -2260,7 +2260,6 @@ def save_post():
                 dane = (TYTUL, WSTEP, AKAPIT, PUNKTY, TAGI, KATEGORIA, int(set_form_id))
             if msq.insert_to_database(zapytanie_sql, dane):
                 msq.handle_error(f'Post {TYTUL} został poprawnie zapisany w bazie!', log_path=logFileName)
-                add_aifaLog(f'Edytowano post na blogu o tytule: {TYTUL}. Na temat: {AKAPIT}\nPost został poprawnie zapisany w bazie!')
                 flash('Dane zostały zapisane poprawnie!', 'success')
                 return redirect(url_for('blog'))
         
@@ -2699,7 +2698,8 @@ def newsletter():
                             instalacje=instalacje
                             )
 
-def preparoator_team(deaprtment_team='domy'):
+def preparoator_team(deaprtment_team='domy', highlight=4):
+    highlight += 1
     users_atributes = {}
     assigned_dmddomy = []
     
@@ -2731,9 +2731,9 @@ def preparoator_team(deaprtment_team='domy'):
         try: employee_photo_dict[employee_login]
         except KeyError: employee_photo_dict[employee_login] = employee_photo
         
-        if i_domy < 5 and department == f'{deaprtment_team}':
+        if i_domy < highlight and department == f'{deaprtment_team}':
             collections[department]['home'].append(employee_login)
-        elif i_domy >= 5 and department == f'{deaprtment_team}':
+        elif i_domy >= highlight and department == f'{deaprtment_team}':
             collections[department]['team'].append(employee_login)
         if department == f'{deaprtment_team}':
             i_domy += 1
@@ -2765,7 +2765,7 @@ def team_domy():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
 
-    preparoator_team_dict = preparoator_team('domy')
+    preparoator_team_dict = preparoator_team('domy', 4)
     settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
@@ -2806,7 +2806,7 @@ def team_budownictwo():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
 
-    preparoator_team_dict = preparoator_team('budownictwo')
+    preparoator_team_dict = preparoator_team('budownictwo', 4)
     settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
@@ -2847,7 +2847,7 @@ def team_development():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
 
-    preparoator_team_dict = preparoator_team('development')
+    preparoator_team_dict = preparoator_team('development', 2)
     settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
@@ -2888,7 +2888,7 @@ def team_elitehome():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
 
-    preparoator_team_dict = preparoator_team('elitehome')
+    preparoator_team_dict = preparoator_team('elitehome', 0)
     settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
@@ -2929,7 +2929,7 @@ def team_inwestycje():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
 
-    preparoator_team_dict = preparoator_team('inwestycje')
+    preparoator_team_dict = preparoator_team('inwestycje', 4)
     settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
@@ -2970,7 +2970,7 @@ def team_instalacje():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
 
-    preparoator_team_dict = preparoator_team('instalacje')
+    preparoator_team_dict = preparoator_team('instalacje', 3)
     settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
