@@ -338,13 +338,20 @@
       <div class="col-lg-6 col-md-12">
         <h3>Pracownicy na stronie</h3>
         <div id="onPage" class="list border">
-          {% for member in members['home'] + members['team'] %}
-          {% set member_photo = photos_dict[member] %}
-          <div class="dostepnyPracownikSelector dostepnyPracownik" data-image-url="{{member_photo}}">
-            <div class="team-avatar"></div>
-            <span>{{member}}</span>
-          </div>
-          {% endfor %}
+            {% for member in members['home'] %}
+            {% set member_photo = photos_dict[member] %}
+            <div class="dostepnyPracownikSelector dostepnyPracownik worker-on-home" data-image-url="{{member_photo}}">
+              <div class="team-avatar"></div>
+              <span>{{member}}</span>
+            </div>
+            {% endfor %}
+            {% for member in members['team'] %}
+            {% set member_photo = photos_dict[member] %}
+            <div class="dostepnyPracownikSelector dostepnyPracownik" data-image-url="{{member_photo}}">
+              <div class="team-avatar"></div>
+              <span>{{member}}</span>
+            </div>
+            {% endfor %}
         </div>
         <p class="p-3">
             Moduł "Team" umożliwia łatwe dostosowywanie kolejności wyświetlania pracowników na stronie firmowej. 
