@@ -4,7 +4,7 @@
 <script>
   // Funkcja przypisująca obrazy do elementów
   function assignImagesToElements() {
-      document.querySelectorAll('.dostepnyPracownik').forEach(pracownik => {
+      document.querySelectorAll('.dostepnyPracownikSelector').forEach(pracownik => {
           const imageUrl = pracownik.getAttribute("data-image-url");
           if (imageUrl) {
               pracownik.querySelector('.team-avatar').style.backgroundImage = `url('${imageUrl}')`;
@@ -14,9 +14,9 @@
   
   // Aktualizacja podświetlenia i przypisywanie awatarów
   function updateHighlight() {
-    const highlightLimit = 3;
+    const highlightLimit = 4;
     Array.from(document.getElementById('onPage').children).forEach((item, index) => {
-      item.classList.toggle('highlight', index < highlightLimit);
+      item.classList.toggle('worker-on-home', index < highlightLimit);
     });
   }
 
@@ -327,7 +327,7 @@
         <div id="available" class="list border">
           {% for member in members['available'] %}
           {% set member_photo = photos_dict[member] %}
-          <div class="dostepnyPracownik" data-image-url="{{member_photo}}">
+          <div class="dostepnyPracownikSelector dostepnyPracownik" data-image-url="{{member_photo}}">
             <div class="team-avatar"></div>
             <span>{{member}}</span>
           </div>
@@ -340,7 +340,7 @@
         <div id="onPage" class="list border">
           {% for member in members['home'] + members['team'] %}
           {% set member_photo = photos_dict[member] %}
-          <div class="dostepnyPracownik" data-image-url="{{member_photo}}">
+          <div class="dostepnyPracownikSelector dostepnyPracownik" data-image-url="{{member_photo}}">
             <div class="team-avatar"></div>
             <span>{{member}}</span>
           </div>
@@ -365,7 +365,7 @@
     new Sortable(availableList, { 
       group: 'employees', 
       animation: 150,
-      onAdd: (evt) => evt.item.classList.remove('highlight')
+      onAdd: (evt) => evt.item.classList.remove('worker-on-home')
     });
 
     new Sortable(onPageList, { 

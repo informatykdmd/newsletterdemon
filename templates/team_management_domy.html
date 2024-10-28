@@ -14,7 +14,7 @@
   
   // Aktualizacja podświetlenia i przypisywanie awatarów
   function updateHighlight() {
-    const highlightLimit = 3;
+    const highlightLimit = 4;
     Array.from(document.getElementById('onPage').children).forEach((item, index) => {
       item.classList.toggle('worker-on-home', index < highlightLimit);
     });
