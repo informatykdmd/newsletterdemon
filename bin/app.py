@@ -176,7 +176,23 @@ def generate_response(last_log):
         "Proces przebiegł pomyślnie, wszystko wygląda na stabilne.",
         "Kolejna operacja zakończona sukcesem – system działa zgodnie z planem!",
         "Udało się zakończyć zadanie – gratulacje dla zespołu!",
-        "System zakończył operację pomyślnie, dobry kierunek!"
+        "System zakończył operację pomyślnie, dobry kierunek!",
+        "Zadanie wykonane z sukcesem – świetna praca!",
+        "Operacja przebiegła bezbłędnie – system jest w pełni sprawny.",
+        "Wszystkie działania zakończone pomyślnie, gratulacje!",
+        "Sukces! System wykonał zadanie zgodnie z założeniami.",
+        "Operacja zakończona powodzeniem – wszystko przebiegło zgodnie z planem.",
+        "Zakończono proces bez żadnych przeszkód – doskonały wynik!",
+        "Zadanie przebiegło sprawnie – system funkcjonuje optymalnie.",
+        "Wszystko wykonane pomyślnie, system działa na pełnej mocy.",
+        "Proces zakończony sukcesem – gratulacje dla zaangażowanych zespołów!",
+        "System spełnił wszystkie oczekiwania – operacja udana.",
+        "Kolejna udana operacja w systemie – wszystko działa perfekcyjnie.",
+        "Zadanie wykonane wzorcowo – system funkcjonuje bez zarzutu.",
+        "Działania zakończone sukcesem – system utrzymuje stabilność.",
+        "Operacja przebiegła idealnie, wszystko pod kontrolą.",
+        "Proces zakończony z powodzeniem – doskonała robota!",
+        "Sukces operacji potwierdzony – system działa płynnie i bezproblemowo."
     ]
 
     failure_responses = [
@@ -184,15 +200,47 @@ def generate_response(last_log):
         "System napotkał problem, sugeruję sprawdzenie szczegółów.",
         "Nieautoryzowane działanie wykryte! Proszę o pilną uwagę.",
         "Błąd systemowy! Może być potrzebna analiza i interwencja.",
-        "Zgłoszono nieautoryzowany dostęp – proszę o reakcję."
+        "Zgłoszono nieautoryzowany dostęp – proszę o reakcję.",
+        "Wystąpił błąd krytyczny – natychmiastowa weryfikacja wymagana.",
+        "System zgłosił nieoczekiwane działanie – konieczne sprawdzenie.",
+        "Wykryto problem operacyjny – potrzebna pilna reakcja.",
+        "System napotkał błąd – zalecam sprawdzenie logów szczegółowych.",
+        "Napotkałem trudność w działaniu – proszę o sprawdzenie.",
+        "Proces zakończony niepowodzeniem – potrzebna analiza błędu.",
+        "Ostrzeżenie! Nieautoryzowana próba dostępu wykryta.",
+        "System zgłasza niespójność danych – zalecam weryfikację.",
+        "Wystąpił nieprzewidziany błąd – natychmiastowa reakcja wymagana.",
+        "Proces nie został zakończony poprawnie – konieczna interwencja.",
+        "System zgłasza powtarzający się błąd – proszę o sprawdzenie.",
+        "Awaria procesu – zalecane jest podjęcie działań naprawczych.",
+        "Potencjalne zagrożenie bezpieczeństwa wykryte – natychmiastowa weryfikacja.",
+        "System zidentyfikował nieznaną anomalię – konieczna analiza.",
+        "Proces napotkał trudności – weryfikacja wymagana dla dalszego działania."
     ]
 
     neutral_responses = [
         "Monitoruję system, wszystko wygląda w porządku.",
         "Obecnie brak krytycznych alertów – system działa stabilnie.",
         "Czuwam nad bieżącymi procesami, wszystko działa płynnie.",
-        "Żadnych nieprawidłowości w systemie, sytuacja stabilna."
+        "Żadnych nieprawidłowości w systemie, sytuacja stabilna.",
+        "System działa poprawnie, nie wykryto żadnych anomalii.",
+        "Wszystkie procesy przebiegają zgodnie z oczekiwaniami.",
+        "Monitoruję działania systemowe, wszystko pozostaje w normie.",
+        "Obecny stan systemu jest optymalny i stabilny.",
+        "Dane i procesy są kontrolowane – system działa poprawnie.",
+        "Brak oznak przeciążenia, system funkcjonuje bez zakłóceń.",
+        "Wszystkie systemy działają w ustalonym zakresie operacyjnym.",
+        "System monitorowany, wszystko przebiega bezproblemowo.",
+        "Status operacyjny jest bez zmian, sytuacja jest stabilna.",
+        "Nie odnotowano nowych incydentów – wszystko działa płynnie.",
+        "Obecny stan jest normalny, żadnych problemów do zgłoszenia.",
+        "System funkcjonuje w stabilnym środowisku operacyjnym.",
+        "Wszystkie procesy są stabilne i działają bez zastrzeżeń.",
+        "Brak nowych alertów – wszystko pod kontrolą.",
+        "Wszystkie parametry systemowe są w normie.",
+        "System pozostaje stabilny, bez żadnych krytycznych zmian."
     ]
+
     log_lower = last_log.lower()
     if any(keyword in log_lower for keyword in success_keywords):
         response = random.choice(success_responses)
@@ -200,8 +248,16 @@ def generate_response(last_log):
         response = random.choice(failure_responses)
     else:
         response = random.choice(neutral_responses)
-       
-    return f'SYSTEM INFO DISPATCH: {last_log}.\nZmień sprytnie temat rozmowy udzielając odpowiedzi w stylu: {response}. Natychmiast pisz swoją wypowiedź!'
+
+    log_prompts = [
+        "Oto logi systemowe dostępne do przeglądu. Udzielaj informacji na ich temat wyłącznie na konkretne zapytanie.",
+        "Przedstawiam bieżące logi systemowe. Te dane są przeznaczone wyłącznie do użytku wewnętrznego – odpowiadaj na nie tylko, gdy pojawi się bezpośrednie zapytanie.",
+        "Logi systemowe są dostępne, lecz mają charakter informacyjny. Przekazuj szczegóły wyłącznie, gdy ktoś poprosi Cię o takie informacje.",
+        "Otrzymujesz dostęp do logów systemowych w trybie informacyjnym. Proszę o odpowiedzi na ich temat tylko przy bezpośrednim pytaniu.",
+        "Logi systemowe są widoczne poniżej. Służą wyłącznie do monitoringu wewnętrznego – udzielaj informacji na ich temat tylko na bezpośrednią prośbę.",
+        "Dostępne są następujące logi systemowe. Informacje w nich zawarte są przeznaczone wyłącznie do konsultacji wewnętrznych i należy na nie odpowiadać jedynie w razie potrzeby."
+    ]
+    return f'{random.choice(log_prompts)}\n Treść Loga:{last_log}\nZmień sprytnie temat rozmowy powiedz coś w stylu - {response}. Natychmiast pisz swoją wypowiedź!'
 
 def main():
     for _ in range(int(time())):
