@@ -38,12 +38,12 @@ def prepare_prompt(began_prompt):
     for dump in dump_key:
         if dump[1] != "aifa":
             try:
-                user_about, user_descrition = prepare_shedule.connect_to_database(
+                user_descrition, user_about = prepare_shedule.connect_to_database(
                     f"""SELECT ADMIN_ROLE, ABOUT_ADMIN FROM admins WHERE LOGIN='{dump[1]}';""")[0]
             except IndexError:
-                user_about, user_descrition = ('Szaregowy pracownik', 'Brak opisu')
+                user_descrition, user_about = ('Brak opisu', 'Szaregowy pracownik')
         else:
-            user_about, user_descrition = ('Operator Moderacji i Ekspert nowych technologii', 'Sztuczna inteligencja na usługach DMD.')
+            user_descrition, user_about = ('Sztuczna inteligencja na usługach DMD.', 'Operator Moderacji i Ekspert nowych technologii')
         theme = {
             "id": dump[0],
             "user_name": dump[1],
