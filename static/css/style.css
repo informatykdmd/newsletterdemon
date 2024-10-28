@@ -2073,13 +2073,13 @@ color:#969696;
 .list {
   min-height: 100px;
   padding: 10px;
-  background-color: #2c2c2c;
+  background-color: #2f3235;
   border: 1px solid #3c4144;
   border-radius: 5px;
 }
 
 .worker-on-home {
-  background-color: #556063 !important;
+  background-color: #3d494d !important;
 }
 
 .dostepnyPracownik {
@@ -2089,7 +2089,7 @@ color:#969696;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #4f5051;
-  background-color: #2e3031;
+  background-color: #2f3234;
   color: #e0e0e0;
 }
 
@@ -2104,5 +2104,4 @@ color:#969696;
   margin-right: 10px;
   background-size: cover;
   background-position: center;
-  background-color: #007bff; /* Niebieski odcień dla avatarów */
 }

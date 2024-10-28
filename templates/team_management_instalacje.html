@@ -34,14 +34,30 @@
     })
     .then(response => response.json())
     .then(data => {
-      console.log("Odpowiedź z serwera:", data);
-      alert(data.status === "Sukces" ? "Lista została zapisana!" : "Wystąpił błąd przy zapisywaniu listy.");
+        console.log("Odpowiedź z serwera:", data);
+        const responseDiv = document.getElementById("responseMessage");
+
+        // Sprawdzenie odpowiedzi i ustawienie wiadomości w divie
+        if (data.status === "Sukces") {
+            responseDiv.textContent = "Lista została zapisana!";
+            responseDiv.style.color = "#3cff00"; // Kolor dla sukcesu
+        } else {
+            responseDiv.textContent = "Wystąpił błąd przy zapisywaniu listy.";
+            responseDiv.style.color = "#ff0033"; // Kolor dla błędu
+        }
+
+        // Timer do ukrycia wiadomości po 3 sekundach
+        setTimeout(() => {
+            responseDiv.textContent = "";
+        }, 3000);
     })
     .catch(error => {
-      console.error("Błąd:", error);
-      alert("Wystąpił błąd przy zapisywaniu listy.");
+        console.error("Błąd:", error);
+        const responseDiv = document.getElementById("responseMessage");
+        responseDiv.textContent = "Wystąpił błąd przy zapisywaniu listy.";
+        responseDiv.style.color = "#ff0033"; // Kolor dla błędu
     });
-  }
+    }
   
   document.addEventListener('DOMContentLoaded', assignImagesToElements);
 </script>
@@ -369,6 +385,7 @@
             prezentacją zespołu na stronie.
         </p>
         <button class="btn btn-primary mt-3" onclick="saveEmployees('instalacje')">Zapisz</button>
+        <div id="responseMessage" class="mt-3"></div>
       </div>
     </div>
 
