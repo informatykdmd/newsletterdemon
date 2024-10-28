@@ -30,6 +30,11 @@ def prepare_prompt(began_prompt):
     dump_key = get_messages('last')
     ready_prompt = f'{began_prompt}\n\n'
     count_ready = 0
+
+    len_control = 0
+    for dump in dump_key:
+        if dump[1] != "aifa": len_control +=1
+
     for dump in dump_key:
         if dump[1] != "aifa":
             try:
@@ -51,7 +56,7 @@ def prepare_prompt(began_prompt):
         if theme["user_name"] == 'aifa':
             theme["user_name"] = 'Ty'
 
-        if theme["status"] == 2 and len(dump_key) < 2:
+        if theme["status"] == 2 and len_control < 2:
             continue
 
         if prepare_shedule.insert_to_database(
