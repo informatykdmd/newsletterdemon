@@ -4,7 +4,7 @@
 <script>
   // Funkcja przypisująca obrazy do elementów
   function assignImagesToElements() {
-      document.querySelectorAll('.dostepnyPracownik').forEach(pracownik => {
+      document.querySelectorAll('.dostepnyPracownikSelector').forEach(pracownik => {
           const imageUrl = pracownik.getAttribute("data-image-url");
           if (imageUrl) {
               pracownik.querySelector('.team-avatar').style.backgroundImage = `url('${imageUrl}')`;
@@ -16,7 +16,7 @@
   function updateHighlight() {
     const highlightLimit = 3;
     Array.from(document.getElementById('onPage').children).forEach((item, index) => {
-      item.classList.toggle('highlight', index < highlightLimit);
+      item.classList.toggle('worker-on-home', index < highlightLimit);
     });
   }
 
@@ -327,7 +327,7 @@
         <div id="available" class="list border">
           {% for member in members['available'] %}
           {% set member_photo = photos_dict[member] %}
-          <div class="dostepnyPracownik" data-image-url="{{member_photo}}">
+          <div class="dostepnyPracownikSelector dostepnyPracownik" data-image-url="{{member_photo}}">
             <div class="team-avatar"></div>
             <span>{{member}}</span>
           </div>
@@ -340,7 +340,7 @@
         <div id="onPage" class="list border">
           {% for member in members['home'] + members['team'] %}
           {% set member_photo = photos_dict[member] %}
-          <div class="dostepnyPracownik" data-image-url="{{member_photo}}">
+          <div class="dostepnyPracownikSelector dostepnyPracownik" data-image-url="{{member_photo}}">
             <div class="team-avatar"></div>
             <span>{{member}}</span>
           </div>
@@ -365,7 +365,7 @@
     new Sortable(availableList, { 
       group: 'employees', 
       animation: 150,
-      onAdd: (evt) => evt.item.classList.remove('highlight')
+      onAdd: (evt) => evt.item.classList.remove('worker-on-home')
     });
 
     new Sortable(onPageList, { 
@@ -373,63 +373,6 @@
       animation: 150,
       onSort: updateHighlight
     });
-
-    // Funkcja do aktualizacji klas w divie "onPage"
-    function updateWorkerOnHome() {
-        console.log("Aktualizacja worker-on-home rozpoczęta");
-
-        // Pobieramy wszystkie elementy z klasą .dostepnyPracownik w onPage
-        const onPageWorkers = Array.from(document.querySelectorAll('#onPage .dostepnyPracownik'));
-        console.log("Ilość pracowników w onPage:", onPageWorkers.length);
-
-        // Usuwamy klasę worker-on-home z wszystkich
-        onPageWorkers.forEach((worker, index) => {
-            worker.classList.remove('worker-on-home');
-            console.log(`Usuwam klasę worker-on-home z elementu o indeksie ${index}`);
-        });
-
-        // Dodajemy klasę worker-on-home tylko do pierwszych 3 elementów
-        onPageWorkers.slice(0, 3).forEach((worker, index) => {
-            worker.classList.add('worker-on-home');
-            console.log(`Dodaję klasę worker-on-home do elementu o indeksie ${index}`);
-        });
-
-        // Ustawiamy atrybut kolejności dla każdego elementu
-        onPageWorkers.forEach((worker, index) => {
-            worker.setAttribute('data-order', index + 1);
-            console.log(`Ustawiam kolejność ${index + 1} dla elementu o indeksie ${index}`);
-        });
-
-        console.log("Aktualizacja worker-on-home zakończona");
-    }
-
-    // Obserwator zmian dla divów "onPage" i "available"
-    const observer = new MutationObserver((mutationsList) => {
-        mutationsList.forEach(mutation => {
-            if (mutation.type === 'childList') {
-                console.log("Wykryto zmianę struktury dzieci w:", mutation.target.id);
-                updateWorkerOnHome();
-            }
-        });
-    });
-
-    // Opcje konfiguracji dla obserwatora (nasłuchujemy zmiany dzieci)
-    const config = { childList: true, subtree: true };
-
-    // Uruchamiamy obserwatora na divach onPage i available
-    const onPageDiv = document.getElementById('onPage');
-    const availableDiv = document.getElementById('available');
-
-    if (onPageDiv && availableDiv) {
-        observer.observe(onPageDiv, config);
-        observer.observe(availableDiv, config);
-        console.log("Obserwator uruchomiony dla divów onPage i available");
-    } else {
-        console.error("Nie znaleziono divów o id 'onPage' lub 'available'");
-    }
-
-    // Inicjalizacja
-    updateWorkerOnHome();
 
   </script>
 {% endblock %}
