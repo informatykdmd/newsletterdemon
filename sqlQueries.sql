@@ -362,3 +362,15 @@ CREATE TABLE hidden_campaigns (
 
 ALTER TABLE dmd.hidden_campaigns 
 ADD author varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL AFTER category;
+
+
+CREATE TABLE system_logs_monitor (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    log TEXT,
+    id_zadania INT,
+    status INT,
+    active_task INT,
+    errors TEXT,
+    data_aktualizacji TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    action_before_errors INT
+);

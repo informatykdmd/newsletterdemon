@@ -168,8 +168,8 @@ def make_fbgroups_task(data):
 # Funkcja generująca odpowiedź
 def generate_response(last_log):
     # Kluczowe słowa dla sukcesów i niepowodzeń
-    success_keywords = ["sukcesem", "pomyślnie", "udane logowanie"]
-    failure_keywords = ["nie udało się", "nie powodzeniem", "błąd", "nie autoryzowane", "nie autoryzowana"]
+    success_keywords = ["sukcesem", "pomyślnie", "udane logowanie", "wysłano zaplanowaną wysyłkę", "powodzeniem"]
+    failure_keywords = ["nie udane logowanie", "nie powodzeniem", "błąd", "zaleziono błędy", "nie autoryzowane", "nie autoryzowana"]
 
     # Listy możliwych reakcji dla każdego przypadku
     success_responses = [
@@ -327,8 +327,8 @@ def main():
         if lastAifaLog is not None:
             final_prompt = generate_response(lastAifaLog) 
             prepare_shedule.insert_to_database(
-                f"""INSERT INTO chat_task
-                        (question, status)
+                f"""INSERT INTO system_logs_monitor
+                        (log, status)
                     VALUES 
                         (%s, %s)""",
                 (final_prompt, 4)
