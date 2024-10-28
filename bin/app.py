@@ -196,7 +196,7 @@ def generate_response(last_log):
     else:
         response = random.choice(neutral_responses)
        
-    return f'SYSTEM INFO DISPATCH: {last_log}.\nZmień sprytnie temat rozmowy udzielając odpowiedzi w stylu: {response}.'
+    return f'SYSTEM INFO DISPATCH: {last_log}.\nZmień sprytnie temat rozmowy udzielając odpowiedzi w stylu: {response}. Natychmiast pisz swoją wypowiedź!'
 
 def main():
     for _ in range(int(time())):
