@@ -62,7 +62,7 @@ def prepare_prompt(began_prompt):
         if prepare_shedule.insert_to_database(
                 f"UPDATE Messages SET status = %s WHERE id = %s",
                 (1, theme["id"])):
-            ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: ({theme["description"]})\nINFORMACJE O UŻYTKOWNIKU: [{theme["user_about"]}] WIADOMOŚĆ\n{theme["content"]}\nZwracaj się w tonie zgodnym z rangą uzytkownika*\n\n'
+            ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n\n'
             count_ready += 1
 
     if count_ready > 0:
