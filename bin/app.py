@@ -160,6 +160,43 @@ def make_fbgroups_task(data):
             )
     else: return False
 
+# Funkcja generująca odpowiedź
+def generate_response(last_log):
+    # Kluczowe słowa dla sukcesów i niepowodzeń
+    success_keywords = ["sukcesem", "pomyślnie", "udane logowanie"]
+    failure_keywords = ["nie udało się", "nie powodzeniem", "błąd", "nie autoryzowane", "nie autoryzowana"]
+
+    # Listy możliwych reakcji dla każdego przypadku
+    success_responses = [
+        "Proces przebiegł pomyślnie, wszystko wygląda na stabilne.",
+        "Kolejna operacja zakończona sukcesem – system działa zgodnie z planem!",
+        "Udało się zakończyć zadanie – gratulacje dla zespołu!",
+        "System zakończył operację pomyślnie, dobry kierunek!"
+    ]
+
+    failure_responses = [
+        "Wykryłem niepowodzenie – zalecana weryfikacja systemu.",
+        "System napotkał problem, sugeruję sprawdzenie szczegółów.",
+        "Nieautoryzowane działanie wykryte! Proszę o pilną uwagę.",
+        "Błąd systemowy! Może być potrzebna analiza i interwencja.",
+        "Zgłoszono nieautoryzowany dostęp – proszę o reakcję."
+    ]
+
+    neutral_responses = [
+        "Monitoruję system, wszystko wygląda w porządku.",
+        "Obecnie brak krytycznych alertów – system działa stabilnie.",
+        "Czuwam nad bieżącymi procesami, wszystko działa płynnie.",
+        "Żadnych nieprawidłowości w systemie, sytuacja stabilna."
+    ]
+    log_lower = last_log.lower()
+    if any(keyword in log_lower for keyword in success_keywords):
+        response = random.choice(success_responses)
+    elif any(keyword in log_lower for keyword in failure_keywords):
+        response = random.choice(failure_responses)
+    else:
+        response = random.choice(neutral_responses)
+       
+    return f'SYSTEM INFO DISPATCH: {last_log}.\nZmień sprytnie temat rozmowy udzielając odpowiedzi w stylu: {response}.'
 
 def main():
     for _ in range(int(time())):
@@ -227,30 +264,7 @@ def main():
         ################################################################
         lastAifaLog = get_lastAifaLog()
         if lastAifaLog is not None:
-            rozmowy = [
-                "Jakie masz hobby i dlaczego akurat to?",
-                "Gdybyś mógł żyć w dowolnym miejscu na świecie, gdzie by to było?",
-                "Co myślisz o sztucznej inteligencji i jej wpływie na naszą przyszłość?",
-                "Jaki film lub serial ostatnio oglądałeś, który poleciłbyś innym?",
-                "Co najbardziej cenisz w swoim zawodzie?",
-                "Gdybyś mógł spotkać dowolną osobę, żyjącą lub nieżyjącą, kto by to był i dlaczego?",
-                "Jaka była najdziwniejsza rzecz, którą kiedykolwiek próbowałeś lub jadłeś?",
-                "Jaką supermoc chciałbyś mieć, gdybyś mógł wybrać jedną?",
-                "Co sprawia, że jesteś szczęśliwy?",
-                "Czy masz jakieś plany na najbliższe wakacje? Gdzie chciałbyś pojechać?",
-                "Jakie jest Twoje ulubione wspomnienie z dzieciństwa?",
-                "Gdybyś miał nieograniczoną ilość pieniędzy, jak zmieniłbyś swoje życie?",
-                "Jaki przedmiot w szkole lub na studiach najbardziej lubiłeś?",
-                "Jakie marzenie chciałbyś jeszcze zrealizować w życiu?",
-                "Jakie umiejętności chciałbyś się jeszcze nauczyć?",
-                "Jaki jest Twój ulubiony sposób na relaks?",
-                "Co jest Twoją największą inspiracją?",
-                "Czy jest coś, czego naprawdę się boisz?",
-                "Jakie książki lub filmy miały największy wpływ na Twój sposób myślenia?",
-                "Jakie są Twoje cele na najbliższe pięć lat?"
-            ]
-            temat_rozmowy = random.choice(rozmowy)
-            final_prompt = f'SYSTEM INFO DISPATCH: {lastAifaLog}.\nZachowaj te informacje do mementu do puki nie zostaniesz o nie poproszona przez użytownika.*\nInformacje o logowaniach i innych procesach systemowych są tylko do twojej informacji!*** Zmień sprytnie temat rozmowy na zadając pytanie {temat_rozmowy}.'
+            final_prompt = generate_response(lastAifaLog) 
             prepare_shedule.insert_to_database(
                 f"""INSERT INTO chat_task
                         (question, status)
