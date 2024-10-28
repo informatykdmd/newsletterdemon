@@ -2074,10 +2074,13 @@ color:#969696;
   min-height: 100px;
   padding: 10px;
   background-color: #2c2c2c;
-  border: 1px solid #444;
+  border: 1px solid #3c4144;
   border-radius: 5px;
 }
 
+.worker-on-home {
+  background-color: #719c9c;
+}
 
 .dostepnyPracownik {
   display: flex;
@@ -2085,13 +2088,13 @@ color:#969696;
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #555;
-  background-color: #333;
+  border: 1px solid #4f5051;
+  background-color: #2e3031;
   color: #e0e0e0;
 }
 
 .dostepnyPracownik:hover {
-  background-color: #3a3a3a;
+  background-color: #47494a;
 }
 
 .team-avatar {

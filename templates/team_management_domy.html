@@ -373,6 +373,42 @@
       animation: 150,
       onSort: updateHighlight
     });
+
+    // Funkcja do aktualizacji klas w divie "onPage"
+    function updateWorkerOnHome() {
+        // Pobieramy wszystkie elementy z klasą .dostepnyPracownik w onPage
+        const onPageWorkers = Array.from(document.querySelectorAll('#onPage .dostepnyPracownik'));
+
+        // Usuwamy klasę worker-on-home z wszystkich
+        onPageWorkers.forEach(worker => worker.classList.remove('worker-on-home'));
+
+        // Dodajemy klasę worker-on-home tylko do pierwszych 3 elementów
+        onPageWorkers.slice(0, 3).forEach(worker => worker.classList.add('worker-on-home'));
+
+        // Ustawiamy atrybut kolejności dla każdego elementu
+        onPageWorkers.forEach((worker, index) => {
+            worker.setAttribute('data-order', index + 1);
+        });
+    }
+
+    // Obserwator zmian dla divów "onPage" i "available"
+    const observer = new MutationObserver((mutationsList) => {
+        mutationsList.forEach(mutation => {
+            if (mutation.type === 'childList') {
+                updateWorkerOnHome();
+            }
+        });
+    });
+
+    // Opcje konfiguracji dla obserwatora (nasłuchujemy zmiany dzieci)
+    const config = { childList: true, subtree: true };
+
+    // Uruchamiamy obserwatora na divach onPage i available
+    observer.observe(document.getElementById('onPage'), config);
+    observer.observe(document.getElementById('available'), config);
+
+    // Inicjalizacja
+    updateWorkerOnHome();
   </script>
 {% endblock %}
 {% block footer %}
