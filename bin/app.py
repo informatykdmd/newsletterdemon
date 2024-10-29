@@ -173,7 +173,9 @@ def getDataLogs(
             continue
         
         # Filtruj według czasu
-        log_date = datetime.datetime.strptime(log['date'], "%Y-%m-%dT%H:%MZ")
+        # log_date = datetime.datetime.strptime(log['date'], "%Y-%m-%dT%H:%MZ")
+        # W sekcji filtrowania logów według czasu
+        log_date = datetime.datetime.strptime(log['date'], "%Y-%m-%dT%H:%MZ").replace(tzinfo=datetime.timezone.utc)
         if time_threshold and log_date < time_threshold:
             continue
 
