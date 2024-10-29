@@ -57,7 +57,7 @@ def prepare_prompt(began_prompt):
                 command = ''
         else:
             command = ''
-        command = None
+
         theme = {
             "id": dump[0],
             "user_name": dump[1],
