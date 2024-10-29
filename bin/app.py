@@ -32,8 +32,6 @@ def prepare_prompt(began_prompt):
     ready_prompt = f'{began_prompt}\n\n'
     count_ready = 0
 
-    
-
     for dump in dump_key:
         if dump[1] != "aifa":
             try:
@@ -43,6 +41,23 @@ def prepare_prompt(began_prompt):
                 user_descrition, user_about = ('Brak opisu', 'Szaregowy pracownik')
         else:
             user_descrition, user_about = ('Sztuczna inteligencja na usługach DMD.', 'Operator Moderacji i Ekspert nowych technologii')
+        
+        dane_d=getMorphy()
+        fraza = dump[2]
+        znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
+        if znalezione_klucze['sukces'] and znalezione_klucze['kolejnosc']\
+            and znalezione_klucze['procent'] > .5 and dump[1] != "aifa":
+            if znalezione_klucze['najtrafniejsze'] == 'raport systemu':
+                pobierz_logi_dla_uzytkownika = getDataLogs(f'{dump[1]}', spen_last_minutes=60)
+                collectedLogs = ''
+                for log in pobierz_logi_dla_uzytkownika:
+                    collectedLogs += f'{log}\n'
+                command = f'WYKRYTO ZAPYTANIE O STSTUS SYSTEMU OTO DUMP Z SYSTEMU DO WYKORZYSTANIA:\n{collectedLogs}'
+            else:
+                command = ''
+        else:
+            command = ''
+        command = None
         theme = {
             "id": dump[0],
             "user_name": dump[1],
@@ -51,6 +66,7 @@ def prepare_prompt(began_prompt):
             "content": dump[2],
             "timestamp": dump[3],
             "status": dump[4],
+            'command': command
         }
         if theme["user_name"] == 'aifa':
             theme["user_name"] = 'Ty'
@@ -61,7 +77,8 @@ def prepare_prompt(began_prompt):
         if prepare_shedule.insert_to_database(
                 f"UPDATE Messages SET status = %s WHERE id = %s",
                 (1, theme["id"])):
-            ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n\n'
+            
+            ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n{command}\n'
             count_ready += 1
 
     if count_ready > 0:
@@ -196,6 +213,102 @@ def addDataLogs(message: str, category: str, file_name_json: str = "/home/johndo
     data_json.append(new_log)
     with open(file_name_json, "w") as file:
         json.dump(data_json, file, indent=4)
+
+def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany):
+    """
+    Sprawdza dopasowanie słów kluczowych z tekst_szukany do tupli kluczy w słowniku dane_d,
+    używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
+    """
+    # Podziel tekst_szukany na listę słów kluczowych
+    slowa_kluczowe = tekst_szukany.lower().split()  # Ignoruje wielkość liter
+    wynik = {
+        "wystapienia": 0,
+        "kolejnosc": False,
+        "wartosci": set(),
+        "sukces": False,
+        "procent": 0.0,
+        "najtrafniejsze": None
+    }
+
+    max_ocena = 0  # Zmienna przechowująca najwyższą ocenę dla najlepszego dopasowania
+
+    for klucz, wartosc in dane_d.items():
+        klucz_lower = tuple(k.lower() for k in klucz)  # Ignoruje wielkość liter w tuplach
+        wystapienia = 0
+        kolejnosc = True
+        ostatni_indeks = -1
+
+        # Sprawdzamy tylko słowa z tekst_szukany, które mogą wystąpić w kluczu
+        slowa_do_sprawdzenia = [slowo for slowo in slowa_kluczowe if any(slowo in czesc for czesc in klucz_lower)]
+
+        # Jeżeli nie ma żadnych dopasowań słów kluczowych, przejdź do następnego klucza
+        if not slowa_do_sprawdzenia:
+            continue
+
+        # Sprawdzenie wystąpień i kolejności słów kluczowych z dopasowaniem częściowym
+        for slowo in slowa_do_sprawdzenia:
+            znaleziono = False
+            for i, czesc_klucza in enumerate(klucz_lower):
+                if slowo in czesc_klucza:  # Dopasowanie częściowe
+                    wystapienia += 1
+                    znaleziono = True
+                    if i > ostatni_indeks:
+                        ostatni_indeks = i
+                    else:
+                        kolejnosc = False
+                    break
+            if not znaleziono:
+                kolejnosc = False
+                break
+
+        # Obliczamy procent dla bieżącego klucza jako liczba znalezionych słów / liczba słów w tupli
+        procent_dopasowania = round(wystapienia / len(klucz), 2) if len(klucz) > 0 else 0.0
+
+        # Ocena końcowa na podstawie wag
+        ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
+
+        # Aktualizujemy wynik dla najlepszego dopasowania na podstawie oceny
+        if wystapienia > 0:
+            wynik["wartosci"].add(wartosc)  # Dodajemy wartość do zestawu wyników
+            wynik["sukces"] = True
+            if ocena > max_ocena:
+                max_ocena = ocena
+                wynik["najtrafniejsze"] = wartosc
+                wynik["wystapienia"] = wystapienia
+                wynik["kolejnosc"] = kolejnosc
+                wynik["procent"] = procent_dopasowania  # Aktualizujemy najlepszy procent
+
+    # Konwersja zestawu "wartosci" na listę
+    wynik["wartosci"] = list(wynik["wartosci"])
+
+    # Usunięcie najtrafniejszej wartości z listy "wartosci", jeśli jest w zestawie
+    if wynik["najtrafniejsze"] in wynik["wartosci"]:
+        wynik["wartosci"].remove(wynik["najtrafniejsze"])
+
+    return wynik
+
+def tuple_to_string(tup, sep="|"):
+    """Konwertuje tuplę na string za pomocą separatora."""
+    return sep.join(tup)
+
+def string_to_tuple(s, sep="|"):
+    """Konwertuje string na tuplę, używając separatora do podziału."""
+    return tuple(s.split(sep))
+
+def getMorphy(morphy_JSON_file_name="/home/johndoe/app/newsletterdemon/logs/commandAifa.json"):
+    """Odzyskuje tuplę z kluczy JSON i zwraca dane z poprawionymi kluczami."""
+    with open(morphy_JSON_file_name, "r", encoding="utf-8") as f:
+        dane_json = json.load(f)
+    # Konwersja kluczy z formatu string na tuple
+    dane_with_tuples = {string_to_tuple(k): v for k, v in dane_json.items()}
+    return dane_with_tuples
+
+def saveMorphy(dane_dict, file_name="/home/johndoe/app/newsletterdemon/logs/commandAifa.json"):
+    # Konwersja tupli na string przy zapisie do JSON
+    dane_json_ready = {tuple_to_string(k): v for k, v in dane_dict.items()}
+    # Zapis do JSON z kodowaniem utf-8
+    with open(file_name, "w", encoding="utf-8") as f:
+        json.dump(dane_json_ready, f, ensure_ascii=False, indent=4)
 
 def make_fbgroups_task(data):
     {'id': 1, 'shedules_level': 0, 'post_id': 13, 'content': 'content TEXT', 'color_choice': 4, 'category': 'praca', 'section': 'career'}
@@ -438,7 +551,8 @@ def main():
                             )
                         
                         handle_error(f"Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]} z podanym kontaktem {data[2]}\n")
-                        add_aifaLog(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}')
+                        # add_aifaLog(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}')
+                        addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
 
                 elif name == 'checkpoint_60s':
                     """ 
@@ -528,7 +642,8 @@ def main():
                         if row[2] < current_time:
                             TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
                             nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=1;')
-                            add_aifaLog(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}')
+                            # add_aifaLog(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}')
+                            addDataLogs(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}', 'success')
                             for data in nesletterDB:
                                 hashes = data[2]
                                 HTML = messagerCreator.create_html_message(row[1], data[0], hashes)
@@ -551,7 +666,8 @@ def main():
                             (3, data[0], data[2])
                             )
                         handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
-                        add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
+                        # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
+                        addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
                 
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time

@@ -78,6 +78,30 @@ def add_aifaLog(message: str, systemInfoFilePath='/home/johndoe/app/newsletterde
         json.dump(data, file, indent=4)  # zapisz zmiany
         file.truncate()  # obetnij zawartość do nowej długości
 
+# Funkcja do dodawania nowego logu
+def addDataLogs(message: str, category: str, file_name_json: str = "/home/johndoe/app/newsletterdemon/logs/dataLogsAifa.json"):
+    # Wczytaj istniejące logi lub utwórz pustą listę
+    try:
+        with open(file_name_json, "r") as file:
+            data_json = json.load(file)
+    except FileNotFoundError:
+        data_json = []
+
+    # Tworzenie nowego logu
+    new_log = {
+        "id": len(data_json) + 1,  # Generowanie unikalnego ID
+        "message": message,
+         "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
+        "category": category,
+        "issued": []
+    }
+
+    # Dodanie nowego logu do listy i zapisanie do pliku
+    data_json.append(new_log)
+    with open(file_name_json, "w") as file:
+        json.dump(data_json, file, indent=4)
+
+
 class LoginForm(FlaskForm):
     username = StringField('Nazwa użytkownika', validators=[DataRequired()])
     password = PasswordField('Hasło', validators=[DataRequired()])
@@ -1226,11 +1250,13 @@ def login():
             session['user_data'] = users_data[username]
             session['brands'] = brands_data[username]
             msq.handle_error(f'Udane logowanie użytkownika {username}', log_path=logFileName)
-            add_aifaLog(f'Udane logowanie użytkownika {username}')
+            # add_aifaLog(f'Udane logowanie użytkownika {username}')
+            addDataLogs(f'Udane logowanie użytkownika {username}', 'success')
             return redirect(url_for('index'))
         elif username in users_data and users_data.get(username, {}).get('status') == '0':
             msq.handle_error(f'Nie udane logowanie. Konto nie aktywne!', log_path=logFileName)
-            add_aifaLog(f'Nie udane logowanie. Konto użytkonika {username} jest nie aktywne!')
+            # add_aifaLog(f'Nie udane logowanie. Konto użytkonika {username} jest nie aktywne!')
+            addDataLogs(f'Nie udane logowanie. Konto użytkonika {username} jest nie aktywne!', 'danger')
             flash('Konto nie aktywne!', 'danger')
         else:
             msq.handle_error(f'Nie udane logowanie. Błędne nazwa użytkownika lub hasło.', log_path=logFileName)
@@ -2199,7 +2225,9 @@ def save_post():
                     (ID_NEW_POST_CONTENT, ID_AUTHOR)):
                 msq.handle_error(f'Dane zostały zapisane poprawnie w tablei blog_posts!', log_path=logFileName)
                 flash('Dane zostały zapisane poprawnie!', 'success')
-                add_aifaLog(f'Dodano nowy post o tytule: {TYTUL}. Na temat: {AKAPIT}\nPost został poprawnie zapisany w bazie!')
+                # add_aifaLog(f'Dodano nowy post o tytule: {TYTUL}. Na temat: {AKAPIT}\nPost został poprawnie zapisany w bazie!')
+                addDataLogs(f'Dodano nowy post o tytule: {TYTUL}. Na temat: {AKAPIT}\nPost został poprawnie zapisany w bazie!', 'success')
+                
                 return redirect(url_for('blog'))
             else:
                 msq.handle_error(f'Błąd podczas tworzenia nowego posta!', log_path=logFileName)
@@ -2268,6 +2296,7 @@ def save_post():
             
             return redirect(url_for('blog'))
     msq.handle_error(f'BŁĄD! Post {TYTUL} nie został poprawnie zapisany w bazie!', log_path=logFileName)
+    addDataLogs(f'BŁĄD! Post {TYTUL} nie został poprawnie zapisany w bazie!', 'danger')
     flash('Błąd!', 'danger')
     return redirect(url_for('index'))
 
@@ -2336,7 +2365,7 @@ def remove_comment():
                 """,
                 (set_comm_id,)
             )
-        
+        addDataLogs(f'Komentarz o id:{set_comm_id} został usunięty przez {session["username"]}!', 'success')
         msq.handle_error(f'Komentarz o id:{set_comm_id} został usunięty przez {session["username"]}!', log_path=logFileName)
         if form_data['page'] == 'subs':
             flash("Wpis został usunięty.", "success")
@@ -2584,6 +2613,7 @@ def set_settings():
                     ADMIN_ESTATE, 1)
         if msq.insert_to_database(zapytanie_sql, dane):
             msq.handle_error(f'Ustawienia zapisane przez {session["username"]}!', log_path=logFileName)
+            addDataLogs(f'Ustawienia zapisane przez {session["username"]}!', 'success')
             flash('Ustawienia zapisane!', 'success')
             return redirect(url_for('settings'))
     
@@ -3228,7 +3258,8 @@ def save_career_offer():
     try: offerID_int = int(offerID)
     except ValueError:
         msq.handle_error(f'UWAGA! Błąd z id oferty {title} wywołany przez {session["username"]}!', log_path=logFileName)
-        flash('Błąd z id oferty. Skontaktuj się z administratorem!', 'danger')
+        flash(f'UWAGA! Błąd z id oferty {title} wywołany przez {session["username"]}!', 'danger')
+        addDataLogs(f'Ustawienia zapisane przez {session["username"]}!', 'success')
         return redirect(url_for('index'))
 
     # Sprawdzenie czy wszystkie wymagane dane zostały przekazane
@@ -3294,6 +3325,7 @@ def save_career_offer():
     if msq.insert_to_database(zapytanie_sql, dane):
         msq.handle_error(f'SOferta pracy została pomyślnie zapisana przez {session["username"]}!', log_path=logFileName)
         flash(f'Oferta pracy została zapisana pomyślnie!', 'success')
+        addDataLogs(f'Oferta pracy została zapisana pomyślnie!', 'success')
         return jsonify({
             'message': 'Oferta pracy została zapisana pomyślnie!',
             'success': True
@@ -3301,6 +3333,8 @@ def save_career_offer():
     else:
         msq.handle_error(f'UWAGA! Błąd zapisu! Oferta pracy nie została zapisana przez {session["username"]}!', log_path=logFileName)
         flash(f'Błąd zapisu! Oferta pracy nie została zapisana!', 'danger')
+        addDataLogs(f'Błąd zapisu! Oferta pracy nie została zapisana!', 'danger')
+
         return jsonify({
             'message': 'Błąd zapisu! Oferta pracy nie została zapisana!',
             'success': False
@@ -3668,12 +3702,14 @@ def remove_rent_offer():
         except IndexError: 
             msq.handle_error(f'UWAGA! Wpis nie został usunięty przez {session["username"]}. Wystąpił błąd struktury danych galerii!', log_path=logFileName)
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
+            addDataLogs(f'Wpis nie został usunięty. Wystąpił błąd struktury danych galerii!', 'danger')
             return redirect(url_for('estateAdsRent'))
         
         try: current_gallery = take_data_where_ID('*', 'ZdjeciaOfert', 'ID', id_galerry)[0]
         except IndexError: 
             msq.handle_error(f'UWAGA! Wpis nie został usunięty przez {session["username"]}. Wystąpił błąd struktury danych galerii!', log_path=logFileName)
             flash("Wpis nie został usunięty. Wystąpił błąd struktury danych galerii", "danger")
+            addDataLogs(f'Wpis nie został usunięty. Wystąpił błąd struktury danych galerii!', 'danger')
             return redirect(url_for('estateAdsRent'))
         
         removeSpecOffer(set_post_id, 'r')
@@ -3717,6 +3753,7 @@ def remove_rent_offer():
         
         msq.handle_error(f'Wpis został usunięty przez {session["username"]}!', log_path=logFileName)
         flash("Wpis został usunięty.", "success")
+        addDataLogs("Wpis został usunięty.", "success")
         return redirect(url_for('estateAdsRent'))
     
     return redirect(url_for('index'))
@@ -4046,10 +4083,12 @@ def save_rent_offer():
             # print(zapytanie_sql, dane)
             if msq.insert_to_database(zapytanie_sql, dane):
                 msq.handle_error(f'Galeria została pomyslnie zaktualizowana przez {session["username"]}!', log_path=logFileName)
+                addDataLogs(f'Galeria została pomyslnie zaktualizowana przez {session["username"]}!', "success")
                 print('update_galerii_udany')
             else:
                 msq.handle_error(f'UWAGA! Bład zapisu galerii! Oferta wynajmu nie została zapisana przez {session["username"]}!', log_path=logFileName)
                 flash(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
+                addDataLogs(f'Bład zapisu galerii! Oferta wynajmu nie została zapisana!', 'danger')
                 return jsonify({
                         'message': 'xxx',
                         'success': True
@@ -11055,10 +11094,12 @@ def restart():
             if msq.insert_to_database(zapytanie_sql, dane):
                 msq.handle_error(f'Aplikacja została zrestartowana przez {session["username"]}', log_path=logFileName)
                 flash("Aplikacja została zrestartowana", 'success')
+                addDataLogs(f"Aplikacja została zrestartowana", 'success')
                 return jsonify({"message": "Aplikacja została zrestartowana"}), 200
             else:
                 msq.handle_error(f'UWAGA! Błąd podczas restartu aplikacji przez {session["username"]}!', log_path=logFileName)
                 flash("Błąd podczas restartu aplikacji!", 'danger')
+                addDataLogs("Błąd podczas restartu aplikacji!", 'danger')
                 return jsonify({"message": f"Błąd podczas restartu aplikacji!"}), 500
         else:
             flash("Błąd podczas restartu aplikacji!", 'danger')
@@ -11446,6 +11487,7 @@ def fb_groups_sender():
 
     if msq.insert_to_database(zapytanie_sql, dane):
         msq.handle_error(f'Harmonogram kampanii dla {section}, id:{post_id} zsotał poprawnie zapisany przez {session["username"]}.', log_path=logFileName)
+        
         return jsonify({'success': True, 'message': f'Zmiany zostały zapisane!'})
     else:
         msq.handle_error(f"Błąd zapisu bazy danych dla {created_by} {section}, id:{post_id}", log_path=logFileName)
