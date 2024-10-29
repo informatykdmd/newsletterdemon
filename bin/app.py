@@ -52,7 +52,10 @@ def prepare_prompt(began_prompt):
                 collectedLogs = ''
                 for log in pobierz_logi_dla_uzytkownika:
                     collectedLogs += f'{log["message"]} : {log["category"]} \n'
-                command = f'WYKRYTO ZAPYTANIE O STSTUS SYSTEMU OTO DUMP Z SYSTEMU DO WYKORZYSTANIA:\n{collectedLogs}'
+                if collectedLogs:
+                    command = f'WYKRYTO ZAPYTANIE O STSTUS SYSTEMU OTO DUMP Z SYSTEMU DO WYKORZYSTANIA:\n{collectedLogs}'
+                else:
+                    command = ''
             else:
                 command = ''
         else:
