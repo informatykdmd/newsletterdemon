@@ -51,7 +51,7 @@ def prepare_prompt(began_prompt):
                 pobierz_logi_dla_uzytkownika = getDataLogs(f'{dump[1]}', spen_last_minutes=60)
                 collectedLogs = ''
                 for log in pobierz_logi_dla_uzytkownika:
-                    collectedLogs += f'{log}\n'
+                    collectedLogs += f'{log["message"]} : {log["category"]} \n'
                 command = f'WYKRYTO ZAPYTANIE O STSTUS SYSTEMU OTO DUMP Z SYSTEMU DO WYKORZYSTANIA:\n{collectedLogs}'
             else:
                 command = ''
