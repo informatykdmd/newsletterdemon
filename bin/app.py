@@ -1,11 +1,12 @@
 from time import time, sleep
-from datetime import datetime, timedelta
+import datetime
 import prepare_shedule
 import messagerCreator 
 import sendEmailBySmtp
 import random
 import os
 import json
+from typing import List, Optional
 from archiveSents import archive_sents
 from appslib import handle_error
 from fbwaitninglist import give_me_curently_tasks
@@ -105,6 +106,98 @@ def add_aifaLog(message: str, systemInfoFilePath='/home/johndoe/app/newsletterde
         json.dump(data, file, indent=4)  # zapisz zmiany
         file.truncate()  # obetnij zawartość do nowej długości
 
+
+# Funkcja do pobierania logów
+def getDataLogs(
+    user: str,  # Nazwa użytkownika, który pobiera logi; służy do oznaczenia logów jako "przeczytane" przez tego użytkownika.
+    search_by: Optional[str] = None,  # Opcjonalny argument; kategoria logów do wyszukania (np. 'success', 'danger').
+                                      # Jeśli nie jest ustawiony (None), logi są zwracane bez względu na kategorię.
+    spend_quantity: Optional[int] = None,  # Maksymalna liczba logów do zwrócenia. Jeśli None, funkcja zwróci wszystkie logi
+                                           # spełniające kryteria. Ogranicza liczbę wyników na podstawie tego parametru.
+    spen_last_days: Optional[int] = None,  # Opcjonalny argument określający liczbę dni wstecz, w których logi mają być
+                                           # wyszukane. Ma niższy priorytet niż godziny i minuty.
+    spen_last_hours: Optional[int] = None, # Opcjonalny argument określający liczbę godzin wstecz do wyszukiwania logów.
+                                           # Ma wyższy priorytet niż dni i niższy niż minuty.
+    spen_last_minutes: Optional[int] = None, # Opcjonalny argument określający liczbę minut wstecz do wyszukiwania logów.
+                                             # Najwyższy priorytet czasowy – jeśli jest ustawiony, ignoruje wartości dni i godzin.
+    file_name_json: str = '/home/johndoe/app/newsletterdemon/logs/dataLogsAifa.json' # Ścieżka do pliku JSON, gdzie przechowywane
+                                                                                # są logi. Domyślnie: dataLogsAifa.json w ścieżce
+                                                                                # aplikacji. Funkcja wczytuje i zapisuje dane
+                                                                                # z/na ten plik.
+) -> List[dict]:  # Funkcja zwraca listę słowników zawierających logi, które spełniają przekazane kryteria.
+
+    
+    # Pobierz aktualny czas
+    now = datetime.datetime.now(datetime.timezone.utc)
+    
+    # Ustal próg czasowy
+    if spen_last_minutes is not None:
+        time_threshold = now - datetime.timedelta(minutes=spen_last_minutes)
+    elif spen_last_hours is not None:
+        time_threshold = now - datetime.timedelta(hours=spen_last_hours)
+    elif spen_last_days is not None:
+        time_threshold = now - datetime.timedelta(days=spen_last_days)
+    else:
+        time_threshold = None
+
+    # Wczytaj dane z pliku JSON lub utwórz pustą listę, jeśli plik nie istnieje
+    try:
+        with open(file_name_json, "r") as file:
+            data_json = json.load(file)
+    except FileNotFoundError:
+        data_json = []
+
+    filtered_logs = []
+    for log in data_json:
+        # Pomijaj logi, które użytkownik już widział
+        if user in log['issued']:
+            continue
+        
+        # Filtruj według kategorii
+        if search_by is not None and log['category'] != search_by:
+            continue
+        
+        # Filtruj według czasu
+        log_date = datetime.datetime.strptime(log['date'], "%Y-%m-%dT%H:%MZ")
+        if time_threshold and log_date < time_threshold:
+            continue
+
+        # Dodaj log do wyników i oznacz jako przeczytany przez użytkownika
+        filtered_logs.append(log)
+        log['issued'].append(user)  # Dopisz użytkownika do issued
+
+    # Ogranicz liczbę wyników
+    if spend_quantity is not None:
+        filtered_logs = filtered_logs[:spend_quantity]
+
+    # Zapisz zaktualizowane dane do pliku
+    with open(file_name_json, "w") as file:
+        json.dump(data_json, file, indent=4)
+    
+    return filtered_logs
+
+# Funkcja do dodawania nowego logu
+def addDataLogs(message: str, category: str, file_name_json: str = "/home/johndoe/app/newsletterdemon/logs/dataLogsAifa.json"):
+    # Wczytaj istniejące logi lub utwórz pustą listę
+    try:
+        with open(file_name_json, "r") as file:
+            data_json = json.load(file)
+    except FileNotFoundError:
+        data_json = []
+
+    # Tworzenie nowego logu
+    new_log = {
+        "id": len(data_json) + 1,  # Generowanie unikalnego ID
+        "message": message,
+         "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
+        "category": category,
+        "issued": []
+    }
+
+    # Dodanie nowego logu do listy i zapisanie do pliku
+    data_json.append(new_log)
+    with open(file_name_json, "w") as file:
+        json.dump(data_json, file, indent=4)
 
 def make_fbgroups_task(data):
     {'id': 1, 'shedules_level': 0, 'post_id': 13, 'content': 'content TEXT', 'color_choice': 4, 'category': 'praca', 'section': 'career'}
@@ -259,154 +352,225 @@ def generate_response(last_log):
     ]
     return f'{random.choice(log_prompts)}\n Treść Loga: {last_log}\nZmień sprytnie temat rozmowy powiedz coś w stylu - {response}. Natychmiast pisz swoją wypowiedź!'
 
+
 def main():
+    # Checkpointy i ich interwały w sekundach
+    checkpoints = {
+        "checkpoint_2s": 2,
+        "checkpoint_15s": 15,
+        "checkpoint_30s": 30,
+        "checkpoint_60s": 60,
+        "checkpoint_180s": 180,
+        "checkpoint_300s": 300
+    }
+    # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
+    last_run_times = {name: time() for name in checkpoints}
     for _ in range(int(time())):
-        ################################################################
-        # Wysyłka newslettera do aktywnych użytkowników według planu wysyłki
-        ################################################################
+        current_time = time()  # Aktualny czas
+        for name, interval in checkpoints.items():
+            if current_time - last_run_times[name] >= interval:
+                # Akcje dla różnych checkpointów
+                if name == 'checkpoint_2s':
+                    """ 
+                        **********************************************************
+                        ****************** CHECKPOINT 2 SECONDS ****************** 
+                        **********************************************************
+                    """
+                    ################################################################
+                    # komentowanie chata przez serwer automatów
+                    ################################################################
 
-        shcedule = prepare_shedule.prepare_mailing_plan(prepare_shedule.get_allPostsID(), prepare_shedule.get_sent())
-        sleep(1)
-        prepare_shedule.save_shedule(shcedule)
-        sleep(1)
-        current_time = datetime.now()
-        for row in prepare_shedule.connect_to_database(
-                'SELECT * FROM schedule;'):
-            if row[2] < current_time:
-                TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
-                nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=1;')
-                add_aifaLog(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}')
-                for data in nesletterDB:
-                    hashes = data[2]
-                    HTML = messagerCreator.create_html_message(row[1], data[0], hashes)
-                    if HTML != '':
-                        sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
-                        archive_sents(row[1])
-                        handle_error(f"Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE} do {data[1]} \n")
+                    random_choiced_prompt_list = [
+                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Włącz się do rozmowy, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",  # Przykład wzorcowy
+                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Reaguj podekscytowanym tonem, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!",
+                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Odpowiedz w sposób neutralny, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",
+                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Reaguj w sposób powściągliwy, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!",
+                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Odpowiedz w żartobliwy sposób, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",
+                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Reaguj szyderczo, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!"
+                        ]
 
-        ################################################################
-        # Aktywacja konta subskrybenta
-        ################################################################
+                    pre_prompt = random.choice(random_choiced_prompt_list)
+                    final_prompt = prepare_prompt(pre_prompt)
+                    if final_prompt is not None:
 
-        nesletterDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=0;')
-        for data in nesletterDB:
-            TITLE_ACTIVE = 'Aktywacja konta'
-            message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1]).replace('{{hashes}}', data[3])
-            sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, data[2])
-            prepare_shedule.insert_to_database(
-                f"UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
-                (3, data[0], data[2])
-                )
-            handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
-            add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
+                        prepare_shedule.insert_to_database(
+                            f"""INSERT INTO chat_task
+                                    (question, status)
+                                VALUES 
+                                    (%s, %s)""",
+                            (final_prompt, 4)
+                            )
+                        
+                elif name == 'checkpoint_15s':
+                    """ 
+                        **********************************************************
+                        ****************** CHECKPOINT 15 SECONDS ***************** 
+                        **********************************************************
+                    """
+                     ################################################################
+                    # Obsługa automatycznej publikacji ogłoszeń na gupach FACEBOOKA
+                    # TWORZENIE ZADANIA DLA AUTOMATU
+                    ################################################################
+                    
+                    for task_data in give_me_curently_tasks():
+                        if make_fbgroups_task(task_data):
+                            handle_error(f"Przygotowano kampanię FB w sekcji {task_data.get('section', None)} dla kategorii {task_data.get('category', None)} eminowaną przez bota {task_data.get('created_by', None)} o id: {task_data.get('post_id', None)}.\n")
+                            sleep(5)
+
+                elif name == 'checkpoint_30s':
+                    """ 
+                        **********************************************************
+                        ****************** CHECKPOINT 30 SECONDS ***************** 
+                        **********************************************************
+                    """
+                    ################################################################
+                    # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
+                    ################################################################
+
+                    contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE, DATE_TIME FROM contact WHERE DONE=1;')
+                    for data in contectDB:
+                        EMAIL_COMPANY = 'pawel@dmdbudownictwo.pl'
+                        TITLE_MESSAGE = f"{data[3]}"
+                        message = messagerCreator.create_html_resend(client_name=data[1], client_email=data[2], data=data[5], tresc=data[4])
+
+                        sendEmailBySmtp.send_html_email(TITLE_MESSAGE, message, EMAIL_COMPANY)
+                        prepare_shedule.insert_to_database(
+                            f"UPDATE contact SET DONE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                            (0, data[0], data[2])
+                            )
+                        
+                        handle_error(f"Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]} z podanym kontaktem {data[2]}\n")
+                        add_aifaLog(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}')
+
+                elif name == 'checkpoint_60s':
+                    """ 
+                        **********************************************************
+                        ****************** CHECKPOINT 60 SECONDS ***************** 
+                        **********************************************************
+                    """
+                    ################################################################
+                    # Przekazywanie logów systemowych 
+                    # do systemu sztucznej inteligencji
+                    ################################################################
+                    # lastAifaLog = get_lastAifaLog()
+                    # if lastAifaLog is not None:
+                    #     final_prompt = generate_response(lastAifaLog) 
+                    #     prepare_shedule.insert_to_database(
+                    #         f"""INSERT INTO system_logs_monitor
+                    #                 (log, status)
+                    #             VALUES 
+                    #                 (%s, %s)""",
+                    #         (final_prompt, 4)
+                    #         )
+                    
+                    ################################################################
+                    # Monitor systemu
+                    ################################################################
+                    handle_error(f'{datetime.datetime.now()} - {__name__} is working...\n')
+                        
+                elif name == 'checkpoint_180s':
+                    """ 
+                        **********************************************************
+                        ****************** CHECKPOINT 180 SECONDS **************** 
+                        **********************************************************
+                    """
+                    ################################################################
+                    # Obsługa automatycznego wygaszania zakończonych ogłoszeń na 
+                    # ALLEGRO OTODOM LENTO
+                    ################################################################
+
+                    expired_records = check_all_tables_for_expiry()
+
+                    for record in expired_records:
+                        table_name = record.get('table', None)
+                        record_id = record.get('id', None)
+                        status = record.get('status', None)
+                        
+                        if table_name is None or record_id is None or status is None:
+                            handle_error(f"Pominięto rekord z brakującymi danymi: {record}.\n")
+                            continue
+
+                        # Jeżeli status jest 1 lub 0 -> Zmieniamy status na 6 (Trwa proces usuwania ogłoszenia)
+                        if status in [0, 1]:
+                            query_update_status = f"UPDATE {table_name} SET status = %s, active_task = %s WHERE id = %s"
+                            values = (6, 0, record_id)
+                            try:
+                                insert_to_database(query_update_status, values)  # Zakładam, że insert_to_database obsługuje także update
+                                handle_error(f"Wygaszanie ogłoszenia o ID {record_id} w tabeli {table_name}.\n")
+                            except Exception as e:
+                                handle_error(f"Błąd przy aktualizacji rekordu o ID {record_id} w tabeli {table_name}: {e}.\n")
+                        
+                        # Jeżeli status jest 2 -> Usuwamy rekord
+                        elif status == 2:
+                            query_delete_record = f"DELETE FROM {table_name} WHERE id = %s"
+                            values = (record_id,)
+                            try:
+                                delete_row_from_database(query_delete_record, values)
+                                handle_error(f"Usunięto rekord o ID {record_id} z tabeli {table_name}.\n")
+                            except Exception as e:
+                                handle_error(f"Błąd przy usuwaniu rekordu o ID {record_id} z tabeli {table_name}: {e}.\n")
+
+                elif name == 'checkpoint_300s':
+                    """ 
+                        **********************************************************
+                        ****************** CHECKPOINT 300 SECONDS **************** 
+                        **********************************************************
+                    """
+                    ################################################################
+                    # Wysyłka newslettera do aktywnych użytkowników według planu wysyłki
+                    ################################################################
+
+                    shcedule = prepare_shedule.prepare_mailing_plan(prepare_shedule.get_allPostsID(), prepare_shedule.get_sent())
+                    sleep(1)
+                    prepare_shedule.save_shedule(shcedule)
+                    sleep(1)
+                    current_time = datetime.datetime.now()
+                    for row in prepare_shedule.connect_to_database(
+                            'SELECT * FROM schedule;'):
+                        if row[2] < current_time:
+                            TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
+                            nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=1;')
+                            add_aifaLog(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}')
+                            for data in nesletterDB:
+                                hashes = data[2]
+                                HTML = messagerCreator.create_html_message(row[1], data[0], hashes)
+                                if HTML != '':
+                                    sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
+                                    archive_sents(row[1])
+                                    handle_error(f"Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE} do {data[1]} \n")
+
+                    ################################################################
+                    # Aktywacja konta subskrybenta
+                    ################################################################
+
+                    nesletterDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=0;')
+                    for data in nesletterDB:
+                        TITLE_ACTIVE = 'Aktywacja konta'
+                        message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1]).replace('{{hashes}}', data[3])
+                        sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, data[2])
+                        prepare_shedule.insert_to_database(
+                            f"UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                            (3, data[0], data[2])
+                            )
+                        handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
+                        add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
+                
+                # Aktualizacja czasu ostatniego wykonania dla checkpointu
+                last_run_times[name] = current_time
             
-        ################################################################
-        # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
-        ################################################################
-
-        contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE, DATE_TIME FROM contact WHERE DONE=1;')
-        for data in contectDB:
-            EMAIL_COMPANY = 'pawel@dmdbudownictwo.pl'
-            TITLE_MESSAGE = f"{data[3]}"
-            message = messagerCreator.create_html_resend(client_name=data[1], client_email=data[2], data=data[5], tresc=data[4])
-
-            sendEmailBySmtp.send_html_email(TITLE_MESSAGE, message, EMAIL_COMPANY)
-            prepare_shedule.insert_to_database(
-                f"UPDATE contact SET DONE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
-                (0, data[0], data[2])
-                )
+                
             
-            handle_error(f"Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]} z podanym kontaktem {data[2]}\n")
-            add_aifaLog(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}')
 
-        ################################################################
-        # Przekazywanie logów systemowych 
-        # do systemu sztucznej inteligencji
-        ################################################################
-        lastAifaLog = get_lastAifaLog()
-        if lastAifaLog is not None:
-            final_prompt = generate_response(lastAifaLog) 
-            prepare_shedule.insert_to_database(
-                f"""INSERT INTO system_logs_monitor
-                        (log, status)
-                    VALUES 
-                        (%s, %s)""",
-                (final_prompt, 4)
-                )
-
-        ################################################################
-        # komentowanie chata przez serwer automatów
-        ################################################################
-
-        random_choiced_prompt_list = [
-                "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Włącz się do rozmowy, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",  # Przykład wzorcowy
-                "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Reaguj podekscytowanym tonem, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!",
-                "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Odpowiedz w sposób neutralny, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",
-                "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Reaguj w sposób powściągliwy, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!",
-                "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Odpowiedz w żartobliwy sposób, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",
-                "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Reaguj szyderczo, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!"
-            ]
-
-        pre_prompt = random.choice(random_choiced_prompt_list)
-        final_prompt = prepare_prompt(pre_prompt)
-        if final_prompt is not None:
-
-            prepare_shedule.insert_to_database(
-                f"""INSERT INTO chat_task
-                        (question, status)
-                    VALUES 
-                        (%s, %s)""",
-                (final_prompt, 4)
-                )
-
-        ################################################################
-        # Obsługa automatycznej publikacji ogłoszeń na gupach FACEBOOKA
-        # TWORZENIE ZADANIA DLA AUTOMATU
-        ################################################################
-        
-        for task_data in give_me_curently_tasks():
-            if make_fbgroups_task(task_data):
-                handle_error(f"Przygotowano kampanię FB w sekcji {task_data.get('section', None)} dla kategorii {task_data.get('category', None)} eminowaną przez bota {task_data.get('created_by', None)} o id: {task_data.get('post_id', None)}.\n")
-                sleep(5)
-
-        ################################################################
-        # Obsługa automatycznego wygaszania zakończonych ogłoszeń na 
-        # ALLEGRO OTODOM LENTO
-        ################################################################
-
-        expired_records = check_all_tables_for_expiry()
-
-        for record in expired_records:
-            table_name = record.get('table', None)
-            record_id = record.get('id', None)
-            status = record.get('status', None)
             
-            if table_name is None or record_id is None or status is None:
-                handle_error(f"Pominięto rekord z brakującymi danymi: {record}.\n")
-                continue
 
-            # Jeżeli status jest 1 lub 0 -> Zmieniamy status na 6 (Trwa proces usuwania ogłoszenia)
-            if status in [0, 1]:
-                query_update_status = f"UPDATE {table_name} SET status = %s, active_task = %s WHERE id = %s"
-                values = (6, 0, record_id)
-                try:
-                    insert_to_database(query_update_status, values)  # Zakładam, że insert_to_database obsługuje także update
-                    handle_error(f"Wygaszanie ogłoszenia o ID {record_id} w tabeli {table_name}.\n")
-                except Exception as e:
-                    handle_error(f"Błąd przy aktualizacji rekordu o ID {record_id} w tabeli {table_name}: {e}.\n")
             
-            # Jeżeli status jest 2 -> Usuwamy rekord
-            elif status == 2:
-                query_delete_record = f"DELETE FROM {table_name} WHERE id = %s"
-                values = (record_id,)
-                try:
-                    delete_row_from_database(query_delete_record, values)
-                    handle_error(f"Usunięto rekord o ID {record_id} z tabeli {table_name}.\n")
-                except Exception as e:
-                    handle_error(f"Błąd przy usuwaniu rekordu o ID {record_id} z tabeli {table_name}: {e}.\n")
 
-        handle_error(f'{datetime.now()} - {__name__} is working...\n')
-        sleep(60)
+           
+
+            
+
+            
+            sleep(0.1)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
 
 if __name__ == "__main__":
