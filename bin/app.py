@@ -75,10 +75,12 @@ def prepare_prompt(began_prompt):
             continue
 
         if prepare_shedule.insert_to_database(
-                f"UPDATE Messages SET status = %s WHERE id = %s",
-                (1, theme["id"])):
-            
-            ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n{command}\n'
+            f"UPDATE Messages SET status = %s WHERE id = %s",
+            (1, theme["id"])):
+            if dump[1] != "aifa":
+                ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n{command}\n'
+            else:
+                ready_prompt += f'WIADOMOŚĆ OD CIEBIE:\n{theme["content"]}\n\n'
             count_ready += 1
 
     if count_ready > 0:
