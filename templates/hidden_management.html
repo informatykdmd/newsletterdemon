@@ -537,7 +537,7 @@
                                                     id="fbgroups_requirementsDescription_{{post_id}}" 
                                                     class="fbgroups-requirements-description content-editable formatuj-maly-font" 
                                                     contenteditable="true">{{post_data['description']}}</div>
-                                                    
+
                                                 <div id="char_count_{{post_id}}" class="char-count ms-3 mt-1" contenteditable="false"></div>
                                                 <!-- Ukryte pole do przechowywania wartości wybranego koloru -->
                                                 <input type="hidden" id="color_choice_{{post_id}}" name="color_choice" value="0">
@@ -1230,12 +1230,13 @@
             this.idGalleryInput = document.getElementById(`id_gallery_${postId}`);
             // console.log('this.idGalleryInput', this.idGalleryInput);
 
-            // Inicjalna aktualizacja licznika znaków
-            this.updateCharCount();
-
+            
             // Sprawdzenie, czy `id_gallery` jest None
             this.galletyValue = false
             this.checkGallery();
+            
+            // Inicjalna aktualizacja licznika znaków
+            this.updateCharCount();
 
             // Nasłuchiwanie zmian w treści contentEditable
             this.contentDiv.addEventListener('keyup', () => this.updateCharCount());
