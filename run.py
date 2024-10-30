@@ -1187,13 +1187,14 @@ def znajdz_wolny_termin(nowe_kampanie, istniejące_kampanie, interval_seconds=10
     return termin_export_list
 
 settingsDB = generator_settingsDB()
-app.config['PER_PAGE'] = settingsDB['pagination']  # Określa liczbę elementów na stronie
-newsletterSettingDB = generator_newsletterSettingDB()
-userDataDB = generator_userDataDB()
-teamDB = generator_teamDB()
-subsDataDB = generator_subsDataDB()
-daneDBList = generator_daneDBList()
+app.config['PER_PAGE'] = generator_settingsDB()['pagination']  # Określa liczbę elementów na stronie
+# newsletterSettingDB = generator_newsletterSettingDB()
+# userDataDB = generator_userDataDB()
+# teamDB = generator_teamDB()
+# subsDataDB = generator_subsDataDB()
+# daneDBList = generator_daneDBList()
 
+active_sessions = {}
 
 @app.route('/')
 def index():
@@ -1245,6 +1246,18 @@ def login():
                 password, usersTempDict[username]['salt']
                 ) == usersTempDict[username]['hashed_password'] and \
                     int(users_data[username]['status']) == 1:
+            
+            # Wylogowanie z poprzednich urządzeń, jeśli istnieje aktywna sesja dla tego użytkownika
+            if username in active_sessions:
+                old_session_id = active_sessions[username]
+                if old_session_id in session:  # Jeśli sesja istnieje, usuń ją
+                    session.pop(old_session_id, None)
+
+            # Przypisanie nowej sesji
+            session_id = request.cookies.get("session")  # Pobierz ID bieżącej sesji z ciasteczek
+            active_sessions[username] = session_id
+
+
             session['username'] = username
             session['userperm'] = permTempDict[username]
             session['user_data'] = users_data[username]
