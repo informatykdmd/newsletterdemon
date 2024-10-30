@@ -5807,6 +5807,10 @@
         // Metoda do liczenia znaków i aktualizowania stanu
         updateCharCount() {
             const text = this.contentDiv.innerText || this.contentDiv.textContent;
+
+            // Usuń nadmiarowe białe znaki (spacje, nowe linie, tabulatory)
+            text = text.replace(/\s+/g, ' ').trim();
+
             const charCount = text.length;
 
             // Aktualizacja licznika znaków
