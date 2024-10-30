@@ -53,13 +53,10 @@ def prepare_prompt(began_prompt):
                 for log in pobierz_logi_dla_uzytkownika:
                     collectedLogs += f'{log["message"]} : {log["category"]} \n'
                 if collectedLogs:
-                    command = f'WYKRYTO ZAPYTANIE O STSTUS SYSTEMU OTO DUMP Z SYSTEMU DO WYKORZYSTANIA:\n{collectedLogs}'
-                else:
-                    command = ''
-            else:
-                command = ''
-        else:
-            command = ''
+                    command = f'WYKRYTO ZAPYTANIE O STATUS SYSTEMU OTO DUMP DO WYKORZYSTANIA:\n{collectedLogs}'
+                else: command = ''
+            else: command = ''
+        else: command = ''
 
         theme = {
             "id": dump[0],
@@ -72,7 +69,7 @@ def prepare_prompt(began_prompt):
             'command': command
         }
         if theme["user_name"] == 'aifa':
-            theme["user_name"] = 'Ty'
+            theme["user_name"] = 'Ty napisałaś:'
 
         if theme["status"] == 2 and len(dump_key) < 2:
             continue
