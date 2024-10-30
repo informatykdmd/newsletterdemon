@@ -48,7 +48,7 @@ def prepare_prompt(began_prompt):
         if znalezione_klucze['sukces'] and znalezione_klucze['kolejnosc']\
             and znalezione_klucze['procent'] > .5 and dump[1] != "aifa":
             if znalezione_klucze['najtrafniejsze'] == 'raport systemu':
-                pobierz_logi_dla_uzytkownika = getDataLogs(f'{dump[1]}', spen_last_minutes=60)
+                pobierz_logi_dla_uzytkownika = getDataLogs(f'{dump[1]}', spen_last_days=4)
                 collectedLogs = ''
                 for log in pobierz_logi_dla_uzytkownika:
                     collectedLogs += f'{log["message"]} : {log["category"]} \n'
