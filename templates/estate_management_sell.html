@@ -1782,51 +1782,48 @@
                                                     <div class="mb-2 mt-2">
                                                         <h5>Treść Ogłoszenia na Grupach FB</h5>
                                                     </div>
-                                                    <div style="position: relative;">
-
-                                                        <div 
-                                                            id="fbgroups_estateAdsSellDescription_{{post_id}}" 
-                                                            class="fbgroups-requirements-description content-editable formatuj-maly-font" 
-                                                            contenteditable="true">
-                                                            {% for item in post_data['Opis'] %}
-                                                                {% for key, val in item.items() %}
-                                                                    {% if key=='li' %}
-                                                                        
-                                                                            {% for li_item in val %}
-                                                                                {{li_item|decode_html_entities_filter|update_new_line_chars}}
-                                                                            {% endfor %}
-                                                                        
-                                                                    {% else %}
-                                                                        {% set decoded_val = val|decode_html_entities_filter|update_new_line_chars %}
-                                                                        {% if key=='p' %}
-                                                                            {{decoded_val}}
-                                                                        {% endif %}
-                                                                        {% if key=='strong' %}
-                                                                            {{decoded_val}}
-                                                                        {% endif %}
-                                                                        {% if key=='h1' %}
-                                                                            {{decoded_val}}
-                                                                        {% endif %}
-                                                                        {% if key=='h1-strong' %}
-                                                                            {{decoded_val}}
-                                                                        {% endif %}
-                                                                        {% if key=='h2' %}
-                                                                            {{decoded_val}}
-                                                                        {% endif %}
-                                                                        {% if key=='h2-strong' %}
-                                                                            {{decoded_val}}
-                                                                        {% endif %}
-                                                                        {% if key=='h3' %}
-                                                                            {{decoded_val}}
-                                                                        {% endif %}
-                                                                        {% if key=='h3-strong' %}
-                                                                            {{decoded_val}}
-                                                                        {% endif %}
+                                                    <div 
+                                                        id="fbgroups_estateAdsSellDescription_{{post_id}}" 
+                                                        class="fbgroups-requirements-description content-editable formatuj-maly-font" 
+                                                        contenteditable="true">
+                                                        {% for item in post_data['Opis'] %}
+                                                            {% for key, val in item.items() %}
+                                                                {% if key=='li' %}
+                                                                    
+                                                                        {% for li_item in val %}
+                                                                            {{li_item|decode_html_entities_filter|update_new_line_chars}}
+                                                                        {% endfor %}
+                                                                    
+                                                                {% else %}
+                                                                    {% set decoded_val = val|decode_html_entities_filter|update_new_line_chars %}
+                                                                    {% if key=='p' %}
+                                                                        {{decoded_val}}
                                                                     {% endif %}
-                                                                {% endfor %}
+                                                                    {% if key=='strong' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h1' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h1-strong' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h2' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h2-strong' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h3' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                    {% if key=='h3-strong' %}
+                                                                        {{decoded_val}}
+                                                                    {% endif %}
+                                                                {% endif %}
                                                             {% endfor %}
-                                                            <div id="char_count_{{post_id}}" class="char-count" contenteditable="false"></div>
-                                                        </div>
+                                                        {% endfor %}
+                                                        <div id="char_count_{{post_id}}" class="char-count" contenteditable="false"></div>
                                                     </div>
 
                                                     <!-- Ukryte pole do przechowywania wartości wybranego koloru -->
