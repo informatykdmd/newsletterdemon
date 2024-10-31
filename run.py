@@ -1344,6 +1344,7 @@ def send_chat_message():
     
     # Sprawdzenie, czy wiadomość jest komendą
     if content.startswith('@'):
+        print(content)
         # Aktywacja trybu wiersza poleceń dla użytkownika
         command_mode_users[username] = time.time()
         msq.handle_error(f'Użytkownik {username} aktywował tryb wiersza poleceń.', log_path=logFileName)
@@ -1359,7 +1360,7 @@ def send_chat_message():
         msq.handle_error(f'Użytkownik {username} przesłał kolejną komendę - licznik resetowany.', log_path=logFileName)
         
         # Zapisujemy wiadomość z trybu wiersza poleceń ze statusem 6
-        new_message = save_chat_message(user_name=username, content=content, status=6)
+        new_message = save_chat_message(user_name=username, content=content, status=1)
         
         if new_message:
             return jsonify({"status": "command_received"}), 200
