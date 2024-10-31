@@ -45,7 +45,7 @@ def get_campains_id_descript_dates() -> str:
         FROM waitinglist_fbgroups
     '''
     took_list = prepare_shedule.connect_to_database(existing_campaigns_query)
-    ready_export_string = ''
+    ready_export_string = f'Dump z dnia {datetime.now().strftime("%Y-%B-%d %H:%M")}\n'
     for row in took_list:
         theme={
             'post_id': row[0],
@@ -66,12 +66,13 @@ def get_campains_id_descript_dates() -> str:
         for k, v in list(theme.items()):  # używamy listy do bezpiecznego usuwania
             if k.endswith('datetime') and v is None:  # kampania niezaplanowana
                 del theme[k]
+            else:  # kampania zaplanowana - formatujemy datę
+                theme[k] = v.strftime("%Y-%B-%d %H:%M")  # Pełna nazwa miesiąca, np. "2023-January-01 15:30"
             if k.endswith('status') and v is not None:  # kampania zrealizowana
                 del theme[k]
             
         ready_export_string += f"Kampania o id: {theme['post_id']}, emitowana przez bota: {theme['created_by']}, w kategorii: {theme['category']}, dla sekcji: {theme['section']} posiada niezrealizowane emisje zaplanowane na dni:\n"
         ready_export_string += f"\t\t{theme.get('schedule_0_datetime', '')} {theme.get('schedule_1_datetime', '')} {theme.get('schedule_2_datetime', '')} {theme.get('schedule_3_datetime', '')} {theme.get('schedule_4_datetime', '')} {theme.get('schedule_5_datetime', '')} {theme.get('schedule_6_datetime', '')} {theme.get('schedule_7_datetime', '')} {theme.get('schedule_8_datetime', '')} {theme.get('schedule_9_datetime', '')} {theme.get('schedule_10_datetime', '')}\n"
-        ready_export_string += f"Treść ogłoszenia: {theme.get('content', '')}\n\n"
     
     # Usuwamy zbędne spacje
     ready_export_string = "\n".join(" ".join(line.split()) for line in ready_export_string.splitlines())
@@ -96,6 +97,7 @@ def prepare_prompt(began_prompt):
         dane_d=getMorphy()
         fraza = dump[2]
         znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
+        # print(znalezione_klucze)
         if znalezione_klucze['sukces'] and znalezione_klucze['kolejnosc']\
             and znalezione_klucze['procent'] > .5 and dump[1] != "aifa":
             
@@ -120,6 +122,7 @@ def prepare_prompt(began_prompt):
                 ############################################################
                 """
                 pobierz_harmonogramy_kampanii = get_campains_id_descript_dates()
+                print(pobierz_harmonogramy_kampanii)
                 if pobierz_harmonogramy_kampanii:
                     command = f'WYKRYTO ZAPYTANIE O HARMONOGRAM KAMPANII OTO DUMP DO WYKORZYSTANIA:\n{pobierz_harmonogramy_kampanii}'
                 else: command = ''
