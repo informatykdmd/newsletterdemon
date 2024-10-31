@@ -45,7 +45,7 @@ def get_campains_id_descript_dates() -> str:
         FROM waitinglist_fbgroups
     '''
     took_list = prepare_shedule.connect_to_database(existing_campaigns_query)
-    ready_export_string = f'Dump z dnia {datetime.now().strftime("%Y-%B-%d %H:%M")}\n'
+    ready_export_string = f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n'
     for row in took_list:
         theme={
             'post_id': row[0],
