@@ -64,11 +64,15 @@ def get_campains_id_descript_dates() -> str:
             'category': row[24], 'created_by': row[25], 'section': row[26]
         }
         for k, v in list(theme.items()):  # używamy listy do bezpiecznego usuwania
-            if k.endswith('datetime') and v is None:  # kampania niezaplanowana
-                del theme[k]
-            else:  # kampania zaplanowana - formatujemy datę
-                theme[k] = v.strftime("%Y-%B-%d %H:%M")  # Pełna nazwa miesiąca, np. "2023-January-01 15:30"
-            if k.endswith('status') and v is not None:  # kampania zrealizowana
+            if k.endswith('datetime'):
+                if v is None:  # kampania niezaplanowana
+                    del theme[k]
+                elif isinstance(v, datetime.datetime):  # kampania zaplanowana - formatujemy datę
+                    theme[k] = v.strftime("%Y-%B-%d %H:%M")  # Pełna nazwa miesiąca, np. "2023-January-01 15:30"
+                else:
+                    # Jeśli nie jest datetime, traktujemy jako niepoprawne i usuwamy
+                    del theme[k]
+            elif k.endswith('status') and v is not None:  # kampania zrealizowana
                 del theme[k]
             
         ready_export_string += f"Kampania o id: {theme['post_id']}, emitowana przez bota: {theme['created_by']}, w kategorii: {theme['category']}, dla sekcji: {theme['section']} posiada niezrealizowane emisje zaplanowane na dni:\n"
