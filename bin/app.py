@@ -27,6 +27,57 @@ def get_messages(flag='all'):
             """SELECT id, user_name, content, timestamp, status FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR AND status != 1 ORDER BY timestamp ASC;""")
     return dump_key
 
+def get_campains_id_descript_dates() -> str:
+    existing_campaigns_query = '''
+        SELECT post_id, content, 
+            schedule_0_datetime, schedule_0_status, 
+            schedule_1_datetime, schedule_1_status, 
+            schedule_2_datetime, schedule_2_status, 
+            schedule_3_datetime, schedule_3_status, 
+            schedule_4_datetime, schedule_4_status, 
+            schedule_5_datetime, schedule_5_status, 
+            schedule_6_datetime, schedule_6_status, 
+            schedule_7_datetime, schedule_7_status, 
+            schedule_8_datetime, schedule_8_status, 
+            schedule_9_datetime, schedule_9_status, 
+            schedule_10_datetime, schedule_10_status,
+            category, created_by, section
+        FROM waitinglist_fbgroups
+    '''
+    took_list = prepare_shedule.connect_to_database(existing_campaigns_query)
+    ready_export_string = ''
+    for row in took_list:
+        theme={
+            'post_id': row[0],
+            'content': row[1],
+            'schedule_0_datetime': row[2], 'schedule_0_status': row[3],
+            'schedule_1_datetime': row[4], 'schedule_1_status': row[5],
+            'schedule_2_datetime': row[6], 'schedule_2_status': row[7],
+            'schedule_3_datetime': row[8], 'schedule_3_status': row[9],
+            'schedule_4_datetime': row[10], 'schedule_4_status': row[11],
+            'schedule_5_datetime': row[12], 'schedule_5_status': row[13],
+            'schedule_6_datetime': row[14], 'schedule_6_status': row[15],
+            'schedule_7_datetime': row[16], 'schedule_7_status': row[17],
+            'schedule_8_datetime': row[18], 'schedule_8_status': row[19],
+            'schedule_9_datetime': row[20], 'schedule_9_status': row[21],
+            'schedule_10_datetime': row[22], 'schedule_10_status': row[23],
+            'category': row[24], 'created_by': row[25], 'section': row[26]
+        }
+        for k, v in list(theme.items()):  # używamy listy do bezpiecznego usuwania
+            if k.endswith('datetime') and v is None:  # kampania niezaplanowana
+                del theme[k]
+            if k.endswith('status') and v is not None:  # kampania zrealizowana
+                del theme[k]
+            
+        ready_export_string += f"Kampania o id: {theme['post_id']}, emitowana przez bota: {theme['created_by']}, w kategorii: {theme['category']}, dla sekcji: {theme['section']} posiada niezrealizowane emisje zaplanowane na dni:\n"
+        ready_export_string += f"\t\t{theme.get('schedule_0_datetime', '')} {theme.get('schedule_1_datetime', '')} {theme.get('schedule_2_datetime', '')} {theme.get('schedule_3_datetime', '')} {theme.get('schedule_4_datetime', '')} {theme.get('schedule_5_datetime', '')} {theme.get('schedule_6_datetime', '')} {theme.get('schedule_7_datetime', '')} {theme.get('schedule_8_datetime', '')} {theme.get('schedule_9_datetime', '')} {theme.get('schedule_10_datetime', '')}\n"
+        ready_export_string += f"Treść ogłoszenia: {theme.get('content', '')}\n\n"
+    
+    # Usuwamy zbędne spacje
+    ready_export_string = "\n".join(" ".join(line.split()) for line in ready_export_string.splitlines())
+    
+    return ready_export_string
+
 def prepare_prompt(began_prompt):
     dump_key = get_messages('last')
     ready_prompt = f'{began_prompt}\n\n'
@@ -47,13 +98,30 @@ def prepare_prompt(began_prompt):
         znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
         if znalezione_klucze['sukces'] and znalezione_klucze['kolejnosc']\
             and znalezione_klucze['procent'] > .5 and dump[1] != "aifa":
+            
             if znalezione_klucze['najtrafniejsze'] == 'raport systemu':
+                """
+                ############################################################
+                # obsługa flagi 'raport systemu'
+                ############################################################
+                """
                 pobierz_logi_dla_uzytkownika = getDataLogs(f'{dump[1]}', spen_last_days=4)
                 collectedLogs = ''
                 for log in pobierz_logi_dla_uzytkownika:
                     collectedLogs += f'{log["message"]} : {log["category"]} \n'
                 if collectedLogs:
                     command = f'WYKRYTO ZAPYTANIE O STATUS SYSTEMU OTO DUMP DO WYKORZYSTANIA:\n{collectedLogs}'
+                else: command = ''
+            
+            elif znalezione_klucze['najtrafniejsze'] == 'harmonogram kampanii':
+                """
+                ############################################################
+                # obsługa flagi 'harmonogram kampanii'
+                ############################################################
+                """
+                pobierz_harmonogramy_kampanii = get_campains_id_descript_dates()
+                if pobierz_harmonogramy_kampanii:
+                    command = f'WYKRYTO ZAPYTANIE O HARMONOGRAM KAMPANII OTO DUMP DO WYKORZYSTANIA:\n{pobierz_harmonogramy_kampanii}'
                 else: command = ''
             else: command = ''
         else: command = ''
