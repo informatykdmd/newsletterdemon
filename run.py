@@ -1395,13 +1395,26 @@ def send_chat_message():
             result = generator(content)  # Wywołujemy funkcję generator
             msq.handle_error(f'Użytkownik {username} przesłał polecenie do generatora: {content}.', log_path=logFileName)
             if result != "@end":
-                save_chat_message(user_name=username, content=result, status=1)
+                # Zapisujemy wiadomość z poleceniem ze statusem 1
+                new_message = save_chat_message(user_name=username, content=result, status=1)
+                if new_message:
+                    return jsonify({"status": "command_received", "result": result}), 200
+                else:
+                    msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
+                    return jsonify({"status": "error"}), 500
 
         elif active_command == 'ustawienia':
             result = ustawienia(content)  # Wywołujemy funkcję ustawienia
             msq.handle_error(f'Użytkownik {username} przesłał polecenie do ustawień: {content}.', log_path=logFileName)
             if result != "@end":
-                save_chat_message(user_name=username, content=result, status=1)
+                # Zapisujemy wiadomość z poleceniem ze statusem 1
+                new_message = save_chat_message(user_name=username, content=result, status=1)
+                if new_message:
+                    return jsonify({"status": "command_received", "result": result}), 200
+                else:
+                    msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
+                    return jsonify({"status": "error"}), 500
+                
 
         # Sprawdzenie, czy wynik komendy to `@end`, co oznacza zakończenie trybu wiersza poleceń
         if result == "@end":
@@ -1409,15 +1422,6 @@ def send_chat_message():
             msq.handle_error(f'Użytkownik {username} zakończył tryb wiersza poleceń przez komendę @end.', log_path=logFileName)
             save_chat_message(user_name=username, content=f'Użytkownik {username} zakończył tryb wiersza poleceń przez komendę @end.', status=1)
             return jsonify({"status": "command_mode_deactivated"}), 200
-
-        # Zapisujemy wiadomość z poleceniem ze statusem 1
-        new_message = save_chat_message(user_name=username, content=content, status=1)
-        
-        if new_message:
-            return jsonify({"status": "command_received", "result": result}), 200
-        else:
-            msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
-            return jsonify({"status": "error"}), 500
 
     # Zwykła wiadomość, poza trybem komend
     new_message = save_chat_message(user_name=username, content=content, status=0)
