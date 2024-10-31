@@ -24,6 +24,7 @@ from PIL import Image
 import logging
 from appStatistic import log_stats
 from threading import Timer
+from bin.command_generator import getMorphy, saveMorphy
 
 
 """
@@ -102,6 +103,94 @@ def addDataLogs(message: str, category: str, file_name_json: str = "/home/johndo
     with open(file_name_json, "w") as file:
         json.dump(data_json, file, indent=4)
 
+
+# Struktura do przechowywania informacji o aktywnym trybie wiersza poleceń dla użytkowników
+command_mode_users = {}
+command_mode_timers = {}
+generator_states = {}
+
+# Funkcja do uruchomienia timera i wyłączenia trybu wiersza poleceń po 3 minutach
+def deactivate_command_mode(username):
+    """
+    ############################################################
+    # Dezaktywuje tryb wiersza poleceń dla użytkownika 
+    # po upływie czasu i zapisuje w logach.
+    ############################################################
+    """
+    if username in command_mode_users:
+        del command_mode_users[username]
+        msq.handle_error(f'Komenda zakończona - tryb wiersza poleceń zakończony dla użytkownika {username}.', log_path=logFileName)
+
+# Funkcja do resetowania timera dla użytkownika
+def reset_command_timer(username):
+    """
+    ############################################################
+    # Resetuje timer dla trybu wiersza poleceń użytkownika, 
+    # lub tworzy nowy, jeśli nie istnieje.
+    ############################################################
+    """
+    # Zatrzymujemy poprzedni timer, jeśli istnieje
+    if username in command_mode_timers:
+        command_mode_timers[username].cancel()
+
+    # Tworzymy nowy timer na 3 minuty i zapisujemy go
+    timer = Timer(180, deactivate_command_mode, args=[username])
+    command_mode_timers[username] = timer
+    timer.start()
+
+def ustawienia(prompt):
+    """
+    ############################################################
+    # Funkcja do obsługi komendy @ustawienia. Kończy tryb 
+    # wiersza poleceń, jeśli prompt to '@koniec'.
+    ############################################################
+    """
+    if prompt == "@koniec":
+        return "@end"  # kończy tryb wiersza poleceń
+    else:
+        return 'Przyjęto polecenie: ' + prompt
+
+# Słownik przechowujący stan generatora dla każdego użytkownika osobno
+dane = getMorphy()
+def generator(username, prompt):
+    """
+    ############################################################
+    # Funkcja generator dla systemu wiersza poleceń z rozpoznaniem użytkownika.
+    # Dodaje nowe polecenia do istniejącego pliku JSON na podstawie 
+    # komend wprowadzonych przez użytkownika.
+    # Użytkownik może dodawać polecenia tylko do istniejących kategorii.
+    ############################################################
+    """
+
+    global dane  # Korzystamy z wcześniej załadowanych danych
+    dostepne_kategorie = list(set(dane.values()))  # Tworzymy listę dostępnych kategorii z istniejących danych
+
+    # Przypadek zakończenia dodawania poleceń do bieżącej kategorii
+    if prompt == "@koniec":
+        # Jeśli dodawanie poleceń do kategorii było aktywne dla tego użytkownika, kończymy je
+        if username in generator_states:
+            response = f"Zakończono dodawanie poleceń do kategorii '{generator_states[username]}' dla użytkownika {username}"
+            del generator_states[username]  # Usuwamy aktywną kategorię dla tego użytkownika
+            return response
+        else:
+            # Jeśli nie ma aktywnej kategorii, kończymy tryb generatora
+            saveMorphy(dane)
+            return "@end"  # Sygnał do zakończenia trybu wiersza poleceń
+
+    # Sprawdzamy, czy mamy aktywną kategorię dla danego użytkownika
+    if username not in generator_states:
+        # Jeśli kategoria jest spoza dostępnych kategorii, zwracamy informację o błędzie
+        if prompt not in dostepne_kategorie:
+            return f"Błąd: Kategoria '{prompt}' nie jest dostępna. Wybierz jedną z dostępnych kategorii: {', '.join(dostepne_kategorie)}"
+        
+        # Przypisujemy wybraną kategorię do generator_states dla tego użytkownika
+        generator_states[username] = prompt
+        return f"Przyjęto kategorię poleceń: '{generator_states[username]}' - teraz dodaj polecenia lub wpisz '@koniec' aby zakończyć dodawanie dla tej kategorii."
+
+    # Jeśli już mamy aktywną kategorię dla tego użytkownika, dodajemy polecenie do tej kategorii
+    polecenie_tuple = tuple(prompt.split())
+    dane[polecenie_tuple] = generator_states[username]
+    return f"Dodano polecenie: {polecenie_tuple} -> {generator_states[username]}"
 
 class LoginForm(FlaskForm):
     username = StringField('Nazwa użytkownika', validators=[DataRequired()])
@@ -1321,129 +1410,6 @@ def fetch_messages():
     messages = get_messages('last')
     return jsonify(messages)
 
-# Struktura do przechowywania informacji o aktywnym trybie wiersza poleceń dla użytkowników
-command_mode_users = {}
-command_mode_timers = {}
-
-# Funkcja do uruchomienia timera i wyłączenia trybu wiersza poleceń po 3 minutach
-def deactivate_command_mode(username):
-    """
-    ############################################################
-    # Dezaktywuje tryb wiersza poleceń dla użytkownika po upływie czasu i zapisuje w logach.
-    ############################################################
-    """
-    if username in command_mode_users:
-        del command_mode_users[username]
-        msq.handle_error(f'Komenda zakończona - tryb wiersza poleceń zakończony dla użytkownika {username}.', log_path=logFileName)
-
-# Funkcja do resetowania timera dla użytkownika
-def reset_command_timer(username):
-    """Resetuje timer dla trybu wiersza poleceń użytkownika, lub tworzy nowy, jeśli nie istnieje."""
-    # Zatrzymujemy poprzedni timer, jeśli istnieje
-    if username in command_mode_timers:
-        command_mode_timers[username].cancel()
-
-    # Tworzymy nowy timer na 3 minuty i zapisujemy go
-    timer = Timer(180, deactivate_command_mode, args=[username])
-    command_mode_timers[username] = timer
-    timer.start()
-
-def ustawienia(prompt):
-    """
-    ############################################################
-    # Funkcja do obsługi komendy @ustawienia. Kończy tryb wiersza poleceń, jeśli prompt to '@koniec'.
-    ############################################################
-    """
-    if prompt == "@koniec":
-        return "@end"  # kończy tryb wiersza poleceń
-    else:
-        return 'Przyjęto polecenie: ' + prompt
-
-from bin.command_generator import getMorphy, saveMorphy
-dane = getMorphy()
-
-# def generator(prompt):
-#     """
-#     ############################################################
-#     # Funkcja generator dla systemu wiersza poleceń.
-#     # Dodaje nowe polecenia do istniejącego pliku JSON na podstawie 
-#     # komend wprowadzonych przez użytkownika.
-#     # Użytkownik może dodawać polecenia tylko do istniejących kategorii.
-#     ############################################################
-#     """
-
-#     global dane  # Korzystamy z wcześniej załadowanych danych
-#     dostepne_kategorie = list(set(dane.values()))  # Tworzymy listę dostępnych kategorii z istniejących danych
-
-#     # Przypadek zakończenia dodawania poleceń do bieżącej kategorii
-#     if prompt == "@koniec":
-#         # Jeśli dodawanie poleceń do kategorii było aktywne, kończymy je
-#         if 'kategoria' in generator.__dict__:
-#             response = f"Zakończono dodawanie poleceń do kategorii '{generator.kategoria}'"
-#             del generator.kategoria  # Usuwamy aktywną kategorię
-#             return response
-#         else:
-#             # Jeśli nie ma aktywnej kategorii, kończymy tryb generatora
-#             saveMorphy(dane)
-#             return "@end"  # Sygnał do zakończenia trybu wiersza poleceń
-
-#     # Sprawdzamy, czy mamy aktywną kategorię
-#     if 'kategoria' not in generator.__dict__:
-#         # Jeśli kategoria jest spoza dostępnych kategorii, zwracamy informację o błędzie
-#         if prompt not in dostepne_kategorie:
-#             return f"Błąd: Kategoria '{prompt}' nie jest dostępna. Wybierz jedną z dostępnych kategorii: {', '.join(dostepne_kategorie)}"
-        
-#         # Przypisujemy wybraną kategorię do generator.kategoria
-#         generator.kategoria = prompt
-#         return f"Przyjęto kategorię poleceń: '{generator.kategoria}' - teraz dodaj polecenia lub wpisz '@koniec' aby zakończyć dodawanie dla tej kategorii."
-
-#     # Jeśli już mamy aktywną kategorię, dodajemy polecenie do tej kategorii
-#     polecenie_tuple = tuple(prompt.split())
-#     dane[polecenie_tuple] = generator.kategoria
-#     return f"Dodano polecenie: {polecenie_tuple} -> {generator.kategoria}"
-
-
-# Słownik przechowujący stan generatora dla każdego użytkownika osobno
-generator_states = {}
-def generator(username, prompt):
-    """
-    ############################################################
-    # Funkcja generator dla systemu wiersza poleceń z rozpoznaniem użytkownika.
-    # Dodaje nowe polecenia do istniejącego pliku JSON na podstawie 
-    # komend wprowadzonych przez użytkownika.
-    # Użytkownik może dodawać polecenia tylko do istniejących kategorii.
-    ############################################################
-    """
-
-    global dane  # Korzystamy z wcześniej załadowanych danych
-    dostepne_kategorie = list(set(dane.values()))  # Tworzymy listę dostępnych kategorii z istniejących danych
-
-    # Przypadek zakończenia dodawania poleceń do bieżącej kategorii
-    if prompt == "@koniec":
-        # Jeśli dodawanie poleceń do kategorii było aktywne dla tego użytkownika, kończymy je
-        if username in generator_states:
-            response = f"Zakończono dodawanie poleceń do kategorii '{generator_states[username]}' dla użytkownika {username}"
-            del generator_states[username]  # Usuwamy aktywną kategorię dla tego użytkownika
-            return response
-        else:
-            # Jeśli nie ma aktywnej kategorii, kończymy tryb generatora
-            saveMorphy(dane)
-            return "@end"  # Sygnał do zakończenia trybu wiersza poleceń
-
-    # Sprawdzamy, czy mamy aktywną kategorię dla danego użytkownika
-    if username not in generator_states:
-        # Jeśli kategoria jest spoza dostępnych kategorii, zwracamy informację o błędzie
-        if prompt not in dostepne_kategorie:
-            return f"Błąd: Kategoria '{prompt}' nie jest dostępna. Wybierz jedną z dostępnych kategorii: {', '.join(dostepne_kategorie)}"
-        
-        # Przypisujemy wybraną kategorię do generator_states dla tego użytkownika
-        generator_states[username] = prompt
-        return f"Przyjęto kategorię poleceń: '{generator_states[username]}' - teraz dodaj polecenia lub wpisz '@koniec' aby zakończyć dodawanie dla tej kategorii."
-
-    # Jeśli już mamy aktywną kategorię dla tego użytkownika, dodajemy polecenie do tej kategorii
-    polecenie_tuple = tuple(prompt.split())
-    dane[polecenie_tuple] = generator_states[username]
-    return f"Dodano polecenie: {polecenie_tuple} -> {generator_states[username]}"
 
 
 @app.route('/send-chat-message', methods=['POST'])
@@ -1594,24 +1560,6 @@ def send_chat_message():
         msq.handle_error(f'Błąd wysyłania wiadomości do chatu.', log_path=logFileName)
         return jsonify({"status": "error"}), 500
 
-
-
-# @app.route('/send-chat-message', methods=['POST'])
-# def send_chat_message():
-#     """Strona z zarządzaniem czatem."""
-#     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
-#     if 'username' not in session:
-#         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /send-chat-message bez autoryzacji.', log_path=logFileName)
-#         return redirect(url_for('index'))
-#     data = request.get_json()
-    
-#     new_message = save_chat_message(user_name=session['username'], content=data['content'], status=0)
-#     if new_message:
-#         msq.handle_error(f'Wysłano nowe wiadomość do chatu.', log_path=logFileName)
-#         return jsonify({"status": "success"}), 201
-#     else:
-#         msq.handle_error(f'Błąd wysyłania wiadomość do chatu.', log_path=logFileName)
-#         return jsonify({"status": "error"}), 500
 
 @app.route('/blog')
 def blog(router=True):
