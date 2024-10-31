@@ -1363,7 +1363,6 @@ def send_chat_message():
 
                 # Zapisujemy wiadomość z informacją o zakończeniu trybu
                 new_message = save_chat_message(user_name=username, content=f'Deaktywowano wiersz poleceń', status=1)
-                
                 if new_message:
                     return jsonify({"status": "command_mode_deactivated"}), 200
                 else:
@@ -1376,13 +1375,27 @@ def send_chat_message():
             # Aktywacja trybu komendy generator
             command_mode_users[username] = {'time': time.time(), 'command': 'generator'}
             msq.handle_error(f'Użytkownik {username} aktywował komendę @generator.', log_path=logFileName)
-            return jsonify({"status": "command_generator_activated"}), 200
+            # Zapisujemy wiadomość z poleceniem ze statusem 1
+            new_message = save_chat_message(user_name=username, content=f'Użytkownik {username} aktywował komendę @generator.', status=1)
+            if new_message:
+                return jsonify({"status": "command_generator_activated"}), 200
+            else:
+                msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
+                return jsonify({"status": "error"}), 500
+            
 
         elif content == '@ustawienia':
             # Aktywacja trybu komendy ustawienia
             command_mode_users[username] = {'time': time.time(), 'command': 'ustawienia'}
             msq.handle_error(f'Użytkownik {username} aktywował komendę @ustawienia.', log_path=logFileName)
-            return jsonify({"status": "command_ustawienia_activated"}), 200
+            # Zapisujemy wiadomość z poleceniem ze statusem 1
+            new_message = save_chat_message(user_name=username, content=f'Użytkownik {username} aktywował komendę @ustawienia.', status=1)
+            if new_message:
+                return jsonify({"status": "command_ustawienia_activated"}), 200
+            else:
+                msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
+                return jsonify({"status": "error"}), 500
+            
 
     # Jeśli użytkownik jest w trybie wiersza poleceń, sprawdzamy aktywną komendę
     if username in command_mode_users:
