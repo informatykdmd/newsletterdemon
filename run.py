@@ -1405,7 +1405,7 @@ def send_chat_message():
     content = data['content']
     
     # Sprawdzenie, czy wiadomość jest komendą i czy użytkownik ma uprawnienia do komend
-    if content.startswith('@') and session['userperm']['settings'] == 0:
+    if content.startswith('@') and session['userperm']['settings'] == 1:
         """
         ############################################################
         # Obsługa wiadomości rozpoczynających się od @ - aktywacja 
