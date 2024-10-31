@@ -1326,25 +1326,76 @@ command_mode_users = {}
 
 # Funkcja do uruchomienia timera i wyłączenia trybu wiersza poleceń po 3 minutach
 def deactivate_command_mode(username):
+    """
+    ############################################################
+    # Dezaktywuje tryb wiersza poleceń dla użytkownika po upływie czasu i zapisuje w logach.
+    ############################################################
+    """
     if username in command_mode_users:
         del command_mode_users[username]
         msq.handle_error(f'Komenda zakończona - tryb wiersza poleceń zakończony dla użytkownika {username}.', log_path=logFileName)
 
-def ustawienia(prompt):
-    if prompt == "@koniec":
-        return "@end" # konczy tryb wiersza poleceń
-    else:
-        return 'Przyjęto polecenie do funkcji ustawienia: ' + prompt
 
-def generator(prompt):
+def ustawienia(prompt):
+    """
+    ############################################################
+    # Funkcja do obsługi komendy @ustawienia. Kończy tryb wiersza poleceń, jeśli prompt to '@koniec'.
+    ############################################################
+    """
     if prompt == "@koniec":
-        return "@end" # konczy tryb wiersza poleceń
+        return "@end"  # kończy tryb wiersza poleceń
     else:
-        return 'Przyjęto polecenie do funkcji generator: ' + prompt
+        return 'Przyjęto polecenie: ' + prompt
+
+from bin.command_generator import getMorphy, saveMorphy
+dane = getMorphy()
+def generator(prompt):
+    """
+    ############################################################
+    # Funkcja generator dla systemu wiersza poleceń.
+    # Dodaje nowe polecenia do istniejącego pliku JSON na podstawie 
+    # komend wprowadzonych przez użytkownika.
+    # Użytkownik może dodawać polecenia tylko do istniejących kategorii.
+    ############################################################
+    """
+
+    global dane  # Korzystamy z wcześniej załadowanych danych
+    dostepne_kategorie = list(set(dane.values()))  # Tworzymy listę dostępnych kategorii z istniejących danych
+
+    # Przypadek zakończenia dodawania poleceń
+    if prompt == "@koniec":
+        saveMorphy(dane)
+        return "@end"  # Zwracamy sygnał do zakończenia trybu wiersza poleceń
+
+    # Sprawdzamy, czy mamy aktywną kategorię
+    if 'kategoria' not in generator.__dict__:
+        # Jeśli kategoria jest spoza dostępnych kategorii, zwracamy informację o błędzie
+        if prompt not in dostepne_kategorie:
+            return f"Błąd: Kategoria '{prompt}' nie jest dostępna. Wybierz jedną z dostępnych kategorii: {', '.join(dostepne_kategorie)}"
+        
+        # Przypisujemy wybraną kategorię do generator.kategoria
+        generator.kategoria = prompt
+        return f"Przyjęto kategorię poleceń: '{generator.kategoria}'"
+
+    # Jeśli już mamy kategorię, dodajemy polecenie do tej kategorii
+    polecenie_tuple = tuple(prompt.split())
+    dane[polecenie_tuple] = generator.kategoria
+    response = f"Dodano polecenie: {polecenie_tuple} -> {generator.kategoria}"
+
+    # Po dodaniu polecenia usuwamy kategorię, aby użytkownik mógł wybrać nową
+    del generator.kategoria
+    return response
+
 
 @app.route('/send-chat-message', methods=['POST'])
 def send_chat_message():
-    """Strona z zarządzaniem czatem."""
+    """
+    ############################################################
+    # Endpoint do obsługi wiadomości czatu oraz komend wiersza poleceń.
+    ############################################################
+    """
+
+    # Sprawdzenie, czy użytkownik jest zalogowany
     if 'username' not in session:
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /send-chat-message bez autoryzacji.', log_path=logFileName)
         return redirect(url_for('index'))
@@ -1353,15 +1404,26 @@ def send_chat_message():
     data = request.get_json()
     content = data['content']
     
-    # Sprawdzenie, czy wiadomość jest komendą
-    if content.startswith('@'):
+    # Sprawdzenie, czy wiadomość jest komendą i czy użytkownik ma uprawnienia do komend
+    if content.startswith('@') and session['userperm']['settings'] == 0:
+        """
+        ############################################################
+        # Obsługa wiadomości rozpoczynających się od @ - aktywacja 
+        # komendy lub zakończenie trybu wiersza poleceń.
+        ############################################################
+        """
+
         if content == '@end':
-            # Deaktywacja trybu wiersza poleceń
+            """
+            ############################################################
+            # Deaktywacja trybu wiersza poleceń przez komendę @end.
+            ############################################################
+            """
             if username in command_mode_users:
                 del command_mode_users[username]
                 msq.handle_error(f'Użytkownik {username} zakończył tryb wiersza poleceń.', log_path=logFileName)
 
-                # Zapisujemy wiadomość z informacją o zakończeniu trybu
+                # Zapisujemy informację o zakończeniu trybu wiersza poleceń do chatu
                 new_message = save_chat_message(user_name=username, content=f'Deaktywowano wiersz poleceń', status=1)
                 if new_message:
                     return jsonify({"status": "command_mode_deactivated"}), 200
@@ -1372,10 +1434,15 @@ def send_chat_message():
                 return jsonify({"status": "command_mode_not_active"}), 400
 
         elif content == '@generator':
-            # Aktywacja trybu komendy generator
+            """
+            ############################################################
+            # Aktywacja trybu komendy @generator.
+            ############################################################
+            """
             command_mode_users[username] = {'time': time.time(), 'command': 'generator'}
             msq.handle_error(f'Użytkownik {username} aktywował komendę @generator.', log_path=logFileName)
-            # Zapisujemy wiadomość z poleceniem ze statusem 1
+            
+            # Zapisujemy wiadomość o aktywacji generatora do chatu
             new_message = save_chat_message(user_name=username, content=f'Użytkownik {username} aktywował komendę @generator.', status=1)
             if new_message:
                 return jsonify({"status": "command_generator_activated"}), 200
@@ -1385,30 +1452,47 @@ def send_chat_message():
             
 
         elif content == '@ustawienia':
-            # Aktywacja trybu komendy ustawienia
+            """
+            ############################################################
+            # Aktywacja trybu komendy @ustawienia.
+            ############################################################
+            """
             command_mode_users[username] = {'time': time.time(), 'command': 'ustawienia'}
             msq.handle_error(f'Użytkownik {username} aktywował komendę @ustawienia.', log_path=logFileName)
-            # Zapisujemy wiadomość z poleceniem ze statusem 1
+            
+            # Zapisujemy wiadomość o aktywacji ustawień do chatu
             new_message = save_chat_message(user_name=username, content=f'Użytkownik {username} aktywował komendę @ustawienia.', status=1)
             if new_message:
                 return jsonify({"status": "command_ustawienia_activated"}), 200
             else:
                 msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
                 return jsonify({"status": "error"}), 500
-            
+        
 
-    # Jeśli użytkownik jest w trybie wiersza poleceń, sprawdzamy aktywną komendę
+        # Ustawienie timera na 3 minuty
+        # Timer(180, deactivate_command_mode, args=[username]).start()    
+        # return jsonify({"status": "command_mode_activated"}), 200
+
+    # Jeśli użytkownik jest w trybie wiersza poleceń, przetwarzamy jego aktywną komendę
     if username in command_mode_users:
+        """
+        ############################################################
+        # Obsługa aktywnego trybu wiersza poleceń. 
+        # Reset licznika czasu i przekazanie polecenia do funkcji 
+        # aktywnej komendy.
+        ############################################################
+        """
+        
         # Resetujemy czas na kolejne 3 minuty
         command_mode_users[username]['time'] = time.time()
         active_command = command_mode_users[username]['command']
 
-        # Wykonujemy odpowiednie polecenie na podstawie aktywnej komendy
+        # Przetwarzanie polecenia zależnie od aktywnej komendy
         if active_command == 'generator':
             result = generator(content)  # Wywołujemy funkcję generator
             msq.handle_error(f'Użytkownik {username} przesłał polecenie do generatora: {content}.', log_path=logFileName)
             if result != "@end":
-                # Zapisujemy wiadomość z poleceniem ze statusem 1
+                # Zapisujemy wiadomość z poleceniem do generatora do chatu
                 new_message = save_chat_message(user_name=username, content=result, status=1)
                 if new_message:
                     return jsonify({"status": "command_received", "result": result}), 200
@@ -1420,7 +1504,7 @@ def send_chat_message():
             result = ustawienia(content)  # Wywołujemy funkcję ustawienia
             msq.handle_error(f'Użytkownik {username} przesłał polecenie do ustawień: {content}.', log_path=logFileName)
             if result != "@end":
-                # Zapisujemy wiadomość z poleceniem ze statusem 1
+                # Zapisujemy wiadomość z poleceniem do ustawień do chatu
                 new_message = save_chat_message(user_name=username, content=result, status=1)
                 if new_message:
                     return jsonify({"status": "command_received", "result": result}), 200
@@ -1431,6 +1515,12 @@ def send_chat_message():
 
         # Sprawdzenie, czy wynik komendy to `@end`, co oznacza zakończenie trybu wiersza poleceń
         if result == "@end":
+            """
+            ############################################################
+            # Deaktywacja trybu wiersza poleceń po otrzymaniu 
+            # sygnału `@end`.
+            ############################################################
+            """
             del command_mode_users[username]
             msq.handle_error(f'Użytkownik {username} zakończył tryb wiersza poleceń przez komendę @end.', log_path=logFileName)
             save_chat_message(user_name=username, content=f'Użytkownik {username} zakończył tryb wiersza poleceń przez komendę @end.', status=1)
@@ -1444,6 +1534,7 @@ def send_chat_message():
     else:
         msq.handle_error(f'Błąd wysyłania wiadomości do chatu.', log_path=logFileName)
         return jsonify({"status": "error"}), 500
+
 
 
 # @app.route('/send-chat-message', methods=['POST'])
