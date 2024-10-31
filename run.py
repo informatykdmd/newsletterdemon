@@ -23,6 +23,7 @@ from flask_session import Session
 from PIL import Image
 import logging
 from appStatistic import log_stats
+from threading import Timer
 
 
 """
@@ -1320,6 +1321,15 @@ def fetch_messages():
     messages = get_messages('last')
     return jsonify(messages)
 
+# Struktura do przechowywania informacji o aktywnym trybie wiersza poleceń dla użytkowników
+command_mode_users = {}
+
+# Funkcja do uruchomienia timera i wyłączenia trybu wiersza poleceń po 3 minutach
+def deactivate_command_mode(username):
+    if username in command_mode_users:
+        del command_mode_users[username]
+        msq.handle_error(f'Komenda zakończona - tryb wiersza poleceń zakończony dla użytkownika {username}.', log_path=logFileName)
+
 @app.route('/send-chat-message', methods=['POST'])
 def send_chat_message():
     """Strona z zarządzaniem czatem."""
@@ -1327,15 +1337,62 @@ def send_chat_message():
     if 'username' not in session:
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /send-chat-message bez autoryzacji.', log_path=logFileName)
         return redirect(url_for('index'))
-    data = request.get_json()
     
-    new_message = save_chat_message(user_name=session['username'], content=data['content'], status=0)
+    username = session['username']
+    data = request.get_json()
+    content = data['content']
+    
+    # Sprawdzenie, czy wiadomość jest komendą
+    if content.startswith('@'):
+        # Aktywacja trybu wiersza poleceń dla użytkownika
+        command_mode_users[username] = time.time()
+        msq.handle_error(f'Użytkownik {username} aktywował tryb wiersza poleceń.', log_path=logFileName)
+        
+        # Ustawienie timera na 3 minuty
+        Timer(180, deactivate_command_mode, args=[username]).start()
+        return jsonify({"status": "command_mode_activated"}), 200
+    
+    # Jeśli użytkownik jest w trybie wiersza poleceń, resetujemy licznik czasu
+    if username in command_mode_users:
+        # Resetujemy czas na kolejne 3 minuty
+        command_mode_users[username] = time.time()
+        msq.handle_error(f'Użytkownik {username} przesłał kolejną komendę - licznik resetowany.', log_path=logFileName)
+        
+        # Zapisujemy wiadomość z trybu wiersza poleceń ze statusem 6
+        new_message = save_chat_message(user_name=username, content=content, status=6)
+        
+        if new_message:
+            return jsonify({"status": "command_received"}), 200
+        else:
+            msq.handle_error(f'Błąd wysyłania wiadomość z wiersza poleceń do chatu.', log_path=logFileName)
+            return jsonify({"status": "error"}), 500
+
+    # Zwykła wiadomość, poza trybem komend
+    new_message = save_chat_message(user_name=username, content=content, status=0)
     if new_message:
         msq.handle_error(f'Wysłano nowe wiadomość do chatu.', log_path=logFileName)
         return jsonify({"status": "success"}), 201
     else:
         msq.handle_error(f'Błąd wysyłania wiadomość do chatu.', log_path=logFileName)
         return jsonify({"status": "error"}), 500
+
+
+# @app.route('/send-chat-message', methods=['POST'])
+# def send_chat_message():
+#     """Strona z zarządzaniem czatem."""
+#     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+#     if 'username' not in session:
+#         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /send-chat-message bez autoryzacji.', log_path=logFileName)
+#         return redirect(url_for('index'))
+#     data = request.get_json()
+    
+#     new_message = save_chat_message(user_name=session['username'], content=data['content'], status=0)
+#     if new_message:
+#         msq.handle_error(f'Wysłano nowe wiadomość do chatu.', log_path=logFileName)
+#         return jsonify({"status": "success"}), 201
+#     else:
+#         msq.handle_error(f'Błąd wysyłania wiadomość do chatu.', log_path=logFileName)
+#         return jsonify({"status": "error"}), 500
 
 @app.route('/blog')
 def blog(router=True):
