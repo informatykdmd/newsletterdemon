@@ -1359,7 +1359,7 @@ def ustawienia(prompt):
     else:
         return 'Przyjęto polecenie: ' + prompt
 
-from bin.app import getMorphy, saveMorphy
+from bin.command_generator import getMorphy, saveMorphy
 dane = getMorphy()
 
 # def generator(prompt):
