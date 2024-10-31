@@ -1330,10 +1330,21 @@ def deactivate_command_mode(username):
         del command_mode_users[username]
         msq.handle_error(f'Komenda zakończona - tryb wiersza poleceń zakończony dla użytkownika {username}.', log_path=logFileName)
 
+def ustawienia(prompt):
+    if prompt == "@koniec":
+        return "@end" # konczy tryb wiersza poleceń
+    else:
+        return 'Przyjęto polecenie do funkcji ustawienia: ' + prompt
+
+def generator(prompt):
+    if prompt == "@koniec":
+        return "@end" # konczy tryb wiersza poleceń
+    else:
+        return 'Przyjęto polecenie do funkcji generator: ' + prompt
+
 @app.route('/send-chat-message', methods=['POST'])
 def send_chat_message():
     """Strona z zarządzaniem czatem."""
-    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session:
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /send-chat-message bez autoryzacji.', log_path=logFileName)
         return redirect(url_for('index'))
@@ -1344,37 +1355,77 @@ def send_chat_message():
     
     # Sprawdzenie, czy wiadomość jest komendą
     if content.startswith('@'):
-        print(content)
-        # Aktywacja trybu wiersza poleceń dla użytkownika
-        command_mode_users[username] = time.time()
-        msq.handle_error(f'Użytkownik {username} aktywował tryb wiersza poleceń.', log_path=logFileName)
-        
-        # Ustawienie timera na 3 minuty
-        Timer(180, deactivate_command_mode, args=[username]).start()
-        return jsonify({"status": "command_mode_activated"}), 200
-    
-    # Jeśli użytkownik jest w trybie wiersza poleceń, resetujemy licznik czasu
+        if content == '@end':
+            # Deaktywacja trybu wiersza poleceń
+            if username in command_mode_users:
+                del command_mode_users[username]
+                msq.handle_error(f'Użytkownik {username} zakończył tryb wiersza poleceń.', log_path=logFileName)
+
+                # Zapisujemy wiadomość z informacją o zakończeniu trybu
+                new_message = save_chat_message(user_name=username, content=f'Deaktywowano wiersz poleceń', status=1)
+                
+                if new_message:
+                    return jsonify({"status": "command_mode_deactivated"}), 200
+                else:
+                    msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
+                    return jsonify({"status": "error"}), 500
+            else:
+                return jsonify({"status": "command_mode_not_active"}), 400
+
+        elif content == '@generator':
+            # Aktywacja trybu komendy generator
+            command_mode_users[username] = {'time': time.time(), 'command': 'generator'}
+            msq.handle_error(f'Użytkownik {username} aktywował komendę @generator.', log_path=logFileName)
+            return jsonify({"status": "command_generator_activated"}), 200
+
+        elif content == '@ustawienia':
+            # Aktywacja trybu komendy ustawienia
+            command_mode_users[username] = {'time': time.time(), 'command': 'ustawienia'}
+            msq.handle_error(f'Użytkownik {username} aktywował komendę @ustawienia.', log_path=logFileName)
+            return jsonify({"status": "command_ustawienia_activated"}), 200
+
+    # Jeśli użytkownik jest w trybie wiersza poleceń, sprawdzamy aktywną komendę
     if username in command_mode_users:
         # Resetujemy czas na kolejne 3 minuty
-        command_mode_users[username] = time.time()
-        msq.handle_error(f'Użytkownik {username} przesłał kolejną komendę - licznik resetowany.', log_path=logFileName)
-        
-        # Zapisujemy wiadomość z trybu wiersza poleceń ze statusem 6
+        command_mode_users[username]['time'] = time.time()
+        active_command = command_mode_users[username]['command']
+
+        # Wykonujemy odpowiednie polecenie na podstawie aktywnej komendy
+        if active_command == 'generator':
+            result = generator(content)  # Wywołujemy funkcję generator
+            msq.handle_error(f'Użytkownik {username} przesłał polecenie do generatora: {content}.', log_path=logFileName)
+            if result != "@end":
+                save_chat_message(user_name=username, content=result, status=1)
+
+        elif active_command == 'ustawienia':
+            result = ustawienia(content)  # Wywołujemy funkcję ustawienia
+            msq.handle_error(f'Użytkownik {username} przesłał polecenie do ustawień: {content}.', log_path=logFileName)
+            if result != "@end":
+                save_chat_message(user_name=username, content=result, status=1)
+
+        # Sprawdzenie, czy wynik komendy to `@end`, co oznacza zakończenie trybu wiersza poleceń
+        if result == "@end":
+            del command_mode_users[username]
+            msq.handle_error(f'Użytkownik {username} zakończył tryb wiersza poleceń przez komendę @end.', log_path=logFileName)
+            save_chat_message(user_name=username, content=f'Użytkownik {username} zakończył tryb wiersza poleceń przez komendę @end.', status=1)
+            return jsonify({"status": "command_mode_deactivated"}), 200
+
+        # Zapisujemy wiadomość z poleceniem ze statusem 1
         new_message = save_chat_message(user_name=username, content=content, status=1)
         
         if new_message:
-            return jsonify({"status": "command_received"}), 200
+            return jsonify({"status": "command_received", "result": result}), 200
         else:
-            msq.handle_error(f'Błąd wysyłania wiadomość z wiersza poleceń do chatu.', log_path=logFileName)
+            msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
             return jsonify({"status": "error"}), 500
 
     # Zwykła wiadomość, poza trybem komend
     new_message = save_chat_message(user_name=username, content=content, status=0)
     if new_message:
-        msq.handle_error(f'Wysłano nowe wiadomość do chatu.', log_path=logFileName)
+        msq.handle_error(f'Wysłano nową wiadomość do chatu.', log_path=logFileName)
         return jsonify({"status": "success"}), 201
     else:
-        msq.handle_error(f'Błąd wysyłania wiadomość do chatu.', log_path=logFileName)
+        msq.handle_error(f'Błąd wysyłania wiadomości do chatu.', log_path=logFileName)
         return jsonify({"status": "error"}), 500
 
 
