@@ -1349,6 +1349,7 @@ def ustawienia(prompt):
 
 from bin.command_generator import getMorphy, saveMorphy
 dane = getMorphy()
+
 def generator(prompt):
     """
     ############################################################
@@ -1362,10 +1363,17 @@ def generator(prompt):
     global dane  # Korzystamy z wcześniej załadowanych danych
     dostepne_kategorie = list(set(dane.values()))  # Tworzymy listę dostępnych kategorii z istniejących danych
 
-    # Przypadek zakończenia dodawania poleceń
+    # Przypadek zakończenia dodawania poleceń do bieżącej kategorii
     if prompt == "@koniec":
-        saveMorphy(dane)
-        return "@end"  # Zwracamy sygnał do zakończenia trybu wiersza poleceń
+        # Jeśli dodawanie poleceń do kategorii było aktywne, kończymy je
+        if 'kategoria' in generator.__dict__:
+            response = f"Zakończono dodawanie poleceń do kategorii '{generator.kategoria}'"
+            del generator.kategoria  # Usuwamy aktywną kategorię
+            return response
+        else:
+            # Jeśli nie ma aktywnej kategorii, kończymy tryb generatora
+            saveMorphy(dane)
+            return "@end"  # Sygnał do zakończenia trybu wiersza poleceń
 
     # Sprawdzamy, czy mamy aktywną kategorię
     if 'kategoria' not in generator.__dict__:
@@ -1375,16 +1383,13 @@ def generator(prompt):
         
         # Przypisujemy wybraną kategorię do generator.kategoria
         generator.kategoria = prompt
-        return f"Przyjęto kategorię poleceń: '{generator.kategoria}'"
+        return f"Przyjęto kategorię poleceń: '{generator.kategoria}' - teraz dodaj polecenia lub wpisz '@koniec' aby zakończyć dodawanie dla tej kategorii."
 
-    # Jeśli już mamy kategorię, dodajemy polecenie do tej kategorii
+    # Jeśli już mamy aktywną kategorię, dodajemy polecenie do tej kategorii
     polecenie_tuple = tuple(prompt.split())
     dane[polecenie_tuple] = generator.kategoria
-    response = f"Dodano polecenie: {polecenie_tuple} -> {generator.kategoria}"
+    return f"Dodano polecenie: {polecenie_tuple} -> {generator.kategoria}"
 
-    # Po dodaniu polecenia usuwamy kategorię, aby użytkownik mógł wybrać nową
-    del generator.kategoria
-    return response
 
 
 @app.route('/send-chat-message', methods=['POST'])
