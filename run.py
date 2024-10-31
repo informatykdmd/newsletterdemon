@@ -1410,8 +1410,6 @@ def fetch_messages():
     messages = get_messages('last')
     return jsonify(messages)
 
-
-
 @app.route('/send-chat-message', methods=['POST'])
 def send_chat_message():
     """
