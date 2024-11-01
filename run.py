@@ -145,6 +145,8 @@ def ustawienia(prompt: str):
     # wiersza poleceń, jeśli prompt to '@koniec'.
     ############################################################
     """
+
+    global dane_getMorphy  # Korzystamy z wcześniej załadowanych danych
     if prompt == "@koniec":
         return "@end"  # kończy tryb wiersza poleceń
     else:
@@ -176,7 +178,7 @@ def ustawienia(prompt: str):
                 try: kategoria_podana_w_komendzie = prompt.split('(')[1][:-1]
                 except IndexError: return 'Błąd składni polecenia! Prawidłowa struktura to: polecenie(dane)'
                 ready_export_string =''
-                for k,v in dane.items():
+                for k,v in dane_getMorphy.items():
                     if v == kategoria_podana_w_komendzie:
                         zbudowana_komenda_syting = " ".join(k)
                         ready_export_string += f'{zbudowana_komenda_syting}\n'
@@ -190,7 +192,7 @@ def ustawienia(prompt: str):
         return 'Nieznane polecenie: ' + prompt
 
 # Słownik przechowujący stan generatora dla każdego użytkownika osobno
-dane = getMorphy()
+dane_getMorphy = getMorphy()
 def generator(username, prompt):
     """
     ############################################################
@@ -201,8 +203,8 @@ def generator(username, prompt):
     ############################################################
     """
 
-    global dane  # Korzystamy z wcześniej załadowanych danych
-    dostepne_kategorie = list(set(dane.values()))  # Tworzymy listę dostępnych kategorii z istniejących danych
+    global dane_getMorphy  # Korzystamy z wcześniej załadowanych danych
+    dostepne_kategorie = list(set(dane_getMorphy.values()))  # Tworzymy listę dostępnych kategorii z istniejących danych
 
     # Przypadek zakończenia dodawania poleceń do bieżącej kategorii
     if prompt == "@koniec":
@@ -213,7 +215,7 @@ def generator(username, prompt):
             return response
         else:
             # Jeśli nie ma aktywnej kategorii, kończymy tryb generatora
-            saveMorphy(dane)
+            saveMorphy(dane_getMorphy)
             return "@end"  # Sygnał do zakończenia trybu wiersza poleceń
 
     # Sprawdzamy, czy mamy aktywną kategorię dla danego użytkownika
@@ -228,7 +230,7 @@ def generator(username, prompt):
 
     # Jeśli już mamy aktywną kategorię dla tego użytkownika, dodajemy polecenie do tej kategorii
     polecenie_tuple = tuple(prompt.split())
-    dane[polecenie_tuple] = generator_states[username]
+    dane_getMorphy[polecenie_tuple] = generator_states[username]
     return f"Dodano polecenie: {polecenie_tuple} -> {generator_states[username]}"
 
 class LoginForm(FlaskForm):
