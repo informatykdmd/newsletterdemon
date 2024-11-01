@@ -135,7 +135,7 @@ def prepare_prompt(began_prompt):
                 if pobierz_harmonogramy_kampanii:
                     command = f'WYKRYTO ZAPYTANIE O HARMONOGRAM KAMPANII OTO DUMP DO WYKORZYSTANIA:\n{pobierz_harmonogramy_kampanii}'
                 else: command = ''
-                handle_error(f"command: {command.replace('\n', '')}")
+                handle_error(f"command: {command}")
             else: command = ''
         else: command = ''
 
