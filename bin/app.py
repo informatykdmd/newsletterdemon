@@ -156,7 +156,7 @@ def prepare_prompt(began_prompt):
                 ready_prompt += f'LOGIN TO:{theme["user_name"]}\nRANGA TO: {theme["description"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]} TO:\n{theme["content"]}\n{command}\n'
                 # ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n{command}\n'
             else:
-                ready_prompt += f'TWÓJ LOGIN TO:{theme["user_name"]}\nWIADOMOŚĆ OD CIEBIE TO:\n{theme["content"]}\n\n'
+                ready_prompt += f'TWÓJ LOGIN TO: aifa\nWIADOMOŚĆ OD CIEBIE TO:\n{theme["content"]}\n\n'
             count_ready += 1
 
     if count_ready > 0:
@@ -642,19 +642,7 @@ def main():
                 
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
-            
-                
-            
 
-            
-
-            
-
-           
-
-            
-
-            
             sleep(0.1)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
 
