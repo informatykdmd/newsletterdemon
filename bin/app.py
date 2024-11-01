@@ -7,6 +7,7 @@ import random
 import os
 import json
 import re
+import difflib
 from typing import List, Optional
 from archiveSents import archive_sents
 from appslib import handle_error
@@ -373,8 +374,94 @@ def znajdz_klucz_z_wazeniem_old(dane_d, tekst_szukany):
 
     return wynik
 
+def porownaj_slowa(slowo1, slowo2):
+    """
+    Porównuje podobieństwo między dwoma słowami, uwzględniając literówki i brak polskich znaków.
+    Zwraca procentowe dopasowanie (od 0 do 1).
+    """
+    # Zamiana polskich znaków na ich odpowiedniki bez znaków diakrytycznych
+    def usun_polskie_znaki(tekst):
+        zamienniki = {
+            'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z'
+        }
+        for znak, zamiennik in zamienniki.items():
+            tekst = tekst.replace(znak, zamiennik)
+        return tekst
+
+    # Ujednolicenie liter i usunięcie polskich znaków
+    slowo1 = usun_polskie_znaki(slowo1.lower())
+    slowo2 = usun_polskie_znaki(slowo2.lower())
+    
+    # Porównanie podobieństwa słów
+    podobienstwo = difflib.SequenceMatcher(None, slowo1, slowo2).ratio()
+    return round(podobienstwo, 2)
 
 def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
+    """
+    Sprawdza dopasowanie słów kluczowych i fraz z tekst_szukany do tupli kluczy w słowniku dane_d,
+    używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
+    """
+    tekst_szukany = re.sub(r'[^\w\s]', '', tekst_szukany.lower())
+    wynik = {
+        "wystapienia": 0,
+        "kolejnosc": False,
+        "wartosci": set(),
+        "sukces": False,
+        "procent": 0.0,
+        "najtrafniejsze": None
+    }
+
+    max_ocena = 0
+    prog_podobienstwa = 0.8  # Minimalne podobieństwo, aby uznać słowa za dopasowane
+
+    for klucz, wartosc in dane_d.items():
+        klucz_lower = tuple(k.lower() for k in klucz)
+        wystapienia = 0
+        kolejnosc = True
+        ostatni_indeks = -1
+
+        # Sprawdzamy wystąpienia całych fraz z kluczy w tekście, z tolerancją na literówki
+        znalezione_frazy = [fraza for fraza in klucz_lower if any(porownaj_slowa(fraza, slowo) >= prog_podobienstwa for slowo in tekst_szukany.split())]
+
+        # Jeżeli nie ma żadnych dopasowań fraz, przejdź do następnego klucza
+        if not znalezione_frazy:
+            continue
+
+        for fraza in znalezione_frazy:
+            znaleziono = False
+            for i, czesc_klucza in enumerate(klucz_lower):
+                if porownaj_slowa(fraza, czesc_klucza) >= prog_podobienstwa:  # Dopasowanie z tolerancją literówek
+                    wystapienia += 1
+                    znaleziono = True
+                    if i > ostatni_indeks:
+                        ostatni_indeks = i
+                    else:
+                        kolejnosc = False
+                    break
+            if not znaleziono:
+                kolejnosc = False
+                break
+
+        procent_dopasowania = round(wystapienia / len(klucz), 2) if len(klucz) > 0 else 0.0
+        ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
+
+        if wystapienia > 0:
+            wynik["wartosci"].add(wartosc)
+            wynik["sukces"] = True
+            if ocena > max_ocena:
+                max_ocena = ocena
+                wynik["najtrafniejsze"] = wartosc
+                wynik["wystapienia"] = wystapienia
+                wynik["kolejnosc"] = kolejnosc
+                wynik["procent"] = procent_dopasowania
+
+    wynik["wartosci"] = list(wynik["wartosci"])
+    if wynik["najtrafniejsze"] in wynik["wartosci"]:
+        wynik["wartosci"].remove(wynik["najtrafniejsze"])
+
+    return wynik
+
+def znajdz_klucz_z_wazeniem_old2(dane_d, tekst_szukany: str):
     """
     Sprawdza dopasowanie słów kluczowych i fraz z tekst_szukany do tupli kluczy w słowniku dane_d,
     używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
