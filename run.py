@@ -168,7 +168,7 @@ def ustawienia(prompt: str):
                 else:
                     msq.handle_error(f'Nie udało się zrestartować chat bota.', log_path=logFileName)
                     return f'Nie udało się zrestartować chat bota.'
-        return 'Przyjęto polecenie: ' + prompt
+        return 'Nieznane polecenie: ' + prompt
 
 # Słownik przechowujący stan generatora dla każdego użytkownika osobno
 dane = getMorphy()
