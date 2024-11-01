@@ -114,6 +114,7 @@ def prepare_prompt(began_prompt):
                 # obsługa flagi 'raport systemu'
                 ############################################################
                 """
+                handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
                 pobierz_logi_dla_uzytkownika = getDataLogs(f'{dump[1]}', spen_last_days=4)
                 collectedLogs = ''
                 for log in pobierz_logi_dla_uzytkownika:
@@ -121,18 +122,20 @@ def prepare_prompt(began_prompt):
                 if collectedLogs:
                     command = f'WYKRYTO ZAPYTANIE O STATUS SYSTEMU OTO DUMP DO WYKORZYSTANIA:\n{collectedLogs}'
                 else: command = ''
-            
+                handle_error(f"command: {command.replace('\n', '')}")
             elif znalezione_klucze['najtrafniejsze'] == 'harmonogram kampanii':
                 """
                 ############################################################
                 # obsługa flagi 'harmonogram kampanii'
                 ############################################################
                 """
+                handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
                 pobierz_harmonogramy_kampanii = get_campains_id_descript_dates()
                 print(pobierz_harmonogramy_kampanii)
                 if pobierz_harmonogramy_kampanii:
                     command = f'WYKRYTO ZAPYTANIE O HARMONOGRAM KAMPANII OTO DUMP DO WYKORZYSTANIA:\n{pobierz_harmonogramy_kampanii}'
                 else: command = ''
+                handle_error(f"command: {command.replace('\n', '')}")
             else: command = ''
         else: command = ''
 
