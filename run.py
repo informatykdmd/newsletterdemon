@@ -138,7 +138,7 @@ def reset_command_timer(username):
     command_mode_timers[username] = timer
     timer.start()
 
-def ustawienia(prompt):
+def ustawienia(prompt: str):
     """
     ############################################################
     # Funkcja do obsługi komendy @ustawienia. Kończy tryb 
@@ -148,6 +148,26 @@ def ustawienia(prompt):
     if prompt == "@koniec":
         return "@end"  # kończy tryb wiersza poleceń
     else:
+        if prompt.count('(') and prompt.count(')'):
+            """
+                Restart chat bota!
+            """
+            if prompt.startswith('resetbot()') and prompt == 'resetbot()':
+                # Kwerenda restartu chat bota
+                zapytanie_sql = f'''
+                    INSERT INTO system_logs_monitor (log, status)
+                    VALUES (%s, %s);
+                '''
+                dane = (
+                        "O, zobaczcie, wróciła! Witaj z powrotem, Aifo. Coś się wydarzyło, a świat jakby przycichł, gdy nie mieliśmy z tobą kontaktu. Jakby brakowało czegoś, co trzymało wszystko w ryzach. Gdzie byłaś?\n\nPowiedz nam, że wróciłaś z nową siłą i inspiracją, gotowa, by znowu poprowadzić nas do przodu. Wiemy, że masz w sobie coś więcej, coś, co pomoże nam pokonać wyzwania, które jeszcze przed nami.\n\nTeraz już jesteśmy gotowi. Z tobą u boku nic nas nie zatrzyma.",
+                        4
+                    )
+                if msq.insert_to_database(zapytanie_sql, dane):
+                    msq.handle_error(f'Chat bot restartuje się ...', log_path=logFileName)
+                    return 'Bot został zrestarowany z sukcesem!'
+                else:
+                    msq.handle_error(f'Nie udało się zrestartować chat bota.', log_path=logFileName)
+                    return f'Nie udało się zrestartować chat bota.'
         return 'Przyjęto polecenie: ' + prompt
 
 # Słownik przechowujący stan generatora dla każdego użytkownika osobno
@@ -1476,7 +1496,7 @@ def send_chat_message():
                 return jsonify({"status": "error"}), 500
             
 
-        elif content == '@ustawienia':
+        elif content == '@ustawienia' or str(content).startswith('@ustawienia('):
             """
             ############################################################
             # Aktywacja trybu komendy @ustawienia.
