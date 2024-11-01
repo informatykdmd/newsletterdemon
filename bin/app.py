@@ -6,6 +6,7 @@ import sendEmailBySmtp
 import random
 import os
 import json
+import re
 from typing import List, Optional
 from archiveSents import archive_sents
 from appslib import handle_error
@@ -376,7 +377,7 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
     używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
     """
     # Przekształcamy tekst_szukany na małe litery, aby ignorować wielkość liter
-    tekst_szukany = tekst_szukany.lower().replace('?', '').replace('.', '').replace('!', '')
+    tekst_szukany = re.sub(r'[^\w\s]', '', tekst_szukany.lower())
     wynik = {
         "wystapienia": 0,
         "kolejnosc": False,
