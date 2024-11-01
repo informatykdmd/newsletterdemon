@@ -122,7 +122,7 @@ def prepare_prompt(began_prompt):
                 if collectedLogs:
                     command = f'WYKRYTO ZAPYTANIE O STATUS SYSTEMU OTO DUMP DO WYKORZYSTANIA:\n{collectedLogs}'
                 else: command = ''
-                handle_error(f"command: {command.replace('\n', '')}")
+                handle_error(f"command: {command}")
             elif znalezione_klucze['najtrafniejsze'] == 'harmonogram kampanii':
                 """
                 ############################################################
