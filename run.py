@@ -46,6 +46,9 @@ app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=120)  # Cz
 
 Session(app)
 
+# Słownik przechowujący stan generatora dla każdego użytkownika osobno
+dane_getMorphy = getMorphy()
+
 logFileName = '/home/johndoe/app/newsletterdemon/logs/errors.log'
 # Konfiguracja loggera
 logging.basicConfig(filename=logFileName, level=logging.INFO,
@@ -188,11 +191,10 @@ def ustawienia(prompt: str):
                     return ready_export_string
                 else:
                     msq.handle_error(f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}', log_path=logFileName)
-                    return f'Nie udało się zrestartować chat bota.'
+                    return f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}'
         return 'Nieznane polecenie: ' + prompt
 
-# Słownik przechowujący stan generatora dla każdego użytkownika osobno
-dane_getMorphy = getMorphy()
+
 def generator(username, prompt):
     """
     ############################################################
@@ -1517,7 +1519,7 @@ def send_chat_message():
                 return jsonify({"status": "error"}), 500
             
 
-        elif content == '@ustawienia' or str(content).startswith('@ustawienia('):
+        elif content == '@ustawienia':
             """
             ############################################################
             # Aktywacja trybu komendy @ustawienia.
