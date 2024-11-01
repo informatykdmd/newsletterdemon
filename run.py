@@ -149,10 +149,10 @@ def ustawienia(prompt: str):
         return "@end"  # kończy tryb wiersza poleceń
     else:
         if prompt.count('(') and prompt.count(')'):
-            """
-                Restart chat bota!
-            """
             if prompt.startswith('resetbot()') and prompt == 'resetbot()':
+                """
+                    Restart chat bota!
+                """
                 # Kwerenda restartu chat bota
                 zapytanie_sql = f'''
                     INSERT INTO system_logs_monitor (log, status)
@@ -167,6 +167,25 @@ def ustawienia(prompt: str):
                     return 'Bot został zrestarowany z sukcesem!'
                 else:
                     msq.handle_error(f'Nie udało się zrestartować chat bota.', log_path=logFileName)
+                    return f'Nie udało się zrestartować chat bota.'
+            
+            elif prompt.startswith('pokazKomendy(') and prompt.endswith(')'):
+                """
+                    Wyświetlanie Zaprogramowanych poleceń
+                """
+                try: kategoria_podana_w_komendzie = prompt.split('(')[1][:-1]
+                except IndexError: return 'Błąd składni polecenia! Prawidłowa struktura to: polecenie(dane)'
+                ready_export_string =''
+                for k,v in dane.items():
+                    if v == kategoria_podana_w_komendzie:
+                        zbudowana_komenda_syting = " ".join(k)
+                        ready_export_string += f'{zbudowana_komenda_syting}\n'
+
+                if ready_export_string:
+                    msq.handle_error(f'Wyświetlono listę poleceń dla kategorii: {ready_export_string}', log_path=logFileName)
+                    return ready_export_string
+                else:
+                    msq.handle_error(f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}', log_path=logFileName)
                     return f'Nie udało się zrestartować chat bota.'
         return 'Nieznane polecenie: ' + prompt
 
