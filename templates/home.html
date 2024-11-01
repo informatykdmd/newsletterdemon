@@ -1004,12 +1004,52 @@
 {% endblock %}
 
 {% block footer %}
-<a id="toggle-scroll" style="color: #00ddff; max-width: 30px; max-height: 30px; background: none;">
-    <i class="bi bi-arrow-down-circle"></i>
-</a>
-<p style="font-size: 12px; font-weight: 100; color:#a0abb1;">
-    All right reserved &copy; 2024 by DMD Panel Administratora.
-</p>
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div class="row">
+        <div class="col">
+            <a id="toggle-scroll" style="color: #00ddff; max-width: 60px; max-height: 60px; background: none;">
+                <i class="bi bi-arrow-down-circle"></i>
+            </a>
+        </div>
+        <div class="col">
+            <p style="font-size: 10px; font-weight: 100; color:#a0abb1;">
+                All right reserved &copy; 2024 by DMD Panel Administratora.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div class="row">
+        <div class="col">
+            <a id="toggle-scroll" style="color: #00ddff; max-width: 40px; max-height: 40px; background: none;">
+                <i class="bi bi-arrow-down-circle"></i>
+            </a>
+        </div>
+        <div class="col">
+            <p style="font-size: 12px; font-weight: 100; color:#a0abb1;">
+                All right reserved &copy; 2024 by DMD Panel Administratora.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div class="row">
+        <div class="col">
+            <a id="toggle-scroll" style="color: #00ddff; max-width: 40px; max-height: 40px; background: none;">
+                <i class="bi bi-arrow-down-circle"></i>
+            </a>
+        </div>
+        <div class="col">
+            <p style="font-size: 12px; font-weight: 100; color:#a0abb1;">
+                All right reserved &copy; 2024 by DMD Panel Administratora.
+            </p>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block bottom_script %}

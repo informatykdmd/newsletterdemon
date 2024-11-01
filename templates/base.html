@@ -405,7 +405,32 @@
   <footer class="footer">
     <div class="container">
       <div class="row">
-        {% block footer %}{% endblock %}
+        {% block footer %}
+            <!-- d-block d-sm-none tylko na średnim sm+ -->
+            <div class="d-block d-sm-none mt-2">
+                <div>
+                    <p style="font-size: 10px; font-weight: 100; color:#a0abb1;">
+                        All right reserved &copy; 2024 by DMD Panel Administratora.
+                    </p>
+                </div>
+            </div>
+            <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+            <div class="d-none d-sm-block d-lg-none mt-2">
+                <div>
+                    <p style="font-size: 12px; font-weight: 100; color:#a0abb1;">
+                        All right reserved &copy; 2024 by DMD Panel Administratora.
+                    </p>
+                </div>
+            </div>
+            <!-- d-none d-xl-block tylko na pełnym xl+ -->
+            <div class="d-none d-lg-block mt-2">
+                <div>
+                    <p style="font-size: 13px; font-weight: 100; color:#a0abb1;">
+                        All right reserved &copy; 2024 by DMD Panel Administratora.
+                    </p>
+                </div>
+            </div>
+        {% endblock %}
       </div>
     </div>
   </footer>
