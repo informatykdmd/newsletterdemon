@@ -102,6 +102,7 @@ def prepare_prompt(began_prompt):
         fraza = dump[2]
         znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
         # print(znalezione_klucze)
+        handle_error(f"Znalezione klucze dump: {znalezione_klucze}.")
         if znalezione_klucze['sukces'] and znalezione_klucze['kolejnosc']\
             and znalezione_klucze['procent'] > .5 and dump[1] != "aifa":
             
