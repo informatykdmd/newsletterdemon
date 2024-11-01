@@ -296,7 +296,7 @@ def addDataLogs(message: str, category: str, file_name_json: str = "/home/johndo
     with open(file_name_json, "w") as file:
         json.dump(data_json, file, indent=4)
 
-def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany):
+def znajdz_klucz_z_wazeniem_old(dane_d, tekst_szukany):
     """
     Sprawdza dopasowanie słów kluczowych z tekst_szukany do tupli kluczy w słowniku dane_d,
     używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
@@ -368,6 +368,81 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany):
         wynik["wartosci"].remove(wynik["najtrafniejsze"])
 
     return wynik
+
+
+def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
+    """
+    Sprawdza dopasowanie słów kluczowych i fraz z tekst_szukany do tupli kluczy w słowniku dane_d,
+    używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
+    """
+    # Przekształcamy tekst_szukany na małe litery, aby ignorować wielkość liter
+    tekst_szukany = tekst_szukany.lower().replace('?', '').replace('.', '').replace('!', '')
+    wynik = {
+        "wystapienia": 0,
+        "kolejnosc": False,
+        "wartosci": set(),
+        "sukces": False,
+        "procent": 0.0,
+        "najtrafniejsze": None
+    }
+
+    max_ocena = 0  # Zmienna przechowująca najwyższą ocenę dla najlepszego dopasowania
+
+    for klucz, wartosc in dane_d.items():
+        klucz_lower = tuple(k.lower() for k in klucz)  # Ignoruje wielkość liter w tuplach
+        wystapienia = 0
+        kolejnosc = True
+        ostatni_indeks = -1
+
+        # Sprawdzamy wystąpienia całych fraz z kluczy w tekście
+        znalezione_frazy = [fraza for fraza in klucz_lower if fraza in tekst_szukany]
+
+        # Jeżeli nie ma żadnych dopasowań fraz, przejdź do następnego klucza
+        if not znalezione_frazy:
+            continue
+
+        # Sprawdzenie wystąpień i kolejności fraz z dopasowaniem częściowym
+        for fraza in znalezione_frazy:
+            znaleziono = False
+            for i, czesc_klucza in enumerate(klucz_lower):
+                if fraza == czesc_klucza:  # Dopasowanie pełnej frazy
+                    wystapienia += 1
+                    znaleziono = True
+                    if i > ostatni_indeks:
+                        ostatni_indeks = i
+                    else:
+                        kolejnosc = False
+                    break
+            if not znaleziono:
+                kolejnosc = False
+                break
+
+        # Obliczamy procent dla bieżącego klucza jako liczba znalezionych fraz / liczba fraz w tupli
+        procent_dopasowania = round(wystapienia / len(klucz), 2) if len(klucz) > 0 else 0.0
+
+        # Ocena końcowa na podstawie wag
+        ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
+
+        # Aktualizujemy wynik dla najlepszego dopasowania na podstawie oceny
+        if wystapienia > 0:
+            wynik["wartosci"].add(wartosc)  # Dodajemy wartość do zestawu wyników
+            wynik["sukces"] = True
+            if ocena > max_ocena:
+                max_ocena = ocena
+                wynik["najtrafniejsze"] = wartosc
+                wynik["wystapienia"] = wystapienia
+                wynik["kolejnosc"] = kolejnosc
+                wynik["procent"] = procent_dopasowania  # Aktualizujemy najlepszy procent
+
+    # Konwersja zestawu "wartosci" na listę
+    wynik["wartosci"] = list(wynik["wartosci"])
+
+    # Usunięcie najtrafniejszej wartości z listy "wartosci", jeśli jest w zestawie
+    if wynik["najtrafniejsze"] in wynik["wartosci"]:
+        wynik["wartosci"].remove(wynik["najtrafniejsze"])
+
+    return wynik
+
 
 def tuple_to_string(tup, sep="|"):
     """Konwertuje tuplę na string za pomocą separatora."""
