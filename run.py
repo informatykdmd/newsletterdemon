@@ -1499,7 +1499,8 @@ def send_chat_message():
                     msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
                     return jsonify({"status": "error"}), 500
             else:
-                return jsonify({"status": "command_mode_not_active"}), 400
+                save_chat_message(user_name=username, content=f'Command mode not active', status=1)
+                return jsonify({"status": "command_mode_not_active"}), 200
 
         elif content == '@generator':
             """
