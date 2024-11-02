@@ -47,10 +47,33 @@ def get_campains_id_descript_dates() -> str:
         FROM waitinglist_fbgroups
     '''
     took_list = prepare_shedule.connect_to_database(existing_campaigns_query)
-    ready_export_string = f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n'
+    ready_export_string = f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
     for row in took_list:
+        title_campain_query = ""
+        if row[26] == 'estateAdsSell':
+            title_campain_query = f"""
+                SELECT Tytul FROM OfertySprzedazy WHERE ID = {row[0]};
+            """
+        elif row[26] == 'estateAdsRent':
+            title_campain_query = f"""
+                SELECT Tytul FROM OfertyNajmu WHERE ID = {row[0]};
+            """
+        elif row[26] == 'hiddeCampaigns':
+            title_campain_query = f"""
+                SELECT title FROM hidden_campaigns WHERE id = {row[0]};
+            """
+        elif row[26] == 'career':
+            title_campain_query = f"""
+                SELECT title FROM job_offers WHERE id = {row[0]};
+            """
+        if title_campain_query:
+            try: get_title = prepare_shedule.connect_to_database(title_campain_query)[0][0]
+            except IndexError: get_title = "Brak tytułu"
+        else: get_title = "Brak tytułu"
+
         theme={
             'post_id': row[0],
+            'title': get_title,
             'content': row[1],
             'schedule_0_datetime': row[2], 'schedule_0_status': row[3],
             'schedule_1_datetime': row[4], 'schedule_1_status': row[5],
@@ -76,9 +99,9 @@ def get_campains_id_descript_dates() -> str:
                     del theme[k]
             elif k.endswith('status') and v is not None:  # kampania zrealizowana
                 del theme[k]
-            
-        ready_export_string += f"Kampania o id: {theme['post_id']}, emitowana przez bota: {theme['created_by']}, w kategorii: {theme['category']}, dla sekcji: {theme['section']} posiada niezrealizowane emisje zaplanowane na dni:\n"
-        ready_export_string += f"\t\t{theme.get('schedule_0_datetime', '')} {theme.get('schedule_1_datetime', '')} {theme.get('schedule_2_datetime', '')} {theme.get('schedule_3_datetime', '')} {theme.get('schedule_4_datetime', '')} {theme.get('schedule_5_datetime', '')} {theme.get('schedule_6_datetime', '')} {theme.get('schedule_7_datetime', '')} {theme.get('schedule_8_datetime', '')} {theme.get('schedule_9_datetime', '')} {theme.get('schedule_10_datetime', '')}\n"
+        
+        ready_export_string += f"Kampania o Tytule: {theme['title']}\nEmitowana przez bota: {theme['created_by']}\nW kategorii: {theme['category']}\nPosiada niezrealizowane emisje zaplanowane na:\n"
+        ready_export_string += f"{theme.get('schedule_0_datetime', '')} {theme.get('schedule_1_datetime', '')} {theme.get('schedule_2_datetime', '')} {theme.get('schedule_3_datetime', '')} {theme.get('schedule_4_datetime', '')} {theme.get('schedule_5_datetime', '')} {theme.get('schedule_6_datetime', '')} {theme.get('schedule_7_datetime', '')} {theme.get('schedule_8_datetime', '')} {theme.get('schedule_9_datetime', '')} {theme.get('schedule_10_datetime', '')}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n\n\n"
     
     # Usuwamy zbędne spacje
     ready_export_string = "\n".join(" ".join(line.split()) for line in ready_export_string.splitlines())
