@@ -130,7 +130,7 @@ def prepare_prompt(began_prompt):
         
         if znalezione_klucze['sukces'] and znalezione_klucze['kolejnosc']\
             and znalezione_klucze['procent'] > .5 and dump[1] != "aifa":
-            
+            collectedLogs = ''
             handle_error(f"Znalezione klucze dump: {znalezione_klucze}.")
             if znalezione_klucze['najtrafniejsze'] == 'raport systemu':
                 """
@@ -140,7 +140,6 @@ def prepare_prompt(began_prompt):
                 """
                 handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
                 pobierz_logi_dla_uzytkownika = getDataLogs(f'{dump[1]}', spen_last_days=4)
-                collectedLogs = ''
                 for log in pobierz_logi_dla_uzytkownika:
                     collectedLogs += f'{log["message"]} : {log["category"]} \n'
                 if collectedLogs:
@@ -694,13 +693,13 @@ def main():
                     ################################################################
 
                     random_choiced_prompt_list = [
-                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Włącz się do rozmowy, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",  # Przykład wzorcowy
-                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Reaguj podekscytowanym tonem, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!",
-                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Odpowiedz w sposób neutralny, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",
-                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Reaguj w sposób powściągliwy, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!",
-                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Odpowiedz w żartobliwy sposób, zwracając się do użytkowników po nicku. Od razu pisz swoją wypowiedź!",
-                            "Oto fragment rozmowy, która się toczy na naszym chacie firmowym. Reaguj szyderczo, używając nicków użytkowników. Natychmiast pisz swoją odpowiedź!"
-                        ]
+                        "Spójrz na poniższą rozmowę z naszego firmowego chatu. W sytuacjach wymagających rozwiązania problemu, postaraj się podejść do niego kreatywnie, uwzględniając punkt widzenia innych uczestników.\n\nZareaguj, dostosowując styl odpowiedzi do tonu innych użytkowników i zwracając się do nich po nicku. Napisz swoją odpowiedź od razu!",
+                        "Na naszym firmowym chacie trwa dyskusja. Jeśli w rozmowie pojawia się pytanie lub wyzwanie, spróbuj odpowiedzieć w sposób, który pobudzi myślenie innych i wniesie nowe spojrzenie.\n\nDopasuj swoją reakcję do klimatu rozmowy i bezpośrednio odpowiedz użytkownikom, używając ich nicków. Sformułuj odpowiedź od razu!",
+                        "Przeczytaj poniższy fragment rozmowy z chatu. Zastanów się, czy masz pomysł, który rozwiąże postawiony problem w nietypowy sposób lub zainspiruje uczestników do dalszych działań.\n\nOdpowiedz, uwzględniając charakter wypowiedzi i kontekst, z szacunkiem do nicków użytkowników. Pisz bez zwłoki!",
+                        "Właśnie trwa wymiana zdań na naszym firmowym chacie. Jeżeli dostrzegasz problem, podziel się sugestią, która może pomóc zespołowi, nawet jeśli wykracza poza standardowe rozwiązania.\n\nPrzemyśl odpowiedź, która odpowiada stylowi rozmowy i kontekstu, adresując ją bezpośrednio do użytkowników po ich nickach. Odpowiedz od razu!",
+                        "Spójrz na fragment rozmowy toczącej się na firmowym chacie. W sytuacjach wymagających twórczego podejścia, postaraj się, aby Twoja odpowiedź otworzyła nowe możliwości lub rzuciła inne światło na zagadnienie.\n\nZareaguj adekwatnie do sytuacji, bezpośrednio zwracając się do użytkowników po nickach. Natychmiast prześlij swoją odpowiedź!",
+                        "Trwa konwersacja na chacie firmowym. Jeśli w rozmowie pojawia się potrzeba rozwiązania problemu, wykaż się kreatywnością i zasugeruj pomysł, który może usprawnić pracę zespołu.\n\nWybierz ton odpowiedzi odpowiadający dynamice rozmowy i zwróć się bezpośrednio do uczestników po ich nickach. Napisz odpowiedź już teraz!"
+                    ]
 
                     pre_prompt = random.choice(random_choiced_prompt_list)
                     final_prompt = prepare_prompt(pre_prompt)
