@@ -710,7 +710,7 @@ def main():
                                     (question, status)
                                 VALUES 
                                     (%s, %s)""",
-                            (final_prompt, 4)
+                            (final_prompt, 5)
                             )
 
                     ################################################################
