@@ -841,7 +841,7 @@ def main():
                         # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
                         addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
                 
-                elif name == 'checkpoint_4h':
+                elif name == 'checkpoint_180s': # checkpoint_4h
                     """ 
                         **********************************************************
                         ******************   CHECKPOINT 4 HOURS   **************** 
