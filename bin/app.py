@@ -606,8 +606,6 @@ def make_fbgroups_task(data):
             (created_by, kategoria_ogloszenia)
         )
 
-
-
     fotolinkigrup_string = ""  # Dodajemy wartość domyślną
     if id_gallery is not None:
         dump_row_fotos = prepare_shedule.connect_to_database(
@@ -661,7 +659,7 @@ def main():
         "checkpoint_60s": 60,
         "checkpoint_180s": 180,
         "checkpoint_300s": 300,
-        "checkpoint_day": 86400
+        "checkpoint_4h": 14400
         
     }
     # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
@@ -843,10 +841,10 @@ def main():
                         # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
                         addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
                 
-                elif name == 'checkpoint_day':
+                elif name == 'checkpoint_4h':
                     """ 
                         **********************************************************
-                        ******************    CHECKPOINT 1 DAY    **************** 
+                        ******************   CHECKPOINT 4 HOURS   **************** 
                         **********************************************************
                     """
                     ################################################################
