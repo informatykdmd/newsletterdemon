@@ -744,33 +744,6 @@ def main():
                         # add_aifaLog(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}')
                         addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
 
-                    ################################################################
-                    # Automatyczne zbieranie statystyk dla FB-GROUPS
-                    ################################################################
-
-                    created_by_bot = ['dmddomy', 'fredgraf', 'michalformatyk']
-
-                    for bot in created_by_bot:
-                        # Pobierz id i linki dla danego użytkownika
-                        id_group_links = prepare_shedule.connect_to_database(
-                            f'SELECT id, link FROM facebook_gropus WHERE created_by="{bot}";'
-                        )
-                        
-                        # Tworzenie ciągu ready_string
-                        ready_string = ''
-                        for id, link in id_group_links:
-                            ready_string += f"{id}-$-{link}-@-"
-                        
-                        # Usunięcie ostatniego "-@-" i wstawienie do bazy, jeśli ciąg nie jest pusty
-                        if ready_string:
-                            ready_string = ready_string[:-3]
-                            prepare_shedule.insert_to_database(
-                                """INSERT INTO fbgroups_stats_monitor
-                                    (id_and_links_string, created_by, status)
-                                VALUES 
-                                    (%s, %s, %s)""",
-                                (ready_string, bot, 4)
-                            )
                 elif name == 'checkpoint_60s':
                     """ 
                         **********************************************************
