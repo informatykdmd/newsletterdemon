@@ -1049,7 +1049,7 @@
                         const formattedMessage = message[1]
                                 .split('\n')                // Dzielimy na linie po `\n`
                                 .filter(line => line.trim()) // Filtrujemy puste linie (usuwamy białe znaki)
-                                .join('<br>');               // Łączymy ponownie z `<br>`
+                                .join('<br /><br />');               // Łączymy ponownie z `<br>`
                         chatBox.append(`
                         <div class="chat-container">
                             <div class="chat-bubble">
