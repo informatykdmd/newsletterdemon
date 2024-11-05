@@ -557,15 +557,11 @@ def znajdz_klucz_z_wazeniem_old2(dane_d, tekst_szukany: str):
     return wynik
 
 
-def tuple_to_string(tup, sep="|"):
-    """Konwertuje tuplę na string za pomocą separatora."""
-    return sep.join(tup)
-
-def string_to_tuple(s, sep="|"):
-    """Konwertuje string na tuplę, używając separatora do podziału."""
-    return tuple(s.split(sep))
-
 def getMorphy(morphy_JSON_file_name="/home/johndoe/app/newsletterdemon/logs/commandAifa.json"):
+    def string_to_tuple(s, sep="|"):
+        """Konwertuje string na tuplę, używając separatora do podziału."""
+        return tuple(s.split(sep))
+
     """Odzyskuje tuplę z kluczy JSON i zwraca dane z poprawionymi kluczami."""
     with open(morphy_JSON_file_name, "r", encoding="utf-8") as f:
         dane_json = json.load(f)
@@ -574,6 +570,9 @@ def getMorphy(morphy_JSON_file_name="/home/johndoe/app/newsletterdemon/logs/comm
     return dane_with_tuples
 
 def saveMorphy(dane_dict, file_name="/home/johndoe/app/newsletterdemon/logs/commandAifa.json"):
+    def tuple_to_string(tup, sep="|"):
+        """Konwertuje tuplę na string za pomocą separatora."""
+        return sep.join(tup)
     # Konwersja tupli na string przy zapisie do JSON
     dane_json_ready = {tuple_to_string(k): v for k, v in dane_dict.items()}
     # Zapis do JSON z kodowaniem utf-8
@@ -649,7 +648,9 @@ def main():
         "checkpoint_30s": 30,
         "checkpoint_60s": 60,
         "checkpoint_180s": 180,
-        "checkpoint_300s": 300
+        "checkpoint_300s": 300,
+        "checkpoint_day": 86400
+        
     }
     # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
     last_run_times = {name: time() for name in checkpoints}
@@ -830,6 +831,40 @@ def main():
                         # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
                         addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
                 
+                elif name == 'checkpoint_day':
+                    """ 
+                        **********************************************************
+                        ******************    CHECKPOINT 1 DAY    **************** 
+                        **********************************************************
+                    """
+                    ################################################################
+                    # Automatyczne zbieranie statystyk dla FB-GROUPS
+                    ################################################################
+
+                    created_by_bot = ['dmddomy', 'fredgraf', 'michalformatyk']
+
+                    for bot in created_by_bot:
+                        # Pobierz id i linki dla danego użytkownika
+                        id_group_links = prepare_shedule.connect_to_database(
+                            f'SELECT id, link FROM facebook_gropus WHERE created_by="{bot}";'
+                        )
+                        
+                        # Tworzenie ciągu ready_string
+                        ready_string = ''
+                        for id, link in id_group_links:
+                            ready_string += f"{id}-$-{link}-@-"
+                        
+                        # Usunięcie ostatniego "-@-" i wstawienie do bazy, jeśli ciąg nie jest pusty
+                        if ready_string:
+                            ready_string = ready_string[:-3]
+                            prepare_shedule.insert_to_database(
+                                """INSERT INTO fbgroups_stats_monitor
+                                    (id_and_links_string, created_by, status)
+                                VALUES 
+                                    (%s, %s, %s)""",
+                                (ready_string, bot, 4)
+                            )
+
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
 
