@@ -1046,7 +1046,10 @@
                     let chatBox = $('#chat-box');
                     chatBox.empty();
                     data.forEach(function(message) {
-                        const formattedMessage = message[1].replace(/\n/g, "<br>");
+                        const formattedMessage = message[1]
+                                .split('\n')                // Dzielimy na linie po `\n`
+                                .filter(line => line.trim()) // Filtrujemy puste linie (usuwamy białe znaki)
+                                .join('<br>');               // Łączymy ponownie z `<br>`
                         chatBox.append(`
                         <div class="chat-container">
                             <div class="chat-bubble">
