@@ -596,6 +596,18 @@ def make_fbgroups_task(data):
             f"""SELECT link FROM facebook_gropus WHERE category = '{kategoria_ogloszenia}' AND created_by = '{created_by}';""")
     linkigrup_string = '-@-'.join(link[0] for link in dump_key_links)
 
+    # Zapisz aktualny licznik emisji
+    prepare_shedule.insert_to_database(
+            f"""
+                UPDATE facebook_gropus
+                SET realized_emissions = realized_emissions + 1
+                WHERE created_by = %s AND category = %s;
+            """,
+            (created_by, kategoria_ogloszenia)
+        )
+
+
+
     fotolinkigrup_string = ""  # Dodajemy wartość domyślną
     if id_gallery is not None:
         dump_row_fotos = prepare_shedule.connect_to_database(
