@@ -660,7 +660,6 @@ def main():
         "checkpoint_180s": 180,
         "checkpoint_300s": 300,
         "checkpoint_4h": 14400
-        
     }
     # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
     last_run_times = {name: time() for name in checkpoints}
