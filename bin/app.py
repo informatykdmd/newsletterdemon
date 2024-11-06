@@ -88,17 +88,21 @@ def get_campains_id_descript_dates() -> str:
             'schedule_10_datetime': row[22], 'schedule_10_status': row[23],
             'category': row[24], 'created_by': row[25], 'section': row[26]
         }
-        for k, v in list(theme.items()):  # używamy listy do bezpiecznego usuwania
-            if k.endswith('datetime'):
-                if v is None:  # kampania niezaplanowana
-                    del theme[k]
-                elif isinstance(v, datetime.datetime):  # kampania zaplanowana - formatujemy datę
-                    theme[k] = v.strftime("%Y-%B-%d %H:%M")  # Pełna nazwa miesiąca, np. "2023-January-01 15:30"
-                else:
-                    # Jeśli nie jest datetime, traktujemy jako niepoprawne i usuwamy
-                    del theme[k]
-            elif k.endswith('status') and v is not None:  # kampania zrealizowana
-                del theme[k]
+        # Przechodzimy przez elementy i usuwamy zestawy `datetime`/`status`, które nie spełniają warunków
+        for i in range(11):  # Przeglądamy `schedule_0` do `schedule_10`
+            datetime_key = f'schedule_{i}_datetime'
+            status_key = f'schedule_{i}_status'
+
+            # Pobieramy wartości `datetime` i `status` dla aktualnego zestawu
+            datetime_value = theme.get(datetime_key)
+            status_value = theme.get(status_key)
+
+            # Usuwamy zestaw, jeśli:
+            # 1. `datetime_value` jest `None` (emisja niezaplanowana), lub
+            # 2. `status_value` nie jest `None` (emisja zrealizowana)
+            if datetime_value is None or status_value is not None:
+                theme.pop(datetime_key, None)
+                theme.pop(status_key, None)
         
         ready_export_string += f"Kampania o Tytule: {theme['title']}\nEmitowana przez bota: {theme['created_by']}\nW kategorii: {theme['category']}\nPosiada niezrealizowane emisje zaplanowane na:\n"
         ready_export_string += f"{theme.get('schedule_0_datetime', '')} {theme.get('schedule_1_datetime', '')} {theme.get('schedule_2_datetime', '')} {theme.get('schedule_3_datetime', '')} {theme.get('schedule_4_datetime', '')} {theme.get('schedule_5_datetime', '')} {theme.get('schedule_6_datetime', '')} {theme.get('schedule_7_datetime', '')} {theme.get('schedule_8_datetime', '')} {theme.get('schedule_9_datetime', '')} {theme.get('schedule_10_datetime', '')}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n\n\n"
