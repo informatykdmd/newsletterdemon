@@ -662,13 +662,13 @@ def main():
         "checkpoint_3h": 10800
     }
     # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
-    last_run_times = {name: time() for name in checkpoints}
+    last_run_times = {name: time() for name in checkpoints.keys()}
     for _ in range(int(time())):
         current_time = time()  # Aktualny czas
         for name, interval in checkpoints.items():
-            print(f"Checking {name}:")
-            print(f"current_time (type: {type(current_time)}) = {current_time}")
-            print(f"last_run_times[{name}] (type: {type(last_run_times[name])}) = {last_run_times[name]}")
+            # print(f"Checking {name}:")
+            # print(f"current_time (type: {type(current_time)}) = {current_time}")
+            # print(f"last_run_times[{name}] (type: {type(last_run_times[name])}) = {last_run_times[name]}")
             if current_time - last_run_times[name] >= interval:
                 # Akcje dla różnych checkpointów
                 if name == 'checkpoint_2s':
@@ -810,10 +810,10 @@ def main():
                     sleep(1)
                     prepare_shedule.save_shedule(shcedule)
                     sleep(1)
-                    current_time = datetime.datetime.now()
+                    current_time_newslettera = datetime.datetime.now()
                     for row in prepare_shedule.connect_to_database(
                             'SELECT * FROM schedule;'):
-                        if row[2] < current_time:
+                        if row[2] < current_time_newslettera:
                             TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
                             nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=1;')
                             # add_aifaLog(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}')
