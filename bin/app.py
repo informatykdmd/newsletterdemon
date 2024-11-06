@@ -127,6 +127,9 @@ def prepare_prompt(began_prompt):
             user_descrition, user_about = ('Sztuczna inteligencja na usługach DMD.', 'Operator Moderacji i Ekspert nowych technologii')
         
         dane_d=getMorphy()
+        dane_d[('Michał', 'Jankiewicz')] = "informacje o personelu"
+        dane_d[('Michał', 'Informatyk')] = "informacje o personelu"
+
         fraza = dump[2]
         znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
         # print(znalezione_klucze)
@@ -162,6 +165,26 @@ def prepare_prompt(began_prompt):
                     command = f'WYKRYTO ZAPYTANIE O HARMONOGRAM KAMPANII OTO DUMP DO WYKORZYSTANIA:\n{pobierz_harmonogramy_kampanii}'
                 else: command = ''
                 # handle_error(f"command: {command}")
+            elif znalezione_klucze['najtrafniejsze'] == 'moduł decyzyjny':
+                """
+                ############################################################
+                # obsługa flagi 'moduł decyzyjny'
+                ############################################################
+                """
+                handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
+                command = f'WYKRYTO W ZAPYTANIU URUCHOMIENIE MODELU DECYZYJNEGO:\n{znalezione_klucze['najtrafniejsze']}'
+            
+            elif znalezione_klucze['najtrafniejsze'] == 'informacje o personelu':
+                """
+                ############################################################
+                # obsługa flagi 'informacje o personelu'
+                ############################################################
+                """
+                handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
+
+
+                command = f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{znalezione_klucze['najtrafniejsze']}'
+
             else: command = ''
         else: command = ''
 
