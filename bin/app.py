@@ -130,16 +130,20 @@ def prepare_prompt(began_prompt):
 
         # Budowanie kontekstu informacji o pracownikach
         user_infos_list_tuple = prepare_shedule.connect_to_database(
-            "SELECT ADMIN_ROLE, ABOUT_ADMIN, LOGIN FROM admins;"
+            "SELECT ADMIN_NAME, ADMIN_ROLE, ABOUT_ADMIN, LOGIN FROM admins;"
         )
 
         for db_row in user_infos_list_tuple:
             # Tworzenie klucza dla ADMIN_ROLE jako krotki słów
-            key_in_dane_d_ADMIN_ROLE = tuple(str(db_row[0]).split())
+            key_in_dane_d_ADMIN_NAME = tuple(str(db_row[0]).split())
+            dane_d[key_in_dane_d_ADMIN_NAME] = "informacje o personelu"
+
+            # Tworzenie klucza dla ADMIN_ROLE jako krotki słów
+            key_in_dane_d_ADMIN_ROLE = tuple(str(db_row[1]).split())
             dane_d[key_in_dane_d_ADMIN_ROLE] = "informacje o personelu"
 
             # Tworzenie kluczy z ABOUT_ADMIN jako krotek o długości maks. 5 słów
-            about_words = str(db_row[1]).split()
+            about_words = str(db_row[2]).split()
             temp_list = []
 
             for i, word in enumerate(about_words):
@@ -149,6 +153,7 @@ def prepare_prompt(began_prompt):
                     key_in_dane_d_ABOUT_ADMIN = tuple(temp_list)
                     dane_d[key_in_dane_d_ABOUT_ADMIN] = "informacje o personelu"
                     temp_list = []  # Resetujemy `temp_list` dla następnej krotki
+            
 
         fraza = dump[2]
         znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
@@ -201,9 +206,10 @@ def prepare_prompt(began_prompt):
                 ############################################################
                 """
                 handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
-
-
-                command = f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{znalezione_klucze["najtrafniejsze"]}'
+                great_employee=f"Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
+                for info_line in user_infos_list_tuple:
+                    great_employee = f"@{info_line[3]}\n{info_line[0]}\nRANGA:{info_line[1]}\n{info_line[2]}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
+                command = f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}'
 
             else: command = ''
         else: command = ''
