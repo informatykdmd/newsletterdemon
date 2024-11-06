@@ -219,10 +219,48 @@ def prepare_prompt(began_prompt):
                 ############################################################
                 """
                 handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
-                great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
-                for info_line in user_infos_list_tuple:
+                dane_d_users = {}
+                for db_row in user_infos_list_tuple:
+                    # Tworzenie klucza dla ADMIN_ROLE jako krotki słów
+                    key_in_dane_d_users_ADMIN_NAME = tuple(str(db_row[0]).split())
+                    dane_d_users[key_in_dane_d_users_ADMIN_NAME] = db_row[3]
+
+                    for name_empl in key_in_dane_d_users_ADMIN_NAME:
+                        key_in_dane_d_users_name_empl = tuple(name_empl)
+                        dane_d_users[key_in_dane_d_users_name_empl] = db_row[3]
+
+                    # Tworzenie klucza dla ADMIN_ROLE jako krotki słów
+                    key_in_dane_d_users_ADMIN_ROLE = tuple(str(db_row[1]).split())
+                    dane_d_users[key_in_dane_d_users_ADMIN_ROLE] = db_row[3]
+
+                    # Tworzenie kluczy z ABOUT_ADMIN jako krotek o długości maks. 5 słów
+                    about_words = str(db_row[2]).split()
+                    temp_list = []
+
+                    for i, word in enumerate(about_words):
+                        temp_list.append(word)
+                        # Jeśli osiągnięto 5 słów lub to ostatnie słowo, dodajemy do `dane_d_users`
+                        if (i + 1) % 5 == 0 or i == len(about_words) - 1:
+                            key_in_dane_d_users_ABOUT_ADMIN = tuple(temp_list)
+                            dane_d_users[key_in_dane_d_users_ABOUT_ADMIN] = db_row[3]
+                            temp_list = []  # Resetujemy `temp_list` dla następnej krotki
+
+                znalezione_klucze_users = znajdz_klucz_z_wazeniem(dane_d_users, fraza)
+                wytypowany_login = znalezione_klucze_users["najtrafniejsze"]
+                if wytypowany_login is not None:
+                    try:
+                        info_line = prepare_shedule.connect_to_database(
+                            f"""SELECT ADMIN_NAME, ADMIN_ROLE, ABOUT_ADMIN, LOGIN, EMAIL_ADMIN FROM admins WHERE LOGIN='{wytypowany_login}';""")[0]
+                    except IndexError: info_line = (None, None, None, None, None)
+                    great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
+                    
                     great_employee += f"@{info_line[3]}\n{info_line[0]}\n{info_line[4]}\nRANGA: {info_line[1]}\n{info_line[2]}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
-                command = f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}'
+                    command = f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}'
+                else:
+                    great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
+                    for info_line in user_infos_list_tuple:
+                        great_employee += f"@{info_line[3]}\n{info_line[0]}\n{info_line[4]}\nRANGA: {info_line[1]}\n{info_line[2]}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
+                    command = f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}'
 
             else: command = ''
         else: command = ''
