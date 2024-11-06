@@ -127,8 +127,28 @@ def prepare_prompt(began_prompt):
             user_descrition, user_about = ('Sztuczna inteligencja na usługach DMD.', 'Operator Moderacji i Ekspert nowych technologii')
         
         dane_d=getMorphy()
-        dane_d[('Michał', 'Jankiewicz')] = "informacje o personelu"
-        dane_d[('Michał', 'Informatyk')] = "informacje o personelu"
+
+        # Budowanie kontekstu informacji o pracownikach
+        user_infos_list_tuple = prepare_shedule.connect_to_database(
+            "SELECT ADMIN_ROLE, ABOUT_ADMIN, LOGIN FROM admins;"
+        )
+
+        for db_row in user_infos_list_tuple:
+            # Tworzenie klucza dla ADMIN_ROLE jako krotki słów
+            key_in_dane_d_ADMIN_ROLE = tuple(str(db_row[0]).split())
+            dane_d[key_in_dane_d_ADMIN_ROLE] = "informacje o personelu"
+
+            # Tworzenie kluczy z ABOUT_ADMIN jako krotek o długości maks. 5 słów
+            about_words = str(db_row[1]).split()
+            temp_list = []
+
+            for i, word in enumerate(about_words):
+                temp_list.append(word)
+                # Jeśli osiągnięto 5 słów lub to ostatnie słowo, dodajemy do `dane_d`
+                if (i + 1) % 5 == 0 or i == len(about_words) - 1:
+                    key_in_dane_d_ABOUT_ADMIN = tuple(temp_list)
+                    dane_d[key_in_dane_d_ABOUT_ADMIN] = "informacje o personelu"
+                    temp_list = []  # Resetujemy `temp_list` dla następnej krotki
 
         fraza = dump[2]
         znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
