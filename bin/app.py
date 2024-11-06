@@ -599,6 +599,7 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
         klucz_lower = tuple(usun_polskie_znaki(k.lower()) for k in klucz)
         wystapienia = 0
         kolejnosc = True
+        lokalny_procent = 0.0
 
         # Sprawdzamy każde przesuwające się okno w tekście o długości równej kluczowi lub większym o 1 słowo
         for i in range(len(slowa_w_tekscie) - len(klucz_lower) + 1):
@@ -608,18 +609,25 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
             if all(any(porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa 
                        for czesc_okna in okno) for fraza in klucz_lower):
                 wystapienia += 1  # Pełne dopasowanie
+                lokalny_procent = 1.0  # Pełne dopasowanie, 100%
                 continue
 
             # Druga próba: usuwamy jedno słowo i sprawdzamy dopasowanie pozostałych
+            dopasowanie_bez_slowa = False
             for j in range(len(okno)):
                 okno_bez_slowa = okno[:j] + okno[j+1:]  # Usuwamy jedno słowo z okna
                 if all(any(porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa 
                            for czesc_okna in okno_bez_slowa) for fraza in klucz_lower):
                     wystapienia += 1  # Dopasowanie bez jednego słowa
+                    lokalny_procent = len(okno_bez_slowa) / len(klucz_lower)  # Procent dopasowania
+                    dopasowanie_bez_slowa = True
                     break  # Wystarczy jedno dopasowanie bez jednego słowa
 
-        # Oblicz procent na podstawie liczby pełnych dopasowań
-        procent_dopasowania = 1.0 if wystapienia > 0 else 0.0
+            if not dopasowanie_bez_slowa:
+                lokalny_procent = 0.0  # Brak dopasowania, 0%
+
+        # Uśrednienie procentu dopasowania (jeśli są dopasowania) dla aktualnego klucza
+        procent_dopasowania = lokalny_procent if wystapienia > 0 else 0.0
         ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
 
         if wystapienia > 0:
@@ -658,14 +666,23 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
     #     wystapienia = 0
     #     kolejnosc = True
 
-    #     # Sprawdzamy każde przesuwające się okno w tekście o długości równej kluczowi
+    #     # Sprawdzamy każde przesuwające się okno w tekście o długości równej kluczowi lub większym o 1 słowo
     #     for i in range(len(slowa_w_tekscie) - len(klucz_lower) + 1):
-    #         okno = slowa_w_tekscie[i:i+len(klucz_lower)]
+    #         okno = slowa_w_tekscie[i:i+len(klucz_lower) + 1]  # Okno o długości klucza + 1 słowo
             
-    #         # Sprawdzanie dopasowania słów z tolerancją na literówki
+    #         # Pierwsza próba: sprawdzenie pełnego dopasowania
     #         if all(any(porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa 
     #                    for czesc_okna in okno) for fraza in klucz_lower):
     #             wystapienia += 1  # Pełne dopasowanie
+    #             continue
+
+    #         # Druga próba: usuwamy jedno słowo i sprawdzamy dopasowanie pozostałych
+    #         for j in range(len(okno)):
+    #             okno_bez_slowa = okno[:j] + okno[j+1:]  # Usuwamy jedno słowo z okna
+    #             if all(any(porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa 
+    #                        for czesc_okna in okno_bez_slowa) for fraza in klucz_lower):
+    #                 wystapienia += 1  # Dopasowanie bez jednego słowa
+    #                 break  # Wystarczy jedno dopasowanie bez jednego słowa
 
     #     # Oblicz procent na podstawie liczby pełnych dopasowań
     #     procent_dopasowania = 1.0 if wystapienia > 0 else 0.0
