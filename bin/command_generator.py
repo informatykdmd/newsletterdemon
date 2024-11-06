@@ -52,5 +52,6 @@ def generator_polecen():
     # Zapis do pliku JSON
     saveMorphy(dane, file_name)
     print("Zapisano wszystkie nowe polecenia do pliku.")
+    
 if __name__ == "__main__":
     generator_polecen()
