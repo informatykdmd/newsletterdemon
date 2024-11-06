@@ -165,7 +165,7 @@ def prepare_prompt(began_prompt):
                 "zespół", "ekipa"
             ]:
             # Tworzenie klucza dla KEY_WORDS jako krotki słów
-            key_in_dane_d_KEY_WORDS = tuple(adding_row,)
+            key_in_dane_d_KEY_WORDS = tuple([adding_row])
             dane_d[key_in_dane_d_KEY_WORDS] = "informacje o personelu"
 
         fraza = dump[2]
