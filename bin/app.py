@@ -579,7 +579,6 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
         - "procent" (float): Procent dopasowania klucza w stosunku do liczby jego elementów.
         - "najtrafniejsze" (any): Najlepiej dopasowana wartość na podstawie oceny dopasowania.
     """
-    # Usunięcie polskich znaków z tekstu szukanego
     tekst_szukany = usun_polskie_znaki(re.sub(r'[^\w\s]', '', tekst_szukany.lower()))
     slowa_w_tekście = tekst_szukany.split()
     wynik = {
@@ -603,17 +602,14 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
         # Sprawdzamy każde przesuwające się okno w tekście o długości równej kluczowi
         for i in range(len(slowa_w_tekście) - len(klucz_lower) + 1):
             okno = slowa_w_tekście[i:i+len(klucz_lower)]
-            znalezione_frazy = [
-                fraza for fraza, czesc_okna in zip(klucz_lower, okno) 
-                if porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa
-            ]
+            
+            # Sprawdzanie pełnego dopasowania okna do klucza
+            if all(porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa 
+                   for fraza, czesc_okna in zip(klucz_lower, okno)):
+                wystapienia += 1  # Pełne dopasowanie
 
-            # Jeżeli mamy pełne dopasowanie frazy w oknie, zliczamy wystąpienie
-            if len(znalezione_frazy) == len(klucz_lower):
-                wystapienia += 1
-
-        # Oblicz procent na podstawie długości klucza
-        procent_dopasowania = round(wystapienia / len(klucz), 2) if len(klucz) > 0 else 0.0
+        # Oblicz procent na podstawie liczby pełnych dopasowań
+        procent_dopasowania = 1.0 if wystapienia > 0 else 0.0
         ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
 
         if wystapienia > 0:
@@ -631,6 +627,58 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
         wynik["wartosci"].remove(wynik["najtrafniejsze"])
 
     return wynik
+    # # Usunięcie polskich znaków z tekstu szukanego
+    # tekst_szukany = usun_polskie_znaki(re.sub(r'[^\w\s]', '', tekst_szukany.lower()))
+    # slowa_w_tekscie = tekst_szukany.split()
+    # wynik = {
+    #     "wystapienia": 0,
+    #     "kolejnosc": False,
+    #     "wartosci": set(),
+    #     "sukces": False,
+    #     "procent": 0.0,
+    #     "najtrafniejsze": None
+    # }
+
+    # max_ocena = 0
+    # prog_podobienstwa = 0.8
+
+    # for klucz, wartosc in dane_d.items():
+    #     # Usunięcie polskich znaków z klucza
+    #     klucz_lower = tuple(usun_polskie_znaki(k.lower()) for k in klucz)
+    #     wystapienia = 0
+    #     kolejnosc = True
+
+    #     # Sprawdzamy każde przesuwające się okno w tekście o długości równej kluczowi
+    #     for i in range(len(slowa_w_tekscie) - len(klucz_lower) + 1):
+    #         okno = slowa_w_tekscie[i:i+len(klucz_lower)]
+    #         znalezione_frazy = [
+    #             fraza for fraza, czesc_okna in zip(klucz_lower, okno) 
+    #             if porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa
+    #         ]
+
+    #         # Jeżeli mamy pełne dopasowanie frazy w oknie, zliczamy wystąpienie
+    #         if len(znalezione_frazy) == len(klucz_lower):
+    #             wystapienia += 1
+
+    #     # Oblicz procent na podstawie długości klucza
+    #     procent_dopasowania = round(wystapienia / len(klucz), 2) if len(klucz) > 0 else 0.0
+    #     ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
+
+    #     if wystapienia > 0:
+    #         wynik["wartosci"].add(wartosc)
+    #         wynik["sukces"] = True
+    #         if ocena > max_ocena:
+    #             max_ocena = ocena
+    #             wynik["najtrafniejsze"] = wartosc
+    #             wynik["wystapienia"] = wystapienia
+    #             wynik["kolejnosc"] = kolejnosc
+    #             wynik["procent"] = procent_dopasowania
+
+    # wynik["wartosci"] = list(wynik["wartosci"])
+    # if wynik["najtrafniejsze"] in wynik["wartosci"]:
+    #     wynik["wartosci"].remove(wynik["najtrafniejsze"])
+
+    # return wynik
 
 def getMorphy(morphy_JSON_file_name="/home/johndoe/app/newsletterdemon/logs/commandAifa.json"):
     def string_to_tuple(s, sep="|"):
