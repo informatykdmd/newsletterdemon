@@ -206,7 +206,7 @@ def prepare_prompt(began_prompt):
                 ############################################################
                 """
                 handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
-                great_employee=f"Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
+                great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
                 for info_line in user_infos_list_tuple:
                     great_employee = f"@{info_line[3]}\n{info_line[0]}\nRANGA:{info_line[1]}\n{info_line[2]}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
                 command = f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}'
