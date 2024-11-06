@@ -126,6 +126,7 @@ def prepare_prompt(began_prompt):
         else:
             user_descrition, user_about = ('Sztuczna inteligencja na usługach DMD.', 'Operator Moderacji i Ekspert nowych technologii')
         
+        # Ładuje dane z JSONA
         dane_d=getMorphy()
 
         # Budowanie kontekstu informacji o pracownikach
@@ -137,6 +138,10 @@ def prepare_prompt(began_prompt):
             # Tworzenie klucza dla ADMIN_ROLE jako krotki słów
             key_in_dane_d_ADMIN_NAME = tuple(str(db_row[0]).split())
             dane_d[key_in_dane_d_ADMIN_NAME] = "informacje o personelu"
+
+            for name_empl in key_in_dane_d_ADMIN_NAME:
+                key_in_dane_d_name_empl = tuple(name_empl)
+                dane_d[key_in_dane_d_name_empl] = "informacje o personelu"
 
             # Tworzenie klucza dla ADMIN_ROLE jako krotki słów
             key_in_dane_d_ADMIN_ROLE = tuple(str(db_row[1]).split())
@@ -153,7 +158,15 @@ def prepare_prompt(began_prompt):
                     key_in_dane_d_ABOUT_ADMIN = tuple(temp_list)
                     dane_d[key_in_dane_d_ABOUT_ADMIN] = "informacje o personelu"
                     temp_list = []  # Resetujemy `temp_list` dla następnej krotki
-            
+        
+        for adding_row in [
+                "pracownicy", "pracownik", "personel", 
+                "pracownika", "pracownikowi", "team", 
+                "zespół", "ekipa"
+            ]:
+            # Tworzenie klucza dla KEY_WORDS jako krotki słów
+            key_in_dane_d_KEY_WORDS = tuple(adding_row,)
+            dane_d[key_in_dane_d_KEY_WORDS] = "informacje o personelu"
 
         fraza = dump[2]
         znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
