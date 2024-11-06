@@ -25,7 +25,7 @@ import logging
 from appStatistic import log_stats
 from threading import Timer
 from bin.command_generator import getMorphy, saveMorphy
-from bin.app import znajdz_klucz_z_wazeniem
+from bin.znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
 
 
 """
