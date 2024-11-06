@@ -598,6 +598,7 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
         klucz_lower = tuple(usun_polskie_znaki(k.lower()) for k in klucz)
         wystapienia = 0
         kolejnosc = True
+        procent_dopasowania = 0.0
 
         # Sprawdzamy każde przesuwające się okno w tekście o długości równej kluczowi lub większym o 1 słowo
         for i in range(len(slowa_w_tekscie) - len(klucz_lower) + 1):
