@@ -396,29 +396,7 @@ def znajdz_klucz_z_wazeniem_old(dane_d, tekst_szukany):
 
     return wynik
 
-def porownaj_slowa(slowo1, slowo2):
-    """
-    Porównuje podobieństwo między dwoma słowami, uwzględniając literówki i brak polskich znaków.
-    Zwraca procentowe dopasowanie (od 0 do 1).
-    """
-    # Zamiana polskich znaków na ich odpowiedniki bez znaków diakrytycznych
-    def usun_polskie_znaki(tekst):
-        zamienniki = {
-            'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z'
-        }
-        for znak, zamiennik in zamienniki.items():
-            tekst = tekst.replace(znak, zamiennik)
-        return tekst
-
-    # Ujednolicenie liter i usunięcie polskich znaków
-    slowo1 = usun_polskie_znaki(slowo1.lower())
-    slowo2 = usun_polskie_znaki(slowo2.lower())
-    
-    # Porównanie podobieństwa słów
-    podobienstwo = difflib.SequenceMatcher(None, slowo1, slowo2).ratio()
-    return round(podobienstwo, 2)
-
-def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
+def znajdz_klucz_z_wazeniem_old3(dane_d, tekst_szukany: str):
     """
     Sprawdza dopasowanie słów kluczowych i fraz z tekst_szukany do tupli kluczy w słowniku dane_d,
     używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
@@ -556,6 +534,103 @@ def znajdz_klucz_z_wazeniem_old2(dane_d, tekst_szukany: str):
 
     return wynik
 
+def usun_polskie_znaki(tekst):
+    zamienniki = {
+        'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z'
+    }
+    for znak, zamiennik in zamienniki.items():
+        tekst = tekst.replace(znak, zamiennik)
+    return tekst
+
+def porownaj_slowa(slowo1, slowo2):
+    """
+    Porównuje podobieństwo między dwoma słowami, uwzględniając literówki i brak polskich znaków.
+    Zwraca procentowe dopasowanie (od 0 do 1).
+    """
+    # Zamiana polskich znaków na ich odpowiedniki bez znaków diakrytycznych
+    
+
+    # Ujednolicenie liter i usunięcie polskich znaków
+    slowo1 = usun_polskie_znaki(slowo1.lower())
+    slowo2 = usun_polskie_znaki(slowo2.lower())
+    
+    # Porównanie podobieństwa słów
+    podobienstwo = difflib.SequenceMatcher(None, slowo1, slowo2).ratio()
+    return round(podobienstwo, 2)
+
+def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
+    """
+    Sprawdza dopasowanie słów kluczowych i fraz z tekst_szukany do tupli kluczy w słowniku dane_d.
+    Przeszukuje tekst w oknach o długości klucza, porównując każde słowo z frazami klucza przy 
+    tolerancji na literówki i polskie znaki. Zwraca wynik z oceną na podstawie liczby wystąpień 
+    dopasowań, kolejności fraz oraz procentu dopasowania.
+    
+    Parametry:
+    - dane_d (dict): Słownik, gdzie kluczami są tuplę fraz do wyszukania, a wartościami - 
+      odpowiadające im informacje zwracane przy dopasowaniu.
+    - tekst_szukany (str): Tekst, w którym będą wyszukiwane frazy z kluczy słownika.
+    
+    Zwraca:
+    dict: Słownik z informacjami o dopasowaniach, zawierający:
+        - "wystapienia" (int): Liczba pełnych wystąpień klucza w tekście.
+        - "kolejnosc" (bool): Czy frazy wystąpiły w tej samej kolejności co w kluczu.
+        - "wartosci" (list): Lista unikalnych wartości, które zostały dopasowane.
+        - "sukces" (bool): True, jeśli znaleziono co najmniej jedno dopasowanie, inaczej False.
+        - "procent" (float): Procent dopasowania klucza w stosunku do liczby jego elementów.
+        - "najtrafniejsze" (any): Najlepiej dopasowana wartość na podstawie oceny dopasowania.
+    """
+    # Usunięcie polskich znaków z tekstu szukanego
+    tekst_szukany = usun_polskie_znaki(re.sub(r'[^\w\s]', '', tekst_szukany.lower()))
+    slowa_w_tekście = tekst_szukany.split()
+    wynik = {
+        "wystapienia": 0,
+        "kolejnosc": False,
+        "wartosci": set(),
+        "sukces": False,
+        "procent": 0.0,
+        "najtrafniejsze": None
+    }
+
+    max_ocena = 0
+    prog_podobienstwa = 0.8
+
+    for klucz, wartosc in dane_d.items():
+        # Usunięcie polskich znaków z klucza
+        klucz_lower = tuple(usun_polskie_znaki(k.lower()) for k in klucz)
+        wystapienia = 0
+        kolejnosc = True
+
+        # Sprawdzamy każde przesuwające się okno w tekście o długości równej kluczowi
+        for i in range(len(slowa_w_tekście) - len(klucz_lower) + 1):
+            okno = slowa_w_tekście[i:i+len(klucz_lower)]
+            znalezione_frazy = [
+                fraza for fraza, czesc_okna in zip(klucz_lower, okno) 
+                if porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa
+            ]
+
+            # Jeżeli mamy pełne dopasowanie frazy w oknie, zliczamy wystąpienie
+            if len(znalezione_frazy) == len(klucz_lower):
+                wystapienia += 1
+
+        # Oblicz procent na podstawie długości klucza
+        procent_dopasowania = round(wystapienia / len(klucz), 2) if len(klucz) > 0 else 0.0
+        ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
+
+        if wystapienia > 0:
+            wynik["wartosci"].add(wartosc)
+            wynik["sukces"] = True
+            if ocena > max_ocena:
+                max_ocena = ocena
+                wynik["najtrafniejsze"] = wartosc
+                wynik["wystapienia"] = wystapienia
+                wynik["kolejnosc"] = kolejnosc
+                wynik["procent"] = procent_dopasowania
+
+    wynik["wartosci"] = list(wynik["wartosci"])
+    if wynik["najtrafniejsze"] in wynik["wartosci"]:
+        wynik["wartosci"].remove(wynik["najtrafniejsze"])
+
+    return wynik
 
 def getMorphy(morphy_JSON_file_name="/home/johndoe/app/newsletterdemon/logs/commandAifa.json"):
     def string_to_tuple(s, sep="|"):
