@@ -172,7 +172,7 @@ def prepare_prompt(began_prompt):
                 ############################################################
                 """
                 handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
-                command = f'WYKRYTO W ZAPYTANIU URUCHOMIENIE MODELU DECYZYJNEGO:\n{znalezione_klucze['najtrafniejsze']}'
+                command = f'WYKRYTO W ZAPYTANIU URUCHOMIENIE MODELU DECYZYJNEGO:\n{znalezione_klucze["najtrafniejsze"]}'
             
             elif znalezione_klucze['najtrafniejsze'] == 'informacje o personelu':
                 """
@@ -183,7 +183,7 @@ def prepare_prompt(began_prompt):
                 handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
 
 
-                command = f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{znalezione_klucze['najtrafniejsze']}'
+                command = f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{znalezione_klucze["najtrafniejsze"]}'
 
             else: command = ''
         else: command = ''
