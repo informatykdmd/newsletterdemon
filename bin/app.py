@@ -131,7 +131,7 @@ def prepare_prompt(began_prompt):
         fraza = dump[2]
         znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
         # print(znalezione_klucze)
-        handle_error(f"Znalezione klucze dump FIRST: {znalezione_klucze}.")
+        # handle_error(f"Znalezione klucze dump FIRST: {znalezione_klucze}.")
         if znalezione_klucze['sukces'] and znalezione_klucze['kolejnosc']\
             and znalezione_klucze['procent'] > .5 and dump[1] != "aifa":
             collectedLogs = ''
@@ -149,7 +149,7 @@ def prepare_prompt(began_prompt):
                 if collectedLogs:
                     command = f'WYKRYTO ZAPYTANIE O STATUS SYSTEMU OTO DUMP DO WYKORZYSTANIA:\n{collectedLogs}'
                 else: command = ''
-                handle_error(f"command: {command}")
+                # handle_error(f"command: {command}")
             elif znalezione_klucze['najtrafniejsze'] == 'harmonogram kampanii':
                 """
                 ############################################################
@@ -162,7 +162,7 @@ def prepare_prompt(began_prompt):
                 if pobierz_harmonogramy_kampanii:
                     command = f'WYKRYTO ZAPYTANIE O HARMONOGRAM KAMPANII OTO DUMP DO WYKORZYSTANIA:\n{pobierz_harmonogramy_kampanii}'
                 else: command = ''
-                handle_error(f"command: {command}")
+                # handle_error(f"command: {command}")
             else: command = ''
         else: command = ''
 
@@ -327,217 +327,6 @@ def addDataLogs(message: str, category: str, file_name_json: str = "/home/johndo
     with open(file_name_json, "w") as file:
         json.dump(data_json, file, indent=4)
 
-def znajdz_klucz_z_wazeniem_old(dane_d, tekst_szukany):
-    """
-    Sprawdza dopasowanie słów kluczowych z tekst_szukany do tupli kluczy w słowniku dane_d,
-    używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
-    """
-    # Podziel tekst_szukany na listę słów kluczowych
-    slowa_kluczowe = tekst_szukany.lower().split()  # Ignoruje wielkość liter
-    wynik = {
-        "wystapienia": 0,
-        "kolejnosc": False,
-        "wartosci": set(),
-        "sukces": False,
-        "procent": 0.0,
-        "najtrafniejsze": None
-    }
-
-    max_ocena = 0  # Zmienna przechowująca najwyższą ocenę dla najlepszego dopasowania
-
-    for klucz, wartosc in dane_d.items():
-        klucz_lower = tuple(k.lower() for k in klucz)  # Ignoruje wielkość liter w tuplach
-        wystapienia = 0
-        kolejnosc = True
-        ostatni_indeks = -1
-
-        # Sprawdzamy tylko słowa z tekst_szukany, które mogą wystąpić w kluczu
-        slowa_do_sprawdzenia = [slowo for slowo in slowa_kluczowe if any(slowo in czesc for czesc in klucz_lower)]
-
-        # Jeżeli nie ma żadnych dopasowań słów kluczowych, przejdź do następnego klucza
-        if not slowa_do_sprawdzenia:
-            continue
-
-        # Sprawdzenie wystąpień i kolejności słów kluczowych z dopasowaniem częściowym
-        for slowo in slowa_do_sprawdzenia:
-            znaleziono = False
-            for i, czesc_klucza in enumerate(klucz_lower):
-                if slowo in czesc_klucza:  # Dopasowanie częściowe
-                    wystapienia += 1
-                    znaleziono = True
-                    if i > ostatni_indeks:
-                        ostatni_indeks = i
-                    else:
-                        kolejnosc = False
-                    break
-            if not znaleziono:
-                kolejnosc = False
-                break
-
-        # Obliczamy procent dla bieżącego klucza jako liczba znalezionych słów / liczba słów w tupli
-        procent_dopasowania = round(wystapienia / len(klucz), 2) if len(klucz) > 0 else 0.0
-
-        # Ocena końcowa na podstawie wag
-        ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
-
-        # Aktualizujemy wynik dla najlepszego dopasowania na podstawie oceny
-        if wystapienia > 0:
-            wynik["wartosci"].add(wartosc)  # Dodajemy wartość do zestawu wyników
-            wynik["sukces"] = True
-            if ocena > max_ocena:
-                max_ocena = ocena
-                wynik["najtrafniejsze"] = wartosc
-                wynik["wystapienia"] = wystapienia
-                wynik["kolejnosc"] = kolejnosc
-                wynik["procent"] = procent_dopasowania  # Aktualizujemy najlepszy procent
-
-    # Konwersja zestawu "wartosci" na listę
-    wynik["wartosci"] = list(wynik["wartosci"])
-
-    # Usunięcie najtrafniejszej wartości z listy "wartosci", jeśli jest w zestawie
-    if wynik["najtrafniejsze"] in wynik["wartosci"]:
-        wynik["wartosci"].remove(wynik["najtrafniejsze"])
-
-    return wynik
-
-def znajdz_klucz_z_wazeniem_old3(dane_d, tekst_szukany: str):
-    """
-    Sprawdza dopasowanie słów kluczowych i fraz z tekst_szukany do tupli kluczy w słowniku dane_d,
-    używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
-    """
-    tekst_szukany = re.sub(r'[^\w\s]', '', tekst_szukany.lower())
-    wynik = {
-        "wystapienia": 0,
-        "kolejnosc": False,
-        "wartosci": set(),
-        "sukces": False,
-        "procent": 0.0,
-        "najtrafniejsze": None
-    }
-
-    max_ocena = 0
-    prog_podobienstwa = 0.8  # Minimalne podobieństwo, aby uznać słowa za dopasowane
-
-    for klucz, wartosc in dane_d.items():
-        klucz_lower = tuple(k.lower() for k in klucz)
-        wystapienia = 0
-        kolejnosc = True
-        ostatni_indeks = -1
-
-        # Sprawdzamy wystąpienia całych fraz z kluczy w tekście, z tolerancją na literówki
-        znalezione_frazy = [fraza for fraza in klucz_lower if any(porownaj_slowa(fraza, slowo) >= prog_podobienstwa for slowo in tekst_szukany.split())]
-
-        # Jeżeli nie ma żadnych dopasowań fraz, przejdź do następnego klucza
-        if not znalezione_frazy:
-            continue
-
-        for fraza in znalezione_frazy:
-            znaleziono = False
-            for i, czesc_klucza in enumerate(klucz_lower):
-                if porownaj_slowa(fraza, czesc_klucza) >= prog_podobienstwa:  # Dopasowanie z tolerancją literówek
-                    wystapienia += 1
-                    znaleziono = True
-                    if i > ostatni_indeks:
-                        ostatni_indeks = i
-                    else:
-                        kolejnosc = False
-                    break
-            if not znaleziono:
-                kolejnosc = False
-                break
-
-        procent_dopasowania = round(wystapienia / len(klucz), 2) if len(klucz) > 0 else 0.0
-        ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
-
-        if wystapienia > 0:
-            wynik["wartosci"].add(wartosc)
-            wynik["sukces"] = True
-            if ocena > max_ocena:
-                max_ocena = ocena
-                wynik["najtrafniejsze"] = wartosc
-                wynik["wystapienia"] = wystapienia
-                wynik["kolejnosc"] = kolejnosc
-                wynik["procent"] = procent_dopasowania
-
-    wynik["wartosci"] = list(wynik["wartosci"])
-    if wynik["najtrafniejsze"] in wynik["wartosci"]:
-        wynik["wartosci"].remove(wynik["najtrafniejsze"])
-
-    return wynik
-
-def znajdz_klucz_z_wazeniem_old2(dane_d, tekst_szukany: str):
-    """
-    Sprawdza dopasowanie słów kluczowych i fraz z tekst_szukany do tupli kluczy w słowniku dane_d,
-    używając systemu ważenia na podstawie kolejności, liczby wystąpień i procentu dopasowania.
-    """
-    # Przekształcamy tekst_szukany na małe litery, aby ignorować wielkość liter
-    tekst_szukany = re.sub(r'[^\w\s]', '', tekst_szukany.lower())
-    wynik = {
-        "wystapienia": 0,
-        "kolejnosc": False,
-        "wartosci": set(),
-        "sukces": False,
-        "procent": 0.0,
-        "najtrafniejsze": None
-    }
-
-    max_ocena = 0  # Zmienna przechowująca najwyższą ocenę dla najlepszego dopasowania
-
-    for klucz, wartosc in dane_d.items():
-        klucz_lower = tuple(k.lower() for k in klucz)  # Ignoruje wielkość liter w tuplach
-        wystapienia = 0
-        kolejnosc = True
-        ostatni_indeks = -1
-
-        # Sprawdzamy wystąpienia całych fraz z kluczy w tekście
-        znalezione_frazy = [fraza for fraza in klucz_lower if fraza in tekst_szukany]
-
-        # Jeżeli nie ma żadnych dopasowań fraz, przejdź do następnego klucza
-        if not znalezione_frazy:
-            continue
-
-        # Sprawdzenie wystąpień i kolejności fraz z dopasowaniem częściowym
-        for fraza in znalezione_frazy:
-            znaleziono = False
-            for i, czesc_klucza in enumerate(klucz_lower):
-                if fraza == czesc_klucza:  # Dopasowanie pełnej frazy
-                    wystapienia += 1
-                    znaleziono = True
-                    if i > ostatni_indeks:
-                        ostatni_indeks = i
-                    else:
-                        kolejnosc = False
-                    break
-            if not znaleziono:
-                kolejnosc = False
-                break
-
-        # Obliczamy procent dla bieżącego klucza jako liczba znalezionych fraz / liczba fraz w tupli
-        procent_dopasowania = round(wystapienia / len(klucz), 2) if len(klucz) > 0 else 0.0
-
-        # Ocena końcowa na podstawie wag
-        ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
-
-        # Aktualizujemy wynik dla najlepszego dopasowania na podstawie oceny
-        if wystapienia > 0:
-            wynik["wartosci"].add(wartosc)  # Dodajemy wartość do zestawu wyników
-            wynik["sukces"] = True
-            if ocena > max_ocena:
-                max_ocena = ocena
-                wynik["najtrafniejsze"] = wartosc
-                wynik["wystapienia"] = wystapienia
-                wynik["kolejnosc"] = kolejnosc
-                wynik["procent"] = procent_dopasowania  # Aktualizujemy najlepszy procent
-
-    # Konwersja zestawu "wartosci" na listę
-    wynik["wartosci"] = list(wynik["wartosci"])
-
-    # Usunięcie najtrafniejszej wartości z listy "wartosci", jeśli jest w zestawie
-    if wynik["najtrafniejsze"] in wynik["wartosci"]:
-        wynik["wartosci"].remove(wynik["najtrafniejsze"])
-
-    return wynik
-
 def usun_polskie_znaki(tekst):
     zamienniki = {
         'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z'
@@ -642,64 +431,6 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
         wynik["wartosci"].remove(wynik["najtrafniejsze"])
 
     return wynik
-    # # Usunięcie polskich znaków z tekstu szukanego
-    # tekst_szukany = usun_polskie_znaki(re.sub(r'[^\w\s]', '', tekst_szukany.lower()))
-    # slowa_w_tekscie = tekst_szukany.split()
-    # wynik = {
-    #     "wystapienia": 0,
-    #     "kolejnosc": False,
-    #     "wartosci": set(),
-    #     "sukces": False,
-    #     "procent": 0.0,
-    #     "najtrafniejsze": None
-    # }
-
-    # max_ocena = 0
-    # prog_podobienstwa = 0.8
-
-    # for klucz, wartosc in dane_d.items():
-    #     # Usunięcie polskich znaków z klucza
-    #     klucz_lower = tuple(usun_polskie_znaki(k.lower()) for k in klucz)
-    #     wystapienia = 0
-    #     kolejnosc = True
-
-    #     # Sprawdzamy każde przesuwające się okno w tekście o długości równej kluczowi lub większym o 1 słowo
-    #     for i in range(len(slowa_w_tekscie) - len(klucz_lower) + 1):
-    #         okno = slowa_w_tekscie[i:i+len(klucz_lower) + 1]  # Okno o długości klucza + 1 słowo
-            
-    #         # Pierwsza próba: sprawdzenie pełnego dopasowania
-    #         if all(any(porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa 
-    #                    for czesc_okna in okno) for fraza in klucz_lower):
-    #             wystapienia += 1  # Pełne dopasowanie
-    #             continue
-
-    #         # Druga próba: usuwamy jedno słowo i sprawdzamy dopasowanie pozostałych
-    #         for j in range(len(okno)):
-    #             okno_bez_slowa = okno[:j] + okno[j+1:]  # Usuwamy jedno słowo z okna
-    #             if all(any(porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa 
-    #                        for czesc_okna in okno_bez_slowa) for fraza in klucz_lower):
-    #                 wystapienia += 1  # Dopasowanie bez jednego słowa
-    #                 break  # Wystarczy jedno dopasowanie bez jednego słowa
-
-    #     # Oblicz procent na podstawie liczby pełnych dopasowań
-    #     procent_dopasowania = 1.0 if wystapienia > 0 else 0.0
-    #     ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
-
-    #     if wystapienia > 0:
-    #         wynik["wartosci"].add(wartosc)
-    #         wynik["sukces"] = True
-    #         if ocena > max_ocena:
-    #             max_ocena = ocena
-    #             wynik["najtrafniejsze"] = wartosc
-    #             wynik["wystapienia"] = wystapienia
-    #             wynik["kolejnosc"] = kolejnosc
-    #             wynik["procent"] = procent_dopasowania
-
-    # wynik["wartosci"] = list(wynik["wartosci"])
-    # if wynik["najtrafniejsze"] in wynik["wartosci"]:
-    #     wynik["wartosci"].remove(wynik["najtrafniejsze"])
-
-    # return wynik
 
 def getMorphy(morphy_JSON_file_name="/home/johndoe/app/newsletterdemon/logs/commandAifa.json"):
     def string_to_tuple(s, sep="|"):

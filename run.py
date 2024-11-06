@@ -25,6 +25,7 @@ import logging
 from appStatistic import log_stats
 from threading import Timer
 from bin.command_generator import getMorphy, saveMorphy
+from bin.app import znajdz_klucz_z_wazeniem
 
 
 """
@@ -230,6 +231,10 @@ def generator(username, prompt):
         generator_states[username] = prompt
         return f"Przyjęto kategorię poleceń: '{generator_states[username]}' - teraz dodaj polecenia lub wpisz '@koniec' aby zakończyć dodawanie dla tej kategorii."
 
+    # sprawdzam czy dane polecenie nie koliduje z kategorią
+    wynik_weryfikacji_kolizji = znajdz_klucz_z_wazeniem(dane_getMorphy, prompt)
+    if wynik_weryfikacji_kolizji["najtrafniejsze"] is not None and wynik_weryfikacji_kolizji["najtrafniejsze"] != generator_states[username]:
+        return f"Błąd: Polecenie '{prompt}' koliduje z istniejącym poleceniem dla kategorii: {wynik_weryfikacji_kolizji['najtrafniejsze']}"
     # Jeśli już mamy aktywną kategorię dla tego użytkownika, dodajemy polecenie do tej kategorii
     polecenie_tuple = tuple(prompt.split())
     dane_getMorphy[polecenie_tuple] = generator_states[username]
