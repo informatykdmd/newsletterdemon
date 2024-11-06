@@ -595,36 +595,31 @@ def znajdz_klucz_z_wazeniem(dane_d, tekst_szukany: str):
     prog_podobienstwa = 0.8
 
     for klucz, wartosc in dane_d.items():
-        # Usunięcie polskich znaków z klucza
         klucz_lower = tuple(usun_polskie_znaki(k.lower()) for k in klucz)
         wystapienia = 0
         kolejnosc = True
-        suma_procent_dopasowan = 0.0
 
         # Sprawdzamy każde przesuwające się okno w tekście o długości równej kluczowi lub większym o 1 słowo
         for i in range(len(slowa_w_tekscie) - len(klucz_lower) + 1):
             okno = slowa_w_tekscie[i:i+len(klucz_lower) + 1]  # Okno o długości klucza + 1 słowo
-            
+
             # Pierwsza próba: sprawdzenie pełnego dopasowania
             if all(any(porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa 
                        for czesc_okna in okno) for fraza in klucz_lower):
-                wystapienia += 1  # Pełne dopasowanie
-                suma_procent_dopasowan += 1.0  # Pełne dopasowanie, 100%
-                continue
+                wystapienia += 1
+                procent_dopasowania = 1.0  # Pełne dopasowanie, 100%
+                break  # Przerywamy dalsze sprawdzanie w tym oknie
 
             # Druga próba: usuwamy jedno słowo i sprawdzamy dopasowanie pozostałych
-            dopasowanie_bez_slowa = False
             for j in range(len(okno)):
-                okno_bez_slowa = okno[:j] + okno[j+1:]  # Usuwamy jedno słowo z okna
+                okno_bez_slowa = okno[:j] + okno[j+1:]
                 if all(any(porownaj_slowa(fraza, czesc_okna) >= prog_podobienstwa 
                            for czesc_okna in okno_bez_slowa) for fraza in klucz_lower):
-                    wystapienia += 1  # Dopasowanie bez jednego słowa
-                    suma_procent_dopasowan += len(okno_bez_slowa) / len(klucz_lower)  # Procent dopasowania
-                    dopasowanie_bez_slowa = True
-                    break  # Wystarczy jedno dopasowanie bez jednego słowa
+                    wystapienia += 1
+                    procent_dopasowania = len(okno_bez_slowa) / len(klucz_lower)  # Procent dla dopasowania bez jednego słowa
+                    break
 
-        # Średni procent dopasowania dla aktualnego klucza
-        procent_dopasowania = suma_procent_dopasowan / wystapienia if wystapienia > 0 else 0.0
+        # Obliczenie ostatecznej oceny dla aktualnego klucza
         ocena = (wystapienia * 0.4) + (procent_dopasowania * 0.4) + (kolejnosc * 0.2)
 
         if wystapienia > 0:
