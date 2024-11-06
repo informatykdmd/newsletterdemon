@@ -666,6 +666,9 @@ def main():
     for _ in range(int(time())):
         current_time = time()  # Aktualny czas
         for name, interval in checkpoints.items():
+            print(f"Checking {name}:")
+            print(f"current_time (type: {type(current_time)}) = {current_time}")
+            print(f"last_run_times[{name}] (type: {type(last_run_times[name])}) = {last_run_times[name]}")
             if current_time - last_run_times[name] >= interval:
                 # Akcje dla różnych checkpointów
                 if name == 'checkpoint_2s':
