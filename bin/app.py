@@ -530,7 +530,7 @@ def main():
         "checkpoint_60s": 60,
         "checkpoint_180s": 180,
         "checkpoint_300s": 300,
-        "checkpoint_3h": 10800
+        "checkpoint_24h": 85000
     }
     # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
     last_run_times = {name: time() for name in checkpoints.keys()}
@@ -714,10 +714,10 @@ def main():
                         # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
                         addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
                 
-                elif name == 'checkpoint_3h': 
+                elif name == 'checkpoint_24h': 
                     """ 
                         **********************************************************
-                        ******************   CHECKPOINT 4 HOURS   **************** 
+                        ******************   CHECKPOINT 24 HOURS  **************** 
                         **********************************************************
                     """
                     ################################################################
