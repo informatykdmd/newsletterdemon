@@ -120,7 +120,7 @@ def prepare_prompt(began_prompt):
     command = ''
     for dump in dump_key:
         # Aktywator Modułu decyzyjnego
-        
+        task_for_bot = ""
 
         if dump[1] != "aifa":
             try:
