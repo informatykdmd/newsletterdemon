@@ -632,7 +632,7 @@ def main():
                                     (question, status)
                                 VALUES 
                                     (%s, %s)""",
-                            (final_prompt, 5)
+                            (final_prompt.get("ready_prompt", None), 5)
                             ): 
                             if final_prompt.get("forge_commender", []):
                                 for us_na, ta_des in final_prompt.get("forge_commender", []):
