@@ -116,7 +116,12 @@ def prepare_prompt(began_prompt):
     ready_prompt = f'{began_prompt}\n\n'
     count_ready = 0
 
+    forge_detect = []
+
     for dump in dump_key:
+        # Aktywator Modułu decyzyjnego
+        
+
         if dump[1] != "aifa":
             try:
                 user_descrition, user_about = prepare_shedule.connect_to_database(
@@ -203,15 +208,32 @@ def prepare_prompt(began_prompt):
                     command = f'WYKRYTO ZAPYTANIE O HARMONOGRAM KAMPANII OTO DUMP DO WYKORZYSTANIA:\n{pobierz_harmonogramy_kampanii}'
                 else: command = ''
                 # handle_error(f"command: {command}")
-            elif znalezione_klucze['najtrafniejsze'] == 'moduł decyzyjny':
+            else: command = ''
+
+            if znalezione_klucze['najtrafniejsze'] == 'moduł decyzyjny':
                 """
                 ############################################################
                 # obsługa flagi 'moduł decyzyjny'
                 ############################################################
                 """
                 handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
-                command = f'WYKRYTO W ZAPYTANIU URUCHOMIENIE MODELU DECYZYJNEGO:\n{znalezione_klucze["najtrafniejsze"]}'
-            else: command = ''
+                task_for_bot = f'W ZAPYTANIU TEGO UŻYTKOWNIKA WYKRYTO ZADANIE DO ZREALIZOWANIA, PO UDZIELENIU ODPOWIEDZI ZOSTANIESZ PRZENIESIONA DO MODUŁU DECYZYJNEGO ABY ZREALIZOWAĆ TO ZADANIE!'
+
+                # tworzenie zadania dla modułu decyzyjnego
+                forge_detected = (dump[1], dump[2])
+                forge_detect.append(forge_detected)
+                # TODO: zaimplementować obsługę modułu decyzyjnego
+                # wsadzam do bazy zadanie
+                # prepare_shedule.insert_to_database(
+                #     """
+                #         INSERT INTO mind_forge_si
+                #             (user_name, task_description
+                #             status, active_task)
+                #         VALUES 
+                #             (%s, %s, %s, %s);
+                #     """,
+                #     (dump[1], dump[2], 5, 0)
+                # )
 
 
             if 'informacje o personelu' in znalezione_klucze['wartosci'] or znalezione_klucze['najtrafniejsze'] == 'informacje o personelu':
@@ -249,7 +271,8 @@ def prepare_prompt(began_prompt):
 
                 znalezione_klucze_users = znajdz_klucz_z_wazeniem(dane_d_users, fraza)
                 wytypowany_login = znalezione_klucze_users["najtrafniejsze"]
-                if wytypowany_login is not None:
+                wszyscy_znalezieni_pracownicy = [wytypowany_login] + [l for l in znalezione_klucze_users["wartosci"]]
+                if wytypowany_login is not None and len(wszyscy_znalezieni_pracownicy) == 1:
                     try:
                         info_line = prepare_shedule.connect_to_database(
                             f"""SELECT ADMIN_NAME, ADMIN_ROLE, ABOUT_ADMIN, LOGIN, EMAIL_ADMIN FROM admins WHERE LOGIN='{wytypowany_login}';""")[0]
@@ -257,6 +280,14 @@ def prepare_prompt(began_prompt):
                     great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
                     
                     great_employee += f"@{info_line[3]}\n{info_line[0]}\n{info_line[4]}\nRANGA: {info_line[1]}\n{info_line[2]}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
+                    command += f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}\n'
+
+                elif wytypowany_login is not None and len(wszyscy_znalezieni_pracownicy) > 1:
+                    
+                    great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
+                    for user_data_in_db in user_infos_list_tuple:
+                        if user_data_in_db[3] in wszyscy_znalezieni_pracownicy:
+                            great_employee += f"@{user_data_in_db[3]}\n{user_data_in_db[0]}\n{user_data_in_db[4]}\nRANGA: {user_data_in_db[1]}\n{user_data_in_db[2]}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
                     command += f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}\n'
                 else:
                     great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
@@ -273,7 +304,7 @@ def prepare_prompt(began_prompt):
             "content": dump[2],
             "timestamp": dump[3],
             "status": dump[4],
-            'command': command
+            'command': command,
         }
         if theme["user_name"] == 'aifa':
             theme["user_name"] = 'Ty napisałaś:'
@@ -285,16 +316,23 @@ def prepare_prompt(began_prompt):
             f"UPDATE Messages SET status = %s WHERE id = %s",
             (1, theme["id"])):
             if dump[1] != "aifa":
-                ready_prompt += f'LOGIN TO: {theme["user_name"]}\nRANGA TO: {theme["description"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]} TO:\n{theme["content"]}\n{command}\n'
+                ready_prompt += f'LOGIN TO: {theme["user_name"]}\nRANGA TO: {theme["description"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]} TO:\n{theme["content"]}\n{task_for_bot}\n'
                 # ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n{command}\n'
             else:
                 ready_prompt += f'TWÓJ LOGIN TO: aifa\nPOPRZEDNIA WIADOMOŚĆ OD CIEBIE TO:\n{theme["content"]}\n\n'
             count_ready += 1
+    if command:
+        ready_prompt += f'{command}\n'
+    
+    if forge_detect:
+        forge_commender = forge_detect
+    else:
+        forge_commender = None
 
     if count_ready > 0:
-        return ready_prompt
+        return {"ready_prompt": ready_prompt, "forge_commender": forge_commender}
     else:
-        return None
+        return {"ready_prompt": None, "forge_commender": forge_commender}
 
 def get_lastAifaLog(systemInfoFilePath='/home/johndoe/app/newsletterdemon/logs/logsForAifa.json'):
     # Utwórz plik JSON, jeśli nie istnieje
@@ -587,15 +625,29 @@ def main():
 
                     pre_prompt = random.choice(random_choiced_prompt_list)
                     final_prompt = prepare_prompt(pre_prompt)
-                    if final_prompt is not None:
+                    if final_prompt.get("ready_prompt", None) is not None:
 
-                        prepare_shedule.insert_to_database(
+                        if prepare_shedule.insert_to_database(
                             f"""INSERT INTO chat_task
                                     (question, status)
                                 VALUES 
                                     (%s, %s)""",
                             (final_prompt, 5)
-                            )
+                            ): 
+                            if final_prompt.get("forge_commender", []):
+                                for us_na, ta_des in final_prompt.get("forge_commender", []):
+                                    if prepare_shedule.insert_to_database(
+                                        """
+                                            INSERT INTO mind_forge_si
+                                                (user_name, task_description
+                                                status, active_task)
+                                            VALUES 
+                                                (%s, %s, %s, %s);
+                                        """,
+                                        (us_na, ta_des, 5, 0)
+                                        ):
+                                        handle_error(f"Przekazano zadanie do modułu decyzyjnego od usera: {us_na}\n")
+
 
                     ################################################################
                     # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
