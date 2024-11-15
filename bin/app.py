@@ -117,7 +117,7 @@ def prepare_prompt(began_prompt):
     count_ready = 0
 
     forge_detect = []
-
+    command = ''
     for dump in dump_key:
         # Aktywator Modułu decyzyjnego
         
