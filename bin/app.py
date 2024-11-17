@@ -210,30 +210,30 @@ def prepare_prompt(began_prompt):
                 # handle_error(f"command: {command}")
             else: command = ''
 
-            # if znalezione_klucze['najtrafniejsze'] == 'moduł decyzyjny':
-            #     """
-            #     ############################################################
-            #     # obsługa flagi 'moduł decyzyjny'
-            #     ############################################################
-            #     """
-            #     handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
-            #     task_for_bot = f'W ZAPYTANIU TEGO UŻYTKOWNIKA WYKRYTO ZADANIE DO ZREALIZOWANIA, PO UDZIELENIU ODPOWIEDZI ZOSTANIESZ PRZENIESIONA DO MODUŁU DECYZYJNEGO ABY ZREALIZOWAĆ TO ZADANIE!'
+            if znalezione_klucze['najtrafniejsze'] == 'moduł decyzyjny':
+                """
+                ############################################################
+                # obsługa flagi 'moduł decyzyjny'
+                ############################################################
+                """
+                handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
+                task_for_bot = f'W ZAPYTANIU TEGO UŻYTKOWNIKA WYKRYTO ZADANIE DO ZREALIZOWANIA, PO UDZIELENIU ODPOWIEDZI ZOSTANIESZ PRZENIESIONA DO MODUŁU DECYZYJNEGO ABY ZREALIZOWAĆ TO ZADANIE!'
 
-            #     # tworzenie zadania dla modułu decyzyjnego
-            #     forge_detected = (dump[1], dump[2])
-            #     forge_detect.append(forge_detected)
+                # tworzenie zadania dla modułu decyzyjnego
+                forge_detected = (dump[1], dump[2])
+                forge_detect.append(forge_detected)
                 # TODO: zaimplementować obsługę modułu decyzyjnego
                 # wsadzam do bazy zadanie
-                # prepare_shedule.insert_to_database(
-                #     """
-                #         INSERT INTO mind_forge_si
-                #             (user_name, task_description
-                #             status, active_task)
-                #         VALUES 
-                #             (%s, %s, %s, %s);
-                #     """,
-                #     (dump[1], dump[2], 5, 0)
-                # )
+                prepare_shedule.insert_to_database(
+                    """
+                        INSERT INTO mind_forge_si
+                            (user_name, task_description
+                            status, active_task)
+                        VALUES 
+                            (%s, %s, %s, %s);
+                    """,
+                    (dump[1], dump[2], 5, 0)
+                )
 
 
             if 'informacje o personelu' in znalezione_klucze['wartosci'] or znalezione_klucze['najtrafniejsze'] == 'informacje o personelu':
