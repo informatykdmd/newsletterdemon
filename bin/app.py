@@ -587,29 +587,6 @@ def main():
                         **********************************************************
                     """
                     print("CHECKPOINT 2 SECONDS")
-                        
-                elif name == 'checkpoint_15s':
-                    """ 
-                        **********************************************************
-                        ****************** CHECKPOINT 15 SECONDS ***************** 
-                        **********************************************************
-                    """
-                     ################################################################
-                    # Obsługa automatycznej publikacji ogłoszeń na gupach FACEBOOKA
-                    # TWORZENIE ZADANIA DLA AUTOMATU
-                    ################################################################
-                    
-                    for task_data in give_me_curently_tasks():
-                        if make_fbgroups_task(task_data):
-                            handle_error(f"Przygotowano kampanię FB w sekcji {task_data.get('section', None)} dla kategorii {task_data.get('category', None)} eminowaną przez bota {task_data.get('created_by', None)} o id: {task_data.get('post_id', None)}.\n")
-                            sleep(5)
-
-                elif name == 'checkpoint_30s':
-                    """ 
-                        **********************************************************
-                        ****************** CHECKPOINT 30 SECONDS ***************** 
-                        **********************************************************
-                    """
                     ################################################################
                     # komentowanie chata przez serwer automatów
                     ################################################################
@@ -649,6 +626,29 @@ def main():
                                         (us_na, ta_des, 5, 0)
                                         ):
                                         handle_error(f"Przekazano zadanie do modułu decyzyjnego od usera: {us_na}\n")
+                        
+                elif name == 'checkpoint_15s':
+                    """ 
+                        **********************************************************
+                        ****************** CHECKPOINT 15 SECONDS ***************** 
+                        **********************************************************
+                    """
+                     ################################################################
+                    # Obsługa automatycznej publikacji ogłoszeń na gupach FACEBOOKA
+                    # TWORZENIE ZADANIA DLA AUTOMATU
+                    ################################################################
+                    
+                    for task_data in give_me_curently_tasks():
+                        if make_fbgroups_task(task_data):
+                            handle_error(f"Przygotowano kampanię FB w sekcji {task_data.get('section', None)} dla kategorii {task_data.get('category', None)} eminowaną przez bota {task_data.get('created_by', None)} o id: {task_data.get('post_id', None)}.\n")
+                            sleep(5)
+
+                elif name == 'checkpoint_30s':
+                    """ 
+                        **********************************************************
+                        ****************** CHECKPOINT 30 SECONDS ***************** 
+                        **********************************************************
+                    """
 
 
                     ################################################################
