@@ -606,9 +606,9 @@ def main():
 
                         if prepare_shedule.insert_to_database(
                             f"""INSERT INTO chat_task
-                                    (question, status)
+                                    (question, `status`)
                                 VALUES 
-                                    (%s, %s)""",
+                                    (%s, %s);""",
                             (final_prompt.get("ready_prompt", None), 5)
                             ): 
                             if final_prompt.get("forge_commender", []):
