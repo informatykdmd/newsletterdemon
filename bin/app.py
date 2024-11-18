@@ -639,12 +639,12 @@ def main():
                                     if prepare_shedule.insert_to_database(
                                         """
                                             INSERT INTO mind_forge_si
-                                                (
+                                            (
                                                 user_name, task_description,
-                                                status, active_task
-                                                )
+                                                `status`, active_task
+                                            )
                                             VALUES 
-                                                (%s, %s, %s, %s);
+                                            (%s, %s, %s, %s);
                                         """,
                                         (us_na, ta_des, 5, 0)
                                         ):
