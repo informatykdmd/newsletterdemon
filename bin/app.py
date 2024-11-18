@@ -607,7 +607,7 @@ def main():
                                             VALUES 
                                                 (%s, %s, %s);
                                         """,
-                                        (us_na, ta_des, 5, 0)
+                                        (us_na, ta_des, 5)
                                         ):
                                         handle_error(f"Przekazano zadanie do modułu decyzyjnego od usera: {us_na}\n")
                         
