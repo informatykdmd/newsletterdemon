@@ -222,20 +222,7 @@ def prepare_prompt(began_prompt):
                 # tworzenie zadania dla modułu decyzyjnego
                 forge_detected = (dump[1], dump[2])
                 forge_detect.append(forge_detected)
-                # TODO: zaimplementować obsługę modułu decyzyjnego
-                # wsadzam do bazy zadanie
-                prepare_shedule.insert_to_database(
-                    """
-                        INSERT INTO mind_forge_si
-                            (user_name, task_description
-                            status, active_task)
-                        VALUES 
-                            (%s, %s, %s, %s);
-                    """,
-                    (dump[1], dump[2], 5, 0)
-                )
-
-
+                
             if 'informacje o personelu' in znalezione_klucze['wartosci'] or znalezione_klucze['najtrafniejsze'] == 'informacje o personelu':
                 """
                 ############################################################
