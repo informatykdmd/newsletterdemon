@@ -113,7 +113,7 @@ def get_campains_id_descript_dates() -> str:
 
 def prepare_prompt(began_prompt):
     dump_key = get_messages('last')
-    ready_prompt = f'{began_prompt}\n\n'
+    ready_prompt = f'{began_prompt}\nWeź pod uwagę porę dnia oraz dzień tygodnia:\n{datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n\n'
     count_ready = 0
 
     forge_detect = []
