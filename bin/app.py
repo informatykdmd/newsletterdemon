@@ -118,6 +118,7 @@ def prepare_prompt(began_prompt):
 
     forge_detect = []
     command = ''
+    aifa_counter = [login_name[1] for login_name in dump_key]
     for dump in dump_key:
         # Aktywator Modułu decyzyjnego
         task_for_bot = ""
@@ -296,7 +297,7 @@ def prepare_prompt(began_prompt):
         if theme["user_name"] == 'aifa':
             theme["user_name"] = 'Ty napisałaś:'
 
-        if theme["status"] == 2 and len(dump_key) < 2:
+        if theme["status"] == 2 and all(name == 'aifa' for name in aifa_counter):
             continue
 
         if prepare_shedule.insert_to_database(
