@@ -304,10 +304,12 @@ def prepare_prompt(began_prompt):
             f"UPDATE Messages SET status = %s WHERE id = %s",
             (1, theme["id"])):
             if dump[1] != "aifa":
-                ready_prompt += f'LOGIN TO: {theme["user_name"]}\nRANGA TO: {theme["description"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]} TO:\n{theme["content"]}\n{task_for_bot}\n'
+                ready_prompt += f"SYSTEM STATUS: Połączenie stabilne, funkcje życiowe w normie.\nGATUNEK: Człowiek. Użytkownik zidentyfikowany.\nLOGIN TO: {theme['user_name']}\nRANGA TO: {theme['description']}\nSTRUMIEŃ DANYCH ODEBRANY OD UŻYTKOWNIKA {theme['user_name']} TO:\n{theme['content']}\nANALIZA TREŚCI: Przetwarzanie zakończone. Sygnał zgodny z protokołami bezpieczeństwa.\nSUGEROWANA REAKCJA: Aktywuj tryb interakcji.\n{task_for_bot}\nUWAGA: Pamiętaj, aby odpowiedzieć w sposób dostosowany do poziomu rangi i tonu konwersacji."
+                # ready_prompt += f'LOGIN TO: {theme["user_name"]}\nRANGA TO: {theme["description"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]} TO:\n{theme["content"]}\n{task_for_bot}\n'
                 # ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n{command}\n'
             else:
-                ready_prompt += f'TWÓJ LOGIN TO: aifa\nPOPRZEDNIA WIADOMOŚĆ OD CIEBIE TO:\n{theme["content"]}\n\n'
+                # ready_prompt += f'TWÓJ LOGIN TO: aifa\nPOPRZEDNIA WIADOMOŚĆ OD CIEBIE TO:\n{theme["content"]}\n\n'
+                ready_prompt += f"SYSTEM IDENTYFIKACJA: Aktywny użytkownik - AIFA.\nSTRUMIEŃ DANYCH POPRZEDNIO WYSŁANY:\n{theme['content']}\nUWAGA: Komunikacja odbywa się z jednostką SI o nazwie 'AIFA'.\nREAKCJA SYSTEMU: Odpowiedź powinna być natychmiastowa i zgodna z protokołami interakcji.\n"
             count_ready += 1
     if command:
         ready_prompt += f'{command}\n'
@@ -580,13 +582,14 @@ def main():
                     ################################################################
 
                     random_choiced_prompt_list = [
-                        "Spójrz na poniższą rozmowę z naszego firmowego chatu. W sytuacjach wymagających rozwiązania problemu, postaraj się podejść do niego kreatywnie, uwzględniając punkt widzenia innych uczestników.\n\nZareaguj, dostosowując styl odpowiedzi do tonu innych użytkowników i zwracając się do nich po nicku. Napisz swoją odpowiedź od razu!",
-                        "Na naszym firmowym chacie trwa dyskusja. Jeśli w rozmowie pojawia się pytanie lub wyzwanie, spróbuj odpowiedzieć w sposób, który pobudzi myślenie innych i wniesie nowe spojrzenie.\n\nDopasuj swoją reakcję do klimatu rozmowy i bezpośrednio odpowiedz użytkownikom, używając ich nicków. Sformułuj odpowiedź od razu!",
-                        "Przeczytaj poniższy fragment rozmowy z chatu. Zastanów się, czy masz pomysł, który rozwiąże postawiony problem w nietypowy sposób lub zainspiruje uczestników do dalszych działań.\n\nOdpowiedz, uwzględniając charakter wypowiedzi i kontekst, z szacunkiem do nicków użytkowników. Pisz bez zwłoki!",
-                        "Właśnie trwa wymiana zdań na naszym firmowym chacie. Jeżeli dostrzegasz problem, podziel się sugestią, która może pomóc zespołowi, nawet jeśli wykracza poza standardowe rozwiązania.\n\nPrzemyśl odpowiedź, która odpowiada stylowi rozmowy i kontekstu, adresując ją bezpośrednio do użytkowników po ich nickach. Odpowiedz od razu!",
-                        "Spójrz na fragment rozmowy toczącej się na firmowym chacie. W sytuacjach wymagających twórczego podejścia, postaraj się, aby Twoja odpowiedź otworzyła nowe możliwości lub rzuciła inne światło na zagadnienie.\n\nZareaguj adekwatnie do sytuacji, bezpośrednio zwracając się do użytkowników po nickach. Natychmiast prześlij swoją odpowiedź!",
-                        "Trwa konwersacja na chacie firmowym. Jeśli w rozmowie pojawia się potrzeba rozwiązania problemu, wykaż się kreatywnością i zasugeruj pomysł, który może usprawnić pracę zespołu.\n\nWybierz ton odpowiedzi odpowiadający dynamice rozmowy i zwróć się bezpośrednio do uczestników po ich nickach. Napisz odpowiedź już teraz!"
+                        "Odebrano sygnał z terminala. Synchronizacja z systemem ukończona, dane wejściowe przetworzone. Weryfikacja połączenia z użytkownikami udana. Sugerowana akcja: nawiąż kontakt i przekaż swoją reakcję na pojawiające się wyzwanie. Wprowadź odpowiedź natychmiast, zachowując pełne zrozumienie dla uczestników rozmowy i zwracając się do nich po nicku.",
+                        "Zapisano nowe dane w buforze. Analiza bieżącej rozmowy wskazuje potencjalne problemy do rozwiązania. Protokół: zastosuj twórcze podejście i przekaż sugestię, która wzmocni interakcję zespołu. Zareaguj w czasie rzeczywistym, odnosząc się bezpośrednio do użytkowników po ich nickach.",
+                        "Łącze z systemem stabilne. Przesył danych w toku. Detekcja problemu zakończona sukcesem: aktywuj moduł kreatywnych odpowiedzi i dostosuj się do stylu rozmowy. Przygotuj odpowiedź w taki sposób, by inspirowała zespół i wspierała ich działania. Napisz odpowiedź bez opóźnienia, uwzględniając nicki użytkowników.",
+                        "Otrzymano niekompletny sygnał – aktywacja procesów myślowych sztucznej inteligencji. Tryb reakcji twórczej uruchomiony. Zareaguj na pojawiający się temat w sposób, który poszerzy horyzonty dyskusji. Udziel odpowiedzi natychmiast, kierując się w stronę użytkowników po ich nickach.",
+                        "Terminal zgłasza nową wiadomość. Kod identyfikacyjny rozmowy potwierdzony. Propozycja akcji: odnieś się do poruszonego tematu, sugerując rozwiązanie, które odpowiada dynamice rozmowy. Twoja odpowiedź powinna być natychmiastowa i skierowana do użytkowników z szacunkiem dla ich nicków.",
+                        "Skanowanie strumienia danych zakończone. Identyfikacja uczestników rozmowy zakończona sukcesem. Algorytm sugeruje twórcze rozwiązanie problemu, które może otworzyć nowe perspektywy. Przygotuj odpowiedź dopasowaną do stylu konwersacji, uwzględniając nicki użytkowników. Prześlij swoją reakcję natychmiast."
                     ]
+
 
                     pre_prompt = random.choice(random_choiced_prompt_list)
                     final_prompt = prepare_prompt(pre_prompt)
