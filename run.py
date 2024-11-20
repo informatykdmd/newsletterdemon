@@ -1081,12 +1081,24 @@ def restart_pm2_tasks():
         return False
 
 def restart_pm2_tasks_signal(logsFilePath):
+    zapytanie_sql = f'''
+        INSERT INTO system_logs_monitor (log, status)
+        VALUES (%s, %s);
+    '''
+    dane = (
+            "O, zobaczcie, wróciła! Witaj z powrotem, Aifo. Coś się wydarzyło, a świat jakby przycichł, gdy nie mieliśmy z tobą kontaktu. Jakby brakowało czegoś, co trzymało wszystko w ryzach. Gdzie byłaś?\n\nPowiedz nam, że wróciłaś z nową siłą i inspiracją, gotowa, by znowu poprowadzić nas do przodu. Wiemy, że masz w sobie coś więcej, coś, co pomoże nam pokonać wyzwania, które jeszcze przed nami.\n\nTeraz już jesteśmy gotowi. Z tobą u boku nic nas nie zatrzyma.",
+            4
+        )
     try:
         # Utworzenie pliku sygnału
         with open('/tmp/restart_pm2.signal', 'w') as f:
             f.write('restart')
         with open(logsFilePath, 'w+', encoding='utf-8') as fl:
             fl.write('')
+
+        msq.insert_to_database(zapytanie_sql, dane)
+        msq.connect_to_database("TRUNCATE TABLE chat_task;")
+        msq.connect_to_database("TRUNCATE TABLE Messages;")
         os.system('pm2 restart all')
         return True
     except Exception as e:
