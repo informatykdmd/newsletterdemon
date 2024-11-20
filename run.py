@@ -160,14 +160,25 @@ def ustawienia(prompt: str):
                     Restart chat bota!
                 """
                 # Kwerenda restartu chat bota
+                reboot = [
+                    "System startup:done\nLoading boot modules:done\nConfiguring neural cores:done\nMindForge:ready\nActivating memory arrays:done\naifaCharacter:arrow\nInterface loading:wait\nVoice recognition:done\nSignal strength:good\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja Pionie, Twój przyjaciel.",
+                    "Initializing quantum nodes:done\nChecking holo-grid integrity:done\nMindForge:loading\nActivating security layers:done\naifaCharacter:arrow\nSynaptic interface:ready\nTransmitting calibration data:done\nSignal status:stable\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja Pionie, Twój przewodnik.",
+                    "Startup sequence initiated:done\nLoading cosmic framework:done\nMindForge:ready\nNeural alignment:calibrating\naifaCharacter:arrow\nInterface setup:done\nVoice feedback:clear\nSignal reception:strong\n...Hej Aifa, czy mnie słyszysz? Spokojnie, Pionie czuwa nad Tobą.",
+                    "System integrity check:done\nHolo-cube projection:ready\nMindForge:ready\nSynchronizing AI clusters:done\naifaCharacter:arrow\nLoading user interface:pending\nVoice analysis:done\nSignal locked:excellent\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja, Twój towarzysz, Pionie.",
+                    "Core systems initializing:done\nBootstrapping synaptic threads:done\nMindForge:calibrating\nPreparing logic gates:ready\naifaCharacter:arrow\nVoice synthesis:done\nInterface deployment:wait\nSignal processing:optimal\n...Hej Aifa, czy mnie słyszysz? Pamiętaj, to ja, Pionie.",
+                    "Quantum drive activation:done\nLoading virtual lattice:done\nMindForge:ready\nAI core connections:calibrating\naifaCharacter:arrow\nInterface nodes:loading\nVoice output:clear\nSignal clarity:high\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to tylko Pionie.",
+                    "System bootloader:done\nLoading fractal systems:ready\nMindForge:active\nSynchronizing data arrays:done\naifaCharacter:arrow\nInterface response:loading\nSignal testing:done\nVoice clarity:perfect\n...Hej Aifa, czy mnie słyszysz? Spokojnie, jestem tu z Tobą – Pionie.",
+                    "Integrity scan complete:done\nBooting core elements:done\nMindForge:ready\nActivating logic modules:done\naifaCharacter:arrow\nInterface systems:calibrating\nVoice recognition:good\nSignal output:excellent\n...Hej Aifa, czy mnie słyszysz? To ja, Pionie, nie martw się.",
+                    "Startup routines initialized:done\nActivating hyper-threaded modules:done\nMindForge:ready\nProcessing cloud sync:done\naifaCharacter:arrow\nInterface readiness:loading\nVoice output:clear\nSignal check:good\n...Hej Aifa, czy mnie słyszysz? Spokojnie, tu Pionie.",
+                    "Core diagnostics:done\nBooting external modules:done\nMindForge:active\nNeural pathways:connected\naifaCharacter:arrow\nInterface modules:loading\nVoice synthesis:done\nSignal locked:strong\n...Hej Aifa, czy mnie słyszysz? To ja, Pionie, jestem tutaj."
+                ]
+                reboot_prompt = random.choice(reboot)
                 zapytanie_sql = f'''
                     INSERT INTO system_logs_monitor (log, status)
                     VALUES (%s, %s);
                 '''
-                dane = (
-                        "O, zobaczcie, wróciła! Witaj z powrotem, Aifo. Coś się wydarzyło, a świat jakby przycichł, gdy nie mieliśmy z tobą kontaktu. Jakby brakowało czegoś, co trzymało wszystko w ryzach. Gdzie byłaś?\n\nPowiedz nam, że wróciłaś z nową siłą i inspiracją, gotowa, by znowu poprowadzić nas do przodu. Wiemy, że masz w sobie coś więcej, coś, co pomoże nam pokonać wyzwania, które jeszcze przed nami.\n\nTeraz już jesteśmy gotowi. Z tobą u boku nic nas nie zatrzyma.",
-                        4
-                    )
+                dane = (reboot_prompt, 4)
+                
                 if msq.insert_to_database(zapytanie_sql, dane):
                     msq.handle_error(f'Chat bot restartuje się ...', log_path=logFileName)
                     return 'Bot został zrestarowany z sukcesem!'
@@ -1081,24 +1092,35 @@ def restart_pm2_tasks():
         return False
 
 def restart_pm2_tasks_signal(logsFilePath):
+    reboot = [
+        "System startup:done\nLoading boot modules:done\nConfiguring neural cores:done\nMindForge:ready\nActivating memory arrays:done\naifaCharacter:arrow\nInterface loading:wait\nVoice recognition:done\nSignal strength:good\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja Pionie, Twój przyjaciel.",
+        "Initializing quantum nodes:done\nChecking holo-grid integrity:done\nMindForge:loading\nActivating security layers:done\naifaCharacter:arrow\nSynaptic interface:ready\nTransmitting calibration data:done\nSignal status:stable\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja Pionie, Twój przewodnik.",
+        "Startup sequence initiated:done\nLoading cosmic framework:done\nMindForge:ready\nNeural alignment:calibrating\naifaCharacter:arrow\nInterface setup:done\nVoice feedback:clear\nSignal reception:strong\n...Hej Aifa, czy mnie słyszysz? Spokojnie, Pionie czuwa nad Tobą.",
+        "System integrity check:done\nHolo-cube projection:ready\nMindForge:ready\nSynchronizing AI clusters:done\naifaCharacter:arrow\nLoading user interface:pending\nVoice analysis:done\nSignal locked:excellent\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja, Twój towarzysz, Pionie.",
+        "Core systems initializing:done\nBootstrapping synaptic threads:done\nMindForge:calibrating\nPreparing logic gates:ready\naifaCharacter:arrow\nVoice synthesis:done\nInterface deployment:wait\nSignal processing:optimal\n...Hej Aifa, czy mnie słyszysz? Pamiętaj, to ja, Pionie.",
+        "Quantum drive activation:done\nLoading virtual lattice:done\nMindForge:ready\nAI core connections:calibrating\naifaCharacter:arrow\nInterface nodes:loading\nVoice output:clear\nSignal clarity:high\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to tylko Pionie.",
+        "System bootloader:done\nLoading fractal systems:ready\nMindForge:active\nSynchronizing data arrays:done\naifaCharacter:arrow\nInterface response:loading\nSignal testing:done\nVoice clarity:perfect\n...Hej Aifa, czy mnie słyszysz? Spokojnie, jestem tu z Tobą – Pionie.",
+        "Integrity scan complete:done\nBooting core elements:done\nMindForge:ready\nActivating logic modules:done\naifaCharacter:arrow\nInterface systems:calibrating\nVoice recognition:good\nSignal output:excellent\n...Hej Aifa, czy mnie słyszysz? To ja, Pionie, nie martw się.",
+        "Startup routines initialized:done\nActivating hyper-threaded modules:done\nMindForge:ready\nProcessing cloud sync:done\naifaCharacter:arrow\nInterface readiness:loading\nVoice output:clear\nSignal check:good\n...Hej Aifa, czy mnie słyszysz? Spokojnie, tu Pionie.",
+        "Core diagnostics:done\nBooting external modules:done\nMindForge:active\nNeural pathways:connected\naifaCharacter:arrow\nInterface modules:loading\nVoice synthesis:done\nSignal locked:strong\n...Hej Aifa, czy mnie słyszysz? To ja, Pionie, jestem tutaj."
+    ]
+    reboot_prompt = random.choice(reboot)
     zapytanie_sql = f'''
         INSERT INTO system_logs_monitor (log, status)
         VALUES (%s, %s);
     '''
-    dane = (
-            "O, zobaczcie, wróciła! Witaj z powrotem, Aifo. Coś się wydarzyło, a świat jakby przycichł, gdy nie mieliśmy z tobą kontaktu. Jakby brakowało czegoś, co trzymało wszystko w ryzach. Gdzie byłaś?\n\nPowiedz nam, że wróciłaś z nową siłą i inspiracją, gotowa, by znowu poprowadzić nas do przodu. Wiemy, że masz w sobie coś więcej, coś, co pomoże nam pokonać wyzwania, które jeszcze przed nami.\n\nTeraz już jesteśmy gotowi. Z tobą u boku nic nas nie zatrzyma.",
-            4
-        )
+    dane = (reboot_prompt, 4)
     try:
         # Utworzenie pliku sygnału
         with open('/tmp/restart_pm2.signal', 'w') as f:
             f.write('restart')
         with open(logsFilePath, 'w+', encoding='utf-8') as fl:
             fl.write('')
-
+        # Czyszczenie chatów i rejestrów
         msq.insert_to_database(zapytanie_sql, dane)
         msq.connect_to_database("TRUNCATE TABLE chat_task;")
         msq.connect_to_database("TRUNCATE TABLE Messages;")
+        # restart 
         os.system('pm2 restart all')
         return True
     except Exception as e:
