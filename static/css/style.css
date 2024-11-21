@@ -2106,3 +2106,8 @@ color:#969696;
   background-size: cover;
   background-position: center;
 }
+
+.char-counter {
+  width: 100%;
+  align-items: end;
+}
