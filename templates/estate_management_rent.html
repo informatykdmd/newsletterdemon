@@ -904,7 +904,7 @@
                                                             required>
                                                             <label for="title_{{post_id}}">Tytuł ogłoszenia</label>
                                                 </div>
-                                                <div id="title_{{post_id}}-counter" class="mb-3 ms-7 text-gray  char-counter" style="font-size: 12px; font-weight: 100;">0 znaków</div>
+                                                <div id="title_{{post_id}}-counter" class="mb-3 ms-7 text-gray char-counter" style="font-size: 12px; font-weight: 100;">0 znaków</div>
                                                 <!-- Informacje ogólne o nieruchomości -->
                                                 <label class="form-label">Informacje ogólne o nieruchomości</label>
                                                 <div class="form-floating mb-3">
@@ -5930,12 +5930,17 @@
         }
     }
 
-    // Po załadowaniu DOM dodajemy nasłuchiwacze do wszystkich pól z dynamiczną klasą
+    // Po załadowaniu DOM
     document.addEventListener('DOMContentLoaded', () => {
         // Znajdujemy wszystkie pola o klasie dynamic-title
         const inputs = document.querySelectorAll('.dynamic-title');
 
+        // Dodajemy nasłuchiwacz zdarzeń i aktualizujemy licznik dla każdego pola
         inputs.forEach(input => {
+            // Aktualizacja licznika na starcie
+            updateCharCount(input);
+
+            // Nasłuchiwanie zmian w polach
             input.addEventListener('input', () => updateCharCount(input));
         });
     });
