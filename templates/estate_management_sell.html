@@ -180,17 +180,18 @@
                             <div class="offcanvas-body">
                                 <form method="POST" id="sellOffer_9999999" action="{{ url_for('save_sell_offer') }}" enctype="multipart/form-data" >
                                     <!-- Tytuł artykułu -->
-                                    <div class="mb-3">
+                                    <div class="mb-0">
                                         <label for="title_9999999" class="form-label">Tytuł ogłoszenia</label>
                                         <input 
                                                 type="text" 
                                                 value=""
-                                                class="form-control bg-dark formatuj-maly-font" 
+                                                class="form-control bg-dark formatuj-maly-font dynamic-title" 
                                                 style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                 id="title_9999999" 
                                                 name="title_9999999" 
                                                 required>
                                     </div>
+                                    <div id="title_9999999-counter" class="mb-3 char-counter" style="font-size: 12px; font-weight: 100; margin-left: 35px; color:#6a6a6a !important;">0 znaków</div>
                                     <!-- Informacje ogólne o nieruchomości -->
                                     <label class="form-label">Informacje ogólne o nieruchomości</label>
                                     <div class="mb-3">
@@ -887,18 +888,19 @@
                                     <div class="tylko-klej">
                                         <div style="color:#6a6a6a;">
                                             <form method="POST" id="sellOffer_{{post_id}}" action="{{ url_for('save_sell_offer') }}" enctype="multipart/form-data" >
-                                                <div class="form-floating mb-3">
+                                                <div class="form-floating mb-0">
                                                     
                                                     <input 
                                                             type="text" 
                                                             value="{{post_data['Tytul']}}"
-                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            class="form-control bg-dark formatuj-maly-font dynamic-title" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="title_{{post_id}}" 
                                                             name="title_{{post_id}}" 
                                                             required>
                                                             <label for="title_{{post_id}}">Tytuł ogłoszenia</label>
                                                 </div>
+                                                <div id="title_{{post_id}}-counter" class="mb-3 char-counter" style="font-size: 12px; font-weight: 100; margin-left: 35px; color:#6a6a6a !important;">0 znaków</div>
                                                 <!-- Informacje ogólne o nieruchomości -->
                                                 <label class="form-label">Informacje ogólne o nieruchomości</label>
                                                 <div class="form-floating mb-3">
@@ -5926,6 +5928,31 @@
         // Inicjalne wyświetlenie harmonogramu
         generateSchedule();
     }
+
+    // Funkcja aktualizująca licznik znaków
+    function updateCharCount(input) {
+        const inputId = input.id;
+        const counter = document.getElementById(`${inputId}-counter`);
+        const charCount = input.value.length;
+        if (counter) {
+            counter.textContent = `${charCount} znaków`;
+        }
+    }
+
+    // Po załadowaniu DOM
+    document.addEventListener('DOMContentLoaded', () => {
+        // Znajdujemy wszystkie pola o klasie dynamic-title
+        const inputs = document.querySelectorAll('.dynamic-title');
+
+        // Dodajemy nasłuchiwacz zdarzeń i aktualizujemy licznik dla każdego pola
+        inputs.forEach(input => {
+            // Aktualizacja licznika na starcie
+            updateCharCount(input);
+
+            // Nasłuchiwanie zmian w polach
+            input.addEventListener('input', () => updateCharCount(input));
+        });
+    });
 
 </script>
 {% endblock %}
