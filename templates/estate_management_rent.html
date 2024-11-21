@@ -183,12 +183,14 @@
                                         <input 
                                                 type="text" 
                                                 value=""
-                                                class="form-control bg-dark formatuj-maly-font" 
+                                                class="form-control bg-dark formatuj-maly-font dynamic-title" 
                                                 style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                 id="title_9999999" 
                                                 name="title_9999999" 
                                                 required>
                                     </div>
+                                    <div id="title_9999999-counter" class="char-counter">0 znaków</div>
+
                                     <!-- Informacje ogólne o nieruchomości -->
                                     <label class="form-label">Informacje ogólne o nieruchomości</label>
                                     <div class="mb-3">
@@ -895,13 +897,14 @@
                                                     <input 
                                                             type="text" 
                                                             value="{{post_data['Tytul']}}"
-                                                            class="form-control bg-dark formatuj-maly-font" 
+                                                            class="form-control bg-dark formatuj-maly-font dynamic-title" 
                                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                             id="title_{{post_id}}" 
                                                             name="title_{{post_id}}" 
                                                             required>
                                                             <label for="title_{{post_id}}">Tytuł ogłoszenia</label>
                                                 </div>
+                                                <div id="title_{{post_id}}-counter" class="char-counter">0 znaków</div>
                                                 <!-- Informacje ogólne o nieruchomości -->
                                                 <label class="form-label">Informacje ogólne o nieruchomości</label>
                                                 <div class="form-floating mb-3">
@@ -5917,5 +5920,24 @@
         generateSchedule();
     }
 
+    // Funkcja aktualizująca licznik znaków
+    function updateCharCount(input) {
+        const inputId = input.id;
+        const counter = document.getElementById(`${inputId}-counter`);
+        const charCount = input.value.length;
+        if (counter) {
+            counter.textContent = `${charCount} znaków`;
+        }
+    }
+
+    // Po załadowaniu DOM dodajemy nasłuchiwacze do wszystkich pól z dynamiczną klasą
+    document.addEventListener('DOMContentLoaded', () => {
+        // Znajdujemy wszystkie pola o klasie dynamic-title
+        const inputs = document.querySelectorAll('.dynamic-title');
+
+        inputs.forEach(input => {
+            input.addEventListener('input', () => updateCharCount(input));
+        });
+    });
 </script>
 {% endblock %}
