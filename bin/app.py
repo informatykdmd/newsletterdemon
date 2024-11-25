@@ -604,6 +604,7 @@ def main():
                             ): 
                             if final_prompt.get("forge_commender", []):
                                 for us_na, ta_des in final_prompt.get("forge_commender", []):
+                                    sleep(3)
                                     if prepare_shedule.insert_to_database(
                                         """
                                             INSERT INTO mind_forge_si
