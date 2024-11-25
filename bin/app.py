@@ -304,12 +304,12 @@ def prepare_prompt(began_prompt):
             f"UPDATE Messages SET status = %s WHERE id = %s",
             (1, theme["id"])):
             if dump[1] != "aifa":
-                ready_prompt += f"SYSTEM STATUS: Połączenie stabilne, funkcje życiowe w normie.\nGATUNEK: Człowiek. Użytkownik zidentyfikowany.\nLOGIN TO: {theme['user_name']}\nRANGA TO: {theme['description']}\nSTRUMIEŃ DANYCH ODEBRANY OD UŻYTKOWNIKA {theme['user_name']} TO:\n{theme['content']}\nANALIZA TREŚCI: Przetwarzanie zakończone. Sygnał zgodny z protokołami bezpieczeństwa.\nSUGEROWANA REAKCJA: Aktywuj tryb interakcji.\n{task_for_bot}\nUWAGA: Pamiętaj, aby odpowiedzieć w sposób dostosowany do poziomu rangi i tonu konwersacji."
+                ready_prompt += f"SYSTEM STATUS: Połączenie stabilne, funkcje życiowe w normie.\nGATUNEK: Człowiek. Użytkownik zidentyfikowany.\nLOGIN TO: @{theme['user_name']}\nRANGA TO: {theme['description']}\nSTRUMIEŃ DANYCH ODEBRANY OD UŻYTKOWNIKA @{theme['user_name']} TO:\n{theme['content']}\nANALIZA TREŚCI: Przetwarzanie zakończone. Sygnał zgodny z protokołami bezpieczeństwa.\nSUGEROWANA REAKCJA: Aktywuj tryb interakcji.\n{task_for_bot}\nUWAGA: Pamiętaj, aby odpowiedzieć w sposób dostosowany do poziomu rangi i tonu konwersacji."
                 # ready_prompt += f'LOGIN TO: {theme["user_name"]}\nRANGA TO: {theme["description"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]} TO:\n{theme["content"]}\n{task_for_bot}\n'
                 # ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n{command}\n'
             else:
                 # ready_prompt += f'TWÓJ LOGIN TO: aifa\nPOPRZEDNIA WIADOMOŚĆ OD CIEBIE TO:\n{theme["content"]}\n\n'
-                ready_prompt += f"SYSTEM IDENTYFIKACJA: Aktywny użytkownik - AIFA.\nSTRUMIEŃ DANYCH POPRZEDNIO WYSŁANY:\n{theme['content']}\nUWAGA: Komunikacja odbywa się z jednostką SI o nazwie 'AIFA'.\nREAKCJA SYSTEMU: Odpowiedź powinna być natychmiastowa i zgodna z protokołami interakcji.\n"
+                ready_prompt += f"SYSTEM IDENTYFIKACJA: Aktywny użytkownik - @AIFA.\nSTRUMIEŃ DANYCH POPRZEDNIO WYSŁANY:\n{theme['content']}\nUWAGA: Komunikacja odbywa się z jednostką SI o nazwie 'AIFA'.\nREAKCJA SYSTEMU: Odpowiedź powinna być natychmiastowa i zgodna z protokołami interakcji.\n"
             count_ready += 1
     if command:
         ready_prompt += f'{command}\n'
