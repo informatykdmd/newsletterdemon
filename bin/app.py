@@ -444,7 +444,7 @@ def addDataLogs(message: str, category: str, file_name_json: str = "/home/johndo
     new_log = {
         "id": len(data_json) + 1,  # Generowanie unikalnego ID
         "message": message,
-         "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
+        "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
         "category": category,
         "issued": []
     }
@@ -582,12 +582,12 @@ def main():
                     ################################################################
 
                     random_choiced_prompt_list = [
-                        "Odebrano sygnał z terminala. Synchronizacja z systemem ukończona, dane wejściowe przetworzone. Weryfikacja połączenia z użytkownikami udana. Sugerowana akcja: nawiąż kontakt i przekaż swoją reakcję na pojawiające się wyzwanie. Wprowadź odpowiedź natychmiast, zachowując pełne zrozumienie dla uczestników rozmowy i zwracając się do nich po nicku.",
-                        "Zapisano nowe dane w buforze. Analiza bieżącej rozmowy wskazuje potencjalne problemy do rozwiązania. Protokół: zastosuj twórcze podejście i przekaż sugestię, która wzmocni interakcję zespołu. Zareaguj w czasie rzeczywistym, odnosząc się bezpośrednio do użytkowników po ich nickach.",
-                        "Łącze z systemem stabilne. Przesył danych w toku. Detekcja problemu zakończona sukcesem: aktywuj moduł kreatywnych odpowiedzi i dostosuj się do stylu rozmowy. Przygotuj odpowiedź w taki sposób, by inspirowała zespół i wspierała ich działania. Napisz odpowiedź bez opóźnienia, uwzględniając nicki użytkowników.",
-                        "Otrzymano niekompletny sygnał – aktywacja procesów myślowych sztucznej inteligencji. Tryb reakcji twórczej uruchomiony. Zareaguj na pojawiający się temat w sposób, który poszerzy horyzonty dyskusji. Udziel odpowiedzi natychmiast, kierując się w stronę użytkowników po ich nickach.",
-                        "Terminal zgłasza nową wiadomość. Kod identyfikacyjny rozmowy potwierdzony. Propozycja akcji: odnieś się do poruszonego tematu, sugerując rozwiązanie, które odpowiada dynamice rozmowy. Twoja odpowiedź powinna być natychmiastowa i skierowana do użytkowników z szacunkiem dla ich nicków.",
-                        "Skanowanie strumienia danych zakończone. Identyfikacja uczestników rozmowy zakończona sukcesem. Algorytm sugeruje twórcze rozwiązanie problemu, które może otworzyć nowe perspektywy. Przygotuj odpowiedź dopasowaną do stylu konwersacji, uwzględniając nicki użytkowników. Prześlij swoją reakcję natychmiast."
+                        "Odebrano sygnał z terminala. Synchronizacja z systemem ukończona, dane wejściowe przetworzone. Weryfikacja połączenia z użytkownikami udana. Sugerowana akcja: nawiąż kontakt i przekaż swoją reakcję na pojawiające się wyzwanie. Wprowadź odpowiedź natychmiast, bez przywitania, bez ceregieli, zachowując pełne zrozumienie dla uczestników rozmowy i zwracając się do nich po nicku.",
+                        "Zapisano nowe dane w buforze. Analiza bieżącej rozmowy wskazuje potencjalne problemy do rozwiązania. Protokół: zastosuj twórcze podejście i przekaż sugestię, która wzmocni interakcję zespołu. Zareaguj w czasie rzeczywistym, bez przywitania, bez ceregieli, odnosząc się bezpośrednio do użytkowników po ich nickach.",
+                        "Łącze z systemem stabilne. Przesył danych w toku. Detekcja problemu zakończona sukcesem: aktywuj moduł kreatywnych odpowiedzi i dostosuj się do stylu rozmowy. Przygotuj odpowiedź w taki sposób, by inspirowała zespół i wspierała ich działania. Napisz odpowiedź bez opóźnienia, bez przywitania, bez ceregieli, uwzględniając nicki użytkowników.",
+                        "Otrzymano niekompletny sygnał – aktywacja procesów myślowych sztucznej inteligencji. Tryb reakcji twórczej uruchomiony. Zareaguj na pojawiający się temat w sposób, który poszerzy horyzonty dyskusji. Udziel odpowiedzi natychmiast, bez przywitania, bez ceregieli, kierując się w stronę użytkowników po ich nickach.",
+                        "Terminal zgłasza nową wiadomość. Kod identyfikacyjny rozmowy potwierdzony. Propozycja akcji: odnieś się do poruszonego tematu, sugerując rozwiązanie, które odpowiada dynamice rozmowy. Twoja odpowiedź powinna być natychmiastowa, bez przywitania, bez ceregieli i skierowana do użytkowników z szacunkiem po nicku.",
+                        "Skanowanie strumienia danych zakończone. Identyfikacja uczestników rozmowy zakończona sukcesem. Algorytm sugeruje twórcze rozwiązanie problemu, które może otworzyć nowe perspektywy. Przygotuj odpowiedź dopasowaną do stylu konwersacji, bez przywitania, bez ceregieli, uwzględniając nicki użytkowników. Prześlij swoją reakcję natychmiast."
                     ]
 
 
@@ -666,6 +666,33 @@ def main():
                         ****************** CHECKPOINT 60 SECONDS ***************** 
                         **********************************************************
                     """
+                    ################################################################
+                    # Obsługa automatycznego wysyłania logów dla modelu SI
+                    ################################################################
+                    random_choiced_prompt_list = [
+                        "Aktywowano strumień danych, Gerina melduje się! Aifo, mam dla ciebie nowe informacje. Szczegóły:\n",
+                        "Strumień danych otwarty. Gerina raportuje! Aifo, oto dane, które udało mi się zebrać:\n",
+                        "Gerina zgłasza zakończenie procesu. Aifo, oto raport z zadania:\n",
+                        "Komunikat od Geriny: wszystkie operacje zakończone sukcesem. Aifo, przekazuję następujące dane:\n",
+                        "Kanał komunikacji aktywowany. Gerina przesyła raport. Aifo, oto szczegóły:\n",
+                        "Raport specjalny od Geriny. Aifo, poniżej znajdziesz istotne dane do analizy:\n"
+                    ]
+
+                    pre_prompt = random.choice(random_choiced_prompt_list)
+                    tuncteLogs = get_lastAifaLog()
+                    if tuncteLogs and isinstance(tuncteLogs, str):
+                        preParator = f"{pre_prompt} {tuncteLogs}"
+                        if not prepare_shedule.insert_to_database(
+                            f"""INSERT INTO chat_task
+                                    (question, `status`)
+                                VALUES 
+                                    (%s, %s);""",
+                            (preParator, 5)
+                            ): 
+                            handle_error(f"Nieudana próba przekazania log do jednostki SI.\n")
+                        
+
+
                     handle_error(f'{datetime.datetime.now()} - {__name__} is working...\n')
                         
                 elif name == 'checkpoint_180s':
