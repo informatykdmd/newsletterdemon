@@ -1748,12 +1748,28 @@ color:#969696;
   color: #fff; /* Zmienia kolor tekstu na biały na hover */
 }
 
-.chat-container {
+/* .chat-container {
   display: flex;
   flex-direction: column;
   max-width: 75%;
   min-width: 400px;
   margin: 5px;
+} */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Domyślnie zajmuje 100% szerokości */
+  max-width: 75%; /* Maksymalnie 75% dostępnego miejsca */
+  min-width: 400px; /* Minimalna szerokość to 400px */
+  margin: 5px;
+  box-sizing: border-box; /* Zapewnia poprawne liczenie marginesów i paddingów */
+}
+
+@media (max-width: 400px) {
+  .chat-container {
+    width: 100%; /* Na mniejszych ekranach pełna szerokość */
+    min-width: 0; /* Wyłącz minimalną szerokość, gdy przestrzeń jest ograniczona */
+  }
 }
 
 .chat-bubble {
