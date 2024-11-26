@@ -1751,7 +1751,8 @@ color:#969696;
 .chat-container {
   display: flex;
   flex-direction: column;
-  max-width: 100%;
+  max-width: 75%;
+  min-width: 400px;
   margin: 5px;
 }
 
