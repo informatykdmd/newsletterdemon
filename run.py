@@ -1489,7 +1489,15 @@ def fetch_messages():
     if 'username' not in session:
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /fetch-messages bez autoryzacji.', log_path=logFileName)
         return redirect(url_for('index'))
-    messages = get_messages('last')
+    get_messages_data = get_messages('last')
+    get_users_data = generator_userDataDB()
+    messages = []
+    for message in get_messages_data:
+        for user_data in get_users_data:
+            if message[0] == user_data['username']:
+                ready_record = [message[0], message[1], message[2], user_data['avatar']]
+                messages.append(ready_record)
+                continue
     return jsonify(messages)
 
 @app.route('/send-chat-message', methods=['POST'])
