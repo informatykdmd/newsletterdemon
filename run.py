@@ -1498,6 +1498,9 @@ def fetch_messages():
                 ready_record = [message[0], message[1], message[2], user_data['avatar']]
                 messages.append(ready_record)
                 continue
+            elif message[0] == 'aifa':
+                ready_record = [message[0], message[1], message[2], 'https://dmddomy.pl/images/team/aifa-1.jpg']
+                messages.append(ready_record)
     return jsonify(messages)
 
 @app.route('/send-chat-message', methods=['POST'])
