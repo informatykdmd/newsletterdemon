@@ -1808,7 +1808,8 @@ color:#969696;
   right: 10px;
 } */
 
-.chat-container {
+/* v2  */
+/* .chat-container {
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -1817,7 +1818,7 @@ color:#969696;
 .chat-message {
   display: flex;
   gap: 10px;
-  align-items: center; /* Wyrównanie avatar + nick w pionie */
+  align-items: center; 
 }
 
 .chat-avatar {
@@ -1836,17 +1837,17 @@ color:#969696;
 .chat-nickname {
   font-size: 0.9rem;
   font-weight: bold;
-  margin: 0; /* Usunięcie dodatkowego marginesu */
-  line-height: 1; /* Dopasowanie do wysokości avataru */
+  margin: 0; 
+  line-height: 1; 
   display: flex;
-  align-items: center; /* Wyrównanie do środka w pionie */
+  align-items: center; 
 }
 
 .chat-bubble {
-  max-width: 75%; /* Maksymalnie 75% szerokości */
-  width: fit-content; /* Dopasowanie do zawartości */
-  min-width: 0; /* Umożliwia mniejsze chmurki */
-  margin-top: 2px; /* Odstęp od avataru */
+  max-width: 75%; 
+  width: fit-content; 
+  min-width: 0; 
+  margin-top: 2px;
 }
 
 .chat-message-fill {
@@ -1868,9 +1869,110 @@ color:#969696;
 
 @media (max-width: 400px) {
   .chat-bubble {
-      max-width: 100%; /* Jeśli ekran jest mniejszy niż 400px, zajmuje 100% */
+      max-width: 100%; 
+  }
+} */
+
+/* Kontener wiadomości */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 7px; /* Odstęp między wiadomościami */
+}
+
+/* Wspólne dla wszystkich wiadomości */
+.chat-message {
+  display: flex;
+  gap: 10px;
+  align-items: center; /* Wyrównanie avatara i nicka w pionie */
+}
+
+/* Wiadomości innych użytkowników (po lewej) */
+.chat-message-left {
+  justify-content: flex-start;
+}
+
+/* Wiadomości zalogowanego użytkownika (po prawej) */
+.chat-message-right {
+  justify-content: flex-end;
+  text-align: right; /* Wyrównanie tekstu w chmurce */
+}
+
+/* Avatar */
+.chat-avatar {
+  flex-shrink: 0;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.chat-avatar img {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.chat-message-left .chat-avatar {
+  margin-right: 10px; /* Odstęp po prawej stronie avatara */
+}
+
+.chat-message-right .chat-avatar {
+  margin-left: 10px; /* Odstęp po lewej stronie avatara */
+  margin-right: 0;
+}
+
+/* Nick */
+.chat-nickname {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0; /* Usunięcie dodatkowego marginesu */
+  line-height: 1; /* Dopasowanie do wysokości avataru */
+  display: flex;
+  align-items: center; /* Wyrównanie w pionie */
+}
+
+/* Chmurki wiadomości */
+.chat-bubble {
+  max-width: 75%; /* Maksymalna szerokość chmurki */
+  width: fit-content; /* Dopasowanie do długości treści */
+  min-width: 0; /* Pozwól na mniejsze chmurki */
+  margin-top: 2px; /* Odstęp od nicka */
+  padding: 10px 15px; /* Odstęp wewnętrzny */
+  border-radius: 15px;
+  word-wrap: break-word; /* Zawijanie tekstu */
+}
+
+.chat-message-left .chat-bubble {
+  background-color: #f1f0f0; /* Tło dla innych użytkowników */
+  color: black; /* Kolor tekstu */
+}
+
+.chat-message-right .chat-bubble {
+  background-color: #0078fe; /* Tło dla zalogowanego użytkownika */
+  color: white; /* Kolor tekstu */
+}
+
+/* Treść w chmurce */
+.chat-message-fill {
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+/* Czas wiadomości */
+.chat-timestamp {
+  font-size: 0.6rem;
+  color: #666;
+  text-align: right;
+  margin-top: 1px; /* Bliżej chmurki */
+}
+
+/* Responsywność */
+@media (max-width: 400px) {
+  .chat-bubble {
+    max-width: 100%; /* Chmurka zajmuje całą szerokość na małych ekranach */
   }
 }
+
 
 .file-upload-wrapper {
   width: 100%;
