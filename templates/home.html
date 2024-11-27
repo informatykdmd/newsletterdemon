@@ -1052,47 +1052,26 @@
                                 .filter(line => line.trim()) // Filtrujemy puste linie (usuwamy białe znaki)
                                 .join('<br />');               // Łączymy ponownie z `<br>`
 
-                        chatBox.append(`
-                            <div class="row ${message[0] === loggedInUser ? 'justify-content-end' : ''}">
-                                <!-- Avatar -->
-                                <div class="${message[0] === loggedInUser ? 'col-auto order-last' : 'col-auto'}">
-                                    <div class="chat-avatar">
-                                        <img src="${message[3]}" alt="Avatar">
+                    chatBox.append(`
+                        <!-- Wiadomość chat -->
+                        <div class="chat-message">
+                            <div class="chat-avatar">
+                                <img src="${message[3]}" alt="Avatar">
+                            </div>
+                            <div class="chat-nickname">${message[0]}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="chat-bubble">
+                                    <div class="chat-message-fill">
+                                        ${formattedMessage}
                                     </div>
-                                </div>
-                                <!-- Wiadomość -->
-                                <div class="col-9">
-                                    <div class="chat-nickname">${message[0]}</div>
-                                    <div class="chat-bubble">
-                                        <div class="chat-message-fill">
-                                            ${formattedMessage}
-                                        </div>
-                                        <div class="chat-timestamp text-end">${message[2]}</div>
-                                    </div>
+                                    <div class="chat-timestamp text-end">${message[2]}</div>
                                 </div>
                             </div>
-                        `);
-
-                    //     chatBox.append(`
-                    //     <!-- Wiadomość chat -->
-                    //     <div class="chat-message">
-                    //         <div class="chat-avatar">
-                    //             <img src="${message[3]}" alt="Avatar">
-                    //         </div>
-                    //         <div class="chat-nickname">${message[0]}</div>
-                    //     </div>
-                    //     <div class="row">
-                    //         <div class="col-12">
-                    //             <div class="chat-bubble">
-                    //                 <div class="chat-message-fill">
-                    //                     ${formattedMessage}
-                    //                 </div>
-                    //                 <div class="chat-timestamp text-end">${message[2]}</div>
-                    //             </div>
-                    //         </div>
-                    //     </div>`
-                    // );
-                        // chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-5">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0 fs-7"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
+                        </div>
+                    `);
+                    // chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-5">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0 fs-7"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
                     });
                     if (autoScrollEnabled) {
                         // Przewijanie na dół po załadowaniu wiadomości
