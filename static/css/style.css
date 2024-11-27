@@ -1822,15 +1822,15 @@ color:#969696;
 
 .chat-avatar {
   flex-shrink: 0;
-  width: 40px;
+  width: 20px;
   display: flex;
   justify-content: center;
 }
 
 .chat-avatar img {
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
 }
 
 .chat-nickname {
@@ -1852,6 +1852,7 @@ color:#969696;
 .chat-message-fill {
   background-color: #0078fe;
   color: white;
+  font-size: 0.9rem;
   padding: 10px 15px;
   border-radius: 15px;
   word-wrap: break-word;
@@ -1859,7 +1860,7 @@ color:#969696;
 }
 
 .chat-timestamp {
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   color: #666;
   text-align: right;
   margin-top: 1px;
