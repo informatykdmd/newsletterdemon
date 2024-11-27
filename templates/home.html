@@ -986,7 +986,7 @@
     </div>
 </div>
 <div class="jasne rogi formatyj-maly-wiersz formatuj-padding-lg">
-    <div class="m-2" id="chat-box">
+    <div class="chat-container" id="chat-box">
         <!-- Wiadomości będą tutaj -->
     </div>
     <div class="m-2" >
@@ -1049,14 +1049,23 @@
                         const formattedMessage = message[1]
                                 .split('\n')                // Dzielimy na linie po `\n`
                                 .filter(line => line.trim()) // Filtrujemy puste linie (usuwamy białe znaki)
-                                .join('<br /><br />');               // Łączymy ponownie z `<br>`
+                                .join('<br />');               // Łączymy ponownie z `<br>`
                         chatBox.append(`
-                        <div class="chat-container">
-                            <div class="chat-bubble">
-                                <div class="chat-avatar"><i class="bi bi-robot"></i></div>
-                                <div class="chat-username">${message[0]}</div>
-                                <div class="chat-message-content">${formattedMessage}</div>
-                                <div class="chat-message-date">${message[2]}</div>
+                        <!-- Wiadomość chat -->
+                        <div class="chat-message">
+                            <div class="chat-avatar">
+                                <img src="https://dmddomy.pl/images/team/1729688379_ubrania_dmd.webp" alt="Avatar">
+                            </div>
+                            <div class="chat-nickname">${message[0]}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="chat-bubble">
+                                    <div class="chat-message-fill">
+                                        ${formattedMessage}
+                                    </div>
+                                    <div class="chat-timestamp text-end">${message[2]}</div>
+                                </div>
                             </div>
                         </div>`
                     );

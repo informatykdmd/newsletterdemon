@@ -1747,29 +1747,13 @@ color:#969696;
   border-radius: 5px; /* Dopasowuje rogi na hover */
   color: #fff; /* Zmienia kolor tekstu na biały na hover */
 }
-
-/* .chat-container {
+/* 
+.chat-container {
   display: flex;
   flex-direction: column;
   max-width: 75%;
   min-width: 400px;
   margin: 5px;
-} */
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%; /* Domyślnie zajmuje 100% szerokości */
-  max-width: 75%; /* Maksymalnie 75% dostępnego miejsca */
-  min-width: 400px; /* Minimalna szerokość to 400px */
-  margin: 5px;
-  box-sizing: border-box; /* Zapewnia poprawne liczenie marginesów i paddingów */
-}
-
-@media (max-width: 400px) {
-  .chat-container {
-    width: 100%; /* Na mniejszych ekranach pełna szerokość */
-    min-width: 0; /* Wyłącz minimalną szerokość, gdy przestrzeń jest ograniczona */
-  }
 }
 
 .chat-bubble {
@@ -1822,8 +1806,70 @@ color:#969696;
   bottom: 5px;
   margin-top: 5px;
   right: 10px;
+} */
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
+.chat-message {
+  display: flex;
+  gap: 10px;
+  align-items: center; /* Wyrównanie avatar + nick w pionie */
+}
+
+.chat-avatar {
+  flex-shrink: 0;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.chat-avatar img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.chat-nickname {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0; /* Usunięcie dodatkowego marginesu */
+  line-height: 1; /* Dopasowanie do wysokości avataru */
+  display: flex;
+  align-items: center; /* Wyrównanie do środka w pionie */
+}
+
+.chat-bubble {
+  max-width: 75%; /* Maksymalnie 75% szerokości */
+  width: fit-content; /* Dopasowanie do zawartości */
+  min-width: 0; /* Umożliwia mniejsze chmurki */
+  margin-top: 2px; /* Odstęp od avataru */
+}
+
+.chat-message-fill {
+  background-color: #0078fe;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 15px;
+  word-wrap: break-word;
+  display: inline-block;
+}
+
+.chat-timestamp {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: right;
+  margin-top: 1px;
+}
+
+@media (max-width: 400px) {
+  .chat-bubble {
+      max-width: 100%; /* Jeśli ekran jest mniejszy niż 400px, zajmuje 100% */
+  }
+}
 
 .file-upload-wrapper {
   width: 100%;
