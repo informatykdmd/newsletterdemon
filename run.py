@@ -1494,12 +1494,11 @@ def fetch_messages():
     messages = []
     for message in get_messages_data:
         for user_data in get_users_data:
-            if message[0] == user_data['username']:
-                ready_record = [message[0], message[1], message[2], user_data['avatar']]
-                messages.append(ready_record)
-                continue
-            if message[0] == 'aifa':
-                ready_record = [message[0], message[1], message[2], 'https://dmddomy.pl/images/team/aifa-1.jpg']
+            if message[0] == user_data['username'] or message[0] == 'aifa':
+                if message[0] != 'aifa':
+                    ready_record = [message[0], message[1], message[2], user_data['avatar']]
+                else:
+                    ready_record = [message[0], message[1], message[2], 'https://dmddomy.pl/images/team/aifa-1.jpg']
                 messages.append(ready_record)
                 continue
     return jsonify(messages)
