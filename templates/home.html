@@ -1051,27 +1051,48 @@
                                 .split('\n')                // Dzielimy na linie po `\n`
                                 .filter(line => line.trim()) // Filtrujemy puste linie (usuwamy białe znaki)
                                 .join('<br />');               // Łączymy ponownie z `<br>`
-
-                    chatBox.append(`
-                        <!-- Wiadomość chat -->
-                        <div class="chat-message">
-                            <div class="chat-avatar">
-                                <img src="${message[3]}" alt="Avatar">
-                            </div>
-                            <div class="chat-nickname">${message[0]}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="chat-bubble">
-                                    <div class="chat-message-fill">
-                                        ${formattedMessage}
+                        if (message[0] === loggedInUser) {
+                            chatBox.append(`
+                                <!-- Wiadomość chat -->
+                                <div class="chat-message-self">
+                                    <div class="chat-avatar-self">
+                                        <img src="${message[3]}" alt="Avatar">
                                     </div>
-                                    <div class="chat-timestamp text-end">${message[2]}</div>
+                                    <div class="chat-nickname-self">${message[0]}</div>
                                 </div>
-                            </div>
-                        </div>
-                    `);
-                    // chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-5">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0 fs-7"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="chat-bubble-self">
+                                            <div class="chat-message-fill-self">
+                                                ${formattedMessage}
+                                            </div>
+                                            <div class="chat-timestamp text-end">${message[2]}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        } else {
+                            chatBox.append(`
+                                <!-- Wiadomość chat -->
+                                <div class="chat-message">
+                                    <div class="chat-avatar">
+                                        <img src="${message[3]}" alt="Avatar">
+                                    </div>
+                                    <div class="chat-nickname">${message[0]}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="chat-bubble">
+                                            <div class="chat-message-fill">
+                                                ${formattedMessage}
+                                            </div>
+                                            <div class="chat-timestamp text-end">${message[2]}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                    }
+                        // chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-5">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0 fs-7"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
                     });
                     if (autoScrollEnabled) {
                         // Przewijanie na dół po załadowaniu wiadomości

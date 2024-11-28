@@ -1814,6 +1814,60 @@ color:#969696;
 }
 
 
+.chat-message-self {
+  display: flex;
+  gap: 10px;
+  align-items: center; 
+}
+
+.chat-avatar-self {
+  flex-shrink: 0;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.chat-avatar-self img {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.chat-nickname-self {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0; 
+  line-height: 1; 
+  display: flex;
+  align-items: center; 
+}
+
+.chat-bubble-self {
+  max-width: 100%; 
+  width: fit-content; 
+  min-width: 0; 
+  margin-top: 2px;
+  margin-left: 25%;
+}
+
+.chat-message-fill-self {
+  background-color: #09ff00;
+  color: white;
+  font-size: 0.9rem;
+  padding: 10px 15px;
+  border-radius: 15px;
+  word-wrap: break-word;
+  display: inline-block;
+}
+
+@media (max-width: 400px) {
+  .chat-bubble-self {
+      max-width: 100%; 
+      margin-left: 0;
+  }
+}
+
+
 
 .file-upload-wrapper {
   width: 100%;
