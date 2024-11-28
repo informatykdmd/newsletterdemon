@@ -1763,15 +1763,15 @@ color:#969696;
 
 .chat-avatar {
   flex-shrink: 0;
-  width: 20px;
+  width: 40px;
   display: flex;
   justify-content: center;
 }
 
 .chat-avatar img {
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
 }
 
 .chat-nickname {
@@ -1823,15 +1823,15 @@ color:#969696;
 
 .chat-avatar-self {
   flex-shrink: 0;
-  width: 20px;
+  width: 40px;
   display: flex;
   justify-content: center;
 }
 
 .chat-avatar-self img {
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
 }
 
 .chat-nickname-self {
