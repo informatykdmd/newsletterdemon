@@ -1865,7 +1865,7 @@ color:#969696;
   color: #666;
   text-align: left;
   margin-top: 1px;
-  display: flex;
+  display: block;
 }
 
 @media (max-width: 400px) {
