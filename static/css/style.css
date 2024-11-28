@@ -1818,6 +1818,7 @@ color:#969696;
   display: flex;
   gap: 10px;
   align-items: center; 
+  justify-content: flex-end;
 }
 
 .chat-avatar-self {
