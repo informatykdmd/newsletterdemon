@@ -1860,6 +1860,14 @@ color:#969696;
   display: inline-block;
 }
 
+.chat-timestamp-self {
+  font-size: 0.6rem;
+  color: #666;
+  text-align: right;
+  margin-top: 1px;
+  display: flex;
+}
+
 @media (max-width: 400px) {
   .chat-bubble-self {
       max-width: 100%; 
