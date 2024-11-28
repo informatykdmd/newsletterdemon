@@ -1844,7 +1844,7 @@ color:#969696;
 }
 
 .chat-bubble-self {
-  max-width: 100%; 
+  max-width: 75%; 
   width: fit-content; 
   min-width: 0; 
   margin-top: 2px;
