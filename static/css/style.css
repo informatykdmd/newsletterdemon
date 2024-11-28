@@ -1863,7 +1863,7 @@ color:#969696;
 .chat-timestamp-self {
   font-size: 0.6rem;
   color: #666;
-  text-align: right;
+  text-align: left;
   margin-top: 1px;
   display: flex;
 }
