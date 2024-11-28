@@ -2350,7 +2350,7 @@ def save_new_user():
                 subject = "Czas się aktywować – Witaj w DMD!"
                 html_body = f"""
                         <html><body>
-                        <h1>Szanowny {NAME}, witamy w firmie DMD!</h1>
+                        <h1>Szanowny(a) {NAME}, witamy w firmie DMD!</h1>
                         <p>Ta wiadomość została wygenerowana automatycznie i zawiera ważne informacje dotyczące Twojego dostępu do systemów informatycznych firmy DMD.</p>
                         <p>Jesteśmy przekonani, że Twoje doświadczenie i zaangażowanie wniosą znaczący wkład w nasz zespół. Poniżej znajdziesz dane dostępowe, które umożliwią Ci logowanie do naszego systemu.</p>
                         <p><strong>Dane do logowania:</strong></p>
@@ -2359,7 +2359,7 @@ def save_new_user():
                             <li>Hasło: {TEXT_PASSWORD}</li>
                         </ul>
                         <p>Zachęcamy do zmiany hasła przy pierwszym logowaniu w celu zapewnienia bezpieczeństwa danych. Jeśli nie planujesz w najbliższym czasie korzystać z systemu, możesz zignorować tę wiadomość.</p>
-                        <p>W razie pytań lub potrzeby wsparcia, nasz zespół IT jest do Twojej dyspozycji. Skontaktuj się z nami wysyłając wiadomość na adres: support@dmd.com</p>
+                        <p>W razie pytań lub potrzeby wsparcia, nasz zespół IT jest do Twojej dyspozycji. Skontaktuj się z nami wysyłając wiadomość na adres: informatyk@dmdbudownictwo.pl</p>
                         <p>Życzymy Ci owocnej współpracy i sukcesów w realizacji powierzonych zadań.</p>
                         <p>Z wyrazami szacunku,<br/>Zespół DMD</p>
                         </body></html>
