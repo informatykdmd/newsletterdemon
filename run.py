@@ -2357,6 +2357,7 @@ def save_new_user():
                         <ul>
                             <li>Login: {LOGIN}</li>
                             <li>Hasło: {TEXT_PASSWORD}</li>
+                            <li>URL: <a href="http://adminpanel.dmddomy.pl" target="_blank">adminpanel.dmddomy.pl</a></li>
                         </ul>
                         <p>Zachęcamy do zmiany hasła przy pierwszym logowaniu w celu zapewnienia bezpieczeństwa danych. Jeśli nie planujesz w najbliższym czasie korzystać z systemu, możesz zignorować tę wiadomość.</p>
                         <p>W razie pytań lub potrzeby wsparcia, nasz zespół IT jest do Twojej dyspozycji. Skontaktuj się z nami wysyłając wiadomość na adres: informatyk@dmdbudownictwo.pl</p>
