@@ -720,13 +720,10 @@ def main():
                         # Jeżeli status jest 1 lub 0 -> Zmieniamy status na 6 (Trwa proces usuwania ogłoszenia)
                         query_update_status = f"UPDATE {table_name} SET status = %s, active_task = %s WHERE id = %s"
                         if status in [0, 1]:
-                            if table_name == 'ogloszenia_otodom':
+                            if table_name == 'ogloszenia_otodom' or status == 0:
                                 values = (6, 0, record_id)
                             else:
-                                if status == 0:
-                                    values = (6, 0, record_id)
-                                else:
-                                    values = (7, 0, record_id)
+                                values = (7, 0, record_id)
                             try:
                                 insert_to_database(query_update_status, values)  # Zakładam, że insert_to_database obsługuje także update
                                 handle_error(f"Wygaszanie ogłoszenia o ID {record_id} w tabeli {table_name}.\n")
