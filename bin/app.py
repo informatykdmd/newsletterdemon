@@ -724,9 +724,9 @@ def main():
                                 values = (6, 0, record_id)
                             else:
                                 if status == 0:
-                                    values = (7, 0, record_id)
-                                else:
                                     values = (6, 0, record_id)
+                                else:
+                                    values = (7, 0, record_id)
                             try:
                                 insert_to_database(query_update_status, values)  # Zakładam, że insert_to_database obsługuje także update
                                 handle_error(f"Wygaszanie ogłoszenia o ID {record_id} w tabeli {table_name}.\n")
