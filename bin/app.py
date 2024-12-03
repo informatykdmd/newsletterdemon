@@ -718,8 +718,20 @@ def main():
                             continue
 
                         # Jeżeli status jest 1 lub 0 -> Zmieniamy status na 6 (Trwa proces usuwania ogłoszenia)
+                        query_update_status = f"UPDATE {table_name} SET status = %s, active_task = %s WHERE id = %s"
                         if status in [0, 1]:
-                            query_update_status = f"UPDATE {table_name} SET status = %s, active_task = %s WHERE id = %s"
+                            if table_name == 'ogloszenia_otodom':
+                                values = (6, 0, record_id)
+                            else:
+                                values = (5, 0, record_id)
+                            try:
+                                insert_to_database(query_update_status, values)  # Zakładam, że insert_to_database obsługuje także update
+                                handle_error(f"Wygaszanie ogłoszenia o ID {record_id} w tabeli {table_name}.\n")
+                            except Exception as e:
+                                handle_error(f"Błąd przy aktualizacji rekordu o ID {record_id} w tabeli {table_name}: {e}.\n")
+                        
+                        # Jeżeli status jest 1 lub 0 -> Zmieniamy status na 6 (Trwa proces usuwania ogłoszenia)
+                        if status == 5 and table_name != 'ogloszenia_otodom':
                             values = (6, 0, record_id)
                             try:
                                 insert_to_database(query_update_status, values)  # Zakładam, że insert_to_database obsługuje także update
