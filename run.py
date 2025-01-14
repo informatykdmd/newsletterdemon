@@ -7643,6 +7643,7 @@ def public_on_adresowo():
             tytul_ogloszenia = picked_offer['Tytul']
             powierzchnia = picked_offer['Metraz']
             cena = picked_offer['Cena']
+            rynek = picked_offer.get('Rynek') or 'wtórny'
 
             osoba_kontaktowa = session['user_data']['name']
             nr_telefonu = picked_offer['TelefonKontaktowy']
@@ -7753,17 +7754,18 @@ def public_on_adresowo():
                         INSERT INTO ogloszenia_adresowo
                             (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                             opis_ogloszenia, liczba_pieter, pow_dzialki, ulica, powierzchnia, rok_budowy, 
-                            stan, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, 
+                            stan, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, rynek,
                             status)
                         VALUES 
-                            (%s, %s, %s, %s, %s, %s,
+                            (
                             %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, 
+                            %s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, %s, %s, 
                             %s);
                     '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                         opis_ogloszenia, liczba_pieter, pow_dzialki, ulica, powierzchnia, rok_budowy, 
-                        stan, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu,
+                        stan, typ_budynku, zdjecia_string, osoba_kontaktowa, nr_telefonu, rynek,
                         4)
                 if msq.insert_to_database(zapytanie_sql, dane):
                     msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
@@ -7823,19 +7825,20 @@ def public_on_adresowo():
                             (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                             opis_ogloszenia, liczba_pokoi, poziom, liczba_pieter, ulica, powierzchnia, 
                             rok_budowy, winda, stan, typ_budynku, forma_wlasnosci, zdjecia_string, 
-                            osoba_kontaktowa, nr_telefonu, 
+                            osoba_kontaktowa, nr_telefonu, rynek,
                             status)
                         VALUES 
-                            (%s, %s, %s, %s, %s, %s,
+                            (
                             %s, %s, %s, %s, %s, %s,
                             %s, %s, %s, %s, %s, %s,
-                            %s, %s,
+                            %s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, 
                             %s);
                     '''
                 dane = (rodzaj_ogloszenia, id_ogloszenia, tytul_ogloszenia, kategoria_ogloszenia, region, cena,
                         opis_ogloszenia, liczba_pokoi, poziom, liczba_pieter, ulica, powierzchnia, 
                         rok_budowy, winda, stan, typ_budynku, forma_wlasnosci, zdjecia_string, 
-                        osoba_kontaktowa, nr_telefonu, 
+                        osoba_kontaktowa, nr_telefonu, rynek,
                         4)
                 if msq.insert_to_database(zapytanie_sql, dane):
                     msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na adresowo przez {session["username"]}!', log_path=logFileName)
