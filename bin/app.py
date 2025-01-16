@@ -12,6 +12,7 @@ from appslib import handle_error
 from fbwaitninglist import give_me_curently_tasks
 from ExpiryMonitor import check_all_tables_for_expiry, insert_to_database, delete_row_from_database
 from znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
+from VisibilityTaskManager import create_visibility_tasks
 
 def get_messages(flag='all'):
     # WHERE status != 1
@@ -661,6 +662,7 @@ def main():
                         addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
 
                 elif name == 'checkpoint_60s':
+                    create_visibility_tasks()
                     """ 
                         **********************************************************
                         ****************** CHECKPOINT 60 SECONDS ***************** 
@@ -820,6 +822,22 @@ def main():
                                     (%s, %s, %s)""",
                                 (ready_string, bot, 4)
                             )
+
+                    ################################################################
+                    # Weryfikacja statusu ogłoszeń nieruchomości na:
+                    # - otodom, allegro, lento, adresowo
+                    ################################################################
+                    try:
+                        create_visibility_tasks()
+                        print("Zadania weryfikacji widoczności ogłoszeń zostały utworzone.")
+                        handle_error(f"Zadania weryfikacji widoczności ogłoszeń zostały utworzone.\n")
+                        addDataLogs(f'Zadania weryfikacji widoczności ogłoszeń zostały utworzone.', 'success')
+                    except Exception as e:
+                        print(f"Błąd podczas tworzenia zadań weryfikacji: {e}")
+                        handle_error(f"Błąd podczas tworzenia zadań weryfikacji: {e}\n")
+                        addDataLogs(f'Błąd podczas tworzenia zadań weryfikacji: {e}', 'danger')
+                    finally:
+                        print("Proces weryfikacji zadań zakończony.")
 
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
