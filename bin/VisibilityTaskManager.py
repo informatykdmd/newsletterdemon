@@ -1,5 +1,7 @@
 from connectAndQuery import connect_to_database, insert_to_database
 from appslib import handle_error
+import uuid
+from datetime import datetime
 
 def get_all_records_for_table(table_name: str, column_name: str) -> list:
     """
@@ -22,16 +24,19 @@ def create_task_for_portal(portal_name: str, records: list):
     portal_name: nazwa portalu (np. "lento", "otodom")
     records: lista krotek z rekordami [(id, id_ogloszenia, status), ...]
     """
+    # Generujemy unikalne id_zadania
+    task_id = f"{portal_name}_{datetime.now().strftime('%Y%m%d%H%M%S')}_{uuid.uuid4().hex[:8]}"
+
     # Konwertujemy listę na string
     task_data = ";".join([f"{record[0]}|{record[1]}|{record[2]}" for record in records])
 
     query = """
-        INSERT INTO tasks_check_visibility (portal_nazwa, dane_wykonawcze, status)
-        VALUES (%s, %s, 1)
+        INSERT INTO tasks_check_visibility (id_zadania, portal_nazwa, dane_wykonawcze, status)
+        VALUES (%s, %s, %s, 1)
     """
     try:
-        insert_to_database(query, (portal_name, task_data))
-        print(f"Zadanie dla portalu {portal_name} utworzone.")
+        insert_to_database(query, (task_id, portal_name, task_data))
+        print(f"Zadanie dla portalu {portal_name} utworzone (ID zadania: {task_id}).")
     except Exception as e:
         handle_error(f"Błąd przy tworzeniu zadania dla portalu {portal_name}: {e}")
 

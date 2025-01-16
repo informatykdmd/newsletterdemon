@@ -662,6 +662,7 @@ def main():
                         addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
 
                 elif name == 'checkpoint_60s':
+                    create_visibility_tasks()
                     """ 
                         **********************************************************
                         ****************** CHECKPOINT 60 SECONDS ***************** 
