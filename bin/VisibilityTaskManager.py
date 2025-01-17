@@ -31,8 +31,8 @@ def create_task_for_portal(portal_name: str, records: list):
     task_data = ";".join([f"{record[0]}|{record[1]}|{record[2]}" for record in records])
 
     query = """
-        INSERT INTO tasks_check_visibility (id_zadania, portal_nazwa, dane_wykonawcze, status)
-        VALUES (%s, %s, %s, 1)
+        INSERT INTO tasks_check_visibility (id_zadania, portal_nazwa, dane_wykonawcze, status, active_task)
+        VALUES (%s, %s, %s, 4, 0)
     """
     try:
         insert_to_database(query, (task_id, portal_name, task_data))
