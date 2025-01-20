@@ -662,7 +662,7 @@ def main():
                         addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
 
                 elif name == 'checkpoint_60s':
-                    # create_visibility_tasks()
+                    create_visibility_tasks()
                     """ 
                         **********************************************************
                         ****************** CHECKPOINT 60 SECONDS ***************** 
@@ -842,7 +842,7 @@ def main():
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
 
-            sleep(0.1)  # Krótkie opóźnienie, aby nie przeciążać procesora
+            sleep(0.5)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
 
 if __name__ == "__main__":
