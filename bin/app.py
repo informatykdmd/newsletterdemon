@@ -808,9 +808,7 @@ def main():
                         print(f"Błąd podczas tworzenia zadań weryfikacji: {e}")
                         handle_error(f"Błąd podczas tworzenia zadań weryfikacji: {e}\n")
                         addDataLogs(f'Błąd podczas tworzenia zadań weryfikacji: {e}', 'danger')
-                    finally:
-                        print("Proces weryfikacji zadań zakończony.")
-                        
+
                 elif name == 'checkpoint_24h': 
                     """ 
                         **********************************************************
