@@ -559,6 +559,7 @@ def main():
         "checkpoint_60s": 60,
         "checkpoint_180s": 180,
         "checkpoint_300s": 300,
+        "checkpoint_12h": 43000,
         "checkpoint_24h": 85000
     }
     # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
@@ -662,7 +663,7 @@ def main():
                         addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
 
                 elif name == 'checkpoint_60s':
-                    create_visibility_tasks()
+                    # create_visibility_tasks()
                     """ 
                         **********************************************************
                         ****************** CHECKPOINT 60 SECONDS ***************** 
@@ -788,7 +789,28 @@ def main():
                         handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
                         # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
                         addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
-                
+                elif name == 'checkpoint_12h': 
+                    """ 
+                        **********************************************************
+                        ******************   CHECKPOINT 12 HOURS  **************** 
+                        **********************************************************
+                    """
+                    ################################################################
+                    # Weryfikacja statusu ogłoszeń nieruchomości na:
+                    # - otodom, allegro, lento, adresowo
+                    ################################################################
+                    try:
+                        create_visibility_tasks()
+                        print("Zadania weryfikacji widoczności ogłoszeń zostały utworzone.")
+                        handle_error(f"Zadania weryfikacji widoczności ogłoszeń zostały utworzone.\n")
+                        addDataLogs(f'Zadania weryfikacji widoczności ogłoszeń zostały utworzone.', 'success')
+                    except Exception as e:
+                        print(f"Błąd podczas tworzenia zadań weryfikacji: {e}")
+                        handle_error(f"Błąd podczas tworzenia zadań weryfikacji: {e}\n")
+                        addDataLogs(f'Błąd podczas tworzenia zadań weryfikacji: {e}', 'danger')
+                    finally:
+                        print("Proces weryfikacji zadań zakończony.")
+                        
                 elif name == 'checkpoint_24h': 
                     """ 
                         **********************************************************
@@ -823,21 +845,7 @@ def main():
                                 (ready_string, bot, 4)
                             )
 
-                    ################################################################
-                    # Weryfikacja statusu ogłoszeń nieruchomości na:
-                    # - otodom, allegro, lento, adresowo
-                    ################################################################
-                    try:
-                        create_visibility_tasks()
-                        print("Zadania weryfikacji widoczności ogłoszeń zostały utworzone.")
-                        handle_error(f"Zadania weryfikacji widoczności ogłoszeń zostały utworzone.\n")
-                        addDataLogs(f'Zadania weryfikacji widoczności ogłoszeń zostały utworzone.', 'success')
-                    except Exception as e:
-                        print(f"Błąd podczas tworzenia zadań weryfikacji: {e}")
-                        handle_error(f"Błąd podczas tworzenia zadań weryfikacji: {e}\n")
-                        addDataLogs(f'Błąd podczas tworzenia zadań weryfikacji: {e}', 'danger')
-                    finally:
-                        print("Proces weryfikacji zadań zakończony.")
+                    
 
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
