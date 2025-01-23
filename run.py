@@ -204,6 +204,42 @@ def ustawienia(prompt: str):
                 else:
                     msq.handle_error(f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}', log_path=logFileName)
                     return f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}'
+            
+            elif prompt.startswith('pokazKategorie()'):
+                """
+                    Wyświetlanie Zaprogramowanych kategorii
+                """
+                techSet = set()
+                for k,v in dane_getMorphy.items():
+                    if v == kategoria_podana_w_komendzie:
+                        techSet.add(v)
+                
+                ready_export_string ='Dostępne Kategorie\n\n'
+                for sItem in techSet:
+                    ready_export_string += f'{sItem}\n'
+
+                if ready_export_string:
+                    msq.handle_error(f'Wyświetlono listę kategorii: {ready_export_string}', log_path=logFileName)
+                    return ready_export_string
+                else:
+                    msq.handle_error(f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}', log_path=logFileName)
+                    return f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}'
+                
+            elif prompt.startswith('pomoc()'):
+                """
+                    Wyświetlanie Zaprogramowanych opcji
+                """
+                
+                
+                ready_export_string = f'''Dostępne Opcje\n\npomoc() - Wyświetlanie Zaprogramowanych opcji \npokazKomendy(argument) argument to nazwa kategorii np. pokazKomendy(harmonogram kampanii)\npokazKategorie() - Wyświetlanie Zaprogramowanych kategorii'''
+
+
+                if ready_export_string:
+                    msq.handle_error(f'Wyświetlono listę kategorii: {ready_export_string}', log_path=logFileName)
+                    return ready_export_string
+                else:
+                    msq.handle_error(f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}', log_path=logFileName)
+                    return f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}'
         return 'Nieznane polecenie: ' + prompt
 
 
