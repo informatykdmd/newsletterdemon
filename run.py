@@ -1586,6 +1586,25 @@ def send_chat_message():
             else:
                 msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
                 return jsonify({"status": "error"}), 500
+        
+        elif content == '@pomoc':
+            """
+            ############################################################
+            # Aktywacja trybu komendy @pomoc.
+            ############################################################
+            """
+            command_mode_users[username] = {'time': time.time(), 'command': 'pomoc'}
+            msq.handle_error(f'Użytkownik {username} aktywował komendę @pomoc.', log_path=logFileName)
+            
+            # Zapisujemy wiadomość o aktywacji ustawień do chatu
+            preparedHelpMessage = f'''Użytkownik {username} aktywował komendę @pomoc.\n\n@pomoc - Dostępne komedy\n@ustawienia - Ustawienia SI\n@generator - Dyrektywy SI\n@end - Zakończenie wiersza poleceń'''
+            new_message = save_chat_message(user_name=username, content=preparedHelpMessage, status=1)
+            if new_message:
+                del command_mode_users[username]
+                return jsonify({"status": "command_ustawienia_activated"}), 200
+            else:
+                msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
+                return jsonify({"status": "error"}), 500
 
     # Jeśli użytkownik jest w trybie wiersza poleceń, przetwarzamy jego aktywną komendę
     if username in command_mode_users:
@@ -1628,7 +1647,6 @@ def send_chat_message():
                 else:
                     msq.handle_error(f'Błąd wysyłania wiadomości z wiersza poleceń do chatu.', log_path=logFileName)
                     return jsonify({"status": "error"}), 500
-                
 
         # Sprawdzenie, czy wynik komendy to `@end`, co oznacza zakończenie trybu wiersza poleceń
         if result == "@end":
