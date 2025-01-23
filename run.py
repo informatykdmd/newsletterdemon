@@ -229,7 +229,7 @@ def ustawienia(prompt: str):
                 """
                 
                 
-                ready_export_string = f'''Dostępne Opcje\n\npomoc() - Wyświetlanie Zaprogramowanych opcji \npokazKomendy(argument) argument to nazwa kategorii np. pokazKomendy(harmonogram kampanii)\npokazKategorie() - Wyświetlanie Zaprogramowanych kategorii \nresetbot() - Restart chat bota!'''
+                ready_export_string = f'''Dostępne Opcje modułu ustawień SI\n\npomoc() - Wyświetlanie Zaprogramowanych opcji \npokazKomendy(argument) argument to nazwa kategorii np. pokazKomendy(harmonogram kampanii)\npokazKategorie() - Wyświetlanie Zaprogramowanych kategorii \nresetbot() - Restart chat bota!'''
 
 
                 if ready_export_string:
@@ -1631,7 +1631,7 @@ def send_chat_message():
             msq.handle_error(f'Użytkownik {username} aktywował komendę @pomoc.', log_path=logFileName)
             
             # Zapisujemy wiadomość o aktywacji ustawień do chatu
-            preparedHelpMessage = f'''Użytkownik {username} aktywował komendę @pomoc.\n\n@pomoc - Dostępne komedy\n@ustawienia - Ustawienia SI\n@generator - Dyrektywy SI\n@end - Zakończenie wiersza poleceń'''
+            preparedHelpMessage = f'''Użytkownik {username} aktywował komendę @pomoc.\n\n@pomoc - Dostępne komendy\n@ustawienia - Ustawienia SI\n@generator - Dyrektywy SI\n@end - Zakończenie wiersza poleceń'''
             new_message = save_chat_message(user_name=username, content=preparedHelpMessage, status=1)
             if new_message:
                 del command_mode_users[username]
