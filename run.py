@@ -210,9 +210,7 @@ def ustawienia(prompt: str):
                     Wyświetlanie Zaprogramowanych kategorii
                 """
                 techSet = set()
-                for k,v in dane_getMorphy.items():
-                    if v == kategoria_podana_w_komendzie:
-                        techSet.add(v)
+                for v in dane_getMorphy.values(): techSet.add(v)
                 
                 ready_export_string ='Dostępne Kategorie\n\n'
                 for sItem in techSet:
@@ -231,7 +229,7 @@ def ustawienia(prompt: str):
                 """
                 
                 
-                ready_export_string = f'''Dostępne Opcje\n\npomoc() - Wyświetlanie Zaprogramowanych opcji \npokazKomendy(argument) argument to nazwa kategorii np. pokazKomendy(harmonogram kampanii)\npokazKategorie() - Wyświetlanie Zaprogramowanych kategorii'''
+                ready_export_string = f'''Dostępne Opcje\n\npomoc() - Wyświetlanie Zaprogramowanych opcji \npokazKomendy(argument) argument to nazwa kategorii np. pokazKomendy(harmonogram kampanii)\npokazKategorie() - Wyświetlanie Zaprogramowanych kategorii \nresetbot() - Restart chat bota!'''
 
 
                 if ready_export_string:
