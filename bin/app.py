@@ -553,7 +553,7 @@ def make_fbgroups_task(data):
 def main():
     # Checkpointy i ich interwały w sekundach
     checkpoints = {
-        "checkpoint_2s": 2,
+        "checkpoint_5s": 5,
         "checkpoint_15s": 15,
         "checkpoint_30s": 30,
         "checkpoint_60s": 60,
@@ -572,13 +572,13 @@ def main():
             # print(f"last_run_times[{name}] (type: {type(last_run_times[name])}) = {last_run_times[name]}")
             if current_time - last_run_times[name] >= interval:
                 # Akcje dla różnych checkpointów
-                if name == 'checkpoint_2s':
+                if name == 'checkpoint_5s':
                     """ 
                         **********************************************************
                         ****************** CHECKPOINT 2 SECONDS ****************** 
                         **********************************************************
                     """
-                    print("CHECKPOINT 2 SECONDS")
+                    print("CHECKPOINT 5 SECONDS")
                     ################################################################
                     # komentowanie chata przez serwer automatów
                     ################################################################
@@ -848,7 +848,7 @@ def main():
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
 
-            sleep(0.5)  # Krótkie opóźnienie, aby nie przeciążać procesora
+            sleep(1)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
 
 if __name__ == "__main__":
