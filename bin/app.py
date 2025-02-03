@@ -665,15 +665,7 @@ def main():
                         addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
 
                 elif name == 'checkpoint_60s':
-                    try:
-                        create_visibility_tasks()
-                        print("Zadania weryfikacji widoczności ogłoszeń zostały utworzone.")
-                        handle_error(f"Zadania weryfikacji widoczności ogłoszeń zostały utworzone.\n")
-                        addDataLogs(f'Zadania weryfikacji widoczności ogłoszeń zostały utworzone.', 'success')
-                    except Exception as e:
-                        print(f"Błąd podczas tworzenia zadań weryfikacji: {e}")
-                        handle_error(f"Błąd podczas tworzenia zadań weryfikacji: {e}\n")
-                        addDataLogs(f'Błąd podczas tworzenia zadań weryfikacji: {e}', 'danger')
+                    
                     """ 
                         **********************************************************
                         ****************** CHECKPOINT 60 SECONDS ***************** 
