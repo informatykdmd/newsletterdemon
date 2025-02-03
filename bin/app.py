@@ -625,6 +625,7 @@ def main():
                         ****************** CHECKPOINT 15 SECONDS ***************** 
                         **********************************************************
                     """
+                    print("CHECKPOINT 15 SECONDS")
                      ################################################################
                     # Obsługa automatycznej publikacji ogłoszeń na gupach FACEBOOKA
                     # TWORZENIE ZADANIA DLA AUTOMATU
@@ -642,7 +643,7 @@ def main():
                         **********************************************************
                     """
 
-
+                    print("CHECKPOINT 30 SECONDS")
                     ################################################################
                     # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
                     ################################################################
@@ -670,6 +671,7 @@ def main():
                         ****************** CHECKPOINT 60 SECONDS ***************** 
                         **********************************************************
                     """
+                    print("CHECKPOINT 60 SECONDS")
                     ################################################################
                     # Obsługa automatycznego wysyłania logów dla modelu SI
                     ################################################################
@@ -705,6 +707,7 @@ def main():
                         ****************** CHECKPOINT 180 SECONDS **************** 
                         **********************************************************
                     """
+                    print("CHECKPOINT 180 SECONDS")
                     ################################################################
                     # Obsługa automatycznego wygaszania zakończonych ogłoszeń na 
                     # ALLEGRO OTODOM LENTO
@@ -750,6 +753,7 @@ def main():
                         ****************** CHECKPOINT 300 SECONDS **************** 
                         **********************************************************
                     """
+                    print("CHECKPOINT 300 SECONDS")
                     ################################################################
                     # Wysyłka newslettera do aktywnych użytkowników według planu wysyłki
                     ################################################################
@@ -796,6 +800,7 @@ def main():
                         ******************   CHECKPOINT 12 HOURS  **************** 
                         **********************************************************
                     """
+                    print("CHECKPOINT 12 Hours")
                     ################################################################
                     # Weryfikacja statusu ogłoszeń nieruchomości na:
                     # - otodom, allegro, lento, adresowo
@@ -816,6 +821,7 @@ def main():
                         ******************   CHECKPOINT 24 HOURS  **************** 
                         **********************************************************
                     """
+                    print("CHECKPOINT 24 Hours")
                     ################################################################
                     # Automatyczne zbieranie statystyk dla FB-GROUPS
                     ################################################################
@@ -848,7 +854,7 @@ def main():
                 
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
-                
+
             # 🛑 **Efektywny sposób na oszczędzenie CPU**
             sleep(3)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
