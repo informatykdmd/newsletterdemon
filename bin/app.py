@@ -564,7 +564,8 @@ def main():
     }
     # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
     last_run_times = {name: time() for name in checkpoints.keys()}
-    for _ in range(int(time())):
+    # for _ in range(int(time())):
+    while True:
         current_time = time()  # Aktualny czas
         for name, interval in checkpoints.items():
             # print(f"Checking {name}:")
@@ -844,11 +845,12 @@ def main():
                             )
 
                     
-
+                
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
-
-            sleep(1)  # Krótkie opóźnienie, aby nie przeciążać procesora
+                
+            # 🛑 **Efektywny sposób na oszczędzenie CPU**
+            sleep(3)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
 
 if __name__ == "__main__":
