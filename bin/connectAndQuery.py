@@ -1,106 +1,82 @@
 import mysql.connector
 from config_utils import DBDATA as DB
 from appslib import handle_error
-def connect_to_database(queryA, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):
-    """Łączy się z bazą danych i zwraca List"""
-    try:
-        polaczenie_DB = mysql.connector.connect(
-            user=userA,
-            password=passwordA,
-            host=hostA,
-            database=databaseA)
-        cursor = polaczenie_DB.cursor()
-        query = queryA # 'SELECT id, user, haslo, created FROM users_main'
 
-        cursor.execute(query)
-        export_list = []
-        for data in cursor:
-            export_list.append(data)
+class Database:
+    """Klasa obsługująca stałe połączenie z MySQL"""
 
-        polaczenie_DB.commit()
-        polaczenie_DB.close()
-    except Exception as e:
-        handle_error(e)
-    return export_list
+    def __init__(self):
+        """Inicjalizacja połączenia"""
+        self.db = None
+        self.cursor = None
+        self.connect()
 
-def safe_connect_to_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):
-    """Łączy się z bazą danych i wykonuje podane zapytanie.
-    
-    Args:
-        queryA (str): Zapytanie SQL do wykonania.
-        values (tuple): Krotka wartości do zapytania (dla zapytań parametryzowanych).
-        user (str): Nazwa użytkownika bazy danych.
-        password (str): Hasło użytkownika bazy danych.
-        host (str): Host bazy danych.
-        database (str): Nazwa bazy danych.
-    
-    Returns:
-        List: Lista wyników zapytania (pusta lista, jeśli zapytanie nie zwraca danych).
-    """
-    export_list = []
-    polaczenie_DB = None
-    try:
-        polaczenie_DB = mysql.connector.connect(
-            user=userA,
-            password=passwordA,
-            host=hostA,
-            database=databaseA)
-        cursor = polaczenie_DB.cursor()
-        query = queryA  # 'DELETE FROM twoja_tabela WHERE kolumna1 = %s AND kolumna2 = %s AND kolumna_daty = %s;'
-        values = queryB  # ("value1", "value2", datetime_value)
-        
-        cursor.execute(query, values)
+    def connect(self):
+        """Tworzy połączenie z bazą danych"""
+        try:
+            self.db = mysql.connector.connect(
+                user=DB['user'],
+                password=DB['pass'],
+                host=DB['host'],
+                database=DB['base'],
+                autocommit=True  # Automatyczne commitowanie operacji
+            )
+            self.cursor = self.db.cursor(buffered=True)
+            print("✅ Połączenie z bazą danych MySQL zostało nawiązane.")
+        except Exception as e:
+            handle_error(e, log_path='./logs/errors.log')
 
-        export_list = []
-        for data in cursor:
-            export_list.append(data)
+    def execute_query(self, query, values=None):
+        """Wykonuje zapytanie SQL"""
+        try:
+            if not self.db.is_connected():
+                self.connect()
+            
+            self.cursor.execute(query, values)
+            return self.cursor.fetchall()
+        except Exception as e:
+            handle_error(e, log_path='./logs/errors.log')
+            return []
 
-        polaczenie_DB.commit()
-        polaczenie_DB.close()
-    except Exception as e:
-        handle_error(e, log_path='./logs/errors.log')
-    finally:
-        if polaczenie_DB.is_connected():
-            polaczenie_DB.close()  # Upewniamy się, że połączenie jest zawsze zamykane
+    def execute_commit(self, query, values=None):
+        """Wykonuje zapytanie SQL wymagające commit"""
+        try:
+            if not self.db.is_connected():
+                self.connect()
 
-    return export_list
+            self.cursor.execute(query, values)
+            self.db.commit()
+            return True
+        except Exception as e:
+            handle_error(e, log_path='./logs/errors.log')
+            return False
 
-def insert_to_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):
-    """Łączy się z bazą danych i robi insert"""
-    try:
-        polaczenie_DB = mysql.connector.connect(
-            user=userA,
-            password=passwordA,
-            host=hostA,
-            database=databaseA)
-        cursor = polaczenie_DB.cursor()
-        query = queryA  # 'INSERT INTO your_table (column1, column2, datetime_column) VALUES (%s, %s, %s)'
-        values = queryB  # ("value1", "value2", datetime_value)
-        
-        cursor.execute(query, values)
-        
-        polaczenie_DB.commit()
-        polaczenie_DB.close()
-    except Exception as e:
-        handle_error(e)
-        return False
-    return True
+    def close(self):
+        """Zamyka połączenie"""
+        if self.db.is_connected():
+            self.cursor.close()
+            self.db.close()
+            print("❌ Połączenie z MySQL zostało zamknięte.")
 
-def delete_row_from_database(queryA, queryB, userA=DB['user'], passwordA=DB['pass'], hostA=DB['host'], databaseA=DB['base']):
-    try:
-        polaczenie_DB = mysql.connector.connect(
-            user=userA,
-            password=passwordA,
-            host=hostA,
-            database=databaseA)
-        cursor = polaczenie_DB.cursor()
-        query = queryA  # 'DELETE FROM twoja_tabela WHERE kolumna1 = %s AND kolumna2 = %s AND kolumna_daty = %s;'
-        values = queryB  # ("value1", "value2", datetime_value)
-        
-        cursor.execute(query, values)
-        
-        polaczenie_DB.commit()
-        polaczenie_DB.close()
-    except Exception as e:
-        handle_error(e)
+# Tworzymy jedno stałe połączenie na cały czas działania aplikacji
+database = Database()
 
+# ==============================
+# ✅ POPRAWIONE FUNKCJE BAZY
+# ==============================
+
+def connect_to_database(queryA):
+    """Pobiera dane z bazy i zwraca listę wyników."""
+    return database.execute_query(queryA)
+
+def safe_connect_to_database(queryA, queryB):
+    """Wykonuje zapytanie SQL z parametrami i zwraca wynik."""
+    return database.execute_query(queryA, queryB)
+
+def insert_to_database(queryA, queryB):
+    """Wstawia dane do bazy."""
+    return database.execute_commit(queryA, queryB)
+
+def delete_row_from_database(queryA, queryB):
+    """Usuwa dane z bazy."""
+    return database.execute_commit(queryA, queryB)
