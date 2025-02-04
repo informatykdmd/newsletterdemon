@@ -564,7 +564,6 @@ def main():
     }
     # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
     last_run_times = {name: time() for name in checkpoints.keys()}
-    # for _ in range(int(time())):
     while True:
         current_time = time()  # Aktualny czas
         for name, interval in checkpoints.items():
