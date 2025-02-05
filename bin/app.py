@@ -570,7 +570,9 @@ def main():
             # print(f"Checking {name}:")
             # print(f"current_time (type: {type(current_time)}) = {current_time}")
             # print(f"last_run_times[{name}] (type: {type(last_run_times[name])}) = {last_run_times[name]}")
-            if current_time - last_run_times[name] >= interval:
+            elapsed_time = current_time - last_run_times[name]
+            print(f"🕒 {name}: elapsed_time={elapsed_time:.2f}s, potrzebne={interval}s")
+            if elapsed_time >= interval:
                 # Akcje dla różnych checkpointów
                 if name == 'checkpoint_5s':
                     """ 
