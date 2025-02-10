@@ -797,41 +797,6 @@ def main():
                         addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
 
 
-
-                    created_by_bot = ['dmddomy', 'fredgraf', 'michalformatyk']
-
-                    # Sprawdzenie, czy istnieją zadania ze statusem 7
-                    pending_tasks = prepare_shedule.connect_to_database(
-                        'SELECT id FROM fbgroups_stats_monitor WHERE status = 7 ORDER BY id LIMIT 1;'
-                    )
-
-                    if pending_tasks:
-                        # Jeśli istnieją, zmieniamy status pierwszego na 4
-                        task_id = pending_tasks[0][0]
-                        prepare_shedule.insert_to_database(
-                            'UPDATE fbgroups_stats_monitor SET status = 4 WHERE id = %s;', (task_id,)
-                        )
-                    else:
-                        # Jeśli nie ma zadań statusu 7, to przygotowujemy nowe zadania
-                        for bot in created_by_bot:
-                            # Pobranie ID i linków grup utworzonych przez bota
-                            id_group_links = prepare_shedule.connect_to_database(
-                                f'SELECT id, link FROM facebook_gropus WHERE created_by="{bot}";'
-                            )
-
-                            # Podział na paczki po maksymalnie 15 grup (ostatnia paczka może mieć mniej niż 15!)
-                            for i in range(0, len(id_group_links), 15):
-                                batch = id_group_links[i:i+15]  # Ostatnia paczka może mieć <15 elementów, ale nadal działa!
-                                ready_string = '-@-'.join(f"{id}-$-{link}" for id, link in batch)
-
-                                # Wstawienie nowego zadania do bazy z początkowym statusem 7
-                                prepare_shedule.insert_to_database(
-                                    """INSERT INTO fbgroups_stats_monitor
-                                        (id_and_links_string, created_by, status)
-                                    VALUES 
-                                        (%s, %s, %s)""",
-                                    (ready_string, bot, 7)
-                                )
                 elif name == 'checkpoint_12h': 
                     """ 
                         **********************************************************
@@ -899,31 +864,6 @@ def main():
                                     (ready_string, bot, 7)
                                 )
 
-                    # created_by_bot = ['dmddomy', 'fredgraf', 'michalformatyk']
-
-                    # for bot in created_by_bot:
-                    #     # Pobierz id i linki dla danego użytkownika
-                    #     id_group_links = prepare_shedule.connect_to_database(
-                    #         f'SELECT id, link FROM facebook_gropus WHERE created_by="{bot}";'
-                    #     )
-                        
-                    #     # Tworzenie ciągu ready_string
-                    #     ready_string = ''
-                    #     for id, link in id_group_links:
-                    #         ready_string += f"{id}-$-{link}-@-"
-                        
-                    #     # Usunięcie ostatniego "-@-" i wstawienie do bazy, jeśli ciąg nie jest pusty
-                    #     if ready_string:
-                    #         ready_string = ready_string[:-3]
-                    #         prepare_shedule.insert_to_database(
-                    #             """INSERT INTO fbgroups_stats_monitor
-                    #                 (id_and_links_string, created_by, status)
-                    #             VALUES 
-                    #                 (%s, %s, %s)""",
-                    #             (ready_string, bot, 4)
-                    #         )
-
-                    
                 
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
