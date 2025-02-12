@@ -678,7 +678,7 @@ def checkSocialSyncStatus(kind, id):
     try:
         return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors, kategoria_ogloszenia FROM ogloszenia_socialsync WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
     except IndexError:
-        return (None, None, None, None, None, None, None)
+        return (None, None, None, None, None, None)
 
 
 def takeOtodomResumeStatus(otodom_id):
@@ -4061,8 +4061,8 @@ def estateAdsRent():
         item['socialSync']['data_aktualizacji'] = socialSync_IDstatus[2]
         item['socialSync']['errors'] = socialSync_IDstatus[3]
         item['socialSync']['action_before_errors'] = socialSync_IDstatus[4]
-        item['socialSync']['region'] = socialSync_IDstatus[5]
-        item['socialSync']['kategoria_ogloszenia'] = socialSync_IDstatus[6]
+        item['socialSync']['kategoria_ogloszenia'] = socialSync_IDstatus[5]
+
 
 
         if item.get('socialSync') and item['socialSync'].get('status') is not None:
