@@ -107,7 +107,6 @@ def addDataLogs(message: str, category: str, file_name_json: str = "/home/johndo
     with open(file_name_json, "w") as file:
         json.dump(data_json, file, indent=4)
 
-
 # Struktura do przechowywania informacji o aktywnym trybie wiersza poleceń dla użytkowników
 command_mode_users = {}
 command_mode_timers = {}
@@ -675,9 +674,22 @@ def checkOtodomStatus(kind, id):
     except IndexError:
         return (None, None, None, None, None, None, None)
 
+def checkSocialSyncStatus(kind, id):
+    try:
+        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors, region, kategoria_ogloszenia FROM ogloszenia_socialsync WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
+    except IndexError:
+        return (None, None, None, None, None, None, None)
+
+
 def takeOtodomResumeStatus(otodom_id):
     try:
         return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_otodom WHERE id="{otodom_id}";')[0][0]
+    except IndexError:
+        return None
+
+def takeSocialSyncResumeStatus(socialSync_id):
+    try:
+        return msq.connect_to_database(f'SELECT action_before_errors FROM ogloszenia_socialsync WHERE id="{socialSync_id}";')[0][0]
     except IndexError:
         return None
 
@@ -1003,6 +1015,50 @@ def generator_specialOffert(lang='pl', status='aktywna'): # status='aktywna', 'n
         if status == 'wszystkie':
             specOffer.append(theme)
     return specOffer
+
+# Funkcja pomocnicza do pobrania oferty socialsync
+def get_offer(id_ogloszenia, rodzaj_ogloszenia):
+    generator = generator_rentOffert() if rodzaj_ogloszenia == 'r' else generator_sellOffert()
+    return next((offer for offer in generator if str(offer['ID']) == str(id_ogloszenia)), {})
+
+# Funkcja pomocnicza do generowania opisu ogłoszenia socialsync
+def generate_offer_description(picked_offer, rodzaj_ogloszenia):
+    zdjecia_string = '-@-'.join(picked_offer.get('Zdjecia', []))
+    kategoria_ogloszenia = picked_offer.get('TypNieruchomosci' if rodzaj_ogloszenia == 's' else 'TypDomu', None)
+
+    # Przygotowanie opisu
+    prepared_opis = "\n".join(
+        val if isinstance(val, str) else "\n".join(val)
+        for item in picked_offer.get('Opis', [])
+        for val in item.values()
+    )
+    prepared_opis = f"{prepared_opis}\n{picked_offer['InformacjeDodatkowe']}" if prepared_opis else picked_offer['InformacjeDodatkowe']
+
+    # Tworzenie dodatkowego opisu
+    extra_fields = {
+        "Tytuł ogłoszenia": picked_offer.get('Tytul', ""),
+        "Powierzchnia": f"{picked_offer.get('Metraz', 0)} m²" if picked_offer.get('Metraz') else "",
+        "Cena": f"{picked_offer.get('Cena', 0)} zł" if picked_offer.get('Cena') else "",
+        "Telefon kontaktowy": picked_offer.get('TelefonKontaktowy', None),
+        "Kategoria ogłoszenia": kategoria_ogloszenia,
+        "Rodzaj Zabudowy": picked_offer.get('RodzajZabudowy', ""),
+        "Technologia Budowy": picked_offer.get('TechBudowy', ""),
+        "Stan Wykończenia": picked_offer.get('StanWykonczenia', ""),
+        "Rok Budowy": f"{picked_offer['RokBudowy']} r." if picked_offer.get('RokBudowy', 0) else "",
+        "Numer KW": picked_offer.get('NumerKW', ""),
+        "Rynek": picked_offer.get('Rynek', ""),
+        "Przeznaczenie Lokalu": picked_offer.get('PrzeznaczenieLokalu', ""),
+        "Typ Domu": picked_offer.get('TypDomu', ""),
+        "Informacje dodatkowe": picked_offer.get('InformacjeDodatkowe', "")
+    }
+
+    # Składanie extra_opis, pomijając puste wartości
+    extra_opis = "\n\n".join(f"{key}:\n{value}" for key, value in extra_fields.items() if value)
+
+    # Łączenie całości
+    opis_ogloszenia = f"{prepared_opis}\n\n{extra_opis}" if extra_opis else prepared_opis
+
+    return opis_ogloszenia, zdjecia_string, kategoria_ogloszenia
 
 def checkSpecOffer(offerID, parent):
     offerID = int(offerID)
@@ -3849,10 +3905,7 @@ def estateAdsRent():
             end_date = start_date + datetime.timedelta(days=90)
             # Oblicz liczbę dni pozostałych do końca promocji
             days_left = (end_date - datetime.datetime.now()).days
-
             item['facebook']['zostalo_dni'] = days_left
-
-
             item['facebook']['error_message'] = facebookIDstatus[3]
 
         if 'adresowo' not in item:
@@ -3999,6 +4052,36 @@ def estateAdsRent():
         item['fbgroups']['section'] = fbgroupsIDstatus[53]
         item['fbgroups']['id_gallery'] = fbgroupsIDstatus[54]
         item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[55]
+
+        if 'socialSync' not in item:
+            item['socialSync'] = {}
+        socialSync_IDstatus = checkSocialSyncStatus(kind="r", id=item['ID'])
+        item['socialSync']['id'] = socialSync_IDstatus[0]
+        item['socialSync']['status'] = socialSync_IDstatus[1]
+        item['socialSync']['data_aktualizacji'] = socialSync_IDstatus[2]
+        item['socialSync']['errors'] = socialSync_IDstatus[3]
+        item['socialSync']['action_before_errors'] = socialSync_IDstatus[4]
+        item['socialSync']['region'] = socialSync_IDstatus[5]
+        item['socialSync']['kategoria_ogloszenia'] = socialSync_IDstatus[6]
+
+
+        if item.get('socialSync') and item['socialSync'].get('status') is not None:
+            update_date = item['socialSync'].get('data_aktualizacji')
+            last_update_ads = item.get('DataAktualizacji')
+
+            # Sprawdzamy, czy update_date nie jest None
+            if update_date and last_update_ads and update_date < last_update_ads:
+                query = "DELETE FROM ogloszenia_socialsync WHERE id=%s;"
+                params = (item['socialSync']['id'], )
+
+                if msq.insert_to_database(query, params):  # Jeśli usunięcie się powiodło
+                    item['socialSync']['status'] = None
+
+            # Obliczamy ilość dni od momentu publikacji
+            if update_date:
+                days_since_published = (datetime.datetime.now() - update_date).days
+                item['socialSync']['opublikowano_dni'] = max(days_since_published, 0)  # Unikamy wartości ujemnych
+
 
         new_all_rents.append(item)
     # flash(f"{str(len(new_all_rents))}", 'dnager')
@@ -11361,6 +11444,100 @@ def public_on_otodom():
 
         return redirect(url_for(redirectGoal))
     return redirect(url_for('index')) 
+
+@app.route("/publikuj-na-socialsync", methods=['POST'])
+def public_on_socialsync():
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /public-on-socialsync bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+
+    if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /public-on-socialsync bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    # Pobranie danych z formularza
+    socialSync_id = request.form.get('socialSync_id')
+    id_ogloszenia = request.form.get('PostID')
+    task_kind = request.form.get('task_kind')
+    generuj_opis = request.form.get('generuj_opis')
+    uzyj_aktualnego_opisu = request.form.get('uzyj_aktualnego_opisu')        
+    redirectGoal = request.form.get('redirectGoal')
+
+    # Ustalenie rodzaju ogłoszenia
+    rodzaj_ogloszenia = 'r' if redirectGoal == 'estateAdsRent' else 's' if redirectGoal == 'estateAdsSell' else None
+
+    if task_kind == 'Publikuj' and rodzaj_ogloszenia:
+        # Pobranie oferty
+        picked_offer = get_offer(id_ogloszenia, rodzaj_ogloszenia)
+
+        if not picked_offer:
+            flash('Nie znaleziono ogłoszenia!', 'danger')
+            return redirect(url_for(redirectGoal))
+
+        # Generowanie opisu ogłoszenia
+        opis_ogloszenia, zdjecia_string, kategoria_ogloszenia = generate_offer_description(picked_offer, rodzaj_ogloszenia)
+
+        if uzyj_aktualnego_opisu:
+            styl_ogloszenia = 0
+            status = 4
+        elif generuj_opis:
+            styl_ogloszenia = 1
+            status = 5
+        else:
+            status = 4
+            styl_ogloszenia = 0
+
+
+        # Wstawienie rekordu do bazy danych
+        zapytanie_sql = '''
+            INSERT INTO ogloszenia_socialsync
+                (rodzaj_ogloszenia, id_ogloszenia, kategoria_ogloszenia, tresc_ogloszenia,
+                styl_ogloszenia, zdjecia_string, status, created_by)
+            VALUES 
+                (%s, %s, %s, %s, %s, %s, %s, %s);
+        '''
+        dane = (rodzaj_ogloszenia, id_ogloszenia, kategoria_ogloszenia, opis_ogloszenia, 
+                styl_ogloszenia, zdjecia_string, status, 'dmdinwestycje')
+
+        if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na profilu FB przez {session["username"]}!', log_path=logFileName)
+            flash(f'Oferta została pomyślnie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+        else:
+            msq.handle_error(f'UWAGA! Błąd zapisu! Oferta nie została wysłana do realizacji na profilu FB przez {session["username"]}!', log_path=logFileName)
+            flash('Błąd zapisu! Oferta nie została wysłana do realizacji!', 'danger')
+
+    elif task_kind == 'Anuluj_zadanie':
+        zapytanie_sql = "DELETE FROM ogloszenia_socialsync WHERE id = %s;"
+        dane = (socialSync_id,)
+    
+        if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Zadanie zostało anulowane przez {session["username"]}!', log_path=logFileName)
+            flash('Zadanie zostało anulowane!', 'success')
+        else:
+            msq.handle_error(f'UWAGA! Błąd zapisu! Zadanie nie zostało anulowane przez {session["username"]}!', log_path=logFileName)
+            flash('Błąd zapisu! Zadanie nie zostało anulowane!', 'danger')
+
+
+    elif task_kind == 'Odswiez':
+        flash('Oferta została odświeżona pomyślnie!', 'success')
+
+    elif task_kind == 'Ponow':
+        zapytanie_sql = '''
+            UPDATE ogloszenia_socialsync
+                SET active_task=%s
+                WHERE id = %s;
+        '''
+        dane = (0, socialSync_id)
+
+        if msq.insert_to_database(zapytanie_sql, dane):
+            msq.handle_error(f'Ponowiono zadanie dla FB przez {session["username"]}!', log_path=logFileName)
+            flash('Oferta została ponownie wysłana do realizacji! Przewidywany czas realizacji 3 minuty.', 'success')
+        else:
+            msq.handle_error(f'UWAGA! Nie ponowiono zadania dla FB przez {session["username"]}!', log_path=logFileName)
+            flash('Błąd zapisu! Oferta nie została ponownie wysłana do realizacji!', 'danger')
+
+    return redirect(url_for(redirectGoal))
 
 @app.route('/estate-ads-special')
 def estateAdsspecial():

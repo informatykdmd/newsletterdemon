@@ -2522,7 +2522,159 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-sm-12">
-                                        <!-- OLX -->
+                                        <!-- SocialSync -->
+                                        <!-- 
+                                            1 Opublikowano
+                                            2 Error
+                                            4 Trwa proces tworzenia nowego wpisu z natulanym opisem
+                                            5 Trwa proces tworzenia nowego wpisu z generowanym opisem
+                                            None 
+                                        -->
+                                        {% if post_data.StatusOferty == 1 %}
+                                            {% if post_data.socialSync.status == 1 %}
+                                            <div class="mb-2 mt-2">
+                                                <h5>FACEBOOK PROFIL</h5>
+                                                <p>Status:  Opublikowano (pozostało {{ post_data.socialSync.opublikowano_dni }} dni)</p>
+                                            </div>
+
+                                            {% elif post_data.socialSync.status == 2 %}
+                                            <div class="mb-2 mt-2">
+                                                <h5>FACEBOOK PROFIL</h5>
+                                                <p>Status: Error</p>
+                                                <div class="alert alert-danger" role="alert">
+                                                    {{ post_data.socialSync.errors }}
+                                                </div>
+                                            </div>
+                                            <div class="row row-cols-auto ">
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Ponow" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Ponów zadanie
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Anuluj_zadanie" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Anuluj zadanie
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            {% elif post_data.socialSync.status == 4 or post_data.socialSync.status == 5 %}
+                                            <div class="mb-2 mt-2">
+                                                <h5>FACEBOOK PROFIL</h5>
+                                                <p>Status: Oferta w trakcie publikacji </p>
+                                            </div>
+                                            <div class="row row-cols-auto ">
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Odswiez" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Odświeżenie statusu
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Anuluj_zadanie" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Anuluj zadanie
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            {% elif post_data.socialSync.status == None %}
+                                            <div class="mb-2 mt-2">
+                                                <h5>FACEBOOK PROFIL</h5>
+                                                <p>Status: Pierwsza publikacja na profilu firmowym DMD Inwestycje</p>
+                                            </div>
+                                            <div class="row row-cols-auto mb-3">
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" id="form_socialsync_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Publikuj" />
+
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="generuj_opis_{{post_id}}" name="generuj_opis" value="1">
+                                                                                <label class="form-check-label" for="generuj_opis_{{post_id}}">Generuj opis ogłoszenia</label>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="form-check form-switch">
+                                                                                <input class="form-check-input" type="checkbox" role="switch" id="uzyj_aktualnego_opisu_{{post_id}}" name="uzyj_aktualnego_opisu" value="1">
+                                                                                <label class="form-check-label" for="uzyj_aktualnego_opisu_{{post_id}}">Użyj opisu ogłoszenia</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Publikuj na profilu FB
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <script>
+                                                checkboxControlOffOther(
+                                                    '{{post_id}}', 
+                                                    'generuj_opis_{{post_id}}', 
+                                                    [
+                                                        'uzyj_aktualnego_opisu_{{post_id}}'
+                                                    ]
+                                                );
+                                                checkboxControlOffOther(
+                                                    '{{post_id}}', 
+                                                    'uzyj_aktualnego_opisu_{{post_id}}', 
+                                                    [
+                                                        'generuj_opis_{{post_id}}'
+                                                    ]
+                                                );
+                                            </script>
+                                            {% endif %}
+                                        {% endif %}
                                     </div>
                                     <div class="col-lg-4 col-sm-12">
                                         <div> 
@@ -3143,6 +3295,7 @@
                                                             </form>
                                                         </div>
                                                     </div>
+
                                                 
                                                 {% elif post_data['lento']['status'] == 1 %}
                                                     <div class="mb-2 mt-2">
@@ -4178,7 +4331,7 @@
                                                     <div class="mb-2 mt-2">
                                                         <h5>FACEBOOK MARKETPLACE</h5>
                                                         
-                                                        <p>Status: Pierwsza publikacja na Lento</p>
+                                                        <p>Status: Pierwsza publikacja na MARKETPLACE</p>
                                                     </div>
                                                     <div class="row row-cols-auto mb-3">
                                                         <div class="col">
@@ -4246,7 +4399,7 @@
                                                                     </div>
 
                                                                     <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Publikuj na Facebooku
+                                                                        Publikuj na Marketplace
                                                                     </button>
                                                                 </div>
                                                             </form>
