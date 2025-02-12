@@ -4063,7 +4063,7 @@ def estateAdsRent():
         item['socialSync']['action_before_errors'] = socialSync_IDstatus[4]
         item['socialSync']['kategoria_ogloszenia'] = socialSync_IDstatus[5]
 
-        print(socialSync_IDstatus)
+        
 
         if item.get('socialSync') and item['socialSync'].get('status') is not None:
             update_date = item['socialSync'].get('data_aktualizacji')
@@ -4081,7 +4081,8 @@ def estateAdsRent():
             if update_date:
                 days_since_published = (datetime.datetime.now() - update_date).days
                 item['socialSync']['opublikowano_dni'] = max(days_since_published, 0)  # Unikamy wartości ujemnych
-
+                
+        print(item.get('socialSync'))
 
         new_all_rents.append(item)
     # flash(f"{str(len(new_all_rents))}", 'dnager')
