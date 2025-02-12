@@ -676,7 +676,7 @@ def checkOtodomStatus(kind, id):
 
 def checkSocialSyncStatus(kind, id):
     try:
-        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors, region, kategoria_ogloszenia FROM ogloszenia_socialsync WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
+        return msq.connect_to_database(f'SELECT id, status, data_aktualizacji, errors, action_before_errors, kategoria_ogloszenia FROM ogloszenia_socialsync WHERE rodzaj_ogloszenia="{kind}" AND id_ogloszenia={id};')[0]
     except IndexError:
         return (None, None, None, None, None, None, None)
 
