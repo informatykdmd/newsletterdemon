@@ -4063,7 +4063,7 @@ def estateAdsRent():
         item['socialSync']['action_before_errors'] = socialSync_IDstatus[4]
         item['socialSync']['kategoria_ogloszenia'] = socialSync_IDstatus[5]
 
-
+        print(socialSync_IDstatus)
 
         if item.get('socialSync') and item['socialSync'].get('status') is not None:
             update_date = item['socialSync'].get('data_aktualizacji')
