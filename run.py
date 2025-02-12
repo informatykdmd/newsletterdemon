@@ -749,6 +749,7 @@ def generator_rentOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
             'DataPublikacjiMarketplace': None if data[12] is None else format_date(data[12]),
             'DataUtworzenia': format_date(data[13]),
             'DataAktualizacji': format_date(data[14]),
+            'DataAktualizacji_raw': data[14],
             'RodzajZabudowy': '' if data[15] is None else data[15],
             'Czynsz': 0.00 if data[16] is None else data[16],
             'Umeblowanie': '' if data[17] is None else data[17],
@@ -4065,22 +4066,22 @@ def estateAdsRent():
 
         
 
-        # if item.get('socialSync') and item['socialSync'].get('status') is not None:
-        #     update_date = item['socialSync'].get('data_aktualizacji')
-        #     last_update_ads = item.get('DataAktualizacji')
+        if item.get('socialSync') and item['socialSync'].get('status') is not None:
+            update_date = item['socialSync'].get('data_aktualizacji')
+            last_update_ads = item.get('DataAktualizacji_raw')
 
-        #     # Sprawdzamy, czy update_date nie jest None
-        #     if update_date and last_update_ads and update_date < last_update_ads:
-        #         query = "DELETE FROM ogloszenia_socialsync WHERE id=%s;"
-        #         params = (item['socialSync']['id'], )
+            # Sprawdzamy, czy update_date nie jest None
+            if update_date and last_update_ads and update_date < last_update_ads:
+                query = "DELETE FROM ogloszenia_socialsync WHERE id=%s;"
+                params = (item['socialSync']['id'], )
 
-        #         if msq.insert_to_database(query, params):  # Jeśli usunięcie się powiodło
-        #             item['socialSync']['status'] = None
+                if msq.insert_to_database(query, params):  # Jeśli usunięcie się powiodło
+                    item['socialSync']['status'] = None
 
-        #     # Obliczamy ilość dni od momentu publikacji
-        #     if update_date:
-        #         days_since_published = (datetime.datetime.now() - update_date).days
-        #         item['socialSync']['opublikowano_dni'] = max(days_since_published, 0)  # Unikamy wartości ujemnych
+            # Obliczamy ilość dni od momentu publikacji
+            if update_date:
+                days_since_published = (datetime.datetime.now() - update_date).days
+                item['socialSync']['opublikowano_dni'] = max(days_since_published, 0)  # Unikamy wartości ujemnych
 
         print(item.get('socialSync'))
 
