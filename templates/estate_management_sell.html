@@ -5977,27 +5977,34 @@
                 hiddenInput.value = "";
             }
 
-            // ✅ Obsługa przełączania checkboxów (natychmiastowe odznaczanie drugiej opcji)
+            // ✅ Obsługa przełączania checkboxów (splątane atomy ⚛️🔥)
             generujOpisCheckbox.addEventListener("change", function () {
                 console.log(`✅ Kliknięto "Generuj opis" dla post_id ${postId}`);
                 if (this.checked) {
-                    uzyjOpisuCheckbox.checked = false; // Automatyczne odznaczenie drugiego
+                    uzyjOpisuCheckbox.checked = false;
                     generatorDiv.style.display = "block";
                     hiddenInput.value = generatorDiv.innerText.trim();
                     console.log(`🎯 Pokazuję generator AI dla post_id ${postId}`);
                 } else {
+                    uzyjOpisuCheckbox.checked = true; // Jeśli odznaczymy "Generuj opis", włączamy "Użyj opisu"
                     generatorDiv.style.display = "none";
                     hiddenInput.value = "";
+                    console.log(`🔄 "Generuj opis" odznaczone, automatycznie zaznaczam "Użyj opisu"`);
                 }
             });
 
             uzyjOpisuCheckbox.addEventListener("change", function () {
                 console.log(`✅ Kliknięto "Użyj opisu" dla post_id ${postId}`);
                 if (this.checked) {
-                    generujOpisCheckbox.checked = false; // Automatyczne odznaczenie drugiego
+                    generujOpisCheckbox.checked = false;
                     generatorDiv.style.display = "none";
                     hiddenInput.value = "";
                     console.log(`🎯 Ukrywam generator AI dla post_id ${postId}`);
+                } else {
+                    generujOpisCheckbox.checked = true; // Jeśli odznaczymy "Użyj opisu", włączamy "Generuj opis"
+                    generatorDiv.style.display = "block";
+                    hiddenInput.value = generatorDiv.innerText.trim();
+                    console.log(`🔄 "Użyj opisu" odznaczone, automatycznie zaznaczam "Generuj opis"`);
                 }
             });
         });
@@ -6012,6 +6019,7 @@
             });
         });
     });
+
 
 </script>
 {% endblock %}

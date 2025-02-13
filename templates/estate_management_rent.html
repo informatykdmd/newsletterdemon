@@ -1759,7 +1759,7 @@
                                             <div class="row">
                                                 <div class="col-lg-5 col-sm-12">
                                                     <div class="mb-2 mt-2">
-                                                        <h5>Treść Ogłoszenia na Grupach FB</h5>
+                                                        <h5 class="text-info">📢 Treść Ogłoszenia na Grupach FB</h5>
                                                     </div>
                                                     <div 
                                                         id="fbgroups_estateAdsRentDescription_{{post_id}}" 
@@ -1800,11 +1800,12 @@
                                                 <div class="col-lg-3 col-sm-12">
                                                     <div> 
                                                         
-                                                        <div class="mb-2 mt-2">
-                                                            <h5>FACEBOOK GRUPY</h5>
-                                                            
-                                                            <p>Status: Pierwsza publikacja na grupach facebook</p>
+                                                        <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                            <h5 class="text-success">🌍 FACEBOOK GRUPY</h5>
+                                                            <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na grupach Facebook</strong></p>
+                                                            <p class="text-secondary">🚀 Oferta zostanie opublikowana na wybranych grupach po zakończeniu procesu.</p>
                                                         </div>
+                                                        
 
                                                         <div class="row row-cols-auto mb-3">
                                                             <div class="col">
@@ -2035,15 +2036,16 @@
                                         <form method="POST" id="remove_career_fbgroups_{{post_id}}" action="{{ url_for('remove_career_fbgroups') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz zatrzymać tę kampanię na grupach facebooka?');">
                                             <div class="row">
                                                 <div class="col-lg-12 col-sm-12 mb-3 mt-3">
-                                                    <h3>Monitoring Kampanii Na grupach FB</h3>
-                                                </div>
+                                                    <h3 class="text-info">📊 Monitoring Kampanii na Grupach FB</h3>
+                                                </div>                                                
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-5">
                                                     <div class="row">
                                                         <div class="col-12 mb-3">
-                                                            <h5>Podgląd Posta</h5>
+                                                            <h5 class="text-primary">👀 Podgląd Posta</h5>
                                                         </div>
+                                                        
                                                     </div>
                                                     <div class="fbgroups-requirements-description-preview-{{post_data['fbgroups']['color_choice']}}">
                                                         {{ post_data['fbgroups']['content'] }}
@@ -2053,8 +2055,9 @@
                                                     <div class="">
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <h5>Harmonogram</h5>
+                                                                <h5 class="text-warning">📅 Harmonogram</h5>
                                                             </div>
+                                                            
                                                         </div>
                                                         <div class="row">
                                                             {% for i in range(11) %}
@@ -2133,11 +2136,12 @@
                                             -->
                                             {% if post_data['StatusOferty'] == 1 %}
                                                 {% if post_data['allegro']['status'] == 1 %}
-                                                    <div class="mb-2 mt-2">
-                                                        
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Opublikowano (pozostało {{post_data['allegro']['zostalo_dni']}} dni)</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-primary">🛒 ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-info">Opublikowano</strong> (pozostało <strong>{{ post_data['allegro']['zostalo_dni'] }}</strong> dni)</p>
+                                                        <p class="text-secondary">✅ Oferta jest aktywna na Allegro Lokalnie.</p>
                                                     </div>
+                                                    
                                                     <div class="row row-cols-auto "> 
 
                                                         <div class="col">
@@ -2173,13 +2177,14 @@
                                                     </div>
 
                                                 {% elif post_data['allegro']['status'] == 2 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Error</p>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            {{post_data['allegro']['errors']}}
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">⚠️ ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Błąd publikacji</strong></p>
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                                            <span class="me-2">❌</span> <span>{{ post_data.allegro.errors }}</span>
                                                         </div>
                                                     </div>
+                                                
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
                                                             <form action="{{ url_for('public_on_allegro') }}" method="POST" enctype="multipart/form-data">
@@ -2238,10 +2243,12 @@
                                                     </div>
                                                 
                                                 {% elif post_data['allegro']['status'] == 4 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">⏳ ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces tworzenia nowego ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">🔄 Oferta jest w trakcie publikacji. Proszę czekać...</p>
                                                     </div>
+                                                
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
                                                             <form action="{{ url_for('public_on_allegro') }}" method="POST" enctype="multipart/form-data">
@@ -2277,10 +2284,12 @@
                                                     </div>
                                                 
                                                 {% elif post_data['allegro']['status'] == 5 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">🔄 ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces aktualizacji ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⏳ Oferta jest aktualizowana. Proszę czekać...</p>
                                                     </div>
+                                                
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
                                                             <form action="{{ url_for('public_on_allegro') }}" method="POST" enctype="multipart/form-data">
@@ -2317,10 +2326,12 @@
                                                     
                                                 
                                                 {% elif post_data['allegro']['status'] == 6 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Trwa proces usuwania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">🗑️ ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Trwa proces usuwania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⚠️ Oferta zostanie wkrótce usunięta.</p>
                                                     </div>
+                                                
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
                                                             <form action="{{ url_for('public_on_allegro') }}" method="POST" enctype="multipart/form-data">
@@ -2356,11 +2367,12 @@
                                                     </div>
 
                                                 {% elif post_data['allegro']['status'] == None %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        
-                                                        <p>Status: Pierwsza publikacja na allegro lokalnie</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-success">🌟 ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na Allegro Lokalnie</strong></p>
+                                                        <p class="text-secondary">🚀 Oferta zostanie opublikowana po zakończeniu procesu.</p>
                                                     </div>
+                                                
                                                     <div class="mb-2 mt-2">
                                                         <div class="row mb-2 mt-2">
                                                             <div class="text-body-secondary">Wybierz lokalizację:</div>
