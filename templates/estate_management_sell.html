@@ -5954,5 +5954,64 @@
         });
     });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".toggle-switch").forEach(switchElement => {
+            let postId = switchElement.id.split("_").pop();
+            let generatorDiv = document.getElementById(`generator_${postId}`);
+            let generujOpisCheckbox = document.getElementById(`generuj_opis_${postId}`);
+            let uzyjOpisuCheckbox = document.getElementById(`uzyj_opisu_${postId}`);
+            let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
+
+            // ✅ Ustawienie stanu początkowego
+            if (!generujOpisCheckbox.checked && !uzyjOpisuCheckbox.checked) {
+                uzyjOpisuCheckbox.checked = true; // Domyślnie "Użyj opisu"
+                generatorDiv.style.display = "none";
+                hiddenInput.value = "";
+                console.log(`✅ Inicjalizacja: "Użyj opisu" zaznaczone dla post_id ${postId}, generator ukryty.`);
+            } else if (generujOpisCheckbox.checked) {
+                generatorDiv.style.display = "block";
+                hiddenInput.value = generatorDiv.innerText.trim();
+                console.log(`✅ Inicjalizacja: "Generuj opis" zaznaczone dla post_id ${postId}, generator widoczny.`);
+            } else {
+                generatorDiv.style.display = "none";
+                hiddenInput.value = "";
+            }
+
+            // ✅ Obsługa przełączania checkboxów (natychmiastowe odznaczanie drugiej opcji)
+            generujOpisCheckbox.addEventListener("change", function () {
+                console.log(`✅ Kliknięto "Generuj opis" dla post_id ${postId}`);
+                if (this.checked) {
+                    uzyjOpisuCheckbox.checked = false; // Automatyczne odznaczenie drugiego
+                    generatorDiv.style.display = "block";
+                    hiddenInput.value = generatorDiv.innerText.trim();
+                    console.log(`🎯 Pokazuję generator AI dla post_id ${postId}`);
+                } else {
+                    generatorDiv.style.display = "none";
+                    hiddenInput.value = "";
+                }
+            });
+
+            uzyjOpisuCheckbox.addEventListener("change", function () {
+                console.log(`✅ Kliknięto "Użyj opisu" dla post_id ${postId}`);
+                if (this.checked) {
+                    generujOpisCheckbox.checked = false; // Automatyczne odznaczenie drugiego
+                    generatorDiv.style.display = "none";
+                    hiddenInput.value = "";
+                    console.log(`🎯 Ukrywam generator AI dla post_id ${postId}`);
+                }
+            });
+        });
+
+        // ✅ Aktualizacja pola hidden na input po edycji div
+        document.querySelectorAll(".generator-box").forEach(generator => {
+            generator.addEventListener("input", function () {
+                let postId = this.id.split("_").pop();
+                let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
+                hiddenInput.value = this.innerText.trim();
+                console.log(`✏️ Edytowano polecenie AI dla post_id ${postId}: ${hiddenInput.value}`);
+            });
+        });
+    });
+
 </script>
 {% endblock %}
