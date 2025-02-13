@@ -6081,55 +6081,66 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".toggle-switch").forEach(switchElement => {
-            switchElement.addEventListener("change", function () {
-                let postId = this.id.split("_").pop(); // Pobiera dynamiczne post_id
-                let generatorDiv = document.getElementById(`generator_${postId}`);
-                let generujOpisCheckbox = document.getElementById(`generuj_opis_${postId}`);
-                let uzyjOpisuCheckbox = document.getElementById(`uzyj_opisu_${postId}`);
-                let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
+            let postId = switchElement.id.split("_").pop();
+            let generatorDiv = document.getElementById(`generator_${postId}`);
+            let generujOpisCheckbox = document.getElementById(`generuj_opis_${postId}`);
+            let uzyjOpisuCheckbox = document.getElementById(`uzyj_opisu_${postId}`);
+            let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
 
+            // ✅ Inicjalizacja stanu po załadowaniu strony
+            if (!generujOpisCheckbox.checked && !uzyjOpisuCheckbox.checked) {
+                // Domyślnie ustawiamy "Użyj opisu" na zaznaczone i generator ukryty
+                uzyjOpisuCheckbox.checked = true;
+                generatorDiv.style.display = "none";
+                hiddenInput.value = "";
+                console.log(`✅ Inicjalizacja: Użyj opisu zaznaczone dla post_id ${postId}, generator ukryty.`);
+            } else if (generujOpisCheckbox.checked) {
+                generatorDiv.style.display = "block";
+                hiddenInput.value = generatorDiv.innerText.trim();
+                console.log(`✅ Inicjalizacja: Generuj opis zaznaczone dla post_id ${postId}, generator widoczny.`);
+            } else {
+                generatorDiv.style.display = "none";
+                hiddenInput.value = "";
+                console.log(`✅ Inicjalizacja: Użyj opisu zaznaczone dla post_id ${postId}, generator ukryty.`);
+            }
+
+            // ✅ Obsługa zmiany checkboxów
+            switchElement.addEventListener("change", function () {
                 console.log(`✅ Zmiana w checkboxie dla post_id: ${postId}`);
                 console.log(`🔹 Przed zmianą: Generuj opis = ${generujOpisCheckbox.checked}, Użyj opisu = ${uzyjOpisuCheckbox.checked}`);
 
-                // Jeśli zaznaczamy "Generuj opis", odznaczamy drugą opcję i pokazujemy generator
                 if (generujOpisCheckbox.checked) {
-                    uzyjOpisuCheckbox.checked = false; 
-                    generatorDiv.style.display = "block";  
-                    hiddenInput.value = generatorDiv.innerText.trim(); // Aktualizujemy wartość inputa
-                    
+                    uzyjOpisuCheckbox.checked = false;
+                    generatorDiv.style.display = "block";
+                    hiddenInput.value = generatorDiv.innerText.trim();
                     console.log(`🎯 Akcja: Pokazuję generator AI dla post_id ${postId}`);
-                } 
-                // Jeśli zaznaczamy "Użyj opisu", odznaczamy pierwszą opcję i ukrywamy generator
-                else if (uzyjOpisuCheckbox.checked) {
-                    generujOpisCheckbox.checked = false; 
-                    generatorDiv.style.display = "none";  
-                    hiddenInput.value = ""; // Czyszczenie wartości pola
-                    
-                    console.log(`🎯 Akcja: Ukrywam generator AI dla post_id ${postId}`);
-                } 
-                // Jeśli żadna opcja nie jest zaznaczona, ukrywamy generator
-                else {
+                } else {
                     generatorDiv.style.display = "none";
-                    hiddenInput.value = ""; 
-                    
-                    console.log(`🚨 Żaden checkbox nie jest zaznaczony. Generator ukryty.`);
+                    hiddenInput.value = "";
+                }
+
+                if (uzyjOpisuCheckbox.checked) {
+                    generujOpisCheckbox.checked = false;
+                    generatorDiv.style.display = "none";
+                    hiddenInput.value = "";
+                    console.log(`🎯 Akcja: Ukrywam generator AI dla post_id ${postId}`);
                 }
 
                 console.log(`🔹 Po zmianie: Generuj opis = ${generujOpisCheckbox.checked}, Użyj opisu = ${uzyjOpisuCheckbox.checked}`);
             });
         });
 
-        // Aktualizacja pola hidden na input po edycji div
+        // ✅ Aktualizacja pola hidden na input po edycji div
         document.querySelectorAll(".generator-box").forEach(generator => {
             generator.addEventListener("input", function () {
                 let postId = this.id.split("_").pop();
                 let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
                 hiddenInput.value = this.innerText.trim();
-
                 console.log(`✏️ Edytowano polecenie AI dla post_id ${postId}: ${hiddenInput.value}`);
             });
         });
     });
+
 
 
 </script>
