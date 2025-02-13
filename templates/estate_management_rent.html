@@ -2623,38 +2623,36 @@
                                             <div class="row row-cols-auto mb-3">
                                                 <div class="col">
                                                     <form action="{{ url_for('public_on_socialsync') }}" id="form_socialsync_{{post_id}}" method="POST" enctype="multipart/form-data">
-                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
-                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent" />
-                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                        <div class="col me-1 mb-1">
-                                                            
-                                                            <input type="hidden" name="Status" value="0" />
-                                                            <input type="hidden" name="task_kind" value="Publikuj" />
-
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <div class="row">
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="generuj_opis_{{post_id}}" name="generuj_opis" value="1">
-                                                                                <label class="form-check-label" for="generuj_opis_{{post_id}}">Generuj opis ogłoszenia</label>
-                                                                            </div>
-
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <div class="form-check form-switch">
-                                                                                <input class="form-check-input" type="checkbox" role="switch" id="uzyj_aktualnego_opisu_{{post_id}}" name="uzyj_aktualnego_opisu" value="1">
-                                                                                <label class="form-check-label" for="uzyj_aktualnego_opisu_{{post_id}}">Użyj opisu ogłoszenia</label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}">
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsRent">
+                                                        <input type="hidden" name="PostID" value="{{ post_id }}">
+                                                        <input type="hidden" name="Status" value="0">
+                                                        <input type="hidden" name="task_kind" value="Publikuj">
+                                                        <input type="hidden" name="polecenie_ai" id="polecenie_ai_{{post_id}}" value="">
+                                            
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input toggle-switch" type="checkbox" id="generuj_opis_{{post_id}}" name="generuj_opis" value="1">
+                                                                    <label class="form-check-label" for="generuj_opis_{{post_id}}">Generuj opis ogłoszenia</label>
                                                                 </div>
                                                             </div>
-
-                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                Publikuj na profilu FB
-                                                            </button>
+                                                            <div class="col">
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input toggle-switch" type="checkbox" id="uzyj_opisu_{{post_id}}" name="uzyj_aktualnego_opisu" value="1">
+                                                                    <label class="form-check-label" for="uzyj_opisu_{{post_id}}">Użyj opisu ogłoszenia</label>
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                            
+                                                        <!-- Edytowalne pole dla generowania opisu -->
+                                                        <div id="generator_{{post_id}}" contenteditable="true" class="generator-box" style="display: none; border: 1px solid #ccc; padding: 8px; margin-top: 10px; min-height: 50px;">
+                                                            Wpisz polecenie dla AI (np. "Napisz to w stylu...")
+                                                        </div>
+                                            
+                                                        <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;">
+                                                            Publikuj na profilu FB
+                                                        </button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -6098,5 +6096,42 @@
             input.addEventListener('input', () => updateCharCount(input));
         });
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".toggle-switch").forEach(switchElement => {
+            switchElement.addEventListener("change", function () {
+                let postId = this.id.split("_").pop(); // Pobiera dynamiczne post_id
+                let generatorDiv = document.getElementById(`generator_${postId}`);
+                let generujOpisCheckbox = document.getElementById(`generuj_opis_${postId}`);
+                let uzyjOpisuCheckbox = document.getElementById(`uzyj_opisu_${postId}`);
+                let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
+
+                if (generujOpisCheckbox.checked) {
+                    generatorDiv.style.display = "block";  // Pokazujemy edytowalny div
+                    uzyjOpisuCheckbox.checked = false; // Odznaczamy drugą opcję
+                    hiddenInput.value = generatorDiv.innerText.trim(); // Aktualizujemy wartość inputa
+                } else {
+                    generatorDiv.style.display = "none"; // Ukrywamy edytowalny div
+                    hiddenInput.value = ""; // Czyszczenie wartości pola
+                }
+
+                if (uzyjOpisuCheckbox.checked) {
+                    generujOpisCheckbox.checked = false; // Odznaczamy pierwszą opcję
+                    generatorDiv.style.display = "none"; // Ukrywamy edytowalny div
+                    hiddenInput.value = ""; // Czyszczenie wartości pola
+                }
+            });
+        });
+
+        // Aktualizacja pola hidden na input po edycji div
+        document.querySelectorAll(".generator-box").forEach(generator => {
+            generator.addEventListener("input", function () {
+                let postId = this.id.split("_").pop();
+                let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
+                hiddenInput.value = this.innerText.trim();
+            });
+        });
+    });
+
 </script>
 {% endblock %}

@@ -11462,9 +11462,12 @@ def public_on_socialsync():
     socialSync_id = request.form.get('socialSync_id')
     id_ogloszenia = request.form.get('PostID')
     task_kind = request.form.get('task_kind')
-    generuj_opis = request.form.get('generuj_opis')
-    uzyj_aktualnego_opisu = request.form.get('uzyj_aktualnego_opisu')        
+    generuj_opis = request.form.get('generuj_opis') == "1"  # Konwersja na bool
+    uzyj_aktualnego_opisu = request.form.get('uzyj_aktualnego_opisu') == "1"  # Konwersja na bool
     redirectGoal = request.form.get('redirectGoal')
+
+    # Pobranie polecenia dla AI (jeśli generowanie opisu jest zaznaczone)
+    polecenie_ai = request.form.get('polecenie_ai', "").strip() if generuj_opis else None
 
     # Ustalenie rodzaju ogłoszenia
     rodzaj_ogloszenia = 'r' if redirectGoal == 'estateAdsRent' else 's' if redirectGoal == 'estateAdsSell' else None
