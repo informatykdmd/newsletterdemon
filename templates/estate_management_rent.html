@@ -2532,7 +2532,7 @@
                                         -->
                                         {% if post_data.StatusOferty == 1 %}
                                             {% if post_data.socialSync.status == 1 %}
-                                            <div class="mb-3 mt-3 p-3 border rounded bg-light">
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
                                                 <h5 class="text-primary">🌍 FACEBOOK PROFIL</h5>
                                                 <p class="mb-1">📌 Status: <strong class="text-success">Opublikowano</strong> (pozostało <strong>{{ post_data.socialSync.opublikowano_dni }}</strong> dni)</p>
                                                 <p class="text-warning fs-5 fw-bold">🚀 Oferta jest już aktywna! Aby ponownie ją wystawić, dokonaj aktualizacji.</p>
@@ -2540,7 +2540,7 @@
                                             
 
                                             {% elif post_data.socialSync.status == 2 %}
-                                            <div class="mb-3 mt-3 p-3 border rounded bg-light">
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
                                                 <h5 class="text-danger">⚠️ FACEBOOK PROFIL</h5>
                                                 <p class="mb-1">📌 Status: <strong class="text-danger">Błąd publikacji</strong></p>
                                                 <div class="alert alert-danger d-flex align-items-center" role="alert">
@@ -2581,7 +2581,7 @@
                                                 </div>
                                             </div>
                                             {% elif post_data.socialSync.status == 4 or post_data.socialSync.status == 5 %}
-                                            <div class="mb-3 mt-3 p-3 border rounded bg-light">
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
                                                 <h5 class="text-info">⏳ FACEBOOK PROFIL</h5>
                                                 <p class="mb-1">📌 Status: <strong class="text-primary">Oferta w trakcie publikacji...</strong></p>
                                                 <p class="text-secondary">🔄 Proces może potrwać kilka minut. Proszę czekać...</p>
@@ -2619,7 +2619,7 @@
                                                 </div>
                                             </div>
                                             {% elif post_data.socialSync.status == None %}
-                                            <div class="mb-3 mt-3 p-3 border rounded bg-light">
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
                                                 <h5 class="text-success">🌟 FACEBOOK PROFIL</h5>
                                                 <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na profilu firmowym DMD Inwestycje</strong></p>
                                                 <p class="text-secondary">🚀 Twoja oferta zostanie opublikowana po zakończeniu procesu.</p>
