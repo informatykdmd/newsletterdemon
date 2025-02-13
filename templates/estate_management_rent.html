@@ -6088,23 +6088,34 @@
                 let uzyjOpisuCheckbox = document.getElementById(`uzyj_opisu_${postId}`);
                 let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
 
+                console.log(`✅ Zmiana w checkboxie dla post_id: ${postId}`);
+                console.log(`🔹 Przed zmianą: Generuj opis = ${generujOpisCheckbox.checked}, Użyj opisu = ${uzyjOpisuCheckbox.checked}`);
+
                 // Jeśli zaznaczamy "Generuj opis", odznaczamy drugą opcję i pokazujemy generator
                 if (generujOpisCheckbox.checked) {
                     uzyjOpisuCheckbox.checked = false; 
                     generatorDiv.style.display = "block";  
                     hiddenInput.value = generatorDiv.innerText.trim(); // Aktualizujemy wartość inputa
+                    
+                    console.log(`🎯 Akcja: Pokazuję generator AI dla post_id ${postId}`);
                 } 
                 // Jeśli zaznaczamy "Użyj opisu", odznaczamy pierwszą opcję i ukrywamy generator
                 else if (uzyjOpisuCheckbox.checked) {
                     generujOpisCheckbox.checked = false; 
                     generatorDiv.style.display = "none";  
                     hiddenInput.value = ""; // Czyszczenie wartości pola
+                    
+                    console.log(`🎯 Akcja: Ukrywam generator AI dla post_id ${postId}`);
                 } 
                 // Jeśli żadna opcja nie jest zaznaczona, ukrywamy generator
                 else {
                     generatorDiv.style.display = "none";
                     hiddenInput.value = ""; 
+                    
+                    console.log(`🚨 Żaden checkbox nie jest zaznaczony. Generator ukryty.`);
                 }
+
+                console.log(`🔹 Po zmianie: Generuj opis = ${generujOpisCheckbox.checked}, Użyj opisu = ${uzyjOpisuCheckbox.checked}`);
             });
         });
 
@@ -6114,9 +6125,12 @@
                 let postId = this.id.split("_").pop();
                 let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
                 hiddenInput.value = this.innerText.trim();
+
+                console.log(`✏️ Edytowano polecenie AI dla post_id ${postId}: ${hiddenInput.value}`);
             });
         });
     });
+
 
 </script>
 {% endblock %}
