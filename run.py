@@ -11486,24 +11486,26 @@ def public_on_socialsync():
         if uzyj_aktualnego_opisu:
             styl_ogloszenia = 0
             status = 4
+            polecenie_ai = None  # Nie generujemy opisu, więc polecenie nie jest potrzebne
         elif generuj_opis:
             styl_ogloszenia = 1
             status = 5
+            polecenie_ai = polecenie_ai.strip() if polecenie_ai else None  # Pobieramy polecenie tylko jeśli zostało wpisane
         else:
             status = 4
             styl_ogloszenia = 0
-
+            polecenie_ai = None  # Domyślnie brak polecenia
 
         # Wstawienie rekordu do bazy danych
         zapytanie_sql = '''
             INSERT INTO ogloszenia_socialsync
                 (rodzaj_ogloszenia, id_ogloszenia, kategoria_ogloszenia, tresc_ogloszenia,
-                styl_ogloszenia, zdjecia_string, status, created_by)
+                styl_ogloszenia, polecenie_ai, zdjecia_string, status, created_by)
             VALUES 
-                (%s, %s, %s, %s, %s, %s, %s, %s);
+                (%s, %s, %s, %s, %s, %s, %s, %s, %s);
         '''
         dane = (rodzaj_ogloszenia, id_ogloszenia, kategoria_ogloszenia, opis_ogloszenia, 
-                styl_ogloszenia, zdjecia_string, status, 'dmdinwestycje')
+                styl_ogloszenia, polecenie_ai, zdjecia_string, status, 'dmdinwestycje')
 
         if msq.insert_to_database(zapytanie_sql, dane):
             msq.handle_error(f'Oferta została pomyślnie wysłana do realizacji na profilu FB przez {session["username"]}!', log_path=logFileName)

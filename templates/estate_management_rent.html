@@ -2639,16 +2639,14 @@
                                                             </div>
                                                             <div class="col">
                                                                 <div class="form-check form-switch">
-                                                                    <input class="form-check-input toggle-switch" type="checkbox" id="uzyj_opisu_{{post_id}}" name="uzyj_aktualnego_opisu" value="1">
+                                                                    <input class="form-check-input toggle-switch" type="checkbox" id="uzyj_opisu_{{post_id}}" name="uzyj_aktualnego_opisu" value="1" checked>
                                                                     <label class="form-check-label" for="uzyj_opisu_{{post_id}}">Użyj opisu ogłoszenia</label>
                                                                 </div>
                                                             </div>
                                                         </div>
                                             
                                                         <!-- Edytowalne pole dla generowania opisu -->
-                                                        <div id="generator_{{post_id}}" contenteditable="true" class="generator-box" style="display: none; border: 1px solid #ccc; padding: 8px; margin-top: 10px; min-height: 50px;">
-                                                            Wpisz polecenie dla AI (np. "Napisz to w stylu...")
-                                                        </div>
+                                                        <div id="generator_{{post_id}}" contenteditable="true" class="generator-box" style="display: none; border: 2px solid #ccc; padding: 8px; margin-top: 10px; min-height: 50px; border-radius: 10px;"></div>
                                             
                                                         <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;">
                                                             Publikuj na profilu FB
