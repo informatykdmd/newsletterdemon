@@ -2648,28 +2648,12 @@
                                                         <!-- Edytowalne pole dla generowania opisu -->
                                                         <div id="generator_{{post_id}}" contenteditable="true" class="generator-box" style="display: none; border: 2px solid #ccc; padding: 8px; margin-top: 10px; min-height: 50px; border-radius: 10px;"></div>
                                             
-                                                        <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;">
+                                                        <button type="submit" class="btn btn-outline-info btn-sm mt-2" style="max-height: 30px; font-size: 12px;">
                                                             Publikuj na profilu FB
                                                         </button>
                                                     </form>
                                                 </div>
                                             </div>
-                                            <script>
-                                                checkboxControlOffOther(
-                                                    'socialsync_{{post_id}}', 
-                                                    'generuj_opis_{{post_id}}', 
-                                                    [
-                                                        'uzyj_aktualnego_opisu_{{post_id}}'
-                                                    ]
-                                                );
-                                                checkboxControlOffOther(
-                                                    'socialsync_{{post_id}}', 
-                                                    'uzyj_aktualnego_opisu_{{post_id}}', 
-                                                    [
-                                                        'generuj_opis_{{post_id}}'
-                                                    ]
-                                                );
-                                            </script>
                                             {% endif %}
                                         {% endif %}
                                     </div>
@@ -6104,19 +6088,22 @@
                 let uzyjOpisuCheckbox = document.getElementById(`uzyj_opisu_${postId}`);
                 let hiddenInput = document.getElementById(`polecenie_ai_${postId}`);
 
+                // Jeśli zaznaczamy "Generuj opis", odznaczamy drugą opcję i pokazujemy generator
                 if (generujOpisCheckbox.checked) {
-                    generatorDiv.style.display = "block";  // Pokazujemy edytowalny div
-                    uzyjOpisuCheckbox.checked = false; // Odznaczamy drugą opcję
+                    uzyjOpisuCheckbox.checked = false; 
+                    generatorDiv.style.display = "block";  
                     hiddenInput.value = generatorDiv.innerText.trim(); // Aktualizujemy wartość inputa
-                } else {
-                    generatorDiv.style.display = "none"; // Ukrywamy edytowalny div
+                } 
+                // Jeśli zaznaczamy "Użyj opisu", odznaczamy pierwszą opcję i ukrywamy generator
+                else if (uzyjOpisuCheckbox.checked) {
+                    generujOpisCheckbox.checked = false; 
+                    generatorDiv.style.display = "none";  
                     hiddenInput.value = ""; // Czyszczenie wartości pola
-                }
-
-                if (uzyjOpisuCheckbox.checked) {
-                    generujOpisCheckbox.checked = false; // Odznaczamy pierwszą opcję
-                    generatorDiv.style.display = "none"; // Ukrywamy edytowalny div
-                    hiddenInput.value = ""; // Czyszczenie wartości pola
+                } 
+                // Jeśli żadna opcja nie jest zaznaczona, ukrywamy generator
+                else {
+                    generatorDiv.style.display = "none";
+                    hiddenInput.value = ""; 
                 }
             });
         });
