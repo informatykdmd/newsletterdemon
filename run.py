@@ -4083,7 +4083,7 @@ def estateAdsRent():
                 days_since_published = (datetime.datetime.now() - update_date).days
                 item['socialSync']['opublikowano_dni'] = max(days_since_published, 0)  # Unikamy wartości ujemnych
 
-        print(item.get('socialSync'))
+        # print(item.get('socialSync'))
 
         new_all_rents.append(item)
     # flash(f"{str(len(new_all_rents))}", 'dnager')
@@ -4807,6 +4807,35 @@ def estateAdsSell():
         item['fbgroups']['section'] = fbgroupsIDstatus[53]
         item['fbgroups']['id_gallery'] = fbgroupsIDstatus[54]
         item['fbgroups']['data_aktualizacji'] = fbgroupsIDstatus[55]
+
+        if 'socialSync' not in item:
+            item['socialSync'] = {}
+        socialSync_IDstatus = checkSocialSyncStatus(kind="s", id=item['ID'])
+        item['socialSync']['id'] = socialSync_IDstatus[0]
+        item['socialSync']['status'] = socialSync_IDstatus[1]
+        item['socialSync']['data_aktualizacji'] = socialSync_IDstatus[2]
+        item['socialSync']['errors'] = socialSync_IDstatus[3]
+        item['socialSync']['action_before_errors'] = socialSync_IDstatus[4]
+        item['socialSync']['kategoria_ogloszenia'] = socialSync_IDstatus[5]
+
+        
+
+        if item.get('socialSync') and item['socialSync'].get('status') is not None:
+            update_date = item['socialSync'].get('data_aktualizacji')
+            last_update_ads = item.get('DataAktualizacji_raw')
+
+            # Sprawdzamy, czy update_date nie jest None
+            if update_date and last_update_ads and update_date < last_update_ads:
+                query = "DELETE FROM ogloszenia_socialsync WHERE id=%s;"
+                params = (item['socialSync']['id'], )
+
+                if msq.insert_to_database(query, params):  # Jeśli usunięcie się powiodło
+                    item['socialSync']['status'] = None
+
+            # Obliczamy ilość dni od momentu publikacji
+            if update_date:
+                days_since_published = (datetime.datetime.now() - update_date).days
+                item['socialSync']['opublikowano_dni'] = max(days_since_published, 0)  # Unikamy wartości ujemnych
 
         new_all_sell.append(item)
 

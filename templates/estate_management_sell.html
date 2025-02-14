@@ -1780,7 +1780,7 @@
                                             <div class="row">
                                                 <div class="col-lg-5 col-sm-12">
                                                     <div class="mb-2 mt-2">
-                                                        <h5>Treść Ogłoszenia na Grupach FB</h5>
+                                                        <h5 class="text-info">📢 Treść Ogłoszenia na Grupach FB</h5>
                                                     </div>
                                                     <div 
                                                         id="fbgroups_estateAdsSellDescription_{{post_id}}" 
@@ -1823,10 +1823,10 @@
                                                 <div class="col-lg-3 col-sm-12">
                                                     <div> 
                                                         
-                                                        <div class="mb-2 mt-2">
-                                                            <h5>FACEBOOK GRUPY</h5>
-                                                            
-                                                            <p>Status: Pierwsza publikacja na grupach facebook</p>
+                                                        <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                            <h5 class="text-success">🌍 FACEBOOK GRUPY</h5>
+                                                            <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na grupach Facebook</strong></p>
+                                                            <p class="text-secondary">🚀 Oferta zostanie opublikowana na wybranych grupach po zakończeniu procesu.</p>
                                                         </div>
 
                                                         <div class="row row-cols-auto mb-3">
@@ -2058,14 +2058,14 @@
                                         <form method="POST" id="remove_career_fbgroups_{{post_id}}" action="{{ url_for('remove_career_fbgroups') }}" enctype="multipart/form-data" onsubmit="return confirm('Uwaga: Czy na pewno chcesz zatrzymać tę kampanię na grupach facebooka?');">
                                             <div class="row">
                                                 <div class="col-lg-12 col-sm-12 mb-3 mt-3">
-                                                    <h3>Monitoring Kampanii Na grupach FB</h3>
+                                                    <h3 class="text-info">📊 Monitoring Kampanii na Grupach FB</h3>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-5">
                                                     <div class="row">
                                                         <div class="col-12 mb-3">
-                                                            <h5>Podgląd Posta</h5>
+                                                            <h5 class="text-primary">👀 Podgląd Posta</h5>
                                                         </div>
                                                     </div>
                                                     <div class="fbgroups-requirements-description-preview-{{post_data['fbgroups']['color_choice']}}">
@@ -2076,7 +2076,7 @@
                                                     <div class="">
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <h5>Harmonogram</h5>
+                                                                <h5 class="text-warning">📅 Harmonogram</h5>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -2155,11 +2155,11 @@
                                             -->
                                             {% if post_data['StatusOferty'] == 1 %}
                                                 {% if post_data['allegro']['status'] == 1 %}
-                                                    <div class="mb-2 mt-2">
-                                                        
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Opublikowano (pozostało {{post_data['allegro']['zostalo_dni']}} dni)</p>
-                                                    </div>
+                                                <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                    <h5 class="text-primary">🛒 ALLEGRO LOKALNIE</h5>
+                                                    <p class="mb-1">📌 Status: <strong class="text-info">Opublikowano</strong> (pozostało <strong>{{ post_data['allegro']['zostalo_dni'] }}</strong> dni)</p>
+                                                    <p class="text-secondary">✅ Oferta jest aktywna na Allegro Lokalnie.</p>
+                                                </div>
                                                     <div class="row row-cols-auto "> 
 
                                                         <div class="col">
@@ -2195,11 +2195,11 @@
                                                     </div>
 
                                                 {% elif post_data['allegro']['status'] == 2 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Error</p>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            {{post_data['allegro']['errors']}}
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">⚠️ ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Błąd publikacji</strong></p>
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                                            <span class="me-2">❌</span> <span>{{ post_data.allegro.errors }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="row row-cols-auto ">
@@ -2260,9 +2260,10 @@
                                                     </div>
                                                 
                                                 {% elif post_data['allegro']['status'] == 4 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">⏳ ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces tworzenia nowego ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">🔄 Oferta jest w trakcie publikacji. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -2299,9 +2300,10 @@
                                                     </div>
                                                 
                                                 {% elif post_data['allegro']['status'] == 5 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">🔄 ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces aktualizacji ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⏳ Oferta jest aktualizowana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -2339,9 +2341,10 @@
                                                     
                                                 
                                                 {% elif post_data['allegro']['status'] == 6 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        <p>Status: Trwa proces usuwania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">🗑️ ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Trwa proces usuwania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⚠️ Oferta zostanie wkrótce usunięta.</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -2378,10 +2381,10 @@
                                                     </div>
 
                                                 {% elif post_data['allegro']['status'] == None %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ALLEGRO LOKALNIE</h5>
-                                                        
-                                                        <p>Status: Pierwsza publikacja na allegro lokalnie</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-success">🌟 ALLEGRO LOKALNIE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na Allegro Lokalnie</strong></p>
+                                                        <p class="text-secondary">🚀 Oferta zostanie opublikowana po zakończeniu procesu.</p>
                                                     </div>
                                                     <div class="mb-2 mt-2">
                                                         <div class="row mb-2 mt-2">
@@ -2544,7 +2547,145 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-sm-12">
-                                        OLX
+                                        <!-- SocialSync -->
+                                        <!-- 
+                                            1 Opublikowano
+                                            2 Error
+                                            4 Trwa proces tworzenia nowego wpisu z natulanym opisem
+                                            5 Trwa proces tworzenia nowego wpisu z generowanym opisem
+                                            None 
+                                        -->
+                                        {% if post_data.StatusOferty == 1 %}
+                                            {% if post_data.socialSync.status == 1 %}
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                <h5 class="text-primary">🌍 FACEBOOK PROFIL</h5>
+                                                <p class="mb-1">📌 Status: <strong class="text-success">Opublikowano</strong> (pozostało <strong>{{ post_data.socialSync.opublikowano_dni }}</strong> dni)</p>
+                                                <p class="text-warning fs-5 fw-bold">🚀 Oferta jest już aktywna! Aby ponownie ją wystawić, dokonaj aktualizacji.</p>
+                                            </div>
+                                            
+
+                                            {% elif post_data.socialSync.status == 2 %}
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                <h5 class="text-danger">⚠️ FACEBOOK PROFIL</h5>
+                                                <p class="mb-1">📌 Status: <strong class="text-danger">Błąd publikacji</strong></p>
+                                                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                                    <span class="me-2">❌</span> <span>{{ post_data.socialSync.errors }}</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row row-cols-auto ">
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Ponow" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Ponów zadanie
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Anuluj_zadanie" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Anuluj zadanie
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            {% elif post_data.socialSync.status == 4 or post_data.socialSync.status == 5 %}
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                <h5 class="text-info">⏳ FACEBOOK PROFIL</h5>
+                                                <p class="mb-1">📌 Status: <strong class="text-primary">Oferta w trakcie publikacji...</strong></p>
+                                                <p class="text-secondary">🔄 Proces może potrwać kilka minut. Proszę czekać...</p>
+                                            </div>                                            
+                                            <div class="row row-cols-auto ">
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Odswiez" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Odświeżenie statusu
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Anuluj_zadanie" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Anuluj zadanie
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            {% elif post_data.socialSync.status == None %}
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                <h5 class="text-success">🌟 FACEBOOK PROFIL</h5>
+                                                <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na profilu firmowym DMD Inwestycje</strong></p>
+                                                <p class="text-secondary">🚀 Twoja oferta zostanie opublikowana po zakończeniu procesu.</p>
+                                            </div>
+                                            
+                                            <div class="row row-cols-auto mb-3">
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" id="form_socialsync_{{post_id}}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}">
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsSell">
+                                                        <input type="hidden" name="PostID" value="{{ post_id }}">
+                                                        <input type="hidden" name="Status" value="0">
+                                                        <input type="hidden" name="task_kind" value="Publikuj">
+                                                        <input type="hidden" name="polecenie_ai" id="polecenie_ai_{{post_id}}" value="">
+                                            
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input toggle-switch" type="checkbox" id="generuj_opis_{{post_id}}" name="generuj_opis" value="1">
+                                                                    <label class="form-check-label" for="generuj_opis_{{post_id}}">Generuj opis ogłoszenia</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input toggle-switch" type="checkbox" id="uzyj_opisu_{{post_id}}" name="uzyj_aktualnego_opisu" value="1" checked>
+                                                                    <label class="form-check-label" for="uzyj_opisu_{{post_id}}">Użyj opisu ogłoszenia</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                            
+                                                        <!-- Edytowalne pole dla generowania opisu -->
+                                                        <div id="generator_{{post_id}}" contenteditable="true" class="generator-box" style="display: none; border: 2px solid #ccc; padding: 8px; margin-top: 10px; min-height: 50px; border-radius: 10px;"></div>
+                                            
+                                                        <button type="submit" class="btn btn-outline-info btn-sm mt-2" style="max-height: 30px; font-size: 12px;">
+                                                            Publikuj na profilu FB
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endif %}
                                     </div>
                                     <div class="col-lg-4 col-sm-12">
                                         <div> 
@@ -2563,10 +2704,10 @@
                                                 {% if post_data['otodom']['status'] == 1 %}
                                                     
 
-                                                    <div class="mb-2 mt-2">
-                                                        
-                                                        <h5>OTODOM</h5>
-                                                        <p>Status: Opublikowano (pozostało {{post_data['otodom']['zostalo_dni']}} dni)</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-primary">🏡 OTODOM</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-info">Opublikowano</strong> (pozostało <strong>{{ post_data.otodom.zostalo_dni }}</strong> dni)</p>
+                                                        <p class="text-secondary">✅ Oferta jest aktywna na Otodom.</p>
                                                     </div>
                                                     <div class="row row-cols-auto "> 
 
@@ -2652,11 +2793,11 @@
                                                     </div>
 
                                                 {% elif post_data['otodom']['status'] == 2 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>OTODOM</h5>
-                                                        <p>Status: Error</p>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            {{post_data['otodom']['errors']}}
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">⚠️ OTODOM</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Błąd publikacji</strong></p>
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                                            <span class="me-2">❌</span> <span>{{ post_data.otodom.errors }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="row row-cols-auto ">
@@ -2717,9 +2858,10 @@
                                                     </div>
                                                 
                                                 {% elif post_data['otodom']['status'] == 4 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>OTODOM</h5>
-                                                        <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">⏳ OTODOM</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces tworzenia nowego ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">🔄 Oferta jest w trakcie publikacji. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -2756,9 +2898,10 @@
                                                     </div>
                                                 
                                                 {% elif post_data['otodom']['status'] == 5 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>OTODOM</h5>
-                                                        <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">🔄 OTODOM</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces aktualizacji ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⏳ Oferta jest aktualizowana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -2796,9 +2939,10 @@
                                                     
                                                 
                                                 {% elif post_data['otodom']['status'] == 6 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>OTODOM</h5>
-                                                        <p>Status: Trwa proces usuwania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">🗑️ OTODOM</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Trwa proces usuwania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⚠️ Oferta zostanie wkrótce usunięta.</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -2835,10 +2979,10 @@
                                                     </div>
 
                                                 {% elif post_data['otodom']['status'] == None %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>OTODOM</h5>
-                                                        
-                                                        <p>Status: Pierwsza publikacja na OtoDom</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-success">🌟 OTODOM</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na Otodom</strong></p>
+                                                        <p class="text-secondary">🚀 Oferta zostanie opublikowana po zakończeniu procesu.</p>
                                                     </div>
                                                     <div class="mb-2 mt-2">
                                                         <div class="row mb-2 mt-2">
@@ -3121,9 +3265,10 @@
                                                         
                                                 {% if post_data['StatusOferty'] == 1 %}
                                                     {% if post_data['lento']['status'] == 0 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Wstrzymany</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-muted">⏸️ LENTO.PL</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-muted">Wstrzymany</strong></p>
+                                                        <p class="text-secondary">⚠️ Oferta została tymczasowo wstrzymana. Sprawdź szczegóły lub wznow ją.</p>
                                                     </div>
                                                     <div class="row row-cols-auto "> 
                                                         
@@ -3160,10 +3305,10 @@
                                                     </div>
                                                     
                                                     {% elif post_data['lento']['status'] == 1 %}
-                                                    <div class="mb-2 mt-2">
-                                                        
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Opublikowano (pozostało {{post_data['lento']['zostalo_dni']}} dni)</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-primary">📢 LENTO.PL</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-info">Opublikowano</strong> (pozostało <strong>{{ post_data.lento.zostalo_dni }}</strong> dni)</p>
+                                                        <p class="text-secondary">✅ Oferta jest aktywna na Lento.pl.</p>
                                                     </div>
                                                     <div class="row row-cols-auto "> 
                                                         <div class="col">
@@ -3199,36 +3344,17 @@
                                                                     </button>
                                                                 </div>
                                                             </form>
-                                                        </div>
-                                                        
-                                                        
-                                                        <!-- <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Promuj" />
-                                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Zmień promowanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div> -->
-
-
-                                                        
+                                                        </div> 
                                                     </div>
                                                     
                                                     
                                                     
                                                     {% elif post_data['lento']['status'] == 2 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Error</p>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            {{post_data['lento']['errors']}}
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">⚠️ LENTO.PL</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Błąd publikacji</strong></p>
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                                            <span class="me-2">❌</span> <span>{{ post_data.lento.errors }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="row row-cols-auto ">
@@ -3289,9 +3415,10 @@
                                                     </div>
                                                     
                                                     {% elif post_data['lento']['status'] == 4 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">⏳ LENTO.PL</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces tworzenia nowego ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">🔄 Oferta jest w trakcie publikacji. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -3327,9 +3454,10 @@
                                                     </div>
                                                     
                                                     {% elif post_data['lento']['status'] == 5 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">🔄 LENTO.PL</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces aktualizacji ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⏳ Oferta jest aktualizowana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -3367,9 +3495,10 @@
                                                         
                                                     
                                                     {% elif post_data['lento']['status'] == 6 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces usuwania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">🗑️ LENTO.PL</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Trwa proces usuwania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⚠️ Oferta zostanie wkrótce usunięta.</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -3406,9 +3535,10 @@
                                                     </div>
 
                                                     {% elif post_data['lento']['status'] == 7 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces wstrzymywania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-muted">⏸️ LENTO.PL</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-muted">Trwa proces wstrzymywania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">🔄 Oferta zostanie tymczasowo wstrzymana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -3445,9 +3575,10 @@
                                                     </div>
 
                                                     {% elif post_data['lento']['status'] == 8 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        <p>Status: Trwa proces wznawiania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-success">🔄 LENTO.PL</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-success">Trwa proces wznawiania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⏳ Oferta zostanie wkrótce ponownie aktywowana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -3484,10 +3615,10 @@
                                                     </div>
                                                         
                                                     {% elif post_data['lento']['status'] == None %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>LENTO.PL</h5>
-                                                        
-                                                        <p>Status: Pierwsza publikacja na Lento</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-success">🌟 LENTO.PL</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na Lento</strong></p>
+                                                        <p class="text-secondary">🚀 Oferta zostanie opublikowana po zakończeniu procesu.</p>
                                                     </div>
                                                     <div class="row row-cols-auto mb-3">
                                                         <div class="col">
@@ -3831,9 +3962,10 @@
                                             -->
                                             {% if post_data['StatusOferty'] == 1 %}
                                                 {% if post_data['facebook']['status'] == 0 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>FACEBOOK MARKETPLACE</h5>
-                                                        <p>Status: Wstrzymany</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-muted">⏸️ FACEBOOK MARKETPLACE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-muted">Wstrzymany</strong></p>
+                                                        <p class="text-secondary">⚠️ Ogłoszenie zostało tymczasowo wstrzymane. Możesz je wznowić w dowolnym momencie.</p>
                                                     </div>
                                                     <div class="row row-cols-auto "> 
                                                         
@@ -3870,10 +4002,10 @@
                                                     </div>
                                             
                                                 {% elif post_data['facebook']['status'] == 1 %}
-                                                    <div class="mb-2 mt-2">
-                                                                    
-                                                        <h5>FACEBOOK MARKETPLACE</h5>
-                                                        <p>Status: Opublikowano (pozostało {{post_data['lento']['zostalo_dni']}} dni)</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-primary">📢 FACEBOOK MARKETPLACE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-info">Opublikowano</strong> (pozostało <strong>{{ post_data.facebook.zostalo_dni }}</strong> dni)</p>
+                                                        <p class="text-secondary">✅ Oferta jest aktywna na Facebook Marketplace.</p>
                                                     </div>
                                                     <div class="row row-cols-auto "> 
                                                         <div class="col">
@@ -3909,30 +4041,13 @@
                                                                 </div>
                                                             </form>
                                                         </div>
-                                                        
-                                                        
-                                                        <!-- <div class="col">
-                                                            <form action="{{ url_for('public_on_lento') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="lento_id" value="{{post_data['lento']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Promuj" />
-                                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Zmień promowanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div> -->
-
                                                     </div>
                                                     {% elif post_data['facebook']['status'] == 2 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>FACEBOOK MARKETPLACE</h5>
-                                                        <p>Status: Error</p>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            {{post_data['facebook']['errors']}}
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">⚠️ FACEBOOK MARKETPLACE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Błąd publikacji</strong></p>
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                                            <span class="me-2">❌</span> <span>{{ post_data.facebook.errors }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="row row-cols-auto ">
@@ -3993,9 +4108,10 @@
                                                     </div>
                                                 
                                                 {% elif post_data['facebook']['status'] == 4 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>FACEBOOK MARKETPLACE</h5>
-                                                        <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">⏳ FACEBOOK MARKETPLACE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces tworzenia nowego ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">🔄 Oferta jest w trakcie publikacji. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -4032,9 +4148,10 @@
                                                     </div>
                                                 
                                                 {% elif post_data['facebook']['status'] == 5 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>FACEBOOK MARKETPLACE</h5>
-                                                        <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">🔄 FACEBOOK MARKETPLACE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces aktualizacji ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⏳ Oferta jest aktualizowana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -4072,10 +4189,11 @@
                                                     
                                                 
                                                 {% elif post_data['facebook']['status'] == 6 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>FACEBOOK MARKETPLACE</h5>
-                                                        <p>Status: Trwa proces usuwania ogłoszenia</p>
-                                                    </div>
+                                                <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                    <h5 class="text-danger">🗑️ FACEBOOK MARKETPLACE</h5>
+                                                    <p class="mb-1">📌 Status: <strong class="text-danger">Trwa proces usuwania ogłoszenia...</strong></p>
+                                                    <p class="text-secondary">⚠️ Oferta zostanie wkrótce usunięta.</p>
+                                                </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
                                                             <form action="{{ url_for('public_on_facebook') }}" method="POST" enctype="multipart/form-data">
@@ -4111,9 +4229,10 @@
                                                     </div>
 
                                                 {% elif post_data['facebook']['status'] == 7 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>FACEBOOK MARKETPLACE</h5>
-                                                        <p>Status: Trwa proces wstrzymywania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-muted">⏸️ FACEBOOK MARKETPLACE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-muted">Trwa proces wstrzymywania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">🔄 Oferta zostanie tymczasowo wstrzymana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -4150,9 +4269,10 @@
                                                     </div>
 
                                                 {% elif post_data['facebook']['status'] == 8 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>FACEBOOK MARKETPLACE</h5>
-                                                        <p>Status: Trwa proces wznawiania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-success">🔄 FACEBOOK MARKETPLACE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-success">Trwa proces wznawiania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⏳ Oferta zostanie wkrótce ponownie aktywowana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -4189,10 +4309,10 @@
                                                     </div>
                                                     
                                                 {% elif post_data['facebook']['status'] == None %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>FACEBOOK MARKETPLACE</h5>
-                                                        
-                                                        <p>Status: Pierwsza publikacja na Lento</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-success">🌟 FACEBOOK MARKETPLACE</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na Marketplace</strong></p>
+                                                        <p class="text-secondary">🚀 Oferta zostanie opublikowana po zakończeniu procesu.</p>
                                                     </div>
                                                     <div class="row row-cols-auto mb-3">
                                                         <div class="col">
@@ -4328,10 +4448,10 @@
                                             -->
                                             {% if post_data['StatusOferty'] == 1 %}
                                                 {% if post_data['adresowo']['status'] == 0 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ADRESOWO</h5>
-                                                        
-                                                        <p>Status: Wstrzymany</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-muted">⏸️ ADRESOWO</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-muted">Wstrzymany</strong></p>
+                                                        <p class="text-secondary">⚠️ Ogłoszenie zostało tymczasowo wstrzymane. Możesz je wznowić w dowolnym momencie.</p>
                                                     </div>
                                                     <div class="row row-cols-auto "> 
                                                         
@@ -4367,10 +4487,10 @@
                                                         </div>
                                                     </div>
                                                 {% elif post_data['adresowo']['status'] == 1 %}
-                                                    <div class="mb-2 mt-2">
-                                                                            
-                                                        <h5>ADRESOWO</h5>
-                                                        <p>Status: Opublikowano (aktywne od {{post_data['adresowo']['aktywne_miesiecy']}} miesięcy)</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-primary">📢 ADRESOWO</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-info">Opublikowano</strong> (aktywne od <strong>{{ post_data.adresowo.aktywne_miesiecy }}</strong> miesięcy)</p>
+                                                        <p class="text-secondary">✅ Oferta jest aktywna na Adresowo.</p>
                                                     </div>
                                                     <div class="row row-cols-auto "> 
                                                         <div class="col">
@@ -4404,23 +4524,6 @@
                                                             </button>
                                                             
                                                         </div>
-                                                        
-                                                        
-                                                        <!-- <div class="col">
-                                                            <form action="{{ url_for('public_on_adresowo') }}" method="POST" enctype="multipart/form-data">
-                                                                <input type="hidden" name="adresowo_id" value="{{post_data['adresowo']['id']}}" />
-                                                                <input type="hidden" name="redirectGoal" value="estateAdsSell" />
-                                                                <input type="hidden" name="PostID" value="{{post_id}}" />
-                                                                <div class="col me-1 mb-1">
-                                                                    <input type="hidden" name="Status" value="0" />
-                                                                    <input type="hidden" name="task_kind" value="Promuj" />
-                                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
-                                                                        Zmień promowanie
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div> -->
-
                                                     </div>
                                                     <div class="collapse" style="max-width: 400px;" id="collapse_id_adresowo_{{post_id}}">
                                                         <div class="mb-2 mt-2">
@@ -4488,11 +4591,11 @@
                                                         </div>
                                                     </div>
                                                 {% elif post_data['adresowo']['status'] == 2 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ADRESOWO</h5>
-                                                        <p>Status: Error</p>
-                                                        <div class="alert alert-danger" role="alert">
-                                                            {{post_data['adresowo']['errors']}}
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">⚠️ ADRESOWO</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Błąd publikacji</strong></p>
+                                                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                                            <span class="me-2">❌</span> <span>{{ post_data.adresowo.errors }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="row row-cols-auto ">
@@ -4551,9 +4654,10 @@
                                                         </div>
                                                     </div>
                                                 {% elif post_data['adresowo']['status'] == 4 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ADRESOWO</h5>
-                                                        <p>Status: Trwa proces tworzenia nowego ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">⏳ ADRESOWO</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces tworzenia nowego ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">🔄 Oferta jest w trakcie publikacji. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -4589,9 +4693,10 @@
                                                         </div>
                                                     </div>
                                                 {% elif post_data['adresowo']['status'] == 5 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ADRESOWO</h5>
-                                                        <p>Status: Trwa proces aktualizacji ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-warning">🔄 ADRESOWO</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-warning">Trwa proces aktualizacji ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⏳ Oferta jest aktualizowana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -4627,9 +4732,10 @@
                                                         </div>
                                                     </div>
                                                 {% elif post_data['adresowo']['status'] == 6 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ADRESOWO</h5>
-                                                        <p>Status: Trwa proces usuwania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-danger">🗑️ ADRESOWO</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-danger">Trwa proces usuwania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⚠️ Oferta zostanie wkrótce usunięta.</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -4665,9 +4771,10 @@
                                                         </div>
                                                     </div>
                                                 {% elif post_data['adresowo']['status'] == 7 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ADRESOWO</h5>
-                                                        <p>Status: Trwa proces wstrzymywania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-muted">⏸️ ADRESOWO</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-muted">Trwa proces wstrzymywania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">🔄 Oferta zostanie tymczasowo wstrzymana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -4703,9 +4810,10 @@
                                                         </div>
                                                     </div>
                                                 {% elif post_data['adresowo']['status'] == 8 %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ADRESOWO</h5>
-                                                        <p>Status: Trwa proces wznawiania ogłoszenia</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-success">🔄 ADRESOWO</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-success">Trwa proces wznawiania ogłoszenia...</strong></p>
+                                                        <p class="text-secondary">⏳ Oferta zostanie wkrótce ponownie aktywowana. Proszę czekać...</p>
                                                     </div>
                                                     <div class="row row-cols-auto ">
                                                         <div class="col">
@@ -4741,10 +4849,10 @@
                                                         </div>
                                                     </div>
                                                 {% elif post_data['adresowo']['status'] == None %}
-                                                    <div class="mb-2 mt-2">
-                                                        <h5>ADRESOWO</h5>
-                                                        
-                                                        <p>Status: Pierwsza publikacja na Adresowo</p>
+                                                    <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                        <h5 class="text-success">🌟 ADRESOWO</h5>
+                                                        <p class="mb-1">📌 Status: <strong class="text-success">Pierwsza publikacja na Adresowo</strong></p>
+                                                        <p class="text-secondary">🚀 Oferta zostanie opublikowana po zakończeniu procesu.</p>
                                                     </div>
                                                     <div class="mb-2 mt-2">
                                                         <div class="row mb-2 mt-2">
