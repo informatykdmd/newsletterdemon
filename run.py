@@ -866,6 +866,7 @@ def generator_sellOffert(lang='pl'): # status='aktywna', 'nieaktywna', 'wszystki
             'DataPublikacjiMarketplace': None if data[13] is None else format_date(data[13]),#
             'DataUtworzenia': format_date(data[14]),#
             'DataAktualizacji': format_date(data[15]),#
+            'DataAktualizacji_raw': data[14],
             'RodzajZabudowy': "" if data[16] is None else data[16],#
             'Rynek': '' if data[17] is None else data[17],#
             'LiczbaPieter': 0 if data[18] is None else data[18],#
@@ -4828,6 +4829,7 @@ def estateAdsSell():
 
             print(update_date and last_update_ads and update_date < last_update_ads)
             print(update_date, last_update_ads, update_date, last_update_ads)
+            print(type(update_date), type(last_update_ads), type(update_date), type(last_update_ads))
             # Sprawdzamy, czy update_date nie jest None
             if update_date and last_update_ads and update_date < last_update_ads:
                 query = "DELETE FROM ogloszenia_socialsync WHERE id=%s;"
