@@ -4070,6 +4070,8 @@ def estateAdsRent():
             update_date = item['socialSync'].get('data_aktualizacji')
             last_update_ads = item.get('DataAktualizacji_raw')
 
+            print(update_date and last_update_ads and update_date < last_update_ads)
+            print(update_date, last_update_ads, update_date, last_update_ads)
             # Sprawdzamy, czy update_date nie jest None
             if update_date and last_update_ads and update_date < last_update_ads:
                 query = "DELETE FROM ogloszenia_socialsync WHERE id=%s;"
@@ -4824,6 +4826,8 @@ def estateAdsSell():
             update_date = item['socialSync'].get('data_aktualizacji')
             last_update_ads = item.get('DataAktualizacji_raw')
 
+            print(update_date and last_update_ads and update_date < last_update_ads)
+            print(update_date, last_update_ads, update_date, last_update_ads)
             # Sprawdzamy, czy update_date nie jest None
             if update_date and last_update_ads and update_date < last_update_ads:
                 query = "DELETE FROM ogloszenia_socialsync WHERE id=%s;"
