@@ -1,4 +1,4 @@
-from time import time, sleep
+from time import time, sleep, strftime, gmtime
 import datetime
 import prepare_shedule
 import messagerCreator 
@@ -592,7 +592,7 @@ def main():
                     cpu_usage = psutil.cpu_percent(interval=1)  # Użycie CPU w %
                     ram_usage = psutil.virtual_memory().percent  # Użycie RAM w %
                     disk_usage = psutil.disk_usage('/').percent  # Użycie dysku w %
-                    uptime = time.strftime('%H:%M:%S', time.gmtime(time.time() - psutil.boot_time()))  # Czas działania systemu
+                    uptime = strftime('%H:%M:%S', gmtime(time.time() - psutil.boot_time()))  # Czas działania systemu
                     
                     # Lista komunikatów systemowych z dynamicznymi danymi
                     random_choiced_prompt_list = [
