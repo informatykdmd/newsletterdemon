@@ -233,6 +233,7 @@
 
                                             <option value="">Wybierz profil FB</option>
                                             <option value="dmddomy">DMD Domy</option>
+                                            <option value="dmdinwestycje">DMD Inwestycje</option>
                                             <option value="fredgraf">Fred Graf</option>
                                             <option value="michalformatyk">Michał Formatyk</option>
                                         </select>
@@ -365,6 +366,7 @@
                                                     required>
 
                                                     <option value="">Wybierz profil FB</option>
+                                                    <option value="dmdinwestycje" {{ 'selected' if post_data['created_by'] == 'dmdinwestycje' else '' }}>DMD Inwestycje</option>
                                                     <option value="dmddomy" {{ 'selected' if post_data['created_by'] == 'dmddomy' else '' }}>DMD Domy</option>
                                                     <option value="fredgraf" {{ 'selected' if post_data['created_by'] == 'fredgraf' else '' }}>Fred Graf</option>
                                                     <option value="michalformatyk" {{ 'selected' if post_data['created_by'] == 'michalformatyk' else '' }}>Michał Formatyk</option>
