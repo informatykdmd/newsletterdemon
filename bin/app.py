@@ -1,4 +1,5 @@
-from time import time, sleep, strftime, gmtime
+import time
+# from time import time, sleep, strftime, gmtime
 import datetime
 import prepare_shedule
 import messagerCreator 
@@ -592,7 +593,7 @@ def main():
                     cpu_usage = psutil.cpu_percent(interval=1)  # Użycie CPU w %
                     ram_usage = psutil.virtual_memory().percent  # Użycie RAM w %
                     disk_usage = psutil.disk_usage('/').percent  # Użycie dysku w %
-                    uptime = strftime('%H:%M:%S', gmtime(time.time() - psutil.boot_time()))  # Czas działania systemu
+                    uptime = time.strftime('%H:%M:%S', time.gmtime(time.time() - psutil.boot_time()))  # Czas działania systemu
                     
                     # Lista komunikatów systemowych z dynamicznymi danymi
                     random_choiced_prompt_list = [
@@ -637,7 +638,7 @@ def main():
                             ): 
                             if final_prompt.get("forge_commender", []):
                                 for us_na, ta_des in final_prompt.get("forge_commender", []):
-                                    sleep(3)
+                                    time.sleep(3)
                                     if prepare_shedule.insert_to_database(
                                         """
                                             INSERT INTO mind_forge_si
@@ -664,7 +665,7 @@ def main():
                     for task_data in give_me_curently_tasks():
                         if make_fbgroups_task(task_data):
                             handle_error(f"Przygotowano kampanię FB w sekcji {task_data.get('section', None)} dla kategorii {task_data.get('category', None)} eminowaną przez bota {task_data.get('created_by', None)} o id: {task_data.get('post_id', None)}.\n")
-                            sleep(5)
+                            time.sleep(5)
 
                 elif name == 'checkpoint_30s':
                     """ 
@@ -789,9 +790,9 @@ def main():
                     ################################################################
 
                     shcedule = prepare_shedule.prepare_mailing_plan(prepare_shedule.get_allPostsID(), prepare_shedule.get_sent())
-                    sleep(1)
+                    time.sleep(1)
                     prepare_shedule.save_shedule(shcedule)
-                    sleep(1)
+                    time.sleep(1)
                     current_time_newslettera = datetime.datetime.now()
                     for row in prepare_shedule.connect_to_database(
                             'SELECT * FROM schedule;'):
@@ -898,7 +899,7 @@ def main():
                 last_run_times[name] = current_time
 
             # 🛑 **Efektywny sposób na oszczędzenie CPU**
-            sleep(3)  # Krótkie opóźnienie, aby nie przeciążać procesora
+            time.sleep(3)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
 
 if __name__ == "__main__":
