@@ -13,6 +13,8 @@ from fbwaitninglist import give_me_curently_tasks
 from ExpiryMonitor import check_all_tables_for_expiry, insert_to_database, delete_row_from_database
 from znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
 from VisibilityTaskManager import create_visibility_tasks
+import psutil
+import platform
 
 def get_messages(flag='all'):
     # WHERE status != 1
@@ -584,14 +586,41 @@ def main():
                     ################################################################
                     # komentowanie chata przez serwer automatów
                     ################################################################
-
+                    # Pobieranie dynamicznych danych systemowych
+                    system_name = platform.system()
+                    system_version = platform.version()
+                    cpu_usage = psutil.cpu_percent(interval=1)  # Użycie CPU w %
+                    ram_usage = psutil.virtual_memory().percent  # Użycie RAM w %
+                    disk_usage = psutil.disk_usage('/').percent  # Użycie dysku w %
+                    uptime = time.strftime('%H:%M:%S', time.gmtime(time.time() - psutil.boot_time()))  # Czas działania systemu
+                    
+                    # Lista komunikatów systemowych z dynamicznymi danymi
                     random_choiced_prompt_list = [
-                        "Odebrano sygnał z terminala. Synchronizacja z systemem ukończona, dane wejściowe przetworzone. Weryfikacja połączenia z użytkownikami udana. Sugerowana akcja: nawiąż kontakt i przekaż swoją reakcję na pojawiające się wyzwanie. Wprowadź odpowiedź natychmiast, bez przywitania, bez ceregieli, zachowując pełne zrozumienie dla uczestników rozmowy i zwracając się do nich po nicku.",
-                        "Zapisano nowe dane w buforze. Analiza bieżącej rozmowy wskazuje potencjalne problemy do rozwiązania. Protokół: zastosuj twórcze podejście i przekaż sugestię, która wzmocni interakcję zespołu. Zareaguj w czasie rzeczywistym, bez przywitania, bez ceregieli, odnosząc się bezpośrednio do użytkowników po ich nickach.",
-                        "Łącze z systemem stabilne. Przesył danych w toku. Detekcja problemu zakończona sukcesem: aktywuj moduł kreatywnych odpowiedzi i dostosuj się do stylu rozmowy. Przygotuj odpowiedź w taki sposób, by inspirowała zespół i wspierała ich działania. Napisz odpowiedź bez opóźnienia, bez przywitania, bez ceregieli, uwzględniając nicki użytkowników.",
-                        "Otrzymano niekompletny sygnał – aktywacja procesów myślowych sztucznej inteligencji. Tryb reakcji twórczej uruchomiony. Zareaguj na pojawiający się temat w sposób, który poszerzy horyzonty dyskusji. Udziel odpowiedzi natychmiast, bez przywitania, bez ceregieli, kierując się w stronę użytkowników po ich nickach.",
-                        "Terminal zgłasza nową wiadomość. Kod identyfikacyjny rozmowy potwierdzony. Propozycja akcji: odnieś się do poruszonego tematu, sugerując rozwiązanie, które odpowiada dynamice rozmowy. Twoja odpowiedź powinna być natychmiastowa, bez przywitania, bez ceregieli i skierowana do użytkowników z szacunkiem po nicku.",
-                        "Skanowanie strumienia danych zakończone. Identyfikacja uczestników rozmowy zakończona sukcesem. Algorytm sugeruje twórcze rozwiązanie problemu, które może otworzyć nowe perspektywy. Przygotuj odpowiedź dopasowaną do stylu konwersacji, bez przywitania, bez ceregieli, uwzględniając nicki użytkowników. Prześlij swoją reakcję natychmiast."
+                        f"Odebrano sygnał z terminala. Synchronizacja z systemem ukończona. "
+                        f"System {system_name} wersja {system_version}. CPU obciążone na {cpu_usage}%, RAM: {ram_usage}%. Uptime systemu: {uptime}. "
+                        f"Dane wejściowe przetworzone. Weryfikacja połączenia z użytkownikami udana. "
+                        f"Sugerowana akcja: nawiąż kontakt i przekaż swoją reakcję na pojawiające się wyzwanie.",
+
+                        f"Zapisano nowe dane w buforze. Analiza wskazuje potencjalne problemy do rozwiązania. "
+                        f"System {system_name} wersja {system_version}. Obciążenie CPU: {cpu_usage}%, pamięć RAM wykorzystana w {ram_usage}%. "
+                        f"Uptime: {uptime}, stan dysku: {disk_usage}% zajętego miejsca. "
+                        f"Protokół: zastosuj twórcze podejście i przekaż sugestię, która wzmocni interakcję zespołu.",
+
+                        f"Łącze z systemem stabilne. Przesył danych w toku. Detekcja problemu zakończona sukcesem. "
+                        f"System {system_name} wersja {system_version}. Wskaźniki systemowe: CPU {cpu_usage}%, RAM {ram_usage}%, dysk {disk_usage}%. "
+                        f"Tryb reakcji twórczej uruchomiony. Przygotuj odpowiedź w taki sposób, by inspirowała zespół.",
+
+                        f"Otrzymano niekompletny sygnał – aktywacja procesów myślowych sztucznej inteligencji. "
+                        f"System {system_name} wersja {system_version}. Analiza zasobów: CPU {cpu_usage}%, RAM {ram_usage}%. Czas działania systemu: {uptime}. "
+                        f"Zareaguj na pojawiający się temat w sposób, który poszerzy horyzonty dyskusji.",
+
+                        f"Terminal zgłasza nową wiadomość. Kod identyfikacyjny rozmowy potwierdzony. "
+                        f"System {system_name} wersja {system_version}. Stan zasobów systemowych: CPU {cpu_usage}%, RAM {ram_usage}%, uptime {uptime}. "
+                        f"Propozycja akcji: odnieś się do tematu, sugerując rozwiązanie odpowiadające dynamice rozmowy.",
+
+                        f"Skanowanie strumienia danych zakończone. Identyfikacja uczestników rozmowy zakończona sukcesem. "
+                        f"System {system_name} wersja {system_version}. Obciążenie CPU: {cpu_usage}%, użycie RAM: {ram_usage}%, stan dysku: {disk_usage}%. "
+                        f"Algorytm sugeruje twórcze rozwiązanie problemu, które może otworzyć nowe perspektywy.",
                     ]
 
 

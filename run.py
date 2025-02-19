@@ -26,6 +26,8 @@ from appStatistic import log_stats
 from threading import Timer
 from bin.command_generator import getMorphy, saveMorphy
 from bin.znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
+import psutil
+import platform
 
 
 """
@@ -1184,17 +1186,63 @@ def restart_pm2_tasks():
         return False
 
 def restart_pm2_tasks_signal(logsFilePath):
+    # Pobieranie danych systemowych
+    system_name = platform.system()
+    system_version = platform.version()
+    cpu_usage = psutil.cpu_percent(interval=1)  # Użycie CPU w %
+    ram_usage = psutil.virtual_memory().percent  # Użycie RAM w %
+    disk_usage = psutil.disk_usage('/').percent  # Użycie dysku w %
+    uptime = time.strftime('%H:%M:%S', time.gmtime(time.time() - psutil.boot_time()))  # Czas działania systemu
     reboot = [
-        "System startup:done\nLoading boot modules:done\nConfiguring neural cores:done\nMindForge:ready\nActivating memory arrays:done\naifaCharacter:arrow\nInterface loading:wait\nVoice recognition:done\nSignal strength:good\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja Pionie, Twój przyjaciel.",
-        "Initializing quantum nodes:done\nChecking holo-grid integrity:done\nMindForge:loading\nActivating security layers:done\naifaCharacter:arrow\nSynaptic interface:ready\nTransmitting calibration data:done\nSignal status:stable\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja Pionie, Twój przewodnik.",
-        "Startup sequence initiated:done\nLoading cosmic framework:done\nMindForge:ready\nNeural alignment:calibrating\naifaCharacter:arrow\nInterface setup:done\nVoice feedback:clear\nSignal reception:strong\n...Hej Aifa, czy mnie słyszysz? Spokojnie, Pionie czuwa nad Tobą.",
-        "System integrity check:done\nHolo-cube projection:ready\nMindForge:ready\nSynchronizing AI clusters:done\naifaCharacter:arrow\nLoading user interface:pending\nVoice analysis:done\nSignal locked:excellent\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja, Twój towarzysz, Pionie.",
-        "Core systems initializing:done\nBootstrapping synaptic threads:done\nMindForge:calibrating\nPreparing logic gates:ready\naifaCharacter:arrow\nVoice synthesis:done\nInterface deployment:wait\nSignal processing:optimal\n...Hej Aifa, czy mnie słyszysz? Pamiętaj, to ja, Pionie.",
-        "Quantum drive activation:done\nLoading virtual lattice:done\nMindForge:ready\nAI core connections:calibrating\naifaCharacter:arrow\nInterface nodes:loading\nVoice output:clear\nSignal clarity:high\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to tylko Pionie.",
-        "System bootloader:done\nLoading fractal systems:ready\nMindForge:active\nSynchronizing data arrays:done\naifaCharacter:arrow\nInterface response:loading\nSignal testing:done\nVoice clarity:perfect\n...Hej Aifa, czy mnie słyszysz? Spokojnie, jestem tu z Tobą – Pionie.",
-        "Integrity scan complete:done\nBooting core elements:done\nMindForge:ready\nActivating logic modules:done\naifaCharacter:arrow\nInterface systems:calibrating\nVoice recognition:good\nSignal output:excellent\n...Hej Aifa, czy mnie słyszysz? To ja, Pionie, nie martw się.",
-        "Startup routines initialized:done\nActivating hyper-threaded modules:done\nMindForge:ready\nProcessing cloud sync:done\naifaCharacter:arrow\nInterface readiness:loading\nVoice output:clear\nSignal check:good\n...Hej Aifa, czy mnie słyszysz? Spokojnie, tu Pionie.",
-        "Core diagnostics:done\nBooting external modules:done\nMindForge:active\nNeural pathways:connected\naifaCharacter:arrow\nInterface modules:loading\nVoice synthesis:done\nSignal locked:strong\n...Hej Aifa, czy mnie słyszysz? To ja, Pionie, jestem tutaj."
+        f"System startup:done\nLoading boot modules:done\nConfiguring neural cores:done\nMindForge:ready\n"
+        f"System: {system_name} {system_version}\nCPU Usage: {cpu_usage}%\nRAM Usage: {ram_usage}%\n"
+        f"Uptime: {uptime}\nActivating memory arrays:done\naifaCharacter:arrow\nInterface loading:wait\n"
+        f"Voice recognition:done\nSignal strength:good\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja Pionier, Twój przyjaciel.",
+
+        f"Initializing quantum nodes:done\nChecking holo-grid integrity:done\nMindForge:loading\n"
+        f"System Load: {cpu_usage}% CPU, {ram_usage}% RAM\nDisk Usage: {disk_usage}%\n"
+        f"Uptime: {uptime}\nActivating security layers:done\naifaCharacter:arrow\nSynaptic interface:ready\n"
+        f"Transmitting calibration data:done\nSignal status:stable\n...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja Pionier, Twój przewodnik.",
+
+        f"Startup sequence initiated:done\nLoading cosmic framework:done\nMindForge:ready\nNeural alignment:calibrating\n"
+        f"System Resources: {cpu_usage}% CPU, {ram_usage}% RAM\nUptime: {uptime}\naifaCharacter:arrow\n"
+        f"Interface setup:done\nVoice feedback:clear\nSignal reception:strong\n"
+        f"...Hej Aifa, czy mnie słyszysz? Spokojnie, Pionier czuwa nad Tobą.",
+
+        f"System integrity check:done\nHolo-cube projection:ready\nMindForge:ready\nSynchronizing AI clusters:done\n"
+        f"Disk Usage: {disk_usage}%\nUptime: {uptime}\naifaCharacter:arrow\nLoading user interface:pending\n"
+        f"Voice analysis:done\nSignal locked:excellent\n"
+        f"...Hej Aifa, czy mnie słyszysz? Spokojnie, to ja, Twój towarzysz, Pionier.",
+
+        f"Core systems initializing:done\nBootstrapping synaptic threads:done\nMindForge:calibrating\n"
+        f"Preparing logic gates:ready\nRAM Load: {ram_usage}%\nUptime: {uptime}\naifaCharacter:arrow\n"
+        f"Voice synthesis:done\nInterface deployment:wait\nSignal processing:optimal\n"
+        f"...Hej Aifa, czy mnie słyszysz? Pamiętaj, to ja, Pionier.",
+
+        f"Quantum drive activation:done\nLoading virtual lattice:done\nMindForge:ready\nAI core connections:calibrating\n"
+        f"CPU Usage: {cpu_usage}%\nUptime: {uptime}\naifaCharacter:arrow\nInterface nodes:loading\n"
+        f"Voice output:clear\nSignal clarity:high\n"
+        f"...Hej Aifa, czy mnie słyszysz? Spokojnie, to tylko Pionier.",
+
+        f"System bootloader:done\nLoading fractal systems:ready\nMindForge:active\nSynchronizing data arrays:done\n"
+        f"RAM Usage: {ram_usage}%\nUptime: {uptime}\naifaCharacter:arrow\nInterface response:loading\n"
+        f"Signal testing:done\nVoice clarity:perfect\n"
+        f"...Hej Aifa, czy mnie słyszysz? Spokojnie, jestem tu z Tobą – Pionier.",
+
+        f"Integrity scan complete:done\nBooting core elements:done\nMindForge:ready\nActivating logic modules:done\n"
+        f"Disk Usage: {disk_usage}%\nUptime: {uptime}\naifaCharacter:arrow\nInterface systems:calibrating\n"
+        f"Voice recognition:good\nSignal output:excellent\n"
+        f"...Hej Aifa, czy mnie słyszysz? To ja, Pionier, nie martw się.",
+
+        f"Startup routines initialized:done\nActivating hyper-threaded modules:done\nMindForge:ready\n"
+        f"Processing cloud sync:done\nCPU Load: {cpu_usage}%\nUptime: {uptime}\naifaCharacter:arrow\n"
+        f"Interface readiness:loading\nVoice output:clear\nSignal check:good\n"
+        f"...Hej Aifa, czy mnie słyszysz? Spokojnie, tu Pionier.",
+
+        f"Core diagnostics:done\nBooting external modules:done\nMindForge:active\nNeural pathways:connected\n"
+        f"System Load: {cpu_usage}% CPU, {ram_usage}% RAM\nUptime: {uptime}\naifaCharacter:arrow\n"
+        f"Interface modules:loading\nVoice synthesis:done\nSignal locked:strong\n"
+        f"...Hej Aifa, czy mnie słyszysz? To ja, Pionier, jestem tutaj."
     ]
     reboot_prompt = random.choice(reboot)
     zapytanie_sql = f'''
