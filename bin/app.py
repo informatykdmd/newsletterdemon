@@ -520,7 +520,7 @@ def make_fbgroups_task(data):
     else:
         zdjecia_string = None
     # Pobieramy bieżący czas w formacie UNIX
-    unix_time = int(time()) % 1000000
+    unix_time = int(time.time()) % 1000000
     # Generujemy losowe cyfry (np. 5-cyfrowy numer)
     random_digits = random.randint(100, 999)
 
@@ -566,9 +566,9 @@ def main():
         "checkpoint_24h": 85000
     }
     # Inicjalizacja czasu ostatniego uruchomienia dla każdego checkpointu
-    last_run_times = {name: time() for name in checkpoints.keys()}
+    last_run_times = {name: time.time() for name in checkpoints.keys()}
     while True:
-        current_time = time()  # Aktualny czas
+        current_time = time.time()  # Aktualny czas
         for name, interval in checkpoints.items():
             # print(f"Checking {name}:")
             # print(f"current_time (type: {type(current_time)}) = {current_time}")
