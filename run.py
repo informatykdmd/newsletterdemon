@@ -5245,7 +5245,7 @@ def save_sell_offer():
         full_path = output_path
 
         # print(full_path, logo_path, output_path)
-        apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+        # apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
 
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertySprzedazy', 'ID', offerID_int)[0][0]
