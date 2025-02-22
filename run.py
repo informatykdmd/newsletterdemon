@@ -1268,9 +1268,16 @@ def restart_pm2_tasks_signal(logsFilePath):
         return False
 
 def apply_logo_to_image(image_path, logo_path, output_path, scale_factor=1):
+    def remove_icc_profile(image):
+        """Usuwa profil ICC z obrazu, aby uniknąć błędów w Pillow."""
+        return image.convert("RGB")  # Konwersja do RGB usuwa ICC
+    
     # Otwórz obraz główny i logo
-    image = Image.open(image_path)
-    logo = Image.open(logo_path)
+    image = Image.open(image_path).convert("RGBA")
+    logo = Image.open(logo_path).convert("RGBA")
+
+    image = remove_icc_profile(image)
+    logo = remove_icc_profile(logo)
 
     # Skalowanie logo
     image_width, image_height = image.size
@@ -1281,12 +1288,6 @@ def apply_logo_to_image(image_path, logo_path, output_path, scale_factor=1):
     new_logo_height = int(logo_height * (new_logo_width / logo_width))
     logo = logo.resize((new_logo_width, new_logo_height), Image.LANCZOS)
 
-    # Ustawienie przezroczystości logo
-    logo = logo.convert("RGBA")
-
-    # Ustawienie przezroczystości obrazu głównego
-    image = image.convert("RGBA")
-
     # Pozycja logo w prawym dolnym rogu
     position = (image_width - new_logo_width, image_height - new_logo_height)
 
@@ -1294,14 +1295,13 @@ def apply_logo_to_image(image_path, logo_path, output_path, scale_factor=1):
     image.paste(logo, position, logo)
 
     # Sprawdzenie formatu wyjściowego
-    if str(output_path).lower().endswith('.png')\
-        or str(output_path).lower().endswith('.webp'):
+    if output_path.lower().endswith('.png') or output_path.lower().endswith('.webp'):
         final_image = image  # Zostawiamy przezroczystość
     else:
         final_image = image.convert("RGB")  # Konwersja do RGB dla JPEG i innych formatów bez przezroczystości
-    
-    # Konwersja z powrotem do formatu RGB, aby zapisać jako JPG
-    final_image.save(output_path, format='JPEG')
+
+    # Zapisanie obrazu
+    final_image.save(output_path, format='JPEG' if output_path.lower().endswith('.jpg') or output_path.lower().endswith('.jpeg') else None)
 
 def generator_jobs():
     daneList = []
@@ -4501,12 +4501,16 @@ def save_rent_offer():
                     'success': True
                     }), 200
         
-        logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
-        output_path = upload_path+saved_photos[0].split('/')[-1]
-        full_path = output_path
+        
+        try:
+            logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+            output_path = upload_path+saved_photos[0].split('/')[-1]
+            full_path = output_path
 
-        # print(full_path, logo_path, output_path)
-        apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+            # print(full_path, logo_path, output_path)
+            apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+        except:
+            flash(f'Uwaga Nakładka nie została ustawiona, zmień tryb zdjęcia z sRGB na RGB!', 'danger')
 
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', offerID_int)[0][0]
@@ -4599,13 +4603,16 @@ def save_rent_offer():
                         }), 200
 
     
-        logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
-        output_path = upload_path+oldPhotos_plus_saved_photos_sorted[0].split('/')[-1]
-        full_path = output_path
+        
+        try:
+            logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+            output_path = upload_path+oldPhotos_plus_saved_photos_sorted[0].split('/')[-1]
+            full_path = output_path
 
-        # print(full_path, logo_path, output_path)
-        apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
-
+            # print(full_path, logo_path, output_path)
+            apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+        except:
+            flash(f'Uwaga Nakładka nie została ustawiona, zmień tryb zdjęcia z sRGB na RGB!', 'danger')
 
     user_phone = session['user_data']['phone']
     user_email = session['user_data']['email']
@@ -5239,13 +5246,15 @@ def save_sell_offer():
                     'message': 'BRAK ZDJĘĆ! Niemożliwe jest zapisywania galerii w bazie!',
                     'success': True
                     }), 200
-        
-        logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
-        output_path = upload_path+saved_photos[0].split('/')[-1]
-        full_path = output_path
+        try:
+            logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+            output_path = upload_path+saved_photos[0].split('/')[-1]
+            full_path = output_path
+            # print(full_path, logo_path, output_path)
+            apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+        except:
+            flash(f'Uwaga Nakładka nie została ustawiona, zmień tryb zdjęcia z sRGB na RGB!', 'danger')
 
-        # print(full_path, logo_path, output_path)
-        apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
 
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertySprzedazy', 'ID', offerID_int)[0][0]
@@ -5334,12 +5343,16 @@ def save_sell_offer():
                         'success': True
                         }), 200
             
-        logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
-        output_path = upload_path+oldPhotos_plus_saved_photos_sorted[0].split('/')[-1]
-        full_path = output_path
+        
+        try:
+            logo_path = upload_path+'logo.png'  # Ścieżka do pliku logo
+            output_path = upload_path+oldPhotos_plus_saved_photos_sorted[0].split('/')[-1]
+            full_path = output_path
 
-        # print(full_path, logo_path, output_path)
-        apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+            # print(full_path, logo_path, output_path)
+            apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
+        except:
+            flash(f'Uwaga Nakładka nie została ustawiona, zmień tryb zdjęcia z sRGB na RGB!', 'danger')
 
 
     user_phone = session['user_data']['phone']
