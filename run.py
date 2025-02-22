@@ -1268,6 +1268,36 @@ def restart_pm2_tasks_signal(logsFilePath):
         return False
 
 def apply_logo_to_image(image_path, logo_path, output_path, scale_factor=1):
+    # Otwórz obraz główny i logo w trybie RGBA (obsługa przezroczystości)
+    image = Image.open(image_path).convert("RGBA")
+    logo = Image.open(logo_path).convert("RGBA")
+
+    # Skalowanie logo proporcjonalnie do rozmiaru zdjęcia
+    image_width, image_height = image.size
+    logo_width, logo_height = logo.size
+
+    new_logo_width = int(image_width * scale_factor)
+    new_logo_height = int(logo_height * (new_logo_width / logo_width))
+    logo = logo.resize((new_logo_width, new_logo_height), Image.LANCZOS)
+
+    # Pozycja logo w prawym dolnym rogu
+    position = (image_width - new_logo_width, image_height - new_logo_height)
+
+    # Wykorzystanie alpha_composite() zamiast paste(), aby uniknąć błędu maski
+    temp_image = Image.new("RGBA", image.size)
+    temp_image.paste(image, (0, 0))  # Skopiowanie głównego obrazu
+    temp_image.paste(logo, position, logo.split()[3])  # Poprawne nałożenie logo
+
+    # Obsługa formatu wyjściowego
+    if output_path.lower().endswith('.png') or output_path.lower().endswith('.webp'):
+        final_image = temp_image  # Zachowanie przezroczystości
+    else:
+        final_image = temp_image.convert("RGB")  # JPEG nie obsługuje przezroczystości
+
+    # Zapis obrazu
+    final_image.save(output_path, format='JPEG' if output_path.lower().endswith('.jpg') or output_path.lower().endswith('.jpeg') else None)
+
+def apply_logo_to_image_old(image_path, logo_path, output_path, scale_factor=1):
     def remove_icc_profile(image):
         """Usuwa profil ICC z obrazu, aby uniknąć błędów w Pillow."""
         return image.convert("RGB")  # Konwersja do RGB usuwa ICC
