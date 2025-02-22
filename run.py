@@ -4509,8 +4509,8 @@ def save_rent_offer():
 
             # print(full_path, logo_path, output_path)
             apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
-        except:
-            flash(f'Uwaga Nakładka nie została ustawiona, zmień tryb zdjęcia z sRGB na RGB!', 'danger')
+        except Exception as e:
+            flash(f'Uwaga Nakładka nie została ustawiona: {e}', 'danger')
 
     else:
         try: gallery_id = take_data_where_ID('Zdjecia', 'OfertyNajmu', 'ID', offerID_int)[0][0]
@@ -4611,8 +4611,8 @@ def save_rent_offer():
 
             # print(full_path, logo_path, output_path)
             apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
-        except:
-            flash(f'Uwaga Nakładka nie została ustawiona, zmień tryb zdjęcia z sRGB na RGB!', 'danger')
+        except Exception as e:
+            flash(f'Uwaga Nakładka nie została ustawiona: {e}', 'danger')
 
     user_phone = session['user_data']['phone']
     user_email = session['user_data']['email']
@@ -5252,8 +5252,8 @@ def save_sell_offer():
             full_path = output_path
             # print(full_path, logo_path, output_path)
             apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
-        except:
-            flash(f'Uwaga Nakładka nie została ustawiona, zmień tryb zdjęcia z sRGB na RGB!', 'danger')
+        except Exception as e:
+            flash(f'Uwaga Nakładka nie została ustawiona: {e}', 'danger')
 
 
     else:
@@ -5351,8 +5351,8 @@ def save_sell_offer():
 
             # print(full_path, logo_path, output_path)
             apply_logo_to_image(full_path, logo_path, output_path, scale_factor=1)
-        except:
-            flash(f'Uwaga Nakładka nie została ustawiona, zmień tryb zdjęcia z sRGB na RGB!', 'danger')
+        except Exception as e:
+            flash(f'Uwaga Nakładka nie została ustawiona: {e}', 'danger')
 
 
     user_phone = session['user_data']['phone']
