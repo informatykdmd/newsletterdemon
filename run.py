@@ -4481,19 +4481,45 @@ def save_rent_offer():
     for photo in photos:
         if photo:
             filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
-            # print(filename)
             full_path = os.path.join(upload_path, filename)
             complete_URL_PIC = f'{mainDomain_URL}{filename}'
+
             try:
                 photo.save(full_path)
-                
                 saved_photos.append(complete_URL_PIC)
-                if secure_filename(photo.filename) in allPhotos:
-                    pobrany_index = allPhotos.index(secure_filename(photo.filename))
-                    allPhotos[pobrany_index] = filename
+
+                # Normalizujemy nazwy plików w allPhotos, aby uniknąć problemów z porównaniem
+                normalized_allPhotos = [secure_filename(p.split('/')[-1]) for p in allPhotos]
+
+                # Sprawdzenie, czy nazwa zdjęcia istnieje w allPhotos
+                original_name = secure_filename(photo.filename)
+                if original_name in normalized_allPhotos:
+                    pobrany_index = normalized_allPhotos.index(original_name)
+                    allPhotos[pobrany_index] = filename  # Zastępujemy starą nazwę nową
+
             except Exception as e:
-                msq.handle_error(f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', log_path=logFileName)
+                msq.handle_error(
+                    f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', 
+                    log_path=logFileName
+                )
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
+
+    # for photo in photos:
+    #     if photo:
+    #         filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
+    #         # print(filename)
+    #         full_path = os.path.join(upload_path, filename)
+    #         complete_URL_PIC = f'{mainDomain_URL}{filename}'
+    #         try:
+    #             photo.save(full_path)
+                
+    #             saved_photos.append(complete_URL_PIC)
+    #             if secure_filename(photo.filename) in allPhotos:
+    #                 pobrany_index = allPhotos.index(secure_filename(photo.filename))
+    #                 allPhotos[pobrany_index] = filename
+    #         except Exception as e:
+    #             msq.handle_error(f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', log_path=logFileName)
+    #             print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
     # print(allPhotos)
     if offerID_int == 9999999:
         gallery_id = None
@@ -5229,17 +5255,43 @@ def save_sell_offer():
     for photo in photos:
         if photo:
             filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
-            # print(filename)
             full_path = os.path.join(upload_path, filename)
             complete_URL_PIC = f'{mainDomain_URL}{filename}'
+
             try:
                 photo.save(full_path)
                 saved_photos.append(complete_URL_PIC)
-                if secure_filename(photo.filename) in allPhotos:
-                    pobrany_index = allPhotos.index(secure_filename(photo.filename))
-                    allPhotos[pobrany_index] = filename
+
+                # Normalizujemy nazwy plików w allPhotos, aby uniknąć problemów z porównaniem
+                normalized_allPhotos = [secure_filename(p.split('/')[-1]) for p in allPhotos]
+
+                # Sprawdzenie, czy nazwa zdjęcia istnieje w allPhotos
+                original_name = secure_filename(photo.filename)
+                if original_name in normalized_allPhotos:
+                    pobrany_index = normalized_allPhotos.index(original_name)
+                    allPhotos[pobrany_index] = filename  # Zastępujemy starą nazwę nową
+
             except Exception as e:
+                msq.handle_error(
+                    f'UWAGA! Nie udało się zapisać pliku {filename}: {str(e)}. Adres {complete_URL_PIC} nie jest dostępny!!', 
+                    log_path=logFileName
+                )
                 print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
+                
+    # for photo in photos:
+    #     if photo:
+    #         filename = f"{int(time.time())}_{secure_filename(photo.filename)}"
+    #         # print(filename)
+    #         full_path = os.path.join(upload_path, filename)
+    #         complete_URL_PIC = f'{mainDomain_URL}{filename}'
+    #         try:
+    #             photo.save(full_path)
+    #             saved_photos.append(complete_URL_PIC)
+    #             if secure_filename(photo.filename) in allPhotos:
+    #                 pobrany_index = allPhotos.index(secure_filename(photo.filename))
+    #                 allPhotos[pobrany_index] = filename
+    #         except Exception as e:
+    #             print(f"Nie udało się zapisać pliku {filename}: {str(e)}. UWAGA: Adres {complete_URL_PIC} nie jest dostępny!")
     # print(allPhotos)
     if offerID_int == 9999999:
         gallery_id = None
