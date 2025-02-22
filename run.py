@@ -1267,7 +1267,52 @@ def restart_pm2_tasks_signal(logsFilePath):
         print(f"Błąd podczas restartu tasków PM2: {e}")
         return False
 
-def apply_logo_to_image(image_path, logo_path, output_path, scale_factor=1):
+def apply_logo_to_image(image_path, logo_path, output_path, scale_factor=0.1):
+    """Dodaje logo do obrazu, umieszczając je w prawym dolnym rogu."""
+    
+    # Otwórz obraz główny i logo
+    image = Image.open(image_path).convert("RGBA")
+    logo = Image.open(logo_path).convert("RGBA")
+
+    # Skalowanie logo proporcjonalnie do rozmiaru zdjęcia
+    image_width, image_height = image.size
+    logo_width, logo_height = logo.size
+
+    # Nowy rozmiar logo
+    new_logo_width = min(int(image_width * scale_factor), image_width)
+    new_logo_height = int(logo_height * (new_logo_width / logo_width))
+
+    # Zapobiegamy sytuacji, w której logo jest większe niż obraz
+    if new_logo_width > image_width or new_logo_height > image_height:
+        new_logo_width = image_width // 5  # Maksymalnie 1/5 szerokości obrazu
+        new_logo_height = int(logo_height * (new_logo_width / logo_width))
+
+    logo = logo.resize((new_logo_width, new_logo_height), Image.LANCZOS)
+
+    # Pozycja logo w prawym dolnym rogu
+    position = (image_width - new_logo_width, image_height - new_logo_height)
+
+    # Sprawdzenie czy logo ma kanał alfa (przezroczystość)
+    if logo.mode == "RGBA":
+        mask = logo.split()[3]  # Pobranie kanału alfa
+    else:
+        mask = None  # Brak maski dla obrazów bez przezroczystości
+
+    # Wykorzystanie alpha_composite() zamiast paste(), aby uniknąć błędu maski
+    temp_image = Image.new("RGBA", image.size)
+    temp_image.paste(image, (0, 0))  # Skopiowanie głównego obrazu
+    temp_image.paste(logo, position, mask)  # Poprawne nałożenie logo
+
+    # Obsługa formatu wyjściowego
+    if output_path.lower().endswith('.png') or output_path.lower().endswith('.webp'):
+        final_image = temp_image  # Zachowanie przezroczystości
+    else:
+        final_image = temp_image.convert("RGB")  # JPEG nie obsługuje przezroczystości
+
+    # Zapis obrazu
+    final_image.save(output_path, format='JPEG' if output_path.lower().endswith('.jpg') or output_path.lower().endswith('.jpeg') else None)
+
+def apply_logo_to_image_old(image_path, logo_path, output_path, scale_factor=1):
     # Otwórz obraz główny i logo w trybie RGBA (obsługa przezroczystości)
     image = Image.open(image_path).convert("RGBA")
     logo = Image.open(logo_path).convert("RGBA")
@@ -1295,42 +1340,6 @@ def apply_logo_to_image(image_path, logo_path, output_path, scale_factor=1):
         final_image = temp_image.convert("RGB")  # JPEG nie obsługuje przezroczystości
 
     # Zapis obrazu
-    final_image.save(output_path, format='JPEG' if output_path.lower().endswith('.jpg') or output_path.lower().endswith('.jpeg') else None)
-
-def apply_logo_to_image_old(image_path, logo_path, output_path, scale_factor=1):
-    def remove_icc_profile(image):
-        """Usuwa profil ICC z obrazu, aby uniknąć błędów w Pillow."""
-        return image.convert("RGB")  # Konwersja do RGB usuwa ICC
-    
-    # Otwórz obraz główny i logo
-    image = Image.open(image_path).convert("RGBA")
-    logo = Image.open(logo_path).convert("RGBA")
-
-    image = remove_icc_profile(image)
-    logo = remove_icc_profile(logo)
-
-    # Skalowanie logo
-    image_width, image_height = image.size
-    logo_width, logo_height = logo.size
-
-    # Obliczenie nowych rozmiarów logo proporcjonalnie do rozmiaru zdjęcia
-    new_logo_width = int(image_width * scale_factor)
-    new_logo_height = int(logo_height * (new_logo_width / logo_width))
-    logo = logo.resize((new_logo_width, new_logo_height), Image.LANCZOS)
-
-    # Pozycja logo w prawym dolnym rogu
-    position = (image_width - new_logo_width, image_height - new_logo_height)
-
-    # Nałożenie logo na obraz
-    image.paste(logo, position, logo)
-
-    # Sprawdzenie formatu wyjściowego
-    if output_path.lower().endswith('.png') or output_path.lower().endswith('.webp'):
-        final_image = image  # Zostawiamy przezroczystość
-    else:
-        final_image = image.convert("RGB")  # Konwersja do RGB dla JPEG i innych formatów bez przezroczystości
-
-    # Zapisanie obrazu
     final_image.save(output_path, format='JPEG' if output_path.lower().endswith('.jpg') or output_path.lower().endswith('.jpeg') else None)
 
 def generator_jobs():
