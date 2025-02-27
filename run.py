@@ -284,6 +284,13 @@ def generator(username, prompt):
     # Jeśli już mamy aktywną kategorię dla tego użytkownika, dodajemy polecenie do tej kategorii
     polecenie_tuple = tuple(prompt.split())
     dane_getMorphy[polecenie_tuple] = generator_states[username]
+
+    # Natychmiast zapisujemy zmiany do pliku JSON
+    saveMorphy(dane_getMorphy)
+
+    global dane_getMorphy
+    dane_getMorphy = getMorphy()
+
     return f"Dodano polecenie: {polecenie_tuple} -> {generator_states[username]}"
 
 class LoginForm(FlaskForm):
