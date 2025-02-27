@@ -288,8 +288,6 @@ def generator(username, prompt):
     # Natychmiast zapisujemy zmiany do pliku JSON
     saveMorphy(dane_getMorphy)
 
-    global dane_getMorphy
-    dane_getMorphy = getMorphy()
 
     return f"Dodano polecenie: {polecenie_tuple} -> {generator_states[username]}"
 
