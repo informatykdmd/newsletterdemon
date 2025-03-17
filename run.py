@@ -1657,27 +1657,13 @@ def home():
     if 'username' not in session:
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /home bez autoryzacji.', log_path=logFileName)
         return redirect(url_for('index'))
-    
-    # settingsDB = generator_settingsDB()
-    # domy = settingsDB['domy']
-    # budownictwo = settingsDB['budownictwo']
-    # development = settingsDB['development']
-    # elitehome = settingsDB['elitehome']
-    # inwestycje = settingsDB['inwestycje']
-    # instalacje = settingsDB['instalacje']
-    
+       
     return render_template(
-                            "home.html", 
-                            userperm=session['userperm'], 
-                            username=session['username'], 
-                            users_data=session['user_data'],
-                            # domy=domy,
-                            # budownictwo=budownictwo,
-                            # development=development,
-                            # elitehome=elitehome,
-                            # inwestycje=inwestycje,
-                            # instalacje=instalacje
-                            )
+            "home.html", 
+            userperm=session['userperm'], 
+            username=session['username'], 
+            users_data=session['user_data']
+            )
 
 @app.route('/fetch-messages')
 def fetch_messages():
@@ -1865,7 +1851,6 @@ def send_chat_message():
         msq.handle_error(f'Błąd wysyłania wiadomości do chatu.', log_path=logFileName)
         return jsonify({"status": "error"}), 500
 
-
 @app.route('/blog')
 def blog(router=True):
     """Strona z zarządzaniem blogiem."""
@@ -1890,28 +1875,15 @@ def blog(router=True):
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     posts = all_posts[offset: offset + per_page]
     if router:
-        # Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
-        settingsDB = generator_settingsDB()
-        domy = settingsDB['domy']
-        budownictwo = settingsDB['budownictwo']
-        development = settingsDB['development']
-        elitehome = settingsDB['elitehome']
-        inwestycje = settingsDB['inwestycje']
-        instalacje = settingsDB['instalacje']
+        
 
         return render_template(
-                            "blog_management.html", 
-                            posts=posts, 
-                            username=session['username'], 
-                            userperm=session['userperm'], 
-                            pagination=pagination,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )
+                "blog_management.html", 
+                posts=posts, 
+                username=session['username'], 
+                userperm=session['userperm'], 
+                pagination=pagination,
+                )
     else:
         return posts, session['username'], session['userperm'], pagination
 
@@ -3236,28 +3208,15 @@ def newsletter():
             elementItem = (item['id'], item['name'], item['email'])
             sortedListSubs.append(elementItem)
 
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
 
     return render_template(
-                            "newsletter_management.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            newsletterPlan=newsletterPlan, 
-                            smtpSettingsDict=smtpSettingsDict,
-                            sortedListSubs=sortedListSubs,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )
+            "newsletter_management.html", 
+            username=session['username'],
+            userperm=session['userperm'], 
+            newsletterPlan=newsletterPlan, 
+            smtpSettingsDict=smtpSettingsDict,
+            sortedListSubs=sortedListSubs,
+            )
 
 def preparoator_team(deaprtment_team='domy', highlight=4):
     highlight += 1
@@ -3327,7 +3286,7 @@ def team_domy():
         return redirect(url_for('index'))
 
     preparoator_team_dict = preparoator_team('domy', 4)
-    settingsDB = generator_settingsDB()
+
 
     # update sesji userperm brands
     permTempDict = {}
@@ -3345,13 +3304,7 @@ def team_domy():
                             userperm=session['userperm'], 
                             user_brands=session['brands'], 
                             members=preparoator_team_dict['collections'], 
-                            photos_dict=preparoator_team_dict['employee_photo_dict'],
-                            domy=settingsDB['domy'],
-                            budownictwo=settingsDB['budownictwo'],
-                            development=settingsDB['development'],
-                            elitehome=settingsDB['elitehome'],
-                            inwestycje=settingsDB['inwestycje'],
-                            instalacje=settingsDB['instalacje']
+                            photos_dict=preparoator_team_dict['employee_photo_dict']
                             )
 
 @app.route('/team-budownictwo')
@@ -3368,7 +3321,6 @@ def team_budownictwo():
         return redirect(url_for('index'))
 
     preparoator_team_dict = preparoator_team('budownictwo', 4)
-    settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
     permTempDict = {}
@@ -3381,19 +3333,13 @@ def team_budownictwo():
     session['brands'] = brands_data[session['username']]
 
     return render_template(
-                            "team_management_budownictwo.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=preparoator_team_dict['collections'], 
-                            photos_dict=preparoator_team_dict['employee_photo_dict'],
-                            domy=settingsDB['domy'],
-                            budownictwo=settingsDB['budownictwo'],
-                            development=settingsDB['development'],
-                            elitehome=settingsDB['elitehome'],
-                            inwestycje=settingsDB['inwestycje'],
-                            instalacje=settingsDB['instalacje']
-                            )
+            "team_management_budownictwo.html", 
+            username=session['username'],
+            userperm=session['userperm'], 
+            user_brands=session['brands'], 
+            members=preparoator_team_dict['collections'], 
+            photos_dict=preparoator_team_dict['employee_photo_dict']
+            )
 
 @app.route('/team-development')
 def team_development():
@@ -3409,7 +3355,6 @@ def team_development():
         return redirect(url_for('index'))
 
     preparoator_team_dict = preparoator_team('development', 2)
-    settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
     permTempDict = {}
@@ -3422,19 +3367,13 @@ def team_development():
     session['brands'] = brands_data[session['username']]
 
     return render_template(
-                            "team_management_development.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=preparoator_team_dict['collections'], 
-                            photos_dict=preparoator_team_dict['employee_photo_dict'],
-                            domy=settingsDB['domy'],
-                            budownictwo=settingsDB['budownictwo'],
-                            development=settingsDB['development'],
-                            elitehome=settingsDB['elitehome'],
-                            inwestycje=settingsDB['inwestycje'],
-                            instalacje=settingsDB['instalacje']
-                            )
+            "team_management_development.html", 
+            username=session['username'],
+            userperm=session['userperm'], 
+            user_brands=session['brands'], 
+            members=preparoator_team_dict['collections'], 
+            photos_dict=preparoator_team_dict['employee_photo_dict']
+            )
 
 @app.route('/team-elitehome')
 def team_elitehome():
@@ -3450,7 +3389,6 @@ def team_elitehome():
         return redirect(url_for('index'))
 
     preparoator_team_dict = preparoator_team('elitehome', 0)
-    settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
     permTempDict = {}
@@ -3463,19 +3401,13 @@ def team_elitehome():
     session['brands'] = brands_data[session['username']]
 
     return render_template(
-                            "team_management_elitehome.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=preparoator_team_dict['collections'], 
-                            photos_dict=preparoator_team_dict['employee_photo_dict'],
-                            domy=settingsDB['domy'],
-                            budownictwo=settingsDB['budownictwo'],
-                            development=settingsDB['development'],
-                            elitehome=settingsDB['elitehome'],
-                            inwestycje=settingsDB['inwestycje'],
-                            instalacje=settingsDB['instalacje']
-                            )
+            "team_management_elitehome.html", 
+            username=session['username'],
+            userperm=session['userperm'], 
+            user_brands=session['brands'], 
+            members=preparoator_team_dict['collections'], 
+            photos_dict=preparoator_team_dict['employee_photo_dict']
+            )
 
 @app.route('/team-inwestycje')
 def team_inwestycje():
@@ -3491,7 +3423,6 @@ def team_inwestycje():
         return redirect(url_for('index'))
 
     preparoator_team_dict = preparoator_team('inwestycje', 4)
-    settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
     permTempDict = {}
@@ -3504,19 +3435,13 @@ def team_inwestycje():
     session['brands'] = brands_data[session['username']]
 
     return render_template(
-                            "team_management_inwestycje.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=preparoator_team_dict['collections'], 
-                            photos_dict=preparoator_team_dict['employee_photo_dict'],
-                            domy=settingsDB['domy'],
-                            budownictwo=settingsDB['budownictwo'],
-                            development=settingsDB['development'],
-                            elitehome=settingsDB['elitehome'],
-                            inwestycje=settingsDB['inwestycje'],
-                            instalacje=settingsDB['instalacje']
-                            )
+            "team_management_inwestycje.html", 
+            username=session['username'],
+            userperm=session['userperm'], 
+            user_brands=session['brands'], 
+            members=preparoator_team_dict['collections'], 
+            photos_dict=preparoator_team_dict['employee_photo_dict'],
+            )
 
 @app.route('/team-instalacje')
 def team_instalacje():
@@ -3532,7 +3457,6 @@ def team_instalacje():
         return redirect(url_for('index'))
 
     preparoator_team_dict = preparoator_team('instalacje', 3)
-    settingsDB = generator_settingsDB()
 
     # update sesji userperm brands
     permTempDict = {}
@@ -3545,19 +3469,13 @@ def team_instalacje():
     session['brands'] = brands_data[session['username']]
 
     return render_template(
-                            "team_management_instalacje.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            members=preparoator_team_dict['collections'], 
-                            photos_dict=preparoator_team_dict['employee_photo_dict'],
-                            domy=settingsDB['domy'],
-                            budownictwo=settingsDB['budownictwo'],
-                            development=settingsDB['development'],
-                            elitehome=settingsDB['elitehome'],
-                            inwestycje=settingsDB['inwestycje'],
-                            instalacje=settingsDB['instalacje']
-                            )
+            "team_management_instalacje.html", 
+            username=session['username'],
+            userperm=session['userperm'], 
+            user_brands=session['brands'], 
+            members=preparoator_team_dict['collections'], 
+            photos_dict=preparoator_team_dict['employee_photo_dict']
+            )
 
 @app.route('/ustawieni_pracownicy', methods=['POST'])
 def ustawieni_pracownicy():
@@ -3735,30 +3653,17 @@ def career():
 
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     ads_career = all_career[offset: offset + per_page]
-    
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
+
 
     return render_template(
-                            "career_management.html", 
-                            username=session['username'],
-                            useremail=session['user_data']['email'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            ads_career=ads_career,
-                            pagination=pagination,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )
+            "career_management.html", 
+            username=session['username'],
+            useremail=session['user_data']['email'],
+            userperm=session['userperm'], 
+            user_brands=session['brands'], 
+            ads_career=ads_career,
+            pagination=pagination
+            )
 
 @app.route('/save-career-offer', methods=["POST"])
 def save_career_offer():
@@ -3943,6 +3848,7 @@ def update_career_offer_status():
             return redirect(url_for('career'))
     
     return redirect(url_for('index'))
+
 @app.template_filter()
 def decode_html_entities_filter(text):
     return html.unescape(text)
@@ -4209,33 +4115,17 @@ def estateAdsRent():
     else:
         specOfferID = 'None'
 
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
-
     lentoOffer = 1
 
-    # flash(f"{str(len(ads_rent))}", 'dnager')
-
     return render_template(
-                            "estate_management_rent.html",
-                            ads_rent=ads_rent,
-                            specOfferID=specOfferID,
-                            userperm=session['userperm'],
-                            username=session['username'],
-                            pagination=pagination,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje,
-                            lentoOffer=lentoOffer
-                            )     
+            "estate_management_rent.html",
+            ads_rent=ads_rent,
+            specOfferID=specOfferID,
+            userperm=session['userperm'],
+            username=session['username'],
+            pagination=pagination,
+            lentoOffer=lentoOffer
+            )     
 
 @app.route('/remove-rent-offer', methods=['POST'])
 def remove_rent_offer():
@@ -4978,28 +4868,14 @@ def estateAdsSell():
     else:
         specOfferID = 'None'
 
-
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
     return render_template(
-                            "estate_management_sell.html",
-                            ads_sell=ads_sell,
-                            specOfferID=specOfferID,
-                            userperm=session['userperm'],
-                            username=session['username'],
-                            pagination=pagination,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )     
+            "estate_management_sell.html",
+            ads_sell=ads_sell,
+            specOfferID=specOfferID,
+            userperm=session['userperm'],
+            username=session['username'],
+            pagination=pagination
+            )     
 
 @app.route('/remove-sell-offer', methods=['POST'])
 def remove_sell_offer():
@@ -11740,51 +11616,26 @@ def estateAdsspecial():
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     ads_spec = all_spec[offset: offset + per_page]
 
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
     return render_template(
-                            "estate_management_special.html",
-                            ads_spec=ads_spec,
-                            userperm=session['userperm'],
-                            username=session['username'],
-                            pagination=pagination,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )     
+            "estate_management_special.html",
+            ads_spec=ads_spec,
+            userperm=session['userperm'],
+            username=session['username'],
+            pagination=pagination
+            )     
 
 @app.route("/estate-development")
 def estate_development():
 
     pagination = None
 
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
+
     return render_template(
-                            "estate_management_special.html",
-                            userperm=session['userperm'],
-                            username=session['username'],
-                            pagination=pagination,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )   
+            "estate_management_special.html",
+            userperm=session['userperm'],
+            username=session['username'],
+            pagination=pagination
+            )
 
 @app.route('/subscriber')
 def subscribers(router=True):
@@ -11809,26 +11660,14 @@ def subscribers(router=True):
     subs = subscribers_all[offset: offset + per_page]
     
     if router:
-        settingsDB = generator_settingsDB()
-        domy = settingsDB['domy']
-        budownictwo = settingsDB['budownictwo']
-        development = settingsDB['development']
-        elitehome = settingsDB['elitehome']
-        inwestycje = settingsDB['inwestycje']
-        instalacje = settingsDB['instalacje']
-        # Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
+        
         return render_template(
-                                "subscriber_management.html", 
-                                subs=subs, 
-                                username=session['username'], 
-                                userperm=session['userperm'], 
-                                pagination=pagination,
-                                domy=domy,
-                                budownictwo=budownictwo,
-                                development=development,
-                                elitehome=elitehome,
-                                inwestycje=inwestycje,
-                                instalacje=instalacje)
+                "subscriber_management.html", 
+                subs=subs, 
+                username=session['username'], 
+                userperm=session['userperm'], 
+                pagination=pagination
+                )
     else:
         return subs, session['username'], pagination
 
@@ -11884,37 +11723,26 @@ def settings():
     etate_logo_png = settingsDB['main-domain']+estate_pic_path+'logo.png'
     
     restart = settingsDB['last-restart']
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
+    
     smtpAdmin = settingsDB['smtp_admin']
 
     # last_logs = get_last_logs('logs/errors.log', 10250)
 
     return render_template(
-                            "setting_management.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            onPages=onPages, 
-                            domain=domain,
-                            blog=blog,
-                            avatar=avatar,
-                            real_loc_on_server=real_loc_on_server,
-                            estate_pic_path=estate_pic_path,
-                            restart=restart,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje,
-                            smtpAdmin=smtpAdmin,
-                            etate_logo_png=etate_logo_png,
-                            # last_logs=last_logs
-                            )
+            "setting_management.html", 
+            username=session['username'],
+            userperm=session['userperm'], 
+            onPages=onPages, 
+            domain=domain,
+            blog=blog,
+            avatar=avatar,
+            real_loc_on_server=real_loc_on_server,
+            estate_pic_path=estate_pic_path,
+            restart=restart,
+            smtpAdmin=smtpAdmin,
+            etate_logo_png=etate_logo_png,
+            # last_logs=last_logs
+            )
 
 @app.route('/fetch-logs')
 def fetch_logs():
@@ -11967,28 +11795,15 @@ def fbGroups():
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     groups = items_sorted[offset: offset + per_page]
 
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
-
     return render_template(
-                            "fb-groups_management.html", 
-                            username=session['username'],
-                            userperm=session['userperm'], 
-                            groups=groups,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje,
-                            pagination=pagination,
-                            sort_by=sort_by, 
-                            sort_type=sort_type
-                            )
+            "fb-groups_management.html", 
+            username=session['username'],
+            userperm=session['userperm'], 
+            groups=groups,
+            pagination=pagination,
+            sort_by=sort_by, 
+            sort_type=sort_type
+            )
 
 @app.route('/add-fb-group', methods=["POST"])
 def add_fb_group():
@@ -12415,31 +12230,16 @@ def hiddeCampaigns():
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     ads_hidden_campaigns = all_hidden[offset: offset + per_page]
     
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
-
     return render_template(
-                            "hidden_management.html", 
-                            username=session['username'],
-                            useremail=session['user_data']['email'],
-                            userperm=session['userperm'], 
-                            user_brands=session['brands'], 
-                            ads_hidden_campaigns=ads_hidden_campaigns,
-                            categoryStats=categoryStats,
-                            pagination=pagination,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-                            )
-
+            "hidden_management.html", 
+            username=session['username'],
+            useremail=session['user_data']['email'],
+            userperm=session['userperm'], 
+            user_brands=session['brands'], 
+            ads_hidden_campaigns=ads_hidden_campaigns,
+            categoryStats=categoryStats,
+            pagination=pagination
+            )
 
 @app.route('/save-hidden-campaigns', methods=['POST'])
 def save_hidden_campaigns():
