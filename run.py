@@ -241,7 +241,6 @@ def ustawienia(prompt: str):
                     return f'Nie znaleziono żadnych poleceń dla kategorii: {kategoria_podana_w_komendzie}'
         return 'Nieznane polecenie: ' + prompt
 
-
 def generator(username, prompt):
     """
     ############################################################
@@ -687,6 +686,18 @@ def checkSocialSyncStatus(kind, id):
     except IndexError:
         return (None, None, None, None, None, None)
 
+@app.context_processor
+def inject_shared_variable():
+
+    settingsDB = generator_settingsDB()
+    return {
+        'domy': settingsDB.get("domy", None),
+        'budownictwo': settingsDB.get("budownictwo", None),
+        'development': settingsDB.get("development", None),
+        'elitehome': settingsDB.get("elitehome", None),
+        'inwestycje': settingsDB.get("inwestycje", None),
+        'instalacje': settingsDB.get("instalacje", None)
+    }
 
 def takeOtodomResumeStatus(otodom_id):
     try:
@@ -1647,25 +1658,25 @@ def home():
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /home bez autoryzacji.', log_path=logFileName)
         return redirect(url_for('index'))
     
-    settingsDB = generator_settingsDB()
-    domy = settingsDB['domy']
-    budownictwo = settingsDB['budownictwo']
-    development = settingsDB['development']
-    elitehome = settingsDB['elitehome']
-    inwestycje = settingsDB['inwestycje']
-    instalacje = settingsDB['instalacje']
+    # settingsDB = generator_settingsDB()
+    # domy = settingsDB['domy']
+    # budownictwo = settingsDB['budownictwo']
+    # development = settingsDB['development']
+    # elitehome = settingsDB['elitehome']
+    # inwestycje = settingsDB['inwestycje']
+    # instalacje = settingsDB['instalacje']
     
     return render_template(
                             "home.html", 
                             userperm=session['userperm'], 
                             username=session['username'], 
                             users_data=session['user_data'],
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
+                            # domy=domy,
+                            # budownictwo=budownictwo,
+                            # development=development,
+                            # elitehome=elitehome,
+                            # inwestycje=inwestycje,
+                            # instalacje=instalacje
                             )
 
 @app.route('/fetch-messages')
@@ -11749,6 +11760,31 @@ def estateAdsspecial():
                             inwestycje=inwestycje,
                             instalacje=instalacje
                             )     
+
+@app.route("/estate-development")
+def estate_development():
+
+    pagination = None
+
+    settingsDB = generator_settingsDB()
+    domy = settingsDB['domy']
+    budownictwo = settingsDB['budownictwo']
+    development = settingsDB['development']
+    elitehome = settingsDB['elitehome']
+    inwestycje = settingsDB['inwestycje']
+    instalacje = settingsDB['instalacje']
+    return render_template(
+                            "estate_management_special.html",
+                            userperm=session['userperm'],
+                            username=session['username'],
+                            pagination=pagination,
+                            domy=domy,
+                            budownictwo=budownictwo,
+                            development=development,
+                            elitehome=elitehome,
+                            inwestycje=inwestycje,
+                            instalacje=instalacje
+                            )   
 
 @app.route('/subscriber')
 def subscribers(router=True):

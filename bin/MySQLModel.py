@@ -1,6 +1,7 @@
 import pymysql
 import re
 from config_utils import DBDATA as DB  # Import konfiguracji połączenia
+from appslib import handle_error_Turbo
 
 class MySQLModel:
     _global_conn = None  # Globalne połączenie dla stałego trybu
@@ -55,6 +56,7 @@ class MySQLModel:
 
         except Exception as e:
             print(f"Nie udało się rozpoznać tabeli: {e}")
+            handle_error_Turbo(f"Nie udało się rozpoznać tabeli: {e}")
 
         return None
 
@@ -83,6 +85,7 @@ class MySQLModel:
         except Exception as e:
             self.conn.rollback()
             print(f"Błąd SQL: {e}")
+            handle_error_Turbo(f"Błąd SQL: {e}")
             return False
 
     def getFrom(self, query, params=None, as_dict=False, as_object=False):
@@ -95,6 +98,11 @@ class MySQLModel:
         :param as_object: Jeśli True, zwraca listę obiektów MySQLModel
         :return: Wynik w formacie tuple, dict lub obiektowym
         """
+        if as_dict and as_object:
+            handle_error_Turbo(f"Błąd: as_dict i as_object nie mogą być jednocześnie ustawione na True!")
+            raise ValueError("Parametry as_dict i as_object nie mogą być jednocześnie True. Wybierz jedno.")
+
+
         table_name = self._extract_table_name(query)
 
         self.cursor.execute(query, params)
