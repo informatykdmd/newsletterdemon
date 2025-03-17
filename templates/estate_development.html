@@ -1,0 +1,498 @@
+{% extends 'base.html' %}
+
+{% block title %}DMD Panel Administratora - Zarządzanie Ogłoszeniami{% endblock %}
+
+{% block addButton %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" 
+            style="max-height: 29px; font-size: 20px;"
+            aria-expanded="false">
+            <i class="bi bi-bricks" style="color: #12dcef; position: relative; top: -10px;"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="estate_button dropdown-item active" href="/estate-development" style="max-height: 29px; font-size: 12px; font-weight: 100;">Wiśniowa House</a></li>
+        </ul>
+    </div>
+    <!-- dropdown END -->
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" type="button" 
+            style="max-height: 40px; font-size: 15px; font-weight: 100;"
+            id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+            Wiśniowa
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="estate_button dropdown-item active" href="/estate-development" style="max-height: 40px; font-size: 15px; font-weight: 100;">Wiśniowa House</a></li>
+        </ul>
+    </div>
+    <!-- dropdown END -->
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <!-- dropdown -->
+    <div class="dropdown">
+        <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            style="max-height: 45px; font-size: 20px; font-weight: 100;"
+            type="button" id="dropdownMenuButton2" 
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Wiśniowa House
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+            <li><a class="estate_button dropdown-item active" href="/estate-development" style="max-height: 45px; font-size: 20px; font-weight: 100;">Wiśniowa House</a></li>
+        </ul>
+    </div>
+    <!-- dropdown END -->
+</div>
+
+{% endblock %}
+{% block navbarTitle %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 2px !important; padding-right: 10px; max-height: 22px;"/>
+        </a>
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_lg" aria-controls="offcanvasTop_lg">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 5px !important; padding-right: 10px; max-height: 35px;"
+                />
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 40px; font-size: 15px; font-weight: 100;"
+            href="#">
+            Wiśniowa
+        </a>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_xl" aria-controls="offcanvasTop_xl">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 10px !important; padding-right: 10px; max-height: 40px;"/>
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 45px; font-size: 20px; font-weight: 100;"
+            href="#">
+            Wiśniowa House
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block tableHeader %}
+                        <div>
+                            <div class="row klej formatuj-header">
+                                <div class="d-none d-lg-block" style="max-width: 30px;">
+                                    #
+                                </div>
+                                <div  class="col-xl-8 col-lg-6 col-sm-8">
+                                    Tytuł
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Cena
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 150px;">
+                                    Lokalizacja
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Status
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 250px;">
+                                    Operator
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 150px;">
+                                    Data publikacji
+                                </div>
+                                <div  class="text-end" style="max-width: 80px;">
+                                    <i class="bi bi-person-gear"></i> Akcja 
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}
+{% block tableContent%}
+                        {% for post_data in ads_spec %}
+                            {% set post_id  = post_data['ID'] %}
+                        <!-- linia contentu tabeli ciemna-->
+                        <div>
+                            <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {{post_id}}
+                                </div>
+                                <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {% if post_data['StatusOferty'] == 1 %}
+                                        <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
+                                    {% else %}
+                                        <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-secondary"></i></span>
+                                    {% endif %}
+                                </div>
+                                <div  class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {{post_data['Tytul']}}
+                                    </a>
+                                    
+                                </div>
+                                <div  class="d-none d-lg-block"  style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="display-6 formatuj-maly-font">{{post_data['Cena']}} PLN</span>
+                                    </a>
+                                </div>
+                                <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="display-6 formatuj-maly-font">{{post_data['Lokalizacja'][:12]}}</span>
+                                    </a>
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {% if post_data['Status'] == 'aktywna' %}
+                                            <span class="text-info">Aktywna</span>
+                                        {% else %}
+                                            <span class="text-secondary formatuj-maly-font">{% if post_data['Status'] != None %}{{post_data['DataZakonczenia']}}{% else %}Brak daty zakonczenia{% endif %}</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {% if post_data['EmailKontaktowy'] != '' %}
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="text-secondary formatuj-maly-font">{{post_data['EmailKontaktowy']}}</span>
+                                    </a>
+                                    {% else %}
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="text-secondary">Brak</span>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <span class="display-6 formatuj-maly-font">{{post_data['DataUtworzenia']}}</span>
+                                    </a>
+                                </div>
+                                <div class="text-end" style="max-width: 80px;">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- collapse start -->
+                        <div class="sub-panel rogi collapse formatyj-maly-wiersz p-2" id="collapse_id_{{post_id}}">
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-12">
+                                    <img src="{{post_data['mainFoto']}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
+                                    <div class="row row-cols-4">
+                                        {% for foto in post_data['Zdjecia'][1:] %}
+                                        <div class="col mb-1">
+                                            <img src="{{foto}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark" >
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <h5>{{post_data['Tytul']}}</h5>
+                                    <h4 class="text-secondary">Opis</h4>
+                                    {% for item in post_data['Opis'] %}
+                                        {% for key, val in item.items() %}
+                                            {% if key=='li' %}
+                                                <ul>
+                                                    {% for li_item in val %}
+                                                        <li>{{li_item|decode_html_entities_filter|update_new_line_chars}}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% else %}
+                                                {% set decoded_val = val|decode_html_entities_filter|update_new_line_chars %}
+                                                {% if key=='p' %}
+                                                    <p class='text-secondary'>{{decoded_val}}</p>
+                                                {% endif %}
+                                                {% if key=='strong' %}
+                                                    <strong class='text-secondary'>{{decoded_val}}</strong>
+                                                {% endif %}
+                                                {% if key=='h1' %}
+                                                    <h1 class='text-secondary'>{{decoded_val}}</h1>
+                                                {% endif %}
+                                                {% if key=='h1-strong' %}
+                                                    <h1 class='text-secondary'><strong>{{decoded_val}}</strong></h1>
+                                                {% endif %}
+                                                {% if key=='h2' %}
+                                                    <h2 class='text-secondary'>{{decoded_val}}</h2>
+                                                {% endif %}
+                                                {% if key=='h2-strong' %}
+                                                    <h2 class='text-secondary'><strong>{{decoded_val}}</strong></h2>
+                                                {% endif %}
+                                                {% if key=='h3' %}
+                                                    <h3 class='text-secondary'>{{decoded_val}}</h3>
+                                                {% endif %}
+                                                {% if key=='h3-strong' %}
+                                                    <h3 class='text-secondary'><strong>{{decoded_val}}</strong></h3>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    <p class="h3"><i class="bi bi-database-fill-check text-warning"></i> {{post_data['Cena']}} PLN</p>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    
+                                    <div class="row-cols-1 ">
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Oferty</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-success"></i> 
+                                                    {% if post_data['Rodzaj'] == 'wynajem' %}
+                                                        <span class="text-secondary fw-lighter">Oferta Wynajmu</span>
+                                                    {% else %}
+                                                        <span class="text-secondary fw-lighter">Oferta Sprzedaży</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if post_data['Lokalizacja']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Lokalizacja</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-geo text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Lokalizacja']}} </span>
+                                                    {% if post_data['GPS']!={} %}
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['latitude']}} </span>
+                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['longitude']}} </span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['InformacjeDodatkowe']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Informacje Dodatkowe </span>
+                                                    <i class="bi bi-info-lg text-success"></i>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-stack text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['InformacjeDodatkowe']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="row row-cols-2">
+                                        
+                                        
+
+                                        {% if post_data['Metraz']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Metraż</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-app-indicator text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Metraz']}} m&sup2;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['LiczbaPokoi']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Liczba Pokoi</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPokoi']}} </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['Kaucja']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Kaucja</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-cash text-warning"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Kaucja']}} PLN</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['Czynsz']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Czynsz</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-cash text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Czynsz']}} PLN</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['LiczbaPieter']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Liczba Pięter</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPieter']}} </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['PowierzchniaDzialki']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Powierzchnia Dzialki</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-app-indicator text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['PowierzchniaDzialki']}} m&sup2;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['TechBudowy']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Technologia Budowy</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-gear text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['TechBudowy']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['Umeblowanie']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Umeblowanie</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-heart text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['Umeblowanie']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['FormaKuchni']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Forma Kuchni</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-heart text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['FormaKuchni']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['TypDomu']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rodzaj Nieruchomości </span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['TypDomu']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['StanWykonczenia']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Stan Wykończenia</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-check text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['StanWykonczenia']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['RokBudowy']!=0 %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Rok Budowy</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-calendar3 text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['RokBudowy']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% if post_data['NumerKW']!='' %}
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Numer KW</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-journal-text text-success"></i>
+                                                    <span class="text-secondary fw-lighter">{{post_data['NumerKW']}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                        <!-- collapse end -->
+                        {% endfor %}
+                        <!-- Paginacja -->
+                        <span class="formatuj-maly-logout">{{ pagination.info }}</span>
+                        <div class="pagination formatuj-margin-top">
+                            <nav aria-label="Page navigation example">                            
+                                <ul class="pagination justify-content-center dark-mode">
+                                    <li class="page-item">{{ pagination.prev }}</li>
+                                    <li class="page-item">{{ pagination.links }}</li>
+                                    <li class="page-item">{{ pagination.next }}</li>
+                                </ul>
+                            </nav>
+                        </div>
+{% endblock %}
+

@@ -11622,7 +11622,7 @@ def estateAdsspecial():
             userperm=session['userperm'],
             username=session['username'],
             pagination=pagination
-            )     
+            )
 
 @app.route("/estate-development")
 def estate_development():
@@ -11631,7 +11631,7 @@ def estate_development():
 
 
     return render_template(
-            "estate_management_special.html",
+            "estate_development.html",
             userperm=session['userperm'],
             username=session['username'],
             pagination=pagination
