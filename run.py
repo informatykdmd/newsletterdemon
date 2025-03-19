@@ -1579,7 +1579,7 @@ def generator_wisniowa_lokale():
             pos_dict['Messages'] = all_messages_for_lokal
 
     return all_lokale
-    
+
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = generator_settingsDB()['pagination']  # Określa liczbę elementów na stronie
 
@@ -11651,7 +11651,7 @@ def estate_development():
 
     pagination = None
     lokale = generator_wisniowa_lokale()
-
+    print(lokale)
     return render_template(
             "estate_development.html",
             userperm=session['userperm'],
