@@ -1570,7 +1570,7 @@ def generator_wisniowa_lokale():
     db = get_db()
     query_lokale = "SELECT * FROM Lokale_wisniowa;"
     all_lokale = db.getFrom(query_lokale, as_dict=True)
-
+    print(all_lokale)
     for pos_dict in all_lokale:
         id_lokal = pos_dict.get('id', None)
         if isinstance(id_lokal, int):
