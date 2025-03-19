@@ -113,14 +113,9 @@
                                     #
                                 </div>
                                 <div  class="col-xl-8 col-lg-6 col-sm-8">
-                                    Tytuł
+                                    Lokal
                                 </div>
-                                <div  class="d-none d-lg-block" style="max-width: 120px;">
-                                    Cena
-                                </div>
-                                <div  class="d-none d-xl-block" style="max-width: 150px;">
-                                    Lokalizacja
-                                </div>
+                                
                                 <div  class="d-none d-lg-block" style="max-width: 120px;">
                                     Status
                                 </div>
@@ -128,7 +123,7 @@
                                     Operator
                                 </div>
                                 <div  class="d-none d-lg-block" style="max-width: 150px;">
-                                    Data publikacji
+                                    Data aktualizacji
                                 </div>
                                 <div  class="text-end" style="max-width: 80px;">
                                     <i class="bi bi-person-gear"></i> Akcja 
@@ -137,6 +132,7 @@
                         </div>
 {% endblock %}
 {% block tableContent%}
+{{lokale}}
                         {% for post_data in ads_spec %}
                             {% set post_id  = post_data['ID'] %}
                         <!-- linia contentu tabeli ciemna-->
@@ -158,19 +154,14 @@
                                     </a>
                                     
                                 </div>
-                                <div  class="d-none d-lg-block"  style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        <span class="display-6 formatuj-maly-font">{{post_data['Cena']}} PLN</span>
-                                    </a>
-                                </div>
-                                <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        <span class="display-6 formatuj-maly-font">{{post_data['Lokalizacja'][:12]}}</span>
-                                    </a>
-                                </div>
+                                
                                 <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {% if post_data['Status'] == 'aktywna' %}
+                                        {% if post_data['Status'] == 'dostępny' %}
+                                            <span class="text-info">Aktywna</span>
+                                        {% elif post_data['Status'] == 'rezerwacja' %}
+                                            <span class="text-info">Aktywna</span>
+                                        {% elif post_data['Status'] == 'sprzedane' %}
                                             <span class="text-info">Aktywna</span>
                                         {% else %}
                                             <span class="text-secondary formatuj-maly-font">{% if post_data['Status'] != None %}{{post_data['DataZakonczenia']}}{% else %}Brak daty zakonczenia{% endif %}</span>
@@ -305,9 +296,6 @@
 
                                     </div>
                                     <div class="row row-cols-2">
-                                        
-                                        
-
                                         {% if post_data['Metraz']!=0 %}
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">

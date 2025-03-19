@@ -1,7 +1,7 @@
 import pymysql
 import re
-from config_utils import DBDATA as DB  # Import konfiguracji połączenia
-from appslib import handle_error_Turbo
+from bin.config_utils import DBDATA as DB  # Import konfiguracji połączenia
+from bin.appslib import handle_error_Turbo
 
 class MySQLModel:
     _global_conn = None  # Globalne połączenie dla stałego trybu
@@ -96,6 +96,7 @@ class MySQLModel:
         :param params: Parametry do zapytania (opcjonalne)
         :param as_dict: Jeśli True, zwraca listę słowników
         :param as_object: Jeśli True, zwraca listę obiektów MySQLModel
+        :UWAGA! Parametry as_dict i as_object nie mogą być jednocześnie True.
         :return: Wynik w formacie tuple, dict lub obiektowym
         """
         if as_dict and as_object:
@@ -144,23 +145,23 @@ if __name__ == "__main__":
     db = MySQLModel(permanent_connection=True)
 
     # Pobranie użytkownika (SQL sam wykryje tabelę!)
-    db.fetch_one("SELECT * FROM users WHERE id=1")
+    db.fetch_one("SELECT * FROM contact WHERE id=11356")
     print(db)
 
     # Pobranie produktów (SQL sam wykryje tabelę!)
-    db.fetch_one("SELECT * FROM products WHERE id=3")
+    db.fetch_one("SELECT * FROM contact WHERE id=3")
     print(db)
 
     # Pobranie listy użytkowników jako dict
-    print(db.getFrom("SELECT * FROM users LIMIT 5", as_dict=True))
+    print(db.getFrom("SELECT * FROM contact LIMIT 5", as_dict=True))
 
     # Pobranie listy zamówień jako lista obiektów
-    orders = db.getFrom("SELECT * FROM orders LIMIT 5", as_object=True)
+    orders = db.getFrom("SELECT * FROM contact LIMIT 5", as_object=True)
     for order in orders:
         print(order)
 
-    # Wykonanie INSERT bez podawania tabeli
-    db.executeTo("INSERT INTO users (name, email) VALUES (%s, %s)", ("Nowy", "nowy@example.com"))
+    # # Wykonanie INSERT bez podawania tabeli
+    # db.executeTo("INSERT INTO xusers (name, email) VALUES (%s, %s)", ("Nowy", "nowy@example.com"))
 
     # Zamknięcie połączenia
     db.close_connection()

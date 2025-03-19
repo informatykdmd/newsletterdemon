@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request
+from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request, g
 from flask_wtf import FlaskForm
 from flask_paginate import Pagination, get_page_args
 from wtforms import StringField, PasswordField, SubmitField
@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 import secrets
 import app.utils.passwordSalt as hash
 import mysqlDB as msq
+from MySQLModel import MySQLModel
 import time
 import datetime
 import os
@@ -66,6 +67,18 @@ def log_request():
     
     # Logowanie do pliku
     logging.info(f'IP: {ip_address}, Time: {date_time}, Endpoint: {endpoint}, Method: {method}')
+
+# Instancja MySql
+def get_db():
+    if 'db' not in g:
+        g.db = MySQLModel(permanent_connection=False)
+    return g.db
+
+@app.teardown_appcontext
+def close_db(error=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close_connection()
 
 
 @app.before_request
@@ -1553,13 +1566,22 @@ def znajdz_wolny_termin(nowe_kampanie, istniejące_kampanie, interval_seconds=10
     # Zwracamy listę nowych dat umieszczonych na wolnych miejscach (w formacie string)
     return termin_export_list
 
+def generator_wisniowa_lokale():
+    db = get_db()
+    query_lokale = "SELECT * FROM Lokale_wisniowa;"
+    all_lokale = db.getFrom(query_lokale, as_dict=True)
+
+    for pos_dict in all_lokale:
+        id_lokal = pos_dict.get('id', None)
+        if isinstance(id_lokal, int):
+            query_messages = f"SELECT * FROM Messages_wisniowa WHERE id_lokalu={id_lokal};"
+            all_messages_for_lokal = db.getFrom(query_messages, as_dict=True)
+            pos_dict['Messages'] = all_messages_for_lokal
+
+    return all_lokale
+    
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = generator_settingsDB()['pagination']  # Określa liczbę elementów na stronie
-# newsletterSettingDB = generator_newsletterSettingDB()
-# userDataDB = generator_userDataDB()
-# teamDB = generator_teamDB()
-# subsDataDB = generator_subsDataDB()
-# daneDBList = generator_daneDBList()
 
 @app.route('/')
 def index():
@@ -11628,13 +11650,14 @@ def estateAdsspecial():
 def estate_development():
 
     pagination = None
-
+    lokale = generator_wisniowa_lokale()
 
     return render_template(
             "estate_development.html",
             userperm=session['userperm'],
             username=session['username'],
-            pagination=pagination
+            pagination=pagination,
+            lokale=lokale
             )
 
 @app.route('/subscriber')
