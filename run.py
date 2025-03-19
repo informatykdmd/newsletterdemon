@@ -1576,7 +1576,7 @@ def generator_wisniowa_lokale():
         if isinstance(id_lokal, int):
             query_messages = f"SELECT * FROM Messages_wisniowa WHERE id_lokalu={id_lokal};"
             all_messages_for_lokal = db.getFrom(query_messages, as_dict=True)
-            pos_dict['Messages'] = all_messages_for_lokal
+            pos_dict['Messages'] = all_messages_for_lokal or []
 
     return all_lokale
 
@@ -11651,7 +11651,7 @@ def estate_development():
 
     pagination = None
     lokale = generator_wisniowa_lokale()
-    print(lokale)
+
     return render_template(
             "estate_development.html",
             userperm=session['userperm'],
