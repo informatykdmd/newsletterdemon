@@ -1055,7 +1055,7 @@ def get_offer(id_ogloszenia, rodzaj_ogloszenia):
     return next((offer for offer in generator if str(offer['ID']) == str(id_ogloszenia)), {})
 
 # Funkcja pomocnicza do generowania opisu ogłoszenia socialsync
-def generate_offer_description(picked_offer, rodzaj_ogloszenia):
+def generate_offer_description(picked_offer, rodzaj_ogloszenia, generator):
     zdjecia_string = '-@-'.join(picked_offer.get('Zdjecia', []))
     kategoria_ogloszenia = picked_offer.get('TypNieruchomosci' if rodzaj_ogloszenia == 's' else 'TypDomu', None)
 
@@ -1065,7 +1065,8 @@ def generate_offer_description(picked_offer, rodzaj_ogloszenia):
         for item in picked_offer.get('Opis', [])
         for val in item.values()
     )
-    prepared_opis = f"{prepared_opis}\n{picked_offer['InformacjeDodatkowe']}" if prepared_opis else picked_offer['InformacjeDodatkowe']
+    if generator:
+        prepared_opis = f"{prepared_opis}\n{picked_offer['InformacjeDodatkowe']}" if prepared_opis else picked_offer['InformacjeDodatkowe']
 
     # Tworzenie dodatkowego opisu
     extra_fields = {
@@ -1089,7 +1090,7 @@ def generate_offer_description(picked_offer, rodzaj_ogloszenia):
     extra_opis = "\n\n".join(f"{key}:\n{value}" for key, value in extra_fields.items() if value)
 
     # Łączenie całości
-    opis_ogloszenia = f"{prepared_opis}\n\n{extra_opis}" if extra_opis else prepared_opis
+    opis_ogloszenia = f"{prepared_opis}\n\n{extra_opis}" if extra_opis and generator else prepared_opis
 
     return opis_ogloszenia, zdjecia_string, kategoria_ogloszenia
 
@@ -1570,7 +1571,7 @@ def generator_wisniowa_lokale():
     db = get_db()
     query_lokale = "SELECT * FROM Lokale_wisniowa;"
     all_lokale = db.getFrom(query_lokale, as_dict=True)
-    print(all_lokale)
+
     for pos_dict in all_lokale:
         id_lokal = pos_dict.get('id', None)
         if isinstance(id_lokal, int):
@@ -5444,6 +5445,7 @@ def public_on_lento():
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
         redirectGoal = request.form.get('redirectGoal')
+        extra_descript = request.form.get('extra_descript')
         
         
         rodzaj_ogloszenia = None
@@ -5524,7 +5526,9 @@ def public_on_lento():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_rent_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_rent_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_rent_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -5543,7 +5547,11 @@ def public_on_lento():
             if picked_rent_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_rent_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
             
 
             if str(picked_rent_offer['TypDomu']).lower().count('dom') > 0\
@@ -5928,7 +5936,10 @@ def public_on_lento():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_sell_offer['InformacjeDodatkowe']
+
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_sell_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_sell_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -5945,7 +5956,10 @@ def public_on_lento():
             if picked_sell_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_sell_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
             
             if str(picked_sell_offer['TypNieruchomosci']).lower().count('dom') > 0\
                 or str(picked_sell_offer['TypNieruchomosci']).lower().count('willa') > 0\
@@ -6330,7 +6344,9 @@ def public_on_lento():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_rent_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_rent_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_rent_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -6349,7 +6365,11 @@ def public_on_lento():
             if picked_rent_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_rent_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             if str(picked_rent_offer['TypDomu']).lower().count('dom') > 0\
                 or str(picked_rent_offer['TypDomu']).lower().count('willa') > 0\
@@ -6602,7 +6622,9 @@ def public_on_lento():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_sell_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_sell_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_sell_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -6619,7 +6641,10 @@ def public_on_lento():
             if picked_sell_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_sell_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             if str(picked_sell_offer['TypNieruchomosci']).lower().count('dom') > 0\
                 or str(picked_sell_offer['TypNieruchomosci']).lower().count('willa') > 0\
@@ -7528,6 +7553,7 @@ def public_on_adresowo():
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
         redirectGoal = request.form.get('redirectGoal')
+        extra_descript = request.form.get('extra_descript')
         if 'region' in request.form:
             get_region = request.form.get('region')
             if get_region!='' and get_region.count('/')>4:
@@ -7602,7 +7628,10 @@ def public_on_adresowo():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             if str(picked_offer['TypDomu']).lower().count('dom') > 0\
                 or str(picked_offer['TypDomu']).lower().count('willa') > 0\
@@ -7866,7 +7895,9 @@ def public_on_adresowo():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -7883,7 +7914,10 @@ def public_on_adresowo():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             if str(picked_offer['TypNieruchomosci']).lower().count('dom') > 0\
                 or str(picked_offer['TypNieruchomosci']).lower().count('willa') > 0\
@@ -8150,7 +8184,9 @@ def public_on_adresowo():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -8169,7 +8205,10 @@ def public_on_adresowo():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             if str(picked_offer['TypDomu']).lower().count('dom') > 0\
                 or str(picked_offer['TypDomu']).lower().count('willa') > 0\
@@ -8578,7 +8617,9 @@ def public_on_adresowo():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -8594,7 +8635,10 @@ def public_on_adresowo():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             if str(picked_offer['TypNieruchomosci']).lower().count('dom') > 0\
                 or str(picked_offer['TypNieruchomosci']).lower().count('willa') > 0\
@@ -9134,6 +9178,7 @@ def public_on_allegro():
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
         redirectGoal = request.form.get('redirectGoal')
+        extra_descript = request.form.get('extra_descript')
         if 'region' in request.form:
             get_region = request.form.get('region')
             if get_region!='' and get_region.count('/')>4:
@@ -9215,7 +9260,9 @@ def public_on_allegro():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -9234,7 +9281,10 @@ def public_on_allegro():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             if str(picked_offer['TypDomu']).lower().count('dom') > 0\
                 or str(picked_offer['TypDomu']).lower().count('willa') > 0\
@@ -9500,7 +9550,9 @@ def public_on_allegro():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -9516,7 +9568,10 @@ def public_on_allegro():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             if str(picked_offer['TypNieruchomosci']).lower().count('dom') > 0\
                 or str(picked_offer['TypNieruchomosci']).lower().count('willa') > 0\
@@ -9773,8 +9828,10 @@ def public_on_allegro():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
-            else: prepared_opis = picked_offer['InformacjeDodatkowe']
+                if prepared_opis != '':
+                    if extra_descript:
+                        prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+                else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
             if picked_offer['RodzajZabudowy'] != '':
@@ -9792,7 +9849,10 @@ def public_on_allegro():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
 
             kategoria_ogloszenia = checkAllegroStatus('r', id_ogloszenia)[8]
@@ -10028,7 +10088,9 @@ def public_on_allegro():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -10044,7 +10106,11 @@ def public_on_allegro():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
+
 
 
             kategoria_ogloszenia = checkAllegroStatus('s', id_ogloszenia)[8]
@@ -10358,6 +10424,7 @@ def public_on_otodom():
         id_ogloszenia = request.form.get('PostID')
         task_kind = request.form.get('task_kind')
         redirectGoal = request.form.get('redirectGoal')
+        extra_descript = request.form.get('extra_descript')
         if 'region' in request.form:
             get_region = request.form.get('region')
             if get_region!='' and get_region.count('/')>4:
@@ -10469,7 +10536,9 @@ def public_on_otodom():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -10488,7 +10557,10 @@ def public_on_otodom():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             if str(picked_offer['TypDomu']).lower().count('dom') > 0\
                 or str(picked_offer['TypDomu']).lower().count('willa') > 0\
@@ -10740,7 +10812,9 @@ def public_on_otodom():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -10756,7 +10830,10 @@ def public_on_otodom():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             if str(picked_offer['TypNieruchomosci']).lower().count('dom') > 0\
                 or str(picked_offer['TypNieruchomosci']).lower().count('willa') > 0\
@@ -11000,7 +11077,9 @@ def public_on_otodom():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -11019,7 +11098,10 @@ def public_on_otodom():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             kategoria_ogloszenia = checkOtodomStatus('r', id_ogloszenia)[6]
 
@@ -11228,7 +11310,9 @@ def public_on_otodom():
                     if isinstance(val, list):
                         for v_val in val:
                             prepared_opis += f'{v_val}\n'
-            if prepared_opis != '':prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
+            if prepared_opis != '':
+                if extra_descript:
+                    prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
             extra_opis = ''
@@ -11244,7 +11328,10 @@ def public_on_otodom():
             if picked_offer['NumerKW'] != "":
                 extra_opis += f"Numer KW:\n{picked_offer['NumerKW']}\n\n"
             extra_opis = extra_opis[:-2]
-            opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
 
             kategoria_ogloszenia = checkOtodomStatus('s', id_ogloszenia)[6]
 
@@ -11549,7 +11636,11 @@ def public_on_socialsync():
             return redirect(url_for(redirectGoal))
 
         # Generowanie opisu ogłoszenia
-        opis_ogloszenia, zdjecia_string, kategoria_ogloszenia = generate_offer_description(picked_offer, rodzaj_ogloszenia)
+        if uzyj_aktualnego_opisu:
+            generator = False
+        else:
+            generator = True
+        opis_ogloszenia, zdjecia_string, kategoria_ogloszenia = generate_offer_description(picked_offer, rodzaj_ogloszenia, generator)
 
         if uzyj_aktualnego_opisu:
             styl_ogloszenia = 0
