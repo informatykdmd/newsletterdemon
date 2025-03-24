@@ -254,7 +254,7 @@
                             <div class="sub-panel rogi">
                                 {% for mess in post_data.Messages %}
                                 <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin-left">
-                                    <div class="row" style="width: 100%;">
+                                    <div class="row" style="width: 100%;" onclick="change_message_status('odczytana', '{{post_id}}', '{{mess.id}}')">
                                         <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font">
                                             <figure>
                                                 <blockquote class="blockquote">
@@ -283,27 +283,23 @@
                                                 </div>
                                                 {% if mess.telefon_do_autora_wiadomosci %}
                                                 <div>
-                                                    {{mess.telefon_do_autora_wiadomosci}}
+                                                    <a href="tel:{{mess.telefon_do_autora_wiadomosci}}">{{mess.telefon_do_autora_wiadomosci}}</a>
                                                 </div>
                                                 {% endif %}
                                                 {% if mess.email_autora_wiadomosci %}
                                                 <div>
-                                                    {{mess.email_autora_wiadomosci}}
+                                                    <a href="mailto:{{mess.email_autora_wiadomosci}}">{{mess.email_autora_wiadomosci}}</a>
                                                 </div>
                                                 {% endif %}
                                             </div> 
-                                            
                                         </div>
                                         <div class="col d-flex justify-content-end">
-                                            <a href="#">
+                                            <div onclick="change_message_status('archiwum', '{{post_id}}', '{{mess.id}}')">
                                                 <i class="bi bi-archive" style="color: #4281b7 !important;"></i>
-                                            </a>
-                                            <form method="POST" id="removeComment_{{post_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
-                                                <input type="hidden" name="page" id="CommName_{{post_id}}" value="blog"/>
-                                                <input type="hidden" name="comment_id" id="CommName_{{post_id}}" value="{{mess.id}}"/>
-                                                <button type="submit" class="custom-icon-button"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></button>
-                                            </form>
-                                            <!-- <a href="#"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></a> -->
+                                            </div>
+                                            <div onclick="remove_selected_message('{{post_id}}', '{{mess.id}}')">
+                                                <i class="bi bi-trash" style="color: #ff2525 !important;"></i>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -313,5 +309,54 @@
                         <!-- collapse end -->
                         {% endfor %}
                         
+{% endblock %}
+{% block bottom_script %}
+<script>
+    function change_message_status(status, post_id, message_id) {
+        fetch('/lokale-wisniowa-messages-control', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                action: 'change_status',
+                post_id: post_id,
+                message_id: message_id,
+                status: status
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Status zmieniony');
+                location.reload(); // lub dynamiczna zmiana klasy/ikony
+            } else {
+                alert(data.message);
+            }
+        });
+    }
+
+    function remove_selected_message(post_id, message_id) {
+        if (confirm("Czy na pewno usunąć tę wiadomość?")) {
+            fetch('/lokale-wisniowa-messages-control', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    action: 'remove',
+                    post_id: post_id,
+                    message_id: message_id
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Wiadomość usunięta');
+                    location.reload(); // lub dynamiczne usunięcie z DOM
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+    }
+</script>
+
 {% endblock %}
 

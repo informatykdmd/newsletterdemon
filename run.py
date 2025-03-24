@@ -11749,6 +11749,29 @@ def estate_development():
             lokale=lokale
             )
 
+@app.route('/lokale-wisniowa-messages-control', methods=['POST'])
+def messages_control():
+    data = request.get_json()
+    action = data.get('action')
+    post_id = data.get('post_id')
+    message_id = data.get('message_id')
+    status = data.get('status', None)
+
+    # Logika akcji
+    if action == 'change_status':
+        # TODO: Zapisz nowy status do bazy dla wiadomości message_id
+        print(f"Zmieniam status wiadomości {message_id} na {status}")
+        # np. msq.safe_connect_to_database("UPDATE wiadomosci SET status_wiadomosci=%s WHERE id=%s", (status, message_id))
+        return jsonify({"success": True, "message": "Status zmieniony"})
+    
+    elif action == 'remove':
+        # TODO: Usuń wiadomość z bazy lub ustaw status 'usunieta'
+        print(f"Usuwam wiadomość {message_id}")
+        # np. msq.safe_connect_to_database("DELETE FROM wiadomosci WHERE id=%s", (message_id,))
+        return jsonify({"success": True, "message": "Wiadomość usunięta"})
+
+    return jsonify({"success": False, "message": "Nieznana akcja"})
+
 @app.route('/subscriber')
 def subscribers(router=True):
     """Strona zawierająca listę subskrybentów Newslettera."""
