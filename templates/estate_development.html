@@ -248,6 +248,78 @@
                                             Wymów sprzedaż
                                         </button>
                                     {% endif %}
+                                    <div class="row row-cols-2">
+
+                                        <!-- ID Lokalu -->
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">ID Lokalu</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-hash text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.id_lokalu }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Powierzchnia całkowita -->
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Powierzchnia całkowita</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-aspect-ratio text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.powierzchnia_m2 }} m&sup2;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Powierzchnia użytkowa -->
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Pow. użytkowa</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-grid-1x2-fill text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.powierzchnia_uzytkowa_m2 }} m&sup2;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Typ zabudowy -->
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Typ zabudowy</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-house-door text-info"></i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.typ_zabudowy }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <!-- Status lokalu -->
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="mb-2">
+                                                    <span class="text-light fw-light">Status lokalu</span>
+                                                </div>
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-lightbulb-fill 
+                                                        {% if post_data.status_lokalu == 'dostepny' %}text-success
+                                                        {% elif post_data.status_lokalu == 'rezerwacja' %}text-warning
+                                                        {% else %}text-secondary{% endif %}">
+                                                    </i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.status_lokalu|capitalize }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
                                     
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
@@ -473,24 +545,6 @@
                                             <button type="submit" class="btn btn-success w-100">Oznacz jako sprzedane</button>
 
                                         </form>
-                                    </div>
-
-                                    
-                                    <div class="row row-cols-2">
-                                        
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Metraż</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-app-indicator text-info"></i>
-                                                    <span class="text-secondary fw-lighter">140 m&sup2;</span>
-                                                </div>
-                                            </div>
-                                        </div>
- 
-                                        
                                     </div>
                                 </div> 
                             </div>
