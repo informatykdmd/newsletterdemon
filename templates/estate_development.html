@@ -147,11 +147,11 @@
                                 <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {% if post_data.status_lokalu == 'dostepny' %}
-                                            <span class="text-info">Aktywna</span>
+                                            <span class="text-info formatuj-maly-font"><i class="bi bi-lightbulb-fill text-info"></i> Aktywna</span>
                                         {% elif post_data.status_lokalu == 'rezerwacja' %}
-                                            <span class="text-warning">Zarezerwowana</span>
+                                            <span class="text-warning formatuj-maly-font"><i class="bi bi-lightbulb-fill text-warning"></i> Rezeracja</span>
                                         {% elif post_data.status_lokalu == 'sprzedane' %}
-                                            <span class="text-secondary">Sfinalizowana</span>
+                                            <span class="text-secondary formatuj-maly-font"><i class="bi bi-lightbulb-fill text-secondary"></i> Sprzedane</span>
                                         {% endif %}
                                     </a>
                                 </div>
@@ -222,7 +222,7 @@
                                         </button>
                                         <button 
                                             type="button" 
-                                            class="btn btn-outline-info btn-sm m-2" 
+                                            class="btn btn-outline-secondary btn-sm m-2" 
                                             style="max-height: 30px; font-size: 12px;" 
                                             data-bs-toggle="collapse" 
                                             href="#collapse_id_sold_{{post_id}}" 
