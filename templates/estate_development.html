@@ -198,16 +198,18 @@
                                             Zarezerwuj
                                         </button>
                                     {% elif post_data.status_lokalu == 'rezerwacja' %}
-                                        <button 
-                                            type="button" 
-                                            class="btn btn-outline-info btn-sm mt-2" 
-                                            style="max-height: 30px; font-size: 12px;" 
-                                            data-bs-toggle="collapse" 
-                                            href="#collapse_id_payment_{{post_id}}" 
-                                            role="button" aria-expanded="false" 
-                                            aria-controls="collapse_id_payment_{{post_id}}">
-                                            Zmień status płatności
-                                        </button>
+                                        {% if post_data.status_platnosci == 'oczekuje' %}
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-outline-info btn-sm mt-2" 
+                                                style="max-height: 30px; font-size: 12px;" 
+                                                data-bs-toggle="collapse" 
+                                                href="#collapse_id_payment_{{post_id}}" 
+                                                role="button" aria-expanded="false" 
+                                                aria-controls="collapse_id_payment_{{post_id}}">
+                                                Zmień status płatności
+                                            </button>
+                                        {% endif %}
                                         <button 
                                             type="button" 
                                             class="btn btn-outline-info btn-sm mt-2" 
