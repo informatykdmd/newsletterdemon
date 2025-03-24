@@ -255,9 +255,9 @@
                                 {% for mess in post_data.Messages %}
                                 <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin-left">
                                     <div class="row" style="width: 100%;">
-                                        <div class="col-xl-7 col-lg-7 col-sm-8 formatuj-maly-font">
+                                        <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font">
                                             <figure>
-                                                <blockquote class="blockquote fs-6">
+                                                <blockquote class="blockquote">
                                                     <p> 
                                                         {% if mess.status_wiadomosci == 'nowa' %}
                                                             <i class="bi bi-envelope-arrow-down text-success"></i>
@@ -277,14 +277,20 @@
                                         <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;">
                                             <div>
                                                 <div>
-                                                    {{mess.autor_wiadomosci}}
+                                                    <strong>
+                                                        {{mess.autor_wiadomosci}}
+                                                    </strong>
                                                 </div>
+                                                {% if mess.telefon_do_autora_wiadomosci %}
                                                 <div>
                                                     {{mess.telefon_do_autora_wiadomosci}}
                                                 </div>
+                                                {% endif %}
+                                                {% if mess.email_autora_wiadomosci %}
                                                 <div>
                                                     {{mess.email_autora_wiadomosci}}
                                                 </div>
+                                                {% endif %}
                                             </div> 
                                             
                                         </div>
