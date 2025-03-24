@@ -121,7 +121,7 @@
 {% block tableContent%}
 
                         {% for post_data in lokale %}
-                            {% set post_id  = post_data['id'] %}
+                            {% set post_id  = post_data.id %}
                         <!-- linia contentu tabeli ciemna-->
                         <div>
                             <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
@@ -130,9 +130,9 @@
                                 </div>
                                 <!-- enum('dostepny','rezerwacja','sprzedane') -->
                                 <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                    {% if post_data['status_lokalu'] == 'dostepny' %}
+                                    {% if post_data.status_lokalu == 'dostepny' %}
                                         <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-success"></i></span>
-                                    {% if post_data['status_lokalu'] == 'rezerwacja' %}
+                                    {% if post_data.status_lokalu == 'rezerwacja' %}
                                         <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
                                     {% else %}
                                         <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-secondary"></i></span>
@@ -140,27 +140,25 @@
                                 </div>
                                 <div  class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {{post_data['nazwa']}} - {{post_data['id_lokalu']}} / {{post_data['typ_zabudowy']}}
+                                        {{post_data.nazwa}} - {{post_data.id_lokalu}} / {{post_data.typ_zabudowy}}
                                     </a>
                                 </div>
                                 
                                 <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {% if post_data['status_lokalu'] == 'dostępny' %}
+                                        {% if post_data.status_lokalu == 'dostępny' %}
                                             <span class="text-info">Aktywna</span>
-                                        {% elif post_data['status_lokalu'] == 'rezerwacja' %}
+                                        {% elif post_data.status_lokalu == 'rezerwacja' %}
                                             <span class="text-info">Zarezerwowana</span>
-                                        {% elif post_data['status_lokalu'] == 'sprzedane' %}
+                                        {% elif post_data.status_lokalu == 'sprzedane' %}
                                             <span class="text-info">Sfinalizowana</span>
-                                        {% else %}
-                                            <span class="text-secondary formatuj-maly-font">{% if post_data['Status'] != None %}{{post_data['DataZakonczenia']}}{% else %}Brak daty zakonczenia{% endif %}</span>
                                         {% endif %}
                                     </a>
                                 </div>
                                 <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                    {% if post_data['EmailKontaktowy'] != '' %}
+                                    {% if post_data.kto_aktualizowal %}
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        <span class="text-secondary formatuj-maly-font">{{post_data['EmailKontaktowy']}}</span>
+                                        <span class="text-secondary formatuj-maly-font">{{post_data.kto_aktualizowal}}</span>
                                     </a>
                                     {% else %}
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -170,7 +168,7 @@
                                 </div>
                                 <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        <span class="display-6 formatuj-maly-font">{{post_data['DataUtworzenia']}}</span>
+                                        <span class="display-6 formatuj-maly-font">{{post_data.data_aktualizacji}}</span>
                                     </a>
                                 </div>
                                 <div class="text-end" style="max-width: 80px;">
@@ -182,110 +180,19 @@
                         <div class="sub-panel rogi collapse formatyj-maly-wiersz p-2" id="collapse_id_{{post_id}}">
                             <div class="row">
                                 <div class="col-lg-4 col-sm-12">
-                                    <img src="{{post_data['mainFoto']}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
-                                    <div class="row row-cols-4">
-                                        {% for foto in post_data['Zdjecia'][1:] %}
-                                        <div class="col mb-1">
-                                            <img src="{{foto}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark" >
-                                        </div>
-                                        {% endfor %}
-                                    </div>
+                                    <img src="https://dmddomy.pl/images/project/bl-01-750x430-Oszust-1.png" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
-                                    <h5>{{post_data['Tytul']}}</h5>
+                                    <h5>{{post_data.nazwa}}</h5>
                                     <h4 class="text-secondary">Opis</h4>
-                                    {% for item in post_data['Opis'] %}
-                                        {% for key, val in item.items() %}
-                                            {% if key=='li' %}
-                                                <ul>
-                                                    {% for li_item in val %}
-                                                        <li>{{li_item|decode_html_entities_filter|update_new_line_chars}}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            {% else %}
-                                                {% set decoded_val = val|decode_html_entities_filter|update_new_line_chars %}
-                                                {% if key=='p' %}
-                                                    <p class='text-secondary'>{{decoded_val}}</p>
-                                                {% endif %}
-                                                {% if key=='strong' %}
-                                                    <strong class='text-secondary'>{{decoded_val}}</strong>
-                                                {% endif %}
-                                                {% if key=='h1' %}
-                                                    <h1 class='text-secondary'>{{decoded_val}}</h1>
-                                                {% endif %}
-                                                {% if key=='h1-strong' %}
-                                                    <h1 class='text-secondary'><strong>{{decoded_val}}</strong></h1>
-                                                {% endif %}
-                                                {% if key=='h2' %}
-                                                    <h2 class='text-secondary'>{{decoded_val}}</h2>
-                                                {% endif %}
-                                                {% if key=='h2-strong' %}
-                                                    <h2 class='text-secondary'><strong>{{decoded_val}}</strong></h2>
-                                                {% endif %}
-                                                {% if key=='h3' %}
-                                                    <h3 class='text-secondary'>{{decoded_val}}</h3>
-                                                {% endif %}
-                                                {% if key=='h3-strong' %}
-                                                    <h3 class='text-secondary'><strong>{{decoded_val}}</strong></h3>
-                                                {% endif %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endfor %}
+                                    <p>{{post_data.opis}}</p>
                                     <p class="h3"><i class="bi bi-database-fill-check text-warning"></i> {{post_data['Cena']}} PLN</p>
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
                                     
-                                    <div class="row-cols-1 ">
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Rodzaj Oferty</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-house-check text-success"></i> 
-                                                    {% if post_data['Rodzaj'] == 'wynajem' %}
-                                                        <span class="text-secondary fw-lighter">Oferta Wynajmu</span>
-                                                    {% else %}
-                                                        <span class="text-secondary fw-lighter">Oferta Sprzedaży</span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% if post_data['Lokalizacja']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Lokalizacja</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-geo text-success"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['Lokalizacja']}} </span>
-                                                    {% if post_data['GPS']!={} %}
-                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['latitude']}} </span>
-                                                    <span class="text-secondary fw-lighter"><i class="bi bi-globe2"></i> {{post_data['GPS']['longitude']}} </span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['InformacjeDodatkowe']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Informacje Dodatkowe </span>
-                                                    <i class="bi bi-info-lg text-success"></i>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-stack text-warning"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['InformacjeDodatkowe']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-
-                                    </div>
+                                    
                                     <div class="row row-cols-2">
-                                        {% if post_data['Metraz']!=0 %}
+
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="mb-2">
@@ -293,167 +200,12 @@
                                                 </div>
                                                 <div class="ms-3 formatuj-maly-font">
                                                     <i class="bi bi-app-indicator text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['Metraz']}} m&sup2;</span>
+                                                    <span class="text-secondary fw-lighter">140 m&sup2;</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        {% endif %}
-                                        {% if post_data['LiczbaPokoi']!=0 %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Liczba Pokoi</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-house-check text-warning"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPokoi']}} </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['Kaucja']!=0 %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Kaucja</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-cash text-warning"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['Kaucja']}} PLN</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['Czynsz']!=0 %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Czynsz</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-cash text-success"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['Czynsz']}} PLN</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['LiczbaPieter']!=0 %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Liczba Pięter</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-house-check text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['LiczbaPieter']}} </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['PowierzchniaDzialki']!=0 %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Powierzchnia Dzialki</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-app-indicator text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['PowierzchniaDzialki']}} m&sup2;</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['TechBudowy']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Technologia Budowy</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-house-gear text-success"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['TechBudowy']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['Umeblowanie']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Umeblowanie</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-house-heart text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['Umeblowanie']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['FormaKuchni']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Forma Kuchni</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-house-heart text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['FormaKuchni']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['TypDomu']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Rodzaj Nieruchomości </span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-house text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['TypDomu']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['StanWykonczenia']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Stan Wykończenia</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-house-check text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['StanWykonczenia']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['RokBudowy']!=0 %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Rok Budowy</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-calendar3 text-info"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['RokBudowy']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if post_data['NumerKW']!='' %}
-                                        <div class="col">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="mb-2">
-                                                    <span class="text-light fw-light">Numer KW</span>
-                                                </div>
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-journal-text text-success"></i>
-                                                    <span class="text-secondary fw-lighter">{{post_data['NumerKW']}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
+ 
+                                        
                                     </div>
                                 </div> 
                             </div>
