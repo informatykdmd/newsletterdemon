@@ -2196,3 +2196,15 @@ color:#969696;
   /* margin-left: 15px;  */
   color:#6a6a6a !important;
 }
+
+.form-control.bg-dark {
+  color: #f8f9fa; /* Jasny tekst */
+}
+
+.form-control.bg-dark::placeholder {
+  color: #ccc;
+}
+
+.form-control.bg-dark option {
+  color: #212529; /* Ciemniejszy tekst opcji jeśli chcesz */
+}
