@@ -255,7 +255,7 @@
                                 {% for mess in post_data.Messages %}
                                 <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin-left">
                                     <div class="row" style="width: 100%;">
-                                        <div class="col-xl-9 col-lg-9 col-sm-8 formatuj-maly-font">
+                                        <div class="col-xl-7 col-lg-7 col-sm-8 formatuj-maly-font">
                                             <figure>
                                                 <blockquote class="blockquote fs-6">
                                                     <p>{{mess.tytul_wiadomosci}} </p>
@@ -269,14 +269,15 @@
                                             {{mess.autor_wiadomosci}}
                                         </div>
                                         <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;">
-                                            <figure>
-                                                <blockquote class="blockquote fs-6">
+                                            <div>
+                                                <div class="blockquote-footer">
                                                     <p>{{mess.telefon_do_autora_wiadomosci}}</p>
-                                                </blockquote>
-                                                <figcaption class="blockquote-footer">
+                                                </div>
+                                                <div class="blockquote-footer">
                                                     {{mess.email_autora_wiadomosci}}
-                                                </figcaption>
-                                            </figure>                                             
+                                                </div>
+                                            </div> 
+                                            
                                         </div>
                                         <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
                                             {{mess.status_wiadomosci}}
