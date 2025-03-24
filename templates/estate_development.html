@@ -132,7 +132,7 @@
                                 <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {% if post_data.status_lokalu == 'dostepny' %}
                                         <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-success"></i></span>
-                                    {% if post_data.status_lokalu == 'rezerwacja' %}
+                                    {% elif post_data.status_lokalu == 'rezerwacja' %}
                                         <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-warning"></i></span>
                                     {% else %}
                                         <span class="d-block d-lg-none formatuj-maly-font"> <i class="bi bi-lightbulb-fill text-secondary"></i></span>
