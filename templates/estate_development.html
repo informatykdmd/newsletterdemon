@@ -256,9 +256,14 @@
                                 <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin-left">
                                     <div class="row" style="width: 100%;">
                                         <div class="col-xl-7 col-lg-7 col-sm-8 formatuj-maly-font">
-                                            {{mess.tytul_wiadomosci}} 
-                                            <hr/>
-                                            {{mess.wiadomosc}} 
+                                            <figure>
+                                                <blockquote class="blockquote">
+                                                    <p>{{mess.tytul_wiadomosci}} </p>
+                                                </blockquote>
+                                                <figcaption class="blockquote-footer">
+                                                    {{mess.wiadomosc}} 
+                                                </figcaption>
+                                            </figure>                                            
                                         </div>
                                         <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 100px;">
                                             {{mess.autor_wiadomosci}}
