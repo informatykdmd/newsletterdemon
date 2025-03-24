@@ -279,8 +279,14 @@
                                             </div> 
                                             
                                         </div>
-                                        <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
-                                            {{mess.status_wiadomosci}}
+                                        <div class="d-none d-xl-block formatuj-maly-font justify-content-center" style="max-width: 80px;">
+                                            {% if mess.status_wiadomosci == 'nowa' %}
+                                                <i class="bi bi-envelope-arrow-down text-success"></i>
+                                            {% elif mess.status_wiadomosci == 'odczytana' %}
+                                                <i class="bi bi-envelope-open text-secondary"></i>
+                                            {% else %}
+                                                <i class="bi bi-envelope-paper text-primary"></i>
+                                            {% endif %}
                                         </div>
                                         <div class="col d-flex justify-content-end">
                                             <form method="POST" id="removeComment_{{post_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
