@@ -251,6 +251,39 @@
                                     </div>
                                 </div> 
                             </div>
+                            <div class="sub-panel rogi">
+                                {% for mess in post_data.Messages %}
+                                <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin-left">
+                                    <div class="row" style="width: 100%;">
+                                        <div class="col-xl-7 col-lg-7 col-sm-8 formatuj-maly-font">
+                                            {{mess.tytul_wiadomosci}} 
+                                            <hr/>
+                                            {{mess.wiadomosc}} 
+                                        </div>
+                                        <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 100px;">
+                                            {{mess.autor_wiadomosci}}
+                                        </div>
+                                        <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;">
+                                            {{mess.email_autora_wiadomosci}}
+                                            <hr/>
+                                            {{mess.telefon_do_autora_wiadomosci}}
+                                        </div>
+                                        <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
+                                            {{mess.status_wiadomosci}}
+                                        </div>
+                                        <div class="col d-flex justify-content-end">
+                                            <form method="POST" id="removeComment_{{post_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
+                                                <input type="hidden" name="page" id="CommName_{{post_id}}" value="blog"/>
+                                                <input type="hidden" name="comment_id" id="CommName_{{post_id}}" value="{{mess.id}}"/>
+                                                <button type="submit" class="custom-icon-button"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></button>
+                                            </form>
+                                            <!-- <a href="#"><i class="bi bi-person-video2" style="color: rgb(193, 156, 156) !important;"></i></a> -->
+                                            <!-- <a href="#"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></a> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
                         </div>
                         <!-- collapse end -->
                         {% endfor %}
