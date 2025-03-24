@@ -186,12 +186,24 @@
                                     <h5>{{post_data.nazwa}}</h5>
                                     <p>{{post_data.opis}}</p>
                                     <p class="h5"><i class="bi bi-database-fill-check text-warning"></i> {{post_data.cena_wyjsciowa}} PLN</p>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-outline-secondary btn-sm" 
+                                        style="max-height: 30px; font-size: 12px;" 
+                                        data-bs-toggle="collapse" 
+                                        href="#collapse_id_reseved_{{post_id}}" 
+                                        role="button" aria-expanded="false" 
+                                        aria-controls="collapse_id_reseved_{{post_id}}">
+                                        Zarezerwuj
+                                    </button>
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
-                                    
+                                    <div class="collapse" style="max-width: 400px;" id="collapse_id_reseved_{{post_id}}">
+                                        Rezerwacja Lokalu {{post_data.id_lokalu}} / {{post_data.typ_zabudowy}}
+                                    </div>
                                     
                                     <div class="row row-cols-2">
-
+                                        
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="mb-2">
