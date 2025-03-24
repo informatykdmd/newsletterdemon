@@ -220,6 +220,16 @@
                                             aria-controls="collapse_id_cancel_{{post_id}}">
                                             Anuluj rezerwację
                                         </button>
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-outline-info btn-sm m-2" 
+                                            style="max-height: 30px; font-size: 12px;" 
+                                            data-bs-toggle="collapse" 
+                                            href="#collapse_id_sold_{{post_id}}" 
+                                            role="button" aria-expanded="false" 
+                                            aria-controls="collapse_id_sold_{{post_id}}">
+                                            Ustaw jako sprzedane
+                                        </button>
                                     {% elif post_data.status_lokalu == 'sprzedane' %}
                                         <button 
                                             type="button" 
@@ -357,7 +367,6 @@
                                     
                                             <!-- Przycisk -->
                                             <button type="submit" class="btn btn-danger w-100">Anuluj rezerwację</button>
-                                    
                                         </form>
                                     </div>
                                     
@@ -376,6 +385,90 @@
                                             <button type="submit" class="btn btn-warning w-100">Wymów sprzedaż</button>
                                         </form>
                                     </div>
+
+                                    <div class="collapse" style="max-width: 400px;" id="collapse_id_sell_{{post_id}}">
+                                    <h5 class="mb-1">Sprzedaż Lokalu {{post_data.id_lokalu}} / {{post_data.typ_zabudowy}}</h5>
+
+                                    <form id="sell_form_{{post_id}}" method="post" action="/sprzedaj-lokal">
+
+                                        <!-- Imię i nazwisko nowego właściciela -->
+                                        <div class="form-floating mb-1">
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="imie_wlasciciela_{{post_id}}" name="imie_nazwisko_nowego_wlasciciela" placeholder="Imię i nazwisko" required>
+                                            <label for="imie_wlasciciela_{{post_id}}">Imię i nazwisko</label>
+                                        </div>
+
+                                        <!-- Adres -->
+                                        <div class="form-floating mb-1">
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="adres_wlasciciela_{{post_id}}" name="adres_nowego_wlasciciela" placeholder="Adres" required>
+                                            <label for="adres_wlasciciela_{{post_id}}">Adres</label>
+                                        </div>
+
+                                        <!-- Telefon -->
+                                        <div class="form-floating mb-1">
+                                            <input type="tel" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="telefon_wlasciciela_{{post_id}}" name="nr_telefonu_nowego_wlasciciela" placeholder="Telefon" required>
+                                            <label for="telefon_wlasciciela_{{post_id}}">Numer telefonu</label>
+                                        </div>
+
+                                        <!-- Email -->
+                                        <div class="form-floating mb-1">
+                                            <input type="email" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="email_wlasciciela_{{post_id}}" name="email_nowego_wlasciciela" placeholder="Email" required>
+                                            <label for="email_wlasciciela_{{post_id}}">Email</label>
+                                        </div>
+
+                                        <!-- Data sprzedaży -->
+                                        <div class="form-floating mb-1">
+                                            <input type="date" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="data_sprzedazy_{{post_id}}" name="data_sprzedazy" required>
+                                            <label for="data_sprzedazy_{{post_id}}">Data sprzedaży</label>
+                                        </div>
+
+                                        <!-- Numer umowy sprzedaży -->
+                                        <div class="form-floating mb-1">
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="nr_umowy_sprzedazy_{{post_id}}" name="nr_umowy_sprzedazy" placeholder="Numer umowy" required>
+                                            <label for="nr_umowy_sprzedazy_{{post_id}}">Numer umowy sprzedaży</label>
+                                        </div>
+
+                                        <!-- Data podpisania umowy -->
+                                        <div class="form-floating mb-1">
+                                            <input type="date" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="data_podpisania_umowy_{{post_id}}" name="data_podpisania_umowy" required>
+                                            <label for="data_podpisania_umowy_{{post_id}}">Data podpisania umowy</label>
+                                        </div>
+
+                                        <!-- Notariusz -->
+                                        <div class="form-floating mb-1">
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="notariusz_{{post_id}}" name="notariusz" placeholder="Notariusz" required>
+                                            <label for="notariusz_{{post_id}}">Notariusz</label>
+                                        </div>
+
+                                        <!-- Cena wyjściowa -->
+                                        <div class="form-floating mb-1">
+                                            <input type="number" step="0.01" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="cena_wyjsciowa_{{post_id}}" name="cena_wyjsciowa" placeholder="Cena wyjściowa" required>
+                                            <label for="cena_wyjsciowa_{{post_id}}">Cena wyjściowa (PLN)</label>
+                                        </div>
+
+                                        <!-- Cena po negocjacji -->
+                                        <div class="form-floating mb-1">
+                                            <input type="number" step="0.01" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="cena_po_negocjacji_{{post_id}}" name="cena_po_negocjacji" placeholder="Cena po negocjacji" required>
+                                            <label for="cena_po_negocjacji_{{post_id}}">Cena po negocjacji (PLN)</label>
+                                        </div>
+
+                                        <!-- Cena sprzedaży -->
+                                        <div class="form-floating mb-1">
+                                            <input type="number" step="0.01" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="cena_sprzedazy_{{post_id}}" name="cena_sprzedazy" placeholder="Cena sprzedaży" required>
+                                            <label for="cena_sprzedazy_{{post_id}}">Cena sprzedaży (PLN)</label>
+                                        </div>
+
+                                        <!-- Forma płatności -->
+                                        <div class="form-floating mb-1">
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="forma_platnosci_{{post_id}}" name="forma_platnosci" placeholder="Forma płatności" required>
+                                            <label for="forma_platnosci_{{post_id}}">Forma płatności</label>
+                                        </div>
+
+                                        <!-- Przycisk wysyłania formularza -->
+                                        <button type="submit" class="btn btn-success w-100">Oznacz jako sprzedane</button>
+
+                                    </form>
+                                </div>
+
                                     
                                     <div class="row row-cols-2">
                                         
@@ -400,11 +493,11 @@
                                 <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin-left">
                                     <div class="row" style="width: 100%;">
                                         {% if mess.status_wiadomosci == 'nowa' %}
-                                            <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font" onclick="change_message_status('odczytana', '{{post_id}}', '{{mess.id}}')">
+                                        <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font" onclick="change_message_status('odczytana', '{{post_id}}', '{{mess.id}}')">
                                         {% elif mess.status_wiadomosci == 'odczytana' %}
-                                            <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font" onclick="change_message_status('nowa', '{{post_id}}', '{{mess.id}}')">
+                                        <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font" onclick="change_message_status('nowa', '{{post_id}}', '{{mess.id}}')">
                                         {% else %}
-                                            <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font">
+                                        <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font">
                                         {% endif %}
                                             <figure>
                                                 <blockquote class="blockquote">
@@ -423,7 +516,7 @@
                                                     {{mess.wiadomosc}} 
                                                 </figcaption>
                                                 <p style="font-size: 10px;">{{mess.data_dodania}}</p>
-                                            </figure>                                            
+                                            </figure>
                                         </div>
                                         <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;">
                                             <div>
