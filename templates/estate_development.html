@@ -154,6 +154,12 @@
                                             <span class="text-secondary formatuj-maly-font"><i class="bi bi-lightbulb-fill text-secondary"></i> Sprzedane</span>
                                         {% endif %}
                                     </a>
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {% if post_data.Messages %}
+                                            <span class="text-info formatuj-maly-font"><i class="bi bi-envelope-arrow-down text-success"></i></span>
+                                        {% endif %}
+                                    </a>
+                                    
                                 </div>
                                 <div  class="d-none d-xl-block" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     {% if post_data.kto_aktualizowal %}
