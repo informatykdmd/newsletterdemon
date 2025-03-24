@@ -254,8 +254,14 @@
                             <div class="sub-panel rogi">
                                 {% for mess in post_data.Messages %}
                                 <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin-left">
-                                    <div class="row" style="width: 100%;" onclick="change_message_status('odczytana', '{{post_id}}', '{{mess.id}}')">
-                                        <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font">
+                                    <div class="row" style="width: 100%;">
+                                        {% if mess.status_wiadomosci == 'nowa' %}
+                                            <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font" onclick="change_message_status('odczytana', '{{post_id}}', '{{mess.id}}')">
+                                        {% elif mess.status_wiadomosci == 'odczytana' %}
+                                            <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font" onclick="change_message_status('nowa', '{{post_id}}', '{{mess.id}}')">
+                                        {% else %}
+                                            <div class="col-xl-9 col-lg-8 col-sm-9 formatuj-maly-font">
+                                        {% endif %}
                                             <figure>
                                                 <blockquote class="blockquote">
                                                     <p> 
@@ -291,7 +297,7 @@
                                                     <a href="mailto:{{mess.email_autora_wiadomosci}}">{{mess.email_autora_wiadomosci}}</a>
                                                 </div>
                                                 {% endif %}
-                                            </div> 
+                                            </div>
                                         </div>
                                         <div class="col d-flex justify-content-end">
                                             <div class="m-1" onclick="change_message_status('archiwum', '{{post_id}}', '{{mess.id}}')">
