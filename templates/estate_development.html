@@ -203,6 +203,16 @@
                                             class="btn btn-outline-info btn-sm mt-2" 
                                             style="max-height: 30px; font-size: 12px;" 
                                             data-bs-toggle="collapse" 
+                                            href="#collapse_id_payment_{{post_id}}" 
+                                            role="button" aria-expanded="false" 
+                                            aria-controls="collapse_id_payment_{{post_id}}">
+                                            Zmień status płatności
+                                        </button>
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-outline-info btn-sm mt-2" 
+                                            style="max-height: 30px; font-size: 12px;" 
+                                            data-bs-toggle="collapse" 
                                             href="#collapse_id_cancel_{{post_id}}" 
                                             role="button" aria-expanded="false" 
                                             aria-controls="collapse_id_cancel_{{post_id}}">
@@ -275,13 +285,56 @@
                                                 <select class="form-control bg-dark2 bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="status_platnosci_{{post_id}}" name="status_platnosci" required>
                                                     <option value="oczekuje">Oczekuje</option>
                                                     <option value="zatwierdzona">Zatwierdzona</option>
-                                                    <option value="anulowana">Anulowana</option>
                                                 </select>
                                                 <label for="status_platnosci_{{post_id}}">Status płatności</label>
                                             </div>
                                     
                                             <!-- Przycisk wysyłania formularza -->
                                             <button type="submit" class="btn btn-primary w-100">Zarezerwuj</button>
+                                    
+                                        </form>
+                                    </div>
+
+                                    <div class="collapse" style="max-width: 400px;" id="collapse_id_payment_{{post_id}}">
+                                        <h5 class="mb-1">Rezerwacja Lokalu {{post_data.id_lokalu}} / {{post_data.typ_zabudowy}}</h5>
+                                    
+                                        <form id="reservation_form_{{post_id}}" method="post" action="/status-platnosci">
+                                            
+                                            <!-- Imię i nazwisko -->
+                                            
+                                    
+                                            <!-- Adres -->
+                                            
+                                    
+                                            <!-- Numer telefonu -->
+                                            
+                                    
+                                            <!-- Email -->
+                                            
+                                    
+                                            <!-- Data rezerwacji -->
+                                            
+                                    
+                                            <!-- Numer umowy rezerwacyjnej -->
+                                            
+                                    
+                                            <!-- Data wpłaty zadatku -->
+                                            <div class="form-floating mb-1">
+                                                <input type="date" class="form-control bg-dark2 bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="data_wplaty_{{post_id}}" name="data_wplaty_zadatku" required>
+                                                <label for="data_wplaty_{{post_id}}">Data wpłaty zadatku</label>
+                                            </div>
+                                    
+                                            <!-- Status płatności -->
+                                            <div class="form-floating mb-1">
+                                                <select class="form-control bg-dark2 bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="status_platnosci_{{post_id}}" name="status_platnosci" required>
+                                                    <option value="oczekuje">Oczekuje</option>
+                                                    <option value="zatwierdzona">Zatwierdzona</option>
+                                                </select>
+                                                <label for="status_platnosci_{{post_id}}">Status płatności</label>
+                                            </div>
+                                    
+                                            <!-- Przycisk wysyłania formularza -->
+                                            <button type="submit" class="btn btn-primary w-100">Zmień status płatności</button>
                                     
                                         </form>
                                     </div>
