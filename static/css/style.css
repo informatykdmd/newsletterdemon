@@ -2197,14 +2197,14 @@ color:#969696;
   color:#6a6a6a !important;
 }
 
-.form-control.bg-dark {
+.form-control.bg-dark2 {
   color: #f8f9fa; /* Jasny tekst */
 }
 
-.form-control.bg-dark::placeholder {
+.form-control.bg-dark2::placeholder {
   color: #ccc;
 }
 
-.form-control.bg-dark option {
+.form-control.bg-dark2 option {
   color: #212529; /* Ciemniejszy tekst opcji jeśli chcesz */
 }
