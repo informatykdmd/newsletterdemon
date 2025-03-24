@@ -198,6 +198,7 @@
                                             Zarezerwuj
                                         </button>
                                     {% elif post_data.status_lokalu == 'rezerwacja' %}
+                                        {{post_data.status_platnosci}}
                                         {% if post_data.status_platnosci == 'oczekuje' %}
                                             <button 
                                                 type="button" 
