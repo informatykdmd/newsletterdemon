@@ -11740,14 +11740,12 @@ def estateAdsspecial():
 @app.route("/estate-development")
 def estate_development():
 
-    pagination = None
     lokale = generator_wisniowa_lokale()
 
     return render_template(
             "estate_development.html",
             userperm=session['userperm'],
             username=session['username'],
-            pagination=pagination,
             lokale=lokale
             )
 
@@ -12801,5 +12799,5 @@ def update_hidden_campaigns_status():
 
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
-    # app.run(debug=True, host='0.0.0.0', port=8000)
-    app.run(debug=False, host='0.0.0.0', port=8000)
+    app.run(debug=True, host='0.0.0.0', port=8000)
+    # app.run(debug=False, host='0.0.0.0', port=8000)
