@@ -41,6 +41,13 @@ body {
       color: #ccc; /* Kolor przy kliknięciu nad linkiem */
       cursor: default;
   }
+
+  .podswietlaj-plus-rogi a:hover {
+    color: inherit;
+    color: #6b6b6b;
+  }
+  
+
   div:hover {
       cursor: default;
   }
