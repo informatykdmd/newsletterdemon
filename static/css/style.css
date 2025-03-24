@@ -42,6 +42,11 @@ body {
       cursor: default;
   }
 
+  .podswietlaj-plus-rogi a {
+    color: inherit;
+    color: #9f9f9f;
+  }
+
   .podswietlaj-plus-rogi a:hover {
     color: inherit;
     color: #6b6b6b;
