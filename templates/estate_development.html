@@ -363,7 +363,8 @@
                                                 </select>
                                                 <label for="status_platnosci_{{post_id}}">Status płatności</label>
                                             </div>
-                                    
+
+                                            <input type="hidden" name="post_id" value="{{post_id}}">
                                             <!-- Przycisk wysyłania formularza -->
                                             <button type="submit" class="btn btn-primary w-100">Zarezerwuj</button>
                                     
@@ -371,9 +372,9 @@
                                     </div>
 
                                     <div class="collapse" style="max-width: 400px;" id="collapse_id_payment_{{post_id}}">
-                                        <h5 class="mb-1">Rezerwacja Lokalu {{post_data.id_lokalu}} / {{post_data.typ_zabudowy}}</h5>
+                                        <h5 class="mb-1">Status płatności rezerwacji {{post_data.id_lokalu}} / {{post_data.typ_zabudowy}}</h5>
                                     
-                                        <form id="reservation_form_{{post_id}}" method="post" action="/status-platnosci">
+                                        <form id="paymentstatus_form_{{post_id}}" method="post" action="/status-platnosci">
                                             
                                             <!-- Imię i nazwisko -->
                                             
@@ -407,7 +408,8 @@
                                                 </select>
                                                 <label for="status_platnosci_{{post_id}}">Status płatności</label>
                                             </div>
-                                    
+                                            
+                                            <input type="hidden" name="post_id" value="{{post_id}}">
                                             <!-- Przycisk wysyłania formularza -->
                                             <button type="submit" class="btn btn-primary w-100">Zmień status płatności</button>
                                     
@@ -525,7 +527,8 @@
                                                 <input type="text" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="forma_platnosci_{{post_id}}" name="forma_platnosci" placeholder="Forma płatności" required>
                                                 <label for="forma_platnosci_{{post_id}}">Forma płatności</label>
                                             </div>
-
+                                            
+                                            <input type="hidden" name="post_id" value="{{post_id}}">
                                             <!-- Przycisk wysyłania formularza -->
                                             <button type="submit" class="btn btn-success w-100">Oznacz jako sprzedane</button>
 
@@ -645,6 +648,144 @@
             });
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('form[id^="reservation_form_"]').forEach(function(form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const postId = form.id.split('_').pop();
+
+                fetch('/zarezerwuj-lokal', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Błąd podczas rezerwacji');
+                    return response.json();
+                })
+                .then(data => {
+                    alert(`✅ ${data.message}`);
+                })
+                .catch(error => {
+                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                });
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('form[id^="paymentstatus_form_"]').forEach(function(form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const postId = form.id.split('_').pop();
+
+                fetch('/status-platnosci', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Błąd podczas aktualizacji');
+                    return response.json();
+                })
+                .then(data => {
+                    alert(`✅ ${data.message}`);
+                })
+                .catch(error => {
+                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                });
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('form[id^="cancel_form_"]').forEach(function(form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                if (!confirm("Czy na pewno chcesz anulować tę rezerwację?")) return;
+
+                const formData = new FormData(form);
+
+                fetch('/anuluj-rezerwacje', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Błąd podczas anulowania');
+                    return response.json();
+                })
+                .then(data => {
+                    alert(`✅ ${data.message}`);
+                    // np. ukryj formularz albo odśwież widok
+                    // form.closest('.jakis-wrapper').style.display = 'none';
+                })
+                .catch(error => {
+                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                });
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('form[id^="remove_sell_form_"]').forEach(function(form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                if (!confirm("Czy na pewno chcesz wymówić sprzedaż?")) return;
+
+                const formData = new FormData(form);
+
+                fetch('/wymow-sprzedaz', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Błąd podczas przetwarzania');
+                    return response.json();
+                })
+                .then(data => {
+                    alert(`✅ ${data.message}`);
+                    // Możesz np. ukryć kartę lokalu lub odświeżyć widok
+                })
+                .catch(error => {
+                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                });
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('form[id^="sell_form_"]').forEach(function(form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                if (!confirm("Czy na pewno chcesz oznaczyć ten lokal jako sprzedany?")) return;
+
+                const formData = new FormData(form);
+
+                fetch('/sprzedaj-lokal', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Błąd podczas sprzedaży');
+                    return response.json();
+                })
+                .then(data => {
+                    alert(`✅ ${data.message}`);
+                    // opcjonalnie: ukryj formularz lub odśwież
+                    // form.reset();
+                })
+                .catch(error => {
+                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                });
+            });
+        });
+    });
 </script>
 
 {% endblock %}

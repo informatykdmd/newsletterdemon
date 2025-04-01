@@ -5509,7 +5509,7 @@ def public_on_lento():
             powierzchnia = picked_rent_offer['Metraz']
             cena = picked_rent_offer['Cena']
             numer_kw = picked_rent_offer['NumerKW']
-            miejscowosc = picked_rent_offer['Lokalizacja'] 
+            miejscowosc = picked_rent_offer['Lokalizacja']
             osoba_kontaktowa = session['user_data']['name']
             nr_telefonu = picked_rent_offer['TelefonKontaktowy']
 
@@ -11749,28 +11749,297 @@ def estate_development():
             lokale=lokale
             )
 
+@app.route('/zarezerwuj-lokal', methods=['POST'])
+def zarezerwuj_lokal():
+    try:
+        imie_nazwisko = request.form.get('imie_nazwisko_rezerwujacego')
+        adres = request.form.get('adres_rezerwujacego')
+        telefon = request.form.get('nr_telefonu_rezerwujacego')
+        email = request.form.get('email_rezerwujacego')
+        data_rezerwacji = request.form.get('data_rezerwacji')
+        nr_umowy = request.form.get('nr_umowy_rezerwacyjnej')
+        data_wplaty = request.form.get('data_wplaty_zadatku')
+        status_platnosci = request.form.get('status_platnosci')
+        post_id = request.form.get('post_id')  # zakładam, że id_lokalu to właśnie post_id (można zmienić nazwę)
+
+        kto_aktualizowal = session['user_data']['name']  # lub np. session["user"] jeśli masz logowanie
+        data_aktualizacji = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        db = get_db()
+        query = """
+            UPDATE Lokale_wisniowa SET 
+                status_lokalu='rezerwacja',
+                imie_nazwisko_rezerwujacego=%s,
+                adres_rezerwujacego=%s,
+                nr_telefonu_rezerwujacego=%s,
+                email_rezerwujacego=%s,
+                data_rezerwacji=%s,
+                nr_umowy_rezerwacyjnej=%s,
+                data_wplaty_zadatku=%s,
+                status_platnosci=%s,
+                kto_aktualizowal=%s,
+                data_aktualizacji=%s
+            WHERE id = %s
+        """
+
+        params = (
+            imie_nazwisko,
+            adres,
+            telefon,
+            email,
+            data_rezerwacji,
+            nr_umowy,
+            data_wplaty,
+            status_platnosci,
+            kto_aktualizowal,
+            data_aktualizacji,
+            post_id
+        )
+
+        success = db.executeTo(query, params)
+
+        if success:
+            return jsonify({"message": "Formularz został pomyślnie przesłany!"})
+        else:
+            return jsonify({"message": "Nie udało się zaktualizować danych."}), 500
+
+    except Exception as e:
+        return jsonify({"message": f"Wystąpił błąd: {str(e)}"}), 500
+
+@app.route('/status-platnosci', methods=['POST'])
+def zmien_status_platnosci():
+    try:
+        data_wplaty = request.form.get('data_wplaty_zadatku')
+        status = request.form.get('status_platnosci')
+        post_id = request.form.get('post_id')
+
+        kto_aktualizowal = session['user_data']['name']  # Możesz tu użyć session["user"] jeśli masz logowanie
+        data_aktualizacji = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        db = get_db()
+        query = """
+            UPDATE Lokale_wisniowa SET 
+                data_wplaty_zadatku=%s,
+                status_platnosci=%s,
+                kto_aktualizowal=%s,
+                data_aktualizacji=%s
+            WHERE id = %s
+        """
+
+        params = (
+            data_wplaty,
+            status,
+            kto_aktualizowal,
+            data_aktualizacji,
+            post_id
+        )
+
+        success = db.executeTo(query, params)
+
+        if success:
+            return jsonify({"message": "Status płatności został zaktualizowany."})
+        else:
+            return jsonify({"message": "Nie udało się zaktualizować statusu."}), 500
+
+    except Exception as e:
+        return jsonify({"message": f"Błąd: {str(e)}"}), 500
+
+@app.route('/anuluj-rezerwacje', methods=['POST'])
+def anuluj_rezerwacje():
+    try:
+        post_id = request.form.get('post_id')
+        powod = request.form.get('powod_anulowania')
+
+        kto_aktualizowal = session['user_data']['name']  # lub np. session["user"]
+        data_aktualizacji = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        db = get_db()
+        query = """
+            UPDATE Lokale_wisniowa SET
+                status_lokalu='dostepny',
+                imie_nazwisko_rezerwujacego=NULL,
+                adres_rezerwujacego=NULL,
+                nr_telefonu_rezerwujacego=NULL,
+                email_rezerwujacego=NULL,
+                data_rezerwacji=NULL,
+                nr_umowy_rezerwacyjnej=NULL,
+                data_wplaty_zadatku=NULL,
+                status_platnosci='oczekuje',
+                powod_wycofania=%s,
+                kto_aktualizowal=%s,
+                data_aktualizacji=%s
+            WHERE id = %s
+        """
+
+        params = (
+            powod,
+            kto_aktualizowal,
+            data_aktualizacji,
+            post_id
+        )
+
+        success = db.executeTo(query, params)
+
+        if success:
+            return jsonify({"message": f"Rezerwacja została anulowana (ID: {post_id})."})
+        else:
+            return jsonify({"message": "Nie udało się anulować rezerwacji."}), 500
+
+    except Exception as e:
+        return jsonify({"message": f"Błąd: {str(e)}"}), 500
+
+@app.route('/wymow-sprzedaz', methods=['POST'])
+def wymow_sprzedaz():
+    try:
+        post_id = request.form.get('post_id')
+        powod = request.form.get('powod_wymowienia')
+
+        kto_aktualizowal = session['user_data']['name']  # lub session["user"]
+        data_aktualizacji = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        db = get_db()
+        query = """
+            UPDATE Lokale_wisniowa SET
+                status_lokalu='dostepny',
+                imie_nazwisko_nowego_wlasciciela=NULL,
+                adres_nowego_wlasciciela=NULL,
+                nr_telefonu_nowego_wlasciciela=NULL,
+                email_nowego_wlasciciela=NULL,
+                data_sprzedazy=NULL,
+                nr_umowy_sprzedazy=NULL,
+                data_podpisania_umowy=NULL,
+                notariusz=NULL,
+                cena_wyjsciowa=NULL,
+                cena_po_negocjacji=NULL,
+                cena_sprzedazy=NULL,
+                forma_platnosci=NULL,
+                powod_wycofania=%s,
+                kto_aktualizowal=%s,
+                data_aktualizacji=%s
+            WHERE id = %s
+        """
+
+        params = (
+            powod,
+            kto_aktualizowal,
+            data_aktualizacji,
+            post_id
+        )
+
+        success = db.executeTo(query, params)
+
+        if success:
+            return jsonify({"message": f"Sprzedaż lokalu została wymówiona (ID: {post_id})."})
+        else:
+            return jsonify({"message": "Nie udało się wymówić sprzedaży."}), 500
+
+    except Exception as e:
+        return jsonify({"message": f"Błąd: {str(e)}"}), 500
+
+@app.route('/sprzedaj-lokal', methods=['POST'])
+def sprzedaj_lokal():
+    try:
+        dane = {
+            "imie_nazwisko": request.form.get('imie_nazwisko_nowego_wlasciciela'),
+            "adres": request.form.get('adres_nowego_wlasciciela'),
+            "telefon": request.form.get('nr_telefonu_nowego_wlasciciela'),
+            "email": request.form.get('email_nowego_wlasciciela'),
+            "data_sprzedazy": request.form.get('data_sprzedazy'),
+            "nr_umowy": request.form.get('nr_umowy_sprzedazy'),
+            "data_podpisania": request.form.get('data_podpisania_umowy'),
+            "notariusz": request.form.get('notariusz'),
+            "cena_wyjsciowa": request.form.get('cena_wyjsciowa'),
+            "cena_po_negocjacji": request.form.get('cena_po_negocjacji'),
+            "cena_sprzedazy": request.form.get('cena_sprzedazy'),
+            "forma_platnosci": request.form.get('forma_platnosci'),
+        }
+
+        post_id = request.form.get("post_id")
+        kto_aktualizowal = session['user_data']['name']
+        data_aktualizacji = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        db = get_db()
+        query = """
+            UPDATE Lokale_wisniowa SET
+                status_lokalu='sprzedane',
+                imie_nazwisko_nowego_wlasciciela=%s,
+                adres_nowego_wlasciciela=%s,
+                nr_telefonu_nowego_wlasciciela=%s,
+                email_nowego_wlasciciela=%s,
+                data_sprzedazy=%s,
+                nr_umowy_sprzedazy=%s,
+                data_podpisania_umowy=%s,
+                notariusz=%s,
+                cena_wyjsciowa=%s,
+                cena_po_negocjacji=%s,
+                cena_sprzedazy=%s,
+                forma_platnosci=%s,
+                kto_aktualizowal=%s,
+                data_aktualizacji=%s
+            WHERE id = %s
+        """
+
+        params = (
+            dane["imie_nazwisko"],
+            dane["adres"],
+            dane["telefon"],
+            dane["email"],
+            dane["data_sprzedazy"],
+            dane["nr_umowy"],
+            dane["data_podpisania"],
+            dane["notariusz"],
+            dane["cena_wyjsciowa"],
+            dane["cena_po_negocjacji"],
+            dane["cena_sprzedazy"],
+            dane["forma_platnosci"],
+            kto_aktualizowal,
+            data_aktualizacji,
+            post_id
+        )
+
+        success = db.executeTo(query, params)
+
+        if success:
+            return jsonify({"message": f"Lokal (ID: {post_id}) został oznaczony jako sprzedany."})
+        else:
+            return jsonify({"message": "Nie udało się oznaczyć lokalu jako sprzedanego."}), 500
+
+    except Exception as e:
+        return jsonify({"message": f"Błąd: {str(e)}"}), 500
+
 @app.route('/lokale-wisniowa-messages-control', methods=['POST'])
 def messages_control():
-    data = request.get_json()
-    action = data.get('action')
-    post_id = data.get('post_id')
-    message_id = data.get('message_id')
-    status = data.get('status', None)
+    try:
+        data = request.get_json()
+        action = data.get('action')
+        post_id = data.get('post_id')
+        message_id = data.get('message_id')
+        status = data.get('status', None)
 
-    # Logika akcji
-    if action == 'change_status':
-        # TODO: Zapisz nowy status do bazy dla wiadomości message_id
-        print(f"Zmieniam status wiadomości {message_id} na {status}")
-        # np. msq.safe_connect_to_database("UPDATE wiadomosci SET status_wiadomosci=%s WHERE id=%s", (status, message_id))
-        return jsonify({"success": True, "message": "Status zmieniony"})
-    
-    elif action == 'remove':
-        # TODO: Usuń wiadomość z bazy lub ustaw status 'usunieta'
-        print(f"Usuwam wiadomość {message_id}")
-        # np. msq.safe_connect_to_database("DELETE FROM wiadomosci WHERE id=%s", (message_id,))
-        return jsonify({"success": True, "message": "Wiadomość usunięta"})
+        db = get_db()
 
-    return jsonify({"success": False, "message": "Nieznana akcja"})
+        if action == 'change_status':
+            if not status:
+                return jsonify({"success": False, "message": "Brak statusu do ustawienia"}), 400
+
+            query = "UPDATE Messages_wisniowa SET status_wiadomosci = %s WHERE id = %s"
+            db.executeTo(query, (status, message_id))
+            print(f"[STATUS] Zmieniono status wiadomości {message_id} na '{status}'")
+
+            return jsonify({"success": True, "message": "Status zmieniony"})
+
+        elif action == 'remove':
+            # Możesz zamiast DELETE zrobić UPDATE z oznaczeniem 'usunieta', jeśli chcesz zachować historię
+            query = "UPDATE Messages_wisniowa SET status_wiadomosci = 'usunieta' WHERE id = %s"
+            db.executeTo(query, (message_id,))
+            print(f"[USUNIĘCIE] Wiadomość {message_id} została oznaczona jako usunięta")
+
+            return jsonify({"success": True, "message": "Wiadomość usunięta"})
+
+        return jsonify({"success": False, "message": "Nieznana akcja"}), 400
+
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Błąd: {str(e)}"}), 500
 
 @app.route('/subscriber')
 def subscribers(router=True):
