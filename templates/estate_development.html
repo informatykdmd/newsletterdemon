@@ -667,6 +667,7 @@
                 })
                 .then(data => {
                     alert(`✅ ${data.message}`);
+                    location.reload();
                 })
                 .catch(error => {
                     alert(`❌ Wystąpił błąd: ${error.message}`);
@@ -693,6 +694,7 @@
                 })
                 .then(data => {
                     alert(`✅ ${data.message}`);
+                    location.reload();
                 })
                 .catch(error => {
                     alert(`❌ Wystąpił błąd: ${error.message}`);
@@ -722,6 +724,7 @@
                     alert(`✅ ${data.message}`);
                     // np. ukryj formularz albo odśwież widok
                     // form.closest('.jakis-wrapper').style.display = 'none';
+                    location.reload();
                 })
                 .catch(error => {
                     alert(`❌ Wystąpił błąd: ${error.message}`);
@@ -750,6 +753,7 @@
                 .then(data => {
                     alert(`✅ ${data.message}`);
                     // Możesz np. ukryć kartę lokalu lub odświeżyć widok
+                    location.reload();
                 })
                 .catch(error => {
                     alert(`❌ Wystąpił błąd: ${error.message}`);
@@ -779,6 +783,7 @@
                     alert(`✅ ${data.message}`);
                     // opcjonalnie: ukryj formularz lub odśwież
                     // form.reset();
+                    location.reload();
                 })
                 .catch(error => {
                     alert(`❌ Wystąpił błąd: ${error.message}`);
