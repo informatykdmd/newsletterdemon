@@ -305,6 +305,52 @@
                                         </div>
                                     
                                     </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-person-circle text-info"></i> 
+                                                    <strong>Rezerwujący:</strong> {{ post_data.imie_nazwisko_rezerwujacego }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-geo-alt text-info"></i> 
+                                                    <strong>Adres:</strong> {{ post_data.adres_rezerwujacego }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-telephone text-info"></i> 
+                                                    <strong>Telefon:</strong> {{ post_data.nr_telefonu_rezerwujacego }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-envelope text-info"></i> 
+                                                    <strong>Email:</strong> {{ post_data.email_rezerwujacego }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-calendar-event text-info"></i> 
+                                                    <strong>Data rezerwacji:</strong> {{ post_data.data_rezerwacji }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-file-earmark-text text-info"></i> 
+                                                    <strong>Umowa rezerwacyjna:</strong> {{ post_data.nr_umowy_rezerwacyjnej }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
@@ -373,24 +419,6 @@
 
                                     <div class="collapse" style="max-width: 400px;" id="collapse_id_payment_{{post_id}}">
                                         <h5 class="mb-1">Status płatności rezerwacji {{post_data.id_lokalu}} / {{post_data.typ_zabudowy}}</h5>
-                                    
-                                        <!-- Imię i nazwisko -->
-                                        {{post_data.imie_nazwisko_rezerwujacego}}
-                                
-                                        <!-- Adres -->
-                                        {{post_data.adres_rezerwujacego}}
-                                                                            
-                                        <!-- Numer telefonu -->
-                                        {{post_data.nr_telefonu_rezerwujacego}}
-                                
-                                        <!-- Email -->
-                                        {{post_data.email_rezerwujacego}}
-                                
-                                        <!-- Data rezerwacji -->
-                                        {{post_data.data_rezerwacji}}
-                                
-                                        <!-- Numer umowy rezerwacyjnej -->
-                                        {{post_data.nr_umowy_rezerwacyjnej}}
                                         <form id="paymentstatus_form_{{post_id}}" method="post" action="/status-platnosci">
                                             <!-- Data wpłaty zadatku -->
                                             <div class="form-floating mb-1">
