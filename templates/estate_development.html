@@ -374,26 +374,24 @@
                                     <div class="collapse" style="max-width: 400px;" id="collapse_id_payment_{{post_id}}">
                                         <h5 class="mb-1">Status płatności rezerwacji {{post_data.id_lokalu}} / {{post_data.typ_zabudowy}}</h5>
                                     
+                                        <!-- Imię i nazwisko -->
+                                        {{post_data.imie_nazwisko_rezerwujacego}}
+                                
+                                        <!-- Adres -->
+                                        {{post_data.adres_rezerwujacego}}
+                                                                            
+                                        <!-- Numer telefonu -->
+                                        {{post_data.nr_telefonu_rezerwujacego}}
+                                
+                                        <!-- Email -->
+                                        {{post_data.email_rezerwujacego}}
+                                
+                                        <!-- Data rezerwacji -->
+                                        {{post_data.data_rezerwacji}}
+                                
+                                        <!-- Numer umowy rezerwacyjnej -->
+                                        {{post_data.nr_umowy_rezerwacyjnej}}
                                         <form id="paymentstatus_form_{{post_id}}" method="post" action="/status-platnosci">
-                                            
-                                            <!-- Imię i nazwisko -->
-                                            
-                                    
-                                            <!-- Adres -->
-                                            
-                                    
-                                            <!-- Numer telefonu -->
-                                            
-                                    
-                                            <!-- Email -->
-                                            
-                                    
-                                            <!-- Data rezerwacji -->
-                                            
-                                    
-                                            <!-- Numer umowy rezerwacyjnej -->
-                                            
-                                    
                                             <!-- Data wpłaty zadatku -->
                                             <div class="form-floating mb-1">
                                                 <input type="date" class="form-control bg-dark2 bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="data_wplaty_{{post_id}}" name="data_wplaty_zadatku" required>
