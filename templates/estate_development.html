@@ -305,6 +305,7 @@
                                         </div>
                                     
                                     </div>
+                                    {% if post_data.status_lokalu == 'rezerwacja' %}
                                     <div class="row">
                                         <div class="col">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
@@ -350,7 +351,96 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {% elif post_data.status_lokalu == 'rezerwacja' %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-person-badge text-success"></i>
+                                                    <strong>Nowy właściciel:</strong> {{ post_data.imie_nazwisko_nowego_wlasciciela }}
+                                                </div>
+                                            </div>
                                     
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-geo-alt text-success"></i>
+                                                    <strong>Adres:</strong> {{ post_data.adres_nowego_wlasciciela }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-telephone text-success"></i>
+                                                    <strong>Telefon:</strong> {{ post_data.nr_telefonu_nowego_wlasciciela }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-envelope text-success"></i>
+                                                    <strong>Email:</strong> {{ post_data.email_nowego_wlasciciela }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-calendar-check text-success"></i>
+                                                    <strong>Data sprzedaży:</strong> {{ post_data.data_sprzedazy }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-file-earmark-text text-success"></i>
+                                                    <strong>Umowa sprzedaży:</strong> {{ post_data.nr_umowy_sprzedazy }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-pencil-square text-success"></i>
+                                                    <strong>Data podpisania umowy:</strong> {{ post_data.data_podpisania_umowy }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-person-vcard text-success"></i>
+                                                    <strong>Notariusz:</strong> {{ post_data.notariusz }}
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-cash-stack text-success"></i>
+                                                    <strong>Cena wyjściowa:</strong> {{ post_data.cena_wyjsciowa }} PLN
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-currency-exchange text-success"></i>
+                                                    <strong>Po negocjacji:</strong> {{ post_data.cena_po_negocjacji }} PLN
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-currency-check text-success"></i>
+                                                    <strong>Cena sprzedaży:</strong> {{ post_data.cena_sprzedazy }} PLN
+                                                </div>
+                                            </div>
+                                    
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-2 formatuj-maly-font">
+                                                    <i class="bi bi-wallet2 text-success"></i>
+                                                    <strong>Forma płatności:</strong> {{ post_data.forma_platnosci }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {% endif %}
                                     
                                 </div>
                                 <div class="col-lg-4 col-sm-12">
