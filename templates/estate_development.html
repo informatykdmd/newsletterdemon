@@ -667,6 +667,7 @@
                 })
                 .then(data => {
                     alert(`✅ ${data.message}`);
+                    form.reset();
                     location.reload();
                 })
                 .catch(error => {
@@ -694,6 +695,7 @@
                 })
                 .then(data => {
                     alert(`✅ ${data.message}`);
+                    form.reset();
                     location.reload();
                 })
                 .catch(error => {
@@ -724,6 +726,7 @@
                     alert(`✅ ${data.message}`);
                     // np. ukryj formularz albo odśwież widok
                     // form.closest('.jakis-wrapper').style.display = 'none';
+                    form.reset();
                     location.reload();
                 })
                 .catch(error => {
@@ -753,6 +756,7 @@
                 .then(data => {
                     alert(`✅ ${data.message}`);
                     // Możesz np. ukryć kartę lokalu lub odświeżyć widok
+                    form.reset();
                     location.reload();
                 })
                 .catch(error => {
@@ -782,7 +786,7 @@
                 .then(data => {
                     alert(`✅ ${data.message}`);
                     // opcjonalnie: ukryj formularz lub odśwież
-                    // form.reset();
+                    form.reset();
                     location.reload();
                 })
                 .catch(error => {
