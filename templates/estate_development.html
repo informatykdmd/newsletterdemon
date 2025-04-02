@@ -714,11 +714,14 @@
 {% endblock %}
 {% block bottom_script %}
 <div class="toast-container position-fixed bottom-0 end-0 p-3 z-3">
-    <div id="liveToast" class="toast align-items-center text-white bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="d-flex">
-        <div class="toast-body" id="toast-body">Wiadomość</div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img src="https://dmddomy.pl/static/img/icon.png" class="rounded me-2" alt="..." style="width: 20px; height: 20px;">
+        <strong class="me-auto" id="toast-title">System</strong>
+        <small class="text-muted" id="toast-time">Teraz</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Zamknij"></button>
       </div>
+      <div class="toast-body" id="toast-body">Tutaj treść komunikatu</div>
     </div>
 </div>
   
