@@ -755,10 +755,7 @@
         toastTime.innerText = new Date().toLocaleTimeString();
 
         const toast = bootstrap.Toast.getOrCreateInstance(toastElement);
-        
-        setTimeout(() => {
-            toast.show();
-        }, 3000);
+        toast.show();
     }
 
 
@@ -777,7 +774,9 @@
         .then(data => {
             if (data.success) {
                 showToast('Status zmieniony', 'success');
-                location.reload(); // lub dynamiczna zmiana klasy/ikony
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
             } else {
                 showToast(data.message, 'error');
                 // alert(data.message);
@@ -801,7 +800,9 @@
                 if (data.success) {
                     showToast('Wiadomość usunięta', 'success');
                     // alert('Wiadomość usunięta');
-                    location.reload(); // lub dynamiczne usunięcie z DOM
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
                 } else {
                     showToast(data.message, 'error');
                     // alert(data.message);
@@ -830,7 +831,9 @@
                     showToast(`✅ ${data.message}`, 'success');
                     // alert(`✅ ${data.message}`);
                     form.reset();
-                    location.reload();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
                 })
                 .catch(error => {
                     showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
@@ -860,7 +863,9 @@
                     // alert(`✅ ${data.message}`);
                     showToast(`✅ ${data.message}`, 'success');
                     form.reset();
-                    location.reload();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
                 })
                 .catch(error => {
                     showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
@@ -893,7 +898,9 @@
                     // np. ukryj formularz albo odśwież widok
                     // form.closest('.jakis-wrapper').style.display = 'none';
                     form.reset();
-                    location.reload();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
                 })
                 .catch(error => {
                     showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
@@ -925,7 +932,9 @@
                     // alert(`✅ ${data.message}`);
                     // Możesz np. ukryć kartę lokalu lub odświeżyć widok
                     form.reset();
-                    location.reload();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
                 })
                 .catch(error => {
                     showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
@@ -957,7 +966,9 @@
                     // alert(`✅ ${data.message}`);
                     // opcjonalnie: ukryj formularz lub odśwież
                     form.reset();
-                    location.reload();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
                 })
                 .catch(error => {
                     showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
