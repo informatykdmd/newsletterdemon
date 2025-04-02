@@ -713,7 +713,34 @@
                         
 {% endblock %}
 {% block bottom_script %}
+<div class="toast-container position-fixed bottom-0 end-0 p-3 z-3">
+    <div id="liveToast" class="toast align-items-center text-white bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toast-body">Wiadomość</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+</div>
+  
 <script>
+    function showToast(message, type = 'success') {
+        const toastElement = document.getElementById('liveToast');
+        const toastBody = document.getElementById('toast-body');
+
+        // Ustawienie koloru tła w zależności od typu
+        let bgClass = 'bg-dark';
+        if (type === 'success') bgClass = 'bg-success';
+        else if (type === 'error') bgClass = 'bg-danger';
+        else if (type === 'info') bgClass = 'bg-info';
+        else if (type === 'warning') bgClass = 'bg-warning';
+
+        toastElement.className = `toast align-items-center text-white ${bgClass} border-0`;
+        toastBody.innerText = message;
+
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    }
+
     function change_message_status(status, post_id, message_id) {
         fetch('/lokale-wisniowa-messages-control', {
             method: 'POST',
@@ -728,10 +755,11 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Status zmieniony');
+                showToast('Status zmieniony', 'success');
                 location.reload(); // lub dynamiczna zmiana klasy/ikony
             } else {
-                alert(data.message);
+                showToast(data.message, 'error');
+                // alert(data.message);
             }
         });
     }
@@ -750,10 +778,12 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Wiadomość usunięta');
+                    showToast('Wiadomość usunięta', 'success');
+                    // alert('Wiadomość usunięta');
                     location.reload(); // lub dynamiczne usunięcie z DOM
                 } else {
-                    alert(data.message);
+                    showToast(data.message, 'error');
+                    // alert(data.message);
                 }
             });
         }
@@ -776,12 +806,14 @@
                     return response.json();
                 })
                 .then(data => {
-                    alert(`✅ ${data.message}`);
+                    showToast(`✅ ${data.message}`, 'success');
+                    // alert(`✅ ${data.message}`);
                     form.reset();
                     location.reload();
                 })
                 .catch(error => {
-                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                    showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
+                    // alert(`❌ Wystąpił błąd: ${error.message}`);
                 });
             });
         });
@@ -804,12 +836,14 @@
                     return response.json();
                 })
                 .then(data => {
-                    alert(`✅ ${data.message}`);
+                    // alert(`✅ ${data.message}`);
+                    showToast(`✅ ${data.message}`, 'success');
                     form.reset();
                     location.reload();
                 })
                 .catch(error => {
-                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                    showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
+                    // alert(`❌ Wystąpił błąd: ${error.message}`);
                 });
             });
         });
@@ -833,14 +867,16 @@
                     return response.json();
                 })
                 .then(data => {
-                    alert(`✅ ${data.message}`);
+                    showToast(`✅ ${data.message}`, 'success');
+                    // alert(`✅ ${data.message}`);
                     // np. ukryj formularz albo odśwież widok
                     // form.closest('.jakis-wrapper').style.display = 'none';
                     form.reset();
                     location.reload();
                 })
                 .catch(error => {
-                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                    showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
+                    // alert(`❌ Wystąpił błąd: ${error.message}`);
                 });
             });
         });
@@ -864,12 +900,14 @@
                     return response.json();
                 })
                 .then(data => {
-                    alert(`✅ ${data.message}`);
+                    showToast(`✅ ${data.message}`, 'success');
+                    // alert(`✅ ${data.message}`);
                     // Możesz np. ukryć kartę lokalu lub odświeżyć widok
                     form.reset();
                     location.reload();
                 })
                 .catch(error => {
+                    showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
                     alert(`❌ Wystąpił błąd: ${error.message}`);
                 });
             });
@@ -894,12 +932,14 @@
                     return response.json();
                 })
                 .then(data => {
-                    alert(`✅ ${data.message}`);
+                    showToast(`✅ ${data.message}`, 'success');
+                    // alert(`✅ ${data.message}`);
                     // opcjonalnie: ukryj formularz lub odśwież
                     form.reset();
                     location.reload();
                 })
                 .catch(error => {
+                    showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
                     alert(`❌ Wystąpił błąd: ${error.message}`);
                 });
             });
