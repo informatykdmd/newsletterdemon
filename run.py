@@ -12026,7 +12026,7 @@ def messages_control():
 
         elif action == 'remove':
             # Możesz zamiast DELETE zrobić UPDATE z oznaczeniem 'usunieta', jeśli chcesz zachować historię
-            query = "UPDATE Messages_wisniowa SET status_wiadomosci = 'usunieta' WHERE id = %s"
+            query = "DELETE FROM Messages_wisniowa WHERE id = %s LIMIT 1"
             db.executeTo(query, (message_id,))
             print(f"[USUNIĘCIE] Wiadomość {message_id} została oznaczona jako usunięta")
 
