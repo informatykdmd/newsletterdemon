@@ -729,20 +729,38 @@
     function showToast(message, type = 'success') {
         const toastElement = document.getElementById('liveToast');
         const toastBody = document.getElementById('toast-body');
+        const toastTitle = document.getElementById('toast-title');
+        const toastTime = document.getElementById('toast-time');
 
-        // Ustawienie koloru tła w zależności od typu
+        // Kolor tła nagłówka (opcjonalnie można zmieniać)
         let bgClass = 'bg-dark';
-        if (type === 'success') bgClass = 'bg-success';
-        else if (type === 'error') bgClass = 'bg-danger';
-        else if (type === 'info') bgClass = 'bg-info';
-        else if (type === 'warning') bgClass = 'bg-warning';
+        if (type === 'success') {
+            bgClass = 'bg-success';
+            toastTitle.innerText = 'Sukces';
+        } else if (type === 'error') {
+            bgClass = 'bg-danger';
+            toastTitle.innerText = 'Błąd';
+        } else if (type === 'info') {
+            bgClass = 'bg-info';
+            toastTitle.innerText = 'Informacja';
+        } else if (type === 'warning') {
+            bgClass = 'bg-warning';
+            toastTitle.innerText = 'Ostrzeżenie';
+        }
 
-        toastElement.className = `toast align-items-center text-white ${bgClass} border-0`;
+        toastElement.className = `toast ${bgClass} text-white border-0`;
         toastBody.innerText = message;
 
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
+        // Ustaw aktualny czas
+        toastTime.innerText = new Date().toLocaleTimeString();
+
+        const toast = bootstrap.Toast.getOrCreateInstance(toastElement);
+        
+        setTimeout(() => {
+            toast.show();
+        }, 3000);
     }
+
 
     function change_message_status(status, post_id, message_id) {
         fetch('/lokale-wisniowa-messages-control', {
