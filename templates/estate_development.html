@@ -156,7 +156,7 @@
                                     </a>
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {% if post_data.Messages %}
-                                            <span class="text-info formatuj-maly-font"><i class="bi bi-envelope-arrow-down text-success"></i></span>
+                                            <span class="text-info formatuj-maly-font"><i class="bi bi-envelope-arrow-down text-danger"></i></span>
                                         {% endif %}
                                     </a>
                                     
@@ -938,7 +938,7 @@
                 })
                 .catch(error => {
                     showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
-                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                    // alert(`❌ Wystąpił błąd: ${error.message}`);
                 });
             });
         });
@@ -972,7 +972,7 @@
                 })
                 .catch(error => {
                     showToast(`❌ Wystąpił błąd: ${error.message}`, 'error');
-                    alert(`❌ Wystąpił błąd: ${error.message}`);
+                    // alert(`❌ Wystąpił błąd: ${error.message}`);
                 });
             });
         });
