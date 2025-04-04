@@ -11739,7 +11739,15 @@ def estateAdsspecial():
 
 @app.route("/estate-development")
 def estate_development():
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /estate-development bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
 
+    if session['userperm']['estate'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /estate-development bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
     lokale = generator_wisniowa_lokale()
 
     return render_template(
