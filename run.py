@@ -7633,6 +7633,11 @@ def public_on_adresowo():
                     prepared_opis = prepared_opis + '\n' + picked_offer['InformacjeDodatkowe']
             else: prepared_opis = picked_offer['InformacjeDodatkowe']
 
+            if extra_descript:
+                opis_ogloszenia = f"""{prepared_opis}\n\n{extra_opis}"""
+            else:
+                opis_ogloszenia = f"""{prepared_opis}"""
+
             if str(picked_offer['TypDomu']).lower().count('dom') > 0\
                 or str(picked_offer['TypDomu']).lower().count('willa') > 0\
                     or str(picked_offer['TypDomu']).lower().count('bliźniak') > 0\
@@ -13095,5 +13100,5 @@ def update_hidden_campaigns_status():
 
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)
-    app.run(debug=True, host='0.0.0.0', port=8000)
-    # app.run(debug=False, host='0.0.0.0', port=8000)
+    # app.run(debug=True, host='0.0.0.0', port=8000)
+    app.run(debug=False, host='0.0.0.0', port=8000)
