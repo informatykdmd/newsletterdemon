@@ -552,63 +552,65 @@ def make_fbgroups_task(data):
     else: return False
 
 
-def pobierz_aktualne_warunki():
-    teraz = datetime.datetime.now()
-    dni_tygodnia = {
-        'Monday': 'poniedziałek',
-        'Tuesday': 'wtorek',
-        'Wednesday': 'środa',
-        'Thursday': 'czwartek',
-        'Friday': 'piątek',
-        'Saturday': 'sobota',
-        'Sunday': 'niedziela'
-    }
 
-    miesiace = {
-        'January': 'styczeń',
-        'February': 'luty',
-        'March': 'marzec',
-        'April': 'kwiecień',
-        'May': 'maj',
-        'June': 'czerwiec',
-        'July': 'lipiec',
-        'August': 'sierpień',
-        'September': 'wrzesień',
-        'October': 'październik',
-        'November': 'listopad',
-        'December': 'grudzień'
-    }
-
-    dzien_tygodnia = dni_tygodnia[teraz.strftime('%A')]
-    dzien_miesiaca = teraz.day
-    miesiac = miesiace[teraz.strftime('%B')]
-    rok = teraz.year
-
-    tydzien_miesiaca = (teraz.day - 1) // 7 + 1
-
-    godzina = teraz.hour
-    if 5 <= godzina < 8:
-        pora_dnia = 'świt'
-    elif 8 <= godzina < 12:
-        pora_dnia = 'poranek'
-    elif 12 <= godzina < 17:
-        pora_dnia = 'południe'
-    elif 17 <= godzina < 21:
-        pora_dnia = 'wieczór'
-    else:
-        pora_dnia = 'noc'
-
-    return {
-        'dzien_tygodnia': dzien_tygodnia,
-        'dzien_miesiaca': dzien_miesiaca,
-        'tydzien_miesiaca': tydzien_miesiaca,
-        'miesiac': miesiac,
-        'rok': rok,
-        'pora_dnia': pora_dnia
-    }
 
 def sprawdz_czas(dzien_tygodnia=None, dzien_miesiaca=None, tydzien_miesiaca=None,
                  miesiac=None, rok=None, pora_dnia=None):
+    def pobierz_aktualne_warunki():
+        teraz = datetime.datetime.now()
+        dni_tygodnia = {
+            'Monday': 'poniedziałek',
+            'Tuesday': 'wtorek',
+            'Wednesday': 'środa',
+            'Thursday': 'czwartek',
+            'Friday': 'piątek',
+            'Saturday': 'sobota',
+            'Sunday': 'niedziela'
+        }
+
+        miesiace = {
+            'January': 'styczeń',
+            'February': 'luty',
+            'March': 'marzec',
+            'April': 'kwiecień',
+            'May': 'maj',
+            'June': 'czerwiec',
+            'July': 'lipiec',
+            'August': 'sierpień',
+            'September': 'wrzesień',
+            'October': 'październik',
+            'November': 'listopad',
+            'December': 'grudzień'
+        }
+
+        dzien_tygodnia = dni_tygodnia[teraz.strftime('%A')]
+        dzien_miesiaca = teraz.day
+        miesiac = miesiace[teraz.strftime('%B')]
+        rok = teraz.year
+
+        tydzien_miesiaca = (teraz.day - 1) // 7 + 1
+
+        godzina = teraz.hour
+        if 5 <= godzina < 8:
+            pora_dnia = 'świt'
+        elif 8 <= godzina < 12:
+            pora_dnia = 'poranek'
+        elif 12 <= godzina < 17:
+            pora_dnia = 'południe'
+        elif 17 <= godzina < 21:
+            pora_dnia = 'wieczór'
+        else:
+            pora_dnia = 'noc'
+
+        return {
+            'dzien_tygodnia': dzien_tygodnia,
+            'dzien_miesiaca': dzien_miesiaca,
+            'tydzien_miesiaca': tydzien_miesiaca,
+            'miesiac': miesiac,
+            'rok': rok,
+            'pora_dnia': pora_dnia
+        }
+    
     aktualne = pobierz_aktualne_warunki()
 
     return all([
@@ -973,8 +975,8 @@ def main():
             # 🛑 **Efektywny sposób na oszczędzenie CPU**
             time.sleep(3)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
-        # Czy jest poniedziałkowy poranek?
-        if sprawdz_czas(dzien_tygodnia='poniedziałek', pora_dnia='poranek'):
+        # Czy jest poniedziałkowy południe?
+        if sprawdz_czas(dzien_tygodnia='poniedziałek', pora_dnia='południe'):
             print("Zaczynamy tydzień!")
 
         # Czy jest 1. dzień miesiąca?
