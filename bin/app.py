@@ -813,14 +813,6 @@ def main():
                         **********************************************************
                     """
                     print("CHECKPOINT 180 SECONDS")
-                    print("Zaczynamy poniedziałkowe południe!")
-                    prepare_shedule.insert_to_database(
-                        """INSERT INTO ogloszenia_formsapitest
-                                (platform, status)
-                            VALUES 
-                                (%s, %s)""",
-                            ('FORMS-API-TEST', 4)
-                        )
                     ################################################################
                     # Obsługa automatycznego wygaszania zakończonych ogłoszeń na 
                     # ALLEGRO OTODOM LENTO
