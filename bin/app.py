@@ -813,6 +813,14 @@ def main():
                         **********************************************************
                     """
                     print("CHECKPOINT 180 SECONDS")
+                    print("Zaczynamy poniedziałkowe południe!")
+                    prepare_shedule.insert_to_database(
+                        """INSERT INTO ogloszenia_formsapitest
+                                (platform, status)
+                            VALUES 
+                                (%s, %s)""",
+                            ('FORMS-API-TEST', 4)
+                        )
                     ################################################################
                     # Obsługa automatycznego wygaszania zakończonych ogłoszeń na 
                     # ALLEGRO OTODOM LENTO
@@ -968,6 +976,18 @@ def main():
                                     (ready_string, bot, 7)
                                 )
 
+                    ################################################################
+                    # Automatyczne validacja formularzy automatyzacji
+                    ################################################################
+                    if sprawdz_czas(dzien_tygodnia='poniedziałek', pora_dnia='poranek'):
+                        print("Zaczynamy poniedziałkowe południe!")
+                        prepare_shedule.insert_to_database(
+                            """INSERT INTO ogloszenia_formsapitest
+                                    (platform, status)
+                                VALUES 
+                                    (%s, %s)""",
+                                ('FORMS-API-TEST', 4)
+                            )
                 
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
@@ -975,8 +995,12 @@ def main():
             # 🛑 **Efektywny sposób na oszczędzenie CPU**
             time.sleep(3)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
-        # Czy jest poniedziałkowy południe?
+        # Czy jest poniedziałkowe południe?
         if sprawdz_czas(dzien_tygodnia='poniedziałek', pora_dnia='południe'):
+            print("Zaczynamy poniedziałkowe południe!")
+
+        # Czy jest poniedziałkowy poranek?
+        if sprawdz_czas(dzien_tygodnia='poniedziałek', pora_dnia='poranek'):
             print("Zaczynamy tydzień!")
 
         # Czy jest 1. dzień miesiąca?
