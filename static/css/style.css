@@ -2208,3 +2208,15 @@ color:#969696;
 .form-control.bg-dark2 option {
   color: #212529; /* Ciemniejszy tekst opcji jeśli chcesz */
 }
+
+#automat-monitor {
+  background-color: #000;
+  color: #fff;
+  border: 2px solid #0d6efd; /* Bootstrap blue */
+  font-family: system-ui, monospace;
+  white-space: nowrap;
+  font-size: 0.875rem; /* Mała czcionka */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}

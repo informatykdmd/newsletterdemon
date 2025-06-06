@@ -171,7 +171,7 @@
                         <button type="submit" class="btn btn-success btn-sm" value="Ustaw plan">Zapisz Ustawienia</button>
                         <!-- <input type="submit" class="btn btn-success btn-sm" value="Zapisz Ustawienia"/> -->
                     </div>
-                    <div class="formatuj-left formatuj-margin">                    
+                    <div class="formatuj-left formatuj-margin">
                         <input type="submit" class="btn btn-danger btn-sm" id="restartButton" value="Restaruj Aplikację"/>
                         <p class="jasny formatuj-padding" style="margin-top: 25px; max-width: 150px; color: #beddff">Ostatni restart aplikacji: {{restart}}</p>
                         <!-- Dodajemy miejsce na ostatni log "__main__" -->
@@ -179,6 +179,16 @@
                             <!-- Ostatni log "__main__" zostanie tutaj wstawiony dynamicznie -->
                         </p>
                     </div>
+                    <div class="container">
+                        <h5 class="text-primary">📟 Automat Monitor</h5>
+                        <div id="automat-monitor">
+                        > System initialized...<br>
+                        > Listening on port 8080...<br>
+                        > Log: Connection from 192.168.1.42<br>
+                        > Status: OK
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
@@ -243,7 +253,6 @@
                     </div>
                 </div>                                          
             </div>
-            
         </div>
     </form>
 </div>
