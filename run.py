@@ -12211,7 +12211,7 @@ def fetch_noisy_system():
         last_line = "Brak danych w bazie"
 
     # 3. Generujemy log systemowy
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     synthetic_log = f"{now} INFO SYSTEM Oczekiwanie na aktywność automatu | Ostatni wpis: {last_line}"
 
     return jsonify([synthetic_log])
