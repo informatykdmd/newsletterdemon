@@ -12219,7 +12219,7 @@ def fetch_noisy_system():
         f"{last_line}"
     ]
 
-    return jsonify([synthetic_log])
+    return jsonify(synthetic_log)
 
 
 @app.route('/fb-groups')
