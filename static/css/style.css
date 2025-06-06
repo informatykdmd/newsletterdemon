@@ -2217,6 +2217,7 @@ color:#969696;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-left: 10px;
   font-size: 0.675rem;
   padding: 1rem;
   border-radius: 0.5rem;
