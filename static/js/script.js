@@ -992,7 +992,7 @@ function pobierzIKonsolujKolejnosc(sekcjaId) {
     // console.log(`Kolejność w sekcji ${sekcjaId}:`, kolejnosc);
 }
 
-function addCustomElement(id, elementType, elementContent) {
+function addCustomElement(id, elementType, elementContent, manualTrigger = false) {
     var container = document.getElementById('list-container' + id);
     var buttonContainer = document.getElementById('button-container' + id) || createButtonContainer(id, container);
     var newElement;
@@ -1005,7 +1005,10 @@ function addCustomElement(id, elementType, elementContent) {
         newElement.style.border = '#6a6a6a solid 1px';
         newElement.setAttribute('data-type', elementType);
         newElement.setAttribute('placeholder', `Dodaj treść dla atrybutu <${elementType}>`);
-        toggleButtons(false);
+        // 👇 Wywołaj tylko jeśli to użytkownik kliknął
+        if (manualTrigger) {
+            toggleButtons(false);
+        }
     } else {
         newElement = document.createElement('textarea');
         newElement.rows = 4;

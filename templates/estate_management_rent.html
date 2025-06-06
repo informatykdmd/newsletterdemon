@@ -1363,7 +1363,7 @@
                                                             //{% if key=='li' %}
                                                                 // {% for i_element in val %}
                                                                 document.addEventListener('DOMContentLoaded', () => {
-                                                                    addCustomElement('{{post_id}}', '{{key}}', `{{i_element|decode_html_entities_filter}}`);
+                                                                    addCustomElement('{{post_id}}', '{{key}}', `{{i_element|decode_html_entities_filter}}`, true);
                                                                 });
                                                                 // {% endfor %}
                                                             //{% else %}
