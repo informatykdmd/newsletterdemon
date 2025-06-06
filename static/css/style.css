@@ -2212,7 +2212,7 @@ color:#969696;
 #automat-monitor {
   background-color: #000;
   color: #fff;
-  border: 2px solid #435268; /* Bootstrap blue */
+  border: 1px solid #435268; 
   font-family: "Courier New", Courier, monospace;
   white-space: nowrap;
   overflow: hidden;
