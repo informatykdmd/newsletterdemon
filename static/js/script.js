@@ -1034,7 +1034,7 @@ function addCustomElement(id, elementType, elementContent) {
     elementWrapper.appendChild(removeButton);
     container.insertBefore(elementWrapper, buttonContainer);
 
-    if (elementType.includes('li') && !document.querySelector('.end-list-button')) {
+    if (elementType === 'li' && !container.querySelector('.end-list-button'))  {
         createListManagementButtons(buttonContainer);
     }
 }
