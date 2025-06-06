@@ -12212,7 +12212,12 @@ def fetch_noisy_system():
 
     # 3. Generujemy log systemowy
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    synthetic_log = f"{now} INFO SYSTEM Oczekiwanie na aktywność automatu | Ostatni wpis: {last_line}"
+    synthetic_log = [
+        f"{now} INFO SYSTEM",
+        f"Oczekiwanie na aktywność automatu...",
+        f"Ostatni wpis w systemie:",
+        f"{last_line}"
+    ]
 
     return jsonify([synthetic_log])
 
