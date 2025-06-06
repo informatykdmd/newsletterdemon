@@ -2212,13 +2212,12 @@ color:#969696;
 #automat-monitor {
   background-color: #000;
   color: #fff;
-  border: 2px solid #0d6efd; /* Bootstrap blue */
-  /* font-family: system-ui, monospace !important; */
+  border: 2px solid #435268; /* Bootstrap blue */
   font-family: "Courier New", Courier, monospace;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 0.875rem;
+  font-size: 0.475rem;
   padding: 1rem;
   border-radius: 0.5rem;
 }
