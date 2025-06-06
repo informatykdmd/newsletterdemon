@@ -180,12 +180,12 @@
                         </p>
                     </div>
                     <div class="row">
-                        <h5 class="text-primary">📟 Automat Monitor</h5>
-                        <div id="automat-monitor" class="unix-log-style">
-                        > System initialized...<br>
-                        > Listening on port 8080...<br>
-                        > Log: Connection from 192.168.1.42 Log: Connection from 192.168.1.42Log: Connection from 192.168.1.42Log: Connection from 192.168.1.42<br>
-                        > Status: OK
+                        <h5 class="text-white-50">📟 Automat Monitor</h5>
+                        <div id="automat-monitor" >
+                            > System initialized...<br>
+                            > Listening on port 8080...<br>
+                            > Log: Connection from 192.168.1.42 Log: Connection from 192.168.1.42Log: Connection from 192.168.1.42Log: Connection from 192.168.1.42<br>
+                            > Status: OK
                         </div>
                     </div>
 
@@ -385,6 +385,24 @@
         // Początkowe pobranie logów
         fetchLogs();
     });
+
+    function updateTerminalLogs() {
+        fetch('/fetch-noisy-system')
+        .then(response => response.json())
+        .then(data => {
+            const terminal = document.getElementById('automat-monitor');
+            terminal.innerHTML = data.map(line => `> ${line}`).join('<br>');
+        })
+        .catch(error => {
+            console.error('Błąd podczas pobierania logów:', error);
+        });
+    }
+
+    // Pierwsze uruchomienie od razu
+    updateTerminalLogs();
+
+    // Aktualizuj co 6 sekund
+    setInterval(updateTerminalLogs, 6000);
 </script>
 {% endblock %}
 

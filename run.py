@@ -12173,6 +12173,24 @@ def fetch_logs():
     last_logs = get_last_logs('logs/errors.log', 10250)
     return jsonify(last_logs)
 
+@app.route('/fetch-noisy-system')
+def fetch_noisy_system():
+    db = get_db()
+    query = """
+        SELECT module, message, status, update_date
+        FROM noisy_system
+        ORDER BY update_date DESC
+        LIMIT 4;
+    """
+    logs = db.getFrom(query, as_dict=True)
+    
+    formatted_logs = []
+    for log in logs:
+        line = f"{log['update_date']} {log['status']} {log['module']} {log['message']}"
+        formatted_logs.append(line)
+
+    return jsonify(formatted_logs)
+
 @app.route('/fb-groups')
 def fbGroups():
     """Zarządzanie grupami FB"""
