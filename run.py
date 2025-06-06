@@ -12176,20 +12176,46 @@ def fetch_logs():
 @app.route('/fetch-noisy-system')
 def fetch_noisy_system():
     db = get_db()
-    query = """
+
+    # 1. Logi z ostatnich 2h
+    query_recent = """
         SELECT module, message, status, update_date
         FROM noisy_system
+        WHERE update_date >= NOW() - INTERVAL 2 HOUR
         ORDER BY update_date DESC
         LIMIT 4;
     """
-    logs = db.getFrom(query, as_dict=True)
-    
-    formatted_logs = []
-    for log in logs:
-        line = f"{log['update_date']} {log['status']} {log['module']} {log['message']}"
-        formatted_logs.append(line)
+    recent_logs = db.getFrom(query_recent, as_dict=True)
 
-    return jsonify(formatted_logs)
+    if recent_logs:
+        # Formatowanie klasyczne
+        formatted_logs = [
+            f"{log['update_date']} {log['status']} {log['module']} {log['message']}"
+            for log in recent_logs
+        ]
+        return jsonify(formatted_logs)
+
+    # 2. Brak logów → szukamy ostatniego wpisu w ogóle
+    query_last = """
+        SELECT module, message, status, update_date
+        FROM noisy_system
+        ORDER BY update_date DESC
+        LIMIT 1;
+    """
+    last_log = db.getFrom(query_last, as_dict=True)
+
+    if last_log:
+        log = last_log[0]
+        last_line = f"{log['update_date']} {log['status']} {log['module']} {log['message']}"
+    else:
+        last_line = "Brak danych w bazie"
+
+    # 3. Generujemy log systemowy
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    synthetic_log = f"{now} INFO SYSTEM Oczekiwanie na aktywność automatu | Ostatni wpis: {last_line}"
+
+    return jsonify([synthetic_log])
+
 
 @app.route('/fb-groups')
 def fbGroups():
