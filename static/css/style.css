@@ -2213,7 +2213,7 @@ color:#969696;
   background-color: #000;
   color: #fff;
   border: 2px solid #0d6efd; /* Bootstrap blue */
-  font-family: system-ui, monospace;
+  font-family: system-ui, monospace !important;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
