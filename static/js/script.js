@@ -997,7 +997,7 @@ function addCustomElement(id, elementType, elementContent) {
     var buttonContainer = document.getElementById('button-container' + id) || createButtonContainer(id, container);
     var newElement;
     
-    if (elementType.includes('li')) {
+    if (elementType === 'li') {
         newElement = document.createElement('input');
         newElement.type = 'text';
         newElement.className = 'form-control bg-dark custom-element mb-1';
@@ -1034,7 +1034,7 @@ function addCustomElement(id, elementType, elementContent) {
     elementWrapper.appendChild(removeButton);
     container.insertBefore(elementWrapper, buttonContainer);
 
-    if (elementType === 'li' && !container.querySelector('.end-list-button'))  {
+    if (elementType === 'li' && !container.querySelector('.end-list-button')) {
         createListManagementButtons(buttonContainer);
     }
 }
