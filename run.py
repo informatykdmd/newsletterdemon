@@ -1290,6 +1290,7 @@ def restart_pm2_tasks_signal(logsFilePath):
         msq.insert_to_database(zapytanie_sql, dane)
         msq.connect_to_database("TRUNCATE TABLE chat_task;")
         msq.connect_to_database("TRUNCATE TABLE Messages;")
+        msq.connect_to_database("TRUNCATE TABLE noisy_system;")
         # restart 
         os.system('pm2 restart all')
         return True
