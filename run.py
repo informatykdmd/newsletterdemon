@@ -23,7 +23,7 @@ import regions
 from flask_session import Session
 from PIL import Image
 import logging
-from appStatistic import log_stats
+from appStatistic import log_stats, log_stats_dmddomy
 from threading import Timer
 from bin.command_generator import getMorphy, saveMorphy
 from bin.znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
@@ -1674,7 +1674,7 @@ def logStats():
     raw_wisniowahouse = log_stats('/home/johndoe/app/wisniowahouse/logs/access.log')
     raw_dmdinwestycje = log_stats('/home/johndoe/app/dmdinwestycje/logs/access.log')
     raw_dmdinstalacje = log_stats('/home/johndoe/app/dmdinstalacje/logs/access.log')
-    raw_dmddomy = log_stats('/home/johndoe/app/dmddomy_stats/server.log')
+    raw_dmddomy = log_stats_dmddomy('/home/johndoe/app/dmddomy_stats/server.log')
     
 
     # pomocnicza funkcja do przekształcenia danych

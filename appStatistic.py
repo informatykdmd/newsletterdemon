@@ -38,3 +38,34 @@ def log_stats(log_file_path):
 
     # Zwracanie statystyk
     return stats
+
+def log_stats_dmddomy(log_file_path):
+    # Dostosowane wyrażenie regularne do formatu z Node.js (IPv6 + query string w endpoint)
+    log_pattern = re.compile(
+        r'IP: (.*?), Time: (.*?), Endpoint: (.*?), Method: (\S+)'
+    )
+
+    stats = {
+        'total_requests': 0,
+        'requests_per_ip': {},
+        'requests_per_endpoint': {},
+        'requests_per_method': {}
+    }
+
+    try:
+        with open(log_file_path, 'r') as f:
+            for line in f:
+                match = log_pattern.search(line)
+                if match:
+                    ip, time, endpoint, method = match.groups()
+
+                    stats['total_requests'] += 1
+
+                    stats['requests_per_ip'][ip] = stats['requests_per_ip'].get(ip, 0) + 1
+                    stats['requests_per_endpoint'][endpoint] = stats['requests_per_endpoint'].get(endpoint, 0) + 1
+                    stats['requests_per_method'][method] = stats['requests_per_method'].get(method, 0) + 1
+
+    except FileNotFoundError:
+        print(f"❌ Nie znaleziono pliku: {log_file_path}")
+
+    return stats
