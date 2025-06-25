@@ -2222,3 +2222,22 @@ color:#969696;
   padding: 1rem;
   border-radius: 0.5rem;
 }
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.chart {
+  width: 150px;
+  height: 150px;
+  margin: 20px;
+  background-color: #2c2c2c;  /* Ciemne tło wykresu */
+  padding: 10px;
+  border-radius: 10px;
+}
+
+canvas {
+  background-color: #2c2c2c;
+}
