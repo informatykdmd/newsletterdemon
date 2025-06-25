@@ -1672,7 +1672,7 @@ def logStats():
     raw_adminpanel = log_stats('/home/johndoe/app/newsletterdemon/logs/errors.log')
     raw_dmdbudownictwo = log_stats('/home/johndoe/app/dmdbudownictwo/logs/errors.log')
     raw_dmdelitehome = log_stats('/home/johndoe/app/dmdelitehome/logs/errors.log')
-    raw_dmdinstalacje = log_stats('/home/johndoe/app/dmdinstalacje/logs/errors.log')
+    # raw_dmdinstalacje = log_stats('/home/johndoe/app/dmdinstalacje/logs/errors.log')
     raw_wisniowahouse = log_stats('/home/johndoe/app/wisniowahouse/logs/errors.log')
     raw_dmdinwestycje = log_stats('/home/johndoe/app/dmdinwestycje/logs/errors.log')
     raw_dmdtransport = log_stats('/home/johndoe/app/dmdtransport/logs/errors.log')
@@ -1699,7 +1699,7 @@ def logStats():
         ],
         "DMD Budownictwo": map_stats(raw_dmdbudownictwo),
         "DMD EliteHome": map_stats(raw_dmdelitehome),
-        "DMD Instalacje": map_stats(raw_dmdinstalacje),
+        # "DMD Instalacje": map_stats(raw_dmdinstalacje),
         "DMD Inwestycje": map_stats(raw_dmdinwestycje),
         "Wiśniowa House": map_stats(raw_wisniowahouse),
         "DMD Transport": map_stats(raw_dmdtransport)
