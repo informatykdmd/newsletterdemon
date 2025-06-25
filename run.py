@@ -1674,6 +1674,8 @@ def logStats():
     raw_wisniowahouse = log_stats('/home/johndoe/app/wisniowahouse/logs/access.log')
     raw_dmdinwestycje = log_stats('/home/johndoe/app/dmdinwestycje/logs/access.log')
     raw_dmdinstalacje = log_stats('/home/johndoe/app/dmdinstalacje/logs/access.log')
+    raw_dmddomy = log_stats('/home/johndoe/app/dmddomy_stats/server.log')
+    
 
     # pomocnicza funkcja do przekształcenia danych
     def map_stats(raw):
@@ -1700,7 +1702,7 @@ def logStats():
         "DMD Instalacje": map_stats(raw_dmdinstalacje),
         "DMD Inwestycje": map_stats(raw_dmdinwestycje),
         "Wiśniowa House": map_stats(raw_wisniowahouse),
-        # "DMD Transport": map_stats(raw_dmdtransport)
+        "DMD Domy": map_stats(raw_dmddomy)
     }
 
     return jsonify(fake_stats)
