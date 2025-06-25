@@ -1666,14 +1666,39 @@ def logout():
 
 @app.route('/log-stats')
 def logStats():
-    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej    
     if 'username' not in session:
         return redirect(url_for('index'))
-    
-    # Pobieranie statystyk z logów
-    stats = log_stats(logFileName)
-    print(stats)
-    return jsonify(stats)  # Zwracanie statystyk jako JSON
+
+    raw = log_stats(logFileName)
+
+    # Przekształcenie na dane do wykresów
+    # Mapujemy jak chcemy: total_requests, ilość endpointów, IP itd.
+    # Tutaj to sztuczne dane, na podstawie np. % udziałów
+
+    fake_stats = {
+        "DMD Domy": [
+            raw["requests_per_endpoint"].get("home", 0),                # Blog i komentarze
+            raw["requests_per_endpoint"].get("contact", 0),             # Strona kontaktu
+            len(raw["requests_per_ip"]),                                # Unikalne wejścia
+            raw["total_requests"],                                      # Wszystkie wejścia
+            int(raw["total_requests"] / max(len(raw["requests_per_ip"]), 1)),  # Czas pobytu (proxy)
+            int(raw["total_requests"] / 24)                             # Średnia wejść na godzinę
+        ],
+        "DMD Inwestycje": [210, 95, 180, 560, 100, 50],
+        "DMD Budownictwo": [120, 110, 160, 500, 90, 45],
+        "DMD Instalacje": [90, 100, 140, 400, 80, 40],
+        "DMD EliteHome": [300, 280, 200, 700, 130, 60],
+        "DMD Admin Panel": [
+            raw["requests_per_endpoint"].get("settings", 0),
+            raw["requests_per_endpoint"].get("fetch_logs", 0),
+            raw["requests_per_endpoint"].get("fetch_messages", 0),
+            raw["requests_per_endpoint"].get("fetch_noisy_system", 0),
+            raw["requests_per_endpoint"].get("index", 0),
+            raw["requests_per_method"].get("POST", 0)
+        ]
+    }
+
+    return jsonify(fake_stats)
 
 @app.route('/home')
 def home():
