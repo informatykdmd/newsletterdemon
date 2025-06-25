@@ -1669,36 +1669,44 @@ def logStats():
     if 'username' not in session:
         return redirect(url_for('index'))
 
-    raw = log_stats(logFileName)
+    raw_adminpanel = log_stats('/home/johndoe/app/newsletterdemon/logs/errors.log')
+    raw_dmdbudownictwo = log_stats('/home/johndoe/app/dmdbudownictwo/logs/errors.log')
+    raw_dmdelitehome = log_stats('/home/johndoe/app/dmdelitehome/logs/errors.log')
+    raw_dmdinstalacje = log_stats('/home/johndoe/app/dmdinstalacje/logs/errors.log')
+    raw_wisniowahouse = log_stats('/home/johndoe/app/wisniowahouse/logs/errors.log')
+    raw_dmdinwestycje = log_stats('/home/johndoe/app/dmdinwestycje/logs/errors.log')
+    raw_dmdtransport = log_stats('/home/johndoe/app/dmdtransport/logs/errors.log')
 
-    # Przekształcenie na dane do wykresów
-    # Mapujemy jak chcemy: total_requests, ilość endpointów, IP itd.
-    # Tutaj to sztuczne dane, na podstawie np. % udziałów
+    # pomocnicza funkcja do przekształcenia danych
+    def map_stats(raw):
+        return [
+            raw["requests_per_endpoint"].get("home", 0),
+            raw["requests_per_endpoint"].get("contact", 0),
+            len(raw["requests_per_ip"]),
+            raw["total_requests"],
+            int(raw["total_requests"] / max(len(raw["requests_per_ip"]), 1)),
+            int(raw["total_requests"] / 24)
+        ]
 
     fake_stats = {
-        "DMD Domy": [
-            raw["requests_per_endpoint"].get("home", 0),                # Blog i komentarze
-            raw["requests_per_endpoint"].get("contact", 0),             # Strona kontaktu
-            len(raw["requests_per_ip"]),                                # Unikalne wejścia
-            raw["total_requests"],                                      # Wszystkie wejścia
-            int(raw["total_requests"] / max(len(raw["requests_per_ip"]), 1)),  # Czas pobytu (proxy)
-            int(raw["total_requests"] / 24)                             # Średnia wejść na godzinę
-        ],
-        "DMD Inwestycje": [210, 95, 180, 560, 100, 50],
-        "DMD Budownictwo": [120, 110, 160, 500, 90, 45],
-        "DMD Instalacje": [90, 100, 140, 400, 80, 40],
-        "DMD EliteHome": [300, 280, 200, 700, 130, 60],
         "DMD Admin Panel": [
-            raw["requests_per_endpoint"].get("settings", 0),
-            raw["requests_per_endpoint"].get("fetch_logs", 0),
-            raw["requests_per_endpoint"].get("fetch_messages", 0),
-            raw["requests_per_endpoint"].get("fetch_noisy_system", 0),
-            raw["requests_per_endpoint"].get("index", 0),
-            raw["requests_per_method"].get("POST", 0)
-        ]
+            raw_adminpanel["requests_per_endpoint"].get("settings", 0),
+            raw_adminpanel["requests_per_endpoint"].get("fetch_logs", 0),
+            raw_adminpanel["requests_per_endpoint"].get("fetch_messages", 0),
+            raw_adminpanel["requests_per_endpoint"].get("fetch_noisy_system", 0),
+            raw_adminpanel["requests_per_endpoint"].get("index", 0),
+            raw_adminpanel["requests_per_method"].get("POST", 0)
+        ],
+        "DMD Budownictwo": map_stats(raw_dmdbudownictwo),
+        "DMD EliteHome": map_stats(raw_dmdelitehome),
+        "DMD Instalacje": map_stats(raw_dmdinstalacje),
+        "DMD Inwestycje": map_stats(raw_dmdinwestycje),
+        "Wiśniowa House": map_stats(raw_wisniowahouse),
+        "DMD Transport": map_stats(raw_dmdtransport)
     }
 
     return jsonify(fake_stats)
+
 
 @app.route('/home')
 def home():
