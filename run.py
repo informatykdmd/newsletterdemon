@@ -1687,6 +1687,18 @@ def logStats():
             int(raw["total_requests"] / max(len(raw["requests_per_ip"]), 1)),
             int(raw["total_requests"] / 24)
         ]
+    def map_stats_domy(raw):
+        def endpoint_contains(key):
+            return sum(1 for ep in raw["requests_per_endpoint"] if key in ep)
+
+        return [
+            endpoint_contains("/api/getBlogPosts"),        # Liczba wejść na bloga
+            endpoint_contains("/api/contact"),             # Liczba wejść na kontakt – jeśli istnieje
+            len(raw["requests_per_ip"]),                   # Unikalne IP
+            raw["total_requests"],                         # Wszystkie żądania
+            int(raw["total_requests"] / max(len(raw["requests_per_ip"]), 1)),  # Średnia na IP
+            int(raw["total_requests"] / 24)                # Średnia na godzinę (zakładamy 24h danych)
+        ]
 
     fake_stats = {
         "DMD Admin Panel": [
@@ -1702,7 +1714,7 @@ def logStats():
         "DMD Instalacje": map_stats(raw_dmdinstalacje),
         "DMD Inwestycje": map_stats(raw_dmdinwestycje),
         "Wiśniowa House": map_stats(raw_wisniowahouse),
-        "DMD Domy": map_stats(raw_dmddomy)
+        "DMD Domy": map_stats_domy(raw_dmddomy)
     }
 
     return jsonify(fake_stats)
