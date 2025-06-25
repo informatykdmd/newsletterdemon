@@ -68,6 +68,10 @@ def log_request():
     # Logowanie do pliku
     logging.info(f'IP: {ip_address}, Time: {date_time}, Endpoint: {endpoint}, Method: {method}')
 
+@app.before_request
+def before_request_logging():
+    log_request()  # Loguj przed każdym zapytaniem
+
 # Instancja MySql
 def get_db():
     if 'db' not in g:
@@ -79,11 +83,6 @@ def close_db(error=None):
     db = g.pop('db', None)
     if db is not None:
         db.close_connection()
-
-
-@app.before_request
-def before_request_logging():
-    log_request()  # Loguj przed każdym zapytaniem
 
 def add_aifaLog(message: str, systemInfoFilePath='/home/johndoe/app/newsletterdemon/logs/logsForAifa.json') -> None:
     # Utwórz plik JSON, jeśli nie istnieje
@@ -1670,12 +1669,10 @@ def logStats():
         return redirect(url_for('index'))
 
     raw_adminpanel = log_stats('/home/johndoe/app/newsletterdemon/logs/errors.log')
-    raw_dmdbudownictwo = log_stats('/home/johndoe/app/dmdbudownictwo/logs/errors.log')
+    raw_dmdbudownictwo = log_stats('/home/johndoe/app/dmdbudownictwo/logs/access.log')
     raw_dmdelitehome = log_stats('/home/johndoe/app/dmdelitehome/logs/errors.log')
-    # raw_dmdinstalacje = log_stats('/home/johndoe/app/dmdinstalacje/logs/errors.log')
     raw_wisniowahouse = log_stats('/home/johndoe/app/wisniowahouse/logs/errors.log')
     raw_dmdinwestycje = log_stats('/home/johndoe/app/dmdinwestycje/logs/errors.log')
-    # raw_dmdtransport = log_stats('/home/johndoe/app/dmdtransport/logs/errors.log')
 
     # pomocnicza funkcja do przekształcenia danych
     def map_stats(raw):
