@@ -1670,7 +1670,7 @@ def logStats():
 
     raw_adminpanel = log_stats('/home/johndoe/app/newsletterdemon/logs/errors.log')
     raw_dmdbudownictwo = log_stats('/home/johndoe/app/dmdbudownictwo/logs/access.log')
-    raw_dmdelitehome = log_stats('/home/johndoe/app/dmdelitehome/logs/errors.log')
+    raw_dmdelitehome = log_stats('/home/johndoe/app/dmdelitehome/logs/access.log')
     raw_wisniowahouse = log_stats('/home/johndoe/app/wisniowahouse/logs/errors.log')
     raw_dmdinwestycje = log_stats('/home/johndoe/app/dmdinwestycje/logs/errors.log')
 
