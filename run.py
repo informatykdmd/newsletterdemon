@@ -1672,6 +1672,7 @@ def logStats():
     
     # Pobieranie statystyk z logów
     stats = log_stats(logFileName)
+    print(stats)
     return jsonify(stats)  # Zwracanie statystyk jako JSON
 
 @app.route('/home')
