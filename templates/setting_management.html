@@ -503,7 +503,6 @@
                 if (!response.ok) {
                     throw new Error('Błąd pobierania danych');
                 }
-                console.log(response.json());
                 return response.json();
             });
     }
