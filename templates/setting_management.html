@@ -428,8 +428,15 @@
                     const chartContainer = document.createElement('div');
                     chartContainer.className = 'chart';
                     document.getElementById('charts').appendChild(chartContainer);
-                    console.log(brand);
-                    chartContainer.appendChild(`<div>${brand}</div>`);
+                    
+                    // 🆕 Dodanie tytułu brandu
+                    const brandTitle = document.createElement('div');
+                    brandTitle.textContent = brand;
+                    brandTitle.style.fontWeight = 'bold';
+                    brandTitle.style.marginBottom = '6px';
+                    brandTitle.style.fontSize = '1.1em';
+                    chartContainer.appendChild(brandTitle);
+                    
                     // Generowanie wykresu
                     const ctx = document.createElement('canvas');
                     chartContainer.appendChild(ctx);
