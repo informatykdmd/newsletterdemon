@@ -429,7 +429,7 @@
                     chartContainer.className = 'chart';
                     document.getElementById('charts').appendChild(chartContainer);
                     console.log(brand);
-                    chartContainer.appendChild(brand);
+                    chartContainer.appendChild(`<div>${brand}</div>`);
                     // Generowanie wykresu
                     const ctx = document.createElement('canvas');
                     chartContainer.appendChild(ctx);
