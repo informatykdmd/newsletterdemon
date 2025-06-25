@@ -249,6 +249,11 @@
                 </div>                                          
             </div>
         </div>
+        <div class="row">
+            <div class="col-12 p-15 formatuj-left formatuj-padding-lg">
+                <div id="charts" class="chart-container"></div>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -264,6 +269,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.getElementById('restartButton').addEventListener('click', function(event) {
         event.preventDefault();  // Zapobiega domyślnemu zachowaniu przycisku submit
@@ -400,6 +406,88 @@
 
     // Aktualizuj co 6 sekund
     setInterval(updateTerminalLogs, 6000);
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Symulowane pobieranie danych z API
+        fetchDataFromEndpoint()
+            .then(data => {
+                const brands = Object.keys(data);  // Nazwy marek są kluczami w obiekcie data
+
+                const shortLabels = ["Blog", "Kontakt", "Unikalne", "Wszystkie", "Czas", "Średnia/godz"];
+                const fullLabels = {
+                    "Blog": "Blog i komentarze",
+                    "Kontakt": "Strona kontaktu",
+                    "Unikalne": "Unikalne wejścia",
+                    "Wszystkie": "Wszystkie wejścia",
+                    "Czas": "Czas pobytu",
+                    "Średnia/godz": "Średnia wejść na godzinę"
+                };
+
+                brands.forEach(brand => {
+                    // Tworzenie kontenera dla każdego wykresu
+                    const chartContainer = document.createElement('div');
+                    chartContainer.className = 'chart';
+                    document.getElementById('charts').appendChild(chartContainer);
+
+                    // Generowanie wykresu
+                    const ctx = document.createElement('canvas');
+                    chartContainer.appendChild(ctx);
+                    new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: shortLabels,
+                            datasets: [{
+                                data: data[brand],
+                                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                legend: {
+                                    display: false  // ukryj legendę, jeśli przeszkadza
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const labelIndex = context.dataIndex;
+                                            const fullNames = [
+                                                "Blog i komentarze",
+                                                "Strona kontaktu",
+                                                "Unikalne wejścia",
+                                                "Wszystkie wejścia",
+                                                "Czas pobytu",
+                                                "Średnia wejść na godzinę"
+                                            ];
+                                            return `${fullNames[labelIndex]}: ${context.raw}`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            })
+            .catch(error => console.error('Błąd przy pobieraniu danych:', error));
+    });
+
+    function fetchDataFromEndpoint() {
+        return new Promise((resolve) => {
+            // Symulowane dane JSON
+            const data = {
+                "DMD Domy": [250, 300, 150, 800, 100, 50],
+                "DMD Inwestycje": [200, 100, 350, 450, 120, 80],
+                "DMD Budownictwo": [180, 240, 300, 360, 90, 60],
+                "DMD Instalacje": [100, 200, 150, 320, 80, 40],
+                "DMD EliteHome": [300, 400, 200, 500, 150, 100],
+                "DMD Admin Panel": [250, 320, 180, 430, 140, 90]
+            };
+
+            // Symulacja opóźnienia, jak przy prawdziwym zapytaniu do API
+            setTimeout(() => {
+                resolve(data);
+            }, 1000); // Symulacja opóźnienia 1 sekundy
+        });
+    }
 </script>
 {% endblock %}
 
