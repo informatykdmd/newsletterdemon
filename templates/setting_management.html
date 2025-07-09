@@ -482,24 +482,6 @@
             .catch(error => console.error('Błąd przy pobieraniu danych:', error));
     });
 
-    // function fetchDataFromEndpoint() {
-    //     return new Promise((resolve) => {
-    //         // Symulowane dane JSON
-    //         const data = {
-    //             "DMD Domy": [250, 300, 150, 800, 100, 50],
-    //             "DMD Inwestycje": [200, 100, 350, 450, 120, 80],
-    //             "DMD Budownictwo": [180, 240, 300, 360, 90, 60],
-    //             "DMD Instalacje": [100, 200, 150, 320, 80, 40],
-    //             "DMD EliteHome": [300, 400, 200, 500, 150, 100],
-    //             "DMD Admin Panel": [250, 320, 180, 430, 140, 90]
-    //         };
-
-    //         // Symulacja opóźnienia, jak przy prawdziwym zapytaniu do API
-    //         setTimeout(() => {
-    //             resolve(data);
-    //         }, 1000); // Symulacja opóźnienia 1 sekundy
-    //     });
-    // }
     function fetchDataFromEndpoint() {
         return fetch('/log-stats')
             .then(response => {
