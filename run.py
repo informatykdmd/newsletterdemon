@@ -1704,8 +1704,8 @@ def logStats():
         "DMD Admin Panel": [
             raw_adminpanel["requests_per_endpoint"].get("settings", 0),
             raw_adminpanel["requests_per_endpoint"].get("blog", 0),
-            raw_adminpanel["requests_per_endpoint"].get("estate-ads-rent", 0),
-            raw_adminpanel["requests_per_endpoint"].get("estate-ads-sell", 0),
+            raw_adminpanel["requests_per_endpoint"].get("estateAdsRent", 0),
+            raw_adminpanel["requests_per_endpoint"].get("estateAdsSell", 0),
             raw_adminpanel["requests_per_endpoint"].get("home", 0),
             raw_adminpanel["requests_per_method"].get("POST", 0)
         ],
