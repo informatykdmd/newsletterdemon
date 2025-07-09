@@ -1703,9 +1703,9 @@ def logStats():
     fake_stats = {
         "DMD Admin Panel": [
             raw_adminpanel["requests_per_endpoint"].get("settings", 0),
-            raw_adminpanel["requests_per_endpoint"].get("fetch_logs", 0),
-            raw_adminpanel["requests_per_endpoint"].get("fetch_messages", 0),
-            raw_adminpanel["requests_per_endpoint"].get("fetch_noisy_system", 0),
+            raw_adminpanel["requests_per_endpoint"].get("blog", 0),
+            raw_adminpanel["requests_per_endpoint"].get("estate-ads-rent", 0),
+            raw_adminpanel["requests_per_endpoint"].get("estate-ads-sell", 0),
             raw_adminpanel["requests_per_endpoint"].get("home", 0),
             raw_adminpanel["requests_per_method"].get("POST", 0)
         ],

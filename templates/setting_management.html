@@ -414,14 +414,7 @@
                 const brands = Object.keys(data);  // Nazwy marek są kluczami w obiekcie data
 
                 const shortLabels = ["Blog", "Kontakt", "Unikalne", "Wszystkie", "Czas", "Średnia/godz"];
-                const fullLabels = {
-                    "Blog": "Blog i komentarze",
-                    "Kontakt": "Strona kontaktu",
-                    "Unikalne": "Unikalne wejścia",
-                    "Wszystkie": "Wszystkie wejścia",
-                    "Czas": "Czas pobytu",
-                    "Średnia/godz": "Średnia wejść na godzinę"
-                };
+                const shortLabels_panel = ["Ustawienia", "Blog", "Wynajem", "Sprzedaż", "Strona główna", "POST"];
 
                 brands.forEach(brand => {
                     // Tworzenie kontenera dla każdego wykresu
@@ -444,7 +437,7 @@
                     new Chart(ctx, {
                         type: 'pie',
                         data: {
-                            labels: shortLabels,
+                            labels: (brand === "DMD Admin Panel") ? shortLabels_panel : shortLabels,
                             datasets: [{
                                 data: data[brand],
                                 backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
@@ -459,7 +452,7 @@
                                     callbacks: {
                                         label: function(context) {
                                             const labelIndex = context.dataIndex;
-                                            const fullNames = [
+                                            const fullNames_default = [
                                                 "Blog i komentarze",
                                                 "Strona kontaktu",
                                                 "Unikalne wejścia",
@@ -467,6 +460,16 @@
                                                 "Czas pobytu",
                                                 "Średnia wejść na godzinę"
                                             ];
+                                            const fullNames_panel = [
+                                                "Ustawienia systemowe",
+                                                "Posty blogowe",
+                                                "Ogłoszenia wynajmu",
+                                                "Ogłoszenia sprzedaży",
+                                                "Strona główna",
+                                                "POST API"
+                                            ];
+
+                                            const fullNames = (brand === "DMD Admin Panel") ? fullNames_panel : fullNames_default;
                                             return `${fullNames[labelIndex]}: ${context.raw}`;
                                         }
                                     }
