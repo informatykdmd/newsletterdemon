@@ -1680,7 +1680,7 @@ def logStats():
     # pomocnicza funkcja do przekształcenia danych
     def map_stats(raw):
         return [
-            raw["requests_per_endpoint"].get("home", 0),
+            raw["requests_per_endpoint"].get("index", 0),
             raw["requests_per_endpoint"].get("contact", 0),
             len(raw["requests_per_ip"]),
             raw["total_requests"],
@@ -1699,6 +1699,15 @@ def logStats():
             int(raw["total_requests"] / max(len(raw["requests_per_ip"]), 1)),  # Średnia na IP
             int(raw["total_requests"] / 24)                # Średnia na godzinę (zakładamy 24h danych)
         ]
+    def map_stats_budownictwo(raw):
+        return [
+            raw["requests_per_endpoint"].get("index", 0),
+            raw["requests_per_endpoint"].get("kontakt", 0),
+            len(raw["requests_per_ip"]),
+            raw["total_requests"],
+            int(raw["total_requests"] / max(len(raw["requests_per_ip"]), 1)),
+            int(raw["total_requests"] / 24)
+        ]
 
     fake_stats = {
         "DMD Admin Panel": [
@@ -1709,7 +1718,7 @@ def logStats():
             raw_adminpanel["requests_per_endpoint"].get("home", 0),
             raw_adminpanel["requests_per_method"].get("POST", 0)
         ],
-        "DMD Budownictwo": map_stats(raw_dmdbudownictwo),
+        "DMD Budownictwo": map_stats_budownictwo(raw_dmdbudownictwo),
         "DMD EliteHome": map_stats(raw_dmdelitehome),
         "DMD Instalacje": map_stats(raw_dmdinstalacje),
         "DMD Inwestycje": map_stats(raw_dmdinwestycje),
