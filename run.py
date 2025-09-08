@@ -3581,6 +3581,13 @@ def realization_domy_list():
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /realization-domy-list bez uprawnień do zarządzania.', log_path=logFileName)
         return redirect(url_for('index'))
     
+    categories = [
+        "Rezydencja Parkowa",
+        "Dom z Widokiem 4",
+        "Kasjopea",
+        "Opal",
+        "Rezydencja Leśna"
+    ] # do przerzucenia na bazę
 
     db = get_db()
     query = """
@@ -3603,7 +3610,8 @@ def realization_domy_list():
             posts=posts, 
             username=session['username'], 
             userperm=session['userperm'],
-            user_brands=session['brands'], 
+            user_brands=session['brands'],
+            categories=categories,
             pagination=pagination,
             )
 

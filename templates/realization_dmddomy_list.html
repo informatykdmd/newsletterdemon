@@ -345,9 +345,9 @@
                             </div>
                             <div class="offcanvas-body">
                                 <form method="POST" id="editPost_9999999" action="{{ url_for('save_post') }}" enctype="multipart/form-data" >
-                                    <!-- Tytuł artykułu -->
+                                    <!-- Tytuł  -->
                                     <div class="mb-3">
-                                    <label for="title_9999999" class="form-label">Tytuł artykułu</label>
+                                    <label for="title_9999999" class="form-label">Tytuł</label>
                                     <input 
                                             type="text" 
                                             value=""
@@ -360,7 +360,7 @@
 
                                     <!-- Wstęp -->
                                     <div class="mb-3">
-                                    <label for="introduction_9999999" class="form-label">Wstęp</label>
+                                    <label for="introduction_9999999" class="form-label">Opis</label>
                                     <textarea 
                                             class="form-control bg-dark formatuj-maly-font" 
                                             style="color:#c2c2c2; border:#6a6a6a solid 1px;"
@@ -369,15 +369,20 @@
                                             rows="4" required></textarea>
                                     </div>
 
-                                    <!-- Highlight -->
+                                    <!-- category -->
                                     <div class="mb-3">
-                                    <label for="highlight_9999999" class="form-label">Highlight</label>
-                                    <textarea 
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                            id="Highlight_9999999" 
-                                            name="Highlight_9999999" 
-                                            rows="4" required></textarea>
+                                        <select 
+                                            class="form-select dark-mode mb-2 mt-2" 
+                                            style="max-height: 30px; font-size: 12px;" 
+                                            id="to_splitted_category_9999999" 
+                                            name="category"
+                                            required>
+
+                                            <option value="">Kategoria realizacji</option>
+                                            {% for cateName in categories %}
+                                                <option value="{{ cateName }}">{{ cateName }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
 
                                     <!-- Main Foto -->
@@ -391,89 +396,12 @@
                                         </div>
                                     </div>
 
-                                    <!-- Content Foto -->
-                                    <div class="mb-3">
-                                        <label for="contentFoto_9999999" class="form-label">Content Foto (750x430)</label>
-                                        <div>
-                                            <img src="" style="max-height: 100px; max-width: 400px; border-radius: 10px; margin-bottom: 10px;" id="contentFotoPreview_9999999" />
-                                        </div>  
-                                        <div>
-                                            <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="contentFoto_9999999" name="contentFoto_9999999" accept="image/*" onchange="previewImage(this, 'contentFotoPreview_9999999', 750, 430, 3)">
-                                        </div>
-                                    </div>
-
-                                    <!-- Additional List -->
-                                    <div class="mb-3">
-                                        <label for="additionalList9999999" class="form-label">Additional List</label>
-                                        <div id="list-container9999999" class="no-border">
-                                            <!-- Tutaj będą dynamicznie dodawane elementy listy -->
-                                        </div>
-                                        <div class="formatuj-right formatuj-margin">
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="addListItem('9999999')">Dodaj pole</button>
-                                        </div>
-                                    </div>
-                                    <script>
-                                        addListItem('9999999');
-                                    </script>
-
-                                    <!-- Tags -->
-                                    <div class="mb-3">
-                                        <label for="tags9999999" class="form-label">Tags</label>
-                                        <div id="list-tag-container9999999" class="no-border">
-                                            <!-- Tutaj będą dynamicznie dodawane elementy listy -->
-                                        </div>
-                                        <div class="formatuj-right formatuj-margin">
-                                            <button 
-                                                    type="button" 
-                                                    class="btn btn-warning btn-sm" 
-                                                    onclick="addListItem(
-                                                                        '9999999', 
-                                                                        'dynamicTagsField',
-                                                                        'input',
-                                                                        'form-control bg-dark formatuj-maly-font',
-                                                                        'additionalTagList',
-                                                                        '4',
-                                                                        '#c2c2c2',
-                                                                        '#6a6a6a solid 1px',
-                                                                        true,
-                                                                        'no-border formatuj-margin form-control bg-dark formatuj-right',
-                                                                        'list-tag-container',
-                                                                        'btn btn-outline-danger formatuj-maly-font formatuj-margin',
-                                                                        'Usuń tag'
-                                                                        )">
-                                                Dodaj Tag
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <script>
-                                        addListItem(
-                                                                        '9999999', 
-                                                                        'dynamicTagsField',
-                                                                        'input',
-                                                                        'form-control bg-dark formatuj-maly-font',
-                                                                        'additionalTagList',
-                                                                        '4',
-                                                                        '#c2c2c2',
-                                                                        '#6a6a6a solid 1px',
-                                                                        true,
-                                                                        'no-border formatuj-margin form-control bg-dark formatuj-right',
-                                                                        'list-tag-container',
-                                                                        'btn btn-outline-danger formatuj-maly-font formatuj-margin',
-                                                                        'Usuń tag'
-                                                                        );
-                                    </script>
-
-                                    <!-- Category -->
-                                    <div class="mb-3">
-                                        <label for="category_9999999" class="form-label">Kategoria</label>
-                                        <input type="text" value="" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="category_9999999" name="category_9999999" required>
-                                    </div>
                                     <!-- Ukryte pola formularza -->
                                     <input type="hidden" name="tagsFieldData_9999999" id="tagsFieldData_9999999" />
                                     <input type="hidden" name="dynamicFieldData_9999999" id="dynamicFieldData_9999999" />
                                     <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}"/>
                                     <!-- Przycisk Zapisz artykuł -->
-                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitForm('9999999', false)">Dodaj artykuł</button>
+                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitForm('9999999', false)">Dodaj realizację</button>
                                 </form>
                             </div>
                         </div>
@@ -676,7 +604,6 @@
                         </div>
                        
                         <!-- collapse start -->
-
                         <div class="sub-panel rogi collapse" id="collapse_id_{{post_id}}">
                             <div class="row">
                                 <div class="col-lg-4 col-sm-12">
