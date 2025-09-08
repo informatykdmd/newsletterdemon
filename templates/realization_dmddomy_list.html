@@ -678,6 +678,36 @@
                         <!-- collapse start -->
 
                         <div class="sub-panel rogi collapse" id="collapse_id_{{post_id}}">
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-12">
+                                    <img src="{{post_data.zdjecie}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <h5>{{post_data.tytul_ogloszenia}}</h5>
+                                    <p>{{post_data.opis}}</p>
+                                    <div class="row">
+                                        <!-- kateoria -->
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-folder"></i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.kateoria }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- kateoria -->
+                                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-helmet-safety"></i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.r_start }} - {{ post_data.r_finish }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12"></div>
+                            </div>
                             {{post_data}}
                         </div>
             
