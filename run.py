@@ -406,7 +406,8 @@ def generator_userDataDB():
                 'newsletter': data[23],
                 'estate': data[31], # kolejne uprawnienie wzz. dmd inwestycje
                 'career': data[32], # kolejne uprawnienie wzz. dmd budownictwo kariera
-                'fbhidden': data[33] # kolejne uprawnienie wzz. dmd budownictwo kariera
+                'fbhidden': data[33], # kolejne uprawnienie wzz. dmd budownictwo kariera
+                'realizations': data[34] # kolejne uprawnienie wzz. dmd budownictwo kariera
                 },
             'brands': {
                 'domy': (data[24]),
@@ -3575,9 +3576,9 @@ def realization_domy_list():
         msq.handle_error(f'UWAGA! Nieautoryzowana próba dostępu do endpointa: /realization-domy-list', log_path=logFileName)
         return redirect(url_for('index'))
     
-    if session['userperm']['blog'] == 0:
+    if session['userperm']['realizations'] == 0:
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
-        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /blog bez uprawnień do zarządzania.', log_path=logFileName)
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /realization-domy-list bez uprawnień do zarządzania.', log_path=logFileName)
         return redirect(url_for('index'))
     
     # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
