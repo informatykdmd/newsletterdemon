@@ -74,9 +74,9 @@
             type="button" id="dropdownMenuButton2" 
             style="max-height: 29px; font-size: 20px;"
             data-bs-toggle="dropdown" aria-expanded="false">
-            {% if user_brands['inwestycje'] == 0 %}
-                {% if user_brands['domy'] == 1 %}
-                    <script>window.location.href = "/team-domy";</script>
+            {% if user_brands['domy'] == 0 %}
+                {% if user_brands['inwestycje'] == 1 %}
+                    <script>window.location.href = "/team-inwestycje";</script>
                 {% else %}
                     {% if user_brands['budownictwo'] == 1 %}
                         <script>window.location.href = "/team-budownictwo";</script>
@@ -97,7 +97,7 @@
                     {% endif %}
                 {% endif %}
             {% else %}
-                <i class="bi bi-house-door" style="color: #00ff08; position: relative; top: -10px;"></i>
+            <i class="bi bi-house-door" style="color: #00ff08; position: relative; top: -10px;"></i>
             {% endif %}
         </button>
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
@@ -146,9 +146,9 @@
         type="button" id="dropdownMenuButton2" 
         style="max-height: 40px; font-size: 15px; font-weight: 100;"
         data-bs-toggle="dropdown" aria-expanded="false">
-            {% if user_brands['inwestycje'] == 0 %}
-                {% if user_brands['domy'] == 1 %}
-                    <script>window.location.href = "/team-domy";</script>
+            {% if user_brands['domy'] == 0 %}
+                {% if user_brands['inwestycje'] == 1 %}
+                    <script>window.location.href = "/team-inwestycje";</script>
                 {% else %}
                     {% if user_brands['budownictwo'] == 1 %}
                         <script>window.location.href = "/team-budownictwo";</script>
@@ -219,9 +219,9 @@
             data-bs-toggle="dropdown" 
             style="max-height: 45px; font-size: 20px; font-weight: 100;"
             aria-expanded="false">
-            {% if user_brands['inwestycje'] == 0 %}
-                {% if user_brands['domy'] == 1 %}
-                    <script>window.location.href = "/team-domy";</script>
+            {% if user_brands['domy'] == 0 %}
+                {% if user_brands['inwestycje'] == 1 %}
+                    <script>window.location.href = "/team-inwestycje";</script>
                 {% else %}
                     {% if user_brands['budownictwo'] == 1 %}
                         <script>window.location.href = "/team-budownictwo";</script>
