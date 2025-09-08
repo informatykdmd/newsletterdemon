@@ -325,7 +325,7 @@
                                     Kategoria
                                 </div>
                                 <div class="d-none d-xl-block" style="max-width: 200px;">
-                                    Autor
+                                    Realizacja
                                 </div>
                                 <div class="d-none d-lg-block" style="max-width: 150px;">
                                     Data
@@ -478,7 +478,7 @@
                             </div>
                         </div>
                         {% for post_data in posts %}
-                            {% set post_id  = post_data['id'] %}
+                            {% set post_id  = post_data.id %}
                         <!-- linia contentu tabeli ciemna-->
                         <div>
                             <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
@@ -487,30 +487,30 @@
                                 </div>
                                 <div class="col-xl-10 col-lg-10 col-sm-11 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {{post_data['title']}}
+                                        {{post_data.tytul}}
                                     </a>
                                 </div>
                                 <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {{post_data['category']}}
+                                        {{post_data.kategoria}}
                                     </a>
                                 </div>
                                 <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {{post_data['author']}}
+                                        {{post_data.r_start}} - {{post_data.r_finish}}
                                     </a>
                                 </div>
                                 <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {{post_data['data']}}
+                                        {{post_data.data_aktualizacji}}
                                     </a>
                                 </div>
                                 <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 80px;">
                                     
                                     <form method="POST" id="removePost_{{post_id}}" action="{{ url_for('remove_post') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć post?');">
-                                        {% if userperm['commnets'] == 1 and post_data['comments']|length > 0 %}
+
                                             <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
-                                        {% endif %}
+
                                             <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling_{{post_id}}" aria-controls="offcanvasScrolling_{{post_id}}"><i class="bi bi-pencil" style="color: #7eb5cc !important;"></i></a>
                                         <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/>
                                         <input type="hidden" name="PostID" id="PostID_{{post_id}}" value="{{post_id}}"/>
@@ -676,37 +676,11 @@
                         </div>
                        
                         <!-- collapse start -->
-                        {% if userperm['commnets'] == 1 and post_data['comments']|length > 0 %}
+
                         <div class="sub-panel rogi collapse" id="collapse_id_{{post_id}}">
-                            {% for comment in post_data['comments'].values() %}
-                            <div class="formatuj-maly-wiersz formatuj-padding-lg rogi podswietlaj-plus-rogi formatuj-margin-left">
-                                <div class="row" style="width: 100%;">
-                                    <div class="col-xl-7 col-lg-7 col-sm-8 formatuj-maly-font">
-                                        {{comment['message']}}
-                                    </div>
-                                    <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 100px;">
-                                        {{comment['user']}}
-                                    </div>
-                                    <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;">
-                                        {{comment['e-mail']}}
-                                    </div>
-                                    <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 150px;">
-                                        {{comment['data-time']}}
-                                    </div>
-                                    <div class="col d-flex justify-content-end">
-                                        <form method="POST" id="removeComment_{{post_id}}" action="{{ url_for('remove_comment') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć komentarz?');">
-                                            <input type="hidden" name="page" id="CommName_{{post_id}}" value="blog"/>
-                                            <input type="hidden" name="comment_id" id="CommName_{{post_id}}" value="{{comment['id']}}"/>
-                                            <button type="submit" class="custom-icon-button"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></button>
-                                        </form>
-                                        <!-- <a href="#"><i class="bi bi-person-video2" style="color: rgb(193, 156, 156) !important;"></i></a> -->
-                                        <!-- <a href="#"><i class="bi bi-trash" style="color: rgb(205, 93, 93) !important;"></i></a> -->
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
+                            {{post_data}}
                         </div>
-                        {% endif %}
+            
                         <!-- collapse end -->
                         {% endfor %}
                         <!-- Paginacja -->

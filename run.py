@@ -3581,8 +3581,14 @@ def realization_domy_list():
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /realization-domy-list bez uprawnień do zarządzania.', log_path=logFileName)
         return redirect(url_for('index'))
     
-    # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
-    all_posts = generator_daneDBList()
+
+    db = get_db()
+    query = """
+        SELECT *
+        FROM realizacje_domy
+        ORDER BY r_finish DESC;
+    """
+    all_posts = db.getFrom(query, as_dict=True)
 
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
