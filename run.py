@@ -2284,6 +2284,7 @@ def update_permission():
     if perm_id == 16: perm_name = 'Zarządzanie Ogłoszeniami'
     if perm_id == 17: perm_name = 'Zarządzanie Karierą'
     if perm_id == 18: perm_name = 'Zarządzanie Anonimowymi Kampaniami'
+    if perm_id == 19: perm_name = 'Zarządzanie realizacjami'
 
     if perm_id == 10: perm_name = 'Przynależność do DMD Domy'
     if perm_id == 11: perm_name = 'Przynależność do DMD Budownictwo'
@@ -2292,7 +2293,7 @@ def update_permission():
     if perm_id == 14: perm_name = 'Przynależność do DMD Instalacje'
     if perm_id == 15: perm_name = 'Przynależność do DMD Development'
 
-    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16, 17, 18]:
+    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16, 17, 18, 19]:
         if session['userperm']['permissions'] == 0:
             msq.handle_error(f'UWAGA! Próba zarządzania uprawnieniami bez uprawnień przez {session["username"]}!', log_path=logFileName)
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
@@ -2404,6 +2405,16 @@ def update_permission():
         if perm_id == 18: 
             'Zarządzanie Anonimowymi Kampaniami'
             zapytanie_sql = '''UPDATE admins SET PERM_FBHIDDEN = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        
+        if perm_id == 19: 
+            'Zarządzanie Realizacjami'
+            zapytanie_sql = '''UPDATE admins SET PERM_REALIZED = %s WHERE ID = %s;'''
             if permission: onOff = 1
             else: onOff = 0
             dane = (onOff, user_id)
@@ -3555,6 +3566,39 @@ def team_instalacje():
             members=preparoator_team_dict['collections'], 
             photos_dict=preparoator_team_dict['employee_photo_dict']
             )
+
+@app.route('/realization-domy-list')
+def realization_domy_list():
+    """Strona z zarządzaniem blogiem."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Nieautoryzowana próba dostępu do endpointa: /realization-domy-list', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['blog'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /blog bez uprawnień do zarządzania.', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
+    all_posts = generator_daneDBList()
+
+    # Ustawienia paginacji
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(all_posts)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
+    posts = all_posts[offset: offset + per_page]
+
+    return render_template(
+            "realization_dmddomy_list.html", 
+            posts=posts, 
+            username=session['username'], 
+            userperm=session['userperm'], 
+            pagination=pagination,
+            )
+
 
 @app.route('/ustawieni_pracownicy', methods=['POST'])
 def ustawieni_pracownicy():

@@ -858,6 +858,28 @@
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
+                                                                <!-- kolejne uprawnienia realizations id 19-->
+                                                                <div class="form-check form-switch">
+                                                                    <form class="formatuj-padding-lg" action="">
+                                                                        {% if userperm['permissions'] == 0 %}
+                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_19_{{user_id}}" disabled/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_19_{{user_id}}">Zarządzanie Realizacjami</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_19_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_19_{{user_id}}">Zarządzanie Realizacjami</label>
+                                                                            {% endif %}
+                                                                        {% else %}
+                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_19_{{user_id}}_0" />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_19_{{user_id}}_0">Zarządzanie Realizacjami</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_19_{{user_id}}_1" checked />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_19_{{user_id}}_1">Zarządzanie Realizacjami</label>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    </form>
+                                                                </div>
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
@@ -1570,6 +1592,28 @@
                                                                             {% else %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}_1" checked />
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_18_{{user_id}}_1">Zarządzanie Anonimowymi Kampaniami</label>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    </form>
+                                                                </div>
+                                                                <!-- kolejne uprawnienia fbhidden id 19-->
+                                                                <div class="form-check form-switch">
+                                                                    <form class="formatuj-padding-lg" action="">
+                                                                        {% if userperm['permissions'] == 0 %}
+                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_19_{{user_id}}" disabled/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_19_{{user_id}}">Zarządzanie Realizacjami</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_19_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_19_{{user_id}}">Zarządzanie Realizacjami</label>
+                                                                            {% endif %}
+                                                                        {% else %}
+                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_19_{{user_id}}_0" />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_19_{{user_id}}_0">Zarządzanie Realizacjami</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_19_{{user_id}}_1" checked />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_19_{{user_id}}_1">Zarządzanie Realizacjami</label>
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>
@@ -2330,6 +2374,28 @@
                                                                             {% else %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}_1" checked />
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_18_{{user_id}}_1">Zarządzanie Anonimowymi Kampaniami</label>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    </form>
+                                                                </div>
+                                                                <!-- kolejne uprawnienia realizations id 19-->
+                                                                <div class="form-check form-switch">
+                                                                    <form class="formatuj-padding-lg" action="">
+                                                                        {% if userperm['permissions'] == 0 %}
+                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}" disabled/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}">Zarządzanie Realizacjami</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}">Zarządzanie Realizacjami</label>
+                                                                            {% endif %}
+                                                                        {% else %}
+                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}_0" />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}_0">Zarządzanie Realizacjami</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}_1" checked />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}_1">Zarządzanie Realizacjami</label>
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>

@@ -257,6 +257,9 @@
                                 {% if userperm['fbhidden'] == 1 %}
                                     <li><a class="dropdown-item" href="/hidden-campaigns" style="color: #c0c6ce; max-height: 25px; font-size: 12px; font-weight: 100;">Zarządzaj Kampaniami</a></li>
                                 {% endif %}
+                                {% if userperm['realizations'] == 1 %}
+                                    <li><a class="dropdown-item" href="/realization-domy-list" style="color: #c0c6ce; max-height: 25px; font-size: 12px; font-weight: 100;">Zarządzaj Realizacjami</a></li>
+                                {% endif %}
                                 {% if userperm['settings'] == 1 %} 
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/setting" style="color: #c0c6ce; max-height: 25px; font-size: 12px; font-weight: 100;">Ustawienia</a></li>
@@ -303,6 +306,9 @@
                                 {% if userperm['fbhidden'] == 1 %}
                                     <li><a class="dropdown-item" href="/hidden-campaigns" style="color: #c0c6ce; max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Kampaniami</a></li>
                                 {% endif %}
+                                {% if userperm['realizations'] == 1 %}
+                                    <li><a class="dropdown-item" href="/realization-domy-list" style="color: #c0c6ce; max-height: 30px; font-size: 15px; font-weight: 100;">Zarządzaj Realizacjami</a></li>
+                                {% endif %}
                                 {% if userperm['settings'] == 1 %} 
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/setting" style="color: #c0c6ce; max-height: 30px; font-size: 15px; font-weight: 100;">Ustawienia</a></li>
@@ -348,6 +354,9 @@
                                 {% endif %}
                                 {% if userperm['fbhidden'] == 1 %}
                                     <li><a class="dropdown-item" href="/hidden-campaigns" style="color: #c0c6ce; max-height: 35px; font-size: 20px; font-weight: 100;">Zarządzaj Kampaniami</a></li>
+                                {% endif %}
+                                {% if userperm['realizations'] == 1 %}
+                                    <li><a class="dropdown-item" href="/realization-domy-list" style="color: #c0c6ce; max-height: 35px; font-size: 20px; font-weight: 100;">Zarządzaj Realizacjami</a></li>
                                 {% endif %}
                                 {% if userperm['settings'] == 1 %} 
                                     <li><hr class="dropdown-divider"></li>
