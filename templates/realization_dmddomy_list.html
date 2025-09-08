@@ -360,17 +360,19 @@
 
                                     <!-- Wstęp -->
                                     <div class="mb-3">
-                                    <label for="introduction_9999999" class="form-label">Opis</label>
-                                    <textarea 
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                            id="introduction_9999999" 
-                                            name="introduction_9999999" 
-                                            rows="4" required></textarea>
+                                        <label for="introduction_9999999" class="form-label">Opis</label>
+                                        <textarea 
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="introduction_9999999" 
+                                                name="introduction_9999999" 
+                                                rows="4" required></textarea>
                                     </div>
 
                                     <!-- category -->
+
                                     <div class="mb-3">
+                                        <label for="introduction_9999999" class="form-label">Kategoria realizacji</label>
                                         <select 
                                             class="form-select dark-mode mb-2 mt-2" 
                                             style="max-height: 30px; font-size: 12px;" 
@@ -378,11 +380,39 @@
                                             name="category"
                                             required>
 
-                                            <option value="">Kategoria realizacji</option>
+                                            <option value="">---</option>
                                             {% for cateName in categories %}
                                                 <option value="{{ cateName }}">{{ cateName }}</option>
                                             {% endfor %}
                                         </select>
+                                    </div>
+
+                                    <label class="form-label">Lata realizacji</label>
+                                    <div class="row row-cols-3 mb-3">
+                                        <div class="col-sm-4">
+                                            <input 
+                                                type="number" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="rstart_9999999" 
+                                                name="rstart_9999999" 
+                                                placeholder="Rok rozpoczęcia" 
+                                                aria-label="rokstart" />
+                                        
+                                        </div>
+                                        
+                                        <div class="col-sm-4">
+                                            <input 
+                                                type="number" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="rfinish_9999999" 
+                                                name="rfinish_9999999" 
+                                                placeholder="Rok zakończenia" 
+                                                aria-label="rokfinish" />
+                                        </div>
                                     </div>
 
                                     <!-- Main Foto -->
