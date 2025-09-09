@@ -288,7 +288,7 @@
             aria-current="page" 
             style="max-height: 40px; font-size: 15px; font-weight: 100;"
             href="#">
-            Realizacje
+            Kategorie
         </a>
     </div>
 </div>
@@ -306,7 +306,7 @@
             aria-current="page" 
             style="max-height: 45px; font-size: 20px; font-weight: 100;"
             href="#">
-            Zarządzanie Realizacjami
+            Kategorie Realizacji
         </a>
     </div>
 </div>
@@ -319,13 +319,10 @@
                                     #
                                 </div>
                                 <div  class="col-xl-10 col-lg-10 col-sm-11">
-                                    Tytuł
+                                    Nazwa
                                 </div>
                                 <div  class="d-none d-xl-block" style="max-width: 250px;">
-                                    Kategoria
-                                </div>
-                                <div class="d-none d-xl-block" style="max-width: 200px;">
-                                    Realizacja
+                                    Rodzaj
                                 </div>
                                 <div class="d-none d-lg-block" style="max-width: 150px;">
                                     Data
@@ -344,18 +341,18 @@
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_realizacje_domy') }}" enctype="multipart/form-data" >
-                                    <!-- Tytuł  -->
+                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_kategorie_domy') }}" enctype="multipart/form-data">
+                                    <!-- Nazwa  -->
                                     <div class="mb-3">
-                                    <label for="title_9999999" class="form-label">Tytuł</label>
-                                    <input 
-                                            type="text" 
-                                            value=""
-                                            class="form-control bg-dark formatuj-maly-font" 
-                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                            id="title_9999999" 
-                                            name="title_9999999" 
-                                            required>
+                                        <label for="nazwa_9999999" class="form-label">Nazwa</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="nazwa_9999999" 
+                                                name="nazwa_9999999" 
+                                                required>
                                     </div>
 
                                     <!-- Opis -->
@@ -369,60 +366,28 @@
                                                 rows="4" required></textarea>
                                     </div>
 
-                                    <!-- category -->
-
+                                    <!-- URL ENDPOINTA  -->
                                     <div class="mb-3">
-                                        <label for="category_9999999" class="form-label">Kategoria realizacji</label>
-                                        <select 
-                                            class="form-select dark-mode mb-2 mt-2" 
-                                            style="max-height: 30px; font-size: 12px;" 
-                                            id="category_9999999" 
-                                            name="category_9999999"
-                                            required>
-
-                                            <option value="">---</option>
-                                            {% for cateName in categories %}
-                                                <option value="{{ cateName }}">{{ cateName }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-
-                                    <label class="form-label">Lata realizacji</label>
-                                    <div class="row row-cols-3 mb-3">
-                                        <div class="col-sm-4">
-                                            <input 
-                                                type="number" 
+                                        <label for="url_9999999" class="form-label">Endpoint URL</label>
+                                        <input 
+                                                type="text" 
                                                 value=""
                                                 class="form-control bg-dark formatuj-maly-font" 
                                                 style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                id="rstart_9999999" 
-                                                name="rstart_9999999" 
-                                                placeholder="Rok rozpoczęcia" 
-                                                aria-label="rokstart" />
-                                        
-                                        </div>
-                                        
-                                        <div class="col-sm-4">
-                                            <input 
-                                                type="number" 
-                                                value=""
-                                                class="form-control bg-dark formatuj-maly-font" 
-                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                id="rfinish_9999999" 
-                                                name="rfinish_9999999" 
-                                                placeholder="Rok zakończenia" 
-                                                aria-label="rokfinish" />
-                                        </div>
+                                                id="url_9999999" 
+                                                name="url_9999999" 
+                                                placeholder="/przykładowy/adres-endpointa"
+                                                required>
                                     </div>
 
                                     <!-- Main Foto -->
                                     <div class="mb-3">
-                                        <label for="mainFoto_9999999" class="form-label">Zdjęcie realizacji (1920 x 1080)</label>
+                                        <label for="mainFoto_9999999" class="form-label">Zdjęcie dla kategorii (750 x 430)</label>
                                         <div>
                                             <img src="" style="max-height: 100px; max-width: 400px; border-radius: 10px; margin-bottom: 10px;" id="mainFotoPreview_9999999" />
                                         </div>
                                         <div>
-                                            <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="mainFoto_9999999" name="mainFoto_9999999" accept="image/*" onchange="previewImage(this, 'mainFotoPreview_9999999', 1920, 1080, 100)">
+                                            <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="mainFoto_9999999" name="mainFoto_9999999" accept="image/*" onchange="previewImage(this, 'mainFotoPreview_9999999', 750, 430, 5)">
                                         </div>
                                     </div>
 
@@ -430,13 +395,14 @@
                                     <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}"/>
                                     <input type="hidden" name="formid" id="formid_9999999" value="9999999"/>
                                     <!-- Przycisk Zapisz artykuł -->
-                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormRealizacjeDomy('9999999', false)">Dodaj realizację</button>
+                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormKategoriejeDomy('{{post_id}}', false)">Dodaj kategorię</button>
                                 </form>
                             </div>
                         </div>
                         {% for post_data in posts %}
                             {% set post_id  = post_data.id %}
                         <!-- linia contentu tabeli ciemna-->
+                        
                         <div>
                             <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
                                 <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -444,17 +410,12 @@
                                 </div>
                                 <div class="col-xl-10 col-lg-10 col-sm-11 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {{post_data.tytul_ogloszenia}}
+                                        {{post_data.nazwa}}
                                     </a>
                                 </div>
                                 <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 250px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                     <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {{post_data.kategoria}}
-                                    </a>
-                                </div>
-                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {{post_data.r_start}} - {{post_data.r_finish}}
+                                        {{post_data.rodzaj}}
                                     </a>
                                 </div>
                                 <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -463,12 +424,9 @@
                                     </a>
                                 </div>
                                 <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 80px;">
-                                    
-                                    <form method="POST" id="removeRealizacje_{{post_id}}" action="{{ url_for('remove_realizacje_domy') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć realizację?');">
-
-                                            <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
-
-                                            <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling_{{post_id}}" aria-controls="offcanvasScrolling_{{post_id}}"><i class="bi bi-pencil" style="color: #7eb5cc !important;"></i></a>
+                                    <form method="POST" id="removeRealizacje_{{post_id}}" action="{{ url_for('remove_kategorie_domy') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć tę kategorię?');">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
+                                        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling_{{post_id}}" aria-controls="offcanvasScrolling_{{post_id}}"><i class="bi bi-pencil" style="color: #7eb5cc !important;"></i></a>
                                         <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/>
                                         <input type="hidden" name="PostID" id="PostID_{{post_id}}" value="{{post_id}}"/>
                                         <input type="hidden" name="photoLink" id="photoLink_{{post_id}}" value="{{post_data.zdjecie}}"/>
@@ -481,24 +439,25 @@
                         <!-- offcanvanse left -->
                         <div class="offcanvas offcanvas-start bg-dark oc-width" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling_{{post_id}}" aria-labelledby="offcanvasScrollingLabel">
                             <div class="offcanvas-header">
-                              <h4 class="offcanvas-title" id="offcanvasScrollingLabel">Edycja Realizacji id: {{post_id}}</h4>
+                              <h4 class="offcanvas-title" id="offcanvasScrollingLabel">Edycja kategorii id: {{post_id}}</h4>
                               <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
+                            
                             <div class="offcanvas-body formatuj-maly-font">
                                 <div class="tylko-klej">
                                     <div style="color:#6a6a6a;">
-                                        <form method="POST" id="editPost_{{post_id}}" action="{{ url_for('save_realizacje_domy') }}" enctype="multipart/form-data">
-                                            <!-- Tytuł  -->
+                                        <form method="POST" id="editPost_{{post_id}}" action="{{ url_for('save_kategorie_domy') }}" enctype="multipart/form-data">
+                                            <!-- Nazwa  -->
                                             <div class="mb-3">
-                                            <label for="title_{{post_id}}" class="form-label">Tytuł</label>
+                                            <label for="nazwa_{{post_id}}" class="form-label">Nazwa</label>
                                             <input 
                                                     type="text" 
-                                                    value="{{post_data.tytul_ogloszenia}}"
+                                                    value="{{post_data.nazwa}}"
                                                     class="form-control bg-dark formatuj-maly-font" 
                                                     style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                    id="title_{{post_id}}" 
-                                                    name="title_{{post_id}}" 
-                                                    required>
+                                                    id="nazwa_{{post_id}}" 
+                                                    name="nazwa_{{post_id}}" 
+                                                    required disabled>
                                             </div>
     
                                             <!-- Opis -->
@@ -511,64 +470,29 @@
                                                         name="opis_{{post_id}}" 
                                                         rows="4" required>{{post_data.opis}}</textarea>
                                             </div>
-    
-                                            <!-- category -->
 
+                                            <!-- URL ENDPOINTA  -->
                                             <div class="mb-3">
-                                                <label for="category_{{post_id}}" class="form-label">Kategoria realizacji</label>
-                                                <select 
-                                                    class="form-select dark-mode mb-2 mt-2" 
-                                                    style="max-height: 30px; font-size: 12px;" 
-                                                    id="category_{{post_id}}" 
-                                                    name="category_{{post_id}}"
+                                            <label for="url_{{post_id}}" class="form-label">Endpoint URL</label>
+                                            <input 
+                                                    type="text" 
+                                                    value="{{post_data.ep_url}}"
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="url_{{post_id}}" 
+                                                    name="url_{{post_id}}" 
+                                                    placeholder="/przykładowy/adres-endpointa"
                                                     required>
-                                                    <option value="">---</option>
-                                                    {% for cateName in categories %}
-                                                        <option value="{{ cateName }}" 
-                                                                {% if cateName == post_data.kategoria %}selected{% endif %}>
-                                                            {{ cateName }}
-                                                        </option>
-                                                    {% endfor %}
-                                                </select>
-
                                             </div>
-
-                                            <label class="form-label">Lata realizacji</label>
-                                            <div class="row row-cols-3 mb-3">
-                                                <div class="col-sm-4">
-                                                    <input 
-                                                        type="number" 
-                                                        value="{{post_data.r_start}}"
-                                                        class="form-control bg-dark formatuj-maly-font" 
-                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                        id="rstart_{{post_id}}" 
-                                                        name="rstart_{{post_id}}" 
-                                                        placeholder="Rok rozpoczęcia" 
-                                                        aria-label="rokstart" />
-                                                
-                                                </div>
-                                                
-                                                <div class="col-sm-4">
-                                                    <input 
-                                                        type="number" 
-                                                        value="{{post_data.r_finish}}"
-                                                        class="form-control bg-dark formatuj-maly-font" 
-                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
-                                                        id="rfinish_{{post_id}}" 
-                                                        name="rfinish_{{post_id}}" 
-                                                        placeholder="Rok zakończenia" 
-                                                        aria-label="rokfinish" />
-                                                </div>
-                                            </div>
-
+    
                                             <!-- Main Foto -->
                                             <div class="mb-3">
-                                                <label for="mainFoto_{{post_id}}" class="form-label">Zdjęcie realizacji (1920 x 1080)</label>
+                                                <label for="mainFoto_{{post_id}}" class="form-label">Zdjęcie dla kategorii (750 x 430)</label>
                                                 <div>
                                                     <img src="{{post_data.zdjecie}}" style="max-height: 100px; max-width: 400px; border-radius: 10px; margin-bottom: 10px;" id="mainFotoPreview_{{post_id}}" />
                                                 </div>
                                                 <div>
-                                                    <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="mainFoto_{{post_id}}" name="mainFoto_{{post_id}}" accept="image/*" onchange="previewImage(this, 'mainFotoPreview_{{post_id}}', 1920, 1080, 100)">
+                                                    <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="mainFoto_{{post_id}}" name="mainFoto_{{post_id}}" accept="image/*" onchange="previewImage(this, 'mainFotoPreview_{{post_id}}', 750, 430, 5)">
                                                 </div>
                                             </div>
 
@@ -576,7 +500,7 @@
                                             <input type="hidden" name="UserName_{{post_id}}" id="UserName_{{post_id}}" value="{{username}}"/>
                                             <input type="hidden" name="formid" id="formid_{{post_id}}" value="{{post_id}}"/>
                                             <!-- Przycisk Zapisz artykuł -->
-                                            <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormRealizacjeDomy('{{post_id}}', true)">Zapisz realizację</button>
+                                            <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormKategoriejeDomy('{{post_id}}', true)">Zapisz kategorię</button>
                                         </form>
                                     </div>
                                 </div>
@@ -590,24 +514,24 @@
                                     <img src="{{post_data.zdjecie}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
                                 </div>
                                 <div class="col-lg-7 col-sm-12">
-                                    <h5>{{post_data.tytul_ogloszenia}}</h5>
+                                    <h5>{{post_data.nazwa}}</h5>
                                     <p>{{post_data.opis}}</p>
                                     <div class="row">
-                                        <!-- kateoria -->
-                                        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
+                                        <!-- endpoint -->
+                                        <div class="col-12">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="ms-3 formatuj-maly-font">
                                                     <i class="bi bi-folder"></i>
-                                                    <span class="text-secondary fw-lighter">{{ post_data.kategoria }}</span>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.ep_url }}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- rok -->
-                                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                        <!-- rodzaj kategorii -->
+                                        <div class="col-12">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-helmet-safety"></i>
-                                                    <span class="text-secondary fw-lighter">{{ post_data.r_start }} - {{ post_data.r_finish }}</span>
+                                                    <i class="bi bi-folder"></i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.rodzaj }}</span>
                                                 </div>
                                             </div>
                                         </div>

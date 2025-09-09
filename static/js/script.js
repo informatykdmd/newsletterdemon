@@ -216,6 +216,32 @@ function prepareAndSubmitFormRealizacjeDomy(postId, oldFotos=true) {
     form.submit();
 }
 
+
+function prepareAndSubmitFormKategoriejeDomy(postId, oldFotos=true) {
+    // Sprawdź, czy wymagane pola są wypełnione
+    var nazwa = document.getElementById('nazwa_' + postId).value;
+    var opis = document.getElementById('opis_' + postId).value;
+    var url_ep = document.getElementById('url_' + postId).value;
+    var rodzaj = document.getElementById('rodzaj_' + postId).value;
+    var mainFoto = document.getElementById('mainFoto_' + postId).value;
+
+    if (!oldFotos) {
+        if (!nazwa || !opis || !url_ep || !rodzaj || !mainFoto) {
+            alert('Wypełnij wszystkie wymagane pola przed zapisaniem kategorii.');
+            return;  // Zatrzymaj przesyłanie formularza
+        };
+    } else {
+        if (!nazwa || !opis || !url_ep || !rodzaj) {
+            alert('Wypełnij wszystkie wymagane pola przed zapisaniem kategorii.');
+            return;  // Zatrzymaj przesyłanie formularza
+        };
+    }
+
+    // Znajdź formularz i wyślij go
+    var form = document.getElementById('editPost_'+postId);
+    form.submit();
+}
+
 function prepareAndSubmitCareerForm(careerId) {
     let formIsValid = true;
 
