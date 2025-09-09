@@ -3799,10 +3799,11 @@ def remove_realizacje_domy():
         checkExt = {'jpg', 'jpeg', 'png'}
         last_part = os.path.basename(raw_link.split('?', 1)[0].split('#', 1)[0])
         ext = last_part.rsplit('.', 1)[-1].lower() if '.' in last_part else ''
+        print(last_part, ext)
         return last_part if ext in checkExt else None
 
     filename = prepareFileName(photo_link)
-    print(filename)
+    print(photo_link, filename)
     if not filename:
         msq.handle_error('UWAGA! Niewłaściwa nazwa fotografii!', log_path=logFileName)
         flash('Błąd usuwania fotografii z serwera (nieprawidłowa nazwa).', 'danger')
