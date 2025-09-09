@@ -186,6 +186,36 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     form.submit();
 }
 
+function prepareAndSubmitFormRealizacjeDomy(postId, oldFotos=true) {
+    // Sprawdź, czy wymagane pola są wypełnione
+    var title = document.getElementById('title_' + postId).value;
+    var opis = document.getElementById('opis_' + postId).value;
+
+    var category = document.getElementById('category_' + postId).value;
+    var mainFoto = document.getElementById('mainFoto_' + postId).value;
+  
+
+    // console.log("tags Field Data: " + tagsFieldData, "Dynamic field data: " + dynamicFieldData);
+
+    if (!oldFotos) {
+        if (!title || !opis || !category || !mainFoto) {
+            alert('Wypełnij wszystkie wymagane pola przed zapisaniem artykułu.');
+            return;  // Zatrzymaj przesyłanie formularza
+        };
+    } else {
+        if (!title || !opis || !category) {
+            alert('Wypełnij wszystkie wymagane pola przed zapisaniem artykułu.');
+            return;  // Zatrzymaj przesyłanie formularza
+        };
+    }
+
+    // Pobierz dane za pomocą funkcji joinListFields i ustaw wartości ukrytych pól formularza
+
+    // Znajdź formularz i wyślij go
+    var form = document.getElementById('editPost_'+postId);
+    form.submit();
+}
+
 function prepareAndSubmitCareerForm(careerId) {
     let formIsValid = true;
 
