@@ -3670,9 +3670,11 @@ def save_realizacje_domy():
         flash('Rok zakończenia nie może być wcześniejszy niż rozpoczęcia.', 'danger')
         return redirect(url_for('realization_domy_list'))
 
-    # --- 4) Ścieżki i upload ---
+
+        # --- 4) Ścieżki i upload ---
     settings = generator_settingsDB()  # UJEDNOLICONE użycie
-    base_root   = '/var/www/html/appdmddomy/public'
+    get_base_cfg  = settings.get('real-location-on-server', '')
+    base_root   = get_base_cfg.rstrip('/') # np. '/var/www/html/appdmddomy/public/'
     pics_rel    = (settings.get('blog-pic-path') or '').lstrip('/')  # np. 'images/realizacje/'
     upload_dir  = os.path.join(base_root, pics_rel)
     url_base    = settings.get('main-domain', '')                     # np. 'https://dmddomy.pl/'
@@ -3808,10 +3810,13 @@ def remove_realizacje_domy():
         return redirect(url_for('realization_domy_list'))
 
     # ścieżka do pliku
-    pics_dir_cfg = generator_settingsDB().get('blog-pic-path', '')  # np. 'images/realizacje/'
+    settingsDB = generator_settingsDB()
+    pics_dir_cfg = settingsDB.get('blog-pic-path', '')  # np. 'images/realizacje/'
+    get_base_cfg  = settingsDB.get('real-location-on-server', '')
     # Upewnij się, że to względna ścieżka
     pics_dir_rel = pics_dir_cfg.lstrip('/')
-    base_root = '/var/www/html/appdmddomy/public'
+    base_got = get_base_cfg.rstrip('/')
+    base_root = base_got # np. '/var/www/html/appdmddomy/public'
     file_path = os.path.join(base_root, pics_dir_rel, filename)
 
     db = get_db()
