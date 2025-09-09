@@ -3709,7 +3709,6 @@ def save_realizacje_domy():
         if not MAIN_FOTO_URL:
             flash('Dodaj zdjęcie główne.', 'danger')
             return redirect(url_for('realization_domy_list'))
-
         
         insert_sql = '''
             INSERT INTO realizacje_domy (
@@ -3736,6 +3735,14 @@ def save_realizacje_domy():
         # UPDATE
         # spróbuj pobrać ewentualny nowy plik
         fname, MAIN_FOTO_URL = handle_upload(f'mainFoto_{set_form_id}')
+
+        # Pobierz stare URL zdjęcia (zanim zrobisz UPDATE)
+        dbFetchOne = get_db()
+        dbFetchOne.fetch_one(
+            query="SELECT zdjecie FROM realizacje_domy WHERE id=%s",
+            params=(int(set_form_id), )
+        )
+        old_photo_url = getattr(dbFetchOne, "zdjecie", None)
 
         # składamy SQL zależnie od tego, czy podmieniamy zdjęcie
         fields = [
@@ -3764,6 +3771,37 @@ def save_realizacje_domy():
         params.append(int(set_form_id))
 
         if db.executeTo(query=update_sql, params=tuple(params)):
+            # Po udanym UPDATE – jeśli faktycznie było nowe zdjęcie, usuń stare z dysku
+            if MAIN_FOTO_URL and old_photo_url:
+                # porównuj po nazwie pliku, żeby ignorować domenę / query string
+                def _basename(u: str):
+                    u = (u or '').split('?', 1)[0].split('#', 1)[0]
+                    return os.path.basename(u)
+
+                old_name = _basename(old_photo_url)
+                new_name = _basename(MAIN_FOTO_URL)
+
+                if old_name and new_name and old_name != new_name:
+                    # upload_dir masz z góry w tym handlerze
+                    old_path = os.path.join(upload_dir, old_name)
+
+                    # safety: upewnij się, że kasujesz wewnątrz katalogu uploadów
+                    try:
+                        upload_dir_real = os.path.realpath(upload_dir)
+                        old_path_real = os.path.realpath(old_path)
+                        if old_path_real.startswith(upload_dir_real + os.sep) or old_path_real == upload_dir_real:
+                            if os.path.exists(old_path_real):
+                                try:
+                                    os.remove(old_path_real)
+                                except OSError as e:
+                                    msq.handle_error(f'Nie udało się usunąć starego pliku: {old_path_real} ({e})', log_path=logFileName)
+                            else:
+                                msq.handle_error(f'Stary plik nie istnieje: {old_path_real}', log_path=logFileName)
+                        else:
+                            msq.handle_error(f'Ścieżka poza katalogiem uploadów! {old_path_real}', log_path=logFileName)
+                    except Exception as e:
+                        msq.handle_error(f'Błąd przy weryfikacji/usuwaniu starego pliku: {e}', log_path=logFileName)
+
             msq.handle_error(f'Realizacja zaktualizowana: {TYTUL} przez {session.get("username")}', log_path=logFileName)
             flash('Dane zostały zapisane poprawnie!', 'success')
             return redirect(url_for('realization_domy_list'))
