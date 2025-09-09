@@ -3581,14 +3581,6 @@ def realization_domy_kategorie():
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /realization-domy-list bez uprawnień do zarządzania.', log_path=logFileName)
         return redirect(url_for('index'))
     
-    categories = [
-        "Rezydencja Parkowa",
-        "Dom z Widokiem 4",
-        "Kasjopea",
-        "Opal",
-        "Rezydencja Leśna"
-    ] # do przerzucenia na bazę
-
     db = get_db()
     query = """
         SELECT *
@@ -3610,8 +3602,7 @@ def realization_domy_kategorie():
         username=session['username'], 
         userperm=session['userperm'],
         user_brands=session['brands'],
-        categories=categories,
-        pagination=pagination,
+        pagination=pagination
     )
 
 @app.route('/save-kategorie-domy', methods=['GET', 'POST'])
@@ -3920,7 +3911,6 @@ def realization_domy_list():
         "SELECT DISTINCT nazwa FROM realizacje_domy_kategorie WHERE nazwa IS NOT NULL AND nazwa <> '' ORDER BY nazwa;",
         as_dict=True
     )
-
     categories = [r['nazwa'].strip() for r in rows if r.get('nazwa') and r['nazwa'].strip()]
 
 
