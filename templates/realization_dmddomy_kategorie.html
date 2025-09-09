@@ -355,6 +355,20 @@
                                                 required>
                                     </div>
 
+                                    <!-- rodzaj  -->
+                                    <div class="mb-3">
+                                        <label for="rodzaj_9999999" class="form-label">Rodzaj kategorii</label>
+                                        <input 
+                                                type="text" 
+                                                value=""
+                                                class="form-control bg-dark formatuj-maly-font" 
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="rodzaj_9999999" 
+                                                name="rodzaj_9999999"
+                                                placeholder="np. Budowa domu"
+                                                required>
+                                    </div>
+
                                     <!-- Opis -->
                                     <div class="mb-3">
                                         <label for="opis_9999999" class="form-label">Opis</label>
@@ -458,6 +472,20 @@
                                                     id="nazwa_{{post_id}}" 
                                                     name="nazwa_{{post_id}}" 
                                                     required disabled>
+                                            </div>
+
+                                            <!-- rodzaj  -->
+                                            <div class="mb-3">
+                                                <label for="rodzaj_{{post_id}}" class="form-label">Rodzaj kategorii</label>
+                                                <input 
+                                                        type="text" 
+                                                        value="{{post_data.rodzaj}}"
+                                                        class="form-control bg-dark formatuj-maly-font" 
+                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                        id="rodzaj_{{post_id}}" 
+                                                        name="rodzaj_{{post_id}}"
+                                                        placeholder="np. Budowa domu"
+                                                        required>
                                             </div>
     
                                             <!-- Opis -->
