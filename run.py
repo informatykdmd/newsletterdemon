@@ -4216,6 +4216,326 @@ def remove_realizacje_domy():
         return redirect(url_for('realization_domy_list'))
 
 
+
+@app.route('/realization-budownictwo-list')
+def realization_budownictwo_list():
+    """Strona z zarządzaniem realizacjami dmdbudownictwo."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Nieautoryzowana próba dostępu do endpointa: /realization-budownictwo-list', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['realizations'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /realization-budownictwo-list bez uprawnień do zarządzania.', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    
+    categories = ["Hala", "Edukacja", "Inne"]
+
+
+    db = get_db()
+    query = """
+        SELECT *
+        FROM realizacje_budownictwo
+        ORDER BY r_finish DESC;
+    """
+    all_posts = db.getFrom(query, as_dict=True)
+
+    # Ustawienia paginacji
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(all_posts)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
+    posts = all_posts[offset: offset + per_page]
+
+    return render_template(
+            "realization_dmdbudownictwo_list.html", 
+            posts=posts, 
+            username=session['username'], 
+            userperm=session['userperm'],
+            user_brands=session['brands'],
+            categories=categories,
+            pagination=pagination,
+            )
+
+@app.route('/save-realizacje-budownictwo', methods=['GET', 'POST'])
+def save_realizacje_budownictwo():
+    """Strona zapisywania edytowanej realizacji."""
+
+    # --- 1) Autoryzacja ---
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error('UWAGA! Wywołanie /save-realizacje-budownictwo bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+
+    if session.get('userperm', {}).get('realizations', 0) == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /save-realizacje-budownictwo bez uprawnień przez {session.get("username")}', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    # --- 2) GET -> wróć do listy (tu nie renderujemy formularza edycji) ---
+    if request.method == 'GET':
+        return redirect(url_for('realization_budownictwo_list'))
+
+    # --- 3) POST: zbierz dane ---
+    form_data = request.form.to_dict()
+
+    # Preferuj jawne pole hidden "formid"
+    set_form_id = form_data.get('formid')
+    try:
+        # walidacja do liczby (ale trzymaj typ str do składania kluczy w form_data)
+        int(set_form_id)
+    except (TypeError, ValueError):
+        msq.handle_error('Błąd! Nieprawidłowe formid.', log_path=logFileName)
+        flash('Nieprawidłowy identyfikator formularza.', 'danger')
+        return redirect(url_for('realization_budownictwo_list'))
+
+    # Zabezpieczenie: odczytaj pola z sufiksem _{id}
+    try:
+        TYTUL       = form_data[f'title_{set_form_id}']     .strip()
+        OPIS        = form_data[f'opis_{set_form_id}']      .strip()
+        KATEGORIA   = form_data[f'category_{set_form_id}']  .strip()
+        RSTART      = form_data[f'rstart_{set_form_id}']    .strip()
+        RFINISH     = form_data[f'rfinish_{set_form_id}']   .strip()
+    except KeyError as e:
+        msq.handle_error(f'Brak wymaganych pól: {e}', log_path=logFileName)
+        flash('Brakuje danych formularza.', 'danger')
+        return redirect(url_for('realization_budownictwo_list'))
+
+    # walidujemy r_start/r_finish jako int/rok
+    try:
+        RSTART_i  = int(RSTART)
+        RFINISH_i = int(RFINISH)
+    except ValueError:
+        flash('Rok rozpoczęcia/zakończenia musi być liczbą.', 'danger')
+        return redirect(url_for('realization_budownictwo_list'))
+
+    if RSTART_i > RFINISH_i:
+        flash('Rok zakończenia nie może być wcześniejszy niż rozpoczęcia.', 'danger')
+        return redirect(url_for('realization_budownictwo_list'))
+
+
+        # --- 4) Ścieżki i upload ---
+    settings = generator_settingsDB()  # UJEDNOLICONE użycie
+    get_base_cfg  = settings.get('real-location-on-server', '')
+    base_root   = get_base_cfg.rstrip('/') # np. '/var/www/html/appdmddomy/public/'
+    pics_rel    = (settings.get('blog-pic-path') or '').lstrip('/')  # np. 'images/realizacje/'
+    upload_dir  = os.path.join(base_root, pics_rel)
+    url_base    = settings.get('main-domain', '')                     # np. 'https://dmddomy.pl/'
+    url_path    = settings.get('blog-pic-path', '')                    # np. '/images/realizacje/' lub 'images/...'
+
+    # upewnij się, że katalog istnieje
+    os.makedirs(upload_dir, exist_ok=True)
+
+    # Wspólna obsługa uploadu (zwraca (filename, public_url) albo (None, None))
+    def handle_upload(field_name: str):
+        f = request.files.get(field_name)
+        if not f or not f.filename:
+            return None, None
+        if not allowed_file(f.filename):
+            flash('Niedozwolony format pliku (dozwolone: jpg, jpeg, png, webp).', 'danger')
+            return None, None
+        fname = f'{int(time.time())}_{secure_filename(f.filename)}'
+        f.save(os.path.join(upload_dir, fname))
+        # Zadbaj, by url_path miał separator między domeną a ścieżką
+        public = (url_base.rstrip('/') + '/' + url_path.lstrip('/')).rstrip('/') + '/' + fname
+        return fname, public
+
+    MAIN_FOTO_URL = None
+
+    # --- 5) Rozróżnienie create vs update ---
+    is_create = (set_form_id == '9999999')
+    db = get_db()
+    if is_create:
+        # wymagamy zdjęcia głównego przy tworzeniu? (jeśli nie, usuń ten warunek)
+        fname, MAIN_FOTO_URL = handle_upload(f'mainFoto_{set_form_id}')
+        # Tu możesz zdecydować czy zdjęcie jest obowiązkowe:
+        if not MAIN_FOTO_URL:
+            flash('Dodaj zdjęcie główne.', 'danger')
+            return redirect(url_for('realization_budownictwo_list'))
+        
+        insert_sql = '''
+            INSERT INTO realizacje_budownictwo (
+                kategoria,
+                zdjecie,
+                tytul_ogloszenia,
+                opis,
+                r_start,
+                r_finish
+            ) VALUES (%s, %s, %s, %s, %s, %s);
+        '''
+        params = (KATEGORIA, MAIN_FOTO_URL, TYTUL, OPIS, RSTART_i, RFINISH_i)
+
+        if not db.executeTo(query=insert_sql, params=params):
+            msq.handle_error(f'Błąd podczas tworzenia nowego posta: {TYTUL}', log_path=logFileName)
+            flash('Błąd podczas tworzenia nowego posta.', 'danger')
+            return redirect(url_for('realization_budownictwo_list'))
+
+        msq.handle_error(f'Nowa realizacja utworzona: {TYTUL} przez {session.get("username")}', log_path=logFileName)
+        flash('Nowy wpis został dodany.', 'success')
+        return redirect(url_for('realization_budownictwo_list'))
+
+    else:
+        # UPDATE
+        # spróbuj pobrać ewentualny nowy plik
+        fname, MAIN_FOTO_URL = handle_upload(f'mainFoto_{set_form_id}')
+
+        # Pobierz stare URL zdjęcia (zanim zrobisz UPDATE)
+        dbFetchOne = get_db()
+        dbFetchOne.fetch_one(
+            query="SELECT zdjecie FROM realizacje_budownictwo WHERE id=%s",
+            params=(int(set_form_id), )
+        )
+        old_photo_url = getattr(dbFetchOne, "zdjecie", None)
+
+        # składamy SQL zależnie od tego, czy podmieniamy zdjęcie
+        fields = [
+            ('kategoria', KATEGORIA),
+            ('tytul_ogloszenia', TYTUL),
+            ('opis', OPIS),
+            ('r_start', RSTART_i),
+            ('r_finish', RFINISH_i),
+        ]
+        params = []
+
+        set_clauses = []
+        for col, val in fields:
+            set_clauses.append(f"{col} = %s")
+            params.append(val)
+
+        if MAIN_FOTO_URL:
+            set_clauses.insert(1, "zdjecie = %s")  # np. tuż po kategoria
+            params.insert(1, MAIN_FOTO_URL)
+
+        update_sql = f'''
+            UPDATE realizacje_budownictwo
+            SET {", ".join(set_clauses)}
+            WHERE id = %s;
+        '''
+        params.append(int(set_form_id))
+
+        if db.executeTo(query=update_sql, params=tuple(params)):
+            # Po udanym UPDATE – jeśli faktycznie było nowe zdjęcie, usuń stare z dysku
+            if MAIN_FOTO_URL and old_photo_url:
+                # porównuj po nazwie pliku, żeby ignorować domenę / query string
+                def _basename(u: str):
+                    u = (u or '').split('?', 1)[0].split('#', 1)[0]
+                    return os.path.basename(u)
+
+                old_name = _basename(old_photo_url)
+                new_name = _basename(MAIN_FOTO_URL)
+
+                if old_name and new_name and old_name != new_name:
+                    # upload_dir masz z góry w tym handlerze
+                    old_path = os.path.join(upload_dir, old_name)
+
+                    # safety: upewnij się, że kasujesz wewnątrz katalogu uploadów
+                    try:
+                        upload_dir_real = os.path.realpath(upload_dir)
+                        old_path_real = os.path.realpath(old_path)
+                        if old_path_real.startswith(upload_dir_real + os.sep) or old_path_real == upload_dir_real:
+                            if os.path.exists(old_path_real):
+                                try:
+                                    os.remove(old_path_real)
+                                except OSError as e:
+                                    msq.handle_error(f'Nie udało się usunąć starego pliku: {old_path_real} ({e})', log_path=logFileName)
+                            else:
+                                msq.handle_error(f'Stary plik nie istnieje: {old_path_real}', log_path=logFileName)
+                        else:
+                            msq.handle_error(f'Ścieżka poza katalogiem uploadów! {old_path_real}', log_path=logFileName)
+                    except Exception as e:
+                        msq.handle_error(f'Błąd przy weryfikacji/usuwaniu starego pliku: {e}', log_path=logFileName)
+
+            msq.handle_error(f'Realizacja zaktualizowana: {TYTUL} przez {session.get("username")}', log_path=logFileName)
+            flash('Dane zostały zapisane poprawnie!', 'success')
+            return redirect(url_for('realization_budownictwo_list'))
+
+        msq.handle_error(f'Błąd UPDATE realizacji: {TYTUL}', log_path=logFileName)
+        flash('Wystąpił błąd podczas zapisu.', 'danger')
+        return redirect(url_for('realization_budownictwo_list'))
+
+
+@app.route('/remove-realizacje-budownictwo', methods=['POST'])
+def remove_realizacje_budownictwo():
+    """Usuwanie realizacji"""
+    # auth
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error('UWAGA! wywołanie /remove-realizacje-budownictwo bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+
+    if session.get('userperm', {}).get('realizations', 0) == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania bez uprawnień przez {session.get("username")}', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj się z administratorem!', 'danger')
+        return redirect(url_for('index'))
+
+    # dane z formularza
+    form_data = request.form.to_dict()
+    try:
+        set_post_id = int(form_data.get('PostID'))
+    except (TypeError, ValueError):
+        flash('Nieprawidłowe ID wpisu.', 'danger')
+        return redirect(url_for('realization_budownictwo_list'))
+
+    photo_link = form_data.get('photoLink', '') or ''
+
+    # helper
+    def prepareFileName(raw_link: str):
+        checkExt = {'jpg', 'jpeg', 'png'}
+        last_part = os.path.basename(raw_link.split('?', 1)[0].split('#', 1)[0])
+        ext = last_part.rsplit('.', 1)[-1].lower() if '.' in last_part else ''
+        return last_part if ext in checkExt else None
+
+    filename = prepareFileName(photo_link)
+    if not filename:
+        msq.handle_error('UWAGA! Niewłaściwa nazwa fotografii!', log_path=logFileName)
+        flash('Błąd usuwania fotografii z serwera (nieprawidłowa nazwa).', 'danger')
+        return redirect(url_for('realization_budownictwo_list'))
+
+    # ścieżka do pliku
+    settingsDB = generator_settingsDB()
+    pics_dir_cfg = settingsDB.get('blog-pic-path', '')  # np. 'images/realizacje/'
+    get_base_cfg  = settingsDB.get('real-location-on-server', '')
+    # Upewnij się, że to względna ścieżka
+    pics_dir_rel = pics_dir_cfg.lstrip('/')
+    base_got = get_base_cfg.rstrip('/')
+    base_root = base_got 
+    file_path = os.path.join(base_root, pics_dir_rel, filename)
+
+    db = get_db()
+    try:
+        # Najpierw usuń rekord z DB
+        deleted = db.executeTo(
+            "DELETE FROM realizacje_budownictwo WHERE id = %s;",
+            (set_post_id,)
+        )
+
+        if not deleted:
+            flash('Nie znaleziono wpisu do usunięcia.', 'warning')
+            return redirect(url_for('realization_budownictwo_list'))
+
+        # Potem spróbuj usunąć plik (jeśli istnieje)
+        if os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+            except OSError as e:
+                msq.handle_error(f'UWAGA! Nie udało się usunąć pliku: {file_path} ({e})', log_path=logFileName)
+                # Nie wywracamy procesu – rekord już usunięty. Tylko komunikat:
+                flash('Wpis usunięty. Nie udało się usunąć pliku zdjęcia (zalogowano błąd).', 'warning')
+        else:
+            # Brak pliku – logujemy, ale nie traktujemy jako błąd krytyczny
+            msq.handle_error(f'Plik nie istnieje: {file_path}', log_path=logFileName)
+
+        msq.handle_error(f'Realizacja id={set_post_id} usunięta przez {session["username"]}', log_path=logFileName)
+        flash('Wpis został usunięty.', 'success')
+        return redirect(url_for('realization_budownictwo_list'))
+
+    except Exception as e:
+        msq.handle_error(f'Błąd przy usuwaniu realizacji id={set_post_id}: {e}', log_path=logFileName)
+        flash('Wystąpił błąd podczas usuwania wpisu.', 'danger')
+        return redirect(url_for('realization_budownictwo_list'))
+
+
 @app.route('/ustawieni_pracownicy', methods=['POST'])
 def ustawieni_pracownicy():
     data = request.get_json()  # Pobranie danych JSON z żądania

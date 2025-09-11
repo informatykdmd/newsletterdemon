@@ -14,12 +14,13 @@
                 type="button" id="dropdownMenuButton2" 
                 style="max-height: 29px; font-size: 20px;"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                {% if user_brands['domy'] == 0 %}
+                
+                {% if user_brands['budownictwo'] == 0 %}
                     {% if user_brands['elitehome'] == 1 %}
                         <script>window.location.href = "/realization-elitehome-list";</script>
                     {% else %}
-                        {% if user_brands['budownictwo'] == 1 %}
-                            <script>window.location.href = "/realization-budownictwo-list";</script>
+                        {% if user_brands['domy'] == 1 %}
+                            <script>window.location.href = "/realization-domy-list";</script>
                         {% else %}
                             <script>window.location.href = "/home";</script>
                         {% endif %}
@@ -30,23 +31,18 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
                 {% if user_brands['domy'] == 1 %}
-                    <li><a class="team_button_domy dropdown-item active" href="/realization-domy-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">Domy</a></li>
+                    <li><a class="team_button_domy dropdown-item" href="/realization-domy-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">Domy</a></li>
                 {% endif%}
                 {% if user_brands['budownictwo'] == 1 %}
-                    <li><a class="dropdown-item" href="/realization-budownictwo-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">Budownictwo</a></li>
+                    <li><a class="dropdown-item active" href="/realization-budownictwo-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">Budownictwo</a></li>
                 {% endif%}
                 {% if user_brands['elitehome'] == 1 %}
                     <li><a class="dropdown-item" href="/realization-elitehome-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">EliteHome</a></li>
                 {% endif%}
-                
             </ul>
         </div>
         <!-- dropdown END -->
-        <div class="add-button-green ps-1">
-            <a href="/realization-domy-kategorie">
-                <i class="bi bi-gear" style="font-size: 12pt; color: #0798cc !important;"></i>
-            </a>
-        </div>
+        
         <div class="add-button-green ps-1">
             <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                 <i class="bi bi-plus-square-fill" style="font-size: 12pt; color: #0e900e !important;"></i>
@@ -65,39 +61,33 @@
             type="button" id="dropdownMenuButton2" 
             style="max-height: 40px; font-size: 15px; font-weight: 100;"
             data-bs-toggle="dropdown" aria-expanded="false">
-                {% if user_brands['domy'] == 0 %}
+                {% if user_brands['budownictwo'] == 0 %}
                     {% if user_brands['elitehome'] == 1 %}
                         <script>window.location.href = "/realization-elitehome-list";</script>
                     {% else %}
-                        {% if user_brands['budownictwo'] == 1 %}
-                            <script>window.location.href = "/realization-budownictwo-list";</script>
+                        {% if user_brands['domy'] == 1 %}
+                            <script>window.location.href = "/realization-domy-list";</script>
                         {% else %}
                             <script>window.location.href = "/home";</script>
                         {% endif %}
                     {% endif %}
                 {% else %}
-                    Domy
+                    Budownictwo
                 {% endif %}
             </button>
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
                 {% if user_brands['domy'] == 1 %}
-                    <li><a class="team_button_domy dropdown-item active" href="/realization-domy-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">Domy</a></li>
+                    <li><a class="team_button_domy dropdown-item" href="/realization-domy-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">Domy</a></li>
                 {% endif%}
                 {% if user_brands['budownictwo'] == 1 %}
-                    <li><a class="dropdown-item" href="/realization-budownictwo-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">Budownictwo</a></li>
+                    <li><a class="dropdown-item active" href="/realization-budownictwo-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">Budownictwo</a></li>
                 {% endif%}
                 {% if user_brands['elitehome'] == 1 %}
                     <li><a class="dropdown-item" href="/realization-elitehome-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">EliteHome</a></li>
                 {% endif%}
-                
             </ul>
         </div>
         <!-- dropdown END -->
-        <div class="add-button-green ps-2">
-            <a href="/realization-domy-kategorie">
-                <i class="bi bi-gear" style="font-size: 15pt; color: #0798cc !important;"></i>
-            </a>
-        </div>
         <div class="add-button-green ps-2">
             <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                 <i class="bi bi-plus-square-fill" style="font-size: 15pt; color: #0e900e !important;"></i>
@@ -116,26 +106,26 @@
                 data-bs-toggle="dropdown" 
                 style="max-height: 45px; font-size: 20px; font-weight: 100;"
                 aria-expanded="false">
-                {% if user_brands['domy'] == 0 %}
+                {% if user_brands['budownictwo'] == 0 %}
                     {% if user_brands['elitehome'] == 1 %}
                         <script>window.location.href = "/realization-elitehome-list";</script>
                     {% else %}
-                        {% if user_brands['budownictwo'] == 1 %}
-                            <script>window.location.href = "/realization-budownictwo-list";</script>
+                        {% if user_brands['domy'] == 1 %}
+                            <script>window.location.href = "/realization-domy-list";</script>
                         {% else %}
                             <script>window.location.href = "/home";</script>
                         {% endif %}
                     {% endif %}
                 {% else %}
-                    Realizacje Domy
+                    Realizacje Budownictwo
                 {% endif %}
             </button>
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
                 {% if user_brands['domy'] == 1 %}
-                    <li><a class="team_button_domy dropdown-item active" href="/realization-domy-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">Domy</a></li>
+                    <li><a class="team_button_domy dropdown-item" href="/realization-domy-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">Domy</a></li>
                 {% endif%}
                 {% if user_brands['budownictwo'] == 1 %}
-                    <li><a class="dropdown-item" href="/realization-budownictwo-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">Budownictwo</a></li>
+                    <li><a class="dropdown-item active" href="/realization-budownictwo-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">Budownictwo</a></li>
                 {% endif%}
                 {% if user_brands['elitehome'] == 1 %}
                     <li><a class="dropdown-item" href="/realization-elitehome-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">EliteHome</a></li>
@@ -143,11 +133,6 @@
             </ul>
         </div>
         <!-- dropdown END -->
-        <div class="add-button-green ps-3">
-            <a href="/realization-domy-kategorie">
-                <i class="bi bi-gear" style="font-size: 20pt; color: #0798cc !important;"></i>
-            </a>
-        </div>
         <div class="add-button-green ps-3">
             <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                 <i class="bi bi-plus-square-fill" style="font-size: 20pt; color: #0e900e !important;"></i>
@@ -241,7 +226,7 @@
                                 <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                             <div class="offcanvas-body">
-                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_realizacje_domy') }}" enctype="multipart/form-data" >
+                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_realizacje_budownictwo') }}" enctype="multipart/form-data" >
                                     <!-- Tytuł  -->
                                     <div class="mb-3">
                                     <label for="title_9999999" class="form-label">Tytuł</label>
@@ -314,12 +299,12 @@
 
                                     <!-- Main Foto -->
                                     <div class="mb-3">
-                                        <label for="mainFoto_9999999" class="form-label">Zdjęcie realizacji (1920 x 1080)</label>
+                                        <label for="mainFoto_9999999" class="form-label">Zdjęcie realizacji (365 x 265)</label>
                                         <div>
                                             <img src="" style="max-height: 100px; max-width: 400px; border-radius: 10px; margin-bottom: 10px;" id="mainFotoPreview_9999999" />
                                         </div>
                                         <div>
-                                            <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="mainFoto_9999999" name="mainFoto_9999999" accept="image/*" onchange="previewImage(this, 'mainFotoPreview_9999999', 1920, 1080, 100)">
+                                            <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="mainFoto_9999999" name="mainFoto_9999999" accept="image/*" onchange="previewImage(this, 'mainFotoPreview_9999999', 365, 265, 3)">
                                         </div>
                                     </div>
 
@@ -327,7 +312,7 @@
                                     <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}"/>
                                     <input type="hidden" name="formid" id="formid_9999999" value="9999999"/>
                                     <!-- Przycisk Zapisz artykuł -->
-                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormRealizacjeDomy('9999999', false)">Dodaj realizację</button>
+                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormRealizacjeBudownictwo('9999999', false)">Dodaj realizację</button>
                                 </form>
                             </div>
                         </div>
@@ -361,7 +346,7 @@
                                 </div>
                                 <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 80px;">
                                     
-                                    <form method="POST" id="removeRealizacje_{{post_id}}" action="{{ url_for('remove_realizacje_domy') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć realizację?');">
+                                    <form method="POST" id="removeRealizacje_{{post_id}}" action="{{ url_for('remove_realizacje_budownictwo') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć realizację?');">
 
                                             <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
 
@@ -384,7 +369,7 @@
                             <div class="offcanvas-body formatuj-maly-font">
                                 <div class="tylko-klej">
                                     <div style="color:#6a6a6a;">
-                                        <form method="POST" id="editPost_{{post_id}}" action="{{ url_for('save_realizacje_domy') }}" enctype="multipart/form-data">
+                                        <form method="POST" id="editPost_{{post_id}}" action="{{ url_for('save_realizacje_budownictwo') }}" enctype="multipart/form-data">
                                             <!-- Tytuł  -->
                                             <div class="mb-3">
                                             <label for="title_{{post_id}}" class="form-label">Tytuł</label>
@@ -460,12 +445,12 @@
 
                                             <!-- Main Foto -->
                                             <div class="mb-3">
-                                                <label for="mainFoto_{{post_id}}" class="form-label">Zdjęcie realizacji (1920 x 1080)</label>
+                                                <label for="mainFoto_{{post_id}}" class="form-label">Zdjęcie realizacji (365 x 265)</label>
                                                 <div>
                                                     <img src="{{post_data.zdjecie}}" style="max-height: 100px; max-width: 400px; border-radius: 10px; margin-bottom: 10px;" id="mainFotoPreview_{{post_id}}" />
                                                 </div>
                                                 <div>
-                                                    <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="mainFoto_{{post_id}}" name="mainFoto_{{post_id}}" accept="image/*" onchange="previewImage(this, 'mainFotoPreview_{{post_id}}', 1920, 1080, 100)">
+                                                    <input type="file" class="form-control bg-dark formatuj-maly-font" style="color:#c2c2c2;" id="mainFoto_{{post_id}}" name="mainFoto_{{post_id}}" accept="image/*" onchange="previewImage(this, 'mainFotoPreview_{{post_id}}', 365, 265, 3)">
                                                 </div>
                                             </div>
 
@@ -473,7 +458,7 @@
                                             <input type="hidden" name="UserName_{{post_id}}" id="UserName_{{post_id}}" value="{{username}}"/>
                                             <input type="hidden" name="formid" id="formid_{{post_id}}" value="{{post_id}}"/>
                                             <!-- Przycisk Zapisz artykuł -->
-                                            <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormRealizacjeDomy('{{post_id}}', true)">Zapisz realizację</button>
+                                            <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormRealizacjeBudownictwo('{{post_id}}', true)">Zapisz realizację</button>
                                         </form>
                                     </div>
                                 </div>
