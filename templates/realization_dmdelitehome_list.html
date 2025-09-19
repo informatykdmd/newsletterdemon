@@ -545,13 +545,13 @@
                             <div class="row p-1">
                                 <div class="col-lg-4 col-sm-12">
                                     <!-- Główne zdjęcie -->
-                                    <img src="{{ post_data.get('minaturka','') }}" alt=""
+                                    <img src="{{ post_data.get('paralax_1','') }}" alt=""
                                         class="img-thumbnail object-fit-cover rounded bg-dark mb-2">
 
                                     <!-- Miniatury (4 kolumny) -->
                                     {% set gallery = [
-                                        post_data.get('paralax_1'),
                                         post_data.get('paralax_2'),
+                                        post_data.get('minaturka'),
                                         post_data.get('inside_1'),
                                         post_data.get('inside_2')
                                     ] %}
