@@ -544,35 +544,118 @@
                         <div class="sub-panel rogi collapse" id="collapse_id_{{post_id}}">
                             <div class="row p-1">
                                 <div class="col-lg-4 col-sm-12">
-                                    <img src="{{post_data.zdjecie}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
+                                <img src="{{ post_data.minaturka or '' }}" alt=""
+                                    class="img-thumbnail object-fit-cover rounded bg-dark mb-2"
+                                    style="width:100%; max-height:260px;">
                                 </div>
-                                <div class="col-lg-7 col-sm-12">
-                                    <h5>{{post_data.tytul_ogloszenia}}</h5>
-                                    <p>{{post_data.opis}}</p>
-                                    <div class="row">
-                                        <!-- kateoria -->
-                                        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-folder"></i>
-                                                    <span class="text-secondary fw-lighter">{{ post_data.kategoria }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- rok -->
-                                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
-                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                                <div class="ms-3 formatuj-maly-font">
-                                                    <i class="bi bi-helmet-safety"></i>
-                                                    <span class="text-secondary fw-lighter">{{ post_data.r_start }} - {{ post_data.r_finish }}</span>
-                                                </div>
-                                            </div>
+
+                                <div class="col-lg-8 col-sm-12">
+                                <h5 class="mb-1">{{ post_data.tytul }}</h5>
+
+                                {% if post_data.slogan_1 or post_data.slogan_2 %}
+                                <p class="text-secondary mb-2">
+                                    {% if post_data.slogan_1 %}<em>{{ post_data.slogan_1 }}</em>{% endif %}
+                                    {% if post_data.slogan_1 and post_data.slogan_2 %} &nbsp;|&nbsp; {% endif %}
+                                    {% if post_data.slogan_2 %}<em>{{ post_data.slogan_2 }}</em>{% endif %}
+                                </p>
+                                {% endif %}
+
+                                <p class="mb-2">{{ post_data.opis_1 }}</p>
+
+                                <div class="row">
+                                    <!-- lata realizacji -->
+                                    <div class="col-xl-4 col-lg-5 col-md-5 col-sm-12">
+                                    <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                        <div class="ms-1 formatuj-maly-font">
+                                        <i class="bi bi-helmet-safety"></i>
+                                        <span class="text-secondary fw-lighter">
+                                            {{ post_data.r_start }}{% if post_data.r_finish %} – {{ post_data.r_finish }}{% endif %}
+                                        </span>
                                         </div>
                                     </div>
+                                    </div>
+
+                                    <!-- sekcja 1 (tytuł + podtytuł) -->
+                                    {% if post_data.tytul_1 or post_data.podtytul_1 %}
+                                    <div class="col-xl-8 col-lg-7 col-md-7 col-sm-12">
+                                    <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                        <div class="ms-1 formatuj-maly-font">
+                                        <i class="bi bi-info-circle"></i>
+                                        <span class="text-secondary fw-lighter">
+                                            {% if post_data.tytul_1 %}<strong>{{ post_data.tytul_1 }}</strong>{% endif %}
+                                            {% if post_data.tytul_1 and post_data.podtytul_1 %} — {% endif %}
+                                            {% if post_data.podtytul_1 %}{{ post_data.podtytul_1 }}{% endif %}
+                                        </span>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Zagadki -->
+                                {% if post_data.tytul_zagadek or post_data.podtytul_zagadek
+                                        or post_data.zagadka_1_tytul or post_data.zagadka_2_tytul or post_data.zagadka_3_tytul %}
+                                <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                    <div class="ms-1">
+                                    {% if post_data.tytul_zagadek %}
+                                        <h6 class="mb-1">{{ post_data.tytul_zagadek }}</h6>
+                                    {% endif %}
+                                    {% if post_data.podtytul_zagadek %}
+                                        <p class="text-secondary mb-2">{{ post_data.podtytul_zagadek }}</p>
+                                    {% endif %}
+
+                                    <div class="row g-2">
+                                        {% for i in [1,2,3] %}
+                                        {% set t = attribute(post_data, 'zagadka_' ~ i ~ '_tytul') %}
+                                        {% set o = attribute(post_data, 'zagadka_' ~ i ~ '_opis') %}
+                                        {% if t or o %}
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="border border-1 border-secondary rounded p-2 h-100">
+                                            {% if t %}<div class="fw-semibold mb-1">{{ t }}</div>{% endif %}
+                                            {% if o %}<div class="text-secondary formatuj-maly-font">{{ o }}</div>{% endif %}
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- Galeria obrazów (parallax/inside) jeśli są -->
+                                {% set gallery = [
+                                    ('paralax_1', post_data.paralax_1),
+                                    ('paralax_2', post_data.paralax_2),
+                                    ('inside_1',  post_data.inside_1),
+                                    ('inside_2',  post_data.inside_2)
+                                ] %}
+                                {% if gallery|selectattr(1)|list %}
+                                <div class="row mt-2">
+                                    {% for key, url in gallery %}
+                                    {% if url %}
+                                    <div class="col-md-6 col-sm-12 mb-2">
+                                        <div class="border border-1 border-secondary rounded p-1 bg-dark">
+                                        <img src="{{ url }}" alt="{{ key }}"
+                                            class="img-fluid rounded object-fit-cover"
+                                            style="width:100%; max-height:220px;">
+                                        <div class="text-center text-secondary formatuj-maly-font mt-1">{{ key|replace('_',' ')|title }}</div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <!-- Data aktualizacji -->
+                                {% if post_data.data_aktualizacji %}
+                                <div class="text-secondary formatuj-maly-font mt-2">
+                                    <i class="bi bi-clock-history"></i>
+                                    Ostatnia aktualizacja: {{ post_data.data_aktualizacji }}
+                                </div>
+                                {% endif %}
                                 </div>
                             </div>
                         </div>
-            
                         <!-- collapse end -->
                         {% endfor %}
                         <!-- Paginacja -->
