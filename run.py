@@ -4713,13 +4713,18 @@ def save_realizacje_elitehome():
         return redirect(url_for('realization_elitehome_list'))
 
     # --- 7) Składanie SQL ---
-    now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    # now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     db = get_db()
     if is_create:
         # budujemy dynamicznie listę kolumn/params
-        cols = ['tytul', 'r_start', 'r_finish', 'data_aktualizacji']
-        vals = [text_values['tytul'], r_start, r_finish, now_str]
+        cols = [
+            'tytul', 
+            'r_start', 
+            'r_finish', 
+            # 'data_aktualizacji'
+            ]
+        vals = [text_values['tytul'], r_start, r_finish]
 
         # tekstowe
         for c in text_cols:
@@ -4750,8 +4755,8 @@ def save_realizacje_elitehome():
         params = []
 
         # podstawowe
-        set_clauses += ['tytul=%s', 'r_start=%s', 'r_finish=%s', 'data_aktualizacji=%s']
-        params += [text_values['tytul'], r_start, r_finish, now_str]
+        set_clauses += ['tytul=%s', 'r_start=%s', 'r_finish=%s']
+        params += [text_values['tytul'], r_start, r_finish]
 
         # tekstowe
         for c in text_cols:

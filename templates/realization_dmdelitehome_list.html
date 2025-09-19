@@ -325,7 +325,7 @@
                                     <!-- Ukryte pola -->
                                     <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}">
                                     <input type="hidden" name="formid" id="formid_9999999" value="9999999">
-                                    <input type="hidden" name="data_aktualizacji_9999999" id="data_aktualizacji_9999999" value="{{now().strftime('%Y-%m-%d %H:%M:%S')}}">
+                                    <!-- <input type="hidden" name="data_aktualizacji_9999999" id="data_aktualizacji_9999999" value="{{now().strftime('%Y-%m-%d %H:%M:%S')}}"> -->
 
                                     <!-- Przycisk -->
                                     <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormRealizacjeElitehome('9999999', false)">
@@ -515,10 +515,10 @@
                                         {% endfor %}
 
                                         <!-- data_aktualizacji -->
-                                        <input type="hidden"
+                                        <!-- <input type="hidden"
                                                 id="data_aktualizacji_{{post_id}}"
                                                 name="data_aktualizacji_{{post_id}}"
-                                                value="{{ post_data.get('data_aktualizacji', now().strftime('%Y-%m-%d %H:%M:%S')) }}">
+                                                value="{{ post_data.get('data_aktualizacji', now().strftime('%Y-%m-%d %H:%M:%S')) }}"> -->
 
                                         <!-- Ukryte -->
                                         <input type="hidden" name="UserName_{{post_id}}" id="UserName_{{post_id}}" value="{{username}}">
