@@ -4536,11 +4536,11 @@ def remove_realizacje_budownictwo():
         return redirect(url_for('realization_budownictwo_list'))
 
 obrazy_elitehome = {
-    "minaturka": {"label":"Miniaturka", "w":365, "h":265},
-    "paralax_1": {"label":"Parallax 1", "w":1920, "h":1080},
-    "paralax_2": {"label":"Parallax 2", "w":1920, "h":1080},
-    "inside_1":  {"label":"Inside 1",  "w":1200, "h":800},
-    "inside_2":  {"label":"Inside 2",  "w":1200, "h":800}
+    "minaturka": {"label":"Miniaturka", "w":230, "h":230},
+    "paralax_1": {"label":"Parallax 1", "w":2048, "h":1484},
+    "paralax_2": {"label":"Parallax 2", "w":2048, "h":1299},
+    "inside_1":  {"label":"Inside 1",  "w":879, "h":440},
+    "inside_2":  {"label":"Inside 2",  "w":879, "h":440}
 }
 
 @app.route('/realization-elitehome-list')
