@@ -251,45 +251,45 @@
                                     <!-- Slogany -->
                                     <div class="mb-3">
                                         <label for="slogan_1_9999999" class="form-label">Slogan 1</label>
-                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="slogan_1_9999999" name="slogan_1_9999999">
+                                        <input type="text" style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="slogan_1_9999999" name="slogan_1_9999999">
                                     </div>
                                     <div class="mb-3">
                                         <label for="slogan_2_9999999" class="form-label">Slogan 2</label>
-                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="slogan_2_9999999" name="slogan_2_9999999">
+                                        <input type="text" style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="slogan_2_9999999" name="slogan_2_9999999">
                                     </div>
 
                                     <!-- Sekcja 1 -->
                                     <div class="mb-3">
                                         <label for="tytul_1_9999999" class="form-label">Tytuł sekcji 1</label>
-                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="tytul_1_9999999" name="tytul_1_9999999">
+                                        <input type="text" style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="tytul_1_9999999" name="tytul_1_9999999">
                                     </div>
                                     <div class="mb-3">
                                         <label for="podtytul_1_9999999" class="form-label">Podtytuł sekcji 1</label>
-                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="podtytul_1_9999999" name="podtytul_1_9999999">
+                                        <input type="text" style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="podtytul_1_9999999" name="podtytul_1_9999999">
                                     </div>
                                     <div class="mb-3">
                                         <label for="opis_1_9999999" class="form-label">Opis sekcji 1</label>
-                                        <textarea class="form-control bg-dark formatuj-maly-font" id="opis_1_9999999" name="opis_1_9999999" rows="3"></textarea>
+                                        <textarea style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="opis_1_9999999" name="opis_1_9999999" rows="3"></textarea>
                                     </div>
 
                                     <!-- Zagadki -->
                                     <div class="mb-3">
                                         <label for="tytul_zagadek_9999999" class="form-label">Tytuł zagadek</label>
-                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="tytul_zagadek_9999999" name="tytul_zagadek_9999999">
+                                        <input type="text" style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="tytul_zagadek_9999999" name="tytul_zagadek_9999999">
                                     </div>
                                     <div class="mb-3">
                                         <label for="podtytul_zagadek_9999999" class="form-label">Podtytuł zagadek</label>
-                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="podtytul_zagadek_9999999" name="podtytul_zagadek_9999999">
+                                        <input type="text" style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="podtytul_zagadek_9999999" name="podtytul_zagadek_9999999">
                                     </div>
 
                                     {% for i in range(1,4) %}
                                     <div class="mb-3">
                                         <label for="zagadka_{{i}}_tytul_9999999" class="form-label">Zagadka {{i}} - Tytuł</label>
-                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="zagadka_{{i}}_tytul_9999999" name="zagadka_{{i}}_tytul_9999999">
+                                        <input type="text" style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="zagadka_{{i}}_tytul_9999999" name="zagadka_{{i}}_tytul_9999999">
                                     </div>
                                     <div class="mb-3">
                                         <label for="zagadka_{{i}}_opis_9999999" class="form-label">Zagadka {{i}} - Opis</label>
-                                        <textarea class="form-control bg-dark formatuj-maly-font" id="zagadka_{{i}}_opis_9999999" name="zagadka_{{i}}_opis_9999999" rows="2"></textarea>
+                                        <textarea style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="zagadka_{{i}}_opis_9999999" name="zagadka_{{i}}_opis_9999999" rows="2"></textarea>
                                     </div>
                                     {% endfor %}
 
@@ -309,6 +309,7 @@
                                         <div>
                                         <input type="file"
                                                 class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                 id="{{name}}_9999999"
                                                 name="{{name}}_9999999"
                                                 data-preview="{{name}}Preview_9999999"
@@ -425,12 +426,14 @@
                                         <div class="mb-3">
                                             <label for="slogan_1_{{post_id}}" class="form-label">Slogan 1</label>
                                             <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                 id="slogan_1_{{post_id}}" name="slogan_1_{{post_id}}"
                                                 value="{{ post_data.get('slogan_1','')|e }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="slogan_2_{{post_id}}" class="form-label">Slogan 2</label>
                                             <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"    
                                                 id="slogan_2_{{post_id}}" name="slogan_2_{{post_id}}"
                                                 value="{{ post_data.get('slogan_2','')|e }}">
                                         </div>
@@ -439,19 +442,22 @@
                                         <div class="mb-3">
                                             <label for="tytul_1_{{post_id}}" class="form-label">Tytuł sekcji 1</label>
                                             <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                 id="tytul_1_{{post_id}}" name="tytul_1_{{post_id}}"
                                                 value="{{ post_data.get('tytul_1','')|e }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="podtytul_1_{{post_id}}" class="form-label">Podtytuł sekcji 1</label>
                                             <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                 id="podtytul_1_{{post_id}}" name="podtytul_1_{{post_id}}"
                                                 value="{{ post_data.get('podtytul_1','')|e }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="opis_1_{{post_id}}" class="form-label">Opis sekcji 1</label>
                                             <textarea class="form-control bg-dark formatuj-maly-font"
-                                                    id="opis_1_{{post_id}}" name="opis_1_{{post_id}}"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"    
+                                                id="opis_1_{{post_id}}" name="opis_1_{{post_id}}"
                                                     rows="4">{{ post_data.get('opis_1','') }}</textarea>
                                         </div>
 
@@ -459,12 +465,14 @@
                                         <div class="mb-3">
                                             <label for="tytul_zagadek_{{post_id}}" class="form-label">Tytuł zagadek</label>
                                             <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                 id="tytul_zagadek_{{post_id}}" name="tytul_zagadek_{{post_id}}"
                                                 value="{{ post_data.get('tytul_zagadek','')|e }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="podtytul_zagadek_{{post_id}}" class="form-label">Podtytuł zagadek</label>
                                             <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                 id="podtytul_zagadek_{{post_id}}" name="podtytul_zagadek_{{post_id}}"
                                                 value="{{ post_data.get('podtytul_zagadek','')|e }}">
                                         </div>
@@ -473,13 +481,15 @@
                                         <div class="mb-3">
                                             <label for="zagadka_{{i}}_tytul_{{post_id}}" class="form-label">Zagadka {{i}} – Tytuł</label>
                                             <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                 id="zagadka_{{i}}_tytul_{{post_id}}" name="zagadka_{{i}}_tytul_{{post_id}}"
                                                 value="{{ post_data.get('zagadka_' ~ i ~ '_tytul','')|e }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="zagadka_{{i}}_opis_{{post_id}}" class="form-label">Zagadka {{i}} – Opis</label>
                                             <textarea class="form-control bg-dark formatuj-maly-font"
-                                                    id="zagadka_{{i}}_opis_{{post_id}}" name="zagadka_{{i}}_opis_{{post_id}}" rows="2">{{ post_data.get('zagadka_' ~ i ~ '_opis','') }}</textarea>
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"    
+                                                id="zagadka_{{i}}_opis_{{post_id}}" name="zagadka_{{i}}_opis_{{post_id}}" rows="2">{{ post_data.get('zagadka_' ~ i ~ '_opis','') }}</textarea>
                                         </div>
                                         {% endfor %}
 
@@ -498,6 +508,7 @@
 
                                             <div>
                                             <input type="file"
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
                                                     class="form-control bg-dark formatuj-maly-font"
                                                     id="{{name}}_{{post_id}}"
                                                     name="{{name}}_{{post_id}}"
