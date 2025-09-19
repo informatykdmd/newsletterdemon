@@ -606,8 +606,10 @@
 
                                     <div class="row g-2">
                                         {% for i in [1,2,3] %}
-                                        {% set t = attribute(post_data, 'zagadka_' ~ i ~ '_tytul') %}
-                                        {% set o = attribute(post_data, 'zagadka_' ~ i ~ '_opis') %}
+                                        {% set key_t = 'zagadka_' ~ i ~ '_tytul' %}
+                                        {% set key_o = 'zagadka_' ~ i ~ '_opis' %}
+                                        {% set t = post_data.get(key_t) %}
+                                        {% set o = post_data.get(key_o) %}
                                         {% if t or o %}
                                         <div class="col-md-4 col-sm-12">
                                             <div class="border border-1 border-secondary rounded p-2 h-100">
