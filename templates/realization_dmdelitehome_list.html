@@ -544,10 +544,31 @@
                         <div class="sub-panel rogi collapse" id="collapse_id_{{post_id}}">
                             <div class="row p-1">
                                 <div class="col-lg-4 col-sm-12">
-                                <img src="{{ post_data.minaturka or '' }}" alt=""
-                                    class="img-thumbnail object-fit-cover rounded bg-dark mb-2"
-                                    style="width:100%; max-height:260px;">
+                                    <!-- Główne zdjęcie -->
+                                    <img src="{{ post_data.get('minaturka','') }}" alt=""
+                                        class="img-thumbnail object-fit-cover rounded bg-dark mb-2">
+
+                                    <!-- Miniatury (4 kolumny) -->
+                                    {% set gallery = [
+                                        post_data.get('paralax_1'),
+                                        post_data.get('paralax_2'),
+                                        post_data.get('inside_1'),
+                                        post_data.get('inside_2')
+                                    ] %}
+                                    {% set thumbs = gallery | select | list %} {# odfiltruj puste/None #}
+
+                                    {% if thumbs %}
+                                    <div class="row row-cols-4">
+                                        {% for foto in thumbs %}
+                                        <div class="col mb-1">
+                                            <img src="{{ foto }}" alt=""
+                                                class="img-thumbnail object-fit-cover rounded bg-dark">
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
+
 
                                 <div class="col-lg-8 col-sm-12">
                                 <h5 class="mb-1">{{ post_data.tytul }}</h5>
@@ -624,29 +645,7 @@
                                 </div>
                                 {% endif %}
 
-                                <!-- Galeria obrazów (parallax/inside) jeśli są -->
-                                {% set gallery = [
-                                    ('paralax_1', post_data.paralax_1),
-                                    ('paralax_2', post_data.paralax_2),
-                                    ('inside_1',  post_data.inside_1),
-                                    ('inside_2',  post_data.inside_2)
-                                ] %}
-                                {% if gallery|selectattr(1)|list %}
-                                <div class="row mt-2">
-                                    {% for key, url in gallery %}
-                                    {% if url %}
-                                    <div class="col-md-6 col-sm-12 mb-2">
-                                        <div class="border border-1 border-secondary rounded p-1 bg-dark">
-                                        <img src="{{ url }}" alt="{{ key }}"
-                                            class="img-fluid rounded object-fit-cover"
-                                            style="width:100%; max-height:220px;">
-                                        <div class="text-center text-secondary formatuj-maly-font mt-1">{{ key|replace('_',' ')|title }}</div>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
+                                
 
                                 <!-- Data aktualizacji -->
                                 {% if post_data.data_aktualizacji %}
