@@ -550,21 +550,20 @@
 
                                     <!-- Miniatury (4 kolumny) -->
                                     {% set gallery = [
-                                        post_data.get('paralax_2'),
-                                        post_data.get('minaturka'),
-                                        post_data.get('inside_1'),
-                                        post_data.get('inside_2')
+                                        ('Parallax 2', post_data.get('paralax_2')),
+                                        ('Miniaturka', post_data.get('minaturka')),
+                                        ('Inside 1',   post_data.get('inside_1')),
+                                        ('Inside 2',   post_data.get('inside_2'))
                                     ] %}
-                                    {% set thumbs = gallery | select | list %} {# odfiltruj puste/None #}
+                                    {% set thumbs = gallery | selectattr(1) | list %} {# odfiltruj te bez URL #}
 
                                     {% if thumbs %}
                                     <div class="row row-cols-4">
-                                        {% for foto in thumbs %}
-                                        <div class="col mb-1">
-                                            <img src="{{ foto }}" alt=""
+                                        {% for label, foto in thumbs %}
+                                        <div class="col mb-1 text-center">
+                                            <img src="{{ foto }}" alt="{{ label }}"
                                                 class="img-thumbnail object-fit-cover rounded bg-dark">
                                             <div class="formatuj-maly-font text-secondary mt-1">{{ label }}</div>
-
                                         </div>
                                         {% endfor %}
                                     </div>
