@@ -185,6 +185,60 @@ function prepareAndSubmitForm(postId, oldFotos=true) {
     var form = document.getElementById('editPost_'+postId);
     form.submit();
 }
+
+function prepareAndSubmitFormRealizacjeElitehome(postId, oldFotos = true) {
+  // Helpery
+  const byId = id => document.getElementById(id);
+  const getVal = id => (byId(id) ? byId(id).value.trim() : '');
+  const exists = id => !!byId(id);
+
+  // Pola wg nowej tabeli
+  const tytul   = getVal('tytul_'   + postId);
+  const opis1   = getVal('opis_1_'  + postId);
+
+  // Kategoria: tylko jeśli masz ją w tym formularzu
+  const hasCategory = exists('category_' + postId);
+  const category = hasCategory ? getVal('category_' + postId) : null;
+
+  // Miniaturka: input file + istniejący podgląd (edycja)
+  const miniInputId = 'minaturka_' + postId;
+  const miniPrevId  = 'minaturkaPreview_' + postId;
+  const miniFileVal = getVal(miniInputId); // ścieżka wybranego pliku (jeśli nowy)
+  const miniPrevSrc = exists(miniPrevId) ? (byId(miniPrevId).getAttribute('src') || '').trim() : '';
+
+  // Zbieramy brakujące pola
+  const missing = [];
+  if (!tytul) missing.push('Tytuł');
+  if (!opis1) missing.push('Opis sekcji 1');
+
+  // Kategoria wymagająca tylko jeśli pole jest obecne w DOM
+  if (hasCategory && !category) missing.push('Kategoria');
+
+  // Logika zdjęć:
+  // - jeśli oldFotos === false (np. w trybie "add new") → wymagaj miniaturki (nowy plik)
+  // - jeśli oldFotos === true (edit) → pozwól nie wybierać pliku, o ile istnieje poprzedni (src w podglądzie)
+  if (!oldFotos) {
+    if (!miniFileVal) missing.push('Miniaturka (plik)');
+  } else {
+    // edit: jeśli brak nowego pliku i brak istniejącego src → też brak
+    if (!miniFileVal && !miniPrevSrc) missing.push('Miniaturka (plik lub istniejące zdjęcie)');
+  }
+
+  if (missing.length) {
+    alert('Wypełnij wymagane pola:\n• ' + missing.join('\n• '));
+    return;
+  }
+
+  // Submit
+  const form = byId('editPost_' + postId);
+  if (!form) {
+    console.error('Nie znaleziono formularza: editPost_' + postId);
+    alert('Wewnętrzny błąd: nie znaleziono formularza.');
+    return;
+  }
+  form.submit();
+}
+
 function prepareAndSubmitFormRealizacjeBudownictwo(postId, oldFotos=true) {
     // Sprawdź, czy wymagane pola są wypełnione
     var title = document.getElementById('title_' + postId).value;

@@ -1,0 +1,588 @@
+{% extends 'base.html' %}
+
+{% block title %}DMD Panel Administratora - Zarządzanie Blogiem{% endblock %}
+
+{% block addButton %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div class="d-flex align-items-center justify-content-between">
+
+        <!-- dropdown -->
+        <div class="dropdown">
+            <button 
+                class="nav-link dropdown-toggle link-light dark-mode" 
+                type="button" id="dropdownMenuButton2" 
+                style="max-height: 29px; font-size: 20px;"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                
+                {% if user_brands['elitehome'] == 0 %}
+                    {% if user_brands['budownictwo'] == 1 %}
+                        <script>window.location.href = "/realization-budownictwo-list";</script>
+                    {% else %}
+                        {% if user_brands['domy'] == 1 %}
+                            <script>window.location.href = "/realization-domy-list";</script>
+                        {% else %}
+                            <script>window.location.href = "/home";</script>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <i class="bi bi-rulers" style="color: #737373; position: relative; top: -10px;"></i>
+                {% endif %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                {% if user_brands['domy'] == 1 %}
+                    <li><a class="dropdown-item" href="/realization-domy-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">Domy</a></li>
+                {% endif%}
+                {% if user_brands['budownictwo'] == 1 %}
+                    <li><a class="dropdown-item active" href="/realization-budownictwo-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">Budownictwo</a></li>
+                {% endif%}
+                {% if user_brands['elitehome'] == 1 %}
+                    <li><a class="team_button_elitehome dropdown-item" href="/realization-elitehome-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">EliteHome</a></li>
+                {% endif%}
+            </ul>
+        </div>
+        <!-- dropdown END -->
+        
+        <div class="add-button-green ps-1">
+            <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-plus-square-fill" style="font-size: 12pt; color: #0e900e !important;"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div class="d-flex align-items-center justify-content-between">
+
+        <!-- dropdown -->
+        <div class="dropdown">
+            <button 
+            class="nav-link dropdown-toggle link-light dark-mode" 
+            type="button" id="dropdownMenuButton2" 
+            style="max-height: 40px; font-size: 15px; font-weight: 100;"
+            data-bs-toggle="dropdown" aria-expanded="false">
+                {% if user_brands['elitehome'] == 0 %}
+                    {% if user_brands['budownictwo'] == 1 %}
+                        <script>window.location.href = "/realization-budownictwo-list";</script>
+                    {% else %}
+                        {% if user_brands['domy'] == 1 %}
+                            <script>window.location.href = "/realization-domy-list";</script>
+                        {% else %}
+                            <script>window.location.href = "/home";</script>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    EliteHome
+                {% endif %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                {% if user_brands['domy'] == 1 %}
+                    <li><a class="dropdown-item" href="/realization-domy-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">Domy</a></li>
+                {% endif%}
+                {% if user_brands['budownictwo'] == 1 %}
+                    <li><a class="dropdown-item active" href="/realization-budownictwo-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">Budownictwo</a></li>
+                {% endif%}
+                {% if user_brands['elitehome'] == 1 %}
+                    <li><a class="team_button_elitehome dropdown-item" href="/realization-elitehome-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">EliteHome</a></li>
+                {% endif%}
+            </ul>
+        </div>
+        <!-- dropdown END -->
+        <div class="add-button-green ps-2">
+            <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-plus-square-fill" style="font-size: 15pt; color: #0e900e !important;"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div class="d-flex align-items-center justify-content-between">
+        <!-- dropdown -->
+        <div class="dropdown">
+            <button 
+                class="nav-link dropdown-toggle link-light dark-mode" 
+                type="button" id="dropdownMenuButton2" 
+                data-bs-toggle="dropdown" 
+                style="max-height: 45px; font-size: 20px; font-weight: 100;"
+                aria-expanded="false">
+                {% if user_brands['elitehome'] == 0 %}
+                    {% if user_brands['budownictwo'] == 1 %}
+                        <script>window.location.href = "/realization-budownictwo-list";</script>
+                    {% else %}
+                        {% if user_brands['domy'] == 1 %}
+                            <script>window.location.href = "/realization-domy-list";</script>
+                        {% else %}
+                            <script>window.location.href = "/home";</script>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    EliteHome
+                {% endif %}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                {% if user_brands['domy'] == 1 %}
+                    <li><a class="dropdown-item" href="/realization-domy-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">Domy</a></li>
+                {% endif%}
+                {% if user_brands['budownictwo'] == 1 %}
+                    <li><a class="team_button_budownictwo dropdown-item active" href="/realization-budownictwo-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">Budownictwo</a></li>
+                {% endif%}
+                {% if user_brands['elitehome'] == 1 %}
+                    <li><a class="team_button_elitehome dropdown-item" href="/realization-elitehome-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">EliteHome</a></li>
+                {% endif%}
+            </ul>
+        </div>
+        <!-- dropdown END -->
+        <div class="add-button-green ps-3">
+            <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="bi bi-plus-square-fill" style="font-size: 20pt; color: #0e900e !important;"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block navbarTitle %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 2px !important; padding-right: 10px; max-height: 22px;"/>
+        </a>
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_lg" aria-controls="offcanvasTop_lg">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 5px !important; padding-right: 10px; max-height: 35px;"
+                />
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 40px; font-size: 15px; font-weight: 100;"
+            href="#">
+            Realizacje
+        </a>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_xl" aria-controls="offcanvasTop_xl">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 10px !important; padding-right: 10px; max-height: 40px;"/>
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 45px; font-size: 20px; font-weight: 100;"
+            href="#">
+            Zarządzanie Realizacjami
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block tableHeader %}
+                        <div>
+                            <div class="row klej formatuj-header">
+                                <div class="d-none d-lg-block" style="max-width: 30px;">
+                                    #
+                                </div>
+                                <div  class="col-xl-10 col-lg-10 col-sm-11">
+                                    Tytuł
+                                </div>
+                                
+                                <div class="d-none d-xl-block" style="max-width: 200px;">
+                                    Realizacja
+                                </div>
+                                <div class="d-none d-lg-block" style="max-width: 150px;">
+                                    Data
+                                </div>
+                                <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 80px;">
+                                    <i class="bi bi-person-gear me-1"></i> Akcja 
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}
+{% block tableContent%}
+                        <!-- OFFCANVANSE RIGHT ADD NEW POST -->
+                        <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowej realizacji</h4>
+                                <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <form method="POST" id="editPost_9999999" action="{{ url_for('save_realizacje_elitehome') }}" enctype="multipart/form-data">
+
+                                    <!-- Tytuł -->
+                                    <div class="mb-3">
+                                        <label for="tytul_9999999" class="form-label">Tytuł</label>
+                                        <input type="text" value="" class="form-control bg-dark formatuj-maly-font"
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="tytul_9999999" name="tytul_9999999" required>
+                                    </div>
+
+                                    <!-- Lata realizacji -->
+                                    <label class="form-label">Lata realizacji</label>
+                                    <div class="row row-cols-3 mb-3">
+                                        <div class="col-sm-4">
+                                            <input type="number" value="" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="r_start_9999999" name="r_start_9999999"
+                                                placeholder="Rok rozpoczęcia" aria-label="rokstart" />
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="number" value="" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;" id="r_finish_9999999" name="r_finish_9999999"
+                                                placeholder="Rok zakończenia" aria-label="rokfinish" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Slogany -->
+                                    <div class="mb-3">
+                                        <label for="slogan_1_9999999" class="form-label">Slogan 1</label>
+                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="slogan_1_9999999" name="slogan_1_9999999">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="slogan_2_9999999" class="form-label">Slogan 2</label>
+                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="slogan_2_9999999" name="slogan_2_9999999">
+                                    </div>
+
+                                    <!-- Sekcja 1 -->
+                                    <div class="mb-3">
+                                        <label for="tytul_1_9999999" class="form-label">Tytuł sekcji 1</label>
+                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="tytul_1_9999999" name="tytul_1_9999999">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="podtytul_1_9999999" class="form-label">Podtytuł sekcji 1</label>
+                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="podtytul_1_9999999" name="podtytul_1_9999999">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="opis_1_9999999" class="form-label">Opis sekcji 1</label>
+                                        <textarea class="form-control bg-dark formatuj-maly-font" id="opis_1_9999999" name="opis_1_9999999" rows="3"></textarea>
+                                    </div>
+
+                                    <!-- Zagadki -->
+                                    <div class="mb-3">
+                                        <label for="tytul_zagadek_9999999" class="form-label">Tytuł zagadek</label>
+                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="tytul_zagadek_9999999" name="tytul_zagadek_9999999">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="podtytul_zagadek_9999999" class="form-label">Podtytuł zagadek</label>
+                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="podtytul_zagadek_9999999" name="podtytul_zagadek_9999999">
+                                    </div>
+
+                                    {% for i in range(1,4) %}
+                                    <div class="mb-3">
+                                        <label for="zagadka_{{i}}_tytul_9999999" class="form-label">Zagadka {{i}} - Tytuł</label>
+                                        <input type="text" class="form-control bg-dark formatuj-maly-font" id="zagadka_{{i}}_tytul_9999999" name="zagadka_{{i}}_tytul_9999999">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="zagadka_{{i}}_opis_9999999" class="form-label">Zagadka {{i}} - Opis</label>
+                                        <textarea class="form-control bg-dark formatuj-maly-font" id="zagadka_{{i}}_opis_9999999" name="zagadka_{{i}}_opis_9999999" rows="2"></textarea>
+                                    </div>
+                                    {% endfor %}
+
+                                    <!-- Obrazy -->
+                                    {% for name, cfg in obrazy.items() %}
+                                    <div class="mb-3">
+                                        <label for="{{name}}_9999999" class="form-label">
+                                        {{ cfg.label }} ({{cfg.w}}×{{cfg.h}})
+                                        </label>
+
+                                        <div>
+                                        <img src=""
+                                            id="{{name}}Preview_9999999"
+                                            style="max-height:100px; max-width:400px; border-radius:10px; margin-bottom:10px;" />
+                                        </div>
+
+                                        <div>
+                                        <input type="file"
+                                                class="form-control bg-dark formatuj-maly-font"
+                                                id="{{name}}_9999999"
+                                                name="{{name}}_9999999"
+                                                data-preview="{{name}}Preview_9999999"
+                                                accept="image/*"
+                                                data-w="{{cfg.w}}"
+                                                data-h="{{cfg.h}}"
+                                                onchange="previewImage(this, this.dataset.preview, this.dataset.w, this.dataset.h, 3)">
+                                        </div>
+
+                                        <small class="text-secondary">Wymagany wymiar: {{cfg.w}}×{{cfg.h}} px</small>
+                                    </div>
+                                    {% endfor %}
+
+                                    <!-- Ukryte pola -->
+                                    <input type="hidden" name="UserName_9999999" id="UserName_9999999" value="{{username}}">
+                                    <input type="hidden" name="formid" id="formid_9999999" value="9999999">
+                                    <input type="hidden" name="data_aktualizacji_9999999" id="data_aktualizacji_9999999" value="{{now().strftime('%Y-%m-%d %H:%M:%S')}}">
+
+                                    <!-- Przycisk -->
+                                    <button type="button" class="btn btn-success btn-sm" style="max-height: 30px; font-size: 12px;" onclick="prepareAndSubmitFormRealizacjeElitehome('9999999', false)">
+                                        Zapisz realizację
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% for post_data in posts %}
+                            {% set post_id  = post_data.id %}
+                        <!-- linia contentu tabeli ciemna-->
+                        <div>
+                            <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    {{post_id}}
+                                </div>
+                                <div class="col-xl-10 col-lg-10 col-sm-11 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {{post_data.tytul}}
+                                    </a>
+                                </div>
+                                
+                                <div class="d-none d-xl-block formatuj-maly-font" style="max-width: 200px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {{post_data.r_start}} - {{post_data.r_finish}}
+                                    </a>
+                                </div>
+                                <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {{post_data.data_aktualizacji}}
+                                    </a>
+                                </div>
+                                <div class="col-xl-2 col-lg-4 col-sm-1 d-flex justify-content-end" style="max-width: 80px;">
+                                    
+                                    <form method="POST" id="removeRealizacje_{{post_id}}" action="{{ url_for('remove_realizacje_elitehome') }}" enctype="multipart/form-data" onsubmit="return confirm('Czy na pewno chcesz usunąć realizację?');">
+
+                                            <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}"><i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i></a>
+
+                                            <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling_{{post_id}}" aria-controls="offcanvasScrolling_{{post_id}}"><i class="bi bi-pencil" style="color: #7eb5cc !important;"></i></a>
+                                        <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{username}}"/>
+                                        <input type="hidden" name="PostID" id="PostID_{{post_id}}" value="{{post_id}}"/>
+                                        <input type="hidden" name="photoLink" id="photoLink_{{post_id}}" value="{{post_data.zdjecie}}"/>
+                                        <button type="submit" class="custom-icon-button"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></button>
+                                        <!-- <a href="#"><i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i></a> -->
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- offcanvanse left -->
+                        <div class="offcanvas offcanvas-start bg-dark oc-width" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling_{{post_id}}" aria-labelledby="offcanvasScrollingLabel">
+                            <div class="offcanvas-header">
+                              <h4 class="offcanvas-title" id="offcanvasScrollingLabel">Edycja Realizacji id: {{post_id}}</h4>
+                              <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body formatuj-maly-font">
+                                <div class="tylko-klej">
+                                    <div style="color:#6a6a6a;">
+                                        <form method="POST"
+                                            id="editPost_{{post_id}}"
+                                            action="{{ url_for('save_realizacje_elitehome') }}"
+                                            enctype="multipart/form-data">
+
+                                        <!-- tytul -->
+                                        <div class="mb-3">
+                                            <label for="tytul_{{post_id}}" class="form-label">Tytuł</label>
+                                            <input type="text"
+                                                class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="tytul_{{post_id}}"
+                                                name="tytul_{{post_id}}"
+                                                value="{{ post_data.get('tytul','')|e }}"
+                                                required>
+                                        </div>
+
+                                        <!-- r_start / r_finish -->
+                                        <label class="form-label">Lata realizacji</label>
+                                        <div class="row row-cols-3 mb-3">
+                                            <div class="col-sm-4">
+                                            <input type="number"
+                                                    class="form-control bg-dark formatuj-maly-font"
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="r_start_{{post_id}}"
+                                                    name="r_start_{{post_id}}"
+                                                    placeholder="Rok rozpoczęcia"
+                                                    value="{{ post_data.get('r_start','') }}">
+                                            </div>
+                                            <div class="col-sm-4">
+                                            <input type="number"
+                                                    class="form-control bg-dark formatuj-maly-font"
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                    id="r_finish_{{post_id}}"
+                                                    name="r_finish_{{post_id}}"
+                                                    placeholder="Rok zakończenia"
+                                                    value="{{ post_data.get('r_finish','') }}">
+                                            </div>
+                                        </div>
+
+                                        <!-- slogany -->
+                                        <div class="mb-3">
+                                            <label for="slogan_1_{{post_id}}" class="form-label">Slogan 1</label>
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                id="slogan_1_{{post_id}}" name="slogan_1_{{post_id}}"
+                                                value="{{ post_data.get('slogan_1','')|e }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="slogan_2_{{post_id}}" class="form-label">Slogan 2</label>
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                id="slogan_2_{{post_id}}" name="slogan_2_{{post_id}}"
+                                                value="{{ post_data.get('slogan_2','')|e }}">
+                                        </div>
+
+                                        <!-- sekcja 1 -->
+                                        <div class="mb-3">
+                                            <label for="tytul_1_{{post_id}}" class="form-label">Tytuł sekcji 1</label>
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                id="tytul_1_{{post_id}}" name="tytul_1_{{post_id}}"
+                                                value="{{ post_data.get('tytul_1','')|e }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="podtytul_1_{{post_id}}" class="form-label">Podtytuł sekcji 1</label>
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                id="podtytul_1_{{post_id}}" name="podtytul_1_{{post_id}}"
+                                                value="{{ post_data.get('podtytul_1','')|e }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="opis_1_{{post_id}}" class="form-label">Opis sekcji 1</label>
+                                            <textarea class="form-control bg-dark formatuj-maly-font"
+                                                    id="opis_1_{{post_id}}" name="opis_1_{{post_id}}"
+                                                    rows="4">{{ post_data.get('opis_1','') }}</textarea>
+                                        </div>
+
+                                        <!-- zagadki -->
+                                        <div class="mb-3">
+                                            <label for="tytul_zagadek_{{post_id}}" class="form-label">Tytuł zagadek</label>
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                id="tytul_zagadek_{{post_id}}" name="tytul_zagadek_{{post_id}}"
+                                                value="{{ post_data.get('tytul_zagadek','')|e }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="podtytul_zagadek_{{post_id}}" class="form-label">Podtytuł zagadek</label>
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                id="podtytul_zagadek_{{post_id}}" name="podtytul_zagadek_{{post_id}}"
+                                                value="{{ post_data.get('podtytul_zagadek','')|e }}">
+                                        </div>
+
+                                        {% for i in [1,2,3] %}
+                                        <div class="mb-3">
+                                            <label for="zagadka_{{i}}_tytul_{{post_id}}" class="form-label">Zagadka {{i}} – Tytuł</label>
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                id="zagadka_{{i}}_tytul_{{post_id}}" name="zagadka_{{i}}_tytul_{{post_id}}"
+                                                value="{{ post_data.get('zagadka_' ~ i ~ '_tytul','')|e }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="zagadka_{{i}}_opis_{{post_id}}" class="form-label">Zagadka {{i}} – Opis</label>
+                                            <textarea class="form-control bg-dark formatuj-maly-font"
+                                                    id="zagadka_{{i}}_opis_{{post_id}}" name="zagadka_{{i}}_opis_{{post_id}}" rows="2">{{ post_data.get('zagadka_' ~ i ~ '_opis','') }}</textarea>
+                                        </div>
+                                        {% endfor %}
+
+                                        <!-- Obrazy wg słownika 'obrazy' z backendu -->
+                                        {% for name, cfg in obrazy.items() %}
+                                        <div class="mb-3">
+                                            <label for="{{name}}_{{post_id}}" class="form-label">
+                                            {{ cfg.label }} ({{cfg.w}}×{{cfg.h}})
+                                            </label>
+
+                                            <div>
+                                            <img src="{{ existing_images.get(name, '') }}"
+                                                id="{{name}}Preview_{{post_id}}"
+                                                style="max-height:100px; max-width:400px; border-radius:10px; margin-bottom:10px;" />
+                                            </div>
+
+                                            <div>
+                                            <input type="file"
+                                                    class="form-control bg-dark formatuj-maly-font"
+                                                    id="{{name}}_{{post_id}}"
+                                                    name="{{name}}_{{post_id}}"
+                                                    accept="image/*"
+                                                    data-preview="{{name}}Preview_{{post_id}}"
+                                                    data-w="{{cfg.w}}"
+                                                    data-h="{{cfg.h}}"
+                                                    onchange="previewImage(this, this.dataset.preview, this.dataset.w, this.dataset.h, 3)">
+                                            </div>
+
+                                            <small class="text-secondary">Wymagany wymiar: {{cfg.w}}×{{cfg.h}} px</small>
+                                        </div>
+                                        {% endfor %}
+
+                                        <!-- data_aktualizacji -->
+                                        <input type="hidden"
+                                                id="data_aktualizacji_{{post_id}}"
+                                                name="data_aktualizacji_{{post_id}}"
+                                                value="{{ post_data.get('data_aktualizacji', now().strftime('%Y-%m-%d %H:%M:%S')) }}">
+
+                                        <!-- Ukryte -->
+                                        <input type="hidden" name="UserName_{{post_id}}" id="UserName_{{post_id}}" value="{{username}}">
+                                        <input type="hidden" name="formid" id="formid_{{post_id}}" value="{{post_id}}">
+
+                                        <!-- Zapis -->
+                                        <button type="button" class="btn btn-success btn-sm"
+                                                style="max-height: 30px; font-size: 12px;"
+                                                onclick="prepareAndSubmitFormRealizacjeElitehome('{{post_id}}', true)">
+                                            Zapisz realizację
+                                        </button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <!-- collapse start -->
+                        <div class="sub-panel rogi collapse" id="collapse_id_{{post_id}}">
+                            <div class="row p-1">
+                                <div class="col-lg-4 col-sm-12">
+                                    <img src="{{post_data.zdjecie}}" alt="" class="img-thumbnail object-fit-cover rounded bg-dark mb-2" >
+                                </div>
+                                <div class="col-lg-7 col-sm-12">
+                                    <h5>{{post_data.tytul_ogloszenia}}</h5>
+                                    <p>{{post_data.opis}}</p>
+                                    <div class="row">
+                                        <!-- kateoria -->
+                                        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-folder"></i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.kategoria }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- rok -->
+                                        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-3 formatuj-maly-font">
+                                                    <i class="bi bi-helmet-safety"></i>
+                                                    <span class="text-secondary fw-lighter">{{ post_data.r_start }} - {{ post_data.r_finish }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- collapse end -->
+                        {% endfor %}
+                        <!-- Paginacja -->
+                        <span class="formatuj-maly-logout">{{ pagination.info }}</span>
+                        <div class="pagination formatuj-margin-top">
+                            <nav aria-label="Page navigation example">                            
+                                <ul class="pagination justify-content-center dark-mode">
+                                    <li class="page-item">{{ pagination.prev }}</li>
+                                    <li class="page-item">{{ pagination.links }}</li>
+                                    <li class="page-item">{{ pagination.next }}</li>
+                                </ul>
+                            </nav>
+                        </div>
+{% endblock %}
+
+

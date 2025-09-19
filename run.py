@@ -4535,6 +4535,374 @@ def remove_realizacje_budownictwo():
         flash('Wystąpił błąd podczas usuwania wpisu.', 'danger')
         return redirect(url_for('realization_budownictwo_list'))
 
+obrazy_elitehome = {
+    "minaturka": {"label":"Miniaturka", "w":365, "h":265},
+    "paralax_1": {"label":"Parallax 1", "w":1920, "h":1080},
+    "paralax_2": {"label":"Parallax 2", "w":1920, "h":1080},
+    "inside_1":  {"label":"Inside 1",  "w":1200, "h":800},
+    "inside_2":  {"label":"Inside 2",  "w":1200, "h":800}
+}
+
+@app.route('/realization-elitehome-list')
+def realization_elitehome_list():
+    """Strona z zarządzaniem realizacjami dmdelitehome."""
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(f'UWAGA! Nieautoryzowana próba dostępu do endpointa: /realization-elitehome-list', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['realizations'] == 0:
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        msq.handle_error(f'UWAGA! wywołanie adresu endpointa /realization-elitehome-list bez uprawnień do zarządzania.', log_path=logFileName)
+        return redirect(url_for('index'))
+ 
+    db = get_db()
+    query = """
+        SELECT *
+        FROM realizacje_elitehome
+        ORDER BY r_finish DESC;
+    """
+    all_posts = db.getFrom(query, as_dict=True)
+
+    # Ustawienia paginacji
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(all_posts)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
+    posts = all_posts[offset: offset + per_page]
+
+    return render_template(
+            "realization_dmdelitehome_list.html", 
+            posts=posts, 
+            username=session['username'], 
+            userperm=session['userperm'],
+            user_brands=session['brands'],
+            obrazy=obrazy_elitehome,
+            pagination=pagination,
+            )
+
+@app.route('/save-realizacje-elitehome', methods=['GET', 'POST'])
+def save_realizacje_elitehome():
+    """Zapis (create/update) realizacji EliteHome w oparciu o nową tabelę."""
+
+    # --- 1) Autoryzacja ---
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error('UWAGA! /save-realizacje-elitehome bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+
+    if session.get('userperm', {}).get('realizations', 0) == 0:
+        msq.handle_error(f'UWAGA! Próba bez uprawnień: {session.get("username")}', log_path=logFileName)
+        flash('Brak uprawnień do zarządzania zasobami.', 'danger')
+        return redirect(url_for('index'))
+
+    # --- 2) GET -> powrót do listy ---
+    if request.method == 'GET':
+        return redirect(url_for('realization_elitehome_list'))
+
+    # --- 3) POST: dane bazowe ---
+    form = request.form.to_dict()
+    files = request.files
+
+    formid = form.get('formid')
+    try:
+        int(formid)
+    except (TypeError, ValueError):
+        msq.handle_error('Błąd! Nieprawidłowe formid.', log_path=logFileName)
+        flash('Nieprawidłowy identyfikator formularza.', 'danger')
+        return redirect(url_for('realization_elitehome_list'))
+
+    post_id = formid
+    is_create = (post_id == '9999999')
+
+    # Helpery do pobierania wartości z sufiksem _{id}
+    def get_val(key, default=''):
+        return (form.get(f'{key}_{post_id}', default) or '').strip()
+
+    def get_int_or_none(key):
+        v = get_val(key, '')
+        if not v:
+            return None
+        try:
+            return int(v)
+        except ValueError:
+            return None
+
+    # --- 4) Konfiguracja uploadów ---
+    settings = generator_settingsDB()
+    base_root = (settings.get('real-location-on-server', '') or '').rstrip('/')
+    url_base  = settings.get('main-domain', '')           # np. 'https://dmddomy.pl/'
+    url_path  = settings.get('blog-pic-path', '')         # np. '/images/realizacje/'
+    pics_rel  = (settings.get('blog-pic-path') or '').lstrip('/')
+    upload_dir = os.path.join(base_root, pics_rel)
+    os.makedirs(upload_dir, exist_ok=True)
+
+    def public_url(filename: str) -> str:
+        return (url_base.rstrip('/') + '/' + url_path.lstrip('/')).rstrip('/') + '/' + filename
+
+    def handle_upload(field_name: str):
+        """Zwraca (filename, public_url) lub (None, None) jeśli brak pliku/niepoprawny."""
+        f = files.get(field_name)
+        if not f or not f.filename:
+            return None, None
+        if not allowed_file(f.filename):
+            flash('Niedozwolony format pliku (dozwolone: jpg, jpeg, png, webp).', 'danger')
+            return None, None
+        fname = f'{int(time.time())}_{secure_filename(f.filename)}'
+        f.save(os.path.join(upload_dir, fname))
+        return fname, public_url(fname)
+
+    # --- 5) Definicja pól tekstowych z tabeli (mapowanie 1:1) ---
+    text_cols = [
+        'tytul', 'slogan_1', 'slogan_2',
+        'tytul_1', 'podtytul_1', 'opis_1',
+        'tytul_zagadek', 'podtytul_zagadek',
+        'zagadka_1_tytul', 'zagadka_1_opis',
+        'zagadka_2_tytul', 'zagadka_2_opis',
+        'zagadka_3_tytul', 'zagadka_3_opis',
+    ]
+    # wartości ze wskaźnikiem _{id} w nazwie
+    text_values = {col: get_val(col, '') for col in text_cols}
+
+    # lata realizacji
+    r_start = get_int_or_none('r_start')
+    r_finish = get_int_or_none('r_finish')
+
+    if r_start is None or r_finish is None:
+        flash('Rok rozpoczęcia i zakończenia muszą być liczbami.', 'danger')
+        return redirect(url_for('realization_elitehome_list'))
+    if r_start > r_finish:
+        flash('Rok zakończenia nie może być wcześniejszy niż rozpoczęcia.', 'danger')
+        return redirect(url_for('realization_elitehome_list'))
+
+    # minimalne wymagania: tytul + opis_1
+    if not text_values.get('tytul') or not text_values.get('opis_1'):
+        flash('Wymagane pola: Tytuł i Opis sekcji 1.', 'danger')
+        return redirect(url_for('realization_elitehome_list'))
+
+    # --- 6) Obsługa obrazów wg słownika 'obrazy_elitehome' ---
+    
+    image_keys = list(obrazy_elitehome.keys())  # ['minaturka','paralax_1','paralax_2','inside_1','inside_2']
+    new_image_urls = {}               # zebrane nowe URL-e (dla update/insert)
+
+    # Przy UPDATE pobieramy stare wartości, by ewentualnie usunąć stare pliki po podmianie
+    old_images = {}
+    if not is_create:
+        db_fetch = get_db()
+        # pobierz aktualny rekord
+        cols_to_fetch = ', '.join(image_keys)
+        row = db_fetch.fetch_one(
+            query=f"SELECT {cols_to_fetch} FROM realizacje_elitehome WHERE id=%s",
+            params=(int(post_id),)
+        )
+        if row and isinstance(row, dict):
+            old_images = {k: row.get(k) for k in image_keys}
+        else:
+            # w niektórych wrapperach fetch_one mapuje atrybuty na obiekt
+            old_images = {k: getattr(db_fetch, k, None) for k in image_keys}
+
+    # wrzucamy nowe pliki (jeśli wybrane)
+    for key in image_keys:
+        fname, url = handle_upload(f'{key}_{post_id}')
+        if url:
+            new_image_urls[key] = url
+
+    # CREATE wymaga miniaturki (jeśli chcesz luzem — usuń to sprawdzenie)
+    if is_create and 'minaturka' not in new_image_urls:
+        flash('Dodaj Miniaturkę (wymagana przy tworzeniu).', 'danger')
+        return redirect(url_for('realization_elitehome_list'))
+
+    # --- 7) Składanie SQL ---
+    now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    db = get_db()
+    if is_create:
+        # budujemy dynamicznie listę kolumn/params
+        cols = ['tytul', 'r_start', 'r_finish', 'data_aktualizacji']
+        vals = [text_values['tytul'], r_start, r_finish, now_str]
+
+        # tekstowe
+        for c in text_cols:
+            if c != 'tytul':  # tytul już dodany
+                cols.append(c)
+                vals.append(text_values[c])
+
+        # obrazy_elitehome: miniaturka jest wymagana, ale dodajemy wszystkie, które są
+        for key in image_keys:
+            cols.append(key)
+            vals.append(new_image_urls.get(key, ''))  # brak = pusty string lub NULL (jak wolisz)
+
+        placeholders = ', '.join(['%s'] * len(vals))
+        insert_sql = f"INSERT INTO realizacje_elitehome ({', '.join(cols)}) VALUES ({placeholders});"
+
+        if not db.executeTo(query=insert_sql, params=tuple(vals)):
+            msq.handle_error('Błąd INSERT realizacji.', log_path=logFileName)
+            flash('Błąd podczas tworzenia wpisu.', 'danger')
+            return redirect(url_for('realization_elitehome_list'))
+
+        msq.handle_error(f'Nowa realizacja: {text_values["tytul"]} (by {session.get("username")})', log_path=logFileName)
+        flash('Nowy wpis został dodany.', 'success')
+        return redirect(url_for('realization_elitehome_list'))
+
+    else:
+        # UPDATE: składamy SET-clauses tylko dla tego, co aktualizujemy
+        set_clauses = []
+        params = []
+
+        # podstawowe
+        set_clauses += ['tytul=%s', 'r_start=%s', 'r_finish=%s', 'data_aktualizacji=%s']
+        params += [text_values['tytul'], r_start, r_finish, now_str]
+
+        # tekstowe
+        for c in text_cols:
+            if c != 'tytul':
+                set_clauses.append(f'{c}=%s')
+                params.append(text_values[c])
+
+        # obrazy_elitehome: tylko te, które faktycznie zostały uploadowane
+        for key, url in new_image_urls.items():
+            set_clauses.append(f'{key}=%s')
+            params.append(url)
+
+        update_sql = f"UPDATE realizacje_elitehome SET {', '.join(set_clauses)} WHERE id=%s;"
+        params.append(int(post_id))
+
+        if db.executeTo(query=update_sql, params=tuple(params)):
+            # sprzątanie starych plików, tylko jeśli dany obrazek został podmieniony
+            def _basename(u: str):
+                u = (u or '').split('?', 1)[0].split('#', 1)[0]
+                return os.path.basename(u)
+
+            upload_dir_real = os.path.realpath(upload_dir)
+
+            for key, new_url in new_image_urls.items():
+                old_url = (old_images or {}).get(key)
+                if not old_url:
+                    continue
+                old_name = _basename(old_url)
+                new_name = _basename(new_url)
+                if old_name and new_name and old_name != new_name:
+                    old_path = os.path.join(upload_dir, old_name)
+                    try:
+                        old_path_real = os.path.realpath(old_path)
+                        if old_path_real.startswith(upload_dir_real + os.sep) or old_path_real == upload_dir_real:
+                            if os.path.exists(old_path_real):
+                                try:
+                                    os.remove(old_path_real)
+                                except OSError as e:
+                                    msq.handle_error(f'Nie udało się usunąć starego pliku: {old_path_real} ({e})', log_path=logFileName)
+                        else:
+                            msq.handle_error(f'Ścieżka poza katalogiem uploadów! {old_path_real}', log_path=logFileName)
+                    except Exception as e:
+                        msq.handle_error(f'Błąd przy usuwaniu starego pliku: {e}', log_path=logFileName)
+
+            msq.handle_error(f'Zaktualizowano realizację: {text_values["tytul"]} (by {session.get("username")})', log_path=logFileName)
+            flash('Dane zostały zapisane.', 'success')
+            return redirect(url_for('realization_elitehome_list'))
+
+        msq.handle_error('Błąd UPDATE realizacji.', log_path=logFileName)
+        flash('Wystąpił błąd podczas zapisu.', 'danger')
+        return redirect(url_for('realization_elitehome_list'))
+
+
+
+@app.route('/remove-realizacje-elitehome', methods=['POST'])
+def remove_realizacje_elitehome():
+    """Usuwanie realizacji + wszystkich powiązanych plików obrazów."""
+
+    # --- 1) Autoryzacja ---
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error('UWAGA! /remove-realizacje-elitehome bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+
+    if session.get('userperm', {}).get('realizations', 0) == 0:
+        msq.handle_error(f'UWAGA! Próba bez uprawnień: {session.get("username")}', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami.', 'danger')
+        return redirect(url_for('index'))
+
+    # --- 2) Dane wejściowe ---
+    form_data = request.form.to_dict()
+    try:
+        post_id = int(form_data.get('PostID'))
+    except (TypeError, ValueError):
+        flash('Nieprawidłowe ID wpisu.', 'danger')
+        return redirect(url_for('realization_elitehome_list'))
+
+    # --- 3) Konfiguracja ścieżek uploadów ---
+    settingsDB   = generator_settingsDB()
+    base_root    = (settingsDB.get('real-location-on-server', '') or '').rstrip('/')   # np. /var/www/html/appdmddomy/public
+    pics_rel     = (settingsDB.get('blog-pic-path', '') or '').lstrip('/')             # np. images/realizacje
+    upload_dir   = os.path.join(base_root, pics_rel)
+    upload_dir_real = os.path.realpath(upload_dir)
+
+    # --- 4) Pobierz rekord i wszystkie kolumny obrazów z bazy ---
+    # Lista kolumn obrazów – spójna ze słownikiem `obrazy_elitehome` w backendzie
+    image_cols = list(obrazy_elitehome.keys())   # ["minaturka","paralax_1","paralax_2","inside_1","inside_2"]
+
+    db = get_db()
+    cols_sql = ', '.join(['id'] + image_cols)
+    row = db.fetch_one(
+        query=f"SELECT {cols_sql} FROM realizacje_elitehome WHERE id=%s",
+        params=(post_id,)
+    )
+
+    # Obsługa różnych wrapperów
+    if not row:
+        flash('Nie znaleziono wpisu do usunięcia.', 'warning')
+        return redirect(url_for('realization_elitehome_list'))
+
+    def get_col(obj, key):
+        # dict lub atrybut na obiekcie wrappera
+        if isinstance(obj, dict):
+            return obj.get(key)
+        return getattr(db, key, None)
+
+    # Zbierz URL-e obrazów
+    image_urls = {col: get_col(row, col) for col in image_cols}
+
+    # --- 5) Pomocnicze: nazwa pliku z URL oraz bezpieczne usunięcie ---
+    def url_to_basename(u: str) -> str:
+        if not u:
+            return ''
+        clean = u.split('?', 1)[0].split('#', 1)[0]
+        return os.path.basename(clean)
+
+    def try_remove_from_uploads(filename: str):
+        if not filename:
+            return
+        candidate = os.path.join(upload_dir, filename)
+        try:
+            cand_real = os.path.realpath(candidate)
+            # Bezpieczeństwo: kasujemy tylko wewnątrz katalogu uploadów
+            if cand_real == upload_dir_real or cand_real.startswith(upload_dir_real + os.sep):
+                if os.path.exists(cand_real):
+                    try:
+                        os.remove(cand_real)
+                    except OSError as e:
+                        msq.handle_error(f'Nie udało się usunąć pliku: {cand_real} ({e})', log_path=logFileName)
+                else:
+                    # brak pliku – log, ale nie błąd
+                    msq.handle_error(f'Plik nie istnieje: {cand_real}', log_path=logFileName)
+            else:
+                msq.handle_error(f'Ścieżka poza katalogiem uploadów! {cand_real}', log_path=logFileName)
+        except Exception as e:
+            msq.handle_error(f'Błąd przy usuwaniu pliku ({filename}): {e}', log_path=logFileName)
+
+    # --- 6) Usuń rekord z bazy, a następnie pliki (lub odwrotnie wg preferencji) ---
+    # Opcja A (najbezpieczniej dla spójności): najpierw delete w DB, potem pliki
+    deleted = db.executeTo("DELETE FROM realizacje_elitehome WHERE id=%s;", (post_id,))
+    if not deleted:
+        flash('Nie znaleziono wpisu do usunięcia.', 'warning')
+        return redirect(url_for('realization_elitehome_list'))
+
+    # Usuń powiązane pliki (każdy z kolumn obrazów)
+    for col, url in image_urls.items():
+        try_remove_from_uploads(url_to_basename(url))
+
+    msq.handle_error(f'Realizacja id={post_id} usunięta przez {session.get("username")}', log_path=logFileName)
+    flash('Wpis został usunięty.', 'success')
+    return redirect(url_for('realization_elitehome_list'))
+
 
 @app.route('/ustawieni_pracownicy', methods=['POST'])
 def ustawieni_pracownicy():
