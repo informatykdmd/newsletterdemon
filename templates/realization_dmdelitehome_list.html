@@ -609,105 +609,105 @@
 
 
                                 <div class="col-lg-8 col-sm-12">
-                                <h5 class="mb-1">{{ post_data.tytul }}</h5>
+                                    <h5 class="mb-1">{{ post_data.tytul }}</h5>
 
-                                <div class="row">
-                                    <!-- lata realizacji -->
-                                    <div class="col-xl-4 col-lg-5 col-md-5 col-sm-12">
-                                    <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                        <div class="ms-1 formatuj-maly-font">
-                                        <i class="bi bi-helmet-safety"></i>
-                                        <span class="text-secondary fw-lighter">
-                                            {{ post_data.r_start }}{% if post_data.r_finish %} – {{ post_data.r_finish }}{% endif %}
-                                        </span>
+                                    <div class="row">
+                                        <!-- lata realizacji -->
+                                        <div class="col-xl-4 col-lg-5 col-md-5 col-sm-12">
+                                            <div class="ms-1 formatuj-maly-font">
+                                                <i class="bi bi-helmet-safety"></i>
+                                                <span class="text-secondary fw-lighter">
+                                                    {{ post_data.r_start }}{% if post_data.r_finish %} – {{ post_data.r_finish }}{% endif %}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    </div>
-                                </div>
 
-                                {% if post_data.slogan_1 or post_data.slogan_2 %}
-                                <p class="text-secondary mb-2">
-                                    {% if post_data.slogan_1 %}<em>{{ post_data.slogan_1 }}</em>{% endif %}
-                                    {% if post_data.slogan_1 and post_data.slogan_2 %} &nbsp;|&nbsp; {% endif %}
-                                    {% if post_data.slogan_2 %}<em>{{ post_data.slogan_2 }}</em>{% endif %}
-                                </p>
-                                {% endif %}
-
-                                <!-- sekcja 1 (tytuł + podtytuł) -->
-                                {% if post_data.tytul_1 or post_data.podtytul_1 %}
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                    <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                        <div class="ms-1 formatuj-maly-font">
-                                            <i class="bi bi-info-circle"></i>
-                                            <span class="text-secondary fw-lighter">
-                                                {% if post_data.tytul_1 %}<strong>{{ post_data.tytul_1 }}</strong>{% endif %}
-                                                {% if post_data.tytul_1 and post_data.podtytul_1 %} — {% endif %}
-                                                {% if post_data.podtytul_1 %}{{ post_data.podtytul_1 }}{% endif %}
-                                            </span>
-                                        </div>
-                                        <p class="mb-2">{{ post_data.opis_1 }}</p>
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                <!-- sekcja 2 (tytuł + podtytuł) -->
-                                {% if post_data.tytul_2 or post_data.podtytul_2 %}
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                    <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                        <div class="ms-1 formatuj-maly-font">
-                                            <i class="bi bi-info-circle"></i>
-                                            <span class="text-secondary fw-lighter">
-                                                {% if post_data.tytul_2 %}<strong>{{ post_data.tytul_2 }}</strong>{% endif %}
-                                                {% if post_data.tytul_2 and post_data.podtytul_2 %} — {% endif %}
-                                                {% if post_data.podtytul_2 %}{{ post_data.podtytul_2 }}{% endif %}
-                                            </span>
-                                        </div>
-                                        <p class="mb-2">{{ post_data.opis_2 }}</p>
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                <!-- Zagadki -->
-                                {% if post_data.tytul_zagadek or post_data.podtytul_zagadek
-                                        or post_data.zagadka_1_tytul or post_data.zagadka_2_tytul or post_data.zagadka_3_tytul %}
-                                <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                    <div class="ms-1">
-                                    {% if post_data.tytul_zagadek %}
-                                        <h6 class="mb-1">{{ post_data.tytul_zagadek }}</h6>
+                                    {% if post_data.slogan_1 or post_data.slogan_2 %}
+                                    <p class="text-secondary mb-2">
+                                        {% if post_data.slogan_1 %}<em>{{ post_data.slogan_1 }}</em>{% endif %}
+                                        {% if post_data.slogan_1 and post_data.slogan_2 %} &nbsp;|&nbsp; {% endif %}
+                                        {% if post_data.slogan_2 %}<em>{{ post_data.slogan_2 }}</em>{% endif %}
+                                    </p>
                                     {% endif %}
-                                    {% if post_data.podtytul_zagadek %}
-                                        <p class="text-secondary mb-2">{{ post_data.podtytul_zagadek }}</p>
-                                    {% endif %}
-
-                                    <div class="row g-2">
-                                        {% for i in [1,2,3] %}
-                                        {% set key_t = 'zagadka_' ~ i ~ '_tytul' %}
-                                        {% set key_o = 'zagadka_' ~ i ~ '_opis' %}
-                                        {% set t = post_data.get(key_t) %}
-                                        {% set o = post_data.get(key_o) %}
-                                        {% if t or o %}
-                                        <div class="col-md-4 col-sm-12">
-                                            <div class="border border-1 border-secondary rounded p-2 h-100">
-                                            {% if t %}<div class="fw-semibold mb-1">{{ t }}</div>{% endif %}
-                                            {% if o %}<div class="text-secondary formatuj-maly-font">{{ o }}</div>{% endif %}
+                                    
+                                    <div class="row">
+                                        <!-- sekcja 1 (tytuł + podtytuł) -->
+                                        {% if post_data.tytul_1 or post_data.podtytul_1 %}
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-1 formatuj-maly-font">
+                                                    <i class="bi bi-info-circle"></i>
+                                                    <span class="text-secondary fw-lighter">
+                                                        {% if post_data.tytul_1 %}<strong>{{ post_data.tytul_1 }}</strong>{% endif %}
+                                                        {% if post_data.tytul_1 and post_data.podtytul_1 %} — {% endif %}
+                                                        {% if post_data.podtytul_1 %}{{ post_data.podtytul_1 }}{% endif %}
+                                                    </span>
+                                                </div>
+                                                <p class="mb-2">{{ post_data.opis_1 }}</p>
                                             </div>
                                         </div>
                                         {% endif %}
-                                        {% endfor %}
+    
+                                        <!-- sekcja 2 (tytuł + podtytuł) -->
+                                        {% if post_data.tytul_2 or post_data.podtytul_2 %}
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                            <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                                <div class="ms-1 formatuj-maly-font">
+                                                    <i class="bi bi-info-circle"></i>
+                                                    <span class="text-secondary fw-lighter">
+                                                        {% if post_data.tytul_2 %}<strong>{{ post_data.tytul_2 }}</strong>{% endif %}
+                                                        {% if post_data.tytul_2 and post_data.podtytul_2 %} — {% endif %}
+                                                        {% if post_data.podtytul_2 %}{{ post_data.podtytul_2 }}{% endif %}
+                                                    </span>
+                                                </div>
+                                                <p class="mb-2">{{ post_data.opis_2 }}</p>
+                                            </div>
+                                        </div>
+                                        {% endif %}
                                     </div>
+
+                                    <!-- Zagadki -->
+                                    {% if post_data.tytul_zagadek or post_data.podtytul_zagadek
+                                            or post_data.zagadka_1_tytul or post_data.zagadka_2_tytul or post_data.zagadka_3_tytul %}
+                                    <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                        <div class="ms-1">
+                                        {% if post_data.tytul_zagadek %}
+                                            <h6 class="mb-1">{{ post_data.tytul_zagadek }}</h6>
+                                        {% endif %}
+                                        {% if post_data.podtytul_zagadek %}
+                                            <p class="text-secondary mb-2">{{ post_data.podtytul_zagadek }}</p>
+                                        {% endif %}
+
+                                        <div class="row g-2">
+                                            {% for i in [1,2,3] %}
+                                            {% set key_t = 'zagadka_' ~ i ~ '_tytul' %}
+                                            {% set key_o = 'zagadka_' ~ i ~ '_opis' %}
+                                            {% set t = post_data.get(key_t) %}
+                                            {% set o = post_data.get(key_o) %}
+                                            {% if t or o %}
+                                            <div class="col-md-4 col-sm-12">
+                                                <div class="border border-1 border-secondary rounded p-2 h-100">
+                                                {% if t %}<div class="fw-semibold mb-1">{{ t }}</div>{% endif %}
+                                                {% if o %}<div class="text-secondary formatuj-maly-font">{{ o }}</div>{% endif %}
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        </div>
                                     </div>
-                                </div>
-                                {% endif %}
+                                    {% endif %}
 
-                                
+                                    
 
-                                <!-- Data aktualizacji -->
-                                {% if post_data.data_aktualizacji %}
-                                <div class="text-secondary formatuj-maly-font mt-2">
-                                    <i class="bi bi-clock-history"></i>
-                                    Ostatnia aktualizacja: {{ post_data.data_aktualizacji }}
-                                </div>
-                                {% endif %}
+                                    <!-- Data aktualizacji -->
+                                    {% if post_data.data_aktualizacji %}
+                                    <div class="text-secondary formatuj-maly-font mt-2">
+                                        <i class="bi bi-clock-history"></i>
+                                        Ostatnia aktualizacja: {{ post_data.data_aktualizacji }}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
