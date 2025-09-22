@@ -34,10 +34,10 @@
                     <li><a class="dropdown-item" href="/realization-domy-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">Domy</a></li>
                 {% endif%}
                 {% if user_brands['budownictwo'] == 1 %}
-                    <li><a class="dropdown-item active" href="/realization-budownictwo-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">Budownictwo</a></li>
+                    <li><a class="dropdown-item" href="/realization-budownictwo-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">Budownictwo</a></li>
                 {% endif%}
                 {% if user_brands['elitehome'] == 1 %}
-                    <li><a class="team_button_elitehome dropdown-item" href="/realization-elitehome-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">EliteHome</a></li>
+                    <li><a class="team_button_elitehome dropdown-item active" href="/realization-elitehome-list" style="max-height: 29px; font-size: 12px; font-weight: 100;">EliteHome</a></li>
                 {% endif%}
             </ul>
         </div>
@@ -80,10 +80,10 @@
                     <li><a class="dropdown-item" href="/realization-domy-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">Domy</a></li>
                 {% endif%}
                 {% if user_brands['budownictwo'] == 1 %}
-                    <li><a class="dropdown-item active" href="/realization-budownictwo-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">Budownictwo</a></li>
+                    <li><a class="dropdown-item" href="/realization-budownictwo-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">Budownictwo</a></li>
                 {% endif%}
                 {% if user_brands['elitehome'] == 1 %}
-                    <li><a class="team_button_elitehome dropdown-item" href="/realization-elitehome-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">EliteHome</a></li>
+                    <li><a class="team_button_elitehome dropdown-item active" href="/realization-elitehome-list" style="max-height: 40px; font-size: 15px; font-weight: 100;">EliteHome</a></li>
                 {% endif%}
             </ul>
         </div>
@@ -125,10 +125,10 @@
                     <li><a class="dropdown-item" href="/realization-domy-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">Domy</a></li>
                 {% endif%}
                 {% if user_brands['budownictwo'] == 1 %}
-                    <li><a class="team_button_budownictwo dropdown-item active" href="/realization-budownictwo-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">Budownictwo</a></li>
+                    <li><a class="dropdown-item" href="/realization-budownictwo-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">Budownictwo</a></li>
                 {% endif%}
                 {% if user_brands['elitehome'] == 1 %}
-                    <li><a class="team_button_elitehome dropdown-item" href="/realization-elitehome-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">EliteHome</a></li>
+                    <li><a class="team_button_elitehome dropdown-item active" href="/realization-elitehome-list" style="max-height: 45px; font-size: 20px; font-weight: 100;">EliteHome</a></li>
                 {% endif%}
             </ul>
         </div>
@@ -270,6 +270,20 @@
                                     <div class="mb-3">
                                         <label for="opis_1_9999999" class="form-label">Opis sekcji 1</label>
                                         <textarea style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="opis_1_9999999" name="opis_1_9999999" rows="3"></textarea>
+                                    </div>
+
+                                    <!-- Sekcja 2 -->
+                                    <div class="mb-3">
+                                        <label for="tytul_2_9999999" class="form-label">Tytuł sekcji 2</label>
+                                        <input type="text" style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="tytul_2_9999999" name="tytul_2_9999999">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="podtytul_2_9999999" class="form-label">Podtytuł sekcji 2</label>
+                                        <input type="text" style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="podtytul_2_9999999" name="podtytul_2_9999999">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="opis_1_9999999" class="form-label">Opis sekcji 2</label>
+                                        <textarea style="color:#c2c2c2; border:#6a6a6a solid 1px;" class="form-control bg-dark formatuj-maly-font" id="opis_2_9999999" name="opis_2_9999999" rows="3"></textarea>
                                     </div>
 
                                     <!-- Zagadki -->
@@ -461,6 +475,29 @@
                                                     rows="4">{{ post_data.get('opis_1','') }}</textarea>
                                         </div>
 
+                                        <!-- sekcja 2 -->
+                                        <div class="mb-3">
+                                            <label for="tytul_2_{{post_id}}" class="form-label">Tytuł sekcji 2</label>
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="tytul_2_{{post_id}}" name="tytul_2_{{post_id}}"
+                                                value="{{ post_data.get('tytul_2','')|e }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="podtytul_2_{{post_id}}" class="form-label">Podtytuł sekcji 2</label>
+                                            <input type="text" class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                id="podtytul_2_{{post_id}}" name="podtytul_2_{{post_id}}"
+                                                value="{{ post_data.get('podtytul_2','')|e }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="opis_2_{{post_id}}" class="form-label">Opis sekcji 2</label>
+                                            <textarea class="form-control bg-dark formatuj-maly-font"
+                                                style="color:#c2c2c2; border:#6a6a6a solid 1px;"    
+                                                id="opis_2_{{post_id}}" name="opis_2_{{post_id}}"
+                                                    rows="4">{{ post_data.get('opis_2','') }}</textarea>
+                                        </div>
+
                                         <!-- zagadki -->
                                         <div class="mb-3">
                                             <label for="tytul_zagadek_{{post_id}}" class="form-label">Tytuł zagadek</label>
@@ -582,7 +619,41 @@
                                 </p>
                                 {% endif %}
 
-                                <p class="mb-2">{{ post_data.opis_1 }}</p>
+                                <!-- sekcja 1 (tytuł + podtytuł) -->
+                                {% if post_data.tytul_1 or post_data.podtytul_1 %}
+                                <div class="col-xl-8 col-lg-7 col-md-7 col-sm-12">
+                                    <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                        <div class="ms-1 formatuj-maly-font">
+                                            <i class="bi bi-info-circle"></i>
+                                            <span class="text-secondary fw-lighter">
+                                                {% if post_data.tytul_1 %}<strong>{{ post_data.tytul_1 }}</strong>{% endif %}
+                                                {% if post_data.tytul_1 and post_data.podtytul_1 %} — {% endif %}
+                                                {% if post_data.podtytul_1 %}{{ post_data.podtytul_1 }}{% endif %}
+                                            </span>
+                                        </div>
+                                        <p class="mb-2">{{ post_data.opis_1 }}</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- sekcja 2 (tytuł + podtytuł) -->
+                                {% if post_data.tytul_2 or post_data.podtytul_2 %}
+                                <div class="col-xl-8 col-lg-7 col-md-7 col-sm-12">
+                                    <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                        <div class="ms-1 formatuj-maly-font">
+                                            <i class="bi bi-info-circle"></i>
+                                            <span class="text-secondary fw-lighter">
+                                                {% if post_data.tytul_2 %}<strong>{{ post_data.tytul_2 }}</strong>{% endif %}
+                                                {% if post_data.tytul_2 and post_data.podtytul_2 %} — {% endif %}
+                                                {% if post_data.podtytul_2 %}{{ post_data.podtytul_2 }}{% endif %}
+                                            </span>
+                                        </div>
+                                        <p class="mb-2">{{ post_data.opis_2 }}</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                
 
                                 <div class="row">
                                     <!-- lata realizacji -->
@@ -597,21 +668,12 @@
                                     </div>
                                     </div>
 
-                                    <!-- sekcja 1 (tytuł + podtytuł) -->
-                                    {% if post_data.tytul_1 or post_data.podtytul_1 %}
-                                    <div class="col-xl-8 col-lg-7 col-md-7 col-sm-12">
-                                    <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
-                                        <div class="ms-1 formatuj-maly-font">
-                                        <i class="bi bi-info-circle"></i>
-                                        <span class="text-secondary fw-lighter">
-                                            {% if post_data.tytul_1 %}<strong>{{ post_data.tytul_1 }}</strong>{% endif %}
-                                            {% if post_data.tytul_1 and post_data.podtytul_1 %} — {% endif %}
-                                            {% if post_data.podtytul_1 %}{{ post_data.podtytul_1 }}{% endif %}
-                                        </span>
-                                        </div>
+                                    
+                                </div>
+                                <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
+                                    <div class="ms-1">
+                                        {% if post_data.podtytul_1 %}{{ post_data.podtytul_1 }}{% endif %}
                                     </div>
-                                    </div>
-                                    {% endif %}
                                 </div>
 
                                 <!-- Zagadki -->

@@ -194,7 +194,12 @@ function prepareAndSubmitFormRealizacjeElitehome(postId, oldFotos = true) {
 
   // Pola wg nowej tabeli
   const tytul   = getVal('tytul_'   + postId);
+  const tytul1   = getVal('tytul_1_'  + postId);
+  const podtytul1   = getVal('podtytul_1_'  + postId);
   const opis1   = getVal('opis_1_'  + postId);
+  const tytul2   = getVal('tytul_2_'  + postId);
+  const podtytul2   = getVal('podtytul_2_'  + postId);
+  const opis2   = getVal('opis_2_'  + postId);
 
   // Kategoria: tylko jeśli masz ją w tym formularzu
   const hasCategory = exists('category_' + postId);
@@ -209,7 +214,12 @@ function prepareAndSubmitFormRealizacjeElitehome(postId, oldFotos = true) {
   // Zbieramy brakujące pola
   const missing = [];
   if (!tytul) missing.push('Tytuł');
+  if (!tytul1) missing.push('Tytuł sekcji 1');
+  if (!podtytul1) missing.push('Podtytuł sekcji 1');
   if (!opis1) missing.push('Opis sekcji 1');
+  if (!tytul2) missing.push('Tytuł sekcji 2');
+  if (!podtytul2) missing.push('Podtytuł sekcji 2');
+  if (!opis2) missing.push('Opis sekcji 2');
 
   // Kategoria wymagająca tylko jeśli pole jest obecne w DOM
   if (hasCategory && !category) missing.push('Kategoria');

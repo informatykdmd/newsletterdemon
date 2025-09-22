@@ -4656,6 +4656,7 @@ def save_realizacje_elitehome():
     text_cols = [
         'tytul', 'slogan_1', 'slogan_2',
         'tytul_1', 'podtytul_1', 'opis_1',
+        'tytul_2', 'podtytul_2', 'opis_2',
         'tytul_zagadek', 'podtytul_zagadek',
         'zagadka_1_tytul', 'zagadka_1_opis',
         'zagadka_2_tytul', 'zagadka_2_opis',
