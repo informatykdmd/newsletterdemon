@@ -4654,7 +4654,7 @@ def save_realizacje_elitehome():
 
     # --- 5) Definicja pól tekstowych z tabeli (mapowanie 1:1) ---
     text_cols = [
-        'tytul', 'slogan_1', 'slogan_2',
+        'tytul', 'slogan_1', 'slogan_2', 'slogan_3', 'slogan_4',
         'tytul_1', 'podtytul_1', 'opis_1',
         'tytul_2', 'podtytul_2', 'opis_2',
         'tytul_zagadek', 'podtytul_zagadek',
