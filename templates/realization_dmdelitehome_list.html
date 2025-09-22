@@ -637,14 +637,13 @@
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="ms-1 formatuj-maly-font">
-                                                    <i class="bi bi-info-circle"></i>
-                                                    <span class="text-secondary fw-lighter">
+                                                    <span class="fw-lighter">
                                                         {% if post_data.tytul_1 %}<strong>{{ post_data.tytul_1 }}</strong>{% endif %}
                                                         {% if post_data.tytul_1 and post_data.podtytul_1 %} — {% endif %}
                                                         {% if post_data.podtytul_1 %}{{ post_data.podtytul_1 }}{% endif %}
                                                     </span>
+                                                    <p class="mb-2 text-secondary">{{ post_data.opis_1 }}</p>
                                                 </div>
-                                                <p class="mb-2">{{ post_data.opis_1 }}</p>
                                             </div>
                                         </div>
                                         {% endif %}
@@ -654,14 +653,13 @@
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                             <div class="border border-1 border-secondary rounded m-1 p-2 formatuj-hover">
                                                 <div class="ms-1 formatuj-maly-font">
-                                                    <i class="bi bi-info-circle"></i>
-                                                    <span class="text-secondary fw-lighter">
+                                                    <span class="fw-lighter">
                                                         {% if post_data.tytul_2 %}<strong>{{ post_data.tytul_2 }}</strong>{% endif %}
                                                         {% if post_data.tytul_2 and post_data.podtytul_2 %} — {% endif %}
                                                         {% if post_data.podtytul_2 %}{{ post_data.podtytul_2 }}{% endif %}
                                                     </span>
+                                                    <p class="mb-2 text-secondary">{{ post_data.opis_2 }}</p>
                                                 </div>
-                                                <p class="mb-2">{{ post_data.opis_2 }}</p>
                                             </div>
                                         </div>
                                         {% endif %}
