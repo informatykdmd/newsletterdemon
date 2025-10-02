@@ -1858,7 +1858,25 @@ def send_chat_message():
             msq.handle_error(f'Użytkownik {username} aktywował komendę @pomoc.', log_path=logFileName)
             
             # Zapisujemy wiadomość o aktywacji ustawień do chatu
-            preparedHelpMessage = f'''Użytkownik {username} aktywował komendę @pomoc.\n\n@pomoc - Dostępne komendy\n@ustawienia - Ustawienia SI\n@generator - Dyrektywy SI\n@end - Zakończenie wiersza poleceń'''
+            f'''Użytkownik {username} aktywował komendę @pomoc.\n\n@pomoc - Dostępne komendy\n@ustawienia - Ustawienia SI\n@generator - Dyrektywy SI\n@end - Zakończenie wiersza poleceń\n\nDostępne Opcje modułu ustawień SI\n\npomoc() - Wyświetlanie Zaprogramowanych opcji \npokazKomendy(argument) argument to nazwa kategorii np. pokazKomendy(harmonogram kampanii)\npokazKategorie() - Wyświetlanie Zaprogramowanych kategorii \nresetbot() - Restart chat bota!'''
+            preparedHelpMessage = (
+                f"Użytkownik {username} aktywował komendę @pomoc.\n"
+                "@pomoc - Dostępne komendy\n"
+                "@generator - Dyrektywy SI\n"
+                    "Instrukcja:\n"
+                    "Po aktywacji komendy @generator użytkownik wybiera kategorię, "
+                    "a następnie podaje polecenia wywołania przypisane do tej kategorii.\n"
+                    "Aby sprawdzić dostępne komendy lub kategorie należy użyć komendy @ustawienia.\n\n"
+                    "Dostępne Opcje modułu ustawień SI:\n\n"
+                "@ustawienia - Ustawienia SI\n"
+                    "pomoc() - Wyświetlanie zaprogramowanych opcji\n"
+                    "pokazKomendy(argument) - argument to nazwa kategorii, np. pokazKomendy(harmonogram kampanii)\n"
+                    "pokazKategorie() - Wyświetlanie zaprogramowanych kategorii\n"
+                    "resetbot() - Restart chat bota!"
+                "@end - Zakończenie wiersza poleceń\n\n"
+
+            )
+
             new_message = save_chat_message(user_name=username, content=preparedHelpMessage, status=1)
             if new_message:
                 del command_mode_users[username]
