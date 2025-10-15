@@ -107,11 +107,22 @@ def addDataLogs(message: str, category: str, file_name_json: str = "/home/johndo
     except FileNotFoundError:
         data_json = []
 
+    except json.JSONDecodeError as e: 
+        data_json = [
+            {
+                "id": 1, 
+                "message": f"⚠️ UWaga, logi zostały utracone! Błąd JSON: {e}",
+                "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
+                "category": "danger",
+                "issued": []
+            }
+        ]
+
     # Tworzenie nowego logu
     new_log = {
         "id": len(data_json) + 1,  # Generowanie unikalnego ID
         "message": message,
-         "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
+        "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ"),
         "category": category,
         "issued": []
     }
