@@ -755,7 +755,7 @@ def main():
 
                     contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE, DATE_TIME FROM contact WHERE DONE=1;')
                     for data in contectDB:
-                        EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #dev
+                        EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
                         TITLE_MESSAGE = f"{data[3]}"
                         message = messagerCreator.create_html_resend(client_name=data[1], client_email=data[2], data=data[5], tresc=data[4])
 
