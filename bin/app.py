@@ -17,6 +17,7 @@ from VisibilityTaskManager import create_visibility_tasks
 import psutil
 import platform
 from wrapper_mistral import MistralChatManager
+from config_utils import MISTRAL_API_KEY
 
 def get_messages(flag='all'):
     # WHERE status != 1
@@ -753,7 +754,7 @@ def main():
                     ################################################################
                     # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
                     ################################################################
-                    mgr_api_key = os.getenv("MISTRAL_API_KEY")
+                    mgr_api_key = MISTRAL_API_KEY
                     print("mgr_api_key: ", mgr_api_key)
                     if mgr_api_key:
                         mgr = MistralChatManager(mgr_api_key)
