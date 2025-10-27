@@ -553,7 +553,13 @@ def make_fbgroups_task(data):
             )
     else: return False
 
-
+def save_chat_message(user_name, content, status):
+    zapytanie_sql = f'''
+        INSERT INTO Messages (user_name, content, status)
+        VALUES (%s, %s, %s);
+    '''
+    dane = (user_name, content, status)
+    return prepare_shedule.insert_to_database(zapytanie_sql, dane)
 
 
 def sprawdz_czas(dzien_tygodnia=None, dzien_miesiaca=None, tydzien_miesiaca=None,
@@ -725,7 +731,14 @@ def main():
                                         (us_na, ta_des, 5)
                                         ):
                                         handle_error(f"Przekazano zadanie do modułu decyzyjnego od usera: {us_na}\n")
-                        
+                            else:
+                                mgr_api_key = MISTRAL_API_KEY
+                                if mgr_api_key:
+                                    mgr = MistralChatManager(mgr_api_key)
+                                    answer_mistral = mgr.text_response(final_prompt.get("ready_prompt", ""))
+                                    if answer_mistral:
+                                        save_chat_message("Aifa", answer_mistral, 1)
+                                    
                 elif name == 'checkpoint_15s':
                     """ 
                         **********************************************************
