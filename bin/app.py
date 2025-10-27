@@ -754,7 +754,7 @@ def main():
                     # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
                     ################################################################
                     mgr_api_key = os.getenv("MISTRAL_API_KEY")
-                    if not mgr_api_key:
+                    if mgr_api_key:
                         mgr = MistralChatManager(mgr_api_key)
 
                     contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE, DATE_TIME FROM contact WHERE DONE=1;')
