@@ -737,7 +737,7 @@ def main():
                                     mgr = MistralChatManager(mgr_api_key)
                                     answer_mistral = mgr.text_response(final_prompt.get("ready_prompt", ""))
                                     if answer_mistral:
-                                        save_chat_message("Aifa", answer_mistral, 1)
+                                        save_chat_message("aifa", answer_mistral, 1)
                                     
                 elif name == 'checkpoint_15s':
                     """ 
