@@ -735,7 +735,15 @@ def main():
                                 mgr_api_key = MISTRAL_API_KEY
                                 if mgr_api_key:
                                     mgr = MistralChatManager(mgr_api_key)
-                                    answer_mistral = mgr.text_response(final_prompt.get("ready_prompt", ""))
+                                    instruction_person = (
+                                        "Odpowiadaj czystym tekstem, bez żadnego formatowania markdown ani znaczników typu ##, **, *** czy ```.\n"
+                                        "Nie używaj nagłówków, pogrubień, list ani kodowych bloków.\n"
+                                        "Zamiast tego pisz swobodnie, jak w wiadomości czatu — z naturalnym przepływem zdań.\n"
+                                        "Używaj dużo emotikon i ikonek, aby nadać tekstowi wyraz i energię 😊🔥✨💬\n"
+                                        "Każdą nową myśl zaczynaj od nowej linii.\n"
+                                    )
+
+                                    answer_mistral = mgr.text_response(instruction_person+final_prompt.get("ready_prompt", ""))
                                     if answer_mistral:
                                         save_chat_message("aifa", answer_mistral, 1)
                                     
