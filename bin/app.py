@@ -16,6 +16,7 @@ from znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
 from VisibilityTaskManager import create_visibility_tasks
 import psutil
 import platform
+from wrapper_mistral import MistralChatManager
 
 def get_messages(flag='all'):
     # WHERE status != 1
@@ -752,10 +753,25 @@ def main():
                     ################################################################
                     # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
                     ################################################################
+                    mgr_api_key = os.getenv("MISTRAL_API_KEY")
+                    if not mgr_api_key:
+                        mgr = MistralChatManager(mgr_api_key)
 
                     contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE, DATE_TIME FROM contact WHERE DONE=1;')
                     for data in contectDB:
-                        EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
+                        if mgr_api_key:
+                            label = mgr.spam_catcher(
+                                client_name=data[1],
+                                client_email=data[2],
+                                subject=data[3],
+                                message=data[4],
+                                dt=str(data[5])
+                            )
+                            print("MistralChatManager: ", label)
+                            EMAIL_COMPANY = "pawel@dmdbudownictwo.pl" if label == "WIADOMOŚĆ" else "informatyk@dmdbudownictwo.pl"
+                        else: EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
+
+                        # EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
                         TITLE_MESSAGE = f"{data[3]}"
                         message = messagerCreator.create_html_resend(client_name=data[1], client_email=data[2], data=data[5], tresc=data[4])
 
