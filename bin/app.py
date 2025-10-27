@@ -753,6 +753,10 @@ def main():
                     print("CHECKPOINT 30 SECONDS")
                     ################################################################
                     # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
+                    #
+                    # Filt Mistrala zwraca SPAM | WIADOMOŚĆ 
+                    # - można rozbudować przierowania do konretnego slotu 
+                    #   na podstawie kontekstu (np. Paweł, Darek, Biuro, SPAM)
                     ################################################################
                     mgr_api_key = MISTRAL_API_KEY
                     if mgr_api_key:
