@@ -755,7 +755,6 @@ def main():
                     # Przekazanie widomości ze strony na pawel@dmdbudownictwo.pl
                     ################################################################
                     mgr_api_key = MISTRAL_API_KEY
-                    print("mgr_api_key: ", mgr_api_key)
                     if mgr_api_key:
                         mgr = MistralChatManager(mgr_api_key)
 
@@ -769,7 +768,6 @@ def main():
                                 message=data[4],
                                 dt=str(data[5])
                             )
-                            print("MistralChatManager: ", label)
                             EMAIL_COMPANY = "pawel@dmdbudownictwo.pl" if label == "WIADOMOŚĆ" else "informatyk@dmdbudownictwo.pl"
                         else: 
                             
