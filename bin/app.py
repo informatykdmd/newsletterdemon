@@ -769,7 +769,9 @@ def main():
                             )
                             print("MistralChatManager: ", label)
                             EMAIL_COMPANY = "pawel@dmdbudownictwo.pl" if label == "WIADOMOŚĆ" else "informatyk@dmdbudownictwo.pl"
-                        else: EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
+                        else: 
+                            print("mgr: ", "else")
+                            EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
 
                         # EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
                         TITLE_MESSAGE = f"{data[3]}"
