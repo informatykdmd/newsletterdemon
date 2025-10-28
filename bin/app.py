@@ -677,7 +677,7 @@ def main():
                 if name == 'checkpoint_5s':
                     """ 
                         **********************************************************
-                        ****************** CHECKPOINT 2 SECONDS ****************** 
+                        ****************** CHECKPOINT 5 SECONDS ****************** 
                         **********************************************************
                     """
                     print("CHECKPOINT 5 SECONDS")
@@ -751,7 +751,24 @@ def main():
                             if mgr_api_key:
                                 hist = final_prompt.get("ready_hist", [])
                                 mgr = MistralChatManager(mgr_api_key)
-                                bot_rotation =  random.choice(['gerina', 'pionier', 'razem'])
+                                witch_bot_list = ['gerina', 'pionier', 'niezidentyfikowana']
+                                bot_ident = 'niezidentyfikowana'
+                                if hist and isinstance(hist[-1], dict):
+                                    prompti = (
+                                        "Zadanie: wskaż jednego adresata wiadomości spośród: gerina, pionier, niezidentyfikowana.\n"
+                                        "Zasady:\n"
+                                        "— Jeśli w treści pojawia się bezpośrednio 'gerina' lub rola/kontekst wykonawczy → odpowiedz: gerina.\n"
+                                        "— Jeśli pojawia się 'pionier' lub rola/kontekst nawigacji/procedur/kroków → odpowiedz: pionier.\n"
+                                        "— Jeśli brak jednoznacznych przesłanek → odpowiedz: niezidentyfikowana.\n"
+                                        "— Zwróć wyłącznie jedną etykietę dokładnie tak: gerina | pionier | niezidentyfikowana.\n"
+                                        "Oto wiadomość do analizy:\n"
+                                    )
+                                    bot_ident = mgr.categorize_response(f"{prompti}\n{hist[-1]['content']}", witch_bot_list, max_tokens=100)
+                                    bot_rotation = bot_ident
+
+                                if bot_ident == 'niezidentyfikowana':
+                                    bot_rotation = random.choice(['gerina', 'pionier', 'razem', 'żaden'])
+
                                 # GERINA
                                 if bot_rotation in ['gerina', 'razem']:
                                     sys_prmt_gerina = (
@@ -792,7 +809,7 @@ def main():
                                     )
 
                                     if hist and isinstance(hist[-1], dict):
-                                        hist[-1]['content'] = f"{pre_prompt}\n{instruction_person_pionier}{hist[-1].get('content', '')}"
+                                        hist[-1]['content'] = f"{instruction_person_pionier}{hist[-1].get('content', '')}"
                                     answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                     if answer_mistral:
                                         save_chat_message("pionier", answer_mistral, 0)
