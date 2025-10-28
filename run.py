@@ -1766,13 +1766,29 @@ def fetch_messages():
     messages = []
     for message in get_messages_data:
         for user_data in get_users_data:
-            if message[0] == user_data['username'] or message[0] == 'aifa':
-                if message[0] != 'aifa':
-                    ready_record = [message[0], message[1], message[2], user_data['avatar']]
+            # if message[0] == user_data['username'] or message[0] == 'aifa':
+            #     if message[0] != 'aifa':
+            #         ready_record = [message[0], message[1], message[2], user_data['avatar']]
+            #     else:
+            #         ready_record = [message[0], message[1], message[2], 'https://dmddomy.pl/images/team/aifa-1.jpg']
+            #     messages.append(ready_record)
+            #     break
+            special_users = {
+                'aifa': 'https://dmddomy.pl/images/team/aifa-1.jpg',
+                'gerina': 'https://dmddomy.pl/images/team/gerina-1.jpg',
+                'pionier': 'https://dmddomy.pl/images/team/pionier-1.jpg'
+            }
+
+            if message[0] == user_data['username'] or message[0] in special_users:
+                if message[0] in special_users:
+                    avatar_url = special_users[message[0]]
                 else:
-                    ready_record = [message[0], message[1], message[2], 'https://dmddomy.pl/images/team/aifa-1.jpg']
+                    avatar_url = user_data['avatar']
+
+                ready_record = [message[0], message[1], message[2], avatar_url]
                 messages.append(ready_record)
                 break
+
     return jsonify(messages)
 
 @app.route('/send-chat-message', methods=['POST'])

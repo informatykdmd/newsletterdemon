@@ -463,6 +463,14 @@ class MistralChatManager:
     def continue_conversation(self, history, new_user_message, max_tokens=500, temperature: float = 0.7):
         messages = history + [{"role": "user", "content": new_user_message}]
         return self._post(messages, max_tokens=max_tokens, temperature=temperature)
+    
+    def continue_conversation_with_system(
+            self, history, 
+            system_prompt="Prowadzisz normalną rozmowę w luźnym stylu.", 
+            max_tokens=500, 
+            temperature: float = 0.7):
+        messages = [{"role": "system", "content": system_prompt}] + history
+        return self._post(messages, max_tokens=max_tokens, temperature=temperature)
 
     def summarize(self, text, max_tokens=500):
         messages = [
