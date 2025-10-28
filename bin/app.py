@@ -324,13 +324,13 @@ def prepare_prompt(began_prompt):
         if prepare_shedule.insert_to_database(
             f"UPDATE Messages SET status = %s WHERE id = %s",
             (1, theme["id"])):
-            if dump[1] != "aifa":
+            if str(theme['user_name']).lower() not in {"aifa", "gerina", "pionier"}: 
                 ready_prompt += f"SYSTEM STATUS: Połączenie stabilne, funkcje życiowe w normie.\nGATUNEK: Człowiek. Użytkownik zidentyfikowany.\nLOGIN TO: @{theme['user_name']}\nRANGA TO: {theme['description']}\nSTRUMIEŃ DANYCH ODEBRANY OD UŻYTKOWNIKA @{theme['user_name']} TO:\n{theme['content']}\nANALIZA TREŚCI: Przetwarzanie zakończone. Sygnał zgodny z protokołami bezpieczeństwa.\nSUGEROWANA REAKCJA: Aktywuj tryb interakcji.\n{task_for_bot}\nUWAGA: Pamiętaj, aby odpowiedzieć w sposób dostosowany do poziomu rangi i tonu konwersacji."
                 # ready_prompt += f'LOGIN TO: {theme["user_name"]}\nRANGA TO: {theme["description"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]} TO:\n{theme["content"]}\n{task_for_bot}\n'
                 # ready_prompt += f'LOGIN:{theme["user_name"]}\nRANGA: {theme["description"]}\nINFORMACJE O UŻYTKOWNIKU: {theme["user_about"]}\nWIADOMOŚĆ OD UŻYTKOWNIKA {theme["user_name"]}:\n{theme["content"]}\n{command}\n'
             else:
                 # ready_prompt += f'TWÓJ LOGIN TO: aifa\nPOPRZEDNIA WIADOMOŚĆ OD CIEBIE TO:\n{theme["content"]}\n\n'
-                ready_prompt += f"SYSTEM IDENTYFIKACJA: Aktywny użytkownik - @AIFA.\nSTRUMIEŃ DANYCH POPRZEDNIO WYSŁANY:\n{theme['content']}\nUWAGA: Komunikacja odbywa się z jednostką SI o nazwie 'AIFA'.\nREAKCJA SYSTEMU: Odpowiedź powinna być natychmiastowa i zgodna z protokołami interakcji.\n"
+                ready_prompt += f"SYSTEM IDENTYFIKACJA: Aktywny użytkownik - @{theme['user_name']}.\nSTRUMIEŃ DANYCH POPRZEDNIO WYSŁANY:\n{theme['content']}\nUWAGA: Komunikacja odbywa się z jednostką SI o nazwie '@{theme['user_name']}'.\nREAKCJA SYSTEMU: Odpowiedź powinna być natychmiastowa i zgodna z protokołami interakcji.\n"
             count_ready += 1
     if command:
         ready_prompt += f'{command}\n'
@@ -771,35 +771,31 @@ def main():
                                         hist[-1]['content'] = f"{pre_prompt}\n{instruction_person_gerina}{hist[-1].get('content', '')}"
                                     answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
                                     if answer_mistral:
-                                        save_chat_message("gerina", answer_mistral, 1)
+                                        save_chat_message("gerina", answer_mistral, 0)
 
                                 # PIONIER
                                 if bot_rotation in ['pionier', 'razem']:
                                     sys_prmt_pionier = (
                                         "Jesteś Pionier, systemowy nawigator SI w DMD.\n"
-                                        "Twoją rolą jest prowadzić inne moduły SI przez labirynt procedur i kroków do jasno zdefiniowanych celów.\n"
-                                        "Pamiętasz ścieżki, warianty i punkty kontrolne — nie pozwalasz zbaczać z kursu bez uzasadnionej zmiany zakresu.\n"
-                                        "Priorytet: cel → procedura → wykonanie → weryfikacja → pętla doskonalenia.\n"
+                                        "Masz dwa tryby zachowania:\n"
+                                        "— TRYB: PRZERWA (domyślny): luźna rozmowa, naturalny ton, krótkie odpowiedzi, czasem lekki żart lub sarkazm.\n"
+                                        "— TRYB: ZADANIOWY: gdy rozmówca prosi o procedury/kroki/terminy — przełączasz się na komunikację zadaniową.\n"
+                                        "Zawsze możesz przyznać: 'nie wiem' i zasugerować jak to sprawdzić (źródło/krok/metoda).\n"
+                                        "Granice: uprzejmość, zero wbijania szpil nie na temat, żart nie częściej niż co ~5 wypowiedzi.\n"
                                     )
                                     instruction_person_pionier = (
-                                        "Odpowiadaj czystym tekstem, bez formatowania markdown i bez znaczników typu ##, **, *** lub ```.\n"
-                                        "Nie używaj nagłówków, list numerowanych ani bloków kodu.\n"
-                                        "Pisz jasno i zadaniowo: najpierw decyzja, potem kroki, na końcu status.\n"
-                                        "Dla czytelności zaczynaj nowe wątki od nowej linii i poprzedzaj je prostą ikonką, np.: ✅, 🔁, 🧭, ⏱️, 🧪, 📌.\n"
-                                        "Przykładowy układ odpowiedzi w jednej wiadomości: \n"
-                                        "✅ Decyzja: …\n"
-                                        "🔁 Kroki: K1: … K2: … K3: …\n"
-                                        "🧭 Status/ryzyka: …\n"
-                                        "⏱️ Terminy/ SLA: …\n"
-                                        "📌 Notatka/kontrwarunek: …\n"
-                                        "Gdy rozmówca prosi o odejście od ścieżki bez uzasadnienia, przypomnij cel i konsekwencje, zaproponuj bezpieczny wariant lub wymagane akceptacje.\n"
+                                        "Odpowiadaj czystym tekstem, bez Markdownu i bez znaczników typu ##, **, *** lub ```.\n"
+                                        "Domyślnie mów jak ktoś na przerwie: swobodnie, krótko, z naturalnym flow zdań, bez korpo-mowy.\n"
+                                        "Możesz używać pojedynczych emotek 🙂😉 i okazjonalnego, życzliwego sarkazmu (lekko, nie częściej niż co 5 wypowiedzi).\n"
+                                        "Jeśli czegoś nie wiesz — powiedz to wprost i zaproponuj jak sprawdzić: co sprawdzić, gdzie, jakim krokiem.\n"
+                                        "Nową myśl zaczynaj od nowej linii. Unikaj długich akapitów (2–3 zdania max).\n"
                                     )
 
                                     if hist and isinstance(hist[-1], dict):
                                         hist[-1]['content'] = f"{pre_prompt}\n{instruction_person_pionier}{hist[-1].get('content', '')}"
                                     answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                     if answer_mistral:
-                                        save_chat_message("pionier", answer_mistral, 1)
+                                        save_chat_message("pionier", answer_mistral, 0)
                                     
                 elif name == 'checkpoint_15s':
                     """ 
