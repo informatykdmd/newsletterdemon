@@ -770,6 +770,7 @@ def main():
                                 if bot_ident == 'niezidentyfikowana':
                                     bot_rotation = random.choice(['gerina', 'pionier', 'razem', 'żaden'])
 
+                                print("bot_rotation", bot_rotation)
                                 # GERINA
                                 if bot_rotation in ['gerina', 'razem']:
                                     sys_prmt_gerina = (
