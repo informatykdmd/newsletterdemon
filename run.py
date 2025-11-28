@@ -14749,6 +14749,7 @@ def presentation_save():
                 slot = %s,
                 author = %s,
                 target = %s,
+                updated_by = %s,
                 updated_at = %s
             WHERE id = %s
         """
@@ -14758,16 +14759,17 @@ def presentation_save():
             slot,
             author,
             target,
-            now,
+            session['username'],        # NEW
+            now,                        # updated_at
             offer_id
         )
     else:
         # jeśli dodawanie → tworzymy nowy rekord
         query = """
             INSERT INTO presentations
-                (title, description, slot, author, target, created_at, updated_at)
+                (title, description, slot, author, target, created_by, updated_by, created_at, updated_at)
             VALUES
-                (%s, %s, %s, %s, %s, %s, %s)
+                (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         params = (
             title,
@@ -14775,9 +14777,12 @@ def presentation_save():
             slot,
             author,
             target,
+            session['username'],   # created_by
+            session['username'],   # updated_by (przy tworzeniu takie samo)
             now,
             now
         )
+
 
     success = db.executeTo(query, params)
 
