@@ -798,6 +798,9 @@
     window.videoDropBox = window.videoDropBox || {};
 
     function prepareAndSubmitPresentation(formId, isEdit) {
+
+        console.log("window.videoDropBox", window.videoDropBox);
+
         const titleEl   = document.getElementById('title_' + formId);
         const descEl    = document.getElementById('description_' + formId);
         const slotEl    = document.getElementById('slot_' + formId);
