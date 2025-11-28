@@ -195,8 +195,8 @@
                                             <option value="">Wybierz slot prezentacji</option>
 
                                             <option value="green">GREEN — treści ogólne / firmowe</option>
-                                            {% if userperm['prezentation-silver'] == 1 %}<option value="silver">SILVER — informacje operacyjne</option>{% endif %}
-                                            {% if userperm['prezentation-gold'] == 1 %}<option value="gold">GOLD — prezentacje strategiczne</option>{% endif %}
+                                            {% if userperm['presentation-silver'] == 1 %}<option value="silver">SILVER — informacje operacyjne</option>{% endif %}
+                                            {% if userperm['presentation-gold'] == 1 %}<option value="gold">GOLD — prezentacje strategiczne</option>{% endif %}
 
                                         </select>
                                     </div>
@@ -412,13 +412,13 @@
                                                             {% if post_data['slot'] == 'green' %}selected{% endif %}>
                                                             GREEN — treści ogólne / firmowe
                                                         </option>
-                                                        {% if userperm['prezentation-silver'] == 1 %}
+                                                        {% if userperm['presentation-silver'] == 1 %}
                                                         <option value="silver" 
                                                             {% if post_data['slot'] == 'silver' %}selected{% endif %}>
                                                             SILVER — informacje operacyjne
                                                         </option>
                                                         {% endif %}
-                                                        {% if userperm['prezentation-gold'] == 1 %}
+                                                        {% if userperm['presentation-gold'] == 1 %}
                                                         <option value="gold" 
                                                             {% if post_data['slot'] == 'gold' %}selected{% endif %}>
                                                             GOLD — prezentacje strategiczne
