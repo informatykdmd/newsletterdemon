@@ -14969,7 +14969,7 @@ def update_presentation_status():
     # 1) dezaktywuj wszystkie prezentacje w tym slocie
     query_reset = """
         UPDATE presentations
-        SET status = 0
+        SET status = 0, sync = 0
         WHERE slot = %s
     """
     params_reset = (slot,)
@@ -14988,7 +14988,7 @@ def update_presentation_status():
     # 2) aktywuj wskazaną prezentację
     query_set = """
         UPDATE presentations
-        SET status = 1, sync = 0
+        SET status = 1
         WHERE id = %s
     """
     params_set = (post_id_int,)
