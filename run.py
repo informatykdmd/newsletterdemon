@@ -14661,8 +14661,10 @@ def presentation_view():
         return redirect(url_for('index'))
     
     db = get_db()
-    query = ""
-    params = ()
+    query = """"
+            SELECT * FROM presentations;
+    """
+    params = None
     presentations_items = db.getFrom(query=query, params=params, as_dict=True)
 
     # Ustawienia paginacji
