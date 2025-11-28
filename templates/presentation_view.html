@@ -217,9 +217,12 @@
                                     </div>
 
                                     <script>
-                                        document.addEventListener('DOMContentLoaded', () => {
-                                            const myVideoDropBox = new VideoDropBox('9999999');
-                                        });
+                                        // upewniamy się, że globalna mapa istnieje
+                                        window.videoDropBox = window.videoDropBox || {};
+                                        window.videoDropBox["9999999"] = new VideoDropBox("9999999");
+                                        // document.addEventListener('DOMContentLoaded', () => {
+                                        //     const myVideoDropBox = new VideoDropBox('9999999');
+                                        // });
                                     </script>
 
                                     <input type="hidden" name="OfferID" id="OfferID_9999999" value="" />
