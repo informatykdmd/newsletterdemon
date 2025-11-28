@@ -667,8 +667,8 @@ color:#969696;
     background-color: #33383b;
   }
 
-  .drop-area-video {
-    width: 100%;
+.drop-area-video {
+    width: 90%;
     /* height: 200px; */
     border: 2px dashed #7d7d7d;
     border-radius: 5px;
@@ -679,7 +679,8 @@ color:#969696;
     margin: 20px;
 }
 
- .drop-area {
+
+.drop-area {
     width: 80%;
     height: 200px;
     border: 2px dashed #7d7d7d;

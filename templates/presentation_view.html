@@ -785,7 +785,10 @@
                     : '<span class="badge bg-danger">Wymaga korekty</span>';
 
                 this.summaryBox.innerHTML = `
-                    <div class="card bg-dark text-light text-start">
+                    <div class="card bg-dark text-light text-start d-flex p-2">
+                        <div>
+                            <p class="mb-1" style="font-size: 80px;"><i class="bi bi-cloud-plus-fill"></i></p>
+                        </div>
                         <div class="card-body p-3">
                             <h6 class="card-title mb-2">${this.escapeHtml(file.name)}</h6>
                             <p class="mb-1">
@@ -803,6 +806,7 @@
                                 <p class="mb-0 text-success small">Plik spełnia założone parametry (MP4, ≤ 20 min, ≤ 2 GB).</p>
                             `}
                         </div>
+
                     </div>
                 `;
             };
