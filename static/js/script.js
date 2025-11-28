@@ -1718,7 +1718,9 @@ function collectAndSendfbgroupsformestateAdsSell(postId) {
     });
 }
 
-function showToast(message, type = 'success') {
+function showToast(message, type = 'success', posClassY = 'bottom-0', posClassX = 'end-0') {
+    
+    const toastWindow = document.getElementById('main-winToast');
     const toastElement = document.getElementById('liveToast');
     const toastBody = document.getElementById('toast-body');
     const toastTitle = document.getElementById('toast-title');
@@ -1740,6 +1742,7 @@ function showToast(message, type = 'success') {
         toastTitle.innerText = 'Ostrzeżenie';
     }
 
+    toastWindow.className = `toast-container position-fixed ${posClassY} ${posClassX} p-3 z-3`;
     toastElement.className = `toast ${bgClass} text-white border-0`;
     toastBody.innerText = message;
 
