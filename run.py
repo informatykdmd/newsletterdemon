@@ -14654,16 +14654,15 @@ def presentation_view():
     if 'username' not in session:
         msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /presentation-view bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
-    print(session['userperm'])
-    if session['userperm']['presentation'] == 0:
+    
+    if session['userperm'].get('presentation', 0) == 0:
         msq.handle_error(f'UWAGA! Próba zarządzania /presentation-view bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
     db = get_db()
     query = """SELECT * FROM presentations;"""
-    params = None
-    presentations_items = db.getFrom(query=query, params=params, as_dict=True)
+    presentations_items = db.getFrom(query=query, as_dict=True)
 
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
