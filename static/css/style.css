@@ -667,6 +667,18 @@ color:#969696;
     background-color: #33383b;
   }
 
+  .drop-area-video {
+    width: 100%;
+    /* height: 200px; */
+    border: 2px dashed #7d7d7d;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 20px;
+}
+
  .drop-area {
     width: 80%;
     height: 200px;
