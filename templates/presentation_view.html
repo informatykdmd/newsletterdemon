@@ -552,23 +552,7 @@
                                             </div>
                                         {% endif %}
 
-                                        <div class="career-properties mt-2">
-                                            <form action="{{ url_for('update_presentation_status') }}" method="POST">
-                                                <input type="hidden" name="PostID" value="{{ post_id }}" />
-                                                <input type="hidden" name="Status" value="1" />
-                                                <input type="hidden" name="slot" value="{{ post_data['slot'] }}" />
-                                                {% if post_data['status'] == 0 %}
-                                                    <div class="col me-1 mb-1">
-                                                        <button 
-                                                            type="submit" 
-                                                            class="btn btn-outline-success btn-sm" 
-                                                            style="max-height: 30px; font-size: 12px;">
-                                                            Aktywuj prezentację
-                                                        </button>
-                                                    </div>
-                                                {% endif %}
-                                            </form>
-                                        </div>
+                                        
                                     </div>
 
                                     <div class="col-lg-7 col-sm-12 career-properties-other">
@@ -592,6 +576,23 @@
                                         {% if post_data.get('created_by') %}
                                             <p class="mb-0">Utworzone przez: {{ post_data['created_by'] }}</p>
                                         {% endif %}
+                                    </div>
+                                    <div class="career-properties mt-2">
+                                        <form action="{{ url_for('update_presentation_status') }}" method="POST">
+                                            <input type="hidden" name="PostID" value="{{ post_id }}" />
+                                            <input type="hidden" name="Status" value="1" />
+                                            <input type="hidden" name="slot" value="{{ post_data['slot'] }}" />
+                                            {% if post_data['status'] == 0 %}
+                                                <div class="col me-1 mb-1">
+                                                    <button 
+                                                        type="submit" 
+                                                        class="btn btn-outline-success btn-sm" 
+                                                        style="max-height: 30px; font-size: 12px;">
+                                                        Aktywuj prezentację
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+                                        </form>
                                     </div>
                                 </div>
 
