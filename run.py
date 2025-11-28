@@ -14662,8 +14662,17 @@ def presentation_view():
     
     db = get_db()
     query = """SELECT * FROM presentations;"""
-    presentations_items = db.getFrom(query=query, as_dict=True)
+    presentations_items_all = db.getFrom(query=query, as_dict=True)
 
+    presentations_items = []
+    for item in presentations_items_all:
+        if item.get("slot", None) == "green":
+            presentations_items.append(item)
+        elif item.get("slot", None) == "silver" and session['userperm'].get('presentation-silver', 0) == 1:
+            presentations_items.append(item)
+        elif item.get("slot", None) == "gold" and session['userperm'].get('presentation-gold', 0) == 1:
+            presentations_items.append(item)
+    
     # Ustawienia paginacji
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     total = len(presentations_items)
