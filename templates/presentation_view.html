@@ -819,13 +819,8 @@
     function prepareAndSubmitPresentation(formId, isEdit) {
 
         // console.log("window.videoDropBox", window.videoDropBox);
-        if (isEdit) {
-            let posClassY = 'bottom-0';
-            let posClassX = 'end-0'
-        } else {
-            let posClassY = 'top-0';
-            let posClassX = 'end-0'
-        }
+        let posClassY = isEdit ? 'bottom-0' : 'top-0';
+        let posClassX = 'end-0';
 
         const titleEl   = document.getElementById('title_' + formId);
         const descEl    = document.getElementById('description_' + formId);
