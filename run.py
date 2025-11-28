@@ -14739,7 +14739,7 @@ def presentation_save():
     # --- ZAPIS DO BAZY ---
     db = get_db()
 
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     # jeśli edycja → aktualizujemy istniejący rekord
     if is_edit and offer_id:
         query = """
