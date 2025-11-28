@@ -456,9 +456,12 @@
                                                     </select>
                                                 </div> -->
                                                 <div class="mb-3">
-                                                    <div class="alert alert-light" role="alert">
+                                                    
+                                                    <div class="alert alert-{% if post_data.slot|upper == 'gold' %}warning{% elif post_data.slot|upper == 'silver' %}light{% else %}success{% endif %}" 
+                                                        role="alert">
                                                         SLOT: {{post_data['slot']|upper}}
                                                     </div>
+                                                    
                                                 </div>
                                                 <input type="hidden" name="slot" id="slot_{{post_id}}" value="{{post_data['slot']}}" />
 

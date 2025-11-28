@@ -14668,9 +14668,13 @@ def presentation_view():
     for item in presentations_items_all:
         if item.get("slot", None) == "green":
             presentations_items.append(item)
-        elif item.get("slot", None) == "silver" and session['userperm'].get('presentation-silver', 0) == 1:
+        elif item.get("slot", None) == "silver" \
+            and session['userperm'].get('presentation-silver', 0) == 1 \
+                and item.get("author", None) == session["username"]:
             presentations_items.append(item)
-        elif item.get("slot", None) == "gold" and session['userperm'].get('presentation-gold', 0) == 1:
+        elif item.get("slot", None) == "gold" \
+            and session['userperm'].get('presentation-gold', 0) == 1\
+                and item.get("author", None) == session["username"]:
             presentations_items.append(item)
     
     # Ustawienia paginacji
