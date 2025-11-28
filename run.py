@@ -421,9 +421,9 @@ def generator_userDataDB():
                 'career': data[32], # kolejne uprawnienie wzz. dmd budownictwo kariera
                 'fbhidden': data[33], # kolejne uprawnienie wzz. dmd budownictwo kariera
                 'realizations': data[34], # kolejne uprawnienie wzz. dmd budownictwo kariera
-                'prezentation': data[35], # kolejne uprawnienie prezentation
-                'prezentation-silver': data[36], # kolejne uprawnienie 
-                'prezentation-gold': data[37], # kolejne uprawnienie 
+                'presentation': data[35], # kolejne uprawnienie prezentation
+                'presentation-silver': data[36], # kolejne uprawnienie 
+                'presentation-gold': data[37], # kolejne uprawnienie 
                 },
             'brands': {
                 'domy': (data[24]),
