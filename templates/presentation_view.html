@@ -785,26 +785,31 @@
                     : '<span class="badge bg-danger">Wymaga korekty</span>';
 
                 this.summaryBox.innerHTML = `
-                    <div class="card bg-dark text-light text-start d-flex p-2">
-                        <div>
-                            <p class="mb-1" style="font-size: 80px;"><i class="bi bi-cloud-plus-fill"></i></p>
-                        </div>
-                        <div class="card-body p-3">
-                            <h6 class="card-title mb-2">${this.escapeHtml(file.name)}</h6>
-                            <p class="mb-1">
-                                Rozmiar: <strong>${sizeMB.toFixed(2)} MB</strong><br/>
-                                Czas trwania: <strong>${duration ? this.formatDuration(duration) : 'nieznany'}</strong><br/>
-                                Rozdzielczość: <strong>${width} x ${height}</strong>
-                            </p>
-                            <p class="mb-1">${qualityNote}</p>
-                            <p class="mb-1">Status: ${status}</p>
-                            ${issues.length ? `
-                                <ul class="mb-0 text-warning small">
-                                    ${issues.map(i => `<li>${this.escapeHtml(i)}</li>`).join('')}
-                                </ul>
-                            ` : `
-                                <p class="mb-0 text-success small">Plik spełnia założone parametry (MP4, ≤ 20 min, ≤ 2 GB).</p>
-                            `}
+                    <div class="card bg-dark text-light text-start">
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="mb-1" style="font-size: 80px;"><i class="bi bi-cloud-plus-fill"></i></p>
+                                <p class="text-info small">Załaduj ponownie</p>
+                            </div>
+                            <div class="col-8">
+                                <div class="card-body p-3">
+                                    <h6 class="card-title mb-2">${this.escapeHtml(file.name)}</h6>
+                                    <p class="mb-1">
+                                        Rozmiar: <strong>${sizeMB.toFixed(2)} MB</strong><br/>
+                                        Czas trwania: <strong>${duration ? this.formatDuration(duration) : 'nieznany'}</strong><br/>
+                                        Rozdzielczość: <strong>${width} x ${height}</strong>
+                                    </p>
+                                    <p class="mb-1">${qualityNote}</p>
+                                    <p class="mb-1">Status: ${status}</p>
+                                    ${issues.length ? `
+                                        <ul class="mb-0 text-warning small">
+                                            ${issues.map(i => `<li>${this.escapeHtml(i)}</li>`).join('')}
+                                        </ul>
+                                    ` : `
+                                        <p class="mb-0 text-success small">Plik spełnia założone parametry (MP4, ≤ 20 min, ≤ 2 GB).</p>
+                                    `}
+                                </div>
+                            </div>
                         </div>
 
                     </div>
