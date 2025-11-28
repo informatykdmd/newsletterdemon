@@ -457,7 +457,7 @@
                                                 </div> -->
                                                 <div class="mb-3">
                                                     
-                                                    <div class="alert alert-{% if post_data.slot|upper == 'gold' %}warning{% elif post_data.slot|upper == 'silver' %}light{% else %}success{% endif %}" 
+                                                    <div class="slot-info-{% if post_data.slot|upper == 'gold' %}gold{% elif post_data.slot|upper == 'silver' %}gold{% else %}green{% endif %}" 
                                                         role="alert">
                                                         SLOT: {{post_data['slot']|upper}}
                                                     </div>

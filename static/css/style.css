@@ -679,6 +679,27 @@ color:#969696;
     margin: 20px;
 }
 
+.slot-info-gold {
+  border: 2px #7b3108;
+  background-color: #ecb246;
+  color:#2e1b05;
+  border-radius: 5px;
+  padding: 15px;
+}
+.slot-info-silver {
+  border: 2px #2d2c2c;
+  background-color: #768081;
+  color:#090b0e;
+  border-radius: 5px;
+  padding: 15px;
+}
+.slot-info-green {
+  border: 2px #19211a;
+  background-color: #798176;
+  color:#090b0e;
+  border-radius: 5px;
+  padding: 15px;
+}
 
 .drop-area {
     width: 80%;
