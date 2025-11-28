@@ -212,11 +212,6 @@
                                                                                 
                                     </div>
 
-                                    <!-- <div class="mb-3">
-                                        <label class="form-label">Analiza pliku:</label>
-                                        <div id="9999999-videoSummary" ></div>
-                                    </div> -->
-
                                     <script>
                                         // globalna mapa, zadeklarowana raz, nie w funkcji!
                                         window.videoDropBox = window.videoDropBox || {};
@@ -226,25 +221,16 @@
                                             console.log('init videoDropBox[9999999]', window.videoDropBox["9999999"]);
                                         });
                                     </script>
-                                    <!-- <script>
-                                        document.addEventListener('DOMContentLoaded', () => {
-                                            const myVideoDropBox = new VideoDropBox('9999999');
-                                        });
-                                    </script> -->
-
+                                    
                                     <input type="hidden" name="OfferID" id="OfferID_9999999" value="" />
 
                                     <input type="hidden" name="author" id="author_9999999" value="{{ username }}" />
-                                    <!-- <input type="hidden" name="target" id="target_9999999" value="presentation" />
 
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-success btn-sm" 
-                                        style="max-height: 30px; font-size: 12px;" 
-                                        onclick="prepareAndSubmitPresentation('9999999', false)"
-                                    >
-                                        Dodaj prezentację
-                                    </button> -->
+                                    <!-- metadane -->
+                                    <input type="hidden" name="video_duration_sec" id="9999999-videodurationsec" value="" />
+                                    <input type="hidden" name="video_width" id="9999999-videowidth" value="" />
+                                    <input type="hidden" name="video_height" id="9999999-videoheight" value="" />
+                                    
                                     <input type="hidden" name="target" id="target_9999999" value="presentation" />
 
                                     <!-- pasek progresu dla NOWEJ prezentacji -->
@@ -426,35 +412,7 @@
                                                     </a>
                                                 </div>
 
-                                                <!-- slot -->
-                                                <!-- <div class="mb-3">
-                                                    <select 
-                                                        class="form-select dark-mode mb-2 mt-2" 
-                                                        style="max-height: 30px; font-size: 12px;" 
-                                                        id="slot_{{post_id}}" 
-                                                        name="slot"
-                                                        required>
-
-                                                        <option value="">Wybierz slot prezentacji</option>
-                                                        
-                                                        <option value="green" 
-                                                            {% if post_data['slot'] == 'green' %}selected{% endif %}>
-                                                            GREEN — treści ogólne / firmowe
-                                                        </option>
-                                                        {% if userperm['presentation-silver'] == 1 %}
-                                                        <option value="silver" 
-                                                            {% if post_data['slot'] == 'silver' %}selected{% endif %}>
-                                                            SILVER — informacje operacyjne
-                                                        </option>
-                                                        {% endif %}
-                                                        {% if userperm['presentation-gold'] == 1 %}
-                                                        <option value="gold" 
-                                                            {% if post_data['slot'] == 'gold' %}selected{% endif %}>
-                                                            GOLD — prezentacje strategiczne
-                                                        </option>
-                                                        {% endif %}
-                                                    </select>
-                                                </div> -->
+                                                <!-- slot -->                                                
                                                 <div class="mb-3">
                                                     
                                                     <div 
@@ -492,20 +450,14 @@
                                                 
                                                 <input type="hidden" name="OfferID" id="OfferID_{{post_id}}" value="{{post_id}}" />
 
-                                                <!-- <input type="hidden" name="author" id="author_{{post_id}}" value="{{ username }}" />
-                                                <input type="hidden" name="target" id="target_{{post_id}}" value="{{ post_data['target'] }}" />
-
-                                                <button 
-                                                    type="button" 
-                                                    class="btn btn-success btn-sm" 
-                                                    style="max-height: 30px; font-size: 12px;" 
-                                                    onclick="prepareAndSubmitPresentation('{{post_id}}', true)"
-                                                >
-                                                    Zapisz prezentację
-                                                </button> -->
                                                 <input type="hidden" name="author" id="author_{{post_id}}" value="{{ username }}" />
                                                 <input type="hidden" name="target" id="target_{{post_id}}" value="{{ post_data['target'] }}" />
 
+                                                <!-- metadane -->
+                                                <input type="hidden" name="video_duration_sec" id="{{post_id}}-videodurationsec" value="" />
+                                                <input type="hidden" name="video_width" id="{{post_id}}-videowidth" value="" />
+                                                <input type="hidden" name="video_height" id="{{post_id}}-videoheight" value="" />
+                                                
                                                 <!-- pasek progresu dla EDYCJI prezentacji -->
                                                 <div id="uploadProgress_{{post_id}}" class="progress d-none mt-3" style="height: 5px;">
                                                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
@@ -633,6 +585,9 @@
 
             this.dropArea    = document.getElementById(`${formId}-drop-area`);
             this.summaryBox  = document.getElementById(`${formId}-videoSummary`);
+            this.videoDurationSec  = document.getElementById(`${formId}-videodurationsec`);
+            this.videoWidth  = document.getElementById(`${formId}-videowidth`);
+            this.videoHeight  = document.getElementById(`${formId}-videoheight`);
             this.file        = null;
             this.existingVideoUrl = existingVideoUrl;
 
@@ -814,6 +769,11 @@
 
                     </div>
                 `;
+                this.videoDurationSec.value = duration ? this.formatDuration(duration) : '0:00'
+                this.videoWidth.value = width ? width : '0'
+                this.videoHeight.value = height ? height : '0'
+
+                
             };
 
             video.onerror = () => {
@@ -886,6 +846,10 @@
         const offerEl   = document.getElementById('OfferID_' + formId);
         const authorEl  = document.getElementById('author_' + formId);
         const targetEl  = document.getElementById('target_' + formId);
+        const videodurationsecEl  = document.getElementById(formId + '-videodurationsec');
+        const videowidthEl  = document.getElementById(formId + '-videowidth');
+        const videoheightEl  = document.getElementById(formId + '-videoheight');
+        
 
         if (!titleEl || !descEl || !slotEl) {
             console.error('Brak wymaganych elementów formularza (title/description/slot).');
@@ -897,6 +861,9 @@
         const title = (titleEl.value || '').trim();
         const slot  = (slotEl.value || '').trim();
         const desc  = (descEl.innerHTML || '').trim(); // zachowujemy proste formatowanie
+        const videodurationsec  = (videodurationsecEl.value || '').trim(); 
+        const videowidth  = (videowidthEl.value || '').trim(); 
+        const videoheight  = (videoheightEl.value || '').trim(); 
 
         if (!title) {
             showToast('Podaj tytuł prezentacji.', 'warning', posClassY, posClassX);
@@ -928,6 +895,11 @@
             fd.append('title', title);
             fd.append('description', desc);
             fd.append('slot', slot);
+
+            fd.append('video_duration_sec', videodurationsec);
+            fd.append('video_width', videowidth);
+            fd.append('video_height', videoheight);
+
 
             if (authorEl) fd.append('author', authorEl.value || '');
             if (targetEl) fd.append('target', targetEl.value || '');
@@ -1006,52 +978,6 @@
 
             xhr.send(fd);
         }
-
-
-        // const fd = new FormData();
-        // fd.append('offer_id', offerEl ? (offerEl.value || '') : '');
-        // fd.append('is_edit', isEdit ? '1' : '0');
-
-        // fd.append('title', title);
-        // fd.append('description', desc);
-        // fd.append('slot', slot);
-
-        // if (authorEl) fd.append('author', authorEl.value || '');
-        // if (targetEl) fd.append('target', targetEl.value || '');
-
-        // if (videoFile) {
-        //     fd.append('video_file', videoFile);
-        // }
-
-        // fetch('/presentation-save', {
-        //     method: 'POST',
-        //     body: fd
-        // })
-        // .then(function(res) {
-        //     // Flask zwraca JSON – jeśli 4xx/5xx też spróbujemy odczytać
-        //     return res.json().catch(function() {
-        //         throw new Error('Błędna odpowiedź serwera.');
-        //     });
-        // })
-        // .then(function(data) {
-        //     if (data.success) {
-        //         showToast(data.message || 'Prezentacja została zapisana pomyślnie.', "success", posClassY, posClassX);
-
-        //         // np. odśwież listę / przeładuj stronę:
-        //         setTimeout(() => {
-        //                 location.reload();
-        //             }, 5000);
-        //         // window.location.reload();
-        //     } else {
-        //         showToast(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.', 'error', posClassY, posClassX);
-        //     }
-        // })
-        // .catch(function(err) {
-        //     console.error(err);
-        //     showToast('Błąd sieci podczas zapisywania prezentacji. Spróbuj ponownie.', 'error', posClassY, posClassX);
-        // });
-    // }
-
 
     // Funkcja do wypełnienia contenteditable
     function applyTemplate(elementId, value) {

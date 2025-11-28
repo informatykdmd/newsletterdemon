@@ -30,6 +30,8 @@ from bin.znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
 import psutil
 import platform
 from pathlib import Path
+import hashlib
+
 
 
 """
@@ -1597,6 +1599,15 @@ def generator_wisniowa_lokale():
             pos_dict['Messages'] = all_messages_for_lokal or []
 
     return all_lokale
+
+
+def generate_file_hash(file_path, chunk_size=8192):
+    sha256 = hashlib.sha256()
+    with open(file_path, 'rb') as f:
+        for chunk in iter(lambda: f.read(chunk_size), b''):
+            sha256.update(chunk)
+    return sha256.hexdigest()
+
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = generator_settingsDB()['pagination']  # Określa liczbę elementów na stronie
@@ -14724,6 +14735,9 @@ def presentation_save():
     slot        = (request.form.get('slot') or '').strip().lower()
     author      = (request.form.get('author') or session.get('username'))
     target      = request.form.get('target') or 'presentation'
+    duration    = request.form.get('video_duration_sec', '0:00')
+    v_width     = request.form.get('video_width', '0') 
+    v_height    = request.form.get('video_height', '0')
 
     video_file  = request.files.get('video_file')  # może być None przy edycji bez zmiany wideo
 
@@ -14764,6 +14778,9 @@ def presentation_save():
                 target = %s,
                 updated_by = %s,
                 updated_at = %s,
+                video_duration_sec = %s,
+                video_width = %s,
+                video_height = %s,
                 sync = 0
             WHERE id = %s
         """
@@ -14775,13 +14792,16 @@ def presentation_save():
             target,
             session['username'],        # NEW
             now,                        # updated_at
-            offer_id
+            offer_id,
+            duration,
+            v_width,
+            v_height
         )
     else:
         # jeśli dodawanie → tworzymy nowy rekord
         query = """
             INSERT INTO presentations
-                (title, description, slot, author, target, created_by, updated_by, created_at, updated_at)
+                (title, description, slot, author, target, created_by, updated_by, created_at, updated_at, video_duration_sec, video_width, video_height)
             VALUES
                 (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
@@ -14794,7 +14814,10 @@ def presentation_save():
             session['username'],   # created_by
             session['username'],   # updated_by (przy tworzeniu takie samo)
             now,
-            now
+            now,
+            duration,
+            v_width,
+            v_height
         )
 
 
@@ -14820,6 +14843,9 @@ def presentation_save():
             slot,
             author,
             target,
+            duration,
+            v_width,
+            v_height
         )
         db.fetch_one(
             """
@@ -14832,6 +14858,9 @@ def presentation_save():
             AND slot=%s 
             AND author=%s 
             AND target=%s
+            AND video_duration_sec=%s
+            AND video_width=%s
+            AND video_heigh=%s
             """, 
             checkingIDparams
         )
@@ -14881,6 +14910,9 @@ def presentation_save():
         # atomowe przeniesienie tmp → final
         tmp_path.replace(final_path)
 
+        # video_hash
+        video_hash = generate_file_hash(final_path)
+
         # zbuduj PUBLICZNY URL pod którym RPi i TV zobaczą plik
         # np. main-domain = "https://panel.dmd.pl", presentation-files = "/presentations"
         main_domain = (settingsDB.get('main-domain', '') or '').rstrip('/')
@@ -14889,13 +14921,15 @@ def presentation_save():
         rel_url_path = f"{pres_rel_for_url}/{slot}/{filename}".replace('\\', '/')
         video_url = f"{main_domain}/{rel_url_path}"
 
+        
         # zapisz ścieżkę / URL pliku do bazy
         upd_q = """
-            UPDATE presentations
-            SET video_path = %s
+            UPDATE presentations SET 
+                video_path = %s, 
+                video_hash=%s
             WHERE id = %s
         """
-        upd_params = (video_url, offer_id)
+        upd_params = (video_url, video_hash, offer_id)
         ok_video = db.executeTo(upd_q, upd_params)
 
         if not ok_video:
