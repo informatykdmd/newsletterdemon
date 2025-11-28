@@ -433,7 +433,11 @@
                                                 </p>
                                                 
                                                 <div id="{{post_id}}-drop-area" class="drop-area-video m-4">
-                                                    <div id="{{post_id}}-videoSummary" ><p style="font-size: 80px;"><i class="bi bi-cloud-plus"></i></p></div>
+                                                    <div id="{{post_id}}-videoSummary" >
+                                                        <h3 class="text-success">({{post_data.video_width}} x {{post_data.video_height}}) {{post_data.video_duration_sec}}</h3>
+                                                        <p style="font-size: 80px;"><i class="bi bi-cloud-plus"></i></p>
+                                                        <p class="text-info small">Załaduj ponownie</p>
+                                                    </div>
                                                 </div>
 
                                                 <script>
@@ -769,7 +773,7 @@
 
                     </div>
                 `;
-                this.videoDurationSec.value = duration ? this.formatDuration(duration) : '0:00'
+                this.videoDurationSec.value = duration ? this.formatDuration(duration) : '0 min 0 s'
                 this.videoWidth.value = width ? width : '0'
                 this.videoHeight.value = height ? height : '0'
 

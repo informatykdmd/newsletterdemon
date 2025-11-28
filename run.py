@@ -14735,7 +14735,7 @@ def presentation_save():
     slot        = (request.form.get('slot') or '').strip().lower()
     author      = (request.form.get('author') or session.get('username'))
     target      = request.form.get('target') or 'presentation'
-    duration    = request.form.get('video_duration_sec', '0:00')
+    duration    = request.form.get('video_duration_sec', '0 min 0 s')
     v_width     = request.form.get('video_width', '0') 
     v_height    = request.form.get('video_height', '0')
 
