@@ -466,16 +466,12 @@
                                                             
                                                 <!-- moduł VideoDropBox (edycja prezentacji) -->
                                                 <label class="form-label">Plik wideo prezentacji</label>
-                                                <div id="{{post_id}}-drop-area" class="drop-area">
-                                                    <h3>Przeciągnij plik MP4 tutaj lub kliknij, aby wybrać</h3>
-                                                    <p class="small text-muted mb-0">
-                                                        Obsługiwany format: <strong>MP4 (H.264 + AAC)</strong>, maks. <strong>20 minut</strong>, maks. <strong>2 GB</strong>.
-                                                    </p>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label class="form-label ms-5">Aktualny plik / analiza:</label>
-                                                    <div id="{{post_id}}-videoSummary" class="ms-5 me-5"></div>
+                                                <p class="small text-muted mb-0">
+                                                    Obsługiwany format: <strong>MP4 (H.264 + AAC)</strong>, maks. <strong>20 minut</strong>, maks. <strong>2 GB</strong>.
+                                                </p>
+                                                
+                                                <div id="{{post_id}}-drop-area" class="drop-area-video m-4">
+                                                    <div id="{{post_id}}-videoSummary" ><p style="font-size: 80px;"><i class="bi bi-cloud-plus"></i></p></div>
                                                 </div>
 
                                                 <script>
@@ -787,7 +783,7 @@
                 this.summaryBox.innerHTML = `
                     <div class="card bg-dark text-light text-start">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-4 p-5">
                                 <p class="mb-1" style="font-size: 80px;"><i class="bi bi-cloud-plus-fill"></i></p>
                                 <p class="text-info small">Załaduj ponownie</p>
                             </div>
