@@ -566,7 +566,17 @@
                         </div>
 {% endblock %}
 {% block bottom_script %}
-
+<div class="toast-container position-fixed bottom-0 end-0 p-3 z-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img src="https://dmddomy.pl/static/img/icon.png" class="rounded me-2" alt="..." style="width: 20px; height: 20px;">
+        <strong class="me-auto" id="toast-title">System</strong>
+        <small class="text-muted" id="toast-time">Teraz</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Zamknij"></button>
+      </div>
+      <div class="toast-body" id="toast-body">Tutaj treść komunikatu</div>
+    </div>
+</div>
 <script>
     class VideoDropBox { // v1.0 na bazie FotoDropBox
         constructor(formId, existingVideoUrl = null) {
@@ -583,7 +593,7 @@
             }
 
             if (!this.checkDragAndDropSupport()) {
-                alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików. Użyj przycisku wyboru pliku.');
+                showToast('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików. Użyj przycisku wyboru pliku.', 'error');
             }
 
             // ukryty input file
@@ -819,7 +829,7 @@
 
         if (!titleEl || !descEl || !slotEl) {
             console.error('Brak wymaganych elementów formularza (title/description/slot).');
-            alert('Formularz jest niekompletny – skontaktuj się z administratorem.');
+            showToast('Formularz jest niekompletny – skontaktuj się z administratorem.', 'error');
             return;
         }
 
@@ -828,13 +838,13 @@
         const desc  = (descEl.innerHTML || '').trim(); // zachowujemy proste formatowanie
 
         if (!title) {
-            alert('Podaj tytuł prezentacji.');
+            showToast('Podaj tytuł prezentacji.', 'warning');
             titleEl.focus();
             return;
         }
 
         if (!slot) {
-            alert('Wybierz slot prezentacji (GREEN / SILVER / GOLD).');
+            showToast('Wybierz slot prezentacji (GREEN / SILVER / GOLD).', 'warning');
             slotEl.focus();
             return;
         }
@@ -846,7 +856,7 @@
         }
 
         if (!isEdit && !videoFile) {
-            alert('Dodając nową prezentację musisz wybrać plik wideo (MP4).');
+            showToast('Dodając nową prezentację musisz wybrać plik wideo (MP4).', 'warning');
             return;
         }
 
@@ -878,17 +888,17 @@
         .then(function(data) {
             if (data.success) {
                 // tutaj możesz podmienić na własny toast / modal
-                alert(data.message || 'Prezentacja została zapisana pomyślnie.');
+                showToast(data.message || 'Prezentacja została zapisana pomyślnie.');
 
                 // np. odśwież listę / przeładuj stronę:
                 window.location.reload();
             } else {
-                alert(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.');
+                showToast(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.', 'error');
             }
         })
         .catch(function(err) {
             console.error(err);
-            alert('Błąd sieci podczas zapisywania prezentacji. Spróbuj ponownie.');
+            showToast('Błąd sieci podczas zapisywania prezentacji. Spróbuj ponownie.', 'error');
         });
     }
 

@@ -1717,3 +1717,35 @@ function collectAndSendfbgroupsformestateAdsSell(postId) {
         alert('Wystąpił błąd podczas wysyłania ogłoszenia.');
     });
 }
+
+function showToast(message, type = 'success') {
+    const toastElement = document.getElementById('liveToast');
+    const toastBody = document.getElementById('toast-body');
+    const toastTitle = document.getElementById('toast-title');
+    const toastTime = document.getElementById('toast-time');
+
+    // Kolor tła nagłówka (opcjonalnie można zmieniać)
+    let bgClass = 'bg-dark';
+    if (type === 'success') {
+        bgClass = 'bg-success';
+        toastTitle.innerText = 'Sukces';
+    } else if (type === 'error') {
+        bgClass = 'bg-danger';
+        toastTitle.innerText = 'Błąd';
+    } else if (type === 'info') {
+        bgClass = 'bg-info';
+        toastTitle.innerText = 'Informacja';
+    } else if (type === 'warning') {
+        bgClass = 'bg-warning';
+        toastTitle.innerText = 'Ostrzeżenie';
+    }
+
+    toastElement.className = `toast ${bgClass} text-white border-0`;
+    toastBody.innerText = message;
+
+    // Ustaw aktualny czas
+    toastTime.innerText = new Date().toLocaleTimeString();
+
+    const toast = bootstrap.Toast.getOrCreateInstance(toastElement);
+    toast.show();
+}
