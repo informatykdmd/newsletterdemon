@@ -14750,7 +14750,8 @@ def presentation_save():
                 author = %s,
                 target = %s,
                 updated_by = %s,
-                updated_at = %s
+                updated_at = %s,
+                sync = 0
             WHERE id = %s
         """
         params = (
@@ -14872,9 +14873,7 @@ def presentation_save():
         main_domain = (settingsDB.get('main-domain', '') or '').rstrip('/')
         pres_rel_for_url = settingsDB.get('presentation-files', 'images/presentations/').strip('/')  # np. "presentations"
 
-        # wynik: "presentations/green/42.mp4"
         rel_url_path = f"{pres_rel_for_url}/{slot}/{filename}".replace('\\', '/')
-        # wynik: "https://panel.dmd.pl/presentations/green/42.mp4"
         video_url = f"{main_domain}/{rel_url_path}"
 
         # zapisz ścieżkę / URL pliku do bazy
