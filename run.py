@@ -14654,7 +14654,7 @@ def presentation_view():
     if 'username' not in session:
         msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /presentation-view bez autoryzacji!', log_path=logFileName)
         return redirect(url_for('index'))
-    
+    print(session['userperm'])
     if session['userperm']['presentation'] == 0:
         msq.handle_error(f'UWAGA! Próba zarządzania /presentation-view bez uprawnień przez {session["username"]}!', log_path=logFileName)
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
