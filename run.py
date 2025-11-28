@@ -29,6 +29,7 @@ from bin.command_generator import getMorphy, saveMorphy
 from bin.znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
 import psutil
 import platform
+from pathlib import Path
 
 
 """
@@ -337,6 +338,7 @@ def generator_settingsDB():
         'blog-pic-path': take_data_settingsDB('blog_pic_path'),
         'avatar-pic-path': take_data_settingsDB('avatar_pic_path'),
         'estate-pic-offer': take_data_settingsDB('estate_pic_offer'),
+        'presentation-files': take_data_settingsDB('presentation_files'),
         'last-restart': take_data_settingsDB('last_restart'),
         'domy': take_data_settingsDB('domy'),
         'budownictwo': take_data_settingsDB('budownictwo'),
@@ -418,7 +420,10 @@ def generator_userDataDB():
                 'estate': data[31], # kolejne uprawnienie wzz. dmd inwestycje
                 'career': data[32], # kolejne uprawnienie wzz. dmd budownictwo kariera
                 'fbhidden': data[33], # kolejne uprawnienie wzz. dmd budownictwo kariera
-                'realizations': data[34] # kolejne uprawnienie wzz. dmd budownictwo kariera
+                'realizations': data[34], # kolejne uprawnienie wzz. dmd budownictwo kariera
+                'prezentation': data[35], # kolejne uprawnienie prezentation
+                'prezentation-silver': data[36], # kolejne uprawnienie 
+                'prezentation-gold': data[37], # kolejne uprawnienie 
                 },
             'brands': {
                 'domy': (data[24]),
@@ -2332,6 +2337,10 @@ def update_permission():
     if perm_id == 18: perm_name = 'Zarządzanie Anonimowymi Kampaniami'
     if perm_id == 19: perm_name = 'Zarządzanie realizacjami'
 
+    if perm_id == 20: perm_name = 'Zarządzanie prezentacjami'
+    if perm_id == 21: perm_name = 'Zarządzanie prezentacjami-silver'
+    if perm_id == 22: perm_name = 'Zarządzanie prezentacjami-gold'
+
     if perm_id == 10: perm_name = 'Przynależność do DMD Domy'
     if perm_id == 11: perm_name = 'Przynależność do DMD Budownictwo'
     if perm_id == 12: perm_name = 'Przynależność do DMD EliteHome'
@@ -2339,7 +2348,7 @@ def update_permission():
     if perm_id == 14: perm_name = 'Przynależność do DMD Instalacje'
     if perm_id == 15: perm_name = 'Przynależność do DMD Development'
 
-    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16, 17, 18, 19]:
+    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16, 17, 18, 19, 20, 21, 22]:
         if session['userperm']['permissions'] == 0:
             msq.handle_error(f'UWAGA! Próba zarządzania uprawnieniami bez uprawnień przez {session["username"]}!', log_path=logFileName)
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
@@ -2461,6 +2470,36 @@ def update_permission():
         if perm_id == 19: 
             'Zarządzanie Realizacjami'
             zapytanie_sql = '''UPDATE admins SET PERM_REALIZED = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+            
+        if perm_id == 20: 
+            'Zarządzanie prezentacjami'
+            zapytanie_sql = '''UPDATE admins SET PERM_PRESENTATION = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        
+        if perm_id == 21: 
+            'Zarządzanie prezentacjami-silver'
+            zapytanie_sql = '''UPDATE admins SET PERM_PRESENTATION_SILVER = %s WHERE ID = %s;'''
+            if permission: onOff = 1
+            else: onOff = 0
+            dane = (onOff, user_id)
+            if msq.insert_to_database(zapytanie_sql, dane):
+                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
+                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+            
+        if perm_id == 22: 
+            'Zarządzanie prezentacjami-gold'
+            zapytanie_sql = '''UPDATE admins SET PERM_PRESENTATION_GOLD = %s WHERE ID = %s;'''
             if permission: onOff = 1
             else: onOff = 0
             dane = (onOff, user_id)
@@ -3143,7 +3182,7 @@ def set_settings():
     if request.method == 'POST':
         form_data = request.form.to_dict()
 
-        upload_path = '/var/www/html/appdmddomy/public/'+settingsDB['estate-pic-offer']
+        upload_path = f'{settingsDB.get("real-location-on-server", "/var/www/html/appdmddomy/public/")}{settingsDB.get("estate-pic-offer", "images/")}'
         logoPic = request.files.get(f'tmpl_logo')
         
         if logoPic:  # Sprawdza, czy plik został przesłany
@@ -3161,6 +3200,7 @@ def set_settings():
         ADMIN_BLOG = form_data['blog-pic-path']
         ADMIN_AVATAR = form_data['avatar-pic-path']
         ADMIN_ESTATE = form_data['estate-pic-path']
+        ADMIN_PRESENTATIONS = form_data['presentations-path']
         ADMIN_ITEMS = form_data['item-on-page']
         ADMIN_EMAIL = form_data['admin-smtp-username']
         ADMIN_SERVER = form_data['admin-smtp-server']
@@ -3173,7 +3213,7 @@ def set_settings():
         ADMIN_URL_INSTALACJE = form_data['url-instalacje']
 
         ADMIN_PASSWORD = form_data['admin-smtp-password']
-        if ADMIN_PASSWORD == '':
+        if not ADMIN_PASSWORD:
             
             zapytanie_sql = '''
                     UPDATE admin_settings 
@@ -3190,7 +3230,8 @@ def set_settings():
                         blog_pic_path = %s,
                         main_domain = %s,
                         real_location_on_server = %s,
-                        estate_pic_offer = %s
+                        estate_pic_offer = %s,
+                        presentation_files = %s
                     WHERE ID = %s;
                 '''
             dane = (
@@ -3207,7 +3248,8 @@ def set_settings():
                         ADMIN_BLOG, 
                         ADMIN_DOMAIN,
                         ADMIN_REALLOC,
-                        ADMIN_ESTATE, 1)
+                        ADMIN_ESTATE,
+                        ADMIN_PRESENTATIONS, 1)
         else:
             zapytanie_sql = '''
                     UPDATE admin_settings 
@@ -3227,7 +3269,8 @@ def set_settings():
                         blog_pic_path = %s,
                         main_domain = %s,
                         real_location_on_server = %s,
-                        estate_pic_offer = %s
+                        estate_pic_offer = %s,
+                        presentation_files = %s
                     WHERE ID = %s;
                 '''
             dane = (
@@ -3249,7 +3292,8 @@ def set_settings():
                     ADMIN_BLOG, 
                     ADMIN_DOMAIN,
                     ADMIN_REALLOC,
-                    ADMIN_ESTATE, 1)
+                    ADMIN_ESTATE,
+                    ADMIN_PRESENTATIONS, 1)
         if msq.insert_to_database(zapytanie_sql, dane):
             msq.handle_error(f'Ustawienia zapisane przez {session["username"]}!', log_path=logFileName)
             addDataLogs(f'Ustawienia zapisane przez {session["username"]}!', 'success')
@@ -13589,6 +13633,7 @@ def settings():
     real_loc_on_server = settingsDB['real-location-on-server']
     estate_pic_path = settingsDB['estate-pic-offer']
     etate_logo_png = settingsDB['main-domain']+estate_pic_path+'logo.png'
+    presentations_path = settingsDB['presentation-files']
     
     restart = settingsDB['last-restart']
     
@@ -13606,6 +13651,7 @@ def settings():
             avatar=avatar,
             real_loc_on_server=real_loc_on_server,
             estate_pic_path=estate_pic_path,
+            presentations_path=presentations_path,
             restart=restart,
             smtpAdmin=smtpAdmin,
             etate_logo_png=etate_logo_png,
@@ -14601,6 +14647,478 @@ def update_hidden_campaigns_status():
             return redirect(url_for('hiddeCampaigns'))
     
     return redirect(url_for('index'))
+
+@app.route('/presentation-view')
+def presentation_view():
+    # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
+    if 'username' not in session:
+        msq.handle_error(f'UWAGA! Wywołanie adresu endpointa /presentation-view bez autoryzacji!', log_path=logFileName)
+        return redirect(url_for('index'))
+    
+    if session['userperm']['presentation'] == 0:
+        msq.handle_error(f'UWAGA! Próba zarządzania /presentation-view bez uprawnień przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    db = get_db()
+    query = ""
+    params = ()
+    presentations_items = db.getFrom(query=query, params=params, as_dict=True)
+
+    # Ustawienia paginacji
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(presentations_items)
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+    # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
+    presentations_list = presentations_items[offset: offset + per_page]
+    
+    return render_template(
+            "presentation_view.html", 
+            username=session['username'],
+            useremail=session['user_data']['email'],
+            userperm=session['userperm'], 
+            user_brands=session['brands'], 
+            presentations_list=presentations_list,
+            pagination=pagination
+            )
+
+@app.route('/presentation-save', methods=['POST'])
+def presentation_save():
+    # --- autoryzacja ---
+    if 'username' not in session:
+        msq.handle_error(
+            f'UWAGA! Wywołanie adresu endpointa /presentation-save bez autoryzacji!',
+            log_path=logFileName
+        )
+        return redirect(url_for('index'))
+    
+    if session['userperm'].get('presentation', 0) == 0:
+        msq.handle_error(
+            f'UWAGA! Próba zarządzania /presentation-save bez uprawnień przez {session["username"]}!',
+            log_path=logFileName
+        )
+        flash(
+            'Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!',
+            'danger'
+        )
+        return redirect(url_for('index'))
+
+    # --- dane z formularza ---
+    offer_id    = request.form.get('offer_id') or request.form.get('OfferID')
+    is_edit     = request.form.get('is_edit') == '1'
+    title       = (request.form.get('title') or '').strip()
+    description = (request.form.get('description') or '').strip()
+    slot        = (request.form.get('slot') or '').strip().lower()
+    author      = (request.form.get('author') or session.get('username'))
+    target      = request.form.get('target') or 'presentation'
+
+    video_file  = request.files.get('video_file')  # może być None przy edycji bez zmiany wideo
+
+    # --- walidacja podstawowa ---
+    errors = []
+
+    if not title:
+        errors.append('Brak tytułu prezentacji.')
+    if slot not in ('green', 'silver', 'gold'):
+        errors.append('Nieprawidłowy slot prezentacji.')
+
+    if not is_edit and video_file is None:
+        errors.append('Dla nowej prezentacji wymagany jest plik wideo.')
+
+    if errors:
+        msg = ' '.join(errors)
+        msq.handle_error(
+            f'Błąd zapisu prezentacji (użytkownik {session["username"]}): {msg}',
+            log_path=logFileName
+        )
+        return jsonify({
+            'success': False,
+            'message': msg
+        }), 400
+
+    # --- ZAPIS DO BAZY ---
+    db = get_db()
+
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # jeśli edycja → aktualizujemy istniejący rekord
+    if is_edit and offer_id:
+        query = """
+            UPDATE presentations SET
+                title = %s,
+                description = %s,
+                slot = %s,
+                author = %s,
+                target = %s,
+                updated_at = %s
+            WHERE id = %s
+        """
+        params = (
+            title,
+            description,
+            slot,
+            author,
+            target,
+            now,
+            offer_id
+        )
+    else:
+        # jeśli dodawanie → tworzymy nowy rekord
+        query = """
+            INSERT INTO presentations
+                (title, description, slot, author, target, created_at, updated_at)
+            VALUES
+                (%s, %s, %s, %s, %s, %s, %s)
+        """
+        params = (
+            title,
+            description,
+            slot,
+            author,
+            target,
+            now,
+            now
+        )
+
+    success = db.executeTo(query, params)
+
+    if not success:
+        msq.handle_error(
+            f'BŁĄD zapisu prezentacji (slot={slot}, title={title}) przez {session["username"]}',
+            log_path=logFileName
+        )
+        return jsonify({
+            'success': False,
+            'message': 'Błąd bazy danych — nie udało się zapisać prezentacji.'
+        }), 500
+
+    # przy INSERT pobierz ID nowego rekordu
+    if not is_edit:
+        checkingIDparams = (
+            now,
+            now,
+            title,
+            description,
+            slot,
+            author,
+            target,
+        )
+        db.fetch_one(
+            """
+            SELECT id 
+            FROM presentations 
+            WHERE created_at=%s 
+            AND updated_at=%s 
+            AND title=%s 
+            AND description=%s 
+            AND slot=%s 
+            AND author=%s 
+            AND target=%s
+            """, 
+            checkingIDparams
+        )
+        offer_id = getattr(db, 'id', None)
+        if offer_id is None:
+            msq.handle_error(
+                f'UWAGA! Nie udało się pobrać ID nowej prezentacji (slot={slot}, title={title})',
+                log_path=logFileName
+            )
+
+    # --- ZAPIS PLIKU WIDEO (jeśli plik dostarczony) ---
+    if video_file and offer_id:
+        settingsDB = generator_settingsDB()
+
+        # fizyczny root katalogu (np. /var/www/dmd-panel/)
+        base_root = (settingsDB.get('real-location-on-server', '') or '').rstrip('/')
+        base_root = Path(base_root)
+
+        # relatywny katalog na prezentacje, np. "presentations" albo "static/presentations"
+        pre_rel = (settingsDB.get('presentation-files', 'images/presentations/') or '').strip('/')
+        rel_root = Path(pre_rel)  # np. "presentations"
+
+        # katalog dla danego slotu: /var/www/.../presentations/green
+        slot_dir = base_root / rel_root / slot
+        slot_dir.mkdir(parents=True, exist_ok=True)
+
+        # nazwa pliku powiązana z ID prezentacji, np. 42.mp4
+        filename = f"{offer_id}.mp4"
+
+        tmp_path  = slot_dir / f"{filename}.tmp"
+        final_path = slot_dir / filename
+        prev_path  = slot_dir / f"{filename}.bak"
+
+        # zapisz tmp
+        video_file.save(str(tmp_path))
+
+        # rotacja poprzedniej wersji (zachowaj backup)
+        if final_path.exists():
+            try:
+                final_path.replace(prev_path)
+            except Exception as e:
+                msq.handle_error(
+                    f'UWAGA! Nie udało się zrobić backupu pliku wideo {final_path}: {e}',
+                    log_path=logFileName
+                )
+
+        # atomowe przeniesienie tmp → final
+        tmp_path.replace(final_path)
+
+        # zbuduj PUBLICZNY URL pod którym RPi i TV zobaczą plik
+        # np. main-domain = "https://panel.dmd.pl", presentation-files = "/presentations"
+        main_domain = (settingsDB.get('main-domain', '') or '').rstrip('/')
+        pres_rel_for_url = settingsDB.get('presentation-files', 'images/presentations/').strip('/')  # np. "presentations"
+
+        # wynik: "presentations/green/42.mp4"
+        rel_url_path = f"{pres_rel_for_url}/{slot}/{filename}".replace('\\', '/')
+        # wynik: "https://panel.dmd.pl/presentations/green/42.mp4"
+        video_url = f"{main_domain}/{rel_url_path}"
+
+        # zapisz ścieżkę / URL pliku do bazy
+        upd_q = """
+            UPDATE presentations
+            SET video_path = %s
+            WHERE id = %s
+        """
+        upd_params = (video_url, offer_id)
+        ok_video = db.executeTo(upd_q, upd_params)
+
+        if not ok_video:
+            msq.handle_error(
+                f'BŁĄD: zapisano plik wideo na dysk, ale nie udało się zaktualizować video_path w bazie (ID={offer_id})',
+                log_path=logFileName
+            )
+
+        # log techniczny
+        msq.handle_error(
+            f'Plik wideo dla prezentacji ID={offer_id} slot={slot} został zapisany w {final_path} (URL: {video_url}).',
+            log_path=logFileName
+        )
+
+
+
+    msq.handle_error(
+        f'Prezentacja {offer_id or "(nowa)"} slot={slot} zapisana przez {session["username"]} (author={author}, target={target}).',
+        log_path=logFileName
+    )
+
+    flash('Prezentacja została zapisana pomyślnie!', 'success')
+    return jsonify({
+        'message': 'Prezentacja została zapisana pomyślnie!',
+        'success': True
+    }), 200
+
+@app.route('/update-presentation-status', methods=['POST'])
+def update_presentation_status():
+    # --- autoryzacja ---
+    if 'username' not in session:
+        msq.handle_error(
+            f'UWAGA! Wywołanie endpointa /update-presentation-status bez autoryzacji!',
+            log_path=logFileName
+        )
+        return redirect(url_for('index'))
+    
+    if session['userperm'].get('presentation', 0) == 0:
+        msq.handle_error(
+            f'UWAGA! Próba zarządzania /update-presentation-status bez uprawnień przez {session["username"]}!',
+            log_path=logFileName
+        )
+        flash(
+            'Nie masz uprawnień do zarządzania prezentacjami. Skontaktuj się z administratorem!',
+            'danger'
+        )
+        return redirect(url_for('index'))
+
+    # --- dane z formularza ---
+    post_id    = request.form.get('PostID')
+    new_status = request.form.get('Status')
+    slot       = (request.form.get('slot') or '').strip().lower()
+
+    if not post_id or not new_status:
+        return jsonify({
+            'success': False,
+            'message': 'Brak wymaganych danych (PostID / Status).'
+        }), 400
+
+    try:
+        post_id_int = int(post_id)
+    except ValueError:
+        return jsonify({
+            'success': False,
+            'message': 'Nieprawidłowy identyfikator prezentacji.'
+        }), 400
+
+    # w tej logice obsługujemy tylko aktywację (Status = 1)
+    if new_status != '1':
+        return jsonify({
+            'success': False,
+            'message': 'Nieobsługiwany status – prezentację można tylko aktywować.'
+        }), 400
+
+    if slot not in ('green', 'silver', 'gold'):
+        return jsonify({
+            'success': False,
+            'message': 'Nieprawidłowy slot prezentacji.'
+        }), 400
+
+    # --- ZAPIS DO BAZY ---
+    db = get_db()
+
+    # 1) dezaktywuj wszystkie prezentacje w tym slocie
+    query_reset = """
+        UPDATE presentations
+        SET status = 0
+        WHERE slot = %s
+    """
+    params_reset = (slot,)
+    success_reset = db.executeTo(query_reset, params_reset)
+
+    if not success_reset:
+        msq.handle_error(
+            f'BŁĄD przy dezaktywowaniu prezentacji w slocie {slot} (użytkownik {session["username"]})',
+            log_path=logFileName
+        )
+        return jsonify({
+            'success': False,
+            'message': 'Błąd bazy danych — nie udało się dezaktywować pozostałych prezentacji dla tego slotu.'
+        }), 500
+
+    # 2) aktywuj wskazaną prezentację
+    query_set = """
+        UPDATE presentations
+        SET status = 1
+        WHERE id = %s
+    """
+    params_set = (post_id_int,)
+    success_set = db.executeTo(query_set, params_set)
+
+    if not success_set:
+        msq.handle_error(
+            f'BŁĄD przy aktywowaniu prezentacji ID={post_id_int} (slot={slot}) przez {session["username"]}',
+            log_path=logFileName
+        )
+        return jsonify({
+            'success': False,
+            'message': 'Błąd bazy danych — nie udało się aktywować wybranej prezentacji.'
+        }), 500
+
+    msq.handle_error(
+        f'Aktywowano prezentację ID={post_id_int} w slocie {slot} przez {session["username"]}',
+        log_path=logFileName
+    )
+
+    flash('Prezentacja została aktywowana dla wybranego slotu.', 'success')
+
+    # jeśli używasz klasycznego formularza (bez fetch), to lepiej przekierować:
+    return redirect(request.referrer or url_for('presentation_view'))
+    # jeśli wolisz wersję JSON pod fetch(), zamień powyższą linię na:
+    # return jsonify({
+    #     'success': True,
+    #     'message': 'Prezentacja została aktywowana.'
+    # }), 200
+
+
+@app.route('/remove-presentation', methods=["POST"])
+def remove_presentation():
+    """Usuwanie prezentacji (rekord + plik wideo)."""
+
+    # --- autoryzacja ---
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(
+            f'UWAGA! Wywołanie endpointa /remove-presentation bez autoryzacji!',
+            log_path=logFileName
+        )
+        return redirect(url_for('index'))
+    
+    if session['userperm'].get('presentation', 0) == 0:
+        msq.handle_error(
+            f'UWAGA! Próba zarządzania /remove-presentation bez uprawnień przez {session["username"]}!',
+            log_path=logFileName
+        )
+        flash('Nie masz uprawnień do zarządzania prezentacjami. Skontaktuj się z administratorem!', 'danger')
+        return redirect(url_for('index'))
+    
+    # --- Obsługa formularza POST ---
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        msq.handle_error(f'/remove-presentation form_data: {form_data}!', log_path=logFileName)
+
+        try:
+            form_data['PostID']
+        except KeyError:
+            flash("Brak identyfikatora prezentacji.", "danger")
+            return redirect(url_for('presentation_view'))  # dostosuj nazwę widoku listy prezentacji
+
+        try:
+            set_post_id = int(form_data['PostID'])
+        except ValueError:
+            flash("Nieprawidłowy identyfikator prezentacji.", "danger")
+            return redirect(url_for('presentation_view'))
+
+        # --- Pobranie danych prezentacji z bazy (slot + ścieżka do pliku) ---
+        try:
+            # PRZYKŁAD: zakładam, że masz kolumny slot, video_path
+            # jeśli nazwy inne: np. 'file_path', 'video_url' – dostosuj niżej indeksy
+            row = take_data_where_ID('slot, video_path', 'presentations', 'id', set_post_id)[0]
+            slot = row[0]
+            video_path_db = row[1]  # np. "/presentations/green/current.mp4" lub podobne
+        except IndexError:
+            msq.handle_error(
+                f'UWAGA! Prezentacja ID={set_post_id} nie została znaleziona podczas usuwania przez {session["username"]}!',
+                log_path=logFileName
+            )
+            flash("Prezentacja nie została znaleziona.", "danger")
+            return redirect(url_for('presentation_view'))
+
+        # --- Usunięcie rekordu z tabeli presentations ---
+        msq.delete_row_from_database(
+            """
+                DELETE FROM presentations WHERE id = %s;
+            """,
+            (set_post_id,)
+        )
+
+        # --- Usunięcie pliku MP4 z serwera (jeśli jest zdefiniowany) ---
+        if video_path_db:
+            try:
+                # Przykładowa konfiguracja – DOSTOSUJ klucze do swoich settings
+                real_loc_on_server = settingsDB['real-location-on-server']  # np. "/var/www/app"
+                # jeżeli video_path_db jest ścieżką "URL-ową" zaczynającą się od domeny,
+                # trzeba ją oczyścić; jeśli to ścieżka względna od root-a, lstrip('/')
+                if video_path_db.startswith('http://') or video_path_db.startswith('https://'):
+                    # jeśli trzymasz pełny URL, wytnij prefix domeny
+                    domain = settingsDB.get('main-domain', '')
+                    video_rel_path = video_path_db.replace(domain, '').lstrip('/')
+                else:
+                    video_rel_path = video_path_db.lstrip('/')
+
+                file_path = os.path.join(real_loc_on_server, video_rel_path)
+
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                    msq.handle_error(
+                        f'Plik wideo {file_path} powiązany z prezentacją ID={set_post_id} został usunięty przez {session["username"]}.',
+                        log_path=logFileName
+                    )
+                else:
+                    msq.handle_error(
+                        f'Plik wideo {file_path} powiązany z prezentacją ID={set_post_id} nie został znaleziony na dysku.',
+                        log_path=logFileName
+                    )
+            except Exception as e:
+                msq.handle_error(
+                    f'UWAGA! Error removing presentation video file ({video_path_db}) dla ID={set_post_id}: {e}',
+                    log_path=logFileName
+                )
+
+        msq.handle_error(
+            f'Prezentacja ID={set_post_id} została usunięta przez {session["username"]}!',
+            log_path=logFileName
+        )
+        flash("Prezentacja została usunięta.", "success")
+        return redirect(url_for('presentation_view'))  # dostosuj do swojego widoku listy
+
+    return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     # app.run(debug=True, port=8000)

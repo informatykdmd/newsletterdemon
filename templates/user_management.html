@@ -2400,6 +2400,72 @@
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
+                                                                <!-- kolejne uprawnienia presentation id 20-->
+                                                                <div class="form-check form-switch">
+                                                                    <form class="formatuj-padding-lg" action="">
+                                                                        {% if userperm['permissions'] == 0 %}
+                                                                            {% if users_data['uprawnienia']['presentation'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}" disabled/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}">Zarządzanie Prezentacjami (green)</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}">Zarządzanie Prezentacjami (green)</label>
+                                                                            {% endif %}
+                                                                        {% else %}
+                                                                            {% if users_data['uprawnienia']['presentation'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}_0" />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}_0">Zarządzanie Prezentacjami (green)</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}_1" checked />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}_1">Zarządzanie Prezentacjami (green)</label>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    </form>
+                                                                </div>
+                                                                <!-- kolejne uprawnienia presentation-silver id 20-->
+                                                                <div class="form-check form-switch">
+                                                                    <form class="formatuj-padding-lg" action="">
+                                                                        {% if userperm['permissions'] == 0 %}
+                                                                            {% if users_data['uprawnienia']['presentation-silver'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}" disabled/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}">Zarządzanie Prezentacjami (silver)</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}">Zarządzanie Prezentacjami (silver)</label>
+                                                                            {% endif %}
+                                                                        {% else %}
+                                                                            {% if users_data['uprawnienia']['presentation-silver'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}_0" />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}_0">Zarządzanie Prezentacjami (silver)</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}_1" checked />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}_1">Zarządzanie Prezentacjami (silver)</label>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    </form>
+                                                                </div>
+                                                                <!-- kolejne uprawnienia presentation-gold id 22-->
+                                                                <div class="form-check form-switch">
+                                                                    <form class="formatuj-padding-lg" action="">
+                                                                        {% if userperm['permissions'] == 0 %}
+                                                                            {% if users_data['uprawnienia']['presentation-gold'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}" disabled/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}">Zarządzanie Prezentacjami (gold)</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}">Zarządzanie Prezentacjami (gold)</label>
+                                                                            {% endif %}
+                                                                        {% else %}
+                                                                            {% if users_data['uprawnienia']['presentation-gold'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}_0" />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}_0">Zarządzanie Prezentacjami (gold)</label>
+                                                                            {% else %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}_1" checked />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}_1">Zarządzanie Prezentacjami (gold)</label>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    </form>
+                                                                </div>
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}

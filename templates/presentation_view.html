@@ -1,0 +1,896 @@
+{% extends 'base.html' %}
+
+{% block title %}DMD Panel Administratora - Zarządzanie Prezentacjami{% endblock %}
+
+{% block addButton %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div class="add-button-green ps-3">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 15pt; color: #0e900e !important;"></i>
+        </a>
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div class="add-button-green ps-3">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 15pt; color: #0e900e !important;"></i>
+        </a>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div class="add-button-green ps-3">
+        <a  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+            <i class="bi bi-plus-square-fill" style="font-size: 20pt; color: #0e900e !important;"></i>
+        </a>
+    </div>
+</div>
+
+{% endblock %}
+{% block navbarTitle %}
+<!-- d-block d-sm-none tylko na średnim sm+ -->
+<div class="d-block d-sm-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_sm" aria-controls="offcanvasTop_sm">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 2px !important; padding-right: 10px; max-height: 22px;"/>
+        </a>
+
+    </div>
+</div>
+<!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->
+<div class="d-none d-sm-block d-lg-none mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_lg" aria-controls="offcanvasTop_lg">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 5px !important; padding-right: 10px; max-height: 35px;"
+                />
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 40px; font-size: 15px; font-weight: 100;"
+            href="#">
+            Preznetacje
+        </a>
+    </div>
+</div>
+<!-- d-none d-xl-block tylko na pełnym xl+ -->
+<div class="d-none d-lg-block mt-2">
+    <div style="display: flex; justify-content: space-between;">
+        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop_xl" aria-controls="offcanvasTop_xl">
+            <img 
+                src="../static/img/logotypy_dmd_domy.png" 
+                alt="DMD" 
+                style="margin-left: 10px !important; padding-right: 10px; max-height: 40px;"/>
+        </a>
+        <a 
+            class="nav-link active dark-mode" 
+            aria-current="page" 
+            style="max-height: 45px; font-size: 20px; font-weight: 100;"
+            href="#">
+            Zarządzanie Prezentacjami
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block tableHeader %}
+                        <div>
+                            <div class="row klej formatuj-header">
+                                <div class="d-none d-lg-block" style="max-width: 30px;">
+                                    #
+                                </div>
+                                <!-- responsywny start -->
+                                <div class="d-lg-none" style="max-width: 30px;">
+                                    <i class="bi bi-incognito"></i>
+                                </div>
+                                <!-- responsywny koniec -->
+                                <div  class="col-xl-8 col-lg-6 col-sm-8">
+                                    Tytuł
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Autor
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 150px;">
+                                    Slot
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 120px;">
+                                    Status
+                                </div>
+                                <div  class="d-none d-xl-block" style="max-width: 80px;">
+                                    <i class="bi bi-incognito"></i>
+                                </div>
+                                <div  class="d-none d-lg-block" style="max-width: 150px;">
+                                    Data publikacji
+                                </div>
+                                <div  class="text-end" style="max-width: 80px;">
+                                    <i class="bi bi-person-gear"></i> Akcja 
+                                </div>
+                            </div>
+                        </div>
+{% endblock %}
+{% block tableContent%}
+                        <!-- OFFCANVANSE RIGHT ADD NEW POST -->
+                        <div class="offcanvas offcanvas-end bg-dark oc-width" tabindex="-1" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                            <div class="offcanvas-header">
+                                <h4 class="offcanvas-title" id="offcanvasRightLabel">Dodawanie nowej prezentacji.</h4>
+                                <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <form id="presentation_9999999">
+                                    <!-- title -->
+                                    <div class="form-floating mb-3">
+                                        <input 
+                                            type="text" 
+                                            value=""
+                                            class="form-control bg-dark formatuj-maly-font" 
+                                            style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                            id="title_9999999" 
+                                            name="title" 
+                                            placeholder="Tytuł Prezentacji"
+                                            required />
+                                        <label for="title_9999999">Tytuł Prezentacji</label>
+                                    </div>
+                                    <!-- description -->
+                                    <label class="form-label mt-2">Opis Prezentacji</label>
+                                    <div 
+                                        id="description_9999999" 
+                                        contenteditable="true" 
+                                        class="form-control bg-dark formatuj-maly-font" 
+                                        style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
+                                    </div>
+                                    <div class="no-border formatuj-maly-font fadeIn mb-3">
+                                        <a class="ms-2" href="javascript:void(0);" 
+                                        onClick="applyTemplate('description_9999999', 
+                                        'Prezentacja dla roli GOLD. Materiał: [opis treści]. Przeznaczenie: prezentacje strategiczne i zarządcze. Czas trwania: [czas].')">
+                                            Szablon GOLD – prezentacja strategiczna
+                                        </a>
+
+                                        <a class="ms-2" href="javascript:void(0);" 
+                                        onClick="applyTemplate('description_9999999', 
+                                        'Prezentacja SILVER. Materiał: [opis treści]. Zastosowanie: wewnętrzne informacje operacyjne, statusy, raporty. Czas trwania: [czas].')">
+                                            Szablon SILVER – informacje operacyjne
+                                        </a>
+
+                                        <a class="ms-2" href="javascript:void(0);" 
+                                        onClick="applyTemplate('description_9999999', 
+                                        'Prezentacja GREEN. Materiał: [opis treści]. Zastosowanie: treści ogólne, marketingowe, firmowe, dla gości. Czas trwania: [czas].')">
+                                            Szablon GREEN – ogólna firmowa
+                                        </a>
+
+                                        <a class="ms-2" href="javascript:void(0);" 
+                                        onClick="applyTemplate('description_9999999', 
+                                        'Prezentacja budowlana / techniczna. Zawartość: [zakres materiału]. Dla kogo: [dział / dział budowy]. Czas: [czas].')">
+                                            Szablon Techniczny
+                                        </a>
+
+                                        <a class="ms-2" href="javascript:void(0);" 
+                                        onClick="applyTemplate('description_9999999', 
+                                        'Prezentacja marketingowa. Przekaz: [hasło / temat przewodni]. Cele: [cele prezentacji]. Czas: [czas].')">
+                                            Szablon Marketingowy
+                                        </a>
+
+                                        <a class="ms-2" href="javascript:void(0);" 
+                                        onClick="applyTemplate('description_9999999', 
+                                        'Prezentacja dla Zarządu. Temat: [temat]. Kluczowe punkty: [punkty]. Przewidywany czas: [czas].')">
+                                            Szablon Zarząd / Executive
+                                        </a>
+                                    </div>
+                                    <!-- slot -->
+                                    <div class="mb-3">
+                                        <select 
+                                            class="form-select dark-mode mb-2 mt-2" 
+                                            style="max-height: 30px; font-size: 12px;" 
+                                            id="slot_9999999" 
+                                            name="slot"
+                                            required>
+
+                                            <option value="">Wybierz slot prezentacji</option>
+
+                                            <option value="green">GREEN — treści ogólne / firmowe</option>
+                                            {% if userperm['prezentation-silver'] == 1 %}<option value="silver">SILVER — informacje operacyjne</option>{% endif %}
+                                            {% if userperm['prezentation-gold'] == 1 %}<option value="gold">GOLD — prezentacje strategiczne</option>{% endif %}
+
+                                        </select>
+                                    </div>
+
+
+                                    <!-- moduł VideoDropBox -->
+                                    <label class="form-label">Plik wideo prezentacji</label>
+                                    <div id="9999999-drop-area" class="drop-area">
+                                        <h3>Przeciągnij plik MP4 tutaj lub kliknij, aby wybrać</h3>
+                                        <p class="small text-muted mb-0">
+                                            Obsługiwany format: <strong>MP4 (H.264 + AAC)</strong>, maks. <strong>20 minut</strong>, maks. <strong>2 GB</strong>.
+                                        </p>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label ms-5">Analiza pliku:</label>
+                                        <div id="9999999-videoSummary" class="ms-5 me-5"></div>
+                                    </div>
+
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', () => {
+                                            const myVideoDropBox = new VideoDropBox('9999999');
+                                        });
+                                    </script>
+
+                                    <input type="hidden" name="OfferID" id="OfferID_9999999" value="" />
+
+                                    <input type="hidden" name="author" id="author_9999999" value="{{ username }}" />
+                                    <input type="hidden" name="target" id="target_9999999" value="presentation" />
+
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-sm" 
+                                        style="max-height: 30px; font-size: 12px;" 
+                                        onclick="prepareAndSubmitPresentation('9999999', false)"
+                                    >
+                                        Dodaj prezentację
+                                    </button>
+
+                                </form>
+                            </div>
+                        </div>
+
+                        {% for post_data in presentations_list %}
+                            {% set post_id  = post_data['id'] %}
+                            <!-- linia contentu tabeli ciemna-->
+                            <div>
+                                <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
+                                    <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {{post_id}}
+                                    </div>
+                                    <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        {% if post_data['status'] == 1 %}
+                                            <span class="text-warning"><i class="bi bi-lightbulb-fill"></i></span>
+                                        {% else %}
+                                            <span class="text-secondary"><i class="bi bi-lightbulb-fill"></i></span>
+                                        {% endif %}
+                                    </div>
+                                    <div  class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            {{post_data['title']}}
+                                        </a>
+                                        
+                                    </div>
+                                    <div  class="d-none d-lg-block"  style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            <span class="display-6 formatuj-maly-font">{{post_data['author']}}</span>
+                                        </a>
+                                    </div>
+                                    
+                                    <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            <span class="display-6 formatuj-maly-font">{{post_data['slot']|upper}}</span>
+                                        </a>
+                                    </div>
+                                    <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            {% if post_data['status'] == 1 %}
+                                                <span class="text-warning"><i class="bi bi-lightbulb-fill"></i></span>
+                                            {% else %}
+                                                <span class="text-secondary"><i class="bi bi-lightbulb-fill"></i></span>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div  class="d-none d-xl-block" style="max-width: 80px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <div class="row">
+                                            {% if post_data['sync'] == 1 %}
+                                                <span class="text-info"><i class="bi bi-check-circle"></i></span>
+                                            {% else %}
+                                                <span class="text-warning"><i class="bi bi-arrow-repeat"></i></span>
+                                            {% endif %}
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                        <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                            <span class="display-6 formatuj-maly-font">{{post_data['data']}}</span>
+                                        </a>
+                                    </div>
+                                    <div class="text-end" style="max-width: 80px;">
+                                        <form 
+                                            method="POST" 
+                                            id="remove_presentation_{{post_id}}" 
+                                            action="{{ url_for('remove_presentation') }}" 
+                                            onsubmit="return confirm('Uwaga: usunięcie prezentacji spowoduje skasowanie rekordu i powiązanego pliku wideo z serwera. Czy na pewno chcesz kontynuować?');">
+
+                                            <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                                <i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i>
+                                            </a>
+
+                                            <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling_{{post_id}}" aria-controls="offcanvasScrolling_{{post_id}}">
+                                                <i class="bi bi-pencil" style="color: #7eb5cc !important;"></i>
+                                            </a>
+
+                                            <input type="hidden" name="UserName" id="UserName_{{post_id}}" value="{{ username }}"/>
+                                            <input type="hidden" name="PostID"   id="PostID_{{post_id}}"   value="{{ post_id }}"/>
+
+                                            <button type="submit" class="custom-icon-button">
+                                                <i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- offcanvanse left -->
+                            <div class="offcanvas offcanvas-start bg-dark oc-width" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling_{{post_id}}" aria-labelledby="offcanvasScrollingLabel">
+                                <div class="offcanvas-header">
+                                <h4 class="offcanvas-title" id="offcanvasScrollingLabel">Edycja Prezentacji o id: {{post_id}}</h4>
+                                <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                </div>
+                                <div class="offcanvas-body formatuj-maly-font">
+                                    <div class="tylko-klej">
+                                        <div style="color:#6a6a6a;">
+                                            <form id="presentation_{{post_id}}">
+                                                <!-- title -->
+                                                <div class="form-floating mb-3">
+                                                    <input 
+                                                        type="text"
+                                                        value="{{ post_data['title'] }}" 
+                                                        class="form-control bg-dark formatuj-maly-font" 
+                                                        style="color:#c2c2c2; border:#6a6a6a solid 1px;"
+                                                        id="title_{{post_id}}" 
+                                                        name="title" 
+                                                        placeholder="Tytuł Prezentacji"
+                                                        required
+                                                    />
+                                                    <label for="title_{{post_id}}">Tytuł Prezentacji</label>
+                                                </div>
+
+                                                <!-- description -->
+                                                <label class="form-label mt-2">Opis Prezentacji</label>
+
+                                                <div 
+                                                    id="description_{{post_id}}" 
+                                                    contenteditable="true" 
+                                                    class="form-control bg-dark formatuj-maly-font" 
+                                                    style="color:#c2c2c2; border:#6a6a6a solid 1px; padding:10px; min-height:100px;">
+                                                    {{ post_data['description'] | safe }}
+                                                </div>
+
+                                                <div class="no-border formatuj-maly-font fadeIn mb-3">
+
+                                                    <a class="ms-2" href="javascript:void(0);" 
+                                                    onClick="applyTemplate('description_{{post_id}}', 
+                                                    'Prezentacja dla roli GOLD. Materiał: [opis treści]. Przeznaczenie: prezentacje strategiczne i zarządcze. Czas trwania: [czas].')">
+                                                        Szablon GOLD – prezentacja strategiczna
+                                                    </a>
+
+                                                    <a class="ms-2" href="javascript:void(0);" 
+                                                    onClick="applyTemplate('description_{{post_id}}', 
+                                                    'Prezentacja SILVER. Materiał: [opis treści]. Zastosowanie: wewnętrzne informacje operacyjne, statusy, raporty. Czas trwania: [czas].')">
+                                                        Szablon SILVER – informacje operacyjne
+                                                    </a>
+
+                                                    <a class="ms-2" href="javascript:void(0);" 
+                                                    onClick="applyTemplate('description_{{post_id}}', 
+                                                    'Prezentacja GREEN. Materiał: [opis treści]. Zastosowanie: treści ogólne, marketingowe, firmowe, dla gości. Czas trwania: [czas].')">
+                                                        Szablon GREEN – ogólna firmowa
+                                                    </a>
+
+                                                    <a class="ms-2" href="javascript:void(0);" 
+                                                    onClick="applyTemplate('description_{{post_id}}', 
+                                                    'Prezentacja budowlana / techniczna. Zawartość: [zakres materiału]. Dla kogo: [dział / dział budowy]. Czas: [czas].')">
+                                                        Szablon Techniczny
+                                                    </a>
+
+                                                    <a class="ms-2" href="javascript:void(0);" 
+                                                    onClick="applyTemplate('description_{{post_id}}', 
+                                                    'Prezentacja marketingowa. Przekaz: [hasło / temat przewodni]. Cele: [cele prezentacji]. Czas: [czas].')">
+                                                        Szablon Marketingowy
+                                                    </a>
+
+                                                    <a class="ms-2" href="javascript:void(0);" 
+                                                    onClick="applyTemplate('description_{{post_id}}', 
+                                                    'Prezentacja dla Zarządu. Temat: [temat]. Kluczowe punkty: [punkty]. Przewidywany czas: [czas].')">
+                                                        Szablon Zarząd / Executive
+                                                    </a>
+                                                </div>
+
+                                                <!-- slot -->
+                                                <div class="mb-3">
+                                                    <select 
+                                                        class="form-select dark-mode mb-2 mt-2" 
+                                                        style="max-height: 30px; font-size: 12px;" 
+                                                        id="slot_{{post_id}}" 
+                                                        name="slot"
+                                                        required>
+
+                                                        <option value="">Wybierz slot prezentacji</option>
+                                                        
+                                                        <option value="green" 
+                                                            {% if post_data['slot'] == 'green' %}selected{% endif %}>
+                                                            GREEN — treści ogólne / firmowe
+                                                        </option>
+                                                        {% if userperm['prezentation-silver'] == 1 %}
+                                                        <option value="silver" 
+                                                            {% if post_data['slot'] == 'silver' %}selected{% endif %}>
+                                                            SILVER — informacje operacyjne
+                                                        </option>
+                                                        {% endif %}
+                                                        {% if userperm['prezentation-gold'] == 1 %}
+                                                        <option value="gold" 
+                                                            {% if post_data['slot'] == 'gold' %}selected{% endif %}>
+                                                            GOLD — prezentacje strategiczne
+                                                        </option>
+                                                        {% endif %}
+                                                    </select>
+                                                </div>
+
+                                                            
+                                                <!-- moduł VideoDropBox (edycja prezentacji) -->
+                                                <label class="form-label">Plik wideo prezentacji</label>
+                                                <div id="{{post_id}}-drop-area" class="drop-area">
+                                                    <h3>Przeciągnij plik MP4 tutaj lub kliknij, aby wybrać</h3>
+                                                    <p class="small text-muted mb-0">
+                                                        Obsługiwany format: <strong>MP4 (H.264 + AAC)</strong>, maks. <strong>20 minut</strong>, maks. <strong>2 GB</strong>.
+                                                    </p>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label ms-5">Aktualny plik / analiza:</label>
+                                                    <div id="{{post_id}}-videoSummary" class="ms-5 me-5"></div>
+                                                </div>
+
+                                                <script>
+                                                    document.addEventListener('DOMContentLoaded', () => {
+                                                        const existingVideoUrl = "{{ post_data['video_url'] if post_data.get('video_url') else '' }}";
+
+                                                        window.videoDropBox["{{post_id}}"] = new VideoDropBox(
+                                                            "{{post_id}}",
+                                                            existingVideoUrl || null
+                                                        );
+                                                    });
+                                                </script>
+
+                                                
+                                                <input type="hidden" name="OfferID" id="OfferID_{{post_id}}" value="{{post_id}}" />
+
+                                                <input type="hidden" name="author" id="author_{{post_id}}" value="{{ username }}" />
+                                                <input type="hidden" name="target" id="target_{{post_id}}" value="{{ post_data['target'] }}" />
+
+                                                <button 
+                                                    type="button" 
+                                                    class="btn btn-success btn-sm" 
+                                                    style="max-height: 30px; font-size: 12px;" 
+                                                    onclick="prepareAndSubmitPresentation('{{post_id}}', true)"
+                                                >
+                                                    Zapisz prezentację
+                                                </button>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <!-- collapse start -->
+
+                            <div class="sub-panel rogi collapse formatyj-maly-wiersz p-2" id="collapse_id_{{post_id}}">
+
+                                <div class="row">
+                                    <div class="col-lg-5 col-sm-12">
+
+                                        {% if post_data.get('video_url') %}
+                                            <video 
+                                                src="{{ post_data['video_url'] }}"
+                                                class="img-thumbnail object-fit-cover rounded bg-dark mb-2 w-100"
+                                                style="max-height: 260px;"
+                                                controls
+                                                muted>
+                                                Twoja przeglądarka nie obsługuje elementu wideo.
+                                            </video>
+                                        {% else %}
+                                            <div class="img-thumbnail d-flex align-items-center justify-content-center rounded bg-dark mb-2"
+                                                style="height: 180px; color:#888;">
+                                                Brak przypisanego pliku wideo
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="career-properties mt-2">
+                                            <form action="{{ url_for('update_presentation_status') }}" method="POST">
+                                                <input type="hidden" name="PostID" value="{{ post_id }}" />
+                                                <input type="hidden" name="Status" value="1" />
+                                                <input type="hidden" name="slot" value="{{ post_data['slot'] }}" />
+                                                {% if post_data['status'] == 0 %}
+                                                    <div class="col me-1 mb-1">
+                                                        <button 
+                                                            type="submit" 
+                                                            class="btn btn-outline-success btn-sm" 
+                                                            style="max-height: 30px; font-size: 12px;">
+                                                            Aktywuj prezentację
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-7 col-sm-12 career-properties-other">
+                                        <h5 class="mb-1">
+                                            {{ post_data['title'] }}
+                                        </h5>
+                                        <p class="text-muted mb-2" style="font-size: 12px;">
+                                            Slot: <strong>{{ post_data['slot']|upper }}</strong>
+                                            {% if post_data.get('target') %}
+                                                &nbsp;|&nbsp; Target: <strong>{{ post_data['target'] }}</strong>
+                                            {% endif %}
+                                            {% if post_data.get('created_at') %}
+                                                &nbsp;|&nbsp; Utworzono: {{ post_data['created_at'] }}
+                                            {% endif %}
+                                        </p>
+
+                                        <h6>Opis Prezentacji</h6>
+                                        <p>{{ post_data['description']|safe }}</p>
+
+                                        <p class="mb-0">Autor: {{ post_data['author'] }}</p>
+                                        {% if post_data.get('created_by') %}
+                                            <p class="mb-0">Utworzone przez: {{ post_data['created_by'] }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- collapse end -->
+                        {% endfor %}
+                        <!-- Paginacja -->
+                        <span class="formatuj-maly-logout">{{ pagination.info }}</span>
+                        <div class="pagination formatuj-margin-top">
+                            <nav aria-label="Page navigation example">                            
+                                <ul class="pagination justify-content-center dark-mode">
+                                    <li class="page-item">{{ pagination.prev }}</li>
+                                    <li class="page-item">{{ pagination.links }}</li>
+                                    <li class="page-item">{{ pagination.next }}</li>
+                                </ul>
+                            </nav>
+                        </div>
+{% endblock %}
+{% block bottom_script %}
+
+<script>
+    class VideoDropBox { // v1.0 na bazie FotoDropBox
+        constructor(formId, existingVideoUrl = null) {
+            this.formId = formId;
+
+            this.dropArea    = document.getElementById(`${formId}-drop-area`);
+            this.summaryBox  = document.getElementById(`${formId}-videoSummary`);
+            this.file        = null;
+            this.existingVideoUrl = existingVideoUrl;
+
+            if (!this.dropArea || !this.summaryBox) {
+                console.warn('VideoDropBox: brak wymaganych elementów w DOM');
+                return;
+            }
+
+            if (!this.checkDragAndDropSupport()) {
+                alert('Przeglądarka nie obsługuje funkcji przeciągania i upuszczania plików. Użyj przycisku wyboru pliku.');
+            }
+
+            // ukryty input file
+            this.fileInput = document.createElement('input');
+            this.fileInput.type = 'file';
+            this.fileInput.accept = 'video/mp4'; // tylko MP4
+            this.fileInput.multiple = false;
+            this.fileInput.style.display = 'none';
+            document.body.appendChild(this.fileInput);
+
+            this.dropArea.addEventListener('click', () => this.fileInput.click());
+            this.fileInput.addEventListener('change', (e) => this.handleFileInput(e));
+
+            this.initEventListeners();
+
+            if (this.existingVideoUrl) {
+                this.renderExistingVideoInfo();
+            }
+        }
+
+        // --- helpers ---
+
+        checkDragAndDropSupport() {
+            const div = document.createElement('div');
+            return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+        }
+
+        initEventListeners() {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, (e) => this.preventDefaults(e), false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.highlight(), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, () => this.unhighlight(), false);
+            });
+
+            this.dropArea.addEventListener('drop', (e) => this.handleDrop(e), false);
+        }
+
+        preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        highlight() {
+            this.dropArea.classList.add('highlight');
+        }
+
+        unhighlight() {
+            this.dropArea.classList.remove('highlight');
+        }
+
+        handleDrop(e) {
+            this.preventDefaults(e);
+            const dt    = e.dataTransfer;
+            const files = dt && dt.files ? dt.files : [];
+            if (!files.length) return;
+            this.processFile(files[0]); // tylko pierwszy plik
+        }
+
+        handleFileInput(e) {
+            const files = e.target.files || [];
+            if (!files.length) return;
+            this.processFile(files[0]); // tylko jeden plik
+        }
+
+        // --- główna logika ---
+
+        processFile(file) {
+            if (!this.validateType(file)) {
+                alert('Obsługiwane są wyłącznie pliki MP4.');
+                return;
+            }
+
+            this.file = file;
+            this.analyzeFile(file);
+        }
+
+        validateType(file) {
+            // sprawdzamy typ MIME i rozszerzenie
+            const isMp4Mime = file.type === 'video/mp4';
+            const ext       = this.getFileExtension(file.name).toLowerCase();
+            const isMp4Ext  = ext === 'mp4';
+            return isMp4Mime || isMp4Ext;
+        }
+
+        analyzeFile(file) {
+            // standard z „Architektury 0.1”
+            const MAX_SIZE_BYTES    = 2 * 1024 * 1024 * 1024; // 2 GB
+            const MAX_DURATION_SEC  = 20 * 60;                // 20 min
+            const RECOMM_WIDTH      = 1920;
+            const RECOMM_HEIGHT     = 1080;
+
+            const url   = URL.createObjectURL(file);
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            video.src = url;
+
+            video.onloadedmetadata = () => {
+                URL.revokeObjectURL(url);
+
+                const duration = isFinite(video.duration) ? video.duration : null;
+                const width    = video.videoWidth || 0;
+                const height   = video.videoHeight || 0;
+
+                const sizeBytes = file.size;
+                const sizeMB    = sizeBytes / 1024 / 1024;
+
+                const issues = [];
+
+                if (sizeBytes > MAX_SIZE_BYTES) {
+                    issues.push('Plik przekracza dopuszczalny rozmiar 2 GB.');
+                }
+
+                if (duration && duration > MAX_DURATION_SEC) {
+                    issues.push('Czas trwania przekracza 20 minut.');
+                }
+
+                if (width && height && (width < 1280 || height < 720)) {
+                    issues.push('Rozdzielczość jest niższa niż 1280x720 (zalecane minimum HD).');
+                }
+
+                let qualityNote = '';
+                if (width && height) {
+                    if (width === RECOMM_WIDTH && height === RECOMM_HEIGHT) {
+                        qualityNote = 'Rozdzielczość zgodna z rekomendacją (1920x1080).';
+                    } else if (width >= 1280 && height >= 720) {
+                        qualityNote = 'Rozdzielczość akceptowalna (min. HD).';
+                    } else {
+                        qualityNote = 'Rozdzielczość poniżej rekomendacji – rozważ eksport w co najmniej 1920x1080.';
+                    }
+                }
+
+                const status = issues.length === 0
+                    ? '<span class="badge bg-success">OK – zgodne ze standardem</span>'
+                    : '<span class="badge bg-danger">Wymaga korekty</span>';
+
+                this.summaryBox.innerHTML = `
+                    <div class="card bg-dark border-secondary text-light mb-2">
+                        <div class="card-body p-3">
+                            <h6 class="card-title mb-2">${this.escapeHtml(file.name)}</h6>
+                            <p class="mb-1">
+                                Rozmiar: <strong>${sizeMB.toFixed(2)} MB</strong><br/>
+                                Czas trwania: <strong>${duration ? this.formatDuration(duration) : 'nieznany'}</strong><br/>
+                                Rozdzielczość: <strong>${width} x ${height}</strong>
+                            </p>
+                            <p class="mb-1">${qualityNote}</p>
+                            <p class="mb-1">Status: ${status}</p>
+                            ${issues.length ? `
+                                <ul class="mb-0 text-warning small">
+                                    ${issues.map(i => `<li>${this.escapeHtml(i)}</li>`).join('')}
+                                </ul>
+                            ` : `
+                                <p class="mb-0 text-success small">Plik spełnia założone parametry (MP4, ≤ 20 min, ≤ 2 GB).</p>
+                            `}
+                        </div>
+                    </div>
+                `;
+            };
+
+            video.onerror = () => {
+                URL.revokeObjectURL(url);
+                this.summaryBox.innerHTML = `
+                    <div class="alert alert-danger mb-0">
+                        Nie udało się odczytać metadanych wideo. Sprawdź, czy plik jest poprawnym plikiem MP4.
+                    </div>
+                `;
+            };
+        }
+
+        // --- opcjonalnie: info o istniejącym pliku z serwera ---
+
+        renderExistingVideoInfo() {
+            this.summaryBox.innerHTML = `
+                <div class="card bg-dark border-secondary text-light mb-2">
+                    <div class="card-body p-3">
+                        <h6 class="card-title mb-1">Aktualny plik prezentacji</h6>
+                        <p class="mb-0 small">
+                            Źródło: <code>${this.escapeHtml(this.existingVideoUrl)}</code><br/>
+                            Po wybraniu nowego pliku zostanie on wysłany zamiast obecnego.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- utils ---
+
+        getFileExtension(filename) {
+            return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2);
+        }
+
+        formatDuration(sec) {
+            const total = Math.floor(sec);
+            const m = Math.floor(total / 60);
+            const s = total % 60;
+            return `${m} min ${s.toString().padStart(2, '0')} s`;
+        }
+
+        escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // do użycia z formularzem – np. w submit handlerze
+        getFile() {
+            return this.file;
+        }
+    }
+
+
+    // globalna mapa VideoDropBoxów (jeśli jeszcze nie masz)
+    window.videoDropBox = window.videoDropBox || {};
+
+    function prepareAndSubmitPresentation(formId, isEdit) {
+        const titleEl   = document.getElementById('title_' + formId);
+        const descEl    = document.getElementById('description_' + formId);
+        const slotEl    = document.getElementById('slot_' + formId);
+        const offerEl   = document.getElementById('OfferID_' + formId);
+        const authorEl  = document.getElementById('author_' + formId);
+        const targetEl  = document.getElementById('target_' + formId);
+
+        if (!titleEl || !descEl || !slotEl) {
+            console.error('Brak wymaganych elementów formularza (title/description/slot).');
+            alert('Formularz jest niekompletny – skontaktuj się z administratorem.');
+            return;
+        }
+
+        const title = (titleEl.value || '').trim();
+        const slot  = (slotEl.value || '').trim();
+        const desc  = (descEl.innerHTML || '').trim(); // zachowujemy proste formatowanie
+
+        if (!title) {
+            alert('Podaj tytuł prezentacji.');
+            titleEl.focus();
+            return;
+        }
+
+        if (!slot) {
+            alert('Wybierz slot prezentacji (GREEN / SILVER / GOLD).');
+            slotEl.focus();
+            return;
+        }
+
+        // w przypadku NEW wymagamy pliku wideo
+        let videoFile = null;
+        if (window.videoDropBox && window.videoDropBox[formId]) {
+            videoFile = window.videoDropBox[formId].getFile();
+        }
+
+        if (!isEdit && !videoFile) {
+            alert('Dodając nową prezentację musisz wybrać plik wideo (MP4).');
+            return;
+        }
+
+        const fd = new FormData();
+        fd.append('offer_id', offerEl ? (offerEl.value || '') : '');
+        fd.append('is_edit', isEdit ? '1' : '0');
+
+        fd.append('title', title);
+        fd.append('description', desc);
+        fd.append('slot', slot);
+
+        if (authorEl) fd.append('author', authorEl.value || '');
+        if (targetEl) fd.append('target', targetEl.value || '');
+
+        if (videoFile) {
+            fd.append('video_file', videoFile);
+        }
+
+        fetch('/presentation-save', {
+            method: 'POST',
+            body: fd
+        })
+        .then(function(res) {
+            // Flask zwraca JSON – jeśli 4xx/5xx też spróbujemy odczytać
+            return res.json().catch(function() {
+                throw new Error('Błędna odpowiedź serwera.');
+            });
+        })
+        .then(function(data) {
+            if (data.success) {
+                // tutaj możesz podmienić na własny toast / modal
+                alert(data.message || 'Prezentacja została zapisana pomyślnie.');
+
+                // np. odśwież listę / przeładuj stronę:
+                // window.location.reload();
+            } else {
+                alert(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.');
+            }
+        })
+        .catch(function(err) {
+            console.error(err);
+            alert('Błąd sieci podczas zapisywania prezentacji. Spróbuj ponownie.');
+        });
+    }
+
+
+    // Funkcja do wypełnienia contenteditable
+    function applyTemplate(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element && element.hasAttribute('contenteditable')) {
+            // Kolorowanie nawiasów przy wypełnieniu szablonu
+            const formattedValue = value.replace(/\[(.*?)\]/g, '<span style="color: #f39c12;">[$1]</span>');
+            element.innerHTML = formattedValue; // Ustaw pokolorowaną zawartość
+        }
+    }
+
+
+</script>
+{% endblock %}

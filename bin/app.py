@@ -751,7 +751,7 @@ def main():
                             if mgr_api_key:
                                 hist = final_prompt.get("ready_hist", [])
                                 mgr = MistralChatManager(mgr_api_key)
-                                witch_bot_list = ['gerina', 'pionier', 'aifa', 'niezidentyfikowana']
+                                witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
                                 bot_ident = 'niezidentyfikowana'
                                 if hist and isinstance(hist[-1], dict):
                                     prompti = (
@@ -760,6 +760,7 @@ def main():
                                         "— Jeśli w treści pojawia się bezpośrednio 'gerina' lub rola/kontekst wykonawczy → odpowiedz: gerina.\n"
                                         "— Jeśli pojawia się 'pionier' lub rola/kontekst nawigacji/procedur/kroków → odpowiedz: pionier.\n"
                                         "— Jeśli pojawia się 'aifa' lub rola/kontekst raportu/statusu/zadania → odpowiedz: aifa.\n"
+                                        "— Jeśli pojawia się kontekst ogólny lub liczby mnogiej czy wielu adresatów → odpowiedz: razem.\n"
                                         "— Jeśli brak jednoznacznych przesłanek → odpowiedz: niezidentyfikowana.\n"
                                         "— Zwróć wyłącznie jedną etykietę dokładnie tak: gerina | pionier | niezidentyfikowana.\n"
                                         "Oto wiadomość do analizy:\n"
