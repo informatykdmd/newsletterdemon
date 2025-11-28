@@ -234,7 +234,7 @@
                                     <input type="hidden" name="OfferID" id="OfferID_9999999" value="" />
 
                                     <input type="hidden" name="author" id="author_9999999" value="{{ username }}" />
-                                    <input type="hidden" name="target" id="target_9999999" value="presentation" />
+                                    <!-- <input type="hidden" name="target" id="target_9999999" value="presentation" />
 
                                     <button 
                                         type="button" 
@@ -243,7 +243,26 @@
                                         onclick="prepareAndSubmitPresentation('9999999', false)"
                                     >
                                         Dodaj prezentację
+                                    </button> -->
+                                    <input type="hidden" name="target" id="target_9999999" value="presentation" />
+
+                                    <!-- pasek progresu dla NOWEJ prezentacji -->
+                                    <div id="uploadProgress_9999999" class="progress d-none mt-3" style="height: 5px;">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                                            role="progressbar" 
+                                            style="width: 0%;" 
+                                            aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-success btn-sm mt-2" 
+                                        style="max-height: 30px; font-size: 12px;" 
+                                        onclick="prepareAndSubmitPresentation('9999999', false)"
+                                    >
+                                        Dodaj prezentację
                                     </button>
+
 
                                 </form>
                             </div>
@@ -435,6 +454,11 @@
                                                         {% endif %}
                                                     </select>
                                                 </div> -->
+                                                <div class="mb-3">
+                                                    <div class="alert alert-light" role="alert">
+                                                        SLOT: {{post_data['slot']|upper}}
+                                                    </div>
+                                                </div>
                                                 <input type="hidden" name="slot" id="slot_{{post_id}}" value="{{post_data['slot']}}" />
 
 
@@ -467,7 +491,7 @@
                                                 
                                                 <input type="hidden" name="OfferID" id="OfferID_{{post_id}}" value="{{post_id}}" />
 
-                                                <input type="hidden" name="author" id="author_{{post_id}}" value="{{ username }}" />
+                                                <!-- <input type="hidden" name="author" id="author_{{post_id}}" value="{{ username }}" />
                                                 <input type="hidden" name="target" id="target_{{post_id}}" value="{{ post_data['target'] }}" />
 
                                                 <button 
@@ -477,7 +501,27 @@
                                                     onclick="prepareAndSubmitPresentation('{{post_id}}', true)"
                                                 >
                                                     Zapisz prezentację
+                                                </button> -->
+                                                <input type="hidden" name="author" id="author_{{post_id}}" value="{{ username }}" />
+                                                <input type="hidden" name="target" id="target_{{post_id}}" value="{{ post_data['target'] }}" />
+
+                                                <!-- pasek progresu dla EDYCJI prezentacji -->
+                                                <div id="uploadProgress_{{post_id}}" class="progress d-none mt-3" style="height: 5px;">
+                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                                                        role="progressbar" 
+                                                        style="width: 0%;" 
+                                                        aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+
+                                                <button 
+                                                    type="button" 
+                                                    class="btn btn-success btn-sm mt-2" 
+                                                    style="max-height: 30px; font-size: 12px;" 
+                                                    onclick="prepareAndSubmitPresentation('{{post_id}}', true)"
+                                                >
+                                                    Zapisz prezentację
                                                 </button>
+
 
                                             </form>
                                         </div>
@@ -865,49 +909,136 @@
             return;
         }
 
-        const fd = new FormData();
-        fd.append('offer_id', offerEl ? (offerEl.value || '') : '');
-        fd.append('is_edit', isEdit ? '1' : '0');
+            const fd = new FormData();
+            fd.append('offer_id', offerEl ? (offerEl.value || '') : '');
+            fd.append('is_edit', isEdit ? '1' : '0');
 
-        fd.append('title', title);
-        fd.append('description', desc);
-        fd.append('slot', slot);
+            fd.append('title', title);
+            fd.append('description', desc);
+            fd.append('slot', slot);
 
-        if (authorEl) fd.append('author', authorEl.value || '');
-        if (targetEl) fd.append('target', targetEl.value || '');
+            if (authorEl) fd.append('author', authorEl.value || '');
+            if (targetEl) fd.append('target', targetEl.value || '');
 
-        if (videoFile) {
-            fd.append('video_file', videoFile);
+            if (videoFile) {
+                fd.append('video_file', videoFile);
+            }
+
+            // --- PROGRESS BAR ---
+            const progressContainer = document.getElementById('uploadProgress_' + formId);
+            const progressBar = progressContainer 
+                ? progressContainer.querySelector('.progress-bar')
+                : null;
+
+            if (progressContainer && progressBar) {
+                progressContainer.classList.remove('d-none');
+                progressBar.style.width = '0%';
+                progressBar.setAttribute('aria-valuenow', '0');
+            }
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/presentation-save', true);
+
+            // progres uploadu
+            xhr.upload.onprogress = function(e) {
+                if (!progressBar || !e.lengthComputable) return;
+                const percent = Math.round((e.loaded / e.total) * 100);
+                progressBar.style.width = percent + '%';
+                progressBar.setAttribute('aria-valuenow', String(percent));
+            };
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+                // schowaj pasek po chwili
+                if (progressContainer && progressBar) {
+                    setTimeout(function() {
+                        progressContainer.classList.add('d-none');
+                        progressBar.style.width = '0%';
+                        progressBar.setAttribute('aria-valuenow', '0');
+                    }, 700);
+                }
+
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    let data = null;
+                    try {
+                        data = JSON.parse(xhr.responseText);
+                    } catch (err) {
+                        console.error('Błąd parsowania odpowiedzi JSON:', err);
+                        showToast('Prezentacja została zapisana, ale odpowiedź serwera jest nieprawidłowa.', 'error', posClassY, posClassX);
+                        return;
+                    }
+
+                    if (data.success) {
+                        showToast(data.message || 'Prezentacja została zapisana pomyślnie.', 'success', posClassY, posClassX);
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        showToast(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.', 'error', posClassY, posClassX);
+                    }
+                } else {
+                    console.error('Błąd HTTP:', xhr.status, xhr.responseText);
+                    showToast('Błąd sieci / serwera podczas zapisywania prezentacji. Spróbuj ponownie.', 'error', posClassY, posClassX);
+                }
+            };
+
+            xhr.onerror = function() {
+                if (progressContainer && progressBar) {
+                    progressContainer.classList.add('d-none');
+                    progressBar.style.width = '0%';
+                    progressBar.setAttribute('aria-valuenow', '0');
+                }
+                showToast('Błąd połączenia podczas wysyłania prezentacji.', 'error', posClassY, posClassX);
+            };
+
+            xhr.send(fd);
         }
 
-        fetch('/presentation-save', {
-            method: 'POST',
-            body: fd
-        })
-        .then(function(res) {
-            // Flask zwraca JSON – jeśli 4xx/5xx też spróbujemy odczytać
-            return res.json().catch(function() {
-                throw new Error('Błędna odpowiedź serwera.');
-            });
-        })
-        .then(function(data) {
-            if (data.success) {
-                showToast(data.message || 'Prezentacja została zapisana pomyślnie.', "success", posClassY, posClassX);
 
-                // np. odśwież listę / przeładuj stronę:
-                setTimeout(() => {
-                        location.reload();
-                    }, 5000);
-                // window.location.reload();
-            } else {
-                showToast(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.', 'error', posClassY, posClassX);
-            }
-        })
-        .catch(function(err) {
-            console.error(err);
-            showToast('Błąd sieci podczas zapisywania prezentacji. Spróbuj ponownie.', 'error', posClassY, posClassX);
-        });
-    }
+        // const fd = new FormData();
+        // fd.append('offer_id', offerEl ? (offerEl.value || '') : '');
+        // fd.append('is_edit', isEdit ? '1' : '0');
+
+        // fd.append('title', title);
+        // fd.append('description', desc);
+        // fd.append('slot', slot);
+
+        // if (authorEl) fd.append('author', authorEl.value || '');
+        // if (targetEl) fd.append('target', targetEl.value || '');
+
+        // if (videoFile) {
+        //     fd.append('video_file', videoFile);
+        // }
+
+        // fetch('/presentation-save', {
+        //     method: 'POST',
+        //     body: fd
+        // })
+        // .then(function(res) {
+        //     // Flask zwraca JSON – jeśli 4xx/5xx też spróbujemy odczytać
+        //     return res.json().catch(function() {
+        //         throw new Error('Błędna odpowiedź serwera.');
+        //     });
+        // })
+        // .then(function(data) {
+        //     if (data.success) {
+        //         showToast(data.message || 'Prezentacja została zapisana pomyślnie.', "success", posClassY, posClassX);
+
+        //         // np. odśwież listę / przeładuj stronę:
+        //         setTimeout(() => {
+        //                 location.reload();
+        //             }, 5000);
+        //         // window.location.reload();
+        //     } else {
+        //         showToast(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.', 'error', posClassY, posClassX);
+        //     }
+        // })
+        // .catch(function(err) {
+        //     console.error(err);
+        //     showToast('Błąd sieci podczas zapisywania prezentacji. Spróbuj ponownie.', 'error', posClassY, posClassX);
+        // });
+    // }
 
 
     // Funkcja do wypełnienia contenteditable
