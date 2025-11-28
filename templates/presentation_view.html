@@ -819,6 +819,13 @@
     function prepareAndSubmitPresentation(formId, isEdit) {
 
         // console.log("window.videoDropBox", window.videoDropBox);
+        if (isEdit) {
+            let posClassY = 'bottom-0';
+            let posClassX = 'end-0'
+        } else {
+            let posClassY = 'top-0';
+            let posClassX = 'end-0'
+        }
 
         const titleEl   = document.getElementById('title_' + formId);
         const descEl    = document.getElementById('description_' + formId);
@@ -829,22 +836,23 @@
 
         if (!titleEl || !descEl || !slotEl) {
             console.error('Brak wymaganych elementów formularza (title/description/slot).');
-            showToast('Formularz jest niekompletny – skontaktuj się z administratorem.', 'error');
+            showToast('Formularz jest niekompletny – skontaktuj się z administratorem.', 'error', posClassY, posClassX);
             return;
         }
+
 
         const title = (titleEl.value || '').trim();
         const slot  = (slotEl.value || '').trim();
         const desc  = (descEl.innerHTML || '').trim(); // zachowujemy proste formatowanie
 
         if (!title) {
-            showToast('Podaj tytuł prezentacji.', 'warning');
+            showToast('Podaj tytuł prezentacji.', 'warning', posClassY, posClassX);
             titleEl.focus();
             return;
         }
 
         if (!slot) {
-            showToast('Wybierz slot prezentacji (GREEN / SILVER / GOLD).', 'warning');
+            showToast('Wybierz slot prezentacji (GREEN / SILVER / GOLD).', 'warning', posClassY, posClassX);
             slotEl.focus();
             return;
         }
@@ -856,7 +864,7 @@
         }
 
         if (!isEdit && !videoFile) {
-            showToast('Dodając nową prezentację musisz wybrać plik wideo (MP4).', 'warning');
+            showToast('Dodając nową prezentację musisz wybrać plik wideo (MP4).', 'warning', posClassY, posClassX);
             return;
         }
 
@@ -887,7 +895,7 @@
         })
         .then(function(data) {
             if (data.success) {
-                showToast(data.message || 'Prezentacja została zapisana pomyślnie.');
+                showToast(data.message || 'Prezentacja została zapisana pomyślnie.', "success", posClassY, posClassX);
 
                 // np. odśwież listę / przeładuj stronę:
                 setTimeout(() => {
@@ -895,12 +903,12 @@
                     }, 5000);
                 // window.location.reload();
             } else {
-                showToast(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.', 'error');
+                showToast(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.', 'error', posClassY, posClassX);
             }
         })
         .catch(function(err) {
             console.error(err);
-            showToast('Błąd sieci podczas zapisywania prezentacji. Spróbuj ponownie.', 'error');
+            showToast('Błąd sieci podczas zapisywania prezentacji. Spróbuj ponownie.', 'error', posClassY, posClassX);
         });
     }
 
