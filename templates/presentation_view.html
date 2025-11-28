@@ -217,13 +217,19 @@
                                     </div>
 
                                     <script>
-                                        // upewniamy się, że globalna mapa istnieje
+                                        // globalna mapa, zadeklarowana raz, nie w funkcji!
                                         window.videoDropBox = window.videoDropBox || {};
-                                        window.videoDropBox["9999999"] = new VideoDropBox("9999999");
-                                        // document.addEventListener('DOMContentLoaded', () => {
-                                        //     const myVideoDropBox = new VideoDropBox('9999999');
-                                        // });
+
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            window.videoDropBox["9999999"] = new VideoDropBox('9999999');
+                                            console.log('init videoDropBox[9999999]', window.videoDropBox["9999999"]);
+                                        });
                                     </script>
+                                    <!-- <script>
+                                        document.addEventListener('DOMContentLoaded', () => {
+                                            const myVideoDropBox = new VideoDropBox('9999999');
+                                        });
+                                    </script> -->
 
                                     <input type="hidden" name="OfferID" id="OfferID_9999999" value="" />
 
