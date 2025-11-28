@@ -14777,10 +14777,7 @@ def presentation_save():
                 author = %s,
                 target = %s,
                 updated_by = %s,
-                updated_at = %s,
-                video_duration_sec = %s,
-                video_width = %s,
-                video_height = %s,
+                updated_at = %s,                
                 sync = 0
             WHERE id = %s
         """
@@ -14792,16 +14789,13 @@ def presentation_save():
             target,
             session['username'],        # NEW
             now,                        # updated_at
-            offer_id,
-            duration,
-            v_width,
-            v_height
+            offer_id
         )
     else:
         # jeśli dodawanie → tworzymy nowy rekord
         query = """
             INSERT INTO presentations
-                (title, description, slot, author, target, created_by, updated_by, created_at, updated_at, video_duration_sec, video_width, video_height)
+                (title, description, slot, author, target, created_by, updated_by, created_at, updated_at)
             VALUES
                 (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
@@ -14814,10 +14808,7 @@ def presentation_save():
             session['username'],   # created_by
             session['username'],   # updated_by (przy tworzeniu takie samo)
             now,
-            now,
-            duration,
-            v_width,
-            v_height
+            now
         )
 
 
@@ -14842,10 +14833,7 @@ def presentation_save():
             description,
             slot,
             author,
-            target,
-            duration,
-            v_width,
-            v_height
+            target
         )
         db.fetch_one(
             """
@@ -14858,9 +14846,6 @@ def presentation_save():
             AND slot=%s 
             AND author=%s 
             AND target=%s
-            AND video_duration_sec=%s
-            AND video_width=%s
-            AND video_heigh=%s
             """, 
             checkingIDparams
         )
@@ -14926,15 +14911,18 @@ def presentation_save():
         upd_q = """
             UPDATE presentations SET 
                 video_path = %s, 
-                video_hash=%s
+                video_hash=%s,
+                video_duration_sec = %s,
+                video_width = %s,
+                video_height = %s
             WHERE id = %s
         """
-        upd_params = (video_url, video_hash, offer_id)
+        upd_params = (video_url, video_hash, duration, v_width, v_height, offer_id)
         ok_video = db.executeTo(upd_q, upd_params)
 
         if not ok_video:
             msq.handle_error(
-                f'BŁĄD: zapisano plik wideo na dysk, ale nie udało się zaktualizować video_path w bazie (ID={offer_id})',
+                f'BŁĄD: zapisano plik wideo na dysk, ale nie udało się zaktualizować video_path, video_hash, video_duration, video_width, video_height w bazie (ID={offer_id})',
                 log_path=logFileName
             )
 
