@@ -550,16 +550,17 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-sm-12 career-properties-other">
-                                        <div class="">
-                                            <div class="bg-dark">
-                                                <p style="font-size: 80px; text-align: center;">
-                                                    <i class="bi bi-arrow-repeat"></i>
-                                                </p>
-                                                <p>{{post_data.slot}} : <i class="bi bi-arrow-repeat"></i></p>
-                                                <p>{{post_data.slot}} : <i class="bi bi-arrow-repeat"></i></p>
-                                                <p>{{post_data.slot}} : <i class="bi bi-arrow-repeat"></i></p>
-                                            </div>
+
+                                        <div class="rogi border-1">
+                                            <p style="font-size: 80px; text-align: center;">
+                                                <i class="bi bi-arrow-repeat"></i>
+                                            </p>
+                                            <p style="text-align: center;">Sync: {% if post_data.last_sync_status %}{{ post_data.last_sync_status }}{% else %} <i class="bi bi-arrow-repeat"></i>{% endif %}</p>
+                                            <!-- <p>{{post_data.slot}} : <i class="bi bi-arrow-repeat"></i></p>
+                                            <p>{{post_data.slot}} : <i class="bi bi-arrow-repeat"></i></p>
+                                            <p>{{post_data.slot}} : <i class="bi bi-arrow-repeat"></i></p> -->
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>
