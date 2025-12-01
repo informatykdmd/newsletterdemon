@@ -602,37 +602,37 @@
                                     <div class="col-lg-3 col-sm-12">
 
                                         {# USTALAMY KOLOR i TEKST STATUSU #}
-                                        {% set card_class = "bg-light text-muted border-0" %}
+                                        {% set card_class = "msg-light text-muted border-0" %}
                                         {% set status_title = "Nieznany status" %}
                                         {% set status_desc  = "Brak zdefiniowanego stanu synchronizacji dla tej prezentacji." %}
 
                                         {# 4. Rozłączony – był kiedyś poprawnie opublikowany, ale teraz odłączony #}
                                         {% if post_data['last_sync_status'] == 'disconnected' and post_data['published_at'] %}
-                                            {% set card_class = "bg-danger text-white" %}
+                                            {% set card_class = "msg-danger text-white" %}
                                             {% set status_title = "Rozłączony" %}
                                             {% set status_desc  = "Ta prezentacja została zastąpiona inną w tym slocie. Ten rekord jest odłączony." %}
 
                                         {# 1. Nieaktywny + nigdy nie zsynchronizowany (brak published_at) #}
                                         {% elif post_data['status'] == 0 and post_data['sync'] == 0 and not post_data['published_at'] %}
-                                            {% set card_class = "bg-secondary text-white" %}
+                                            {% set card_class = "msg-secondary text-white" %}
                                             {% set status_title = "Oczekuje na pierwszą synchronizację" %}
                                             {% set status_desc  = "Prezentacja jest nieaktywna i nie została jeszcze nigdy poprawnie zsynchronizowana z RPi." %}
 
                                         {# 2. Aktywny + niezsynchronizowany #}
                                         {% elif post_data['status'] == 1 and post_data['sync'] == 0 %}
-                                            {% set card_class = "bg-warning text-dark" %}
+                                            {% set card_class = "msg-warning text-dark" %}
                                             {% set status_title = "Wymagana synchronizacja" %}
                                             {% set status_desc  = "Prezentacja jest aktywna w panelu, ale RPi nie ma jeszcze aktualnej wersji pliku." %}
 
                                         {# 3. Zsynchronizowany + aktywny #}
                                         {% elif post_data['status'] == 1 and post_data['sync'] == 1 %}
-                                            {% set card_class = "bg-success text-white" %}
+                                            {% set card_class = "msg-success text-white" %}
                                             {% set status_title = "Zsynchronizowano" %}
                                             {% set status_desc  = "Prezentacja jest aktywna i poprawnie zsynchronizowana z RPi." %}
                                         {% endif %}
 
-                                        <div class="card card-sync-status {{ card_class }}">
-                                            <div class="card-body p-2">
+                                        <div class="msg card-sync-status {{ card_class }}">
+                                            <div class="p-2">
 
                                                 <h6 class="card-title mb-1">{{ status_title }}</h6>
                                                 <p class="card-text mb-1">{{ status_desc }}</p>
