@@ -1296,23 +1296,57 @@
         syncMonitors[postId] = handle;
     }
 
+    // function refreshSyncStatus(postId) {
+    //     return fetch(`/api/presentation-status?post_id=${encodeURIComponent(postId)}`)
+    //         .then(resp => resp.json().catch(() => ({})))
+    //         .then(data => {
+    //             if (!data || !data.success || !data.data) {
+    //                 console.warn('refreshSyncStatus error:', data && data.message);
+    //                 return null;
+    //             }
+    //             // << TU używamy Twojej logiki >>
+    //             updateRowSyncIconFromData(postId, data.data);
+    //             return data.data;
+    //         })
+    //         .catch(err => {
+    //             console.error('refreshSyncStatus exception:', err);
+    //             return null;
+    //         });
+    // }
     function refreshSyncStatus(postId) {
-        return fetch(`/api/presentation-status?post_id=${encodeURIComponent(postId)}`)
-            .then(resp => resp.json().catch(() => ({})))
-            .then(data => {
-                if (!data || !data.success || !data.data) {
-                    console.warn('refreshSyncStatus error:', data && data.message);
+        const url = `/presentation-sync-status?PostID=${encodeURIComponent(postId)}`;
+
+        return fetch(url)
+            .then(async (resp) => {
+                if (!resp.ok) {
+                    const text = await resp.text();
+                    console.warn('refreshSyncStatus HTTP error:', resp.status, text);
                     return null;
                 }
-                // << TU używamy Twojej logiki >>
+
+                let data;
+                try {
+                    data = await resp.json();
+                } catch (e) {
+                    console.warn('refreshSyncStatus JSON parse error:', e);
+                    return null;
+                }
+
+                if (!data || !data.success || !data.data) {
+                    console.warn('refreshSyncStatus API error:', data && data.message);
+                    return null;
+                }
+
+                // tu używamy Twojej logiki
                 updateRowSyncIconFromData(postId, data.data);
                 return data.data;
             })
-            .catch(err => {
-                console.error('refreshSyncStatus exception:', err);
+            .catch((err) => {
+                console.error('refreshSyncStatus fetch exception:', err);
                 return null;
             });
     }
+
 
     function hideAllSyncIcons(postId) {
         const ids = [
