@@ -335,11 +335,11 @@
                                                     <i class="bi bi-arrow-repeat"></i>
                                                 </span>
                                             
-                                            {# 5. Ostation Odmutowany + nie disconnected #}
+                                            {# 5. Ostatnio Odmutowany + nie disconnected #}
                                             {% elif post_data['status'] == 0 and post_data['last_sync_status'] != 'disconnected' and post_data['published_at'] %}
-                                                <span class="text-warning"
+                                                <span class="text-muted"
                                                     id="sync_status_pending_active_{{post_id}}"
-                                                    title="Wymagana synchronizacja">
+                                                    title="Ostatnio Odmutowany">
                                                     <i class="bi bi-arrow-repeat"></i>
                                                 </span>
 
@@ -632,7 +632,7 @@
                                             {% set status_title = "Wymagana synchronizacja" %}
                                             {% set status_desc  = "Prezentacja jest aktywna w panelu, ale RPi nie ma jeszcze aktualnej wersji pliku." %}
                                         
-                                        {# 5. Ostation Odmutowany + nie disconnected #}
+                                        {# 5. Ostation Odmutowany + nie disconnected + data publikacji #}
                                         {% elif post_data['status'] == 0 and post_data['last_sync_status'] != 'disconnected' and post_data['published_at'] %}
                                             {% set card_class = "msg-warning" %}
                                             {% set status_title = "Odłączanie slotu" %}
