@@ -334,6 +334,14 @@
                                                     title="Wymagana synchronizacja">
                                                     <i class="bi bi-arrow-repeat"></i>
                                                 </span>
+                                            
+                                            {# 5. Ostation Odmutowany + nie disconnected #}
+                                            {% elif post_data['status'] == 0 and post_data['last_sync_status'] != 'disconnected' and post_data['published_at'] %}
+                                                <span class="text-warning"
+                                                    id="sync_status_pending_active_{{post_id}}"
+                                                    title="Wymagana synchronizacja">
+                                                    <i class="bi bi-arrow-repeat"></i>
+                                                </span>
 
                                             {# 3. Zsynchronizowany + aktywny (OK) #}
                                             {% elif post_data['status'] == 1 and post_data['sync'] == 1 %}
@@ -623,6 +631,12 @@
                                             {% set card_class = "msg-warning" %}
                                             {% set status_title = "Wymagana synchronizacja" %}
                                             {% set status_desc  = "Prezentacja jest aktywna w panelu, ale RPi nie ma jeszcze aktualnej wersji pliku." %}
+                                        
+                                        {# 5. Ostation Odmutowany + nie disconnected #}
+                                        {% elif post_data['status'] == 0 and post_data['last_sync_status'] != 'disconnected' and post_data['published_at'] %}
+                                            {% set card_class = "msg-warning" %}
+                                            {% set status_title = "Odłączanie slotu" %}
+                                            {% set status_desc  = "Prezentacja nie jest aktywna w panelu, ale RPi nie zgłosił jeszcze udanej aktualizacji." %}
 
                                         {# 3. Zsynchronizowany + aktywny #}
                                         {% elif post_data['status'] == 1 and post_data['sync'] == 1 %}
@@ -675,7 +689,6 @@
                                                             {{ post_data['last_sync_status'] }}
                                                         {% else %}
                                                             <i class="bi bi-dash-circle text-muted"></i>
-                                                            brak danych
                                                         {% endif %}
                                                     </small>
                                                 </p>
@@ -689,7 +702,6 @@
                                                             {{ post_data['last_sync_error'] }}
                                                         {% else %}
                                                             <i class="bi bi-dash-circle text-muted"></i>
-                                                            brak
                                                         {% endif %}
                                                     </small>
                                                 </p>
@@ -700,7 +712,6 @@
                                                             onclick="forceResync('{{ post_id }}', '{{ post_data.slot }}')"
                                                             id="btn_force_resync_{{ post_id }}">
                                                         <i class="bi bi-arrow-repeat me-1"></i>
-                                                        Wymuś ponowną synchronizację
                                                     </button>
                                                 {% endif %}
 
@@ -1329,6 +1340,12 @@
 
         // 2. Aktywny + niezsynchronizowany
         if (d.status === 1 && d.sync === 0) {
+            showIconById(`sync_status_pending_active_${postId}`);
+            return;
+        }
+
+        // 5. W trakcie przełączania
+        if (d.status === 0 && d.last_sync_status != 'disconnected' && d.published_at) {
             showIconById(`sync_status_pending_active_${postId}`);
             return;
         }
