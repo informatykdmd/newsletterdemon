@@ -1379,6 +1379,10 @@
 
     function updateRowSyncIconFromData(postId, d) {
         hideAllSyncIcons(postId);
+        
+        console.log("postId, d: \n");
+        console.log(postId);
+        console.log(d);
 
         // 4. Rozłączony – był kiedyś opublikowany i ma status disconnected
         if (d.last_sync_status === 'disconnected' && d.published_at) {
