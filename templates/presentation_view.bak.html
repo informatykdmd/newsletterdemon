@@ -309,11 +309,57 @@
                                         role="button" aria-expanded="false"
                                         aria-controls="collapse_id_{{post_id}}">
 
-                                        <div class="row" id="sync_status_row_{{post_id}}">
-                                            {# Na start możesz wyrenderować cokolwiek, ale JS i tak to nadpisze #}
-                                            <span class="text-muted">
-                                                <i class="bi bi-arrow-repeat"></i>
-                                            </span>
+                                        <div class="row">
+
+                                            {# 4. Rozłączony — ale tylko jeśli materiał był kiedyś poprawnie zsynchronizowany (published_at istnieje) #}
+                                            {% if post_data['last_sync_status'] == 'disconnected' and post_data['published_at'] and post_data['status'] != 1 %}
+                                                <span class="text-danger"
+                                                    id="sync_status_disconnected_{{post_id}}"
+                                                    title="Rozłączony">
+                                                    <i class="bi bi-plug-fill"></i>
+                                                </span>
+
+                                            {# 1. Nieaktywny + nigdy nie zsynchronizowany (first upload) #}
+                                            {% elif post_data['status'] == 0 and post_data['sync'] == 0 and not post_data['published_at'] %}
+                                                <span class="text-secondary"
+                                                    id="sync_status_pending_inactive_{{post_id}}"
+                                                    title="Oczekuje na pierwszą synchronizację">
+                                                    <i class="bi bi-hourglass-split"></i>
+                                                </span>
+
+                                            {# 2. Aktywny + niezsynchronizowany (czeka na update) #}
+                                            {% elif post_data['status'] == 1 and post_data['sync'] == 0 %}
+                                                <span class="text-warning"
+                                                    id="sync_status_pending_active_{{post_id}}"
+                                                    title="Wymagana synchronizacja">
+                                                    <i class="bi bi-arrow-repeat"></i>
+                                                </span>
+                                            
+                                            {# 5. Ostatnio Odmutowany + nie disconnected #}
+                                            {% elif post_data['status'] == 0 and post_data['last_sync_status'] != 'disconnected' and post_data['published_at'] %}
+                                                <span class="text-muted"
+                                                    id="sync_status_pending_disconnect_{{post_id}}"
+                                                    title="Ostatnio Odmutowany">
+                                                    <i class="bi bi-arrow-repeat"></i>
+                                                </span>
+
+                                            {# 3. Zsynchronizowany + aktywny (OK) #}
+                                            {% elif post_data['status'] == 1 and post_data['sync'] == 1 %}
+                                                <span class="text-success"
+                                                    id="sync_status_ok_{{post_id}}"
+                                                    title="Zsynchronizowano">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </span>
+
+                                            {# fallback #}
+                                            {% else %}
+                                                <span class="text-muted"
+                                                    id="sync_status_unknown_{{post_id}}"
+                                                    title="Nieznany status">
+                                                    <i class="bi bi-question-circle"></i>
+                                                </span>
+                                            {% endif %}
+
                                         </div>
                                     </div>
 
@@ -1331,120 +1377,45 @@
         showIconById(`sync_status_pending_active_${postId}`);
     }
 
-    // function updateRowSyncIconFromData(postId, d) {
-    //     hideAllSyncIcons(postId);
-        
-    //     console.log("postId, d: \n");
-    //     console.log(postId);
-    //     console.log(d);
-
-    //     // 4. Rozłączony – był kiedyś opublikowany i ma status disconnected
-    //     if (d.last_sync_status === 'disconnected' && d.published_at) {
-    //         showIconById(`sync_status_disconnected_${postId}`);
-    //         return;
-    //     }
-
-    //     // 1. Nieaktywny + nigdy nie zsynchronizowany
-    //     if (d.status === 0 && d.sync === 0 && !d.published_at) {
-    //         showIconById(`sync_status_pending_inactive_${postId}`);
-    //         return;
-    //     }
-
-    //     // 2. Aktywny + niezsynchronizowany
-    //     if (d.status === 1 && d.sync === 0) {
-    //         showIconById(`sync_status_pending_active_${postId}`);
-    //         return;
-    //     }
-
-    //     // 5. W trakcie przełączania
-    //     if (d.status === 0 && d.last_sync_status != 'disconnected' && d.published_at) {
-    //         showIconById(`sync_status_pending_disconnect_${postId}`);
-    //         return;
-    //     }
-
-    //     // 3. Zsynchronizowany + aktywny
-    //     if (d.status === 1 && d.sync === 1) {
-    //         showIconById(`sync_status_ok_${postId}`);
-    //         return;
-    //     }
-
-    //     // fallback
-    //     showIconById(`sync_status_unknown_${postId}`);
-    // }
-
     function updateRowSyncIconFromData(postId, d) {
-        const rowEl = document.getElementById(`sync_status_row_${postId}`);
-        if (!rowEl) return;
-
-        const status = Number(d.status);
-        const sync   = Number(d.sync);
-        const publishedAt    = d.published_at;
-        const lastSyncStatus = d.last_sync_status;
-
-        let html = '';
+        hideAllSyncIcons(postId);
+        
+        console.log("postId, d: \n");
+        console.log(postId);
+        console.log(d);
 
         // 4. Rozłączony – był kiedyś opublikowany i ma status disconnected
-        if (lastSyncStatus === 'disconnected' && publishedAt) {
-            html = `
-                <span class="text-danger"
-                    id="sync_status_disconnected_${postId}"
-                    title="Rozłączony">
-                    <i class="bi bi-plug-fill"></i>
-                </span>
-            `;
-        }
-        // 1. Nieaktywny + nigdy nie zsynchronizowany
-        else if (status === 0 && sync === 0 && !publishedAt) {
-            html = `
-                <span class="text-secondary"
-                    id="sync_status_pending_inactive_${postId}"
-                    title="Oczekuje na pierwszą synchronizację">
-                    <i class="bi bi-hourglass-split"></i>
-                </span>
-            `;
-        }
-        // 2. Aktywny + niezsynchronizowany
-        else if (status === 1 && sync === 0) {
-            html = `
-                <span class="text-warning"
-                    id="sync_status_pending_active_${postId}"
-                    title="Wymagana synchronizacja">
-                    <i class="bi bi-arrow-repeat"></i>
-                </span>
-            `;
-        }
-        // 5. W trakcie odłączania (status=0, ale nie disconnected, ma published_at)
-        else if (status === 0 && lastSyncStatus !== 'disconnected' && publishedAt) {
-            html = `
-                <span class="text-muted"
-                    id="sync_status_pending_disconnect_${postId}"
-                    title="Odłączanie slotu">
-                    <i class="bi bi-arrow-repeat"></i>
-                </span>
-            `;
-        }
-        // 3. Zsynchronizowany + aktywny
-        else if (status === 1 && sync === 1) {
-            html = `
-                <span class="text-success"
-                    id="sync_status_ok_${postId}"
-                    title="Zsynchronizowano">
-                    <i class="bi bi-check-circle"></i>
-                </span>
-            `;
-        }
-        // fallback
-        else {
-            html = `
-                <span class="text-muted"
-                    id="sync_status_unknown_${postId}"
-                    title="Nieznany status">
-                    <i class="bi bi-question-circle"></i>
-                </span>
-            `;
+        if (d.last_sync_status === 'disconnected' && d.published_at) {
+            showIconById(`sync_status_disconnected_${postId}`);
+            return;
         }
 
-        rowEl.innerHTML = html;
+        // 1. Nieaktywny + nigdy nie zsynchronizowany
+        if (d.status === 0 && d.sync === 0 && !d.published_at) {
+            showIconById(`sync_status_pending_inactive_${postId}`);
+            return;
+        }
+
+        // 2. Aktywny + niezsynchronizowany
+        if (d.status === 1 && d.sync === 0) {
+            showIconById(`sync_status_pending_active_${postId}`);
+            return;
+        }
+
+        // 5. W trakcie przełączania
+        if (d.status === 0 && d.last_sync_status != 'disconnected' && d.published_at) {
+            showIconById(`sync_status_pending_disconnect_${postId}`);
+            return;
+        }
+
+        // 3. Zsynchronizowany + aktywny
+        if (d.status === 1 && d.sync === 1) {
+            showIconById(`sync_status_ok_${postId}`);
+            return;
+        }
+
+        // fallback
+        showIconById(`sync_status_unknown_${postId}`);
     }
 
     function setTextOrBrak(id, value, brakText = 'brak') {
