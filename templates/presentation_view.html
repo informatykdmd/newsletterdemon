@@ -1384,7 +1384,7 @@
         let html = '';
 
         // 4. Rozłączony – był kiedyś opublikowany i ma status disconnected
-        if (lastSyncStatus === 'disconnected' && publishedAt) {
+        if (lastSyncStatus === 'disconnected' && publishedAt && status === 1) {
             html = `
                 <span class="text-danger"
                     id="sync_status_disconnected_${postId}"
