@@ -297,7 +297,7 @@
                                     
                                     <div  class="d-none d-xl-block"  style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="display-6 formatuj-maly-font">{{post_data['slot']|upper}}</span>
+                                            <span class="display-6 slot-info-{% if post_data.slot == 'gold' %}gold{% elif post_data.slot == 'silver' %}silver{% else %}green{% endif %} formatuj-maly-font ">{{post_data['slot']|upper}}</span>
                                         </a>
                                     </div>
                                     <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -1412,22 +1412,6 @@
                     <i class="bi bi-check-circle"></i>
                 </span>
             `;
-
-            // // Zapobiegamy wielokrotnemu przeładowaniu
-            // if (!reloadScheduled) {
-            //     reloadScheduled = true;
-
-            //     setTimeout(() => {
-            //         refreshSyncStatus(postId).then(data => {
-            //             if (data && Number(data.status) === 1 && Number(data.sync) === 1) {
-            //                 location.reload();
-            //             } else {
-            //                 // przywróć możliwość ponownego reloadu, jeśli stan jednak się zmienił
-            //                 reloadScheduled = false;
-            //             }
-            //         });
-            //     }, 500);
-            // }
         }
         // fallback
         else {
