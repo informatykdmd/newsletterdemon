@@ -11,7 +11,7 @@
     const SYNC_COUNTDOWN_SECONDS = 7 * 60; // 7 minut
     const syncCountdowns = {}; // np. { "39": 1700000000000 }
 
-    
+    let reloadScheduled = false;
 </script>
 {% endblock %}
 
@@ -1348,6 +1348,7 @@
 
         // 4. Rozłączony – był kiedyś opublikowany i ma status disconnected
         if (lastSyncStatus === 'disconnected' && publishedAt && status === 0) {
+            delete syncCountdowns[postId];
             html = `
                 <span class="text-danger"
                     id="sync_status_disconnected_${postId}"
@@ -1358,6 +1359,7 @@
         }
         // 1. Nieaktywny + nigdy nie zsynchronizowany
         else if (status === 0 && sync === 0 && !publishedAt) {
+            delete syncCountdowns[postId];
             html = `
                 <span class="text-secondary"
                     id="sync_status_pending_inactive_${postId}"
@@ -1387,6 +1389,7 @@
         }
         // 5. W trakcie odłączania (status=0, ale nie disconnected, ma published_at)
         else if (status === 0 && lastSyncStatus !== 'disconnected' && publishedAt) {
+            delete syncCountdowns[postId];
             html = `
                 <span class="text-muted"
                     id="sync_status_pending_disconnect_${postId}"
@@ -1395,9 +1398,11 @@
                 </span>
             `;
         }
-        // 3. Zsynchronizowany + aktywny
+        // 3. Zsynchronizowany + aktywny (SUCCESS)
         else if (status === 1 && sync === 1) {
-            
+
+            delete syncCountdowns[postId];
+
             html = `
                 <span class="text-success"
                     id="sync_status_ok_${postId}"
@@ -1405,9 +1410,26 @@
                     <i class="bi bi-check-circle"></i>
                 </span>
             `;
+
+            // Zapobiegamy wielokrotnemu przeładowaniu
+            if (!reloadScheduled) {
+                reloadScheduled = true;
+
+                setTimeout(() => {
+                    refreshSyncStatus(postId).then(data => {
+                        if (data && Number(data.status) === 1 && Number(data.sync) === 1) {
+                            location.reload();
+                        } else {
+                            // przywróć możliwość ponownego reloadu, jeśli stan jednak się zmienił
+                            reloadScheduled = false;
+                        }
+                    });
+                }, 500);
+            }
         }
         // fallback
         else {
+            delete syncCountdowns[postId];
             html = `
                 <span class="text-muted"
                     id="sync_status_unknown_${postId}"
