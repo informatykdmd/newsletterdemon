@@ -312,7 +312,7 @@
                                         <div class="row">
 
                                             {# 4. Rozłączony — ale tylko jeśli materiał był kiedyś poprawnie zsynchronizowany (published_at istnieje) #}
-                                            {% if post_data['last_sync_status'] == 'disconnected' and post_data['published_at'] %}
+                                            {% if post_data['last_sync_status'] == 'disconnected' and post_data['published_at'] and post_data['status'] != 1 %}
                                                 <span class="text-danger"
                                                     id="sync_status_disconnected_{{post_id}}"
                                                     title="Rozłączony">
