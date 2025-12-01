@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
 {% block title %}DMD Panel Administratora - Zarządzanie Prezentacjami{% endblock %}
+{% block scripts%}
+<script>
+    const syncMonitors = {};
+    const SYNC_POLL_INTERVAL = 5000;       // co 5 sekund
+    const SYNC_POLL_TIMEOUT  = 5 * 60 * 1000; // max 5 minut
+</script>
+{% endblock %}
 
 {% block addButton %}
 <!-- d-block d-sm-none tylko na średnim sm+ -->
@@ -296,16 +303,59 @@
                                             {% endif %}
                                         </a>
                                     </div>
-                                    <div  class="d-none d-xl-block" style="max-width: 80px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                    <div class="d-none d-xl-block" style="max-width: 80px;"
+                                        data-bs-toggle="collapse"
+                                        href="#collapse_id_{{post_id}}"
+                                        role="button" aria-expanded="false"
+                                        aria-controls="collapse_id_{{post_id}}">
+
                                         <div class="row">
-                                            {% if post_data['sync'] == 1 %}
-                                                <span class="text-info"><i class="bi bi-check-circle"></i></span>
+
+                                            {# 4. Rozłączony — ale tylko jeśli materiał był kiedyś poprawnie zsynchronizowany (published_at istnieje) #}
+                                            {% if post_data['last_sync_status'] == 'disconnected' and post_data['published_at'] %}
+                                                <span class="text-danger"
+                                                    id="sync_status_disconnected_{{post_id}}"
+                                                    title="Rozłączony">
+                                                    <i class="bi bi-plug-fill"></i>
+                                                </span>
+
+                                            {# 1. Nieaktywny + nigdy nie zsynchronizowany (first upload) #}
+                                            {% elif post_data['status'] == 0 and post_data['sync'] == 0 and not post_data['published_at'] %}
+                                                <span class="text-secondary"
+                                                    id="sync_status_pending_inactive_{{post_id}}"
+                                                    title="Oczekuje na pierwszą synchronizację">
+                                                    <i class="bi bi-hourglass-split"></i>
+                                                </span>
+
+                                            {# 2. Aktywny + niezsynchronizowany (czeka na update) #}
+                                            {% elif post_data['status'] == 1 and post_data['sync'] == 0 %}
+                                                <span class="text-warning"
+                                                    id="sync_status_pending_active_{{post_id}}"
+                                                    title="Wymagana synchronizacja">
+                                                    <i class="bi bi-arrow-repeat"></i>
+                                                </span>
+
+                                            {# 3. Zsynchronizowany + aktywny (OK) #}
+                                            {% elif post_data['status'] == 1 and post_data['sync'] == 1 %}
+                                                <span class="text-success"
+                                                    id="sync_status_ok_{{post_id}}"
+                                                    title="Zsynchronizowano">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </span>
+
+                                            {# fallback #}
                                             {% else %}
-                                                <span class="text-warning"><i class="bi bi-arrow-repeat"></i></span>
+                                                <span class="text-muted"
+                                                    id="sync_status_unknown_{{post_id}}"
+                                                    title="Nieznany status">
+                                                    <i class="bi bi-question-circle"></i>
+                                                </span>
                                             {% endif %}
-                                            
+
                                         </div>
                                     </div>
+
+
                                     <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                             <span class="display-6 formatuj-maly-font">{{post_data['updated_at']}}</span>
@@ -549,19 +599,117 @@
                                             </form>
                                         </div>
                                     </div>
-                                    <div class="col-lg-2 col-sm-12 career-properties-other">
+                                    <div class="col-lg-2 col-sm-12">
 
-                                        <div class="rogi border-1">
-                                            <p style="font-size: 80px; text-align: center;">
-                                                <i class="bi bi-arrow-repeat"></i>
-                                            </p>
-                                            <p style="text-align: center;">Sync: {% if post_data.last_sync_status %}{{ post_data.last_sync_status }}{% else %} <i class="bi bi-arrow-repeat"></i>{% endif %}</p>
-                                            <!-- <p>{{post_data.slot}} : <i class="bi bi-arrow-repeat"></i></p>
-                                            <p>{{post_data.slot}} : <i class="bi bi-arrow-repeat"></i></p>
-                                            <p>{{post_data.slot}} : <i class="bi bi-arrow-repeat"></i></p> -->
+                                        {# USTALAMY KOLOR i TEKST STATUSU #}
+                                        {% set card_class = "bg-light text-muted border-0" %}
+                                        {% set status_title = "Nieznany status" %}
+                                        {% set status_desc  = "Brak zdefiniowanego stanu synchronizacji dla tej prezentacji." %}
+
+                                        {# 4. Rozłączony – był kiedyś poprawnie opublikowany, ale teraz odłączony #}
+                                        {% if post_data['last_sync_status'] == 'disconnected' and post_data['published_at'] %}
+                                            {% set card_class = "bg-danger text-white" %}
+                                            {% set status_title = "Rozłączony" %}
+                                            {% set status_desc  = "Ta prezentacja została zastąpiona inną w tym slocie. Ten rekord jest odłączony." %}
+
+                                        {# 1. Nieaktywny + nigdy nie zsynchronizowany (brak published_at) #}
+                                        {% elif post_data['status'] == 0 and post_data['sync'] == 0 and not post_data['published_at'] %}
+                                            {% set card_class = "bg-secondary text-white" %}
+                                            {% set status_title = "Oczekuje na pierwszą synchronizację" %}
+                                            {% set status_desc  = "Prezentacja jest nieaktywna i nie została jeszcze nigdy poprawnie zsynchronizowana z RPi." %}
+
+                                        {# 2. Aktywny + niezsynchronizowany #}
+                                        {% elif post_data['status'] == 1 and post_data['sync'] == 0 %}
+                                            {% set card_class = "bg-warning text-dark" %}
+                                            {% set status_title = "Wymagana synchronizacja" %}
+                                            {% set status_desc  = "Prezentacja jest aktywna w panelu, ale RPi nie ma jeszcze aktualnej wersji pliku." %}
+
+                                        {# 3. Zsynchronizowany + aktywny #}
+                                        {% elif post_data['status'] == 1 and post_data['sync'] == 1 %}
+                                            {% set card_class = "bg-success text-white" %}
+                                            {% set status_title = "Zsynchronizowano" %}
+                                            {% set status_desc  = "Prezentacja jest aktywna i poprawnie zsynchronizowana z RPi." %}
+                                        {% endif %}
+
+                                        <div class="card card-sync-status {{ card_class }}">
+                                            <div class="card-body p-2">
+
+                                                <h6 class="card-title mb-1">{{ status_title }}</h6>
+                                                <p class="card-text mb-1">{{ status_desc }}</p>
+
+                                                <hr class="my-1">
+
+                                                <!-- Opublikowano -->
+                                                <p class="card-text mb-1">
+                                                    <small><strong>Opublikowano:</strong>
+                                                        {% if post_data['published_at'] %}
+                                                            <i class="bi bi-calendar-check text-success"></i>
+                                                            <span id="published_at_{{post_id}}">{{ post_data['published_at'] }}</span>
+                                                        {% else %}
+                                                            <i class="bi bi-dash-circle text-muted"></i>
+                                                            <span id="published_at_{{post_id}}">brak</span>
+                                                        {% endif %}
+                                                    </small>
+                                                </p>
+
+                                                <!-- Ostatnia synchronizacja -->
+                                                <p class="card-text mb-1">
+                                                    <small>
+                                                        <strong>Ostatnia synchronizacja:</strong>
+                                                        {% if post_data['last_sync_at'] %}
+                                                            <i class="bi bi-clock-history text-success"></i>
+                                                            {{ post_data['last_sync_at'] }}
+                                                        {% else %}
+                                                            <i class="bi bi-dash-circle text-muted"></i>
+                                                            brak
+                                                        {% endif %}
+                                                    </small>
+                                                </p>
+
+                                                <!-- Status techniczny -->
+                                                <p class="card-text mb-1">
+                                                    <small>
+                                                        <strong>Status techniczny:</strong>
+                                                        {% if post_data['last_sync_status'] %}
+                                                            <i class="bi bi-info-circle text-info"></i>
+                                                            {{ post_data['last_sync_status'] }}
+                                                        {% else %}
+                                                            <i class="bi bi-dash-circle text-muted"></i>
+                                                            brak danych
+                                                        {% endif %}
+                                                    </small>
+                                                </p>
+
+                                                <!-- Ostatni błąd -->
+                                                <p class="card-text mb-2">
+                                                    <small>
+                                                        <strong>Ostatni błąd:</strong>
+                                                        {% if post_data['last_sync_error'] %}
+                                                            <i class="bi bi-bug text-danger"></i>
+                                                            {{ post_data['last_sync_error'] }}
+                                                        {% else %}
+                                                            <i class="bi bi-dash-circle text-muted"></i>
+                                                            brak
+                                                        {% endif %}
+                                                    </small>
+                                                </p>
+
+                                                <!-- Guzik wymuszenia synchronizacji -->
+                                                {% if post_data['status'] == 1 and post_data['sync'] == 1 %}
+                                                    <button class="btn btn-light btn-sm w-100 mt-1 d-flex align-items-center justify-content-center"
+                                                            onclick="forceResync('{{ post_id }}', '{{ post_data.slot }}')"
+                                                            id="btn_force_resync_{{ post_id }}">
+                                                        <i class="bi bi-arrow-repeat me-1"></i>
+                                                        Wymuś ponowną synchronizację
+                                                    </button>
+                                                {% endif %}
+
+                                            </div>
                                         </div>
-                                        
+
+
                                     </div>
+
                                 </div>
                             </div>
 
@@ -969,7 +1117,15 @@
                     if (data.success) {
                         showToast(data.message || 'Prezentacja została zapisana pomyślnie.', 'success', posClassY, posClassX);
                         setTimeout(function() {
-                            location.reload();
+                            if (!isEdit) {
+                                titleEl.value = "";
+                                descEl.innerHTML = "";
+                                slotEl.selectedIndex = 0;
+                                titleEl.blur();
+                                descEl.blur();
+                                slotEl.blur();
+                            }
+                            setTimeout(() => location.reload(), 200);
                         }, 1500);
                     } else {
                         showToast(data.message || 'Wystąpił błąd podczas zapisywania prezentacji.', 'error', posClassY, posClassX);
@@ -1002,6 +1158,205 @@
         }
     }
 
+
+    function forceResync(postId, slot) {
+        if (!postId || !slot) return;
+
+        if (!confirm('Czy na pewno wymusić ponowną synchronizację dla tej prezentacji?')) {
+            return;
+        }
+
+        const btn = document.getElementById(`btn_force_resync_${postId}`);
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-arrow-repeat me-1 spin"></i> Wymuszanie...';
+        }
+
+        const formData = new URLSearchParams();
+        formData.append('PostID', postId);
+        formData.append('slot', slot);
+
+        fetch('/force-resync', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: formData.toString()
+        })
+        .then(response => response.json().catch(() => ({})))
+        .then(data => {
+            if (!data || !data.success) {
+                alert(data && data.message ? data.message : 'Nie udało się wymusić synchronizacji.');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Wymuś ponowną synchronizację';
+                }
+                return;
+            }
+
+            // Informacyjnie
+            alert('Wymuszono ponowną synchronizację. RPi pobierze plik przy najbliższym cyklu.');
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Oczekuje na synchronizację';
+            }
+
+            // UI: zmień ikonkę w wierszu na "wymagana synchronizacja"
+            updateRowSyncIconPending(postId);
+
+            // odpal monitor statusu
+            startSyncStatusMonitor(postId);
+        })
+        .catch(err => {
+            console.error('forceResync error:', err);
+            alert('Wystąpił błąd po stronie przeglądarki / sieci.');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Wymuś ponowną synchronizację';
+            }
+        });
+    }
+
+    function startSyncStatusMonitor(postId) {
+        if (syncMonitors[postId]) {
+            // już działa – nie dublujemy timerów
+            return;
+        }
+
+        const startedAt = Date.now();
+
+        const handle = setInterval(() => {
+            const elapsed = Date.now() - startedAt;
+            if (elapsed > SYNC_POLL_TIMEOUT) {
+                clearInterval(handle);
+                delete syncMonitors[postId];
+                console.warn('Monitoring synchronizacji przekroczył limit czasu dla PostID=' + postId);
+                return;
+            }
+
+            fetch(`/presentation-sync-status?PostID=${encodeURIComponent(postId)}`, {
+                method: 'GET'
+            })
+            .then(resp => resp.json().catch(() => ({})))
+            .then(payload => {
+                if (!payload || !payload.success || !payload.data) {
+                    return;
+                }
+
+                const d = payload.data;
+
+                // Aktualizacja UI na podstawie danych z backendu
+                updateRowSyncIconFromData(postId, d);
+                updateStatusCardFromData(postId, d);
+
+                // Zakończ monitor, jeśli:
+                // - mamy sukces synchronizacji aktywnej prezentacji
+                if (d.status === 1 && d.sync === 1 && d.last_sync_status === 'success') {
+                    clearInterval(handle);
+                    delete syncMonitors[postId];
+
+                    const btn = document.getElementById(`btn_force_resync_${postId}`);
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Wymuś ponowną synchronizację';
+                    }
+                }
+
+                // Można też zakończyć przy stałym errorze:
+                if (d.last_sync_status === 'error') {
+                    clearInterval(handle);
+                    delete syncMonitors[postId];
+                    alert('Synchronizacja zakończyła się błędem – sprawdź szczegóły w statusie.');
+                    const btn = document.getElementById(`btn_force_resync_${postId}`);
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Wymuś ponowną synchronizację';
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('presentation-sync-status error:', err);
+            });
+
+        }, SYNC_POLL_INTERVAL);
+
+        syncMonitors[postId] = handle;
+    }
+
+    function hideAllSyncIcons(postId) {
+        const ids = [
+            `sync_status_disconnected_${postId}`,
+            `sync_status_pending_inactive_${postId}`,
+            `sync_status_pending_active_${postId}`,
+            `sync_status_ok_${postId}`,
+            `sync_status_unknown_${postId}`
+        ];
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('d-none');
+            }
+        });
+    }
+
+    function showIconById(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.remove('d-none');
+        }
+    }
+
+    function updateRowSyncIconPending(postId) {
+        hideAllSyncIcons(postId);
+        showIconById(`sync_status_pending_active_${postId}`);
+    }
+
+    function updateRowSyncIconFromData(postId, d) {
+        hideAllSyncIcons(postId);
+
+        // 4. Rozłączony – był kiedyś opublikowany i ma status disconnected
+        if (d.last_sync_status === 'disconnected' && d.published_at) {
+            showIconById(`sync_status_disconnected_${postId}`);
+            return;
+        }
+
+        // 1. Nieaktywny + nigdy nie zsynchronizowany
+        if (d.status === 0 && d.sync === 0 && !d.published_at) {
+            showIconById(`sync_status_pending_inactive_${postId}`);
+            return;
+        }
+
+        // 2. Aktywny + niezsynchronizowany
+        if (d.status === 1 && d.sync === 0) {
+            showIconById(`sync_status_pending_active_${postId}`);
+            return;
+        }
+
+        // 3. Zsynchronizowany + aktywny
+        if (d.status === 1 && d.sync === 1) {
+            showIconById(`sync_status_ok_${postId}`);
+            return;
+        }
+
+        // fallback
+        showIconById(`sync_status_unknown_${postId}`);
+    }
+
+    function setTextOrBrak(id, value, brakText = 'brak') {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = value ? value : brakText;
+    }
+
+    function updateStatusCardFromData(postId, d) {
+        setTextOrBrak(`published_at_${postId}`, d.published_at);
+        setTextOrBrak(`last_sync_at_${postId}`, d.last_sync_at);
+        setTextOrBrak(`last_sync_status_${postId}`, d.last_sync_status, 'brak danych');
+        setTextOrBrak(`last_sync_error_${postId}`, d.last_sync_error, 'brak');
+
+        // tu można też pogrzebać w klasach card_class, ale to już level 2 :)
+    }
 
 </script>
 {% endblock %}

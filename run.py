@@ -14706,6 +14706,81 @@ def presentation_view():
             pagination=pagination
             )
 
+
+@app.route('/presentation-sync-status', methods=['GET'])
+def presentation_sync_status():
+    # --- autoryzacja ---
+    if 'username' not in session:
+        msq.handle_error(
+            f'UWAGA! Wywołanie endpointa /presentation-sync-status bez autoryzacji!',
+            log_path=logFileName
+        )
+        return jsonify({
+            'success': False,
+            'message': 'Brak autoryzacji – zaloguj się ponownie.'
+        }), 401
+
+    if session['userperm'].get('presentation', 0) == 0:
+        msq.handle_error(
+            f'UWAGA! Próba zarządzania /presentation-sync-status bez uprawnień przez {session["username"]}!',
+            log_path=logFileName
+        )
+        return jsonify({
+            'success': False,
+            'message': 'Nie masz uprawnień do zarządzania prezentacjami.'
+        }), 403
+
+    post_id = request.args.get('PostID')
+
+    if not post_id:
+        return jsonify({
+            'success': False,
+            'message': 'Brak parametru PostID.'
+        }), 400
+
+    try:
+        post_id_int = int(post_id)
+    except ValueError:
+        return jsonify({
+            'success': False,
+            'message': 'Nieprawidłowy identyfikator prezentacji.'
+        }), 400
+
+    db = get_db()
+
+    query = """
+        SELECT id, slot, status, sync,
+               published_at, last_sync_at,
+               last_sync_status, last_sync_error
+        FROM presentations
+        WHERE id = %s
+        LIMIT 1
+    """
+    rows = db.getFrom(query=query, params=(post_id_int,), as_dict=True)
+
+    if not rows:
+        return jsonify({
+            'success': False,
+            'message': 'Nie znaleziono prezentacji o podanym ID.'
+        }), 404
+
+    row = rows[0]
+
+    return jsonify({
+        'success': True,
+        'data': {
+            'id': row.get('id'),
+            'slot': row.get('slot'),
+            'status': row.get('status'),
+            'sync': row.get('sync'),
+            'published_at': row.get('published_at'),
+            'last_sync_at': row.get('last_sync_at'),
+            'last_sync_status': row.get('last_sync_status'),
+            'last_sync_error': row.get('last_sync_error'),
+        }
+    }), 200
+
+
 @app.route('/presentation-save', methods=['POST'])
 def presentation_save():
     # --- autoryzacja ---
@@ -15053,6 +15128,116 @@ def update_presentation_status():
     #     'success': True,
     #     'message': 'Prezentacja została aktywowana.'
     # }), 200
+
+@app.route('/force-resync', methods=['POST'])
+def force_resync():
+    # --- autoryzacja ---
+    if 'username' not in session:
+        msq.handle_error(
+            f'UWAGA! Wywołanie endpointa /force-resync bez autoryzacji!',
+            log_path=logFileName
+        )
+        return jsonify({
+            'success': False,
+            'message': 'Brak autoryzacji – zaloguj się ponownie.'
+        }), 401
+
+    if session['userperm'].get('presentation', 0) == 0:
+        msq.handle_error(
+            f'UWAGA! Próba zarządzania /force-resync bez uprawnień przez {session["username"]}!',
+            log_path=logFileName
+        )
+        return jsonify({
+            'success': False,
+            'message': 'Nie masz uprawnień do zarządzania prezentacjami.'
+        }), 403
+
+    # --- dane z formularza ---
+    post_id = request.form.get('PostID')
+    slot    = (request.form.get('slot') or '').strip().lower()
+
+    if not post_id or not slot:
+        return jsonify({
+            'success': False,
+            'message': 'Brak wymaganych danych (PostID / slot).'
+        }), 400
+
+    try:
+        post_id_int = int(post_id)
+    except ValueError:
+        return jsonify({
+            'success': False,
+            'message': 'Nieprawidłowy identyfikator prezentacji.'
+        }), 400
+
+    if slot not in ('green', 'silver', 'gold'):
+        return jsonify({
+            'success': False,
+            'message': 'Nieprawidłowy slot prezentacji.'
+        }), 400
+
+    db = get_db()
+
+    # Opcjonalnie – upewniamy się, że prezentacja istnieje i jest aktywna
+    query_check = """
+        SELECT id, status, sync, slot
+        FROM presentations
+        WHERE id = %s AND slot = %s
+        LIMIT 1
+    """
+    row_list = db.getFrom(query=query_check, params=(post_id_int, slot), as_dict=True)
+    if not row_list:
+        return jsonify({
+            'success': False,
+            'message': 'Nie znaleziono prezentacji o podanym ID/slot.'
+        }), 404
+
+    row = row_list[0]
+    if row.get('status') != 1:
+        # Możesz to dopuścić, ale lepiej jasno komunikować:
+        return jsonify({
+            'success': False,
+            'message': 'Wymusić synchronizację można tylko dla aktywnej prezentacji.'
+        }), 400
+
+    # --- ustawiamy flagi force_resync ---
+    query_update = """
+        UPDATE presentations
+        SET
+            sync             = 0,
+            video_hash       = %s,
+            last_sync_status = %s,
+            last_sync_error  = NULL
+        WHERE id = %s AND slot = %s
+    """
+    params_update = (
+        'FORCE_RESYNC',
+        'manual_force_resync',
+        post_id_int,
+        slot
+    )
+
+    success_update = db.executeTo(query_update, params_update)
+
+    if not success_update:
+        msq.handle_error(
+            f'BŁĄD przy force-resync prezentacji ID={post_id_int} (slot={slot}) przez {session["username"]}',
+            log_path=logFileName
+        )
+        return jsonify({
+            'success': False,
+            'message': 'Błąd bazy danych – nie udało się ustawić flagi wymuszonej synchronizacji.'
+        }), 500
+
+    msq.handle_error(
+        f'Wymuszono ponowną synchronizację prezentacji ID={post_id_int} w slocie {slot} przez {session["username"]}',
+        log_path=logFileName
+    )
+
+    return jsonify({
+        'success': True,
+        'message': 'Wymuszono ponowną synchronizację – RPi pobierze plik przy najbliższym cyklu.'
+    }), 200
 
 
 @app.route('/remove-presentation', methods=["POST"])
