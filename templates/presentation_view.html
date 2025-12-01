@@ -265,7 +265,7 @@
                         {% for post_data in presentations_list %}
                             {% set post_id  = post_data['id'] %}
                             <!-- linia contentu tabeli ciemna-->
-                            <div>
+                            <div class="presentation-row" data-presentation-id="{{ post_id }}">
                                 <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
                                     <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_id}}
@@ -338,7 +338,7 @@
                                             {# 5. Ostatnio Odmutowany + nie disconnected #}
                                             {% elif post_data['status'] == 0 and post_data['last_sync_status'] != 'disconnected' and post_data['published_at'] %}
                                                 <span class="text-muted"
-                                                    id="sync_status_pending_active_{{post_id}}"
+                                                    id="sync_status_pending_disconnect_{{post_id}}"
                                                     title="Ostatnio Odmutowany">
                                                     <i class="bi bi-arrow-repeat"></i>
                                                 </span>
@@ -1198,7 +1198,7 @@
         .then(response => response.json().catch(() => ({})))
         .then(data => {
             if (!data || !data.success) {
-                alert(data && data.message ? data.message : 'Nie udało się wymusić synchronizacji.');
+                showToast(data && data.message ? data.message : 'Nie udało się wymusić synchronizacji.', 'error');
                 if (btn) {
                     btn.disabled = false;
                     btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Wymuś ponowną synchronizację';
@@ -1207,7 +1207,7 @@
             }
 
             // Informacyjnie
-            alert('Wymuszono ponowną synchronizację. RPi pobierze plik przy najbliższym cyklu.');
+            showToast('Wymuszono ponowną synchronizację. RPi pobierze plik przy najbliższym cyklu.', 'success');
 
             if (btn) {
                 btn.disabled = true;
@@ -1222,7 +1222,7 @@
         })
         .catch(err => {
             console.error('forceResync error:', err);
-            alert('Wystąpił błąd po stronie przeglądarki / sieci.');
+            showToast('Wystąpił błąd po stronie przeglądarki / sieci.', 'error');
             if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Wymuś ponowną synchronizację';
@@ -1279,7 +1279,7 @@
                 if (d.last_sync_status === 'error') {
                     clearInterval(handle);
                     delete syncMonitors[postId];
-                    alert('Synchronizacja zakończyła się błędem – sprawdź szczegóły w statusie.');
+                    showToast('Synchronizacja zakończyła się błędem – sprawdź szczegóły w statusie.', 'error');
                     const btn = document.getElementById(`btn_force_resync_${postId}`);
                     if (btn) {
                         btn.disabled = false;
@@ -1296,11 +1296,30 @@
         syncMonitors[postId] = handle;
     }
 
+    function refreshSyncStatus(postId) {
+        return fetch(`/api/presentation-status?post_id=${encodeURIComponent(postId)}`)
+            .then(resp => resp.json().catch(() => ({})))
+            .then(data => {
+                if (!data || !data.success || !data.data) {
+                    console.warn('refreshSyncStatus error:', data && data.message);
+                    return null;
+                }
+                // << TU używamy Twojej logiki >>
+                updateRowSyncIconFromData(postId, data.data);
+                return data.data;
+            })
+            .catch(err => {
+                console.error('refreshSyncStatus exception:', err);
+                return null;
+            });
+    }
+
     function hideAllSyncIcons(postId) {
         const ids = [
             `sync_status_disconnected_${postId}`,
             `sync_status_pending_inactive_${postId}`,
             `sync_status_pending_active_${postId}`,
+            `sync_status_pending_disconnect_${postId}`,
             `sync_status_ok_${postId}`,
             `sync_status_unknown_${postId}`
         ];
@@ -1347,7 +1366,7 @@
 
         // 5. W trakcie przełączania
         if (d.status === 0 && d.last_sync_status != 'disconnected' && d.published_at) {
-            showIconById(`sync_status_pending_active_${postId}`);
+            showIconById(`sync_status_pending_disconnect_${postId}`);
             return;
         }
 
@@ -1376,5 +1395,29 @@
         // tu można też pogrzebać w klasach card_class, ale to już level 2 :)
     }
 
+    
+    function initSyncPolling(intervalMs = 15000) {  // np. co 15 sekund
+        const rowEls = document.querySelectorAll('[data-presentation-id]');
+        const ids = Array.from(rowEls).map(el => el.getAttribute('data-presentation-id'));
+
+        if (!ids.length) {
+            console.warn('initSyncPolling: brak wierszy prezentacji na stronie');
+            return;
+        }
+
+        // pierwszy refresh od razu po załadowaniu
+        ids.forEach(id => refreshSyncStatus(id));
+
+        // cykliczny polling
+        setInterval(() => {
+            ids.forEach(id => refreshSyncStatus(id));
+        }, intervalMs);
+    }
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        initSyncPolling(15000); // co 15s, możesz dać 10000 albo 30000
+    });
 </script>
 {% endblock %}
