@@ -582,7 +582,7 @@
 
                                         {# 2. Aktywny + niezsynchronizowany #}
                                         {% elif post_data['status'] == 1 and post_data['sync'] == 0 %}
-                                            {% set card_class = "msg-warning" %}
+                                            {% set card_class = "msg-info" %}
                                             {% set status_title = "Wymagana synchronizacja" %}
                                             {% set status_desc  = "Prezentacja jest aktywna w panelu, ale RPi nie ma jeszcze aktualnej wersji pliku." %}
                                         
@@ -1406,7 +1406,7 @@
         // 2. Aktywny + niezsynchronizowany
         else if (status === 1 && sync === 0) {
             html = `
-                <span class="text-warning"
+                <span class="text-info"
                     id="sync_status_pending_active_${postId}"
                     title="Wymagana synchronizacja">
                     <i class="bi bi-arrow-repeat"></i>
