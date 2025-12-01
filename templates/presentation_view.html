@@ -1395,13 +1395,9 @@
                 </span>
             `;
         }
-        // 3. Zsynchronizowany + aktywny (SUCESS)
+        // 3. Zsynchronizowany + aktywny
         else if (status === 1 && sync === 1) {
-
-            // Usuwamy licznik dla tego postId
-            delete syncCountdowns[postId];
-
-            // HTML ikony
+            
             html = `
                 <span class="text-success"
                     id="sync_status_ok_${postId}"
@@ -1409,18 +1405,7 @@
                     <i class="bi bi-check-circle"></i>
                 </span>
             `;
-
-            // Jednorazowy reload strony (po krótkiej zwłoce)
-            setTimeout(() => {
-                // Extra safety: ponownie sprawdzamy że to ten sam stan
-                refreshSyncStatus(postId).then(data => {
-                    if (data && Number(data.status) === 1 && Number(data.sync) === 1) {
-                        location.reload();
-                    }
-                });
-            }, 500);
         }
-
         // fallback
         else {
             html = `
