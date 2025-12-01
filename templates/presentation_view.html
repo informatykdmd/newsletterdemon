@@ -607,7 +607,7 @@
                                         {% set status_desc  = "Brak zdefiniowanego stanu synchronizacji dla tej prezentacji." %}
 
                                         {# 4. Rozłączony – był kiedyś poprawnie opublikowany, ale teraz odłączony #}
-                                        {% if post_data['last_sync_status'] == 'disconnected' and post_data['published_at'] %}
+                                        {% if post_data['last_sync_status'] == 'disconnected' and post_data['published_at'] and post_data['status'] != 1 %}
                                             {% set card_class = "msg-danger text-white" %}
                                             {% set status_title = "Rozłączony" %}
                                             {% set status_desc  = "Ta prezentacja została zastąpiona inną w tym slocie. Ten rekord jest odłączony." %}
