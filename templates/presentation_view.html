@@ -708,7 +708,7 @@
 
                                                 <!-- Guzik wymuszenia synchronizacji -->
                                                 {% if post_data['status'] == 1 and post_data['sync'] == 1 %}
-                                                    <button class="btn btn-light btn-sm w-100 mt-1 d-flex align-items-center justify-content-center"
+                                                    <button class="btn btn-dark btn-sm mt-1 d-flex align-items-center justify-content-center"
                                                             onclick="forceResync('{{ post_id }}', '{{ post_data.slot }}')"
                                                             style="font-size: 60px !important; color: #04cece;"
                                                             id="btn_force_resync_{{ post_id }}">
