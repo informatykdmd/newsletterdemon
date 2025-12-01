@@ -1337,7 +1337,7 @@
 
     
     function updateRowSyncIconFromData(postId, d) {
-        let reloadScheduled = false;
+        
         const rowEl = document.getElementById(`sync_status_row_${postId}`);
         if (!rowEl) return;
 
@@ -1413,21 +1413,21 @@
                 </span>
             `;
 
-            // Zapobiegamy wielokrotnemu przeładowaniu
-            if (!reloadScheduled) {
-                reloadScheduled = true;
+            // // Zapobiegamy wielokrotnemu przeładowaniu
+            // if (!reloadScheduled) {
+            //     reloadScheduled = true;
 
-                setTimeout(() => {
-                    refreshSyncStatus(postId).then(data => {
-                        if (data && Number(data.status) === 1 && Number(data.sync) === 1) {
-                            location.reload();
-                        } else {
-                            // przywróć możliwość ponownego reloadu, jeśli stan jednak się zmienił
-                            reloadScheduled = false;
-                        }
-                    });
-                }, 500);
-            }
+            //     setTimeout(() => {
+            //         refreshSyncStatus(postId).then(data => {
+            //             if (data && Number(data.status) === 1 && Number(data.sync) === 1) {
+            //                 location.reload();
+            //             } else {
+            //                 // przywróć możliwość ponownego reloadu, jeśli stan jednak się zmienił
+            //                 reloadScheduled = false;
+            //             }
+            //         });
+            //     }, 500);
+            // }
         }
         // fallback
         else {
