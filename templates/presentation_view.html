@@ -6,6 +6,12 @@
     const syncMonitors = {};
     const SYNC_POLL_INTERVAL = 5000;       // co 5 sekund
     const SYNC_POLL_TIMEOUT  = 5 * 60 * 1000; // max 5 minut
+
+    // mapujemy postId -> timestamp startu odliczania (ms)
+    const SYNC_COUNTDOWN_SECONDS = 7 * 60; // 7 minut
+    const syncCountdowns = {}; // np. { "39": 1700000000000 }
+
+    
 </script>
 {% endblock %}
 
@@ -1250,23 +1256,7 @@
         syncMonitors[postId] = handle;
     }
 
-    // function refreshSyncStatus(postId) {
-    //     return fetch(`/api/presentation-status?post_id=${encodeURIComponent(postId)}`)
-    //         .then(resp => resp.json().catch(() => ({})))
-    //         .then(data => {
-    //             if (!data || !data.success || !data.data) {
-    //                 console.warn('refreshSyncStatus error:', data && data.message);
-    //                 return null;
-    //             }
-    //             // << TU używamy Twojej logiki >>
-    //             updateRowSyncIconFromData(postId, data.data);
-    //             return data.data;
-    //         })
-    //         .catch(err => {
-    //             console.error('refreshSyncStatus exception:', err);
-    //             return null;
-    //         });
-    // }
+    
     function refreshSyncStatus(postId) {
         const url = `/presentation-sync-status?PostID=${encodeURIComponent(postId)}`;
 
@@ -1330,47 +1320,20 @@
         hideAllSyncIcons(postId);
         showIconById(`sync_status_pending_active_${postId}`);
     }
+    
+    function getRemainingSecondsForPost(postId) {
+        const startTs = syncCountdowns[postId];
+        if (!startTs) return SYNC_COUNTDOWN_SECONDS;
+        const elapsed = Math.floor((Date.now() - startTs) / 1000);
+        return SYNC_COUNTDOWN_SECONDS - elapsed;
+    }
 
-    // function updateRowSyncIconFromData(postId, d) {
-    //     hideAllSyncIcons(postId);
-        
-    //     console.log("postId, d: \n");
-    //     console.log(postId);
-    //     console.log(d);
-
-    //     // 4. Rozłączony – był kiedyś opublikowany i ma status disconnected
-    //     if (d.last_sync_status === 'disconnected' && d.published_at) {
-    //         showIconById(`sync_status_disconnected_${postId}`);
-    //         return;
-    //     }
-
-    //     // 1. Nieaktywny + nigdy nie zsynchronizowany
-    //     if (d.status === 0 && d.sync === 0 && !d.published_at) {
-    //         showIconById(`sync_status_pending_inactive_${postId}`);
-    //         return;
-    //     }
-
-    //     // 2. Aktywny + niezsynchronizowany
-    //     if (d.status === 1 && d.sync === 0) {
-    //         showIconById(`sync_status_pending_active_${postId}`);
-    //         return;
-    //     }
-
-    //     // 5. W trakcie przełączania
-    //     if (d.status === 0 && d.last_sync_status != 'disconnected' && d.published_at) {
-    //         showIconById(`sync_status_pending_disconnect_${postId}`);
-    //         return;
-    //     }
-
-    //     // 3. Zsynchronizowany + aktywny
-    //     if (d.status === 1 && d.sync === 1) {
-    //         showIconById(`sync_status_ok_${postId}`);
-    //         return;
-    //     }
-
-    //     // fallback
-    //     showIconById(`sync_status_unknown_${postId}`);
-    // }
+    function formatSeconds(sec) {
+        if (sec < 0) sec = 0;
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    }
 
     function updateRowSyncIconFromData(postId, d) {
         const rowEl = document.getElementById(`sync_status_row_${postId}`);
@@ -1403,13 +1366,22 @@
                 </span>
             `;
         }
-        // 2. Aktywny + niezsynchronizowany
+        // 2. Aktywny + niezsynchronizowany + ODLICZANIE
         else if (status === 1 && sync === 0) {
+
+            // jeżeli jeszcze nie ma startu licznika, ustawiamy
+            if (!syncCountdowns[postId]) {
+                syncCountdowns[postId] = Date.now();
+            }
+            const remaining = getRemainingSecondsForPost(postId);
+            const label     = formatSeconds(remaining);
+
             html = `
                 <span class="text-info"
                     id="sync_status_pending_active_${postId}"
-                    title="Wymagana synchronizacja">
+                    title="Wymagana synchronizacja – oczekiwanie na RPi">
                     <i class="bi bi-arrow-repeat"></i>
+                    <small class="ms-1" id="sync_countdown_${postId}">${label}</small>
                 </span>
             `;
         }
@@ -1486,5 +1458,33 @@
     document.addEventListener('DOMContentLoaded', function () {
         initSyncPolling(15000); // co 15s, możesz dać 10000 albo 30000
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+    // ... tu możesz mieć initSyncPolling(...)
+
+    // globalne odliczanie dla wszystkich postów w stanie "aktywny + niezsynchronizowany"
+    setInterval(function () {
+        const ids = Object.keys(syncCountdowns);
+        if (!ids.length) return;
+
+        ids.forEach(postId => {
+            const remaining = getRemainingSecondsForPost(postId);
+            const label = formatSeconds(remaining);
+
+            const el = document.getElementById(`sync_countdown_${postId}`);
+            if (el) {
+                el.textContent = label;
+            }
+
+            if (remaining <= 0) {
+                // zakładamy, że w tym czasie RPi już powinno coś zrobić
+                // więc odświeżamy stronę
+                location.reload();
+            }
+        });
+    }, 1000);
+});
+
 </script>
 {% endblock %}
