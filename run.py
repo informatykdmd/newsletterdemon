@@ -349,6 +349,8 @@ def generator_settingsDB():
         'inwestycje': take_data_settingsDB('inwestycje'),
         'instalacje': take_data_settingsDB('instalacje'),
         'presentations-quota-mb': take_data_settingsDB('presentations_quota_mb'),
+        'rpi-api-addr': take_data_settingsDB('rpi_api_addr'),
+        'rpi-api-token': take_data_settingsDB('rpi_api_token'),        
         'smtp_admin': {
             'smtp_server': take_data_settingsDB('admin_smtp_server'),
             'smtp_port': int(take_data_settingsDB('admin_smtp_port')),
@@ -15216,9 +15218,10 @@ def download_dev_script(slot, platform):
 
     # --- adres Huba ---
     # HUB_URL = http://raspberrypi-tv:5000 lub to, co masz w settings
-    # HUB_URL = settingsDB.get("hub-url", "http://raspberrypi-tv:5000")
-    HUB_URL = 'http://192.168.1.248:8443'
-    AMPIO_TOKEN = 'supersekret'
+    settingsDB = generator_settingsDB()
+    HUB_URL = settingsDB.get('rpi_api_addr', 'http://localhost:3000')
+    AMPIO_TOKEN = settingsDB.get('rpi_api_addr', 'bad-token')
+
     # --- sprawdź, czy mamy token ---
     if not AMPIO_TOKEN:
         # możesz zalogować ostrzeżenie, że token nie jest skonfigurowany
