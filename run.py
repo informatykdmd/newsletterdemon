@@ -15219,8 +15219,8 @@ def download_dev_script(slot, platform):
     # --- adres Huba ---
     # HUB_URL = http://raspberrypi-tv:5000 lub to, co masz w settings
     settingsDB = generator_settingsDB()
-    HUB_URL = settingsDB.get('rpi_api_addr', 'http://localhost:3000')
-    AMPIO_TOKEN = settingsDB.get('rpi_api_addr', 'bad-token')
+    HUB_URL = settingsDB.get('rpi-api-addr', 'http://localhost:3000')
+    AMPIO_TOKEN = settingsDB.get('rpi-api-addr', 'bad-token')
 
     # --- sprawdź, czy mamy token ---
     if not AMPIO_TOKEN:
