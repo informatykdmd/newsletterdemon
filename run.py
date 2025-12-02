@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request, g, send_file
+from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request, g, send_file, Response
 from flask_wtf import FlaskForm
 from flask_paginate import Pagination, get_page_args
 from wtforms import StringField, PasswordField, SubmitField
@@ -15169,6 +15169,102 @@ def presentation_download(presentation_id):
         file_path,
         as_attachment=True,
         download_name=download_name
+    )
+
+@app.route('/download-dev-script/<slot>/<platform>', methods=["GET"])
+def download_dev_script(slot, platform):
+    """
+    Generowanie skryptów DEV do wywoływania trigera:
+    /trigger/<slot>
+    Skrypty działają tylko w sieci lokalnej.
+    Uprawnienia: presentation-silver lub presentation-gold
+    """
+
+    # --- autoryzacja ---
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(
+            f'UWAGA! Wywołanie /download-dev-script bez autoryzacji!',
+            log_path=logFileName
+        )
+        return redirect(url_for('index'))
+
+    userperm = session.get('userperm', {})
+    username = session.get('username')
+
+    can_dev = (
+        userperm.get('presentation-silver', 0) == 1 or
+        userperm.get('presentation-gold', 0) == 1
+    )
+
+    if not can_dev:
+        msq.handle_error(
+            f'UWAGA! {username} próbował pobrać DEV SCRIPT bez uprawnień.',
+            log_path=logFileName
+        )
+        flash("Nie masz uprawnień do pobierania narzędzi DEV.", "danger")
+        return redirect(url_for('presentation_view'))
+
+    # --- walidacja slotu ---
+    slot = slot.lower()
+    if slot not in ("gold", "silver", "green"):
+        return "Invalid slot", 400
+
+    # --- walidacja platformy ---
+    platform = platform.lower()
+    if platform not in ("windows", "macos", "android", "ios"):
+        return "Invalid platform", 400
+
+    # --- adres Huba ---
+    # HUB_URL = http://raspberrypi-tv:5000 lub to, co masz w settings
+    HUB_URL = settingsDB.get("hub-url", "http://raspberrypi-tv:5000")
+
+    # --- skrypty dla różnych platform ---
+    if platform == "windows":
+        filename = f"dmd_trigger_{slot}.bat"
+        content = f"""@echo off
+echo Wywolywanie trigera dla slota: {slot}
+echo Pamietaj: Ten skrypt dziala tylko w sieci lokalnej DMD.
+curl -X POST {HUB_URL}/trigger/{slot}
+pause
+"""
+
+    elif platform == "macos":
+        filename = f"dmd_trigger_{slot}.command"
+        content = f"""#!/bin/bash
+echo "Wywolywanie trigera dla slota: {slot}"
+echo "Pamietaj: Ten skrypt dziala tylko w sieci lokalnej DMD."
+curl -X POST {HUB_URL}/trigger/{slot}
+"""
+
+    elif platform == "android":
+        filename = f"dmd_trigger_{slot}.sh"
+        content = f"""#!/data/data/com.termux/files/usr/bin/bash
+echo "Wywolywanie trigera dla slota: {slot}"
+echo "Uruchom w Termuxie w sieci DMD."
+curl -X POST {HUB_URL}/trigger/{slot}
+"""
+
+    elif platform == "ios":
+        filename = f"dmd_trigger_{slot}.sh"
+        content = f"""#!/bin/bash
+echo "Wywolywanie trigera dla slota: {slot}"
+echo "UWAGA: iOS wymaga uruchomienia skryptu przez aplikacje typu iSH/Shell."
+curl -X POST {HUB_URL}/trigger/{slot}
+"""
+
+    # --- log ---
+    msq.handle_error(
+        f'User {username} pobral DEV SCRIPT: {filename}',
+        log_path=logFileName
+    )
+
+    # --- wysyłamy skrypt jako plik do pobrania ---
+    return Response(
+        content,
+        mimetype="text/plain",
+        headers={
+            "Content-Disposition": f"attachment; filename={filename}"
+        }
     )
 
 
