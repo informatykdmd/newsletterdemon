@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request, g
+from flask import Flask, render_template, redirect, url_for, flash, jsonify, session, request, g, send_file
 from flask_wtf import FlaskForm
 from flask_paginate import Pagination, get_page_args
 from wtforms import StringField, PasswordField, SubmitField
@@ -15081,6 +15081,96 @@ def presentation_save():
         'message': 'Prezentacja została zapisana pomyślnie!',
         'success': True
     }), 200
+
+@app.route('/presentation-download/<int:presentation_id>', methods=["GET"])
+def presentation_download(presentation_id):
+    """
+    Pobranie pliku wideo powiązanego z prezentacją.
+    Wymaga zalogowania + uprawnienia 'presentation'.
+    """
+
+    # --- autoryzacja podstawowa ---
+    if 'username' not in session or 'userperm' not in session:
+        msq.handle_error(
+            f'UWAGA! Wywołanie endpointa /presentation-download bez autoryzacji!',
+            log_path=logFileName
+        )
+        return redirect(url_for('index'))
+
+    if session['userperm'].get('presentation', 0) == 0:
+        msq.handle_error(
+            f'UWAGA! Próba użycia /presentation-download bez uprawnień przez {session.get("username")}',
+            log_path=logFileName
+        )
+        flash('Nie masz uprawnień do pobierania prezentacji.', 'danger')
+        return redirect(url_for('presentation_view'))
+
+    db = get_db()
+
+    # --- pobierz dane prezentacji: ścieżka do pliku + coś do nazwy ---
+    db.fetch_one(
+        """
+        SELECT title, video_path
+        FROM presentations
+        WHERE id = %s;
+        """,
+        (presentation_id,)
+    )
+
+    title          = getattr(db, "title", None)
+    video_path_db  = getattr(db, "video_path", None)
+
+    if video_path_db is None:
+        msg = f"Brak przypisanego pliku wideo dla prezentacji ID={presentation_id}."
+        msq.handle_error(
+            f'/presentation-download: {msg} (użytkownik {session.get("username")})',
+            log_path=logFileName
+        )
+        flash("Brak pliku wideo dla tej prezentacji.", "warning")
+        return redirect(url_for('presentation_view'))
+
+    # --- zbuduj pełną ścieżkę na serwerze ---
+    try:
+        real_loc_on_server = settingsDB['real-location-on-server']  # np. "/var/www/app"
+    except KeyError:
+        # awaryjnie: katalog bieżący
+        real_loc_on_server = "."
+
+    # jeżeli w bazie jest pełny URL, odcinamy domenę
+    if video_path_db.startswith('http://') or video_path_db.startswith('https://'):
+        domain = settingsDB.get('main-domain', '')
+        video_rel_path = video_path_db.replace(domain, '').lstrip('/')
+    else:
+        # jeśli ścieżka jest względna względem root-a aplikacji
+        video_rel_path = video_path_db.lstrip('/')
+
+    file_path = os.path.join(real_loc_on_server, video_rel_path)
+
+    if not os.path.exists(file_path):
+        msg = f"Plik wideo {file_path} dla prezentacji ID={presentation_id} nie istnieje na dysku."
+        msq.handle_error(
+            f'/presentation-download: {msg} (użytkownik {session.get("username")})',
+            log_path=logFileName
+        )
+        flash("Plik wideo nie został znaleziony na serwerze.", "danger")
+        return redirect(url_for('presentation_view'))
+
+    # nazwa pliku przy pobieraniu – użyjemy fizycznej nazwy
+    download_name = os.path.basename(file_path)
+    # można by ewentualnie zrobić slug z title, ale nie ma takiej potrzeby na start
+
+    msq.handle_error(
+        f'Użytkownik {session.get("username")} pobiera prezentację ID={presentation_id} (plik: {file_path})',
+        log_path=logFileName
+    )
+
+    # Flask 2.x: download_name; przy starszym Flasku użyj attachment_filename
+    return send_file(
+        file_path,
+        as_attachment=True,
+        download_name=download_name
+    )
+
 
 @app.route('/update-presentation-status', methods=['POST'])
 def update_presentation_status():

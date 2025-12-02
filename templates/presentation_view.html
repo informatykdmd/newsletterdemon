@@ -369,6 +369,14 @@
                                                 <i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i>
                                             </a>
 
+                                            {% if post_data['video_path'] %}
+                                                <a href="{{ url_for('presentation_download', presentation_id=post_id) }}"
+                                                class="ms-1 me-1"
+                                                title="Pobierz wideo">
+                                                    <i class="bi bi-download"></i>
+                                                </a>
+                                            {% endif %}
+
                                             <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling_{{post_id}}" aria-controls="offcanvasScrolling_{{post_id}}">
                                                 <i class="bi bi-pencil" style="color: #7eb5cc !important;"></i>
                                             </a>
@@ -387,6 +395,13 @@
                                                     <i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i>
                                                 </a>
                                             </div>
+                                            {% if post_data['video_path'] %}
+                                                <a href="{{ url_for('presentation_download', presentation_id=post_id) }}"
+                                                class="ms-1 me-1"
+                                                title="Pobierz wideo">
+                                                    <i class="bi bi-download"></i>
+                                                </a>
+                                            {% endif %}
                                             <div>
                                                 <i class="bi bi-pencil" style="color: #696969 !important;"></i>
                                             </div>
@@ -607,6 +622,13 @@
                                                             style="max-height: 30px; font-size: 12px;">
                                                             Aktywuj prezentację
                                                         </button>
+                                                    </div>
+                                                {% endif %}
+                                                {% if post_data['video_path'] %}
+                                                    <div class="col me-1 mb-1">
+                                                        <a href="{{ url_for('presentation_download', presentation_id=post_id) }}" title="Pobierz wideo">
+                                                            <i class="bi bi-download"></i>
+                                                        </a>
                                                     </div>
                                                 {% endif %}
                                             </form>
