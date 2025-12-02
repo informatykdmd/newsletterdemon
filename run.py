@@ -15218,14 +15218,22 @@ def download_dev_script(slot, platform):
     # HUB_URL = http://raspberrypi-tv:5000 lub to, co masz w settings
     # HUB_URL = settingsDB.get("hub-url", "http://raspberrypi-tv:5000")
     HUB_URL = 'http://192.168.1.248:8443'
+    AMPIO_TOKEN = 'supersekret'
 
-    # --- skrypty dla różnych platform ---
+    # --- sprawdź, czy mamy token ---
+    if not AMPIO_TOKEN:
+        # możesz zalogować ostrzeżenie, że token nie jest skonfigurowany
+        msq.handle_error(
+            "Brak skonfigurowanego AMPIO_TOKEN dla skryptów DEV!",
+            log_path=logFileName
+        )
+
     if platform == "windows":
         filename = f"dmd_trigger_{slot}.bat"
         content = f"""@echo off
 echo Wywolywanie trigera dla slota: {slot}
 echo Pamietaj: Ten skrypt dziala tylko w sieci lokalnej DMD.
-curl -X POST {HUB_URL}/trigger/{slot}
+curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
 pause
 """
 
@@ -15234,7 +15242,7 @@ pause
         content = f"""#!/bin/bash
 echo "Wywolywanie trigera dla slota: {slot}"
 echo "Pamietaj: Ten skrypt dziala tylko w sieci lokalnej DMD."
-curl -X POST {HUB_URL}/trigger/{slot}
+curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
 """
 
     elif platform == "android":
@@ -15242,7 +15250,7 @@ curl -X POST {HUB_URL}/trigger/{slot}
         content = f"""#!/data/data/com.termux/files/usr/bin/bash
 echo "Wywolywanie trigera dla slota: {slot}"
 echo "Uruchom w Termuxie w sieci DMD."
-curl -X POST {HUB_URL}/trigger/{slot}
+curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
 """
 
     elif platform == "ios":
@@ -15250,9 +15258,7 @@ curl -X POST {HUB_URL}/trigger/{slot}
         content = f"""#!/bin/bash
 echo "Wywolywanie trigera dla slota: {slot}"
 echo "UWAGA: iOS wymaga uruchomienia skryptu przez aplikacje typu iSH/Shell."
-curl -X POST {HUB_URL}/trigger/{slot}
-"""
-
+curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
     # --- log ---
     msq.handle_error(
         f'User {username} pobral DEV SCRIPT: {filename}',
