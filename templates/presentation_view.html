@@ -288,7 +288,7 @@
                                     <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <span id="status_icon_mobile_{{ post_id }}">
                                             {% if post_data['status'] == 1 %}
-                                                <span class="text-{% if post_data.slot == 'green' %}success{% elif post_data.slot == 'silver' %}info{% elif post_data.slot == 'gold' %}warning{% else %}primary{% endif %}"><i class="bi bi-lightbulb-fill"></i></span>
+                                                <span class="text-primary"><i class="bi bi-lightbulb-fill"></i></span>
                                             {% else %}
                                                 <span class="text-secondary"><i class="bi bi-lightbulb-fill"></i></span>
                                             {% endif %}
@@ -344,6 +344,7 @@
                                         </a>
                                     </div>
                                     <div class="text-end" style="max-width: 80px;">
+                                        {% if post_data.author == username or userperm["presentation-gold"] %}
                                         <form 
                                             method="POST" 
                                             id="remove_presentation_{{post_id}}" 
@@ -365,6 +366,21 @@
                                                 <i class="bi bi-trash-fill" style="color: rgb(149, 47, 47) !important;"></i>
                                             </button>
                                         </form>
+                                        {% else %}
+                                        <div class="row">
+                                            <div class="col">
+                                                <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
+                                                    <i class="bi bi-chevron-double-down" style="color: rgb(89, 176, 90) !important;"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col">
+                                                <i class="bi bi-pencil" style="color: #696969 !important;"></i>
+                                            </div>
+                                            <div class="col">
+                                                <i class="bi bi-trash-fill" style="color: #696969 !important;"></i>
+                                            </div>
+                                        </div>
+                                        {% endif %}
 
                                     </div>
                                 </div>
