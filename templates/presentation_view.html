@@ -632,6 +632,7 @@
                                                     </a>
                                                 </div>
                                             {% endif %}
+                                            {% set can_dev = userperm['presentation-silver'] == 1 or userperm['presentation-gold'] == 1 %}
                                             {% if can_dev %}
                                             <div class="mt-3">
                                                 <h6>Dev – skróty trigera dla slota {{ post_data['slot']|upper }}</h6>
