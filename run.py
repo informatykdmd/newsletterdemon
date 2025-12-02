@@ -14837,13 +14837,63 @@ def presentation_save():
             'success': False,
             'message': msg
         }), 400
-
     # --- ZAPIS DO BAZY ---
     db = get_db()
 
+    userperm  = session.get('userperm', {}) or {}
+    username  = session.get('username')
+    has_gold  = True if userperm.get('presentation-gold', 0) == 1 else False
+
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     # jeśli edycja → aktualizujemy istniejący rekord
     if is_edit and offer_id:
+
+        db.fetch_one(
+            """
+            SELECT author, created_by, slot
+            FROM presentations
+            WHERE id = %s;
+            """,
+            (offer_id,)
+        )
+
+        db_author     = getattr(db, "author", None)
+        db_created_by = getattr(db, "created_by", None)
+        # db.slot też jest dostępny, jakbyś kiedyś chciał logikę per slot
+
+        # brak danych – rekord nie istnieje / nie został załadowany
+        if db_author is None and db_created_by is None:
+            msg = f"Prezentacja o id:{offer_id} nie istnieje."
+            msq.handle_error(
+                f'Błąd zapisu prezentacji (użytkownik {username}): {msg}',
+                log_path=logFileName
+            )
+            return jsonify({
+                'success': False,
+                'message': msg
+            }), 404
+
+        # BLOKADA: użytkownik NIE jest autorem i NIE jest created_by i NIE ma gold
+        if (db_author != username and db_created_by != username) and not has_gold:
+            msg = (
+                f"Brak uprawnień do zarządzania prezentacją o id:{offer_id} "
+                f"użytkownika {db_author} (zalogowany: {username})"
+            )
+            msq.handle_error(
+                f'Błąd zapisu prezentacji (użytkownik {username}): {msg}',
+                log_path=logFileName
+            )
+            return jsonify({
+                'success': False,
+                'message': msg
+            }), 403
+
+        # jeśli dotarliśmy tutaj:
+        # - jesteś autorem LUB
+        # - jesteś created_by LUB
+        # - masz presentation-gold
+
         query = """
             UPDATE presentations SET
                 title = %s,
@@ -15265,11 +15315,10 @@ def remove_presentation():
         form_data = request.form.to_dict()
         msq.handle_error(f'/remove-presentation form_data: {form_data}!', log_path=logFileName)
 
-        try:
-            form_data['PostID']
-        except KeyError:
+        # Walidacja PostID
+        if 'PostID' not in form_data:
             flash("Brak identyfikatora prezentacji.", "danger")
-            return redirect(url_for('presentation_view'))  # dostosuj nazwę widoku listy prezentacji
+            return redirect(url_for('presentation_view'))  # widok listy prezentacji
 
         try:
             set_post_id = int(form_data['PostID'])
@@ -15277,38 +15326,78 @@ def remove_presentation():
             flash("Nieprawidłowy identyfikator prezentacji.", "danger")
             return redirect(url_for('presentation_view'))
 
-        # --- Pobranie danych prezentacji z bazy (slot + ścieżka do pliku) ---
-        try:
-            # PRZYKŁAD: zakładam, że masz kolumny slot, video_path
-            # jeśli nazwy inne: np. 'file_path', 'video_url' – dostosuj niżej indeksy
-            row = take_data_where_ID('slot, video_path', 'presentations', 'id', set_post_id)[0]
-            slot = row[0]
-            video_path_db = row[1]  # np. "/presentations/green/current.mp4" lub podobne
-        except IndexError:
+        db = get_db()
+
+        userperm = session.get('userperm', {}) or {}
+        username = session.get('username')
+        has_gold = True if userperm.get('presentation-gold', 0) == 1 else False
+
+        # --- Pobranie danych prezentacji (autor, created_by, slot, ścieżka pliku) ---
+        db.fetch_one(
+            """
+            SELECT author, created_by, slot, video_path
+            FROM presentations
+            WHERE id = %s;
+            """,
+            (set_post_id,)
+        )
+
+        db_author     = getattr(db, "author", None)
+        db_created_by = getattr(db, "created_by", None)
+        slot          = getattr(db, "slot", None)
+        video_path_db = getattr(db, "video_path", None)
+
+        # brak danych – rekord nie istnieje / nie został załadowany
+        if db_author is None and db_created_by is None:
+            msg = f"Prezentacja o id:{set_post_id} nie istnieje."
             msq.handle_error(
-                f'UWAGA! Prezentacja ID={set_post_id} nie została znaleziona podczas usuwania przez {session["username"]}!',
+                f'Błąd usuwania prezentacji (użytkownik {username}): {msg}',
                 log_path=logFileName
             )
             flash("Prezentacja nie została znaleziona.", "danger")
             return redirect(url_for('presentation_view'))
 
+        # BLOKADA: użytkownik NIE jest autorem i NIE jest created_by i NIE ma gold
+        if (db_author != username and db_created_by != username) and not has_gold:
+            msg = (
+                f"Brak uprawnień do usunięcia prezentacji o id:{set_post_id} "
+                f"użytkownika {db_author} (zalogowany: {username})"
+            )
+            msq.handle_error(
+                f'Błąd usuwania prezentacji (użytkownik {username}): {msg}',
+                log_path=logFileName
+            )
+            flash("Nie masz uprawnień do usunięcia tej prezentacji.", "danger")
+            return redirect(url_for('presentation_view'))
+
+        # jeśli dotarliśmy tutaj:
+        # - jesteś autorem LUB
+        # - jesteś created_by LUB
+        # - masz presentation-gold
+
         # --- Usunięcie rekordu z tabeli presentations ---
-        msq.delete_row_from_database(
+        if not db.executeTo(
             """
-                DELETE FROM presentations WHERE id = %s;
+            DELETE FROM presentations
+            WHERE id = %s;
             """,
             (set_post_id,)
-        )
+        ):
+            msq.handle_error(
+                f'UWAGA! Prezentacja ID={set_post_id} nie została usunięta z bazy przez {username}!',
+                log_path=logFileName
+            )
+            flash("Prezentacja nie została usunięta z bazy!", "danger")
+            return redirect(url_for('presentation_view'))
 
         # --- Usunięcie pliku MP4 z serwera (jeśli jest zdefiniowany) ---
         if video_path_db:
             try:
                 # Przykładowa konfiguracja – DOSTOSUJ klucze do swoich settings
                 real_loc_on_server = settingsDB['real-location-on-server']  # np. "/var/www/app"
-                # jeżeli video_path_db jest ścieżką "URL-ową" zaczynającą się od domeny,
-                # trzeba ją oczyścić; jeśli to ścieżka względna od root-a, lstrip('/')
+
+                # jeżeli video_path_db jest ścieżką URL (z domeną), czyścimy domenę
                 if video_path_db.startswith('http://') or video_path_db.startswith('https://'):
-                    # jeśli trzymasz pełny URL, wytnij prefix domeny
                     domain = settingsDB.get('main-domain', '')
                     video_rel_path = video_path_db.replace(domain, '').lstrip('/')
                 else:
@@ -15319,7 +15408,7 @@ def remove_presentation():
                 if os.path.exists(file_path):
                     os.remove(file_path)
                     msq.handle_error(
-                        f'Plik wideo {file_path} powiązany z prezentacją ID={set_post_id} został usunięty przez {session["username"]}.',
+                        f'Plik wideo {file_path} powiązany z prezentacją ID={set_post_id} został usunięty przez {username}.',
                         log_path=logFileName
                     )
                 else:
@@ -15334,11 +15423,11 @@ def remove_presentation():
                 )
 
         msq.handle_error(
-            f'Prezentacja ID={set_post_id} została usunięta przez {session["username"]}!',
+            f'Prezentacja ID={set_post_id} została usunięta przez {username}!',
             log_path=logFileName
         )
         flash("Prezentacja została usunięta.", "success")
-        return redirect(url_for('presentation_view'))  # dostosuj do swojego widoku listy
+        return redirect(url_for('presentation_view'))
 
     return redirect(url_for('index'))
 

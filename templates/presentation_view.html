@@ -344,7 +344,10 @@
                                         </a>
                                     </div>
                                     <div class="text-end" style="max-width: 80px;">
-                                        {% if post_data.author == username or userperm["presentation-gold"] %}
+                                        {% set is_owner = (post_data['author'] == username) 
+                                                            or (post_data['created_by'] == username) 
+                                                            or userperm['presentation-gold'] == 1 %}
+                                        {% if is_owner %}
                                         <form 
                                             method="POST" 
                                             id="remove_presentation_{{post_id}}" 
