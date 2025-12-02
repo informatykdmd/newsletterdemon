@@ -15218,7 +15218,7 @@ def download_dev_script(slot, platform):
     # HUB_URL = http://raspberrypi-tv:5000 lub to, co masz w settings
     # HUB_URL = settingsDB.get("hub-url", "http://raspberrypi-tv:5000")
     HUB_URL = 'http://192.168.1.248:8443'
-    AMPIO_TOKEN = 'supersecret'
+    AMPIO_TOKEN = 'supersekret'
     # --- sprawdź, czy mamy token ---
     if not AMPIO_TOKEN:
         # możesz zalogować ostrzeżenie, że token nie jest skonfigurowany
