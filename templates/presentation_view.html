@@ -270,18 +270,28 @@
 
                         {% for post_data in presentations_list %}
                             {% set post_id  = post_data['id'] %}
-                            <!-- linia contentu tabeli ciemna-->
-                            <div class="presentation-row" data-presentation-id="{{ post_id }}">
+                                <!-- linia contentu tabeli ciemna-->
+                                <div class="presentation-row"
+                                    data-presentation-id="{{ post_id }}"
+                                    data-status="{{ post_data['status'] }}"
+                                    data-sync="{{ post_data['sync'] }}"
+                                    data-published-at="{{ post_data['published_at'] or '' }}"
+                                    data-last-sync-at="{{ post_data['last_sync_at'] or '' }}"
+                                    data-last-sync-status="{{ post_data['last_sync_status'] or '' }}"
+                                    data-last-sync-error="{{ post_data['last_sync_error'] or '' }}">
+
                                 <div class="row klej {% if loop.index is even %}formatuj-light-line{% else %}formatuj-dark-line{% endif %}" >
                                     <div class="d-none d-lg-block formatuj-maly-font" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         {{post_id}}
                                     </div>
                                     <div class="d-lg-none" style="max-width: 30px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                        {% if post_data['status'] == 1 %}
-                                            <span class="text-warning"><i class="bi bi-lightbulb-fill"></i></span>
-                                        {% else %}
-                                            <span class="text-secondary"><i class="bi bi-lightbulb-fill"></i></span>
-                                        {% endif %}
+                                        <span id="status_icon_mobile_{{ post_id }}">
+                                            {% if post_data['status'] == 1 %}
+                                                <span class="text-{% if post_data.slot == 'green' %}success{% elif post_data.slot == 'silver' %}info{% elif post_data.slot == 'gold' %}warning{% else %}primary{% endif %}"><i class="bi bi-lightbulb-fill"></i></span>
+                                            {% else %}
+                                                <span class="text-secondary"><i class="bi bi-lightbulb-fill"></i></span>
+                                            {% endif %}
+                                        </span>
                                     </div>
                                     <div  class="col-xl-8 col-md-8 col-sm-10 formatuj-maly-font" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -302,12 +312,15 @@
                                     </div>
                                     <div  class="d-none d-lg-block" style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            {% if post_data['status'] == 1 %}
-                                                <span class="text-warning"><i class="bi bi-lightbulb-fill"></i></span>
-                                            {% else %}
-                                                <span class="text-secondary"><i class="bi bi-lightbulb-fill"></i></span>
-                                            {% endif %}
+                                            <span id="status_icon_table_{{ post_id }}">
+                                                {% if post_data['status'] == 1 %}
+                                                    <span class="text-{% if post_data.slot == 'green' %}success{% elif post_data.slot == 'silver' %}info{% elif post_data.slot == 'gold' %}warning{% else %}primary{% endif %}"><i class="bi bi-lightbulb-fill"></i></span>
+                                                {% else %}
+                                                    <span class="text-secondary"><i class="bi bi-lightbulb-fill"></i></span>
+                                                {% endif %}
+                                            </span>
                                         </a>
+
                                     </div>
                                     <div class="d-none d-xl-block" style="max-width: 80px;"
                                         data-bs-toggle="collapse"
@@ -1169,16 +1182,41 @@
             // Informacyjnie
             showToast('Wymuszono ponowną synchronizację. RPi pobierze plik przy najbliższym cyklu.', 'success');
 
+            // if (btn) {
+            //     btn.disabled = true;
+            //     btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Oczekuje na synchronizację';
+            // }
+
+            // // UI: zmień ikonkę w wierszu na "wymagana synchronizacja"
+            // updateRowSyncIconPending(postId);
+
+            // // odpal monitor statusu
+            // startSyncStatusMonitor(postId);
             if (btn) {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Oczekuje na synchronizację';
             }
 
-            // UI: zmień ikonkę w wierszu na "wymagana synchronizacja"
-            updateRowSyncIconPending(postId);
+            // UI: natychmiast ustaw stan "wymagana synchronizacja" również w tabeli i karcie
+            (function () {
+                const rowEl = document.querySelector(`.presentation-row[data-presentation-id="${postId}"]`);
+                const ds = rowEl ? rowEl.dataset : {};
 
-            // odpal monitor statusu
-            startSyncStatusMonitor(postId);
+                const d = {
+                    status: 1, // bo guzik w ogóle jest widoczny tylko gdy była aktywna + zsynchronizowana
+                    sync: 0,
+                    published_at: ds.publishedAt || '',
+                    last_sync_at: ds.lastSyncAt || '',
+                    last_sync_status: 'manual_force_resync',
+                    last_sync_error: ''
+                };
+
+                updatePresentationStatusUI(postId, d);
+            })();
+
+        // odpal monitor statusu
+        startSyncStatusMonitor(postId);
+
         })
         .catch(err => {
             console.error('forceResync error:', err);
@@ -1219,8 +1257,11 @@
                 const d = payload.data;
 
                 // Aktualizacja UI na podstawie danych z backendu
-                updateRowSyncIconFromData(postId, d);
-                updateStatusCardFromData(postId, d);
+                // updateRowSyncIconFromData(postId, d);
+                // updateStatusCardFromData(postId, d);
+
+                // Aktualizacja UI na podstawie danych z backendu v.2
+                updatePresentationStatusUI(postId, d);
 
                 // Zakończ monitor, jeśli:
                 // - mamy sukces synchronizacji aktywnej prezentacji
@@ -1282,7 +1323,8 @@
                 }
 
                 // tu używamy Twojej logiki
-                updateRowSyncIconFromData(postId, data.data);
+                // updateRowSyncIconFromData(postId, data.data);
+                updatePresentationStatusUI(postId, data.data);
                 return data.data;
             })
             .catch((err) => {
@@ -1314,6 +1356,19 @@
         if (el) {
             el.classList.remove('d-none');
         }
+    }
+
+    function setStatusIconInTable(postId, statusValue) {
+        const mobileEl = document.getElementById(`status_icon_mobile_${postId}`);
+        const tableEl  = document.getElementById(`status_icon_table_${postId}`);
+
+        const htmlActive = '<span class="text-warning"><i class="bi bi-lightbulb-fill"></i></span>';
+        const htmlInactive = '<span class="text-secondary"><i class="bi bi-lightbulb-fill"></i></span>';
+
+        const html = (String(statusValue) === '1' || statusValue === 1) ? htmlActive : htmlInactive;
+
+        if (mobileEl) mobileEl.innerHTML = html;
+        if (tableEl)  tableEl.innerHTML  = html;
     }
 
     function updateRowSyncIconPending(postId) {
@@ -1441,6 +1496,40 @@
         setTextOrBrak(`last_sync_error_${postId}`, d.last_sync_error, 'brak');
 
         // tu można też pogrzebać w klasach card_class, ale to już level 2 :)
+    }
+
+    function updatePresentationStatusUI(postId, d) {
+        // 1) zaktualizuj data-* w wierszu
+        const rowEl = document.querySelector(`.presentation-row[data-presentation-id="${postId}"]`);
+        if (rowEl) {
+            if (typeof d.status !== 'undefined') {
+                rowEl.dataset.status = d.status;
+            }
+            if (typeof d.sync !== 'undefined') {
+                rowEl.dataset.sync = d.sync;
+            }
+            if (typeof d.published_at !== 'undefined') {
+                rowEl.dataset.publishedAt = d.published_at || '';
+            }
+            if (typeof d.last_sync_at !== 'undefined') {
+                rowEl.dataset.lastSyncAt = d.last_sync_at || '';
+            }
+            if (typeof d.last_sync_status !== 'undefined') {
+                rowEl.dataset.lastSyncStatus = d.last_sync_status || '';
+            }
+            if (typeof d.last_sync_error !== 'undefined') {
+                rowEl.dataset.lastSyncError = d.last_sync_error || '';
+            }
+        }
+
+        // 2) ikony statusu w tabeli (mobile + desktop)
+        if (typeof d.status !== 'undefined') {
+            setStatusIconInTable(postId, d.status);
+        }
+
+        // 3) ikony i teksty w karcie statusu
+        updateRowSyncIconFromData(postId, d);
+        updateStatusCardFromData(postId, d);
     }
 
     
