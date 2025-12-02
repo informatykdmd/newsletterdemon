@@ -759,27 +759,35 @@
 
                         <!-- File used -->
                         <div class="mt-3 w-50">
-                            <span class="fs-6">Łączny rozmiar wszystkich prezentacji:</span>
+                            <span class="fs-6"><i class="bi bi-database-fill"></i></span>
                             <strong>{{ total_mb }} MB</strong> z <strong>{{ quota_mb }} MB</strong>
                             <div class="mt-1">
                                 {% set width_used_percent = 'style="width:' ~ used_percent ~ '%;"' %}
     
                                 {% if used_percent <= 25 %}
+                                    <span class="fs-6 text-success"><i class="bi bi-database-fill"></i></span>
+                                    <strong>{{ total_mb }} MB</strong> z <strong>{{ quota_mb }} MB</strong>
                                     <div class="progress" role="progressbar" aria-label="relaxed" aria-valuenow="{{ used_percent }}" aria-valuemin="0" aria-valuemax="100">
                                         <div class="progress-bar text-bg-success" {{ width_used_percent }}>{{ used_percent }}%</div>
                                     </div>
     
                                 {% elif used_percent > 25 and used_percent < 50 %}
+                                    <span class="fs-6 text-info"><i class="bi bi-database-fill"></i></span>
+                                    <strong>{{ total_mb }} MB</strong> z <strong>{{ quota_mb }} MB</strong>
                                     <div class="progress" role="progressbar" aria-label="cool" aria-valuenow="{{ used_percent }}" aria-valuemin="26" aria-valuemax="50">
                                         <div class="progress-bar text-bg-info" {{ width_used_percent }}>{{ used_percent }}%</div>
                                     </div>
     
                                 {% elif used_percent >= 50 and used_percent < 75 %}
+                                    <span class="fs-6 text-warning"><i class="bi bi-database-fill"></i></span>
+                                    <strong>{{ total_mb }} MB</strong> z <strong>{{ quota_mb }} MB</strong>
                                     <div class="progress" role="progressbar" aria-label="warning" aria-valuenow="{{ used_percent }}" aria-valuemin="51" aria-valuemax="75">
                                         <div class="progress-bar text-bg-warning" {{ width_used_percent }}>{{ used_percent }}%</div>
                                     </div>
     
                                 {% else %}
+                                    <span class="fs-6 text-danger"><i class="bi bi-database-fill"></i></span>
+                                    <strong>{{ total_mb }} MB</strong> z <strong>{{ quota_mb }} MB</strong>
                                     <div class="progress" role="progressbar" aria-label="danger" aria-valuenow="{{ used_percent }}" aria-valuemin="75" aria-valuemax="100">
                                         <div class="progress-bar text-bg-danger" {{ width_used_percent }}>{{ used_percent }}%</div>
                                     </div>
