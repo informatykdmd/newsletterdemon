@@ -15218,8 +15218,7 @@ def download_dev_script(slot, platform):
     # HUB_URL = http://raspberrypi-tv:5000 lub to, co masz w settings
     # HUB_URL = settingsDB.get("hub-url", "http://raspberrypi-tv:5000")
     HUB_URL = 'http://192.168.1.248:8443'
-    AMPIO_TOKEN = 'supersekret'
-
+    AMPIO_TOKEN = 'supersecret'
     # --- sprawdź, czy mamy token ---
     if not AMPIO_TOKEN:
         # możesz zalogować ostrzeżenie, że token nie jest skonfigurowany
@@ -15258,7 +15257,7 @@ curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
         content = f"""#!/bin/bash
 echo "Wywolywanie trigera dla slota: {slot}"
 echo "UWAGA: iOS wymaga uruchomienia skryptu przez aplikacje typu iSH/Shell."
-curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
+curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}"""
     # --- log ---
     msq.handle_error(
         f'User {username} pobral DEV SCRIPT: {filename}',
