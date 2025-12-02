@@ -273,6 +273,7 @@
                                 <!-- linia contentu tabeli ciemna-->
                                 <div class="presentation-row"
                                     data-presentation-id="{{ post_id }}"
+                                    data-slot="{{ post_data['slot'] }}"
                                     data-status="{{ post_data['status'] }}"
                                     data-sync="{{ post_data['sync'] }}"
                                     data-published-at="{{ post_data['published_at'] or '' }}"
@@ -1362,14 +1363,38 @@
         const mobileEl = document.getElementById(`status_icon_mobile_${postId}`);
         const tableEl  = document.getElementById(`status_icon_table_${postId}`);
 
-        const htmlActive = '<span class="text-warning"><i class="bi bi-lightbulb-fill"></i></span>';
+        // pobieramy element wiersza i slot
+        const rowEl = document.querySelector(`.presentation-row[data-presentation-id="${postId}"]`);
+        const slot = rowEl ? rowEl.dataset.slot : 'default';
+
+        let htmlActive;
+
+        // kolor wg slotu
+        switch (slot) {
+            case 'gold':
+                htmlActive = '<span class="text-warning"><i class="bi bi-lightbulb-fill"></i></span>';
+                break;
+            case 'silver':
+                htmlActive = '<span class="text-info"><i class="bi bi-lightbulb-fill"></i></span>';
+                break;
+            case 'green':
+                htmlActive = '<span class="text-success"><i class="bi bi-lightbulb-fill"></i></span>';
+                break;
+            default:
+                htmlActive = '<span class="text-primary"><i class="bi bi-lightbulb-fill"></i></span>';
+                break;
+        }
+
         const htmlInactive = '<span class="text-secondary"><i class="bi bi-lightbulb-fill"></i></span>';
 
-        const html = (String(statusValue) === '1' || statusValue === 1) ? htmlActive : htmlInactive;
+        const html = (String(statusValue) === '1' || statusValue === 1)
+            ? htmlActive
+            : htmlInactive;
 
         if (mobileEl) mobileEl.innerHTML = html;
         if (tableEl)  tableEl.innerHTML  = html;
     }
+
 
     function updateRowSyncIconPending(postId) {
         hideAllSyncIcons(postId);
