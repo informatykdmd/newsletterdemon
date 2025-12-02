@@ -774,6 +774,7 @@
             this.videoDurationSec  = document.getElementById(`${formId}-videodurationsec`);
             this.videoWidth  = document.getElementById(`${formId}-videowidth`);
             this.videoHeight  = document.getElementById(`${formId}-videoheight`);
+            this.videoSize  = document.getElementById(`${formId}-videosize`);
             this.file        = null;
             this.existingVideoUrl = existingVideoUrl;
 
@@ -958,6 +959,7 @@
                 this.videoDurationSec.value = duration ? this.formatDuration(duration) : '0 min 0 s'
                 this.videoWidth.value = width ? width : '0'
                 this.videoHeight.value = height ? height : '0'
+                this.videoSize.value = sizeBytes ? sizeBytes : '7000000'
 
                 
             };
