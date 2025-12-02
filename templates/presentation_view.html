@@ -735,9 +735,11 @@
             
 
                         <!-- File used -->
-                        Łączny rozmiar wszystkich prezentacji:
-                        <strong>{{ total_mb }} MB</strong> z <strong>{{ quota_mb }} MB</strong>
                         <div class="mt-3">
+                            Łączny rozmiar wszystkich prezentacji:
+                            <strong>{{ total_mb }} MB</strong> z <strong>{{ quota_mb }} MB</strong>
+                        </div>
+                        <div class="mt-1">
                             {% set width_used_percent = 'style="width:' ~ used_percent ~ '%;"' %}
 
                             {% if used_percent <= 25 %}
