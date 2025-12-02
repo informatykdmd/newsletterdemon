@@ -706,7 +706,8 @@ color:#969696;
   background-color: #150e04;
   color:#f5d400;
   border-radius: 5px;
-  padding: 5px;
+  padding: 5px 5px 15px 15px;
+  font-size: 10px;
 }
 .slot-line-silver {
   border: 2px #768081;
