@@ -15216,7 +15216,8 @@ def download_dev_script(slot, platform):
 
     # --- adres Huba ---
     # HUB_URL = http://raspberrypi-tv:5000 lub to, co masz w settings
-    HUB_URL = settingsDB.get("hub-url", "http://raspberrypi-tv:5000")
+    # HUB_URL = settingsDB.get("hub-url", "http://raspberrypi-tv:5000")
+    HUB_URL = 'http://192.168.1.248:8443'
 
     # --- skrypty dla różnych platform ---
     if platform == "windows":
