@@ -775,6 +775,7 @@
             this.videoWidth  = document.getElementById(`${formId}-videowidth`);
             this.videoHeight  = document.getElementById(`${formId}-videoheight`);
             this.videoSize  = document.getElementById(`${formId}-videosize`);
+            console.log("this.videoSize:", this.videoSize);
             this.file        = null;
             this.existingVideoUrl = existingVideoUrl;
 
@@ -956,12 +957,11 @@
 
                     </div>
                 `;
-                this.videoDurationSec.value = duration ? this.formatDuration(duration) : '0 min 0 s'
-                this.videoWidth.value = width ? width : '0'
-                this.videoHeight.value = height ? height : '0'
-                this.videoSize.value = sizeBytes ? sizeBytes : '7000000'
+                this.videoDurationSec.value = duration ? this.formatDuration(duration) : '0 min 0 s';
+                this.videoWidth.value = width ? width : '0';
+                this.videoHeight.value = height ? height : '0';
+                this.videoSize.value = sizeBytes ? sizeBytes : '7000000';
 
-                
             };
 
             video.onerror = () => {
