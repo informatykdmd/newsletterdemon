@@ -396,9 +396,7 @@
                                                 </a>
                                             </div>
                                             {% if post_data['video_path'] %}
-                                                <a href="{{ url_for('presentation_download', presentation_id=post_id) }}"
-                                                class="ms-1 me-1"
-                                                title="Pobierz wideo">
+                                                <a href="{{ url_for('presentation_download', presentation_id=post_id) }}" title="Pobierz wideo">
                                                     <i class="bi bi-download"></i>
                                                 </a>
                                             {% endif %}

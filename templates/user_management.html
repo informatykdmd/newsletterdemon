@@ -1373,10 +1373,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['users'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_1_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_1_{{user_id}}_0" {% if userperm['users'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_1_{{user_id}}_0">Zarządzanie Użytkownikami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_1_{{user_id}}_1" checked/>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_1_{{user_id}}_1" checked {% if userperm['users'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_1_{{user_id}}_1">Zarządzanie Użytkownikami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1394,10 +1394,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['brands'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_2_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_2_{{user_id}}_0" {% if userperm['brands'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_2_{{user_id}}_0">Zarządzanie Brendami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_2_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_2_{{user_id}}_1" checked {% if userperm['brands'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_2_{{user_id}}_1">Zarządzanie Brendami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1416,10 +1416,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['blog'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_3_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_3_{{user_id}}_0" {% if userperm['blog'] == 0 %}disabled{% endif %} />
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_3_{{user_id}}_0">Zarządzanie Blogiem</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_3_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_3_{{user_id}}_1" checked {% if userperm['blog'] == 0 %}disabled{% endif %} />
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_3_{{user_id}}_1">Zarządzanie Blogiem</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1437,10 +1437,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['subscribers'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_4_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_4_{{user_id}}_0" {% if userperm['subscribers'] == 0 %}disabled{% endif %} />
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_4_{{user_id}}_0">Zarządzanie Subskrybentami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_4_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_4_{{user_id}}_1" checked {% if userperm['subscribers'] == 0 %}disabled{% endif %} />
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_4_{{user_id}}_1">Zarządzanie Subskrybentami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1458,10 +1458,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['commnets'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_5_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_5_{{user_id}}_0" {% if userperm['commnets'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_5_{{user_id}}_0">Zarządzanie Komentarzami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_5_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_5_{{user_id}}_1" checked {% if userperm['commnets'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_5_{{user_id}}_1">Zarządzanie Komentarzami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1479,10 +1479,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_6_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_6_{{user_id}}_0" {% if userperm['team'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_6_{{user_id}}_0">Zarządzanie Personelem</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_6_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_6_{{user_id}}_1" checked {% if userperm['team'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_6_{{user_id}}_1">Zarządzanie Personelem</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1500,10 +1500,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['newsletter'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_8_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_8_{{user_id}}_0" {% if userperm['newsletter'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_8_{{user_id}}_0">Zarządzanie Newsletterem</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_8_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_8_{{user_id}}_1" checked {% if userperm['newsletter'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_8_{{user_id}}_1">Zarządzanie Newsletterem</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1512,7 +1512,7 @@
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
+                                                                            {% if users_data['uprawnienia']['permissions'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}" disabled/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
                                                                             {% else %}
@@ -1520,11 +1520,11 @@
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
                                                                             {% endif %}
                                                                         {% else %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}_0" />
+                                                                            {% if users_data['uprawnienia']['permissions'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}_0" {% if userperm['permissions'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_7_{{user_id}}_0">Zarządzanie Uprawnieniami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}_1" checked {% if userperm['permissions'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_7_{{user_id}}_1">Zarządzanie Uprawnieniami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1543,10 +1543,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['estate'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_16_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_16_{{user_id}}_0" {% if userperm['estate'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_16_{{user_id}}_0">Zarządzanie Ogłoszeniami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_16_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_16_{{user_id}}_1" checked {% if userperm['estate'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_16_{{user_id}}_1">Zarządzanie Ogłoszeniami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1565,10 +1565,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['career'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_17_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_17_{{user_id}}_0" {% if userperm['career'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_17_{{user_id}}_0">Zarządzanie Karierą</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_17_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_17_{{user_id}}_1" checked {% if userperm['career'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_17_{{user_id}}_1">Zarządzanie Karierą</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -1587,10 +1587,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['fbhidden'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}_0" {% if userperm['fbhidden'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_18_{{user_id}}_0">Zarządzanie Anonimowymi Kampaniami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}_1" checked {% if userperm['fbhidden'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultLG_18_{{user_id}}_1">Zarządzanie Anonimowymi Kampaniami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2155,10 +2155,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['users'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_1_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_1_{{user_id}}_0" {% if userperm['users'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_1_{{user_id}}_0">Zarządzanie Użytkownikami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_1_{{user_id}}_1" checked/>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_1_{{user_id}}_1" checked {% if userperm['users'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_1_{{user_id}}_1">Zarządzanie Użytkownikami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2176,10 +2176,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['brands'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_2_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_2_{{user_id}}_0" {% if userperm['brands'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_2_{{user_id}}_0">Zarządzanie Brendami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_2_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_2_{{user_id}}_1" checked {% if userperm['brands'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_2_{{user_id}}_1">Zarządzanie Brendami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2198,10 +2198,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['blog'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_3_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_3_{{user_id}}_0" {% if userperm['blog'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_3_{{user_id}}_0">Zarządzanie Blogiem</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_3_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_3_{{user_id}}_1" checked {% if userperm['blog'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_3_{{user_id}}_1">Zarządzanie Blogiem</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2219,10 +2219,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['subscribers'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_4_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_4_{{user_id}}_0" {% if userperm['subscribers'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_4_{{user_id}}_0">Zarządzanie Subskrybentami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_4_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_4_{{user_id}}_1" checked {% if userperm['subscribers'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_4_{{user_id}}_1">Zarządzanie Subskrybentami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2240,10 +2240,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['commnets'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_5_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_5_{{user_id}}_0" {% if userperm['commnets'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_5_{{user_id}}_0">Zarządzanie Komentarzami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_5_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_5_{{user_id}}_1" checked {% if userperm['commnets'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_5_{{user_id}}_1">Zarządzanie Komentarzami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2261,10 +2261,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_6_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_6_{{user_id}}_0" {% if userperm['team'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_6_{{user_id}}_0">Zarządzanie Personelem</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_6_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_6_{{user_id}}_1" checked {% if userperm['team'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_6_{{user_id}}_1">Zarządzanie Personelem</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2282,10 +2282,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['newsletter'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_8_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_8_{{user_id}}_0" {% if userperm['newsletter'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_8_{{user_id}}_0">Zarządzanie Newsletterem</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_8_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_8_{{user_id}}_1" checked {% if userperm['newsletter'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_8_{{user_id}}_1">Zarządzanie Newsletterem</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2294,7 +2294,7 @@
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
+                                                                            {% if users_data['uprawnienia']['permissions'] == 0 %}
                                                                                 <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}" disabled/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
                                                                             {% else %}
@@ -2302,11 +2302,11 @@
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
                                                                             {% endif %}
                                                                         {% else %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}_0" />
+                                                                            {% if users_data['uprawnienia']['permissions'] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}_0" {% if userperm['permissions'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_7_{{user_id}}_0">Zarządzanie Uprawnieniami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}_1" checked {% if userperm['permissions'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_7_{{user_id}}_1">Zarządzanie Uprawnieniami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2325,10 +2325,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['estate'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_16_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_16_{{user_id}}_0" {% if userperm['estate'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_16_{{user_id}}_0">Zarządzanie Ogłoszeniami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_16_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_16_{{user_id}}_1" checked {% if userperm['estate'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_16_{{user_id}}_1">Zarządzanie Ogłoszeniami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2347,10 +2347,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['career'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_17_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_17_{{user_id}}_0" {% if userperm['career'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_17_{{user_id}}_0">Zarządzanie Karierą</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_17_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_17_{{user_id}}_1" checked {% if userperm['career'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_17_{{user_id}}_1">Zarządzanie Karierą</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2369,10 +2369,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['fbhidden'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}_0" {% if userperm['fbhidden'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_18_{{user_id}}_0">Zarządzanie Anonimowymi Kampaniami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}_1" checked {% if userperm['fbhidden'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_18_{{user_id}}_1">Zarządzanie Anonimowymi Kampaniami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2391,10 +2391,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['realizations'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}_0" {% if userperm['realizations'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}_0">Zarządzanie Realizacjami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}_1" checked {% if userperm['realizations'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}_1">Zarządzanie Realizacjami</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2413,16 +2413,16 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['presentation'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}_0" {% if userperm['presentation'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}_0">Zarządzanie Prezentacjami (green)</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}_1" checked {% if userperm['presentation'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}_1">Zarządzanie Prezentacjami (green)</label>
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                <!-- kolejne uprawnienia presentation-silver id 20-->
+                                                                <!-- kolejne uprawnienia presentation-silver id 21-->
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
@@ -2435,10 +2435,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['presentation-silver'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}_0" {% if userperm['presentation-silver'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}_0">Zarządzanie Prezentacjami (silver)</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}_1" checked {% if userperm['presentation-silver'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}_1">Zarządzanie Prezentacjami (silver)</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2457,10 +2457,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['presentation-gold'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}_0"  checked {% if userperm['presentation-gold'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}_0">Zarządzanie Prezentacjami (gold)</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}_1" checked  checked {% if userperm['presentation-gold'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}_1">Zarządzanie Prezentacjami (gold)</label>
                                                                             {% endif %}
                                                                         {% endif %}
@@ -2478,10 +2478,10 @@
                                                                             {% endif %}
                                                                         {% else %}
                                                                             {% if users_data['uprawnienia']['settings'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_9_{{user_id}}_0" />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_9_{{user_id}}_0" {% if userperm['settings'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_9_{{user_id}}_0">Zarządzanie Ustawieniami</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_9_{{user_id}}_1" checked />
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_9_{{user_id}}_1" checked {% if userperm['settings'] == 0 %}disabled{% endif %}/>
                                                                                 <label class="form-check-label" for="flexSwitchCheckDefaultXL_9_{{user_id}}_1">Zarządzanie Ustawieniami</label>
                                                                             {% endif %}
                                                                         {% endif %}
