@@ -348,6 +348,7 @@ def generator_settingsDB():
         'elitehome': take_data_settingsDB('elitehome'),
         'inwestycje': take_data_settingsDB('inwestycje'),
         'instalacje': take_data_settingsDB('instalacje'),
+        'presentations-quota-mb': take_data_settingsDB('presentations_quota_mb'),
         'smtp_admin': {
             'smtp_server': take_data_settingsDB('admin_smtp_server'),
             'smtp_port': int(take_data_settingsDB('admin_smtp_port')),
@@ -1611,6 +1612,7 @@ def generate_file_hash(file_path, chunk_size=8192):
 
 settingsDB = generator_settingsDB()
 app.config['PER_PAGE'] = generator_settingsDB()['pagination']  # Określa liczbę elementów na stronie
+PRESENTATION_QUOTA_MB = settingsDB.get("presentations-quota-mb", 0)
 
 @app.route('/')
 def index():
@@ -14675,6 +14677,11 @@ def presentation_view():
     query = """SELECT * FROM presentations;"""
     presentations_items_all = db.getFrom(query=query, as_dict=True)
 
+    total_bytes = sum(p['video_size_bytes'] or 0 for p in presentations_items_all)
+    total_mb = round(total_bytes / (1024*1024), 2)
+    # quota_mb = PRESENTATION_QUOTA_MB
+    used_percent = int(total_mb / PRESENTATION_QUOTA_MB * 100) if PRESENTATION_QUOTA_MB else 0
+
     presentations_items = []
     for item in presentations_items_all:
         if item.get("slot", None) == "green":
@@ -14703,8 +14710,11 @@ def presentation_view():
             userperm=session['userperm'], 
             user_brands=session['brands'], 
             presentations_list=presentations_list,
-            pagination=pagination
-            )
+            pagination=pagination,
+            total_mb=total_mb,
+            quota_mb=PRESENTATION_QUOTA_MB,
+            used_percent=used_percent
+        )
 
 
 @app.route('/presentation-sync-status', methods=['GET'])
@@ -14803,16 +14813,17 @@ def presentation_save():
         return redirect(url_for('index'))
 
     # --- dane z formularza ---
-    offer_id    = request.form.get('offer_id') or request.form.get('OfferID')
-    is_edit     = request.form.get('is_edit') == '1'
-    title       = (request.form.get('title') or '').strip()
-    description = (request.form.get('description') or '').strip()
-    slot        = (request.form.get('slot') or '').strip().lower()
-    author      = (request.form.get('author') or session.get('username'))
-    target      = request.form.get('target') or 'presentation'
-    duration    = request.form.get('video_duration_sec', '0 min 0 s')
-    v_width     = request.form.get('video_width', '0') 
-    v_height    = request.form.get('video_height', '0')
+    offer_id        = request.form.get('offer_id') or request.form.get('OfferID')
+    is_edit         = request.form.get('is_edit') == '1'
+    title           = (request.form.get('title') or '').strip()
+    description     = (request.form.get('description') or '').strip()
+    slot            = (request.form.get('slot') or '').strip().lower()
+    author          = (request.form.get('author') or session.get('username'))
+    target          = request.form.get('target') or 'presentation'
+    duration        = request.form.get('video_duration_sec', '0 min 0 s')
+    v_width         = request.form.get('video_width', '0') 
+    v_height        = request.form.get('video_height', '0')
+    v_size_bytes    = request.form.get('video_size_bytes', '0')
 
     video_file  = request.files.get('video_file')  # może być None przy edycji bez zmiany wideo
 
@@ -15039,10 +15050,11 @@ def presentation_save():
                 video_hash=%s,
                 video_duration_sec = %s,
                 video_width = %s,
-                video_height = %s
+                video_width = %s,
+                video_size_bytes = %s
             WHERE id = %s
         """
-        upd_params = (video_url, video_hash, duration, v_width, v_height, offer_id)
+        upd_params = (video_url, video_hash, duration, v_width, v_height, v_size_bytes, offer_id)
         ok_video = db.executeTo(upd_q, upd_params)
 
         if not ok_video:

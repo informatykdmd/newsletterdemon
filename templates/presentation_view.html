@@ -120,6 +120,9 @@
                                 <div  class="d-none d-xl-block" style="max-width: 80px;">
                                     <i class="bi bi-incognito"></i>
                                 </div>
+                                <div class="d-none d-lg-block" style="max-width: 100px;">
+                                    Rozmiar
+                                </div>
                                 <div  class="d-none d-lg-block" style="max-width: 150px;">
                                     Data publikacji
                                 </div>
@@ -243,6 +246,7 @@
                                     <input type="hidden" name="video_duration_sec" id="9999999-videodurationsec" value="" />
                                     <input type="hidden" name="video_width" id="9999999-videowidth" value="" />
                                     <input type="hidden" name="video_height" id="9999999-videoheight" value="" />
+                                    <input type="hidden" name="video_size_bytes" id="9999999-videosize" value="" />
                                     
                                     <input type="hidden" name="target" id="target_9999999" value="presentation" />
 
@@ -337,6 +341,13 @@
                                         </div>
                                     </div>
 
+                                    <div class="d-none d-lg-block" style="max-width: 100px;">
+                                        {% if post_data['video_size_bytes'] %}
+                                            {{ (post_data['video_size_bytes'] / (1024*1024))|round(2) }} MB
+                                        {% else %}
+                                            –
+                                        {% endif %}
+                                    </div>
 
                                     <div class="d-none d-lg-block" style="max-width: 150px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
@@ -512,6 +523,7 @@
                                                 <input type="hidden" name="video_duration_sec" id="{{post_id}}-videodurationsec" value="" />
                                                 <input type="hidden" name="video_width" id="{{post_id}}-videowidth" value="" />
                                                 <input type="hidden" name="video_height" id="{{post_id}}-videoheight" value="" />
+                                                <input type="hidden" name="video_size_bytes" id="{{post_id}}-videosize" value="" />
                                                 
                                                 <!-- pasek progresu dla EDYCJI prezentacji -->
                                                 <div id="uploadProgress_{{post_id}}" class="progress d-none mt-3" style="height: 5px;">
@@ -730,6 +742,14 @@
                                     <li class="page-item">{{ pagination.next }}</li>
                                 </ul>
                             </nav>
+                        </div>
+
+                        <div class="mt-3">
+                            <div class="alert alert-secondary">
+                                Łączny rozmiar wszystkich prezentacji:
+                                <strong>{{ total_mb }} MB</strong> z <strong>{{ quota_mb }} MB</strong>
+                                ({{ used_percent }}%).
+                            </div>
                         </div>
 {% endblock %}
 {% block bottom_script %}
@@ -1015,6 +1035,7 @@
         const videodurationsecEl  = document.getElementById(formId + '-videodurationsec');
         const videowidthEl  = document.getElementById(formId + '-videowidth');
         const videoheightEl  = document.getElementById(formId + '-videoheight');
+        const videosizeEl  = document.getElementById(formId + '-videosize');
         
 
         if (!titleEl || !descEl || !slotEl) {
@@ -1030,6 +1051,7 @@
         const videodurationsec  = (videodurationsecEl.value || '').trim(); 
         const videowidth  = (videowidthEl.value || '').trim(); 
         const videoheight  = (videoheightEl.value || '').trim(); 
+        const videosize  = (videosizeEl.value || '').trim(); 
 
         if (!title) {
             showToast('Podaj tytuł prezentacji.', 'warning', posClassY, posClassX);
@@ -1065,6 +1087,7 @@
             fd.append('video_duration_sec', videodurationsec);
             fd.append('video_width', videowidth);
             fd.append('video_height', videoheight);
+            fd.append('video_size_bytes', videosize);
 
 
             if (authorEl) fd.append('author', authorEl.value || '');
