@@ -14692,8 +14692,11 @@ def presentation_view():
             and session['userperm'].get('presentation-silver', 0) == 1 \
                 and item.get("author", None) == session["username"]:
             presentations_items.append(item)
+        elif item.get("slot", None) == "silver" \
+            and session['userperm'].get('presentation-gold', 0) == 1:
+            presentations_items.append(item)
         elif item.get("slot", None) == "gold" \
-            and session['userperm'].get('presentation-gold', 0) == 1\
+            and (session['userperm'].get('presentation-gold', 0) == 1 or session['userperm'].get('presentation-silver', 0) == 1) \
                 and item.get("author", None) == session["username"]:
             presentations_items.append(item)
     
