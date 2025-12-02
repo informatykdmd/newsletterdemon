@@ -291,7 +291,7 @@
                                     </div>
                                     <div  class="d-none d-lg-block"  style="max-width: 120px;" data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
                                         <a data-bs-toggle="collapse" href="#collapse_id_{{post_id}}" role="button" aria-expanded="false" aria-controls="collapse_id_{{post_id}}">
-                                            <span class="display-6 formatuj-maly-font">{{post_data['author']}}</span>
+                                            <span class="display-6 formatuj-maly-font">@{{post_data['author']}}</span>
                                         </a>
                                     </div>
                                     
@@ -533,7 +533,7 @@
                                             {{ post_data['title'] }}
                                         </h5>
                                         <p class="text-muted mb-2" style="font-size: 12px;">
-                                            Slot: <strong>{{ post_data['slot']|upper }}</strong>
+                                            Slot: <strong class="slot-line-{% if post_data.slot == 'gold' %}gold{% elif post_data.slot == 'silver' %}silver{% else %}green{% endif %}">{{ post_data['slot']|upper }}</strong>
                                             {% if post_data.get('target') %}
                                                 &nbsp;|&nbsp; Target: <strong>{{ post_data['target'] }}</strong>
                                             {% endif %}
@@ -545,9 +545,9 @@
                                         <h6>Opis Prezentacji</h6>
                                         <p>{{ post_data['description']|safe }}</p>
 
-                                        <p class="mb-0">Autor: {{ post_data['author'] }}</p>
+                                        <p class="mb-0">Autor: @{{ post_data['author'] }}</p>
                                         {% if post_data.get('created_by') %}
-                                            <p class="mb-0">Utworzone przez: {{ post_data['created_by'] }}</p>
+                                            <p class="mb-0">Utworzone przez: @{{ post_data['created_by'] }}</p>
                                         {% endif %}
                                         <div class="mt-2">
                                             <form action="{{ url_for('update_presentation_status') }}" method="POST">
