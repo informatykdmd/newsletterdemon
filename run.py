@@ -439,15 +439,15 @@ def get_BrandAndPerm():
     return sort_brand_keys_dict, sort_perm_keys_dict
 
 
-def generator_userDataDB():
+def generator_userDataDB(neuralgic=True):
     took_usrD = take_data_table('*', 'admins')
     userData = []
     for data in took_usrD:
         theme = {
             'id': data[0], 
             'username': data[2],
-            'password': data[3], 
-            'salt' : data[4], 
+            'password': data[3] if neuralgic else None, 
+            'salt' : data[4] if neuralgic else None, 
             "email": data[5],
             "phone": '' if data[8] is None else data[8],
             "facebook": '' if data[9] is None else data[9],
@@ -1829,17 +1829,11 @@ def fetch_messages():
         msq.handle_error(f'UWAGA! wywołanie adresu endpointa /fetch-messages bez autoryzacji.', log_path=logFileName)
         return redirect(url_for('index'))
     get_messages_data = get_messages('last')
-    get_users_data = generator_userDataDB()
+    get_users_data = generator_userDataDB(False)
     messages = []
     for message in get_messages_data:
         for user_data in get_users_data:
-            # if message[0] == user_data['username'] or message[0] == 'aifa':
-            #     if message[0] != 'aifa':
-            #         ready_record = [message[0], message[1], message[2], user_data['avatar']]
-            #     else:
-            #         ready_record = [message[0], message[1], message[2], 'https://dmddomy.pl/images/team/aifa-1.jpg']
-            #     messages.append(ready_record)
-            #     break
+            
             special_users = {
                 'aifa': 'https://dmddomy.pl/images/team/aifa-1.jpg',
                 'gerina': 'https://dmddomy.pl/images/team/gerina-1.jpg',
@@ -2196,7 +2190,7 @@ def update_data_user():
             )
             if msq.insert_to_database(zapytanie_sql, dane):
                 flash('Dane zostały pomyślnie zaktualizowane.', 'success')
-                userDataDB = generator_userDataDB()
+                userDataDB = generator_userDataDB(False)
                 users_data = {}
                 for un in userDataDB: 
                     users_data[un['username']] = {
@@ -2287,7 +2281,7 @@ def update_avatar():
                         'UPDATE admins SET ADMIN_AVATAR = %s WHERE ID = %s;', 
                         (settingsDB['main-domain'] + settingsDB['avatar-pic-path'] + filename, set_ava_id)
                     )
-            userDataDB = generator_userDataDB()
+            userDataDB = generator_userDataDB(False)
             users_data = {}
             for un in userDataDB: 
                 users_data[un['username']] = {
@@ -2423,6 +2417,11 @@ def update_permission():
             msq.handle_error(f'UWAGA! Próba zarządzania brendami bez uprawnień przez {session["username"]}!', log_path=logFileName)
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
             return redirect(url_for('users'))
+        
+    if session['userperm' if perm_found else 'brands'][_sys_name] == 0:
+        msq.handle_error(f'UWAGA! Próba zmiany uprawnień wyzszego poziomu przez {session["username"]}!', log_path=logFileName)
+        flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
+        return redirect(url_for('users'))
         
     #Aktualizacja uprawnienia
     zapytanie_sql = f'''UPDATE admins SET {db_name} = %s WHERE ID = %s;'''
@@ -2713,7 +2712,7 @@ def save_post():
                     'DATE_TIME': autor[8]
                     }
             
-            users_data = generator_userDataDB()
+            users_data = generator_userDataDB(False)
             users_data_dict = {}
             for user in users_data:
                 users_data_dict[user['username']] = user
@@ -3182,7 +3181,7 @@ def users():
         flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
         return redirect(url_for('index'))
     
-    userDataDB = generator_userDataDB()
+    userDataDB = generator_userDataDB(False)
     all_users = userDataDB
 
     # Ustawienia paginacji
@@ -3207,73 +3206,6 @@ def users():
     names = [x['name'] for x in all_users]
 
     brands_DICT, perms_DICT = get_BrandAndPerm()
-
-
-    """
-    {% for vPerm in perms_DICT.values() %}
-
-    {% set _id = vPerm.get("perm_id") %}
-    {% set _sys_name = vPerm.get("sys_name") %}
-    {% set sys_label = vPerm.get("sys_label") %}
-
-    <div class="form-check form-switch">
-        <form class="formatuj-padding-lg" action="">
-            {% if userperm['permissions'] == 0 %}
-                {% if users_data['uprawnienia'][_sys_name] == 0 %}
-                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}" disabled/>
-                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}">{{sys_label}}</label>
-                {% else %}
-                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}" checked disabled />
-                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}">{{sys_label}}</label>
-                {% endif %}
-            {% else %}
-                {% if users_data['uprawnienia'][_sys_name] == 0 %}
-                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_0" {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
-                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_0">{{sys_label}}</label>
-                {% else %}
-                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_1" checked {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
-                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_1">{{sys_label}}</label>
-                {% endif %}
-            {% endif %}
-        </form>
-    </div>
-
-    {% endfor %}
-
-
-    ----
-
-
-
-    {% for vbrand in brands_DICT.values() %}
-
-    {% set b_id = vbrand.get("perm_id") %}
-    {% set b_sys_name = vbrand.get("sys_name") %}
-    {% set b_sys_label = vbrand.get("sys_label") %}
-    
-    <div class="form-check form-switch">
-        <form class="formatuj-padding-lg" action="">
-            {% if userperm['brands'] == 0 %}
-                {% if users_data['brands'][b_sys_name] == 0 %}
-                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}" disabled />
-                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}">Domy</label>
-                {% else %}
-                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}" checked disabled />
-                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}">Domy</label>
-                {% endif %}
-            {% else %}
-                {% if users_data['brands'][b_sys_name] == 0 %}
-                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_0" />
-                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_0">Domy</label>
-                {% else %}
-                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_1" checked />
-                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_1">Domy</label>
-                {% endif %}
-            {% endif %}
-        </form>
-    </div>
-    {% endfor %}
-    """
 
     return render_template(
         "user_management.html", 
@@ -3338,7 +3270,7 @@ def preparoator_team(deaprtment_team='domy', highlight=4):
     users_atributes = {}
     assigned_dmddomy = []
     
-    for usr_d in generator_userDataDB():
+    for usr_d in generator_userDataDB(False):
         u_name = usr_d['name']
         u_login = usr_d['username']
         users_atributes[u_name] = usr_d
@@ -3377,7 +3309,7 @@ def preparoator_team(deaprtment_team='domy', highlight=4):
         if assign not in collections[f'{deaprtment_team}']['home'] + collections[f'{deaprtment_team}']['team']:
             collections[f'{deaprtment_team}']['available'].append(assign)
 
-            for row in generator_userDataDB():
+            for row in generator_userDataDB(False):
                 if row['username'] == assign:
                     employee_photo = row['avatar']
                     try: employee_photo_dict[assign]
@@ -3406,7 +3338,7 @@ def team_domy():
     # update sesji userperm brands
     permTempDict = {}
     brands_data = {}
-    for un in generator_userDataDB(): 
+    for un in generator_userDataDB(False): 
         permTempDict[un['username']] = un['uprawnienia']
         brands_data[un['username']] = un['brands']
 
@@ -3440,7 +3372,7 @@ def team_budownictwo():
     # update sesji userperm brands
     permTempDict = {}
     brands_data = {}
-    for un in generator_userDataDB(): 
+    for un in generator_userDataDB(False): 
         permTempDict[un['username']] = un['uprawnienia']
         brands_data[un['username']] = un['brands']
 
@@ -3474,7 +3406,7 @@ def team_development():
     # update sesji userperm brands
     permTempDict = {}
     brands_data = {}
-    for un in generator_userDataDB(): 
+    for un in generator_userDataDB(False): 
         permTempDict[un['username']] = un['uprawnienia']
         brands_data[un['username']] = un['brands']
 
@@ -3508,7 +3440,7 @@ def team_elitehome():
     # update sesji userperm brands
     permTempDict = {}
     brands_data = {}
-    for un in generator_userDataDB(): 
+    for un in generator_userDataDB(False): 
         permTempDict[un['username']] = un['uprawnienia']
         brands_data[un['username']] = un['brands']
 
@@ -3542,7 +3474,7 @@ def team_inwestycje():
     # update sesji userperm brands
     permTempDict = {}
     brands_data = {}
-    for un in generator_userDataDB(): 
+    for un in generator_userDataDB(False): 
         permTempDict[un['username']] = un['uprawnienia']
         brands_data[un['username']] = un['brands']
 
@@ -3576,7 +3508,7 @@ def team_instalacje():
     # update sesji userperm brands
     permTempDict = {}
     brands_data = {}
-    for un in generator_userDataDB(): 
+    for un in generator_userDataDB(False): 
         permTempDict[un['username']] = un['uprawnienia']
         brands_data[un['username']] = un['brands']
 
@@ -4949,7 +4881,7 @@ def ustawieni_pracownicy():
         sequence.append(clear_data)
 
     users_atributesByLogin = {}
-    for usr_d in generator_userDataDB():
+    for usr_d in generator_userDataDB(False):
         u_login = usr_d['username']
         users_atributesByLogin[u_login] = usr_d
     
