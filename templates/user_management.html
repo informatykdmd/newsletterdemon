@@ -623,284 +623,36 @@
                                                                         <h5 class="fw-bold">Uprawnienia</h5>
                                                                     </div>
                                                                 </div>
+                                                                {% for vPerm in perms_DICT.values() %}
+
+                                                                {% set _id = vPerm.get("perm_id") %}
+                                                                {% set _sys_name = vPerm.get("sys_name") %}
+                                                                {% set sys_label = vPerm.get("sys_label") %}
+
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['users'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                                            {% if users_data['uprawnienia'][_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_{{_id}}_{{user_id}}" disabled/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_{{_id}}_{{user_id}}">{{sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}" checked disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_{{_id}}_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_{{_id}}_{{user_id}}">{{sys_label}}</label>
                                                                             {% endif %}
                                                                         {% else %}
-                                                                            {% if users_data['uprawnienia']['users'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}_0">Zarządzanie Użytkownikami</label>
+                                                                            {% if users_data['uprawnienia'][_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_{{_id}}_{{user_id}}_0" {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_{{_id}}_{{user_id}}_0">{{sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_1_{{user_id}}_1" checked/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_1_{{user_id}}_1">Zarządzanie Użytkownikami</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_{{_id}}_{{user_id}}_1" checked {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_{{_id}}_{{user_id}}_1">{{sys_label}}</label>
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['brands'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_2_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_2_{{user_id}}">Zarządzanie Brendami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_2_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_2_{{user_id}}">Zarządzanie Brendami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['brands'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_2_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_2_{{user_id}}_0">Zarządzanie Brendami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_2_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_2_{{user_id}}_1">Zarządzanie Brendami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                    
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['blog'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_3_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_3_{{user_id}}">Zarządzanie Blogiem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_3_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_3_{{user_id}}">Zarządzanie Blogiem</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['blog'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_3_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_3_{{user_id}}_0">Zarządzanie Blogiem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_3_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_3_{{user_id}}_1">Zarządzanie Blogiem</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['subscribers'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}">Zarządzanie Subskrybentami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}">Zarządzanie Subskrybentami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['subscribers'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}_0">Zarządzanie Subskrybentami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_4_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_4_{{user_id}}_1">Zarządzanie Subskrybentami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['commnets'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}">Zarządzanie Komentarzami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}">Zarządzanie Komentarzami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['commnets'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}_0">Zarządzanie Komentarzami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_5_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_5_{{user_id}}_1">Zarządzanie Komentarzami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_6_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_6_{{user_id}}">Zarządzanie Personelem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_6_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_6_{{user_id}}">Zarządzanie Personelem</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_6_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_6_{{user_id}}_0">Zarządzanie Personelem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_6_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_6_{{user_id}}_1">Zarządzanie Personelem</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['newsletter'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_8_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_8_{{user_id}}">Zarządzanie Newsletterem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_8_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_8_{{user_id}}">Zarządzanie Newsletterem</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['newsletter'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_8_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_8_{{user_id}}_0">Zarządzanie Newsletterem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_8_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_8_{{user_id}}_1">Zarządzanie Newsletterem</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_7_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_7_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_7_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_7_{{user_id}}_0">Zarządzanie Uprawnieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_7_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_7_{{user_id}}_1">Zarządzanie Uprawnieniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia estate id 16-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['estate'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_16_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_16_{{user_id}}">Zarządzanie Ogłoszeniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_16_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_16_{{user_id}}">Zarządzanie Ogłoszeniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['estate'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_16_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_16_{{user_id}}_0">Zarządzanie Ogłoszeniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_16_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_16_{{user_id}}_1">Zarządzanie Ogłoszeniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia career id 17-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['career'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_17_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_17_{{user_id}}">Zarządzanie Karierą</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_17_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_17_{{user_id}}">Zarządzanie Karierą</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['career'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_17_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_17_{{user_id}}_0">Zarządzanie Karierą</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_17_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_17_{{user_id}}_1">Zarządzanie Karierą</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia fbhidden id 18-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['fbhidden'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_18_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_18_{{user_id}}">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_18_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_18_{{user_id}}">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['fbhidden'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_18_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_18_{{user_id}}_0">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_18_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_18_{{user_id}}_1">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia realizations id 19-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_19_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_19_{{user_id}}">Zarządzanie Realizacjami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_19_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_19_{{user_id}}">Zarządzanie Realizacjami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_19_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_19_{{user_id}}_0">Zarządzanie Realizacjami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_19_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_19_{{user_id}}_1">Zarządzanie Realizacjami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['settings'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_9_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_9_{{user_id}}">Zarządzanie Ustawieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_9_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_9_{{user_id}}">Zarządzanie Ustawieniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['settings'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_9_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_9_{{user_id}}_0">Zarządzanie Ustawieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_9_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_9_{{user_id}}_1">Zarządzanie Ustawieniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
+
+                                                                {% endfor %}                                                              
+                                                                
                                                                 
                                                             </div>
                                                         </div>
@@ -917,132 +669,35 @@
                                                                         <h5 class="fw-bold">DMD</h5>
                                                                     </div>
                                                                 </div>
+                                                                {% for vbrand in brands_DICT.values() %}
+
+                                                                {% set b_id = vbrand.get("perm_id") %}
+                                                                {% set b_sys_name = vbrand.get("sys_name") %}
+                                                                {% set b_sys_label = vbrand.get("sys_label") %}
+                                                                
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['domy'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_10_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_10_{{user_id}}">Domy</label>
+                                                                            {% if users_data['brands'][b_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_{{b_id}}_{{user_id}}" disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_{{b_id}}_{{user_id}}">{{b_sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_10_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_10_{{user_id}}">Domy</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_{{b_id}}_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_{{b_id}}_{{user_id}}">{{b_sys_label}}</label>
                                                                             {% endif %}
                                                                         {% else %}
-                                                                            {% if users_data['brands']['domy'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_10_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_10_{{user_id}}_0">Domy</label>
+                                                                            {% if users_data['brands'][b_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_{{b_id}}_{{user_id}}_0" />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_{{b_id}}_{{user_id}}_0">{{b_sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_10_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_10_{{user_id}}_1">Domy</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_{{b_id}}_{{user_id}}_1" checked />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_{{b_id}}_{{user_id}}_1">{{b_sys_label}}</label>
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['budownictwo'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_11_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_11_{{user_id}}">Budownictwo</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_11_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_11_{{user_id}}">Budownictwo</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['budownictwo'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_11_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_11_{{user_id}}_0">Budownictwo</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_11_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_11_{{user_id}}_1">Budownictwo</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['elitehome'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_12_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_12_{{user_id}}">EliteHome</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_12_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_12_{{user_id}}">EliteHome</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['elitehome'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_12_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_12_{{user_id}}_0">EliteHome</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_12_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_12_{{user_id}}_1">EliteHome</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['inwestycje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_13_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_13_{{user_id}}">Inwestycje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_13_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_13_{{user_id}}">Inwestycje</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['inwestycje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_13_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_13_{{user_id}}_0">Inwestycje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_13_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_13_{{user_id}}_1">Inwestycje</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['instalacje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_14_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_14_{{user_id}}">Instalacje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_14_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_14_{{user_id}}">Instalacje</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['instalacje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_14_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_14_{{user_id}}_0">Instalacje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_14_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_14_{{user_id}}_1">Instalacje</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['development'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_15_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_15_{{user_id}}">Development</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_15_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_15_{{user_id}}">Development</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['inwestycje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_15_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_15_{{user_id}}_0">Development</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefault_15_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefault_15_{{user_id}}_1">Development</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
+                                                                {% endfor %}
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1361,284 +1016,35 @@
                                                                         <h5 class="fw-bold">Uprawnienia</h5>
                                                                     </div>
                                                                 </div>
+                                                                {% for vPerm in perms_DICT.values() %}
+
+                                                                {% set _id = vPerm.get("perm_id") %}
+                                                                {% set _sys_name = vPerm.get("sys_name") %}
+                                                                {% set sys_label = vPerm.get("sys_label") %}
+
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['users'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_1_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                                            {% if users_data['uprawnienia'][_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}" disabled/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}">{{sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_1_{{user_id}}" checked disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}">{{sys_label}}</label>
                                                                             {% endif %}
                                                                         {% else %}
-                                                                            {% if users_data['uprawnienia']['users'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_1_{{user_id}}_0" {% if userperm['users'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_1_{{user_id}}_0">Zarządzanie Użytkownikami</label>
+                                                                            {% if users_data['uprawnienia'][_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_0" {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_0">{{sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_1_{{user_id}}_1" checked {% if userperm['users'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_1_{{user_id}}_1">Zarządzanie Użytkownikami</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_1" checked {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_1">{{sys_label}}</label>
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['brands'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_2_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_2_{{user_id}}">Zarządzanie Brendami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_2_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_2_{{user_id}}">Zarządzanie Brendami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['brands'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_2_{{user_id}}_0" {% if userperm['brands'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_2_{{user_id}}_0">Zarządzanie Brendami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_2_{{user_id}}_1" checked {% if userperm['brands'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_2_{{user_id}}_1">Zarządzanie Brendami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                    
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['blog'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_3_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_3_{{user_id}}">Zarządzanie Blogiem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_3_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_3_{{user_id}}">Zarządzanie Blogiem</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['blog'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_3_{{user_id}}_0" {% if userperm['blog'] == 0 %}disabled{% endif %} />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_3_{{user_id}}_0">Zarządzanie Blogiem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_3_{{user_id}}_1" checked {% if userperm['blog'] == 0 %}disabled{% endif %} />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_3_{{user_id}}_1">Zarządzanie Blogiem</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['subscribers'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_4_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_4_{{user_id}}">Zarządzanie Subskrybentami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_4_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_4_{{user_id}}">Zarządzanie Subskrybentami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['subscribers'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_4_{{user_id}}_0" {% if userperm['subscribers'] == 0 %}disabled{% endif %} />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_4_{{user_id}}_0">Zarządzanie Subskrybentami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_4_{{user_id}}_1" checked {% if userperm['subscribers'] == 0 %}disabled{% endif %} />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_4_{{user_id}}_1">Zarządzanie Subskrybentami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['commnets'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_5_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_5_{{user_id}}">Zarządzanie Komentarzami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_5_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_5_{{user_id}}">Zarządzanie Komentarzami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['commnets'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_5_{{user_id}}_0" {% if userperm['commnets'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_5_{{user_id}}_0">Zarządzanie Komentarzami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_5_{{user_id}}_1" checked {% if userperm['commnets'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_5_{{user_id}}_1">Zarządzanie Komentarzami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_6_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_6_{{user_id}}">Zarządzanie Personelem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_6_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_6_{{user_id}}">Zarządzanie Personelem</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_6_{{user_id}}_0" {% if userperm['team'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_6_{{user_id}}_0">Zarządzanie Personelem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_6_{{user_id}}_1" checked {% if userperm['team'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_6_{{user_id}}_1">Zarządzanie Personelem</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['newsletter'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_8_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_8_{{user_id}}">Zarządzanie Newsletterem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_8_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_8_{{user_id}}">Zarządzanie Newsletterem</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['newsletter'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_8_{{user_id}}_0" {% if userperm['newsletter'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_8_{{user_id}}_0">Zarządzanie Newsletterem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_8_{{user_id}}_1" checked {% if userperm['newsletter'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_8_{{user_id}}_1">Zarządzanie Newsletterem</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['permissions'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['permissions'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}_0" {% if userperm['permissions'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_7_{{user_id}}_0">Zarządzanie Uprawnieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_7_{{user_id}}_1" checked {% if userperm['permissions'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_7_{{user_id}}_1">Zarządzanie Uprawnieniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia estate id 16-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['estate'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_16_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_16_{{user_id}}">Zarządzanie Ogłoszeniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_16_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_16_{{user_id}}">Zarządzanie Ogłoszeniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['estate'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_16_{{user_id}}_0" {% if userperm['estate'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_16_{{user_id}}_0">Zarządzanie Ogłoszeniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_16_{{user_id}}_1" checked {% if userperm['estate'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_16_{{user_id}}_1">Zarządzanie Ogłoszeniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia career id 17-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['career'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_17_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_17_{{user_id}}">Zarządzanie Karierą</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_17_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_17_{{user_id}}">Zarządzanie Karierą</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['career'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_17_{{user_id}}_0" {% if userperm['career'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_17_{{user_id}}_0">Zarządzanie Karierą</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_17_{{user_id}}_1" checked {% if userperm['career'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_17_{{user_id}}_1">Zarządzanie Karierą</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia fbhidden id 18-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['fbhidden'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_18_{{user_id}}">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_18_{{user_id}}">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['fbhidden'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}_0" {% if userperm['fbhidden'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_18_{{user_id}}_0">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_18_{{user_id}}_1" checked {% if userperm['fbhidden'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_18_{{user_id}}_1">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia fbhidden id 19-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_19_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_19_{{user_id}}">Zarządzanie Realizacjami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_19_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_19_{{user_id}}">Zarządzanie Realizacjami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_19_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_19_{{user_id}}_0">Zarządzanie Realizacjami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_19_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_19_{{user_id}}_1">Zarządzanie Realizacjami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['settings'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_9_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_9_{{user_id}}">Zarządzanie Ustawieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_9_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_9_{{user_id}}">Zarządzanie Ustawieniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['settings'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_9_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_9_{{user_id}}_0">Zarządzanie Ustawieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_9_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_9_{{user_id}}_1">Zarządzanie Ustawieniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
+
+                                                                {% endfor %}  
                                                                 
                                                             </div>
                                                         </div>
@@ -1687,132 +1093,35 @@
                                                                         <h5 class="fw-bold">DMD</h5>
                                                                     </div>
                                                                 </div>
+                                                                {% for vbrand in brands_DICT.values() %}
+
+                                                                {% set b_id = vbrand.get("perm_id") %}
+                                                                {% set b_sys_name = vbrand.get("sys_name") %}
+                                                                {% set b_sys_label = vbrand.get("sys_label") %}
+                                                                
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['domy'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_10_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_10_{{user_id}}">Domy</label>
+                                                                            {% if users_data['brands'][b_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}" disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}">{{b_sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_10_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_10_{{user_id}}">Domy</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}">{{b_sys_label}}</label>
                                                                             {% endif %}
                                                                         {% else %}
-                                                                            {% if users_data['brands']['domy'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_10_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_10_{{user_id}}_0">Domy</label>
+                                                                            {% if users_data['brands'][b_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_0" />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_0">{{b_sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_10_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_10_{{user_id}}_1">Domy</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_1" checked />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_1">{{b_sys_label}}</label>
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['budownictwo'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_11_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_11_{{user_id}}">Budownictwo</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_11_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_11_{{user_id}}">Budownictwo</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['budownictwo'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_11_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_11_{{user_id}}_0">Budownictwo</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_11_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_11_{{user_id}}_1">Budownictwo</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['elitehome'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_12_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_12_{{user_id}}">EliteHome</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_12_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_12_{{user_id}}">EliteHome</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['elitehome'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_12_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_12_{{user_id}}_0">EliteHome</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_12_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_12_{{user_id}}_1">EliteHome</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['inwestycje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_13_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_13_{{user_id}}">Inwestycje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_13_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_13_{{user_id}}">Inwestycje</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['inwestycje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_13_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_13_{{user_id}}_0">Inwestycje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_13_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_13_{{user_id}}_1">Inwestycje</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['instalacje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_14_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_14_{{user_id}}">Instalacje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_14_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_14_{{user_id}}">Instalacje</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['instalacje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_14_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_14_{{user_id}}_0">Instalacje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_14_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_14_{{user_id}}_1">Instalacje</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['development'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_15_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_15_{{user_id}}">Development</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_15_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_15_{{user_id}}">Development</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['inwestycje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_15_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_15_{{user_id}}_0">Development</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_15_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultLG_15_{{user_id}}_1">Development</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
+                                                                {% endfor %}
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2143,350 +1452,36 @@
                                                                         <h5 class="fw-bold">Uprawnienia</h5>
                                                                     </div>
                                                                 </div>
+                                                                {% for vPerm in perms_DICT.values() %}
+
+                                                                {% set _id = vPerm.get("perm_id") %}
+                                                                {% set _sys_name = vPerm.get("sys_name") %}
+                                                                {% set sys_label = vPerm.get("sys_label") %}
+
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['users'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_1_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                                            {% if users_data['uprawnienia'][_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_{{_id}}_{{user_id}}" disabled/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_{{_id}}_{{user_id}}">{{sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_1_{{user_id}}" checked disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_1_{{user_id}}">Zarządzanie Użytkownikami</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_{{_id}}_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_{{_id}}_{{user_id}}">{{sys_label}}</label>
                                                                             {% endif %}
                                                                         {% else %}
-                                                                            {% if users_data['uprawnienia']['users'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_1_{{user_id}}_0" {% if userperm['users'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_1_{{user_id}}_0">Zarządzanie Użytkownikami</label>
+                                                                            {% if users_data['uprawnienia'][_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_{{_id}}_{{user_id}}_0" {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_{{_id}}_{{user_id}}_0">{{sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_1_{{user_id}}_1" checked {% if userperm['users'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_1_{{user_id}}_1">Zarządzanie Użytkownikami</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_{{_id}}_{{user_id}}_1" checked {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_{{_id}}_{{user_id}}_1">{{sys_label}}</label>
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['brands'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_2_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_2_{{user_id}}">Zarządzanie Brendami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_2_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_2_{{user_id}}">Zarządzanie Brendami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['brands'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_2_{{user_id}}_0" {% if userperm['brands'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_2_{{user_id}}_0">Zarządzanie Brendami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_2_{{user_id}}_1" checked {% if userperm['brands'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_2_{{user_id}}_1">Zarządzanie Brendami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                    
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['blog'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_3_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_3_{{user_id}}">Zarządzanie Blogiem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_3_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_3_{{user_id}}">Zarządzanie Blogiem</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['blog'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_3_{{user_id}}_0" {% if userperm['blog'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_3_{{user_id}}_0">Zarządzanie Blogiem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_3_{{user_id}}_1" checked {% if userperm['blog'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_3_{{user_id}}_1">Zarządzanie Blogiem</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['subscribers'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_4_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_4_{{user_id}}">Zarządzanie Subskrybentami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_4_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_4_{{user_id}}">Zarządzanie Subskrybentami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['subscribers'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_4_{{user_id}}_0" {% if userperm['subscribers'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_4_{{user_id}}_0">Zarządzanie Subskrybentami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_4_{{user_id}}_1" checked {% if userperm['subscribers'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_4_{{user_id}}_1">Zarządzanie Subskrybentami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['commnets'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_5_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_5_{{user_id}}">Zarządzanie Komentarzami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_5_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_5_{{user_id}}">Zarządzanie Komentarzami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['commnets'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_5_{{user_id}}_0" {% if userperm['commnets'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_5_{{user_id}}_0">Zarządzanie Komentarzami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_5_{{user_id}}_1" checked {% if userperm['commnets'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_5_{{user_id}}_1">Zarządzanie Komentarzami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_6_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_6_{{user_id}}">Zarządzanie Personelem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_6_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_6_{{user_id}}">Zarządzanie Personelem</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['team'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_6_{{user_id}}_0" {% if userperm['team'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_6_{{user_id}}_0">Zarządzanie Personelem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_6_{{user_id}}_1" checked {% if userperm['team'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_6_{{user_id}}_1">Zarządzanie Personelem</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['newsletter'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_8_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_8_{{user_id}}">Zarządzanie Newsletterem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_8_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_8_{{user_id}}">Zarządzanie Newsletterem</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['newsletter'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_8_{{user_id}}_0" {% if userperm['newsletter'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_8_{{user_id}}_0">Zarządzanie Newsletterem</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_8_{{user_id}}_1" checked {% if userperm['newsletter'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_8_{{user_id}}_1">Zarządzanie Newsletterem</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['permissions'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_7_{{user_id}}">Zarządzanie Uprawnieniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['permissions'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}_0" {% if userperm['permissions'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_7_{{user_id}}_0">Zarządzanie Uprawnieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_7_{{user_id}}_1" checked {% if userperm['permissions'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_7_{{user_id}}_1">Zarządzanie Uprawnieniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia estate id 16-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['estate'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_16_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_16_{{user_id}}">Zarządzanie Ogłoszeniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_16_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_16_{{user_id}}">Zarządzanie Ogłoszeniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['estate'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_16_{{user_id}}_0" {% if userperm['estate'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_16_{{user_id}}_0">Zarządzanie Ogłoszeniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_16_{{user_id}}_1" checked {% if userperm['estate'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_16_{{user_id}}_1">Zarządzanie Ogłoszeniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia career id 17-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['career'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_17_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_17_{{user_id}}">Zarządzanie Karierą</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_17_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_17_{{user_id}}">Zarządzanie Karierą</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['career'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_17_{{user_id}}_0" {% if userperm['career'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_17_{{user_id}}_0">Zarządzanie Karierą</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_17_{{user_id}}_1" checked {% if userperm['career'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_17_{{user_id}}_1">Zarządzanie Karierą</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia fbhidden id 18-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['fbhidden'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_18_{{user_id}}">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_18_{{user_id}}">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['fbhidden'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}_0" {% if userperm['fbhidden'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_18_{{user_id}}_0">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_18_{{user_id}}_1" checked {% if userperm['fbhidden'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_18_{{user_id}}_1">Zarządzanie Anonimowymi Kampaniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia realizations id 19-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}">Zarządzanie Realizacjami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}">Zarządzanie Realizacjami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['realizations'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}_0" {% if userperm['realizations'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}_0">Zarządzanie Realizacjami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_19_{{user_id}}_1" checked {% if userperm['realizations'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_19_{{user_id}}_1">Zarządzanie Realizacjami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia presentation id 20-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['presentation'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}">Zarządzanie Prezentacjami (green)</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}">Zarządzanie Prezentacjami (green)</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['presentation'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}_0" {% if userperm['presentation'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}_0">Zarządzanie Prezentacjami (green)</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_20_{{user_id}}_1" checked {% if userperm['presentation'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_20_{{user_id}}_1">Zarządzanie Prezentacjami (green)</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia presentation-silver id 21-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['presentation-silver'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}">Zarządzanie Prezentacjami (silver)</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}">Zarządzanie Prezentacjami (silver)</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['presentation-silver'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}_0" {% if userperm['presentation-silver'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}_0">Zarządzanie Prezentacjami (silver)</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_21_{{user_id}}_1" checked {% if userperm['presentation-silver'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_21_{{user_id}}_1">Zarządzanie Prezentacjami (silver)</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <!-- kolejne uprawnienia presentation-gold id 22-->
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['presentation-gold'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}">Zarządzanie Prezentacjami (gold)</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}">Zarządzanie Prezentacjami (gold)</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['presentation-gold'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}_0"  checked {% if userperm['presentation-gold'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}_0">Zarządzanie Prezentacjami (gold)</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_22_{{user_id}}_1" checked  checked {% if userperm['presentation-gold'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_22_{{user_id}}_1">Zarządzanie Prezentacjami (gold)</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['permissions'] == 0 %}
-                                                                            {% if users_data['uprawnienia']['settings'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_9_{{user_id}}" disabled/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_9_{{user_id}}">Zarządzanie Ustawieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_9_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_9_{{user_id}}">Zarządzanie Ustawieniami</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['uprawnienia']['settings'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_9_{{user_id}}_0" {% if userperm['settings'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_9_{{user_id}}_0">Zarządzanie Ustawieniami</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_9_{{user_id}}_1" checked {% if userperm['settings'] == 0 %}disabled{% endif %}/>
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_9_{{user_id}}_1">Zarządzanie Ustawieniami</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
+
+                                                                {% endfor %}  
+                                                                
                                                                 
                                                             </div>
                                                         </div>
@@ -2535,132 +1530,36 @@
                                                                         <h5 class="fw-bold">DMD</h5>
                                                                     </div>
                                                                 </div>
+                                                                {% for vbrand in brands_DICT.values() %}
+
+                                                                {% set b_id = vbrand.get("perm_id") %}
+                                                                {% set b_sys_name = vbrand.get("sys_name") %}
+                                                                {% set b_sys_label = vbrand.get("sys_label") %}
+                                                                
                                                                 <div class="form-check form-switch">
                                                                     <form class="formatuj-padding-lg" action="">
                                                                         {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['domy'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_10_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_10_{{user_id}}">Domy</label>
+                                                                            {% if users_data['brands'][b_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_{{b_id}}_{{user_id}}" disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_{{b_id}}_{{user_id}}">{{b_sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_10_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_10_{{user_id}}">Domy</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_{{b_id}}_{{user_id}}" checked disabled />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_{{b_id}}_{{user_id}}">{{b_sys_label}}</label>
                                                                             {% endif %}
                                                                         {% else %}
-                                                                            {% if users_data['brands']['domy'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_10_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_10_{{user_id}}_0">Domy</label>
+                                                                            {% if users_data['brands'][b_sys_name] == 0 %}
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_{{b_id}}_{{user_id}}_0" />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_{{b_id}}_{{user_id}}_0">{{b_sys_label}}</label>
                                                                             {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_10_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_10_{{user_id}}_1">Domy</label>
+                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_{{b_id}}_{{user_id}}_1" checked />
+                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_{{b_id}}_{{user_id}}_1">{{b_sys_label}}</label>
                                                                             {% endif %}
                                                                         {% endif %}
                                                                     </form>
                                                                 </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['budownictwo'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_11_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_11_{{user_id}}">Budownictwo</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_11_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_11_{{user_id}}">Budownictwo</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['budownictwo'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_11_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_11_{{user_id}}_0">Budownictwo</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_11_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_11_{{user_id}}_1">Budownictwo</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['elitehome'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_12_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_12_{{user_id}}">EliteHome</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_12_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_12_{{user_id}}">EliteHome</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['elitehome'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_12_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_12_{{user_id}}_0">EliteHome</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_12_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_12_{{user_id}}_1">EliteHome</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['inwestycje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_13_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_13_{{user_id}}">Inwestycje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_13_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_13_{{user_id}}">Inwestycje</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['inwestycje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_13_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_13_{{user_id}}_0">Inwestycje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_13_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_13_{{user_id}}_1">Inwestycje</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['instalacje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_14_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_14_{{user_id}}">Instalacje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_14_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_14_{{user_id}}">Instalacje</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['instalacje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_14_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_14_{{user_id}}_0">Instalacje</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_14_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_14_{{user_id}}_1">Instalacje</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>
-                                                                <div class="form-check form-switch">
-                                                                    <form class="formatuj-padding-lg" action="">
-                                                                        {% if userperm['brands'] == 0 %}
-                                                                            {% if users_data['brands']['development'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_15_{{user_id}}" disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_15_{{user_id}}">Development</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_15_{{user_id}}" checked disabled />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_15_{{user_id}}">Development</label>
-                                                                            {% endif %}
-                                                                        {% else %}
-                                                                            {% if users_data['brands']['inwestycje'] == 0 %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_15_{{user_id}}_0" />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_15_{{user_id}}_0">Development</label>
-                                                                            {% else %}
-                                                                                <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultXL_15_{{user_id}}_1" checked />
-                                                                                <label class="form-check-label" for="flexSwitchCheckDefaultXL_15_{{user_id}}_1">Development</label>
-                                                                            {% endif %}
-                                                                        {% endif %}
-                                                                    </form>
-                                                                </div>                                                                
+                                                                {% endfor %}
+
+                                                                                                                              
                                                             </div>
                                                         </div>
                                                     </div>

@@ -392,6 +392,53 @@ def take_data_table(key, table):
     dump_key = msq.connect_to_database(f'SELECT {key} FROM {table};')
     return dump_key
 
+def get_BrandAndPerm():
+    sort_brand_keys_dict = {
+        'BRANDS_DOMY': {'db_name': 'BRANDS_DOMY', 'sys_name': 'domy', 'sys_label': 'Przynależność do DMD Domy', 'perm_id': 10},
+        'BRANDS_BUDOWNICTWO': {'db_name': 'BRANDS_BUDOWNICTWO', 'sys_name': 'budownictwo', 'sys_label': 'Przynależność do DMD Budownictwo', 'perm_id': 11},
+        'BRANDS_ELITEHOME': {'db_name': 'BRANDS_ELITEHOME', 'sys_name': 'elitehome', 'sys_label': 'Przynależność do DMD EliteHome', 'perm_id': 12},
+        'BRANDS_INWESTYCJE': {'db_name': 'BRANDS_INWESTYCJE', 'sys_name': 'inwestycje', 'sys_label': 'Przynależność do DMD Inwestycje', 'perm_id': 13},
+        'BRANDS_INSTALACJE': {'db_name': 'BRANDS_INSTALACJE', 'sys_name': 'instalacje', 'sys_label': 'Przynależność do DMD Instalacje', 'perm_id': 14},
+        'BRANDS_DEVELOPMENT': {'db_name': 'BRANDS_DEVELOPMENT', 'sys_name': 'development', 'sys_label': 'Przynależność do DMD Development', 'perm_id': 15},
+    }
+    sort_perm_keys_dict = {
+        'PERM_USERS': {'db_name': 'PERM_USERS', 'sys_name': 'users', 'sys_label': 'Zarządzanie Użytkownikami', 'perm_id': 1},
+        'PERM_BRANDS': {'db_name': 'PERM_BRANDS', 'sys_name': 'brands', 'sys_label': 'Zarządzanie Brendami', 'perm_id': 2},
+        'PERM_BLOG': {'db_name': 'PERM_BLOG', 'sys_name': 'blog', 'sys_label': 'Zarządzanie Blogiem', 'perm_id': 3},
+        'PERM_SUBS': {'db_name': 'PERM_SUBS', 'sys_name': 'subscribers', 'sys_label': 'Zarządzanie Subskrybentami', 'perm_id': 4},
+        'PERM_COMMENTS': {'db_name': 'PERM_COMMENTS', 'sys_name': 'commnets', 'sys_label': 'Zarządzanie Komentarzami', 'perm_id': 5},
+        'PERM_TEAM': {'db_name': 'PERM_TEAM', 'sys_name': 'team', 'sys_label': 'Zarządzanie Personelem', 'perm_id': 6},
+        'PERM_PERMISSIONS': {'db_name': 'PERM_PERMISSIONS', 'sys_name': 'permissions', 'sys_label': 'Zarządzanie Uprawnieniami', 'perm_id': 7},
+        'PERM_NEWSLETTER': {'db_name': 'PERM_NEWSLETTER', 'sys_name': 'newsletter', 'sys_label': 'Zarządzanie Newsletterem', 'perm_id': 8},
+        'PERM_SETTINGS': {'db_name': 'PERM_SETTINGS', 'sys_name': 'settings', 'sys_label': 'Zarządzanie Ustawieniami', 'perm_id': 9},
+        'PERM_ESTATE': {'db_name': 'PERM_ESTATE', 'sys_name': 'estate', 'sys_label': 'Zarządzanie Ogłoszeniami', 'perm_id': 16},
+        'PERM_CAREER': {'db_name': 'PERM_CAREER', 'sys_name': 'career', 'sys_label': 'Zarządzanie Karierą', 'perm_id': 17},
+        'PERM_FBHIDDEN': {'db_name': 'PERM_FBHIDDEN', 'sys_name': 'fbhidden', 'sys_label': 'Zarządzanie Anonimowymi Kampaniami', 'perm_id': 18},
+        'PERM_REALIZED': {'db_name': 'PERM_REALIZED', 'sys_name': 'realizations', 'sys_label': 'Zarządzanie Realizacjami', 'perm_id': 19},
+        'PERM_PRESENTATION': {'db_name': 'PERM_PRESENTATION', 'sys_name': 'presentation', 'sys_label': 'Zarządzanie Prezentacjami', 'perm_id': 20},
+        'PERM_PRESENTATION_SILVER': {'db_name': 'PERM_PRESENTATION_SILVER', 'sys_name': 'presentation-silver', 'sys_label': 'Zarządzanie Prezentacjami-silver', 'perm_id': 21},
+        'PERM_PRESENTATION_GOLD': {'db_name': 'PERM_PRESENTATION_GOLD', 'sys_name': 'presentation-gold', 'sys_label': 'Zarządzanie Prezentacjami-gold', 'perm_id': 22}
+    }
+    
+    # db = get_db()
+
+    # all_rows = db.getFrom(
+    #     "SELECT * FROM admins;", 
+    #     as_dict=True
+    # )
+    # onlyPerms = []
+    # onlyBrands = []
+    # for db_row in all_rows:
+    #     if isinstance(db_row, dict):
+    #         for k, v in db_row.items():
+    #             if k.startswith("PERM_") and k in sort_perm_keys_dict:
+    #                 onlyPerms.append(sort_perm_keys_dict[k])
+    #             elif k.startswith("BRANDS_") and k in sort_brand_keys_dict:
+    #                 onlyBrands.append(sort_perm_keys_dict[k])
+    #       BARNDS                  PERMS
+    return sort_brand_keys_dict, sort_perm_keys_dict
+
+
 def generator_userDataDB():
     took_usrD = take_data_table('*', 'admins')
     userData = []
@@ -2336,252 +2383,55 @@ def update_permission():
     permission = data.get('permission')
     print([perm_id], [user_id], [perm_type], [permission])
 
-    perm_name = None
-    if perm_id == 1: perm_name = 'Zarządzanie Użytkownikami'
-    if perm_id == 2: perm_name = 'Zarządzanie Brendami'
-    if perm_id == 3: perm_name = 'Zarządzanie Blogiem'
-    if perm_id == 4: perm_name = 'Zarządzanie Subskrybentami'
-    if perm_id == 5: perm_name = 'Zarządzanie Komentarzami'
-    if perm_id == 6: perm_name = 'Zarządzanie Personelem'
-    if perm_id == 7: perm_name = 'Zarządzanie Uprawnieniami'
-    if perm_id == 8: perm_name = 'Zarządzanie Newsletterem'
-    if perm_id == 9: perm_name = 'Zarządzanie Ustawieniami'
+    brands, perms = get_BrandAndPerm()
+    brand_or_perm = False
+    perm_found = False
+    brand_found = False
+    data_item = {}
+    # szukamy w uprawnieniach
+    for perm in perms.values():
+        if perm_id == perm.get("perm_id", 0): 
+            brand_or_perm = True
+            perm_found = True
+            data_item = perm
+            break
 
-    if perm_id == 16: perm_name = 'Zarządzanie Ogłoszeniami'
-    if perm_id == 17: perm_name = 'Zarządzanie Karierą'
-    if perm_id == 18: perm_name = 'Zarządzanie Anonimowymi Kampaniami'
-    if perm_id == 19: perm_name = 'Zarządzanie realizacjami'
+    # nie ma w uprawnieniach, szukamy w brandach
+    if not brand_or_perm:
+        for brand in brands.values():
+            if perm_id == brand.get("perm_id", 0): 
+                brand_or_perm = True
+                brand_found = True
+                data_item = brand
+                
+    if not brand_or_perm:
+        return jsonify({'success': False, 'message': 'Nie znana akcja, skontaktuj sie z Administratorem!', 'user_id': user_id})
 
-    if perm_id == 20: perm_name = 'Zarządzanie prezentacjami'
-    if perm_id == 21: perm_name = 'Zarządzanie prezentacjami-silver'
-    if perm_id == 22: perm_name = 'Zarządzanie prezentacjami-gold'
+    _id = data_item.get("perm_id")
+    _sys_name = data_item.get("sys_name")
+    sys_label = data_item.get("sys_label")
+    db_name = data_item.get("db_name")
 
-    if perm_id == 10: perm_name = 'Przynależność do DMD Domy'
-    if perm_id == 11: perm_name = 'Przynależność do DMD Budownictwo'
-    if perm_id == 12: perm_name = 'Przynależność do DMD EliteHome'
-    if perm_id == 13: perm_name = 'Przynależność do DMD Inwestycje'
-    if perm_id == 14: perm_name = 'Przynależność do DMD Instalacje'
-    if perm_id == 15: perm_name = 'Przynależność do DMD Development'
-
-    if perm_id in [1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9, 16, 17, 18, 19, 20, 21, 22]:
+    if perm_found:
         if session['userperm']['permissions'] == 0:
             msq.handle_error(f'UWAGA! Próba zarządzania uprawnieniami bez uprawnień przez {session["username"]}!', log_path=logFileName)
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
             return redirect(url_for('users'))
-        #Aktualizacja uprawnienia
-        if perm_id == 1: 
-            'Zarządzanie Użytkownikami'
-            zapytanie_sql = '''UPDATE admins SET PERM_USERS = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-
-        if perm_id == 2:
-            'Zarządzanie Brendami'
-            zapytanie_sql = '''UPDATE admins SET PERM_BRANDS = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 3: 
-            'Zarządzanie Blogiem'
-            zapytanie_sql = '''UPDATE admins SET PERM_BLOG = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 4: 
-            'Zarządzanie Subskrybentami'
-            zapytanie_sql = '''UPDATE admins SET PERM_SUBS = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 5: 
-            'Zarządzanie Komentarzami'
-            zapytanie_sql = '''UPDATE admins SET PERM_COMMENTS = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 6: 
-            'Zarządzanie Personelem'
-            zapytanie_sql = '''UPDATE admins SET PERM_TEAM = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 7: 
-            'Zarządzanie Uprawnieniami'
-            zapytanie_sql = '''UPDATE admins SET PERM_PERMISSIONS = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 8: 
-            'Zarządzanie Newsletterem'
-            zapytanie_sql = '''UPDATE admins SET PERM_NEWSLETTER = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 9: 
-            'Zarządzanie Ustawieniami'
-            zapytanie_sql = '''UPDATE admins SET PERM_SETTINGS = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
         
-        if perm_id == 16: 
-            'Zarządzanie Ogłoszeniami'
-            zapytanie_sql = '''UPDATE admins SET PERM_ESTATE = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        
-        if perm_id == 17: 
-            'Zarządzanie Karierą'
-            zapytanie_sql = '''UPDATE admins SET PERM_CAREER = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        
-        if perm_id == 18: 
-            'Zarządzanie Anonimowymi Kampaniami'
-            zapytanie_sql = '''UPDATE admins SET PERM_FBHIDDEN = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        
-        if perm_id == 19: 
-            'Zarządzanie Realizacjami'
-            zapytanie_sql = '''UPDATE admins SET PERM_REALIZED = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-            
-        if perm_id == 20: 
-            'Zarządzanie prezentacjami'
-            zapytanie_sql = '''UPDATE admins SET PERM_PRESENTATION = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        
-        if perm_id == 21: 
-            'Zarządzanie prezentacjami-silver'
-            zapytanie_sql = '''UPDATE admins SET PERM_PRESENTATION_SILVER = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-            
-        if perm_id == 22: 
-            'Zarządzanie prezentacjami-gold'
-            zapytanie_sql = '''UPDATE admins SET PERM_PRESENTATION_GOLD = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-    
-    if perm_id in [10, 11, 12, 13, 14, 15]:
+    if brand_found:
         if session['userperm']['brands'] == 0:
             msq.handle_error(f'UWAGA! Próba zarządzania brendami bez uprawnień przez {session["username"]}!', log_path=logFileName)
             flash('Nie masz uprawnień do zarządzania tymi zasobami. Skontaktuj sie z administratorem!', 'danger')
             return redirect(url_for('users'))
-        #Aktualizacja przynależności
-        if perm_id == 10: 
-            'Przynależność do DMD Domy'
-            zapytanie_sql = '''UPDATE admins SET BRANDS_DOMY = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 11: 
-            'Przynależność do DMD Budownictwo'
-            zapytanie_sql = '''UPDATE admins SET BRANDS_BUDOWNICTWO = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 12: 
-            'Przynależność do DMD EliteHome'
-            zapytanie_sql = '''UPDATE admins SET BRANDS_ELITEHOME = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 13: 
-            'Przynależność do DMD Inwestycje'
-            zapytanie_sql = '''UPDATE admins SET BRANDS_INWESTYCJE = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 14: 
-            'Przynależność do DMD Instalacje'
-            zapytanie_sql = '''UPDATE admins SET BRANDS_INSTALACJE = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
-        if perm_id == 15: 
-            'Przynależność do DMD Development'
-            zapytanie_sql = '''UPDATE admins SET BRANDS_DEVELOPMENT = %s WHERE ID = %s;'''
-            if permission: onOff = 1
-            else: onOff = 0
-            dane = (onOff, user_id)
-            if msq.insert_to_database(zapytanie_sql, dane):
-                msq.handle_error(f'UWAGA! {perm_name} zostało zaktualizowane przez {session["username"]}!', log_path=logFileName)
-                return jsonify({'success': True, 'message': f'{perm_name} zostało zaktualizowane.', 'user_id': user_id})
+        
+    #Aktualizacja uprawnienia
+    zapytanie_sql = f'''UPDATE admins SET {db_name} = %s WHERE ID = %s;'''
+    if permission: onOff = 1
+    else: onOff = 0
+    dane = (onOff, user_id)
+    if msq.insert_to_database(zapytanie_sql, dane):
+        msq.handle_error(f'UWAGA! Zaktualizowan: {sys_label} przez {session["username"]}!', log_path=logFileName)
+        return jsonify({'success': True, 'message': f'Zaktualizowano: {sys_label}!', 'user_id': user_id})
 
     msq.handle_error(f'UWAGA! Błąd zarządzania uprawnieniami użytkowników wywołany przez {session["username"]}!', log_path=logFileName)
     return jsonify({'success': False, 'message': 'Coś poszło nie tak, zgłoś to Administratorowi', 'user_id': user_id})
@@ -3320,7 +3170,7 @@ def set_settings():
     return redirect(url_for('settings'))
 
 @app.route('/user')
-def users(router=True):
+def users():
     """Strona z zarządzaniem użytkownikami."""
     # Sprawdzenie czy użytkownik jest zalogowany, jeśli nie - przekierowanie do strony głównej
     if 'username' not in session or 'userperm' not in session:
@@ -3342,37 +3192,107 @@ def users(router=True):
 
     # Pobierz tylko odpowiednią ilość postów na aktualnej stronie
     users = all_users[offset: offset + per_page]
-    if router:
-        # Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
-        settingsDB = generator_settingsDB()
-        domy = settingsDB['domy']
-        budownictwo = settingsDB['budownictwo']
-        development = settingsDB['development']
-        elitehome = settingsDB['elitehome']
-        inwestycje = settingsDB['inwestycje']
-        instalacje = settingsDB['instalacje']
-        logins = [x['username'] for x in all_users]
-        emails = [x['email'] for x in all_users]
-        names = [x['name'] for x in all_users]
+    
+    # Renderowanie szablonu blog-managment.html z danymi o postach (wszystkimi lub po jednym)
+    settingsDB = generator_settingsDB()
 
-        return render_template(
-                            "user_management.html", 
-                            users=users, 
-                            logins=logins,
-                            emails=emails,
-                            names=names,
-                            username=session['username'], 
-                            userperm=session['userperm'], 
-                            pagination=pagination,
-                            domy=domy,
-                            budownictwo=budownictwo,
-                            development=development,
-                            elitehome=elitehome,
-                            inwestycje=inwestycje,
-                            instalacje=instalacje
-            )
-    else:
-        return users, session['username'], session['userperm'], pagination
+    domy = settingsDB['domy']
+    budownictwo = settingsDB['budownictwo']
+    development = settingsDB['development']
+    elitehome = settingsDB['elitehome']
+    inwestycje = settingsDB['inwestycje']
+    instalacje = settingsDB['instalacje']
+    logins = [x['username'] for x in all_users]
+    emails = [x['email'] for x in all_users]
+    names = [x['name'] for x in all_users]
+
+    brands_DICT, perms_DICT = get_BrandAndPerm()
+
+
+    """
+    {% for vPerm in perms_DICT.values() %}
+
+    {% set _id = vPerm.get("perm_id") %}
+    {% set _sys_name = vPerm.get("sys_name") %}
+    {% set sys_label = vPerm.get("sys_label") %}
+
+    <div class="form-check form-switch">
+        <form class="formatuj-padding-lg" action="">
+            {% if userperm['permissions'] == 0 %}
+                {% if users_data['uprawnienia'][_sys_name] == 0 %}
+                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}" disabled/>
+                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}">{{sys_label}}</label>
+                {% else %}
+                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}" checked disabled />
+                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}">{{sys_label}}</label>
+                {% endif %}
+            {% else %}
+                {% if users_data['uprawnienia'][_sys_name] == 0 %}
+                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_0" {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
+                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_0">{{sys_label}}</label>
+                {% else %}
+                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_1" checked {% if userperm[_sys_name] == 0 %}disabled{% endif %}/>
+                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{_id}}_{{user_id}}_1">{{sys_label}}</label>
+                {% endif %}
+            {% endif %}
+        </form>
+    </div>
+
+    {% endfor %}
+
+
+    ----
+
+
+
+    {% for vbrand in brands_DICT.values() %}
+
+    {% set b_id = vbrand.get("perm_id") %}
+    {% set b_sys_name = vbrand.get("sys_name") %}
+    {% set b_sys_label = vbrand.get("sys_label") %}
+    
+    <div class="form-check form-switch">
+        <form class="formatuj-padding-lg" action="">
+            {% if userperm['brands'] == 0 %}
+                {% if users_data['brands'][b_sys_name] == 0 %}
+                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}" disabled />
+                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}">Domy</label>
+                {% else %}
+                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}" checked disabled />
+                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}">Domy</label>
+                {% endif %}
+            {% else %}
+                {% if users_data['brands'][b_sys_name] == 0 %}
+                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_0" />
+                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_0">Domy</label>
+                {% else %}
+                    <input class="custom-checkbox form-check-input" type="checkbox" id="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_1" checked />
+                    <label class="form-check-label" for="flexSwitchCheckDefaultLG_{{b_id}}_{{user_id}}_1">Domy</label>
+                {% endif %}
+            {% endif %}
+        </form>
+    </div>
+    {% endfor %}
+    """
+
+    return render_template(
+        "user_management.html", 
+        users=users, 
+        logins=logins,
+        emails=emails,
+        names=names,
+        username=session['username'], 
+        userperm=session['userperm'], 
+        pagination=pagination,
+        domy=domy,
+        budownictwo=budownictwo,
+        development=development,
+        elitehome=elitehome,
+        inwestycje=inwestycje,
+        instalacje=instalacje,
+        brands_DICT=brands_DICT, 
+        perms_DICT=perms_DICT
+    )
 
 @app.route('/newsletter')
 def newsletter():
