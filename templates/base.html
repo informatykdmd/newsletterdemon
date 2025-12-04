@@ -229,7 +229,128 @@
                             role="button" aria-expanded="true">
                             <i class="bi bi-cloud-fog" style="position: relative; top: -10px;"></i></a>
     
-                            <ul class="dropdown-menu dark-mode">
+                            <ul class="dropdown-menu dark-mode p-2" style="width: 310px;">
+                                <div class="container text-center">
+                                    <div class="row g-3">
+
+                                        <!-- STRONA GŁÓWNA -->
+                                        <div class="col-3">
+                                            <a href="/home" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-house fs-4"></i>
+                                                <span class="mt-1">Start</span>
+                                            </a>
+                                        </div>
+
+                                        {% if userperm['users'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/user" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-people fs-4"></i>
+                                                <span class="mt-1">Użytk.</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['blog'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/blog" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-journal-text fs-4"></i>
+                                                <span class="mt-1">Blog</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['newsletter'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/newsletter" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-envelope-paper fs-4"></i>
+                                                <span class="mt-1">News</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['subscribers'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/subscriber" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-person-lines-fill fs-4"></i>
+                                                <span class="mt-1">Subskryb.</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['team'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/team-domy" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-person-badge fs-4"></i>
+                                                <span class="mt-1">Kadra</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['career'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/career" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-briefcase fs-4"></i>
+                                                <span class="mt-1">Kariera</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['estate'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/estate-ads-rent" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-megaphone fs-4"></i>
+                                                <span class="mt-1">Ogł.</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-3">
+                                            <a href="/estate-development" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-building fs-4"></i>
+                                                <span class="mt-1">Lokale</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['fbhidden'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/hidden-campaigns" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-bullseye fs-4"></i>
+                                                <span class="mt-1">Kamp.</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['realizations'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/realization-domy-list" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-hammer fs-4"></i>
+                                                <span class="mt-1">Realiz.</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['presentation'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/presentation-view" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-collection-play fs-4"></i>
+                                                <span class="mt-1">Prezent.</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if userperm['settings'] == 1 %}
+                                        <div class="col-3">
+                                            <a href="/setting" class="text-decoration-none text-light small d-flex flex-column align-items-center menu-ico">
+                                                <i class="bi bi-gear fs-4"></i>
+                                                <span class="mt-1">Ustaw.</span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </ul>
+
+                            <!-- <ul class="dropdown-menu dark-mode">
                                 <li><a class="dropdown-item" href="/home" style="color: #c0c6ce; max-height: 25px; font-size: 12px; font-weight: 100;">Strona Główna</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 {% if userperm['users'] == 1 %}
@@ -267,7 +388,7 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="/setting" style="color: #c0c6ce; max-height: 25px; font-size: 12px; font-weight: 100;">Ustawienia</a></li>
                                 {% endif %}
-                            </ul>
+                            </ul> -->
                         </li>
                     </div>
                     <!-- d-none d-sm-block d-lg-none tylko na średnim lg+ -->

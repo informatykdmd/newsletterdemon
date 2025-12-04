@@ -2386,3 +2386,8 @@ canvas {
   border-color: #444950;
 }
 
+.menu-ico:hover i,
+.menu-ico:hover span {
+    color: #ffffff !important;
+    transition: 0.15s;
+}
