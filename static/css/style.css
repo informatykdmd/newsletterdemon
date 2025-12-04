@@ -2391,3 +2391,50 @@ canvas {
     color: #ffffff !important;
     transition: 0.15s;
 }
+
+/* kontener dropdowna z ikonami */
+.admin-menu-icons {
+    min-width: 320px;
+    background-color: #111; /* jeśli trzeba, ale już masz dark-mode */
+}
+
+/* wspólny wygląd pozycji */
+.admin-menu-icons .menu-ico {
+    color: rgba(255, 255, 255, 0.4);  /* ~40% czarnego na odwrót :) */
+    font-size: 8px;
+}
+
+.admin-menu-icons .menu-ico i {
+    font-size: 1.3rem;                /* trochę mniejsze niż fs-4 */
+    line-height: 1;
+}
+
+.admin-menu-icons .menu-ico span {
+    margin-top: 2px;
+    display: block;
+    white-space: normal;
+    text-align: center;
+}
+
+/* hover */
+.admin-menu-icons .menu-ico:hover i,
+.admin-menu-icons .menu-ico:hover span {
+    color: #ffffff;
+    transition: 0.15s ease-in-out;
+}
+
+/* KOLOROWE, „ŻARÓWIASTE” IKONY */
+.admin-menu-icons .icon-home i           { color: #00e5ff; }  /* neon cyjan */
+.admin-menu-icons .icon-users i          { color: #ffb300; }  /* mocny żółty */
+.admin-menu-icons .icon-blog i           { color: #7c4dff; }  /* fiolet */
+.admin-menu-icons .icon-newsletter i     { color: #ff4081; }  /* róż/fuksja */
+.admin-menu-icons .icon-subs i           { color: #64ffda; }  /* turkus */
+.admin-menu-icons .icon-team i           { color: #29b6f6; }  /* niebieski */
+.admin-menu-icons .icon-career i         { color: #ffd600; }  /* żółty neon */
+.admin-menu-icons .icon-ads i            { color: #ff6e40; }  /* pomarańcz/coral */
+.admin-menu-icons .icon-locals i         { color: #a5d6a7; }  /* jasna zieleń */
+.admin-menu-icons .icon-campaigns i      { color: #ffea00; }  /* jaskrawy żółty */
+.admin-menu-icons .icon-realizations i   { color: #ffab91; }  /* łososiowy */
+.admin-menu-icons .icon-presentations i  { color: #69f0ae; }  /* seledyn/neon green */
+.admin-menu-icons .icon-settings i       { color: #b2ff59; }  /* zielony neon */
+
