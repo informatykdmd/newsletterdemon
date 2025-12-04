@@ -758,7 +758,7 @@
                         <!-- File used -->
                         <div class="row mt-3">
                             
-                            <div class="col-lg-6 col-sm-12 mt-1">
+                            <div class="col-lg-6 col-sm-12 mt-5">
                                 {% set width_used_percent = 'style="width:' ~ used_percent ~ '%;"' %}
     
                                 {% if used_percent <= 25 %}
@@ -799,7 +799,7 @@
                                 </p>
                                 <div class="row">
                                     <div class="col-lg-4 col-sm-12 p-1">
-                                        <h6 class="p-1">Dev – skróty trigera dla slota <strong class="slot-line-green">GREEN</strong> </h6>
+                                        <strong class="slot-line-green m-2">GREEN</strong>
                                         <div class="btn-group btn-group-sm bg-success" role="group">
                                             <a href="{{ url_for('download_dev_script', slot='green', platform='windows') }}" class="btn btn-outline-light">Windows</a>
                                             <a href="{{ url_for('download_dev_script', slot='green', platform='macos') }}" class="btn btn-outline-light">macOS</a>
@@ -808,7 +808,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-sm-12 p-1">
-                                        <h6 class="p-1">Dev – skróty trigera dla slota <strong class="slot-line-silver">SILVER</strong> </h6>
+                                        <strong class="slot-line-silver m-2">SILVER</strong>
                                         
                                         <div class="btn-group btn-group-sm bg-secondary" role="group">
                                             <a href="{{ url_for('download_dev_script', slot='silver', platform='windows') }}" class="btn btn-outline-light">Windows</a>
@@ -818,7 +818,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-sm-12 p-1">
-                                        <h6 class="p-1">Dev – skróty trigera dla slota <strong class="slot-line-gold">GOLD</strong> </h6>
+                                        <strong class="slot-line-gold m-2">GOLD</strong>
                                         
                                         <div class="btn-group btn-group-sm bg-warning" role="group">
                                             <a href="{{ url_for('download_dev_script', slot='gold', platform='windows') }}" class="btn btn-outline-light">Windows</a>
