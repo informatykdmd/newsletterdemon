@@ -756,9 +756,9 @@
             
 
                         <!-- File used -->
-                        <div class="row mt-3">
+                        <div class="row">
                             
-                            <div class="col-lg-6 col-sm-12 mt-5">
+                            <div class="col-lg-6 col-sm-12 mt-1">
                                 {% set width_used_percent = 'style="width:' ~ used_percent ~ '%;"' %}
     
                                 {% if used_percent <= 25 %}
@@ -794,12 +794,12 @@
                             {% set can_dev = userperm['presentation-silver'] == 1 or userperm['presentation-gold'] == 1 %}
                             {% if can_dev %}
                             <div class="col-lg-6 col-sm-12 mt-1">
-                                <p class="small text-muted">
-                                    Skrypty działają tylko w sieci lokalnej DMD. Uruchom je na komputerze lub urządzeniu podłączonym do tej samej sieci, co TV.
-                                </p>
+                                
                                 <div class="row">
                                     <div class="col-lg-4 col-md-12 p-1">
-                                        <strong class="slot-line-green m-2">GREEN</strong>
+                                        <div class="m-1">
+                                            <strong class="slot-line-green">GREEN</strong>
+                                        </div>
                                         <div class="btn-group btn-group-sm bg-success" role="group">
                                             <a href="{{ url_for('download_dev_script', slot='green', platform='windows') }}" class="btn btn-outline-light">Windows</a>
                                             <a href="{{ url_for('download_dev_script', slot='green', platform='macos') }}" class="btn btn-outline-light">macOS</a>
@@ -808,7 +808,9 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-md-12 p-1">
-                                        <strong class="slot-line-silver m-2">SILVER</strong>
+                                        <div class="m-1">
+                                            <strong class="slot-line-silver">SILVER</strong>
+                                        </div>
                                         
                                         <div class="btn-group btn-group-sm bg-secondary" role="group">
                                             <a href="{{ url_for('download_dev_script', slot='silver', platform='windows') }}" class="btn btn-outline-light">Windows</a>
@@ -818,7 +820,9 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-md-12 p-1">
-                                        <strong class="slot-line-gold m-2">GOLD</strong>
+                                        <div class="m-1">
+                                            <strong class="slot-line-gold">GOLD</strong>
+                                        </div>
                                         
                                         <div class="btn-group btn-group-sm bg-warning" role="group">
                                             <a href="{{ url_for('download_dev_script', slot='gold', platform='windows') }}" class="btn btn-outline-light">Windows</a>
@@ -827,6 +831,9 @@
                                             <a href="{{ url_for('download_dev_script', slot='gold', platform='ios') }}" class="btn btn-outline-light">iOS</a>
                                         </div>
                                     </div>
+                                    <p class="small text-muted">
+                                        Skrypty działają tylko w sieci lokalnej DMD. Uruchom je na komputerze lub urządzeniu podłączonym do tej samej sieci, co TV.
+                                    </p>
                                 </div>
                             </div>
                             {% endif %}
