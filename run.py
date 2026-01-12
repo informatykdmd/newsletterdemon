@@ -15090,7 +15090,7 @@ def download_dev_script(slot, platform):
         content = f"""@echo off
 echo Wywolywanie trigera dla slota: {slot}
 echo Pamietaj: Ten skrypt dziala tylko w sieci lokalnej DMD.
-curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
+curl "{HUB_URL}/trigger/{slot}/{AMPIO_TOKEN}"
 pause
 """
 
@@ -15099,7 +15099,7 @@ pause
         content = f"""#!/bin/bash
 echo "Wywolywanie trigera dla slota: {slot}"
 echo "Pamietaj: Ten skrypt dziala tylko w sieci lokalnej DMD."
-curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
+curl "{HUB_URL}/trigger/{slot}/{AMPIO_TOKEN}"
 """
 
     elif platform == "android":
@@ -15107,7 +15107,7 @@ curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
         content = f"""#!/data/data/com.termux/files/usr/bin/bash
 echo "Wywolywanie trigera dla slota: {slot}"
 echo "Uruchom w Termuxie w sieci DMD."
-curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
+curl "{HUB_URL}/trigger/{slot}/{AMPIO_TOKEN}"
 """
 
     elif platform == "ios":
@@ -15115,7 +15115,8 @@ curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}
         content = f"""#!/bin/bash
 echo "Wywolywanie trigera dla slota: {slot}"
 echo "UWAGA: iOS wymaga uruchomienia skryptu przez aplikacje typu iSH/Shell."
-curl -X POST -H "X-Ampio-Token: {AMPIO_TOKEN}" {HUB_URL}/trigger/{slot}"""
+curl "{HUB_URL}/trigger/{slot}/{AMPIO_TOKEN}"
+"""
     # --- log ---
     msq.handle_error(
         f'User {username} pobral DEV SCRIPT: {filename}',
