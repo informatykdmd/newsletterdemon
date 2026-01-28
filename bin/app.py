@@ -722,7 +722,7 @@ def decision_module(user_name, task_description):
         print("templates: ", templates)
         time.sleep(2)
         if templates.get("prompt", None) and templates.get("data", None) and templates.get("level", None) is not None:
-            build_prompt = f'{add_to_prompt}\n{templates.get('prompt', "")}\n{templates.get('data', None)}'
+            build_prompt = f'{add_to_prompt}\n{templates.get("prompt", "")}\n{templates.get("data", None)}'
             print("build_prompt", build_prompt)
             
             ready_hist.append({
