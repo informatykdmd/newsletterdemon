@@ -1096,7 +1096,13 @@ def main():
                             hist_aifa = list(final_prompt.get("ready_hist", []))
                             if hist_aifa and isinstance(hist_aifa[-1], dict):
                                 if hist_aifa[-1].get('role', None) == 'user':
-                                    hist_aifa[-1] = {"role": 'user', "content": final_prompt.get("ready_prompt", '')}
+                                    ppmt = (
+                                        "Odpowiadaj bez przywitania, nawet jeżeli uważasz, że powinieneś!\n"
+                                        "Żadnych: Cześć, siema, dzień dobry itd.\n"
+                                        "Jeżeli czegoś nie jesteś pewna, powiedz to!\n"
+                                        "Nie udawaj i pisz na luzie.\n"
+                                    )
+                                    hist_aifa[-1] = {"role": 'user', "content": final_prompt.get("ready_prompt", '')+ppmt}
 
                                     reaction = random.choice(automation_messages)
                                     farewell = random.choice(farewell_messages)
