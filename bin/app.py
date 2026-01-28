@@ -1091,28 +1091,7 @@ def main():
                             
                         mgr_api_key = MISTRAL_API_KEY
                         if mgr_api_key:
-                            mgr = MistralChatManager(mgr_api_key)
                             
-                            hist_aifa = list(final_prompt.get("ready_hist", []))
-                            if hist_aifa and isinstance(hist_aifa[-1], dict):
-                                if hist_aifa[-1].get('role', None) == 'user':
-                                    ppmt = (
-                                        "Odpowiadaj bez przywitania, nawet jeżeli uważasz, że powinieneś!\n"
-                                        "Żadnych: Cześć, siema, dzień dobry itd.\n"
-                                        "Jeżeli czegoś nie jesteś pewna, powiedz to!\n"
-                                        "Nie udawaj i pisz na luzie.\n"
-                                    )
-                                    hist_aifa[-1] = {"role": 'user', "content": final_prompt.get("ready_prompt", '')+ppmt}
-
-                                    reaction = random.choice(automation_messages)
-                                    farewell = random.choice(farewell_messages)
-
-                                    sys_prmt_aifa = f"{reaction}\n\n{farewell}"
-
-                                    answer_mistral = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
-                                    if answer_mistral:
-                                        save_chat_message("aifa", answer_mistral, 0)
-                                        time.sleep(1.5)
 
                             hist = final_prompt.get("ready_hist", [])
                             if final_prompt.get("forge_commender", None) is None:
@@ -1120,6 +1099,12 @@ def main():
                                 witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
                                 bot_ident = 'niezidentyfikowana'
                                 if hist and isinstance(hist[-1], dict):
+                                    last_context = "\n".join(
+                                        f"{x.get('role', '')}\n{x.get('content', '')}"
+                                        for x in hist[-5:]
+                                    )
+                                    latest_user_message = hist[-1].get("content", "")
+
                                     prompti = (
                                         "Zadanie: wskaż jednego adresata wiadomości spośród: gerina, pionier, niezidentyfikowana.\n"
                                         "Zasady:\n"
@@ -1128,17 +1113,50 @@ def main():
                                         "— Jeśli pojawia się 'aifa' lub rola/kontekst raportu/statusu/zadania → odpowiedz: aifa.\n"
                                         "— Jeśli pojawia się kontekst ogólny lub liczby mnogiej czy wielu adresatów → odpowiedz: razem.\n"
                                         "— Jeśli brak jednoznacznych przesłanek → odpowiedz: niezidentyfikowana.\n"
-                                        "— Zwróć wyłącznie jedną etykietę dokładnie tak: gerina | pionier | niezidentyfikowana.\n"
-                                        "Oto wiadomość do analizy:\n"
+                                        "— Zwróć wyłącznie jedną etykietę dokładnie tak: gerina | pionier | niezidentyfikowana.\n\n"
+                                        "Kontekst rozmowy (ostatnie wiadomości):\n"
+                                        f"{last_context}\n\n"
+                                        "Najświeższa wiadomość użytkownika (kluczowa do decyzji):\n"
+                                        f"{latest_user_message}\n"
                                     )
-                                    bot_ident = mgr.categorize_response(f"{prompti}\n{hist[-1]['content']}", witch_bot_list, max_tokens=100)
+
+                                    bot_ident = mgr.categorize_response(
+                                        prompti,
+                                        witch_bot_list,
+                                        max_tokens=100
+                                    )
+
                                     bot_rotation = bot_ident
                                     time.sleep(1.5)
 
                                 if bot_ident == 'niezidentyfikowana':
-                                    bot_rotation = random.choice(['gerina', 'pionier', 'razem', 'żaden'])
+                                    bot_rotation = random.choice(['gerina', 'pionier', 'aifa', 'razem', 'żaden'])
 
                                 print("bot_rotation", bot_rotation)
+
+                                # Aifa
+                                mgr = MistralChatManager(mgr_api_key)
+                                if bot_rotation in ['aifa', 'razem', "niezidentyfikowana", "żaden"]:
+                                    hist_aifa = list(final_prompt.get("ready_hist", []))
+                                    ppmt = (
+                                        "Odpowiadaj bez przywitania, nawet jeżeli uważasz, że powinieneś!\n"
+                                        "Żadnych: Cześć, siema, dzień dobry itd. (Jesteś tu czały czas)\n"
+                                        "Jeżeli nie masz pewności, powiedz to!\n"
+                                        "Nie udawaj, że wiesz i pisz na luzie.\n"
+                                    )
+                                    if hist_aifa and isinstance(hist_aifa[-1], dict):
+                                        if hist_aifa[-1].get('role', None) == 'user':
+                                            hist_aifa[-1] = {"role": 'user', "content": final_prompt.get("ready_prompt", '')+ppmt}
+
+                                            reaction = random.choice(automation_messages)
+                                            farewell = random.choice(farewell_messages)
+
+                                            sys_prmt_aifa = f"{reaction}\n\n{farewell}"
+
+                                            answer_mistral = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
+                                            if answer_mistral:
+                                                save_chat_message("aifa", answer_mistral, 0)
+                                                time.sleep(1.5)
 
                                 # GERINA
                                 mgr = MistralChatManager(mgr_api_key)
@@ -1157,7 +1175,7 @@ def main():
                                     )
 
                                     if hist and isinstance(hist[-1], dict):
-                                        hist[-1]['content'] = f"{pre_prompt}\n{instruction_person_gerina}{hist[-1].get('content', '')}"
+                                        hist[-1]['content'] = f"{ppmt}{pre_prompt}\n{instruction_person_gerina}{hist[-1].get('content', '')}"
                                     answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
                                     if answer_mistral:
                                         save_chat_message("gerina", answer_mistral, 0)
@@ -1183,7 +1201,7 @@ def main():
                                     )
 
                                     if hist and isinstance(hist[-1], dict):
-                                        hist[-1]['content'] = f"{instruction_person_pionier}{hist[-1].get('content', '')}"
+                                        hist[-1]['content'] = f"{ppmt}\n{instruction_person_pionier}{hist[-1].get('content', '')}"
                                     answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                     if answer_mistral:
                                         save_chat_message("pionier", answer_mistral, 0)
