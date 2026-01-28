@@ -715,7 +715,7 @@ def decision_module(user_name, task_description, ready_hist = []):
         "- Zmieniaj wyłącznie wartości istniejących kluczy, tylko tam, gdzie jest to uzasadnione poleceniem.\n"
         "- Odpowiadaj wyłącznie poprawnym, maszynowo parsowalnym JSON-em.\n"
         "- Nie dodawaj żadnych komentarzy, opisów ani wyjaśnień.\n"
-        "- Nie używaj znaczników markdown, emotek, ikon ani jakiegokolwiek formatowania tekstowego.\n"
+        "- Nie używaj znaczników MARKDAWN (**, #, ##, ###), emotek, ikon ani jakiegokolwiek formatowania tekstowego.\n"
         "- Nie dodawaj żadnego tekstu przed ani po strukturze JSON.\n"
     )
 
@@ -904,14 +904,15 @@ def decision_module(user_name, task_description, ready_hist = []):
     })
 
     add_to_prompt_list = [
-        f'Przygotuj raport dla użytkownika @{user_name} w kontekście jego polecenia: "{task_description}". Upewnij się, że jest zwięzły i konkretny.',
-        f'@{user_name} potrzebuje krótkiego raportu dotyczącego: "{task_description}". Przygotuj odpowiednie podsumowanie.',
-        f'Napisz dla @{user_name} zwięzły raport w oparciu o treść polecenia: "{task_description}". Zawrzyj najważniejsze szczegóły.',
-        f'Sporządź raport dla użytkownika @{user_name} odnoszący się do tematu polecenia: "{task_description}". Skup się na konkretach.',
-        f'Utwórz raport dla @{user_name}, który podsumowuje zadanie: "{task_description}". Staraj się, by był krótki i treściwy.',
-        f'Zredaguj raport na podstawie informacji z zadania: "{task_description}", aby użytkownik @{user_name} otrzymał klarowne podsumowanie.',
-        f'Przygotuj podsumowanie w formie raportu na temat polecenia: "{task_description}" dla @{user_name}. Raport ma być konkretny i prosty.'
+        f'Opisz krótko, jak przebiegło zadanie wykonane dla użytkownika @{user_name} w kontekście polecenia: "{task_description}". Skup się na konkretach i efektach. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.',
+        f'Krótko opisz przebieg i rezultat zadania zrealizowanego dla @{user_name} na podstawie polecenia: "{task_description}". Uwzględnij tylko najważniejsze informacje. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.',
+        f'Zwięźle przedstaw, jak zostało wykonane zadanie dla użytkownika @{user_name} zgodnie z poleceniem: "{task_description}". Ogranicz się do faktów i wniosków. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.',
+        f'Opisz w kilku zdaniach przebieg zadania dla @{user_name}, odnosząc się do polecenia: "{task_description}". Skoncentruj się na tym, co zostało zrobione i z jakim efektem. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.',
+        f'Podaj krótkie, rzeczowe podsumowanie przebiegu zadania wykonanego dla użytkownika @{user_name} na podstawie polecenia: "{task_description}". Bez dygresji i ozdobników. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.',
+        f'Zwięźle opisz realizację zadania dla @{user_name} wynikającego z polecenia: "{task_description}". Skup się wyłącznie na przebiegu i rezultacie. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.',
+        f'W kilku zdaniach opisz, jak przebiegło wykonanie zadania dla użytkownika @{user_name} w oparciu o polecenie: "{task_description}". Zachowaj prosty i konkretny styl. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.'
     ]
+
     final_prompt = random.choice(add_to_prompt_list)
 
     ready_hist.append({
@@ -920,9 +921,6 @@ def decision_module(user_name, task_description, ready_hist = []):
     })
 
     print("final_prompt:", final_prompt)
-
-    
-
 
     answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
     print("final_answeing:", answeing)
