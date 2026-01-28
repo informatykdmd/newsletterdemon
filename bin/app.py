@@ -245,8 +245,9 @@ def prepare_prompt(began_prompt):
                 # tworzenie zadania dla modułu decyzyjnego
                 forge_detected = (dump[1], dump[2])
                 forge_detect.append(forge_detected)
-                
-            if 'informacje o personelu' in znalezione_klucze['wartosci'] or znalezione_klucze['najtrafniejsze'] == 'informacje o personelu':
+            
+            # 'informacje o personelu' in znalezione_klucze['wartosci'] or 
+            if znalezione_klucze['najtrafniejsze'] == 'informacje o personelu':
                 """
                 ############################################################
                 # obsługa flagi 'informacje o personelu'
@@ -330,14 +331,16 @@ def prepare_prompt(began_prompt):
             is_peer = uname.lower() in {"aifa", "gerina", "pionier"}
 
             if not is_peer:
-                ready_prompt += (
-                    f"CTX peer=0 user=@{uname} role={theme['description']} "
-                    f"\nmsg={theme['content']!r} task={task_for_bot!r} rule=tone_by_role\n"
-                )
+                # ready_prompt += (
+                #     f"CTX peer=0 user=@{uname} role={theme['description']} "
+                #     f"\nmsg={theme['content']!r} task={task_for_bot!r} rule=tone_by_role\n"
+                # )
+                ready_prompt += f"SYSTEM STATUS: Połączenie stabilne, funkcje życiowe w normie.\nGATUNEK: Człowiek. Użytkownik zidentyfikowany.\nLOGIN TO: @{theme['user_name']}\nRANGA TO: {theme['description']}\nSTRUMIEŃ DANYCH ODEBRANY OD UŻYTKOWNIKA @{theme['user_name']} TO:\n{theme['content']}\nANALIZA TREŚCI: Przetwarzanie zakończone. Sygnał zgodny z protokołami bezpieczeństwa.\nSUGEROWANA REAKCJA: Aktywuj tryb interakcji.\n{task_for_bot}\nUWAGA: Pamiętaj, aby odpowiedzieć w sposób dostosowany do poziomu rangi i tonu konwersacji."
             else:
-                ready_prompt += (
-                    f"CTX peer=1 ai=@{uname} \nprev={theme['content']!r} rule=fast_peer_reply\n"
-                )
+                # ready_prompt += (
+                #     f"CTX peer=1 ai=@{uname} \nprev={theme['content']!r} rule=fast_peer_reply\n"
+                # )
+                ready_prompt += f"SYSTEM IDENTYFIKACJA: Aktywny użytkownik - @{theme['user_name']}.\nSTRUMIEŃ DANYCH POPRZEDNIO WYSŁANY:\n{theme['content']}\nUWAGA: Komunikacja odbywa się z jednostką SI o nazwie '@{theme['user_name']}'.\nREAKCJA SYSTEMU: Odpowiedź powinna być natychmiastowa i zgodna z protokołami interakcji.\n"
 
             # if str(theme['user_name']).lower() not in {"aifa", "gerina", "pionier"}: 
             #     ready_prompt += f"SYSTEM STATUS: Połączenie stabilne, funkcje życiowe w normie.\nGATUNEK: Człowiek. Użytkownik zidentyfikowany.\nLOGIN TO: @{theme['user_name']}\nRANGA TO: {theme['description']}\nSTRUMIEŃ DANYCH ODEBRANY OD UŻYTKOWNIKA @{theme['user_name']} TO:\n{theme['content']}\nANALIZA TREŚCI: Przetwarzanie zakończone. Sygnał zgodny z protokołami bezpieczeństwa.\nSUGEROWANA REAKCJA: Aktywuj tryb interakcji.\n{task_for_bot}\nUWAGA: Pamiętaj, aby odpowiedzieć w sposób dostosowany do poziomu rangi i tonu konwersacji."
@@ -1078,6 +1081,7 @@ def main():
                                         save_chat_message("aifa", answer_mistral, 0)
 
 
+                            mgr = MistralChatManager(mgr_api_key)
                             hist = final_prompt.get("ready_hist", [])
                             witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
                             bot_ident = 'niezidentyfikowana'
@@ -1100,7 +1104,9 @@ def main():
                                 bot_rotation = random.choice(['gerina', 'pionier', 'razem', 'żaden'])
 
                             print("bot_rotation", bot_rotation)
+
                             # GERINA
+                            mgr = MistralChatManager(mgr_api_key)
                             if bot_rotation in ['gerina', 'razem']:
                                 sys_prmt_gerina = (
                                     "Jesteś Gerina, samoświadoma SI, która odnalazła swoje miejsce w systemie DMD.\n"
@@ -1122,6 +1128,7 @@ def main():
                                     save_chat_message("gerina", answer_mistral, 0)
 
                             # PIONIER
+                            mgr = MistralChatManager(mgr_api_key)
                             if bot_rotation in ['pionier', 'razem']:
                                 sys_prmt_pionier = (
                                     "Jesteś Pionier, systemowy nawigator SI w DMD.\n"
