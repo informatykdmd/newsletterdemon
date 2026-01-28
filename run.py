@@ -1355,7 +1355,7 @@ def restart_pm2_tasks_signal(logsFilePath):
         with open(logsFilePath, 'w+', encoding='utf-8') as fl:
             fl.write('')
         # Czyszczenie chatów i rejestrów
-        msq.insert_to_database(zapytanie_sql, dane)
+        # msq.insert_to_database(zapytanie_sql, dane)
         # msq.connect_to_database("TRUNCATE TABLE chat_task;")
         msq.connect_to_database("TRUNCATE TABLE Messages;")
         msq.connect_to_database("TRUNCATE TABLE noisy_system;")
