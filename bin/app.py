@@ -905,7 +905,7 @@ def decision_module(user_name, task_description, ready_hist = []):
     })
 
     if 'answer' in answeing:
-        if save_chat_message("aifa", answeing, 1):
+        if save_chat_message("aifa", answeing, 0):
             return {'success': 'Dane zostały zapisane'}
         else:
             return {"error": "Bad structure json file!"}
