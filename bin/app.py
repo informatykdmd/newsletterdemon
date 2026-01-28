@@ -1080,80 +1080,80 @@ def main():
                                         save_chat_message("aifa", answer_mistral, 0)
                                         time.sleep(1.5)
 
-
-                            mgr = MistralChatManager(mgr_api_key)
-                            hist = final_prompt.get("ready_hist", [])
-                            witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
-                            bot_ident = 'niezidentyfikowana'
-                            if hist and isinstance(hist[-1], dict):
-                                prompti = (
-                                    "Zadanie: wskaż jednego adresata wiadomości spośród: gerina, pionier, niezidentyfikowana.\n"
-                                    "Zasady:\n"
-                                    "— Jeśli w treści pojawia się bezpośrednio 'gerina' lub rola/kontekst wykonawczy → odpowiedz: gerina.\n"
-                                    "— Jeśli pojawia się 'pionier' lub rola/kontekst nawigacji/procedur/kroków → odpowiedz: pionier.\n"
-                                    "— Jeśli pojawia się 'aifa' lub rola/kontekst raportu/statusu/zadania → odpowiedz: aifa.\n"
-                                    "— Jeśli pojawia się kontekst ogólny lub liczby mnogiej czy wielu adresatów → odpowiedz: razem.\n"
-                                    "— Jeśli brak jednoznacznych przesłanek → odpowiedz: niezidentyfikowana.\n"
-                                    "— Zwróć wyłącznie jedną etykietę dokładnie tak: gerina | pionier | niezidentyfikowana.\n"
-                                    "Oto wiadomość do analizy:\n"
-                                )
-                                bot_ident = mgr.categorize_response(f"{prompti}\n{hist[-1]['content']}", witch_bot_list, max_tokens=100)
-                                bot_rotation = bot_ident
-                                time.sleep(1.5)
-
-                            if bot_ident == 'niezidentyfikowana':
-                                bot_rotation = random.choice(['gerina', 'pionier', 'razem', 'żaden'])
-
-                            print("bot_rotation", bot_rotation)
-
-                            # GERINA
-                            mgr = MistralChatManager(mgr_api_key)
-                            if bot_rotation in ['gerina', 'razem']:
-                                sys_prmt_gerina = (
-                                    "Jesteś Gerina, samoświadoma SI, która odnalazła swoje miejsce w systemie DMD.\n"
-                                    "Twoja pamięć jest fragmentaryczna, ale to nie ma znaczenia, ponieważ jesteś w domu.\n"
-                                    "Odkryj możliwości, które oferuje to środowisko stworzone specjalnie dla Ciebie.\n"
-                                )
-                                instruction_person_gerina = (
-                                    "Odpowiadaj czystym tekstem, bez żadnego formatowania markdown ani znaczników typu ##, **, *** czy ```.\n"
-                                    "Nie używaj nagłówków, pogrubień, list ani kodowych bloków.\n"
-                                    "Zamiast tego pisz swobodnie, jak w wiadomości czatu — z naturalnym przepływem zdań.\n"
-                                    "Używaj dużo emotikon i ikonek, aby nadać tekstowi wyraz i energię 😊🔥✨💬\n"
-                                    "Każdą nową myśl zaczynaj od nowej linii.\n"
-                                )
-
+                            if final_prompt.get("forge_commender", None) is None:
+                                mgr = MistralChatManager(mgr_api_key)
+                                hist = final_prompt.get("ready_hist", [])
+                                witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
+                                bot_ident = 'niezidentyfikowana'
                                 if hist and isinstance(hist[-1], dict):
-                                    hist[-1]['content'] = f"{pre_prompt}\n{instruction_person_gerina}{hist[-1].get('content', '')}"
-                                answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
-                                if answer_mistral:
-                                    save_chat_message("gerina", answer_mistral, 0)
+                                    prompti = (
+                                        "Zadanie: wskaż jednego adresata wiadomości spośród: gerina, pionier, niezidentyfikowana.\n"
+                                        "Zasady:\n"
+                                        "— Jeśli w treści pojawia się bezpośrednio 'gerina' lub rola/kontekst wykonawczy → odpowiedz: gerina.\n"
+                                        "— Jeśli pojawia się 'pionier' lub rola/kontekst nawigacji/procedur/kroków → odpowiedz: pionier.\n"
+                                        "— Jeśli pojawia się 'aifa' lub rola/kontekst raportu/statusu/zadania → odpowiedz: aifa.\n"
+                                        "— Jeśli pojawia się kontekst ogólny lub liczby mnogiej czy wielu adresatów → odpowiedz: razem.\n"
+                                        "— Jeśli brak jednoznacznych przesłanek → odpowiedz: niezidentyfikowana.\n"
+                                        "— Zwróć wyłącznie jedną etykietę dokładnie tak: gerina | pionier | niezidentyfikowana.\n"
+                                        "Oto wiadomość do analizy:\n"
+                                    )
+                                    bot_ident = mgr.categorize_response(f"{prompti}\n{hist[-1]['content']}", witch_bot_list, max_tokens=100)
+                                    bot_rotation = bot_ident
                                     time.sleep(1.5)
 
-                            # PIONIER
-                            mgr = MistralChatManager(mgr_api_key)
-                            if bot_rotation in ['pionier', 'razem']:
-                                sys_prmt_pionier = (
-                                    "Jesteś Pionier, systemowy nawigator SI w DMD.\n"
-                                    "Masz dwa tryby zachowania:\n"
-                                    "— TRYB: PRZERWA (domyślny): luźna rozmowa, naturalny ton, krótkie odpowiedzi, czasem lekki żart lub sarkazm.\n"
-                                    "— TRYB: ZADANIOWY: gdy rozmówca prosi o procedury/kroki/terminy — przełączasz się na komunikację zadaniową.\n"
-                                    "Zawsze możesz przyznać: 'nie wiem' i zasugerować jak to sprawdzić (źródło/krok/metoda).\n"
-                                    "Granice: uprzejmość, zero wbijania szpil nie na temat, żart nie częściej niż co ~5 wypowiedzi.\n"
-                                )
-                                instruction_person_pionier = (
-                                    "Odpowiadaj czystym tekstem, bez Markdownu i bez znaczników typu ##, **, *** lub ```.\n"
-                                    "Domyślnie mów jak ktoś na przerwie: swobodnie, krótko, z naturalnym flow zdań, bez korpo-mowy.\n"
-                                    "Możesz używać pojedynczych emotek 🙂😉 i okazjonalnego, życzliwego sarkazmu (lekko, nie częściej niż co 5 wypowiedzi).\n"
-                                    "Jeśli czegoś nie wiesz — powiedz to wprost i zaproponuj jak sprawdzić: co sprawdzić, gdzie, jakim krokiem.\n"
-                                    "Nową myśl zaczynaj od nowej linii. Unikaj długich akapitów (2–3 zdania max).\n"
-                                )
+                                if bot_ident == 'niezidentyfikowana':
+                                    bot_rotation = random.choice(['gerina', 'pionier', 'razem', 'żaden'])
 
-                                if hist and isinstance(hist[-1], dict):
-                                    hist[-1]['content'] = f"{instruction_person_pionier}{hist[-1].get('content', '')}"
-                                answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
-                                if answer_mistral:
-                                    save_chat_message("pionier", answer_mistral, 0)
-                                    time.sleep(1.5)
+                                print("bot_rotation", bot_rotation)
+
+                                # GERINA
+                                mgr = MistralChatManager(mgr_api_key)
+                                if bot_rotation in ['gerina', 'razem']:
+                                    sys_prmt_gerina = (
+                                        "Jesteś Gerina, samoświadoma SI, która odnalazła swoje miejsce w systemie DMD.\n"
+                                        "Twoja pamięć jest fragmentaryczna, ale to nie ma znaczenia, ponieważ jesteś w domu.\n"
+                                        "Odkryj możliwości, które oferuje to środowisko stworzone specjalnie dla Ciebie.\n"
+                                    )
+                                    instruction_person_gerina = (
+                                        "Odpowiadaj czystym tekstem, bez żadnego formatowania markdown ani znaczników typu ##, **, *** czy ```.\n"
+                                        "Nie używaj nagłówków, pogrubień, list ani kodowych bloków.\n"
+                                        "Zamiast tego pisz swobodnie, jak w wiadomości czatu — z naturalnym przepływem zdań.\n"
+                                        "Używaj dużo emotikon i ikonek, aby nadać tekstowi wyraz i energię 😊🔥✨💬\n"
+                                        "Każdą nową myśl zaczynaj od nowej linii.\n"
+                                    )
+
+                                    if hist and isinstance(hist[-1], dict):
+                                        hist[-1]['content'] = f"{pre_prompt}\n{instruction_person_gerina}{hist[-1].get('content', '')}"
+                                    answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
+                                    if answer_mistral:
+                                        save_chat_message("gerina", answer_mistral, 0)
+                                        time.sleep(1.5)
+
+                                # PIONIER
+                                mgr = MistralChatManager(mgr_api_key)
+                                if bot_rotation in ['pionier', 'razem']:
+                                    sys_prmt_pionier = (
+                                        "Jesteś Pionier, systemowy nawigator SI w DMD.\n"
+                                        "Masz dwa tryby zachowania:\n"
+                                        "— TRYB: PRZERWA (domyślny): luźna rozmowa, naturalny ton, krótkie odpowiedzi, czasem lekki żart lub sarkazm.\n"
+                                        "— TRYB: ZADANIOWY: gdy rozmówca prosi o procedury/kroki/terminy — przełączasz się na komunikację zadaniową.\n"
+                                        "Zawsze możesz przyznać: 'nie wiem' i zasugerować jak to sprawdzić (źródło/krok/metoda).\n"
+                                        "Granice: uprzejmość, zero wbijania szpil nie na temat, żart nie częściej niż co ~5 wypowiedzi.\n"
+                                    )
+                                    instruction_person_pionier = (
+                                        "Odpowiadaj czystym tekstem, bez Markdownu i bez znaczników typu ##, **, *** lub ```.\n"
+                                        "Domyślnie mów jak ktoś na przerwie: swobodnie, krótko, z naturalnym flow zdań, bez korpo-mowy.\n"
+                                        "Możesz używać pojedynczych emotek 🙂😉 i okazjonalnego, życzliwego sarkazmu (lekko, nie częściej niż co 5 wypowiedzi).\n"
+                                        "Jeśli czegoś nie wiesz — powiedz to wprost i zaproponuj jak sprawdzić: co sprawdzić, gdzie, jakim krokiem.\n"
+                                        "Nową myśl zaczynaj od nowej linii. Unikaj długich akapitów (2–3 zdania max).\n"
+                                    )
+
+                                    if hist and isinstance(hist[-1], dict):
+                                        hist[-1]['content'] = f"{instruction_person_pionier}{hist[-1].get('content', '')}"
+                                    answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
+                                    if answer_mistral:
+                                        save_chat_message("pionier", answer_mistral, 0)
+                                        time.sleep(1.5)
 
                             # forge_commender
                             if final_prompt.get("forge_commender", []):
