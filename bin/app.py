@@ -1134,16 +1134,16 @@ def main():
 
                                 print("bot_rotation", bot_rotation)
 
+                                ppmt = (
+                                    "Odpowiadaj bez przywitania, nawet jeżeli uważasz, że powinieneś!\n"
+                                    "Żadnych: Cześć, siema, dzień dobry itd. (Jesteś tu czały czas)\n"
+                                    "Jeżeli nie masz pewności, powiedz to!\n"
+                                    "Nie udawaj, że wiesz i pisz na luzie.\n"
+                                )
                                 # Aifa
                                 mgr = MistralChatManager(mgr_api_key)
                                 if bot_rotation in ['aifa', 'razem', "niezidentyfikowana", "żaden"]:
                                     hist_aifa = list(final_prompt.get("ready_hist", []))
-                                    ppmt = (
-                                        "Odpowiadaj bez przywitania, nawet jeżeli uważasz, że powinieneś!\n"
-                                        "Żadnych: Cześć, siema, dzień dobry itd. (Jesteś tu czały czas)\n"
-                                        "Jeżeli nie masz pewności, powiedz to!\n"
-                                        "Nie udawaj, że wiesz i pisz na luzie.\n"
-                                    )
                                     if hist_aifa and isinstance(hist_aifa[-1], dict):
                                         if hist_aifa[-1].get('role', None) == 'user':
                                             hist_aifa[-1] = {"role": 'user', "content": final_prompt.get("ready_prompt", '')+ppmt}
