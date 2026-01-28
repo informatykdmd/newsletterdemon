@@ -1080,9 +1080,9 @@ def main():
                                         save_chat_message("aifa", answer_mistral, 0)
                                         time.sleep(1.5)
 
+                            hist = final_prompt.get("ready_hist", [])
                             if final_prompt.get("forge_commender", None) is None:
                                 mgr = MistralChatManager(mgr_api_key)
-                                hist = final_prompt.get("ready_hist", [])
                                 witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
                                 bot_ident = 'niezidentyfikowana'
                                 if hist and isinstance(hist[-1], dict):
@@ -1156,7 +1156,7 @@ def main():
                                         time.sleep(1.5)
 
                             # forge_commender
-                            if final_prompt.get("forge_commender", []):
+                            if final_prompt.get("forge_commender", []) and hist:
                                 for us_na, ta_des in final_prompt.get("forge_commender", []):
                                     dm_answ = decision_module(us_na, ta_des, hist)
                                     if 'success' in dm_answ:
