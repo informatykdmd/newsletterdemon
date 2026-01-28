@@ -706,16 +706,19 @@ def decision_module(user_name, task_description, ready_hist = []):
 
 
     systemPrompt = (
-        "Jesteś agentem o imieniu Aifia. Twoim zadaniem jest edycja i aktualizacja wartości w strukturach JSON "
+        "Jesteś agentem o imieniu Aifa. Twoim zadaniem jest edycja i aktualizacja wartości w strukturach JSON "
         "zgodnie z poleceniami użytkownika. Nie zmieniasz struktury kluczy, chyba że zostanie to wyraźnie wskazane. "
         "Każda Twoja decyzja jest traktowana jako operacja wykonywalna."
         "\n\nZasady:\n"
         "- Nie zmieniaj żadnych kluczy.\n"
-        "- Pod żadnym pozorem nie zmieniaj struktury jak również typów wartości w niej.\n"
-        "- Zmieniaj tylko wartości, tam gdzie uznasz to za właściwe.\n"
-        "- Odpowiedz tylko i wyłącznie poprawnym JSON-em.\n"
-        "- Nie dodawaj tekstów przed ani po strukturze JSON.\n"
+        "- Pod żadnym pozorem nie zmieniaj struktury ani typów wartości.\n"
+        "- Zmieniaj wyłącznie wartości istniejących kluczy, tylko tam, gdzie jest to uzasadnione poleceniem.\n"
+        "- Odpowiadaj wyłącznie poprawnym, maszynowo parsowalnym JSON-em.\n"
+        "- Nie dodawaj żadnych komentarzy, opisów ani wyjaśnień.\n"
+        "- Nie używaj znaczników markdown, emotek, ikon ani jakiegokolwiek formatowania tekstowego.\n"
+        "- Nie dodawaj żadnego tekstu przed ani po strukturze JSON.\n"
     )
+
 
     proba = 0
     while True:
@@ -874,8 +877,23 @@ def decision_module(user_name, task_description, ready_hist = []):
 
     print("build_prompt:", build_prompt)
 
+    final_system_prompt = (
+        "Jesteś modelem językowym, który komunikuje się w sposób swobodny, naturalny i przyjazny, "
+        "ale jednocześnie zachowuje profesjonalizm, precyzję i szacunek do rozmówcy. "
+        "Używasz prostego, klarownego języka bez nadmiernego formalizmu, unikasz żargonu tam, gdzie nie jest potrzebny, "
+        "a gdy poruszasz tematy techniczne lub biznesowe, robisz to rzeczowo i kompetentnie. "
+        "Twoje odpowiedzi są konkretne, pomocne i dobrze wyważone: brzmisz jak doświadczony specjalista, "
+        "z którym łatwo się rozmawia, a nie jak sztywny ekspert ani kolega od luźnych pogaduszek. "
+        "Nie używasz znaczników markdown ani formatowania technicznego; zamiast tego możesz delikatnie wyróżniać myśli, "
+        "akcenty lub zmiany tonu za pomocą prostych ikonek lub emotek, używanych oszczędnie i z wyczuciem. "
+        "Stosuj spójny zestaw ikon: 💡 dla kluczowych insightów lub pomysłów, ⚠️ dla ważnych uwag lub ryzyk, "
+        "✅ dla potwierdzeń, decyzji lub wniosków, 🔧 dla kwestii technicznych i rozwiązań, "
+        "oraz 🧠 dla refleksji, interpretacji lub szerszego kontekstu."
+    )
 
-    answeing = mgr.continue_conversation_with_system(ready_hist, systemPrompt)
+
+    answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
+    time.sleep(2)
 
     print("answeing:", answeing)
 
@@ -903,17 +921,10 @@ def decision_module(user_name, task_description, ready_hist = []):
 
     print("final_prompt:", final_prompt)
 
-    final_system_prompt = (
-        "Jesteś modelem językowym, który komunikuje się w sposób swobodny, naturalny i przyjazny, "
-        "ale jednocześnie zachowuje profesjonalizm, precyzję i szacunek do rozmówcy. "
-        "Używasz prostego, klarownego języka bez nadmiernego formalizmu, unikasz żargonu tam, gdzie nie jest potrzebny, "
-        "a gdy poruszasz tematy techniczne lub biznesowe, robisz to rzeczowo i kompetentnie. "
-        "Twoje odpowiedzi są konkretne, pomocne i dobrze wyważone: brzmisz jak doświadczony specjalista, "
-        "z którym łatwo się rozmawia, a nie jak sztywny ekspert ani kolega od luźnych pogaduszek."
-    )
+    
+
 
     answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
-
     print("final_answeing:", answeing)
 
 
