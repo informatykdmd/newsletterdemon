@@ -1079,6 +1079,7 @@ def main():
                                     answer_mistral = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
                                     if answer_mistral:
                                         save_chat_message("aifa", answer_mistral, 0)
+                                        time.sleep(1.5)
 
 
                             mgr = MistralChatManager(mgr_api_key)
@@ -1099,6 +1100,7 @@ def main():
                                 )
                                 bot_ident = mgr.categorize_response(f"{prompti}\n{hist[-1]['content']}", witch_bot_list, max_tokens=100)
                                 bot_rotation = bot_ident
+                                time.sleep(1.5)
 
                             if bot_ident == 'niezidentyfikowana':
                                 bot_rotation = random.choice(['gerina', 'pionier', 'razem', 'żaden'])
@@ -1126,6 +1128,7 @@ def main():
                                 answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
                                 if answer_mistral:
                                     save_chat_message("gerina", answer_mistral, 0)
+                                    time.sleep(1.5)
 
                             # PIONIER
                             mgr = MistralChatManager(mgr_api_key)
@@ -1151,6 +1154,7 @@ def main():
                                 answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                 if answer_mistral:
                                     save_chat_message("pionier", answer_mistral, 0)
+                                    time.sleep(1.5)
 
                             # forge_commender
                             if final_prompt.get("forge_commender", []):
