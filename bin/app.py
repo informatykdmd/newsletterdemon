@@ -872,7 +872,12 @@ def decision_module(user_name, task_description, ready_hist = []):
         "content": build_prompt
     })
 
+    print("build_prompt:", build_prompt)
+
+
     answeing = mgr.continue_conversation_with_system(ready_hist, systemPrompt)
+
+    print("answeing:", answeing)
 
     # Budowanie historii - assistant
     ready_hist.append({
@@ -896,7 +901,13 @@ def decision_module(user_name, task_description, ready_hist = []):
         "content": final_prompt
     })
 
+    print("final_prompt:", final_prompt)
+
+
     answeing = mgr.continue_conversation_with_system(ready_hist, systemPrompt)
+
+    print("final_answeing:", answeing)
+
 
     # Budowanie historii - assistant
     ready_hist.append({
@@ -904,7 +915,7 @@ def decision_module(user_name, task_description, ready_hist = []):
         "content": answeing
     })
 
-    if 'answer' in answeing:
+    if answeing:
         if save_chat_message("aifa", answeing, 0):
             return {'success': 'Dane zostały zapisane'}
         else:
