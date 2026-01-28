@@ -47,7 +47,7 @@ def communicate_with_endpoint(json_commander, user_name, api_key, api_url="http:
     export_dict = {}
     try:
         # Wysyłanie żądania POST z danymi JSON
-        response = requests.post(api_url, json=payload, timeout=10)
+        response = requests.post(api_url, json=payload, timeout=60)
         
         return response.json()
 
