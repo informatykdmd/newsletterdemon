@@ -1127,7 +1127,7 @@ def main():
                                     )
 
                                     bot_rotation = bot_ident
-                                    time.sleep(1.5)
+                                    time.sleep(2)
 
                                 if bot_ident == 'niezidentyfikowana':
                                     bot_rotation = random.choice(['gerina', 'pionier', 'aifa', 'razem', 'żaden'])
@@ -1156,7 +1156,7 @@ def main():
                                             answer_mistral = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
                                             if answer_mistral:
                                                 save_chat_message("aifa", answer_mistral, 0)
-                                                time.sleep(1.5)
+                                                time.sleep(2)
 
                                 # GERINA
                                 mgr = MistralChatManager(mgr_api_key)
@@ -1179,7 +1179,7 @@ def main():
                                     answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
                                     if answer_mistral:
                                         save_chat_message("gerina", answer_mistral, 0)
-                                        time.sleep(1.5)
+                                        time.sleep(2)
 
                                 # PIONIER
                                 mgr = MistralChatManager(mgr_api_key)
@@ -1205,7 +1205,7 @@ def main():
                                     answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                     if answer_mistral:
                                         save_chat_message("pionier", answer_mistral, 0)
-                                        time.sleep(1.5)
+                                        time.sleep(2)
 
                             # forge_commender
                             if final_prompt.get("forge_commender", []) and hist:
