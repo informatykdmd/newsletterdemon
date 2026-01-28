@@ -667,7 +667,7 @@ def sprawdz_czas(dzien_tygodnia=None, dzien_miesiaca=None, tydzien_miesiaca=None
 # print(sprawdz_czas(dzien_tygodnia='piątek', pora_dnia='wieczór'))  # True / False
 
 
-def decision_module(user_name, task_description):
+def decision_module(user_name, task_description, ready_hist = []):
     
     # print(dataDict)
     tempalate_url = f"{url}{tempalate_endpoit}"
@@ -704,7 +704,6 @@ def decision_module(user_name, task_description):
     veryfication = random.choice(verification_messages)
     add_to_prompt = f"{reaction} {veryfication} @{user_name}, powiedział: {task_description}\n"
 
-    ready_hist = []
 
     systemPrompt = (
         "Jesteś agentem o imieniu Aifia. Twoim zadaniem jest edycja i aktualizacja wartości w strukturach JSON "
@@ -1159,7 +1158,7 @@ def main():
                             # forge_commender
                             if final_prompt.get("forge_commender", []):
                                 for us_na, ta_des in final_prompt.get("forge_commender", []):
-                                    dm_answ = decision_module(us_na, ta_des)
+                                    dm_answ = decision_module(us_na, ta_des, hist)
                                     if 'success' in dm_answ:
                                         handle_error(f"Zrealizowano zadanie do modułu decyzyjnego od usera: {us_na}\n")
                                     elif 'error' in dm_answ:
@@ -1199,12 +1198,11 @@ def main():
                     #   na podstawie kontekstu (np. Paweł, Darek, Biuro, SPAM)
                     ################################################################
                     mgr_api_key = MISTRAL_API_KEY
-                    if mgr_api_key:
-                        mgr = MistralChatManager(mgr_api_key)
 
                     contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE, DATE_TIME FROM contact WHERE DONE=1;')
                     for data in contectDB:
                         if mgr_api_key:
+                            mgr = MistralChatManager(mgr_api_key)
                             label = mgr.spam_catcher(
                                 client_name=data[1],
                                 client_email=data[2],
