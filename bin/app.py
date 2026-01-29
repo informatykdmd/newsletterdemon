@@ -126,7 +126,6 @@ def prepare_prompt(began_prompt):
     ready_hist = []
 
     for msa in dump_key:
-        # zakładam strukturę: [nick, message, ...]
         nick = (msa[1] if len(msa) > 1 else "") or ""
         message = (msa[2] if len(msa) > 2 else "") or ""
 
@@ -1145,7 +1144,7 @@ def main():
                                 if bot_rotation in ['aifa', 'razem', "niezidentyfikowana", "żaden"]:
                                     hist_aifa = list(final_prompt.get("ready_hist", []))
                                     if hist_aifa and isinstance(hist_aifa[-1], dict):
-                                        if hist_aifa[-1].get('role', None) == 'user':
+                                        # if hist_aifa[-1].get('role', None) == 'user':
                                             hist_aifa[-1] = {"role": 'user', "content": final_prompt.get("ready_prompt", '')+ppmt}
 
                                             reaction = random.choice(automation_messages)
