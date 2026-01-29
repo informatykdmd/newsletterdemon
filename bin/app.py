@@ -1156,21 +1156,19 @@ def main():
 
                                     if hist and isinstance(hist[-1], dict):
                                         ai_convers = hist[-1].get('role', None) == 'user'
-                                        if not ai_convers:
-                                            hist[-1]['role'] = "user"
+                                        if ai_convers:
+                                            if answer_mistral_aifa:
+                                                __aifa_answer = (
+                                                    "Aifa udzieliła już takiej odpowiedzi:\n"
+                                                    f"{answer_mistral_aifa}\n"
+                                                )
+                                            else: __aifa_answer = ""
 
-                                        if answer_mistral_aifa:
-                                            __aifa_answer = (
-                                                "Aifa udzieliła już takiej odpowiedzi:\n"
-                                                f"{answer_mistral_aifa}\n"
-                                            )
-                                        else: __aifa_answer = ""
-
-                                        hist[-1]['content'] = f"{ppmt}{pre_prompt}\n{instruction_person_gerina}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}"
-                                    answer_mistral_gerina = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
-                                    if answer_mistral_gerina:
-                                        save_chat_message("gerina", answer_mistral_gerina, 0)
-                                        time.sleep(3)
+                                            hist[-1]['content'] = f"{ppmt}{pre_prompt}\n{instruction_person_gerina}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}"
+                                            answer_mistral_gerina = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
+                                            if answer_mistral_gerina:
+                                                save_chat_message("gerina", answer_mistral_gerina, 0)
+                                                time.sleep(3)
 
                                 # PIONIER
                                 # mgr = MistralChatManager(mgr_api_key)
@@ -1193,27 +1191,25 @@ def main():
 
                                     if hist and isinstance(hist[-1], dict):
                                         ai_convers = hist[-1].get('role', None) == 'user'
-                                        if not ai_convers:
-                                            hist[-1]['role'] = "user"
+                                        if ai_convers:                                            
+                                            if answer_mistral_aifa:
+                                                __aifa_answer = (
+                                                    "Aifa udzieliła już takiej odpowiedzi:\n"
+                                                    f"{answer_mistral_aifa}\n"
+                                                )
+                                            else: __aifa_answer = ""
+                                            if answer_mistral_gerina:
+                                                __gerina_answer = (
+                                                    "Gerina udzieliła już takiej odpowiedzi:\n"
+                                                    f"{answer_mistral_gerina}\n"
+                                                )
+                                            else: __gerina_answer = ""
                                             
-                                        if answer_mistral_aifa:
-                                            __aifa_answer = (
-                                                "Aifa udzieliła już takiej odpowiedzi:\n"
-                                                f"{answer_mistral_aifa}\n"
-                                            )
-                                        else: __aifa_answer = ""
-                                        if answer_mistral_gerina:
-                                            __gerina_answer = (
-                                                "Gerina udzieliła już takiej odpowiedzi:\n"
-                                                f"{answer_mistral_gerina}\n"
-                                            )
-                                        else: __gerina_answer = ""
-                                        
-                                        hist[-1]['content'] = f"{ppmt}\n{instruction_person_pionier}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}\n{__gerina_answer}"
-                                    answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
-                                    if answer_mistral_pionier:
-                                        save_chat_message("pionier", answer_mistral_pionier, 0)
-                                        time.sleep(3)
+                                            hist[-1]['content'] = f"{ppmt}\n{instruction_person_pionier}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}\n{__gerina_answer}"
+                                        answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
+                                        if answer_mistral_pionier:
+                                            save_chat_message("pionier", answer_mistral_pionier, 0)
+                                            time.sleep(3)
 
                             # forge_commender
                             if final_prompt.get("forge_commender", []) and hist:
