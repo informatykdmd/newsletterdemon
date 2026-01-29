@@ -642,30 +642,22 @@ def generator_daneDBList():
     return daneList
 
 
-
-def getLangText(text, source="pl", target="en"):
+def getLangText(text, dest="en", source="pl"):
     if not text:
         return text
-
-    payload = {
-        "text": str(text),
-        "source": source,
-        "target": target,
-        "format": "text"
-    }
-
+    # bezpiecznik: nie tłumacz "ścian"
+    if len(text) > 8000:
+        return text
     try:
         r = requests.post(
             "http://127.0.0.1:5055/translate",
-            json=payload,
-            timeout=20
+            json={"text": text, "source": source, "target": dest, "format": "text"},
+            timeout=(2, 8),
         )
         r.raise_for_status()
-        data = r.json()
-        return data.get("translated", text)
+        return r.json().get("text", text)
     except Exception as e:
-        # fail-safe: zwracamy oryginał, nie wysadzamy systemu
-        print(f"[TRANSLATOR ERROR] {e}")
+        print(f"Exception Error: {e}")
         return text
 
 
