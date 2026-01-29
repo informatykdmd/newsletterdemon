@@ -4,6 +4,10 @@ import time, random
 from typing import Optional
 import socket
 
+from mistralai import Mistral
+from mistralai.utils import BackoffStrategy, RetryConfig
+
+
 
 def json_string_to_dict(response_text, return_type="json"):
     """Parsuje strukturę JSON zawartą w tekście odpowiedzi SI i zwraca pozostały tekst, jeśli istnieje."""
@@ -185,131 +189,266 @@ class MistralChatManager:
     }
 
     """
-    def __init__(self, api_key, model="mistral-small-latest"):
+    # def __init__(self, api_key, model="mistral-small-latest"):
+    #     self.api_key = api_key
+    #     self.model = model
+    #     self.base_url = "https://api.mistral.ai/v1/chat/completions"
+    #     self.headers = {
+    #         "Authorization": f"Bearer {self.api_key}",
+    #         "Content-Type": "application/json"
+    #     }
+
+    def __init__(self, api_key, model="mistral-small-latest", server="eu"):
         self.api_key = api_key
         self.model = model
-        self.base_url = "https://api.mistral.ai/v1/chat/completions"
-        self.headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
+        self.server = server  # opcjonalnie: "eu" (albo ustaw server_url, jeśli wolisz)
+
+
+    # def _post(
+    #     self,
+    #     messages,
+    #     max_tokens: int = 512,
+    #     temperature: float = 0.7,
+    #     retries: int = 8,
+    #     base_delay: float = 0.8,
+    #     max_delay: float = 60.0,
+    #     total_timeout: float = 120.0,
+    #     fail_silently: bool = True,
+    #     logger=None,
+    #     ) -> Optional[str]:
+    #     """
+    #     Miękkie wywołanie API:
+    #     - exponential backoff + jitter
+    #     - szacunek dla Retry-After (429)
+    #     - po wyczerpaniu prób zwraca None (gdy fail_silently=True) zamiast rzucać.
+    #     """
+    #     payload = {
+    #         "model": self.model,
+    #         "messages": messages,
+    #         "temperature": temperature,
+    #         "max_tokens": max_tokens,
+    #     }
+
+    #     start_ts = time.time()
+    #     last_err = None
+
+    #     for attempt in range(retries):
+    #         try:
+    #             response = requests.post(
+    #                 self.base_url,
+    #                 headers=self.headers,
+    #                 json=payload,
+    #                 timeout=90,  # timeout pojedynczego requestu
+    #             )
+
+    #             if response.status_code == 429:
+    #                 # Backoff wg Retry-After, jeśli jest
+    #                 ra = response.headers.get("Retry-After")
+    #                 if ra:
+    #                     try:
+    #                         sleep_s = float(ra)
+    #                     except Exception:
+    #                         sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
+    #                 else:
+    #                     sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
+
+    #                 if logger:
+    #                     logger.warning(f"Mistral 429; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
+    #                 if time.time() - start_ts + sleep_s > total_timeout:
+    #                     break
+    #                 time.sleep(sleep_s)
+    #                 print(f"[_post MISTRAL ERROR] 429 Backoff wg Retry-After, jeśli jest | sleep_s:{sleep_s}")
+    #                 continue
+
+    #             # Inne błędy HTTP
+    #             if 500 <= response.status_code < 600:
+    #                 # Retry przy 5xx
+    #                 last_err = requests.HTTPError(f"{response.status_code} {response.reason}")
+    #                 sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
+    #                 if logger:
+    #                     logger.warning(f"Mistral {response.status_code}; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
+    #                 if time.time() - start_ts + sleep_s > total_timeout:
+    #                     break
+    #                 time.sleep(sleep_s)
+    #                 print("[_post MISTRAL ERROR] 500 - 600 | Inne błędy HTTP")
+    #                 continue
+
+    #             # Podniesie dla 4xx (poza 429) — zwykle błąd nie do retry
+    #             response.raise_for_status()
+
+    #             data = response.json()
+    #             return data["choices"][0]["message"]["content"]
+
+    #         except (requests.Timeout, requests.ConnectionError, socket.gaierror) as e:
+    #             # typowe błędy sieciowe, w tym getaddrinfo failed
+    #             print("[_post MISTRAL ERROR] typowe błędy sieciowe, w tym getaddrinfo failed")
+    #             last_err = e
+    #             sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
+    #             if logger:
+    #                 logger.warning(f"Mistral network error: {repr(e)}; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
+    #             if time.time() - start_ts + sleep_s > total_timeout:
+    #                 break
+    #             time.sleep(sleep_s)
+    #             continue
+
+    #         except requests.HTTPError as e:
+    #             print(f"[_post MISTRAL ERROR] 4xx bez 429 (np. 401, 403, 404) — raczej nie ma sensu retry: {e}")
+    #             # 4xx bez 429 (np. 401, 403, 404) — raczej nie ma sensu retry
+    #             last_err = e
+    #             if logger:
+    #                 logger.error(f"Mistral HTTP error (no retry): {repr(e)}")
+    #             break
+
+    #         except Exception as e:
+    #             print(f"[_post MISTRAL ERROR] cokolwiek innego — spróbujmy jeszcze raz z backoffem: {e}")
+    #             # cokolwiek innego — spróbujmy jeszcze raz z backoffem
+    #             last_err = e
+    #             sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
+    #             if logger:
+    #                 logger.warning(f"Mistral unknown error: {repr(e)}; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
+    #             if time.time() - start_ts + sleep_s > total_timeout:
+    #                 break
+    #             time.sleep(sleep_s)
+    #             continue
+
+    #     # Po wyczerpaniu prób/limitu czasu
+    #     if logger:
+    #         print(f"[_post MISTRAL ERROR] Mistral unavailable after retries; last_err={repr(last_err)}")
+    #         logger.error(f"Mistral unavailable after retries; last_err={repr(last_err)}")
+
+    #     if fail_silently:
+    #         return ""
+    #     else:
+    #         raise Exception(f"Błąd połączenia z API Mistral po retry: {last_err}")
+
+    def _normalize_content_to_text(self, content) -> str:
+        """
+        Normalizuje Mistral 'message.content' do czystego tekstu.
+        Mistral: content może być string albo listą chunków. :contentReference[oaicite:1]{index=1}
+        """
+        if content is None:
+            return ""
+
+        # 1) Najczęściej: zwykły string
+        if isinstance(content, str):
+            return content
+
+        # 2) Nowy format: lista chunków (np. [{"type":"text","text":"..."}])
+        if isinstance(content, list):
+            parts = []
+            for ch in content:
+                if isinstance(ch, str):
+                    # czasem ktoś zwróci sam tekst jako element listy
+                    parts.append(ch)
+                    continue
+
+                if isinstance(ch, dict):
+                    ctype = (ch.get("type") or ch.get("kind") or "").lower()
+
+                    # najczęstszy przypadek: {"type":"text","text":"..."}
+                    if ctype == "text" and isinstance(ch.get("text"), str):
+                        parts.append(ch["text"])
+                        continue
+
+                    # fallbacki: czasem tekst bywa pod "content" albo "value"
+                    for k in ("content", "value", "data"):
+                        v = ch.get(k)
+                        if isinstance(v, str):
+                            parts.append(v)
+                            break
+
+            return "".join(parts).strip()
+
+        # 3) Jakby SDK zwróciło obiekt/dict w dziwnym formacie
+        if isinstance(content, dict):
+            for k in ("text", "content", "value", "data"):
+                v = content.get(k)
+                if isinstance(v, str):
+                    return v
+            return str(content)
+
+        # 4) Ostateczność
+        return str(content)
+
 
     def _post(
         self,
         messages,
         max_tokens: int = 512,
         temperature: float = 0.7,
-        retries: int = 8,
-        base_delay: float = 0.8,
-        max_delay: float = 60.0,
-        total_timeout: float = 120.0,
+        retries: int = 8,              # zostawiamy dla kompatybilności sygnatury
+        base_delay: float = 0.8,       # jw.
+        max_delay: float = 60.0,       # jw.
+        total_timeout: float = 120.0,  # jw.
         fail_silently: bool = True,
         logger=None,
-        ) -> Optional[str]:
+    ) -> Optional[str]:
         """
-        Miękkie wywołanie API:
-        - exponential backoff + jitter
-        - szacunek dla Retry-After (429)
-        - po wyczerpaniu prób zwraca None (gdy fail_silently=True) zamiast rzucać.
+        Wywołanie przez oficjalny SDK (mistralai).
+        Retry/backoff może obsłużyć SDK (RetryConfig), a my trzymamy:
+        - fail_silently (zwraca "" zamiast wyjątku)
+        - jeden spójny parsing odpowiedzi do stringa
         """
-        payload = {
-            "model": self.model,
-            "messages": messages,
-            "temperature": temperature,
-            "max_tokens": max_tokens,
-        }
+        try:
+            # Retry/backoff w SDK (opcjonalne, ale mega wygodne)
+            retry_cfg = RetryConfig(
+                "backoff",
+                BackoffStrategy(
+                    base_delay,        # start
+                    max_delay,         # max
+                    1.6,               # mnożnik (tweak)
+                    retries            # max_tries
+                ),
+                False                 # "fail_fast" (w przykładach jest False)
+            )
 
-        start_ts = time.time()
-        last_err = None
-
-        for attempt in range(retries):
-            try:
-                response = requests.post(
-                    self.base_url,
-                    headers=self.headers,
-                    json=payload,
-                    timeout=90,  # timeout pojedynczego requestu
+            with Mistral(
+                api_key=self.api_key,
+                server=self.server,
+                retry_config=retry_cfg,
+            ) as mistral:
+                res = mistral.chat.complete(
+                    model=self.model,
+                    messages=messages,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                    stream=False,
+                    response_format={"type": "text"},
                 )
 
-                if response.status_code == 429:
-                    # Backoff wg Retry-After, jeśli jest
-                    ra = response.headers.get("Retry-After")
-                    if ra:
-                        try:
-                            sleep_s = float(ra)
-                        except Exception:
-                            sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
-                    else:
-                        sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
+            # Parsing: res bywa obiektem SDK (nie dict z requests)
+            # Cel: zawsze wyciągnąć finalny tekst.
+            content = None
+            try:
+                # najczęstsze: res.choices[0].message.content
+                content = res.choices[0].message.content
+            except Exception:
+                pass
 
-                    if logger:
-                        logger.warning(f"Mistral 429; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
-                    if time.time() - start_ts + sleep_s > total_timeout:
-                        break
-                    time.sleep(sleep_s)
-                    print(f"[_post MISTRAL ERROR] 429 Backoff wg Retry-After, jeśli jest | sleep_s:{sleep_s}")
-                    continue
+            if content is None:
+                try:
+                    # fallback jakby res był dictopodobny
+                    content = res["choices"][0]["message"]["content"]
+                except Exception:
+                    content = None
 
-                # Inne błędy HTTP
-                if 500 <= response.status_code < 600:
-                    # Retry przy 5xx
-                    last_err = requests.HTTPError(f"{response.status_code} {response.reason}")
-                    sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
-                    if logger:
-                        logger.warning(f"Mistral {response.status_code}; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
-                    if time.time() - start_ts + sleep_s > total_timeout:
-                        break
-                    time.sleep(sleep_s)
-                    print("[_post MISTRAL ERROR] 500 - 600 | Inne błędy HTTP")
-                    continue
+            if content is None:
+                # ostatnia deska ratunku: stringuj cały obiekt
+                content = str(res) if res is not None else ""
 
-                # Podniesie dla 4xx (poza 429) — zwykle błąd nie do retry
-                response.raise_for_status()
+            return self._normalize_content_to_text(content)
 
-                data = response.json()
-                return data["choices"][0]["message"]["content"]
 
-            except (requests.Timeout, requests.ConnectionError, socket.gaierror) as e:
-                # typowe błędy sieciowe, w tym getaddrinfo failed
-                print("[_post MISTRAL ERROR] typowe błędy sieciowe, w tym getaddrinfo failed")
-                last_err = e
-                sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
-                if logger:
-                    logger.warning(f"Mistral network error: {repr(e)}; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
-                if time.time() - start_ts + sleep_s > total_timeout:
-                    break
-                time.sleep(sleep_s)
-                continue
+        except Exception as e:
+            if logger:
+                logger.error(f"Mistral SDK error: {repr(e)}")
+            else:
+                print(f"[Mistral SDK ERROR] {repr(e)}")
 
-            except requests.HTTPError as e:
-                print(f"[_post MISTRAL ERROR] 4xx bez 429 (np. 401, 403, 404) — raczej nie ma sensu retry: {e}")
-                # 4xx bez 429 (np. 401, 403, 404) — raczej nie ma sensu retry
-                last_err = e
-                if logger:
-                    logger.error(f"Mistral HTTP error (no retry): {repr(e)}")
-                break
+            if fail_silently:
+                return ""
+            raise
 
-            except Exception as e:
-                print(f"[_post MISTRAL ERROR] cokolwiek innego — spróbujmy jeszcze raz z backoffem: {e}")
-                # cokolwiek innego — spróbujmy jeszcze raz z backoffem
-                last_err = e
-                sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
-                if logger:
-                    logger.warning(f"Mistral unknown error: {repr(e)}; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
-                if time.time() - start_ts + sleep_s > total_timeout:
-                    break
-                time.sleep(sleep_s)
-                continue
-
-        # Po wyczerpaniu prób/limitu czasu
-        if logger:
-            print(f"[_post MISTRAL ERROR] Mistral unavailable after retries; last_err={repr(last_err)}")
-            logger.error(f"Mistral unavailable after retries; last_err={repr(last_err)}")
-
-        if fail_silently:
-            return ""
-        else:
-            raise Exception(f"Błąd połączenia z API Mistral po retry: {last_err}")
 
 
 
@@ -325,8 +464,10 @@ class MistralChatManager:
             {"role": "system", "content": prompt},
             {"role": "user", "content": user_message}
         ], max_tokens=max_tokens)
-        cleaned = response.strip()
-        return cleaned if cleaned in categories else "nieznana"
+
+        cleaned = response.strip().lower()
+        categories_l = [c.lower() for c in categories]
+        return cleaned if cleaned in categories_l else "nieznana"
     
     def spam_catcher(
         self,
