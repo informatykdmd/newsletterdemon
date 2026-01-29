@@ -1191,6 +1191,7 @@ def main():
 
                                     if hist and isinstance(hist[-1], dict):
                                         ai_convers = hist[-1].get('role', None) == 'user'
+                                        print("ai_convers", ai_convers)
                                         if ai_convers:                                            
                                             if answer_mistral_aifa:
                                                 __aifa_answer = (
