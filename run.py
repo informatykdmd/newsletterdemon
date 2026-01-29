@@ -33,7 +33,7 @@ import psutil
 import platform
 from pathlib import Path
 import hashlib
-
+import requests
 
 
 """
@@ -641,7 +641,35 @@ def generator_daneDBList():
         daneList.append(theme)
     return daneList
 
-def getLangText(text):
+
+
+def getLangText(text, source="pl", target="en"):
+    if not text:
+        return text
+
+    payload = {
+        "text": str(text),
+        "source": source,
+        "target": target,
+        "format": "text"
+    }
+
+    try:
+        r = requests.post(
+            "http://127.0.0.1:5055/translate",
+            json=payload,
+            timeout=20
+        )
+        r.raise_for_status()
+        data = r.json()
+        return data.get("translated", text)
+    except Exception as e:
+        # fail-safe: zwracamy oryginał, nie wysadzamy systemu
+        print(f"[TRANSLATOR ERROR] {e}")
+        return text
+
+
+def getLangText_mistral(text):
     """Funkcja do tłumaczenia tekstu z polskiego na angielski"""
     # translator = Translator()
     # translation = translator.translate(str(text), dest='en')
