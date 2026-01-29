@@ -1191,7 +1191,6 @@ def main():
 
                                     if hist and isinstance(hist[-1], dict):
                                         ai_convers = hist[-1].get('role', None) == 'user'
-                                        print("ai_convers", ai_convers)
                                         if ai_convers:                                            
                                             if answer_mistral_aifa:
                                                 __aifa_answer = (
@@ -1207,10 +1206,10 @@ def main():
                                             else: __gerina_answer = ""
                                             
                                             hist[-1]['content'] = f"{ppmt}\n{instruction_person_pionier}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}\n{__gerina_answer}"
-                                        answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
-                                        if answer_mistral_pionier:
-                                            save_chat_message("pionier", answer_mistral_pionier, 0)
-                                            time.sleep(3)
+                                            answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
+                                            if answer_mistral_pionier:
+                                                save_chat_message("pionier", answer_mistral_pionier, 0)
+                                                time.sleep(3)
 
                             # forge_commender
                             if final_prompt.get("forge_commender", []) and hist:
