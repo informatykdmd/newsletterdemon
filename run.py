@@ -14,7 +14,7 @@ import os
 import random
 import string
 import adminSmtpSender as mails
-from googletrans import Translator
+# from googletrans import Translator
 import json
 import html
 from markupsafe import Markup
@@ -27,6 +27,8 @@ from appStatistic import log_stats, log_stats_dmddomy
 from threading import Timer
 from bin.command_generator import getMorphy, saveMorphy
 from bin.znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
+from bin.wrapper_mistral import MistralChatManager
+from bin.config_utils import MISTRAL_API_KEY
 import psutil
 import platform
 from pathlib import Path
@@ -641,9 +643,13 @@ def generator_daneDBList():
 
 def getLangText(text):
     """Funkcja do tłumaczenia tekstu z polskiego na angielski"""
-    translator = Translator()
-    translation = translator.translate(str(text), dest='en')
-    return translation.text
+    # translator = Translator()
+    # translation = translator.translate(str(text), dest='en')
+    # return translation.text
+
+    mgr = MistralChatManager(MISTRAL_API_KEY)
+    out = mgr.translate(text, target_lang='en')
+    return out
 
 def format_date(date_input, pl=True):
     ang_pol = {

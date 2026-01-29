@@ -547,6 +547,23 @@ class MistralChatManager:
         # Ostatecznie: domyślnie 'WIADOMOŚĆ' (zgodnie z polityką)
         return labels[1] if len(labels) > 1 else "WIADOMOŚĆ"
 
+    def translate(self, text: str, target_lang: str = "pl", source_lang: str | None = None, max_tokens: int = 1200) -> str:
+        lang_info = f"z języka {source_lang} " if source_lang else "z wykryciem języka źródłowego "
+        system_prompt = (
+            f"Jesteś profesjonalnym tłumaczem. Przetłumacz poniższy tekst {lang_info}"
+            f"na język {target_lang}.\n"
+            "Zasady:\n"
+            "- Zachowaj sens, ton i styl.\n"
+            "- Nie streszczaj.\n"
+            "- Zwróć wyłącznie przetłumaczony tekst."
+        )
+        return self._post(
+            [{"role": "system", "content": system_prompt},
+            {"role": "user", "content": text}],
+            max_tokens=max_tokens,
+            temperature=0.1,
+        )
+
     
     def multi_categorize_response(self, user_message, categories, max_tokens=1500):
         prompt = f"Wybierz nabrdziej pasujące kategorie do kontekstu, spośród: {', '.join(categories)}. Uzupełnij listę obiektu json."
