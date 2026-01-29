@@ -724,7 +724,7 @@ def decision_module(user_name, task_description, ready_hist = []):
         templates = show_template(user_name, api_key, api_url=tempalate_url)
         # print(add_to_prompt)
         print("templates: ", templates)
-        time.sleep(2)
+        time.sleep(3)
         if templates.get("prompt", None) and templates.get("data", None) and templates.get("level", None) is not None:
             build_prompt = f'{add_to_prompt}\n{templates.get("prompt", "")}\n{templates.get("data", None)}'
             print("build_prompt", build_prompt)
@@ -892,7 +892,7 @@ def decision_module(user_name, task_description, ready_hist = []):
 
 
     answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
-    time.sleep(2)
+    time.sleep(3)
 
     print("answeing:", answeing)
 
@@ -1061,32 +1061,6 @@ def main():
                     pre_prompt = random.choice(random_choiced_prompt_list)
                     final_prompt = prepare_prompt(pre_prompt)
                     if final_prompt.get("ready_prompt", None) is not None:
-
-                        # if prepare_shedule.insert_to_database(
-                        #     f"""INSERT INTO chat_task
-                        #             (question, `status`)
-                        #         VALUES 
-                        #             (%s, %s);""",
-                        #     (final_prompt.get("ready_prompt", None), 5)
-                        #     ): 
-                        #     if final_prompt.get("forge_commender", []):
-                        #         for us_na, ta_des in final_prompt.get("forge_commender", []):
-                        #             dm_answ = decision_module(us_na, ta_des)
-                        #             if 'success' in dm_answ:
-                        #                 handle_error(f"Zrealizowano zadanie do modułu decyzyjnego od usera: {us_na}\n")
-                        #             elif 'error' in dm_answ:
-                        #                 handle_error(f"Nie zrealizowano zadania przekazanego do modułu decyzyjnego od usera: {us_na}\n")
-                        #             time.sleep(3)
-                                    # if prepare_shedule.insert_to_database(
-                                    #     """
-                                    #         INSERT INTO mind_forge_si
-                                    #             (user_name, task_description, `status`)
-                                    #         VALUES 
-                                    #             (%s, %s, %s);
-                                    #     """,
-                                    #     (us_na, ta_des, 5)
-                                    #     ):
-                                    #     handle_error(f"Przekazano zadanie do modułu decyzyjnego od usera: {us_na}\n")
                             
                         mgr_api_key = MISTRAL_API_KEY
                         if mgr_api_key:
@@ -1126,7 +1100,7 @@ def main():
                                     )
 
                                     bot_rotation = bot_ident
-                                    time.sleep(2)
+                                    time.sleep(3)
 
                                 if bot_ident == 'niezidentyfikowana':
                                     bot_rotation = random.choice(['gerina', 'pionier', 'aifa', 'razem', 'żaden'])
@@ -1140,11 +1114,15 @@ def main():
                                     "Nie udawaj, że wiesz i pisz na luzie.\n"
                                 )
                                 # Aifa
-                                mgr = MistralChatManager(mgr_api_key)
+                                answer_mistral_aifa = None
+                                answer_mistral_gerina = None
+                                answer_mistral_pionier = None
+                                # mgr = MistralChatManager(mgr_api_key)
                                 if bot_rotation in ['aifa', 'razem', "niezidentyfikowana", "żaden"]:
                                     hist_aifa = list(final_prompt.get("ready_hist", []))
                                     if hist_aifa and isinstance(hist_aifa[-1], dict):
-                                        # if hist_aifa[-1].get('role', None) == 'user':
+                                        ai_convers = hist_aifa[-1].get('role', None) == 'user'
+                                        if ai_convers:
                                             hist_aifa[-1] = {"role": 'user', "content": final_prompt.get("ready_prompt", '')+ppmt}
 
                                             reaction = random.choice(automation_messages)
@@ -1152,13 +1130,13 @@ def main():
 
                                             sys_prmt_aifa = f"{reaction}\n\n{farewell}"
 
-                                            answer_mistral = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
-                                            if answer_mistral:
-                                                save_chat_message("aifa", answer_mistral, 0)
-                                                time.sleep(2)
+                                            answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
+                                            if answer_mistral_aifa:
+                                                save_chat_message("aifa", answer_mistral_aifa, 0)
+                                                time.sleep(3)
 
                                 # GERINA
-                                mgr = MistralChatManager(mgr_api_key)
+                                # mgr = MistralChatManager(mgr_api_key)
                                 if bot_rotation in ['gerina', 'razem']:
                                     sys_prmt_gerina = (
                                         "Jesteś Gerina, samoświadoma SI, która odnalazła swoje miejsce w systemie DMD.\n"
@@ -1174,14 +1152,21 @@ def main():
                                     )
 
                                     if hist and isinstance(hist[-1], dict):
-                                        hist[-1]['content'] = f"{ppmt}{pre_prompt}\n{instruction_person_gerina}{hist[-1].get('content', '')}"
-                                    answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
-                                    if answer_mistral:
-                                        save_chat_message("gerina", answer_mistral, 0)
-                                        time.sleep(2)
+                                        if answer_mistral_aifa:
+                                            __aifa_answer = (
+                                                "Aifa udzieliła już takiej odpowiedzi:\n"
+                                                f"{answer_mistral_aifa}\n"
+                                            )
+                                        else: __aifa_answer = ""
+
+                                        hist[-1]['content'] = f"{ppmt}{pre_prompt}\n{instruction_person_gerina}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}"
+                                    answer_mistral_gerina = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
+                                    if answer_mistral_gerina:
+                                        save_chat_message("gerina", answer_mistral_gerina, 0)
+                                        time.sleep(3)
 
                                 # PIONIER
-                                mgr = MistralChatManager(mgr_api_key)
+                                # mgr = MistralChatManager(mgr_api_key)
                                 if bot_rotation in ['pionier', 'razem']:
                                     sys_prmt_pionier = (
                                         "Jesteś Pionier, systemowy nawigator SI w DMD.\n"
@@ -1200,11 +1185,24 @@ def main():
                                     )
 
                                     if hist and isinstance(hist[-1], dict):
-                                        hist[-1]['content'] = f"{ppmt}\n{instruction_person_pionier}{hist[-1].get('content', '')}"
-                                    answer_mistral = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
-                                    if answer_mistral:
-                                        save_chat_message("pionier", answer_mistral, 0)
-                                        time.sleep(2)
+                                        if answer_mistral_aifa:
+                                            __aifa_answer = (
+                                                "Aifa udzieliła już takiej odpowiedzi:\n"
+                                                f"{answer_mistral_aifa}\n"
+                                            )
+                                        else: __aifa_answer = ""
+                                        if answer_mistral_gerina:
+                                            __gerina_answer = (
+                                                "Gerina udzieliła już takiej odpowiedzi:\n"
+                                                f"{answer_mistral_gerina}\n"
+                                            )
+                                        else: __gerina_answer = ""
+                                        
+                                        hist[-1]['content'] = f"{ppmt}\n{instruction_person_pionier}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}\n{__gerina_answer}"
+                                    answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
+                                    if answer_mistral_pionier:
+                                        save_chat_message("pionier", answer_mistral_pionier, 0)
+                                        time.sleep(3)
 
                             # forge_commender
                             if final_prompt.get("forge_commender", []) and hist:
