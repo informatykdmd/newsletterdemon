@@ -1122,8 +1122,11 @@ def main():
                                     hist_aifa = list(final_prompt.get("ready_hist", []))
                                     if hist_aifa and isinstance(hist_aifa[-1], dict):
                                         ai_convers = hist_aifa[-1].get('role', None) == 'user'
+                                        if not ai_convers:
+                                            hist_aifa[-1]['role'] = "user"
+
                                         if ai_convers:
-                                            hist_aifa[-1] = {"role": 'user', "content": final_prompt.get("ready_prompt", '')+ppmt}
+                                            hist_aifa[-1]["content"] = final_prompt.get("ready_prompt", '')+ppmt
 
                                             reaction = random.choice(automation_messages)
                                             farewell = random.choice(farewell_messages)
@@ -1152,6 +1155,10 @@ def main():
                                     )
 
                                     if hist and isinstance(hist[-1], dict):
+                                        ai_convers = hist[-1].get('role', None) == 'user'
+                                        if not ai_convers:
+                                            hist[-1]['role'] = "user"
+
                                         if answer_mistral_aifa:
                                             __aifa_answer = (
                                                 "Aifa udzieliła już takiej odpowiedzi:\n"
@@ -1185,6 +1192,10 @@ def main():
                                     )
 
                                     if hist and isinstance(hist[-1], dict):
+                                        ai_convers = hist[-1].get('role', None) == 'user'
+                                        if not ai_convers:
+                                            hist[-1]['role'] = "user"
+                                            
                                         if answer_mistral_aifa:
                                             __aifa_answer = (
                                                 "Aifa udzieliła już takiej odpowiedzi:\n"
