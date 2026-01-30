@@ -1214,6 +1214,7 @@ def main():
                                             sys_prmt_aifa = f"{reaction}\n\n{farewell}"
 
                                             print('aifa:', len(hist_aifa))
+                                            print(hist_aifa)
                                             print('hist_aifa\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist_aifa]))
                                             # print('aifa\n', hist_aifa[-1]['content'])
                                             answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
