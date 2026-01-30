@@ -130,7 +130,7 @@ def prepare_prompt(began_prompt):
     
     ready_hist = []
     souerce_hist = collecting_hist()
-    print('len souerce hist:', len(souerce_hist))
+    # print('len souerce hist:', len(souerce_hist))
     # print('souerce hist:', souerce_hist)
     for msa in souerce_hist:
         nick = msa[0]
@@ -1157,14 +1157,14 @@ def main():
                                     latest_user_message = hist[-1].get("content", "")
 
                                     prompti = (
-                                        "Zadanie: wskaż jednego adresata wiadomości spośród: gerina, pionier, niezidentyfikowana.\n"
+                                        "Zadanie: wskaż jednego adresata wiadomości spośród: gerina, pionier, aifa, niezidentyfikowana.\n"
                                         "Zasady:\n"
                                         "— Jeśli w treści pojawia się bezpośrednio 'gerina' lub rola/kontekst wykonawczy → odpowiedz: gerina.\n"
                                         "— Jeśli pojawia się 'pionier' lub rola/kontekst nawigacji/procedur/kroków → odpowiedz: pionier.\n"
                                         "— Jeśli pojawia się 'aifa' lub rola/kontekst raportu/statusu/zadania → odpowiedz: aifa.\n"
                                         "— Jeśli pojawia się kontekst ogólny lub liczby mnogiej czy wielu adresatów → odpowiedz: razem.\n"
                                         "— Jeśli brak jednoznacznych przesłanek → odpowiedz: niezidentyfikowana.\n"
-                                        "— Zwróć wyłącznie jedną etykietę dokładnie tak: gerina | pionier | niezidentyfikowana.\n\n"
+                                        "— Zwróć wyłącznie jedną etykietę dokładnie tak: gerina | pionier | aifa | niezidentyfikowana.\n\n"
                                         "Kontekst rozmowy (ostatnie wiadomości):\n"
                                         f"{last_context}\n\n"
                                         "Najświeższa wiadomość użytkownika (kluczowa do decyzji):\n"
@@ -1215,9 +1215,9 @@ def main():
                                             sys_prmt_aifa = f"{reaction}\n\n{farewell}"
 
                                             print('aifa:', len(hist_aifa))
-                                            print(hist_aifa)
+                                            # print(hist_aifa)
                                             # print('hist_aifa\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist_aifa]))
-                                            # print('aifa\n', hist_aifa[-1]['content'])
+                                            print('aifa\n', hist_aifa[-1]['content'])
                                             answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
                                             if answer_mistral_aifa:
                                                 save_chat_message("aifa", answer_mistral_aifa, 0)
@@ -1291,8 +1291,8 @@ def main():
                                                 f"{__aifa_answer}\n{ANTYPOWTARZANIE}"
                                             )
                                             print('gerina:', len(hist))
-                                            print('hist_gerina\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist]))
-                                            # print('gerina\n', hist[-1]['content'])
+                                            # print('hist_gerina\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist]))
+                                            print('gerina\n', hist[-1])
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
@@ -1367,8 +1367,8 @@ def main():
                                                 f"{__aifa_answer}\n{__gerina_answer}\n{ANTYPOWTARZANIE}"
                                             )
                                             print('pionier:', len(hist))
-                                            print('hist_pionier\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist]))
-                                            # print('pionier\n', hist[-1]['content'])
+                                            # print('hist_pionier\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist]))
+                                            print('pionier\n', hist[-1])
                                             answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                             if answer_mistral_pionier:
                                                 save_chat_message("pionier", answer_mistral_pionier, 0)
