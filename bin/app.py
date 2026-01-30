@@ -1111,7 +1111,31 @@ def main():
                             
                         mgr_api_key = MISTRAL_API_KEY
                         if mgr_api_key:
-                            
+
+                            def entities_group(current_bot: str) -> str:
+                                ENTITIES_DICT = {
+                                    "Gerina": "jednostka SI — rola wykonawcza (operacje, działania, realizacja poleceń).",
+                                    "Pionier": "jednostka SI — rola nawigacyjna (procedury, kroki, prowadzenie procesu).",
+                                    "Aifa": "jednostka SI — rola raportowa (statusy, zadania, podsumowania).",
+                                }
+
+                                """
+                                Zwraca katalog innych jednostek SI w systemie (bez aktualnej).
+                                """
+                                if not current_bot:
+                                    return ""
+
+                                current_bot_norm = str(current_bot).strip().lower()
+                                header = "KATALOG JEDNOSTEK SI W SYSTEMIE:\n"
+                                lines = []
+
+                                for name, desc in ENTITIES_DICT.items():
+                                    if str(name).strip().lower() != current_bot_norm:
+                                        lines.append(f"- {name} — {desc}")
+                                if not lines:
+                                    return ""
+                                return header + "\n".join(lines) + "\n"
+
 
                             hist = final_prompt.get("ready_hist", [])
                             if final_prompt.get("forge_commender", None) is None:
@@ -1155,7 +1179,7 @@ def main():
                                 print("bot_rotation", bot_rotation)
 
                                 ppmt = (
-                                    "Odpowiadaj bez przywitania, nawet jeżeli uważasz, że powinieneś!\n"
+                                    "\nOdpowiadaj bez przywitania, nawet jeżeli uważasz, że powinieneś!\n"
                                     "Żadnych: Cześć, siema, dzień dobry itd. (Jesteś tu czały czas)\n"
                                     "Jeżeli nie masz pewności, powiedz to!\n"
                                     "Nie udawaj, że wiesz i pisz na luzie.\n"
@@ -1173,7 +1197,7 @@ def main():
                                             hist_aifa[-1]['role'] = "user"
 
                                         if ai_convers:
-                                            hist_aifa[-1]["content"] = final_prompt.get("ready_prompt", '')+ppmt
+                                            hist_aifa[-1]["content"] = final_prompt.get("ready_prompt", '')+ppmt+entities_group('aifa')
 
                                             reaction = random.choice(automation_messages)
                                             farewell = random.choice(farewell_messages)
@@ -1232,7 +1256,7 @@ def main():
                                                 )
                                             else: __aifa_answer = ""
 
-                                            hist[-1]['content'] = f"{ppmt}{pre_prompt}\n{instruction_person_gerina}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}"
+                                            hist[-1]['content'] = f"{ppmt}{pre_prompt}\n{instruction_person_gerina}\n{entities_group('gerina')}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}"
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
@@ -1295,7 +1319,7 @@ def main():
                                                 )
                                             else: __gerina_answer = ""
                                             
-                                            hist[-1]['content'] = f"{ppmt}\n{instruction_person_pionier}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}\n{__gerina_answer}"
+                                            hist[-1]['content'] = f"{ppmt}\n{instruction_person_pionier}\n{entities_group('pionier')}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}\n{__gerina_answer}"
                                             answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                             if answer_mistral_pionier:
                                                 save_chat_message("pionier", answer_mistral_pionier, 0)
