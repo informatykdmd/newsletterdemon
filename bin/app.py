@@ -1206,6 +1206,7 @@ def main():
                                             farewell = random.choice(farewell_messages)
 
                                             sys_prmt_aifa = f"{reaction}\n\n{farewell}"
+                                            print('hist_aifa\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist_aifa]))
                                             print('aifa\n', hist_aifa[-1]['content'])
                                             answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
                                             if answer_mistral_aifa:
@@ -1279,6 +1280,7 @@ def main():
                                                 f"Wiadomość użyrkownika:\n{hist[-1].get('content', '')}\n"
                                                 f"{__aifa_answer}\n{ANTYPOWTARZANIE}"
                                             )
+                                            print('hist_gerina\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist]))
                                             print('gerina\n', hist[-1]['content'])
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
                                             if answer_mistral_gerina:
@@ -1353,6 +1355,7 @@ def main():
                                                 f"Wiadomość użyrkownika:\n{hist[-1].get('content', '')}\n"
                                                 f"{__aifa_answer}\n{__gerina_answer}\n{ANTYPOWTARZANIE}"
                                             )
+                                            print('hist_pionier\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist]))
                                             print('pionier\n', hist[-1]['content'])
                                             answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                             if answer_mistral_pionier:
