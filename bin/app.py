@@ -35,6 +35,11 @@ def get_messages(flag='all'):
             """SELECT id, user_name, content, timestamp, status FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR AND status != 1 ORDER BY timestamp ASC;""")
     return dump_key
 
+def collecting_hist():
+    return prepare_shedule.connect_to_database(
+        """SELECT user_name, content FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR ORDER BY timestamp ASC;"""
+    )
+
 def get_campains_id_descript_dates() -> str:
     existing_campaigns_query = '''
         SELECT post_id, content, 
@@ -124,10 +129,11 @@ def prepare_prompt(began_prompt):
     count_ready = 0
     
     ready_hist = []
-    print('len souerce hist:', len(dump_key))
-    for msa in dump_key:
-        nick = (msa[1] if len(msa) > 1 else "") or ""
-        message = (msa[2] if len(msa) > 2 else "") or ""
+    souerce_hist = collecting_hist()
+    print('len souerce hist:', len(souerce_hist))
+    for msa in souerce_hist:
+        nick = (msa[0] if len(msa) > 1 else "") or ""
+        message = (msa[1] if len(msa) > 2 else "") or ""
 
         role = "assistant" if str(nick).lower() in {"aifa", "gerina", "pionier"} else "user"
 
