@@ -131,6 +131,7 @@ def prepare_prompt(began_prompt):
     ready_hist = []
     souerce_hist = collecting_hist()
     print('len souerce hist:', len(souerce_hist))
+    print('souerce hist:', souerce_hist)
     for msa in souerce_hist:
         nick = (msa[0] if len(msa) > 1 else "") or ""
         message = (msa[1] if len(msa) > 2 else "") or ""
@@ -1215,7 +1216,7 @@ def main():
 
                                             print('aifa:', len(hist_aifa))
                                             print(hist_aifa)
-                                            print('hist_aifa\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist_aifa]))
+                                            # print('hist_aifa\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist_aifa]))
                                             # print('aifa\n', hist_aifa[-1]['content'])
                                             answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
                                             if answer_mistral_aifa:
