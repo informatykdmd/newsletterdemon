@@ -1253,6 +1253,7 @@ def main():
                                                 __aifa_answer = (
                                                     "Aifa udzieliła już takiej odpowiedzi:\n"
                                                     f"{answer_mistral_aifa}\n"
+                                                    '„TO JEST TYLKO KONTEKST, NIE POWTARZAJ TEGO, NAPISZ SWOJĄ ODPOWIEDŹ / DODAJ TYLKO RÓŻNICĘ”\n'
                                                 )
                                             else: __aifa_answer = ""
 
@@ -1310,12 +1311,14 @@ def main():
                                                 __aifa_answer = (
                                                     "Aifa udzieliła już takiej odpowiedzi:\n"
                                                     f"{answer_mistral_aifa}\n"
+                                                    '„TO JEST TYLKO KONTEKST, NIE POWTARZAJ TEGO, NAPISZ SWOJĄ ODPOWIEDŹ / DODAJ TYLKO RÓŻNICĘ”\n'
                                                 )
                                             else: __aifa_answer = ""
                                             if answer_mistral_gerina:
                                                 __gerina_answer = (
                                                     "Gerina udzieliła już takiej odpowiedzi:\n"
                                                     f"{answer_mistral_gerina}\n"
+                                                    '„TO JEST TYLKO KONTEKST, NIE POWTARZAJ TEGO, NAPISZ SWOJĄ ODPOWIEDŹ / DODAJ TYLKO RÓŻNICĘ”\n'
                                                 )
                                             else: __gerina_answer = ""
                                             
