@@ -1197,7 +1197,10 @@ def main():
                                             hist_aifa[-1]['role'] = "user"
 
                                         if ai_convers:
-                                            hist_aifa[-1]["content"] = final_prompt.get("ready_prompt", '')+ppmt+entities_group('aifa')
+                                            hist_aifa[-1]["content"] = (
+                                                f"{final_prompt.get('ready_prompt', '')}\n"
+                                                f"{ppmt}\n{entities_group('aifa')}"
+                                            )
 
                                             reaction = random.choice(automation_messages)
                                             farewell = random.choice(farewell_messages)
@@ -1208,6 +1211,17 @@ def main():
                                             if answer_mistral_aifa:
                                                 save_chat_message("aifa", answer_mistral_aifa, 0)
                                                 time.sleep(3)
+
+                                ANTYPOWTARZANIE = (
+                                    "REGUŁA ANTYPOWTARZANIA (OBOWIĄZKOWA):\n"
+                                    "- Tekst poniżej to WYŁĄCZNIE kontekst/referencja. NIE wolno go kopiować ani przepisywać.\n"
+                                    "- NIE zaczynaj od powitania ani przedstawiania się, jeśli poprzednia odpowiedź już to zrobiła.\n"
+                                    "- Twoja odpowiedź ma wnosić NOWĄ wartość: uzupełnij, popraw, doprecyzuj lub zaproponuj następny krok.\n"
+                                    "- Zakaz cytowania dosłownego: nie powtarzaj zdań z kontekstu.\n"
+                                    "- Jeśli musisz się odnieść: streszcz w max 1 zdaniu (do 12 słów), bez cytatów.\n"
+                                    "- Jeśli poprzednia odpowiedź jest poprawna: potwierdź krótko i dodaj 1–3 konkrety (checklista / kroki).\n"
+                                    "- Odpowiedz wyłącznie treścią końcową (bez wyjaśniania procesu).\n"
+                                )
 
                                 # GERINA
                                 # mgr = MistralChatManager(mgr_api_key)
@@ -1252,12 +1266,19 @@ def main():
                                             if answer_mistral_aifa:
                                                 __aifa_answer = (
                                                     "Aifa udzieliła już takiej odpowiedzi:\n"
+                                                    "KONTEKST REFERENCYJNY (NIE KOPIUJ):\n"
+                                                    "------------------------------------------------------\n"
                                                     f"{answer_mistral_aifa}\n"
+                                                    "------------------------------------------------------\n"
                                                     '„TO JEST TYLKO KONTEKST, NIE POWTARZAJ TEGO, NAPISZ SWOJĄ ODPOWIEDŹ / DODAJ TYLKO RÓŻNICĘ”\n'
                                                 )
                                             else: __aifa_answer = ""
 
-                                            hist[-1]['content'] = f"{ppmt}{pre_prompt}\n{instruction_person_gerina}\n{entities_group('gerina')}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}"
+                                            hist[-1]['content'] = (
+                                                f"{ppmt}{pre_prompt}\n{instruction_person_gerina}\n{entities_group('gerina')}\n"
+                                                f"Wiadomość użyrkownika:\n{hist[-1].get('content', '')}\n"
+                                                f"{__aifa_answer}\n{ANTYPOWTARZANIE}"
+                                            )
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
@@ -1310,19 +1331,27 @@ def main():
                                             if answer_mistral_aifa:
                                                 __aifa_answer = (
                                                     "Aifa udzieliła już takiej odpowiedzi:\n"
+                                                    "------------------------------------------------------\n"
                                                     f"{answer_mistral_aifa}\n"
+                                                    "------------------------------------------------------\n"
                                                     '„TO JEST TYLKO KONTEKST, NIE POWTARZAJ TEGO, NAPISZ SWOJĄ ODPOWIEDŹ / DODAJ TYLKO RÓŻNICĘ”\n'
                                                 )
                                             else: __aifa_answer = ""
                                             if answer_mistral_gerina:
                                                 __gerina_answer = (
                                                     "Gerina udzieliła już takiej odpowiedzi:\n"
+                                                    "------------------------------------------------------\n"
                                                     f"{answer_mistral_gerina}\n"
+                                                    "------------------------------------------------------\n"
                                                     '„TO JEST TYLKO KONTEKST, NIE POWTARZAJ TEGO, NAPISZ SWOJĄ ODPOWIEDŹ / DODAJ TYLKO RÓŻNICĘ”\n'
                                                 )
                                             else: __gerina_answer = ""
                                             
-                                            hist[-1]['content'] = f"{ppmt}\n{instruction_person_pionier}\n{entities_group('pionier')}\nWiadomość użyrkownika:\n{hist[-1].get('content', '')}\n{__aifa_answer}\n{__gerina_answer}"
+                                            hist[-1]['content'] = (
+                                                f"{ppmt}\n{instruction_person_pionier}\n{entities_group('pionier')}\n"
+                                                f"Wiadomość użyrkownika:\n{hist[-1].get('content', '')}\n"
+                                                f"{__aifa_answer}\n{__gerina_answer}\n{ANTYPOWTARZANIE}"
+                                            )
                                             answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                             if answer_mistral_pionier:
                                                 save_chat_message("pionier", answer_mistral_pionier, 0)
