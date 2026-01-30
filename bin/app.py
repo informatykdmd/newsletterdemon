@@ -1206,7 +1206,7 @@ def main():
                                             farewell = random.choice(farewell_messages)
 
                                             sys_prmt_aifa = f"{reaction}\n\n{farewell}"
-
+                                            print('aifa\n', hist_aifa[-1]['content'])
                                             answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
                                             if answer_mistral_aifa:
                                                 save_chat_message("aifa", answer_mistral_aifa, 0)
@@ -1279,6 +1279,7 @@ def main():
                                                 f"Wiadomość użyrkownika:\n{hist[-1].get('content', '')}\n"
                                                 f"{__aifa_answer}\n{ANTYPOWTARZANIE}"
                                             )
+                                            print('gerina\n', hist[-1]['content'])
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(hist, sys_prmt_gerina)
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
@@ -1352,6 +1353,7 @@ def main():
                                                 f"Wiadomość użyrkownika:\n{hist[-1].get('content', '')}\n"
                                                 f"{__aifa_answer}\n{__gerina_answer}\n{ANTYPOWTARZANIE}"
                                             )
+                                            print('pionier\n', hist[-1]['content'])
                                             answer_mistral_pionier = mgr.continue_conversation_with_system(hist, sys_prmt_pionier)
                                             if answer_mistral_pionier:
                                                 save_chat_message("pionier", answer_mistral_pionier, 0)
