@@ -479,6 +479,8 @@ class MistralChatManager:
         labels: tuple[str, str] = ("SPAM", "WIADOMOŚĆ"),
         max_tokens: int = 5,
         temperature: float = 0.0,
+        system_prompt: str = None,
+        user_prompt: str = None,
     ) -> str:
         """
         Klasyfikuje treść z formularza kontaktowego jako 'SPAM' lub 'WIADOMOŚĆ'.
@@ -497,29 +499,31 @@ class MistralChatManager:
         # Mapowanie do formy kanonicznej (zachowujemy oryginalne etykiety z `labels`)
         canonical = {l.upper().replace("Ś", "S").replace("Ć", "C").strip(): l for l in labels}
 
-        system_prompt = (
-            "Jesteś klasyfikatorem wiadomości z formularza kontaktowego firmy budowlanej.\n"
-            f"Zwróć DOKŁADNIE JEDNO SŁOWO z zestawu: {list(labels)}.\n\n"
-            "Definicje:\n"
-            "- 'SPAM' — niezamówione oferty masowe, phishing/oszustwa, erotyka/hazard/krypto, "
-            "ogólne mailingi sprzedażowe bez odniesienia do naszej oferty, niepowiązane tematy, "
-            "losowe linki/załączniki bez kontekstu, niska wiarygodność.\n"
-            "- 'WIADOMOŚĆ' — realne zapytanie związane z naszą działalnością (budowa domów, wyceny, terminy, "
-            "lokalizacja, metraż, budżet, projekt/architekt, formalności), sensowne pytania/dane kontaktowe, "
-            "nawiązanie do konkretnej realizacji lub wcześniejszego kontaktu.\n\n"
-            "Wskazówki:\n"
-            "- Oceń tylko treść użytkową.\n"
-            "- Jeśli nie masz pewności, wybierz 'WIADOMOŚĆ'.\n"
-            "- Format odpowiedzi: bez cudzysłowów, bez kropek i komentarzy — tylko etykieta."
-        )
-
-        user_prompt = (
-            "Oceń, czy poniższa treść z formularza kontaktowego to SPAM czy WIADOMOŚĆ.\n"
-            f"Imię/nazwisko: {client_name}\n"
-            f"E-mail: {client_email}\n"
-            f"Temat: {subject}\n"
-            f"Treść:\n{message}\n"
-        )
+        if system_prompt is None:
+            system_prompt = (
+                "Jesteś klasyfikatorem wiadomości z formularza kontaktowego firmy budowlanej.\n"
+                f"Zwróć DOKŁADNIE JEDNO SŁOWO z zestawu: {list(labels)}.\n\n"
+                "Definicje:\n"
+                "- 'SPAM' — niezamówione oferty masowe, phishing/oszustwa, erotyka/hazard/krypto, "
+                "ogólne mailingi sprzedażowe bez odniesienia do naszej oferty, niepowiązane tematy, "
+                "losowe linki/załączniki bez kontekstu, niska wiarygodność.\n"
+                "- 'WIADOMOŚĆ' — realne zapytanie związane z naszą działalnością (budowa domów, wyceny, terminy, "
+                "lokalizacja, metraż, budżet, projekt/architekt, formalności), sensowne pytania/dane kontaktowe, "
+                "nawiązanie do konkretnej realizacji lub wcześniejszego kontaktu.\n\n"
+                "Wskazówki:\n"
+                "- Oceń tylko treść użytkową.\n"
+                "- Jeśli nie masz pewności, wybierz 'WIADOMOŚĆ'.\n"
+                "- Format odpowiedzi: bez cudzysłowów, bez kropek i komentarzy — tylko etykieta."
+            )
+        if user_prompt is None:
+            user_prompt = (
+                "Oceń, czy poniższa treść z formularza kontaktowego to SPAM czy WIADOMOŚĆ.\n"
+                f"Imię/nazwisko: {client_name}\n"
+                f"E-mail: {client_email}\n"
+                f"Temat: {subject}\n"
+                f"Treść:\n{message}\n"
+            )
+            
         if dt:
             user_prompt += f"Data: {dt}\n"
 

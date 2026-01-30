@@ -1325,17 +1325,6 @@ def main():
                             if answer_mistral:
                                 save_chat_message("aifa", answer_mistral, 1)
 
-                        # if not prepare_shedule.insert_to_database(
-                        #     f"""INSERT INTO chat_task
-                        #             (question, `status`)
-                        #         VALUES 
-                        #             (%s, %s);""",
-                        #     (preParator, 5)
-                        #     ): 
-                        #     handle_error(f"Nieudana próba przekazania log do jednostki SI.\n")
-                        
-
-
                     handle_error(f'{datetime.datetime.now()} - {__name__} is working...\n')
                         
                 elif name == 'checkpoint_180s':
@@ -1415,22 +1404,229 @@ def main():
                                     archive_sents(row[1])
                                     handle_error(f"Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE} do {data[1]} \n")
 
+                    # ################################################################
+                    # # Aktywacja konta subskrybenta
+                    # ################################################################
+
+                    # nesletterDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, USER_HASH, subscribed_at FROM newsletter WHERE ACTIVE=0;')
+                    # for data in nesletterDB:
+                    #     TITLE_ACTIVE = 'Aktywacja konta'
+                    #     labels = ("SPAM", "SUBSKRYPCJA")
+                    #     system_prompt = (
+                    #         "Jesteś klasyfikatorem wiadomości z formularza kontaktowego firmy budowlanej.\n"
+                    #         f"Zwróć DOKŁADNIE JEDNO SŁOWO z zestawu: {list(labels)}.\n\n"
+                    #         "Definicje:\n"
+                    #         "- 'SPAM' — niezamówione oferty masowe, phishing/oszustwa, erotyka/hazard/krypto, "
+                    #         "ogólne mailingi sprzedażowe bez odniesienia do naszej oferty, niepowiązane tematy, "
+                    #         "losowe linki/załączniki bez kontekstu, niska wiarygodność.\n"
+                    #         "- 'WIADOMOŚĆ' — realne zapytanie związane z naszą działalnością (budowa domów, wyceny, terminy, "
+                    #         "lokalizacja, metraż, budżet, projekt/architekt, formalności), sensowne pytania/dane kontaktowe, "
+                    #         "nawiązanie do konkretnej realizacji lub wcześniejszego kontaktu.\n\n"
+                    #         "Wskazówki:\n"
+                    #         "- Oceń tylko treść użytkową.\n"
+                    #         "- Jeśli nie masz pewności, wybierz 'WIADOMOŚĆ'.\n"
+                    #         "- Format odpowiedzi: bez cudzysłowów, bez kropek i komentarzy — tylko etykieta."
+                    #     )
+
+                    #     user_prompt = (
+                    #         "Oceń, czy poniższa treść z formularza kontaktowego to SPAM czy WIADOMOŚĆ.\n"
+                    #         f"Imię/nazwisko: {data[1]}\n"
+                    #         f"E-mail: {data[2]}\n"
+                    #         f"Temat: {TITLE_ACTIVE}\n"
+                    #         f"Treść:\n{message}\n"
+                    #     )
+
+                    #     if mgr_api_key:
+                    #         mgr = MistralChatManager(mgr_api_key)
+                    #         label = mgr.spam_catcher(
+                    #             client_name=data[1],
+                    #             client_email=data[2],
+                    #             subject=TITLE_ACTIVE,
+                    #             labels = labels,
+                    #             message=data[1],
+                    #             dt=str(data[4]),
+                    #             system_prompt = system_prompt,
+                    #             user_prompt = user_prompt
+                    #         )
+                    #         if label == "SUBSKRYPCJA":
+                    #             message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1]).replace('{{hashes}}', data[3])
+                    #             sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, data[2])
+                    #             prepare_shedule.insert_to_database(
+                    #                 f"UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                    #                 (3, data[0], data[2])
+                    #                 )
+                    #             handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
+                    #             # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
+                    #             addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
+
+                    #         else:
+                    #             message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1]).replace('{{hashes}}', data[3])
+                    #             sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, data[2])
+                    #             prepare_shedule.insert_to_database(
+                    #                 f"UPDATE newsletter SET ACTIVE = %s, USER_HASH = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                    #                 (404, "REMOVED404", data[0], data[2])
+                    #                 )
+                    #             handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
+                    #             # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
+                    #             addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
+
                     ################################################################
-                    # Aktywacja konta subskrybenta
+                    # Aktywacja konta subskrybenta + spam_catcher
                     ################################################################
 
-                    nesletterDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=0;')
+                    ADMIN_ALERT_EMAIL = 'informatyk@dmdbudownictwo.pl'
+
+                    nesletterDB = prepare_shedule.connect_to_database(
+                        "SELECT ID, CLIENT_NAME, CLIENT_EMAIL, USER_HASH, subscribed_at, referer "
+                        "FROM newsletter WHERE ACTIVE=0;"
+                    )
+
                     for data in nesletterDB:
-                        TITLE_ACTIVE = 'Aktywacja konta'
-                        message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1]).replace('{{hashes}}', data[3])
-                        sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, data[2])
-                        prepare_shedule.insert_to_database(
-                            f"UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
-                            (3, data[0], data[2])
+                        newsletter_id   = data[0]
+                        client_name     = data[1] or ""
+                        client_email    = data[2] or ""
+                        user_hash       = data[3] or ""
+                        subscribed_at   = data[4]
+                        referer         = (data[5] or "").strip()
+
+                        TITLE_ACTIVE = "Aktywacja konta"
+                        labels = ("SPAM", "SUBSKRYPCJA")
+
+                        # Payload, który faktycznie oceniamy (w newsletterze zwykle nie ma "treści wiadomości")
+                        signup_payload = (
+                            f"newsletter_signup\n"
+                            f"name={client_name}\n"
+                            f"email={client_email}\n"
+                            f"referer={referer}\n"
+                            f"subscribed_at={subscribed_at}\n"
+                        )
+
+                        system_prompt = (
+                            "Jesteś klasyfikatorem zgłoszeń do newslettera firmy budowlanej.\n"
+                            f"Zwróć DOKŁADNIE JEDNO SŁOWO z zestawu: {list(labels)}.\n\n"
+                            "Definicje:\n"
+                            "- 'SPAM' — zgłoszenie wygląda na automatyczne / bot / nieprawdziwe dane, "
+                            "podejrzany referer, nietypowy wzorzec email/nazwy, masowy charakter, "
+                            "wysokie ryzyko nadużycia.\n"
+                            "- 'SUBSKRYPCJA' — normalne zgłoszenie człowieka do newslettera (sensowne dane), "
+                            "brak sygnałów automatu.\n\n"
+                            "Zasady:\n"
+                            "- Oceń wyłącznie sygnały wiarygodności zgłoszenia.\n"
+                            "- Jeśli nie masz pewności, wybierz 'SUBSKRYPCJA'.\n"
+                            "- Format odpowiedzi: bez cudzysłowów, bez kropek i komentarzy — tylko etykieta."
+                        )
+
+                        user_prompt = (
+                            "Oceń, czy poniższe zgłoszenie do newslettera to SPAM czy SUBSKRYPCJA.\n\n"
+                            f"Imię/nazwisko: {client_name}\n"
+                            f"E-mail: {client_email}\n"
+                            f"Referer (źródło): {referer}\n"
+                            f"Data zapisu: {subscribed_at}\n"
+                            f"Temat (systemowy): {TITLE_ACTIVE}\n\n"
+                            f"Dane zgłoszenia:\n{signup_payload}\n"
+                        )
+
+                        if not mgr_api_key:
+                            addDataLogs(
+                                f"{TITLE_ACTIVE}: brak mgr_api_key — pominięto spam_catcher dla {client_email} ({client_name})",
+                                "danger"
                             )
-                        handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
-                        # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
-                        addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
+                            continue
+
+                        mgr = MistralChatManager(mgr_api_key)
+
+                        label = mgr.spam_catcher(
+                            client_name=client_name,
+                            client_email=client_email,
+                            subject=TITLE_ACTIVE,
+                            labels=labels,
+                            message=signup_payload,          # <- to faktycznie klasyfikujemy
+                            dt=str(subscribed_at),
+                            system_prompt=system_prompt,
+                            user_prompt=user_prompt
+                        )
+
+                        # Domyślny fallback bezpieczeństwa: jeśli model zwróci coś spoza etykiet
+                        if label not in labels:
+                            addDataLogs(
+                                f"{TITLE_ACTIVE}: nieoczekiwana etykieta '{label}' — fallback SUBSKRYPCJA dla {client_email} ({client_name})",
+                                "danger"
+                            )
+                            label = "SUBSKRYPCJA"
+
+                        if label in ("SUBSKRYPCJA", "WIADOMOŚĆ", "WIADOMOSC"):
+                            message = (
+                                messagerCreator.HTML_ACTIVE
+                                .replace("{{imie klienta}}", client_name)
+                                .replace("{{hashes}}", user_hash)
+                            )
+                            sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, client_email)
+
+                            prepare_shedule.insert_to_database(
+                                "UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                                (3, newsletter_id, client_email)
+                            )
+
+                            handle_error(f"{TITLE_ACTIVE} dla {client_name} z podanym kontaktem {client_email}\n")
+                            addDataLogs(
+                                f"{TITLE_ACTIVE} OK: {client_name} <{client_email}> (referer: {referer})",
+                                "success"
+                            )
+
+                        else:
+                            # SPAM — mail do użytkownika: blokada i prośba o kontakt przez stronę z referer
+                            safe_site = referer if referer else "https://dmdbudownictwo.pl"
+
+                            message_user = f"""
+                            <div style="font-family:Arial, sans-serif; line-height:1.5;">
+                            <h2>Nie możemy potwierdzić subskrypcji</h2>
+                            <p>Cześć {client_name},</p>
+                            <p>
+                                Próba zapisu do newslettera z adresu <b>{client_email}</b> została oznaczona jako podejrzana
+                                i tymczasowo zablokowana — nie mamy pewności, że zgłoszenie zostało wykonane przez człowieka.
+                            </p>
+                            <p>
+                                Jeśli to pomyłka, prosimy o kontakt przez naszą stronę:
+                                <a href="{safe_site}" target="_blank" rel="noopener noreferrer">{safe_site}</a>
+                            </p>
+                            <p>Dziękujemy za wyrozumiałość.</p>
+                            </div>
+                            """
+
+                            sendEmailBySmtp.send_html_email("Weryfikacja subskrypcji", message_user, client_email)
+
+                            # Blokada w bazie + usunięcie hasha
+                            prepare_shedule.insert_to_database(
+                                "UPDATE newsletter SET ACTIVE = %s, USER_HASH = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                                (404, "REMOVED404", newsletter_id, client_email)
+                            )
+
+                            # Alert do admina/obsługi
+                            message_admin = f"""
+                            <div style="font-family:Arial, sans-serif; line-height:1.5;">
+                            <h2>ALERT: Newsletter oznaczony jako SPAM i zablokowany</h2>
+                            <p><b>Imię/nazwa:</b> {client_name}</p>
+                            <p><b>Email:</b> {client_email}</p>
+                            <p><b>Referer:</b> {referer}</p>
+                            <p><b>subscribed_at:</b> {subscribed_at}</p>
+                            <p><b>Akcja:</b> ACTIVE=404, USER_HASH=REMOVED404</p>
+                            <pre style="background:#f5f5f5; padding:10px; border-radius:6px;">{signup_payload}</pre>
+                            </div>
+                            """
+
+                            sendEmailBySmtp.send_html_email(
+                                "ALERT: Newsletter SPAM zablokowany",
+                                message_admin,
+                                ADMIN_ALERT_EMAIL
+                            )
+
+                            handle_error(f"{TITLE_ACTIVE} SPAM/BLOCKED dla {client_name} z podanym kontaktem {client_email}\n")
+                            addDataLogs(
+                                f"{TITLE_ACTIVE} SPAM/BLOCKED: {client_name} <{client_email}> (referer: {referer})",
+                                "danger"
+                            )
+
+
 
 
                 elif name == 'checkpoint_12h': 
