@@ -131,10 +131,10 @@ def prepare_prompt(began_prompt):
     ready_hist = []
     souerce_hist = collecting_hist()
     print('len souerce hist:', len(souerce_hist))
-    print('souerce hist:', souerce_hist)
+    # print('souerce hist:', souerce_hist)
     for msa in souerce_hist:
-        nick = (msa[0] if len(msa) > 1 else "") or ""
-        message = (msa[1] if len(msa) > 2 else "") or ""
+        nick = msa[0]
+        message = msa[1]
 
         role = "assistant" if str(nick).lower() in {"aifa", "gerina", "pionier"} else "user"
 
