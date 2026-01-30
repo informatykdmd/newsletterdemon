@@ -1946,6 +1946,89 @@ color:#969696;
   }
 }
 
+/* =========================================================
+   Markdown: LINKI i CODE — baza (działa dla obu bąbelków)
+   ========================================================= */
+
+/* Linki */
+.chat-message-fill a,
+.chat-message-fill-self a {
+  color: #ffec99;                /* jasny żółty - bardzo czytelny */
+  font-weight: 600;
+  text-decoration: chip;
+  text-underline-offset: 2px;
+}
+
+.chat-message-fill a:hover,
+.chat-message-fill-self a:hover {
+  color: #fff3bf;
+  text-decoration-thickness: 2px;
+}
+
+/* Inline code */
+.chat-message-fill code,
+.chat-message-fill-self code {
+  color: #ffd43b;                 /* żółty */
+  background: rgba(0,0,0,0.25);   /* przyciemnia za kodem */
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.88em;
+}
+
+/* Code block */
+.chat-message-fill pre,
+.chat-message-fill-self pre {
+  background: rgba(0,0,0,0.32);
+  padding: 10px 12px;
+  border-radius: 10px;
+  overflow: auto;
+  max-width: 100%;
+  max-height: 360px;
+  margin: 8px 0;
+}
+
+.chat-message-fill pre code,
+.chat-message-fill-self pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: #fff3bf;
+  display: block;
+  white-space: pre;  /* bloki kodu trzymają format */
+}
+
+/* =========================================================
+   Nadpisania per wariant (zielony self vs niebieski inni)
+   ========================================================= */
+
+/* Zielony self: dajemy ciut bardziej „cytrynowe” akcenty */
+.chat-message-fill-self a {
+  color: #fff3bf;
+}
+
+.chat-message-fill-self a:hover {
+  color: #ffffff;
+}
+
+.chat-message-fill-self code {
+  color: #fff3bf;
+  background: rgba(0,0,0,0.30);
+}
+
+/* Niebieski inni: trochę bardziej „złote” akcenty */
+.chat-message-fill a {
+  color: #ffd43b;
+}
+
+.chat-message-fill a:hover {
+  color: #ffec99;
+}
+
+.chat-message-fill code {
+  color: #ffec99;
+  background: rgba(0,0,0,0.22);
+}
 
 
 .file-upload-wrapper {
