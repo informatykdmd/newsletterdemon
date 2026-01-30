@@ -1034,7 +1034,91 @@
 {% endblock %}
 
 {% block bottom_script %}
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+
 <script>
+    // Markdown renderer (bez HTML)
+    const md = window.markdownit({
+    html: false,     // BLOKADA HTML w markdownie
+    linkify: true,   // surowe URL -> link
+    breaks: true     // \n -> <br> (czatowo)
+    });
+
+    // Wyłącz rzeczy których nie chcesz
+    md.disable(["table"]);
+    md.disable(["image"]);
+
+    // Normalizacja nagłówków: nie pozwalamy na # i ##, tylko ### max
+    function normalizeHeadings(input) {
+    return String(input ?? "").replace(/^(#{1,2})\s+/gm, "### ");
+    }
+
+    // Linki tylko http/https + rel/target
+    const defaultLinkOpen =
+    md.renderer.rules.link_open ||
+    function (tokens, idx, options, env, self) {
+        return self.renderToken(tokens, idx, options);
+    };
+
+    md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+    const hrefIdx = tokens[idx].attrIndex("href");
+    if (hrefIdx >= 0) {
+        let href = tokens[idx].attrs[hrefIdx][1] || "";
+
+        // 🔧 wisienka: www.domena.pl → https://www.domena.pl
+        if (/^www\./i.test(href)) {
+        href = "https://" + href;
+        }
+
+        const ok = /^https?:\/\//i.test(href);
+        if (!ok) {
+        href = "#";
+        }
+
+        tokens[idx].attrs[hrefIdx][1] = href;
+    }
+
+    tokens[idx].attrSet("target", "_blank");
+    tokens[idx].attrSet("rel", "noopener noreferrer nofollow");
+    return defaultLinkOpen(tokens, idx, options, env, self);
+    };
+
+    function renderChatMarkdown(rawText) {
+    const normalized = normalizeHeadings(rawText);
+    const html = md.render(normalized);
+
+    // Sanitizacja + whitelist tagów/atrybutów
+    return window.DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: [
+        "p", "br",
+        "strong", "em",
+        "h3",
+        "ul", "ol", "li",
+        "code", "pre",
+        "a"
+        ],
+        ALLOWED_ATTR: ["href", "target", "rel"],
+        ALLOWED_URI_REGEXP: /^https?:\/\//i
+    });
+    }
+
+    function escapeHtml(s) {
+        return String(s ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+
+    function safeHttpUrl(url, fallback = "") {
+        const u = String(url ?? "").trim();
+        if (/^https?:\/\//i.test(u)) return u;
+        return fallback;
+    }
+
+
     $(document).ready(function() {
         let autoScrollEnabled = false;
         const loggedInUser = "{{ username }}";
@@ -1047,17 +1131,19 @@
                     let chatBox = $('#chat-box');
                     chatBox.empty();
                     data.forEach(function(message) {
-                        const formattedMessage = message[1]
-                                .split('\n')                // Dzielimy na linie po `\n`
-                                .filter(line => line.trim()) // Filtrujemy puste linie (usuwamy białe znaki)
-                                .join('<br />');               // Łączymy ponownie z `<br>`
-                        if (message[0] === loggedInUser) {
+                        const nick = escapeHtml(message[0]);
+                        const ts   = escapeHtml(message[2]);
+                        const avatar = safeHttpUrl(message[3], "/static/img/avatar-default.png"); // podmień fallback
+
+                        const formattedMessage = renderChatMarkdown(message[1]);
+
+                        if (nick === loggedInUser) {
                             chatBox.append(`
                                 <!-- Wiadomość chat -->
                                 <div class="chat-message-self">
                                     <div class="chat-nickname-self">Ty</div>
                                     <div class="chat-avatar-self">
-                                        <img src="${message[3]}" alt="Avatar">
+                                        <img src="${avatar}" alt="Avatar">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -1067,7 +1153,7 @@
                                                 ${formattedMessage}
                                             </div>
                                             <div class="chat-timestamp-self text-end">
-                                                ${message[2]}
+                                                ${ts}
                                             </div>
                                         </div>
                                     </div>
@@ -1078,9 +1164,9 @@
                                 <!-- Wiadomość chat -->
                                 <div class="chat-message">
                                     <div class="chat-avatar">
-                                        <img src="${message[3]}" alt="Avatar">
+                                        <img src="${avatar}" alt="Avatar">
                                     </div>
-                                    <div class="chat-nickname">${message[0]}</div>
+                                    <div class="chat-nickname">${nick}</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -1088,7 +1174,7 @@
                                             <div class="chat-message-fill">
                                                 ${formattedMessage}
                                             </div>
-                                            <div class="chat-timestamp text-end">${message[2]}</div>
+                                            <div class="chat-timestamp text-end">${ts}</div>
                                         </div>
                                     </div>
                                 </div>

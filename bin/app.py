@@ -1404,72 +1404,6 @@ def main():
                                     archive_sents(row[1])
                                     handle_error(f"Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE} do {data[1]} \n")
 
-                    # ################################################################
-                    # # Aktywacja konta subskrybenta
-                    # ################################################################
-
-                    # nesletterDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, USER_HASH, subscribed_at FROM newsletter WHERE ACTIVE=0;')
-                    # for data in nesletterDB:
-                    #     TITLE_ACTIVE = 'Aktywacja konta'
-                    #     labels = ("SPAM", "SUBSKRYPCJA")
-                    #     system_prompt = (
-                    #         "Jesteś klasyfikatorem wiadomości z formularza kontaktowego firmy budowlanej.\n"
-                    #         f"Zwróć DOKŁADNIE JEDNO SŁOWO z zestawu: {list(labels)}.\n\n"
-                    #         "Definicje:\n"
-                    #         "- 'SPAM' — niezamówione oferty masowe, phishing/oszustwa, erotyka/hazard/krypto, "
-                    #         "ogólne mailingi sprzedażowe bez odniesienia do naszej oferty, niepowiązane tematy, "
-                    #         "losowe linki/załączniki bez kontekstu, niska wiarygodność.\n"
-                    #         "- 'WIADOMOŚĆ' — realne zapytanie związane z naszą działalnością (budowa domów, wyceny, terminy, "
-                    #         "lokalizacja, metraż, budżet, projekt/architekt, formalności), sensowne pytania/dane kontaktowe, "
-                    #         "nawiązanie do konkretnej realizacji lub wcześniejszego kontaktu.\n\n"
-                    #         "Wskazówki:\n"
-                    #         "- Oceń tylko treść użytkową.\n"
-                    #         "- Jeśli nie masz pewności, wybierz 'WIADOMOŚĆ'.\n"
-                    #         "- Format odpowiedzi: bez cudzysłowów, bez kropek i komentarzy — tylko etykieta."
-                    #     )
-
-                    #     user_prompt = (
-                    #         "Oceń, czy poniższa treść z formularza kontaktowego to SPAM czy WIADOMOŚĆ.\n"
-                    #         f"Imię/nazwisko: {data[1]}\n"
-                    #         f"E-mail: {data[2]}\n"
-                    #         f"Temat: {TITLE_ACTIVE}\n"
-                    #         f"Treść:\n{message}\n"
-                    #     )
-
-                    #     if mgr_api_key:
-                    #         mgr = MistralChatManager(mgr_api_key)
-                    #         label = mgr.spam_catcher(
-                    #             client_name=data[1],
-                    #             client_email=data[2],
-                    #             subject=TITLE_ACTIVE,
-                    #             labels = labels,
-                    #             message=data[1],
-                    #             dt=str(data[4]),
-                    #             system_prompt = system_prompt,
-                    #             user_prompt = user_prompt
-                    #         )
-                    #         if label == "SUBSKRYPCJA":
-                    #             message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1]).replace('{{hashes}}', data[3])
-                    #             sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, data[2])
-                    #             prepare_shedule.insert_to_database(
-                    #                 f"UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
-                    #                 (3, data[0], data[2])
-                    #                 )
-                    #             handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
-                    #             # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
-                    #             addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
-
-                    #         else:
-                    #             message = messagerCreator.HTML_ACTIVE.replace('{{imie klienta}}', data[1]).replace('{{hashes}}', data[3])
-                    #             sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, data[2])
-                    #             prepare_shedule.insert_to_database(
-                    #                 f"UPDATE newsletter SET ACTIVE = %s, USER_HASH = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
-                    #                 (404, "REMOVED404", data[0], data[2])
-                    #                 )
-                    #             handle_error(f"{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}\n")
-                    #             # add_aifaLog(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}')
-                    #             addDataLogs(f'{TITLE_ACTIVE} dla {data[1]} z podanym kontaktem {data[2]}', 'success')
-
                     ################################################################
                     # Aktywacja konta subskrybenta + spam_catcher
                     ################################################################
@@ -1540,14 +1474,14 @@ def main():
                             client_email=client_email,
                             subject=TITLE_ACTIVE,
                             labels=labels,
-                            message=signup_payload,          # <- to faktycznie klasyfikujemy
+                            message=signup_payload,
                             dt=str(subscribed_at),
                             system_prompt=system_prompt,
                             user_prompt=user_prompt
                         )
 
                         # Domyślny fallback bezpieczeństwa: jeśli model zwróci coś spoza etykiet
-                        if label not in labels:
+                        if label not in list(labels) + ["WIADOMOŚĆ", "WIADOMOSC"]:
                             addDataLogs(
                                 f"{TITLE_ACTIVE}: nieoczekiwana etykieta '{label}' — fallback SUBSKRYPCJA dla {client_email} ({client_name})",
                                 "danger"
@@ -1598,7 +1532,7 @@ def main():
                             # Blokada w bazie + usunięcie hasha
                             prepare_shedule.insert_to_database(
                                 "UPDATE newsletter SET ACTIVE = %s, USER_HASH = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
-                                (404, "REMOVED404", newsletter_id, client_email)
+                                (408, "BLOCKED&REMOVED408", newsletter_id, client_email)
                             )
 
                             # Alert do admina/obsługi
@@ -1609,7 +1543,7 @@ def main():
                             <p><b>Email:</b> {client_email}</p>
                             <p><b>Referer:</b> {referer}</p>
                             <p><b>subscribed_at:</b> {subscribed_at}</p>
-                            <p><b>Akcja:</b> ACTIVE=404, USER_HASH=REMOVED404</p>
+                            <p><b>Akcja:</b> ACTIVE=408, USER_HASH=BLOCKED&REMOVED408</p>
                             <pre style="background:#f5f5f5; padding:10px; border-radius:6px;">{signup_payload}</pre>
                             </div>
                             """
