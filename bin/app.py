@@ -189,7 +189,7 @@ def prepare_prompt(began_prompt):
         timestamp = dump[3]
         status = dump[4]
 
-        print("uname", uname)
+        print("nick", nick)
 
 
         command = ''
