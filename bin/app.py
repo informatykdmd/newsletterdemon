@@ -172,7 +172,8 @@ def prepare_prompt(began_prompt):
 
         ready_hist.append({
             "role": role,
-            "content": f"[{nick}]\n{message}"
+            "author": nick,
+            "content": f"{message}"
         })
 
     dump_key = get_messages('last')
@@ -419,14 +420,14 @@ def prepare_prompt(began_prompt):
             if not is_peer:
                 comands_hist_injector.append(
                     {
+                        "author": uname,
                         "tech_blocks": (
-                            f"[@{uname}]\n"
+                            
                             f"RANGA: {theme['description']}\n"
                             f"{theme['user_about']}\n"
                             f"{theme['arm_hist']}\n"
                         ),
                         "aifa_prompt": (
-                            f"[@{uname}]\n"
                             f"{began_prompt}\n"
                             f"{theme['content']}\n"
                             f"{theme['command']}\n"
@@ -437,10 +438,10 @@ def prepare_prompt(began_prompt):
 
             else:
                 comands_hist_injector.append(
-                    {
+                    {   
+                        "author": uname,
                         "tech_blocks": None,
                         "aifa_prompt": (
-                            f"[@{uname}]\n"
                             f"{theme['content']}\n"
                             f"{theme['command']}\n"
                         )
@@ -459,7 +460,7 @@ def prepare_prompt(began_prompt):
         forge_commender = forge_detect
 
 
-    if count_ready > 0:
+    if count_ready:
         return {"forge_commender": forge_commender, "ready_hist": ready_hist, "comands_hist": comands_hist}
     else:
         return {"forge_commender": forge_commender, "ready_hist": ready_hist, "comands_hist": comands_hist}
@@ -1253,9 +1254,10 @@ def main():
                                     for ch_patch in ch_list:
                                         hist_aifa = list(final_prompt.get("ready_hist", []))
                                         if hist_aifa and isinstance(hist_aifa[-1], dict):
-                                            if ch_patch["aifa_prompt"]:
+                                            if ch_patch["aifa_prompt"] and ch_patch["author"]:
                                                 hist_aifa[-1] = {
                                                     'role': "user",
+                                                    "author": ch_patch["author"],
                                                     'content': ch_patch["aifa_prompt"]
                                                 }
                                             
@@ -1263,7 +1265,6 @@ def main():
                                             if ch_patch["tech_blocks"]:
                                                 hist_aifa = arm_history_with_context(hist_aifa, ch_patch["tech_blocks"])
 
-                                            print('hist:', len(hist_aifa))
                                             print('hist_aifa:', len(hist_aifa))
                                             print('aifa\n', hist_aifa[-4:])
 
@@ -1285,7 +1286,7 @@ def main():
 
                                 # GERINA
                                 # mgr = MistralChatManager(mgr_api_key)
-                                if bot_rotation in ['gerina', 'razem']:
+                                if bot_rotation in ['gerina', 'razem'] or bot_rotation[:-1] in str(answer_mistral_aifa):
                                     sys_prmt_gerina = (
                                         "Jesteś Gerina (ona/jej).\n"
                                         "Rola: wykonawcza jednostka SI w systemie DMD (realizacja, decyzje, konkret).\n\n"
@@ -1354,7 +1355,7 @@ def main():
 
                                 # PIONIER
                                 # mgr = MistralChatManager(mgr_api_key)
-                                if bot_rotation in ['pionier', 'razem']:
+                                if bot_rotation in ['pionier', 'razem'] or bot_rotation[:-1] in str(answer_mistral_aifa) or bot_rotation[:-1] in str(answer_mistral_gerina):
                                     sys_prmt_pionier = (
                                         "Jesteś Pionier (on/jego).\n"
                                         "Rola: nawigacyjna jednostka SI w systemie DMD (procedury, kroki, prowadzenie procesu).\n\n"
@@ -1426,14 +1427,14 @@ def main():
                                                 f"{__aifa_answer}"
                                                 f"{__aifa_answer}"
                                                 f"{add_ANTYPOWTARZANIE}"
-                                                f"{entities_group('gerina')}"
+                                                f"{entities_group('pionier')}"
                                             )
                                             
 
                                             pionier_hist = arm_history_with_context(hist, tech_block)
                                             print('hist:', len(hist))
                                             print('pionier_hist:', len(pionier_hist))
-                                            print('gerina\n', pionier_hist[-2:-1])
+                                            print('pionier\n', pionier_hist[-2:-1])
 
                                             answer_mistral_pionier = mgr.continue_conversation_with_system(pionier_hist, sys_prmt_pionier)
                                             if answer_mistral_pionier:
