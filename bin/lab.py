@@ -19,10 +19,14 @@ memory_block = (
     "- Preferowany styl: luźny, czatowy.\n"
     "- Brak powitań.\n"
     "- Jeśli brak danych: dopytaj.\n"
+    "- Dane IoT po wysiłku fizycznym:\n"
+    "  • puls: peak ~130, aktualnie ~110\n"
+    "  • temperatura ciała: 37.2°C\n"
+    "  • oddech: płytki\n"
 )
 
 
-user_message = "wróciłem jak samopoczucie?"
+user_message = "biegałem i trochę mi słabo, jak myślisz wszystko ze mną ok?"
 
 hist_aifa = [
     {
