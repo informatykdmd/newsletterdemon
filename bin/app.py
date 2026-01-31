@@ -176,7 +176,6 @@ def prepare_prompt(began_prompt):
         })
 
     dump_key = get_messages('last')
-    ready_prompt = f'{began_prompt}\n'
     count_ready = 0
     forge_detect = []
     comands_hist_injector = []
@@ -1266,7 +1265,7 @@ def main():
 
                                             print('hist:', len(hist_aifa))
                                             print('hist_aifa:', len(hist_aifa))
-                                            print('aifa\n', hist_aifa[-2:])
+                                            print('aifa\n', hist_aifa[-4:])
 
                                             answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
                                             if answer_mistral_aifa:
