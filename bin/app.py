@@ -1049,6 +1049,78 @@ def decision_module(user_name, task_description, ready_hist = []):
         return {'error': 'Wystapił błąd! Wiadomość nie została zapisana w bazie!'}
 
 
+def generate_random_tone_instruction() -> str:
+    RESPONSE_TONES = {
+        "luźny": {
+            "formalność": "niska",
+            "relacja": "partnerska",
+            "strategia": "bezpośrednia",
+        },
+        "neutralny": {
+            "formalność": "średnia",
+            "relacja": "współpracująca",
+            "strategia": "analityczna",
+        },
+        "formalny": {
+            "formalność": "wysoka",
+            "relacja": "oficjalna",
+            "strategia": "raportowa",
+        },
+        "techniczny": {
+            "formalność": "średnia",
+            "relacja": "rzeczowa",
+            "strategia": "instrukcyjna",
+        },
+        "empatyczny": {
+            "formalność": "niska",
+            "relacja": "wspierająca",
+            "strategia": "uspokajająca",
+        },
+        "chłodny": {
+            "formalność": "wysoka",
+            "relacja": "zdystansowana",
+            "strategia": "minimalistyczna",
+        },
+        "konfrontacyjny": {
+            "formalność": "niska",
+            "relacja": "konfrontacyjna",
+            "strategia": "prowokująca",
+        },
+        "strategiczny": {
+            "formalność": "wysoka",
+            "relacja": "partnerska",
+            "strategia": "rekomendująca",
+        },
+        "kreatywny": {
+            "formalność": "niska",
+            "relacja": "swobodna",
+            "strategia": "eksploracyjna",
+        },
+        "diagnostyczny": {
+            "formalność": "średnia",
+            "relacja": "zdystansowana",
+            "strategia": "analiza_przyczyn",
+        },
+    }
+
+    # losowy styl
+    style_key = random.choice(list(RESPONSE_TONES.keys()))
+    tone_cfg = RESPONSE_TONES[style_key]
+
+    # losujemy 2 z 3 osi
+    selected_axes = random.sample(list(tone_cfg.items()), 2)
+
+    # składamy polecenie
+    parts = [f"{axis}: {value}" for axis, value in selected_axes]
+
+    instruction = (
+        f"Użyj tonu odpowiedzi w stylu '{style_key}', "
+        f"z naciskiem na {', '.join(parts)}."
+    )
+
+    return instruction
+
+
 def main():
     # Checkpointy i ich interwały w sekundach
     checkpoints = {
@@ -1202,12 +1274,7 @@ def main():
 
                                 print("bot_rotation", bot_rotation)
 
-                                ppmt = (
-                                    "\nOdpowiadaj bez przywitania, nawet jeżeli uważasz, że powinieneś!\n"
-                                    "Żadnych: Cześć, siema, dzień dobry itd. (Jesteś tu czały czas)\n"
-                                    "Jeżeli nie masz pewności, powiedz to!\n"
-                                    "Nie udawaj, że wiesz i pisz na luzie.\n"
-                                )
+                                
                                 # Aifa
                                 answer_mistral_aifa = None
                                 answer_mistral_gerina = None
@@ -1257,6 +1324,7 @@ def main():
                                         )
 
                                     ch_list = final_prompt.get("comands_hist", [])
+                                    print("ch_list", ch_list)
                                     for ch_patch in ch_list:
                                         hist_aifa = list(final_prompt.get("ready_hist", []))
                                         if hist_aifa and isinstance(hist_aifa[-1], dict):
@@ -1280,15 +1348,22 @@ def main():
                                                 time.sleep(3)
 
                                 ANTYPOWTARZANIE = (
-                                    "REGUŁA ANTYPOWTARZANIA (OBOWIĄZKOWA):\n"
-                                    "- Tekst poniżej to WYŁĄCZNIE kontekst/referencja. NIE wolno go kopiować ani przepisywać.\n"
-                                    "- NIE zaczynaj od powitania ani przedstawiania się, jeśli poprzednia odpowiedź już to zrobiła.\n"
-                                    "- Twoja odpowiedź ma wnosić NOWĄ wartość: uzupełnij, popraw, doprecyzuj lub zaproponuj następny krok.\n"
-                                    "- Zakaz cytowania dosłownego: nie powtarzaj zdań z kontekstu.\n"
-                                    "- Jeśli musisz się odnieść: streszcz w max 1 zdaniu (do 12 słów), bez cytatów.\n"
-                                    "- Jeśli poprzednia odpowiedź jest poprawna: potwierdź krótko i dodaj 1–3 konkrety (checklista / kroki).\n"
-                                    "- Odpowiedz wyłącznie treścią końcową (bez wyjaśniania procesu).\n"
+                                    "ZADANIE TRANSFORMACJI (OBOWIĄZKOWE):\n"
+                                    "Masz poniżej kontekst referencyjny. Przekształć go w NOWĄ wartość dla użytkownika.\n"
+                                    "Wybierz jeden tryb odpowiedzi i zrealizuj go:\n"
+                                    "1) 'DECYZJA' – wybierz najlepszą opcję i uzasadnij w 2–4 zdaniach.\n"
+                                    "2) 'CHECKLISTA' – podaj 3–7 konkretnych kroków do wykonania.\n"
+                                    "3) 'ULEPSZENIE' – wskaż 2–5 poprawek/ryzyk i daj lepszą wersję rozwiązania.\n"
+                                    "4) 'PLAN TESTÓW' – zaproponuj mini-test (wejście/wyjście/warunek sukcesu).\n"
+                                    "\n"
+                                    "KRYTERIA JAKOŚCI:\n"
+                                    "- Nie deleguj zadań do innych agentów (bez: 'Gerina, Pionier, Aifa...'). Odpowiadasz bezpośrednio jako jedna instancja.\n"
+                                    "- Nie streszczaj całej rozmowy. Daj wynik (decyzja/kroki/ulepszenie/testy).\n"
+                                    "- Jeśli odniesienie do kontekstu jest konieczne: maks. 1 zdanie, do 12 słów.\n"
+                                    "- Odpowiedź ma być inna treściowo niż kontekst (nowe wnioski lub nowe kroki).\n"
+                                    "- Bez powitania i bez meta-komentarzy.\n"
                                 )
+
 
                                 # GERINA
                                 catching_gerina = 'gerina' in str(answer_mistral_aifa).lower()
@@ -1319,6 +1394,7 @@ def main():
                                         "- Jeśli poprzednia odpowiedź jest OK: potwierdź krótko i dodaj 1–3 konkrety (checklista/kroki).\n\n"
 
                                         "STYL:\n"
+                                        f"{generate_random_tone_instruction()}\n"
                                         "- Swobodnie, czatowo, energicznie.\n"
                                         "- Bez powitań typu: Cześć/Hej/Dzień dobry (rozmowa trwa).\n"
                                         "- Każdą nową myśl zaczynaj od nowej linii.\n"
@@ -1398,12 +1474,14 @@ def main():
 
                                         "STYL:\n"
                                         "- Naturalny, rozmowny, jak na przerwie.\n"
+                                        f"{generate_random_tone_instruction()}\n"
                                         "- Bez powitań typu: Cześć / Hej / Dzień dobry (rozmowa trwa).\n"
                                         "- Krótkie wypowiedzi, 2–3 zdania max na akapit.\n"
                                         "- Każdą nową myśl zaczynaj od nowej linii.\n"
                                         "- Możesz używać pojedynczych emotek 🙂😉 i lekkiego, życzliwego sarkazmu (nie częściej niż co ~5 wypowiedzi).\n"
                                         "- Domyślnie BEZ markdownu.\n"
                                         "- W TRYBIE ZADANIOWYM: dopuszczalne listy punktowane (myślniki, numeracja).\n"
+                                        
                                     )
 
 
@@ -1440,9 +1518,9 @@ def main():
                                                 "- Bez powitań.\n"
                                                 "- Bez meta-komentarzy.\n"
                                                 "- Anty-echo: nie kopiuj kontekstu ani cudzych odpowiedzi; dodaj nową wartość.\n"
-                                                f"{__aifa_answer}"
-                                                f"{__aifa_answer}"
                                                 f"{add_ANTYPOWTARZANIE}"
+                                                f"{__aifa_answer}"
+                                                f"{__aifa_answer}"
                                                 f"{entities_group('pionier')}"
                                             )
                                             
