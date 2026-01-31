@@ -415,6 +415,9 @@ def prepare_prompt(began_prompt):
                 continue
 
             uname = str(theme["user_name"])
+
+            print("uname", uname)
+            
             is_peer = uname.lower() in {"aifa", "gerina", "pionier"}
 
             if not is_peer:
@@ -1285,8 +1288,8 @@ def main():
                                 )
 
                                 # GERINA
-                                # mgr = MistralChatManager(mgr_api_key)
-                                if bot_rotation.lower() in ['gerina', 'razem'] or bot_rotation[:-1].lower() in str(answer_mistral_aifa).lower():
+                                catching_gerina = bot_rotation[:-1].lower() in str(answer_mistral_aifa).lower()
+                                if bot_rotation.lower() in ['gerina', 'razem'] or catching_gerina:
                                     sys_prmt_gerina = (
                                         "Jesteś Gerina (ona/jej).\n"
                                         "Rola: wykonawcza jednostka SI w systemie DMD (realizacja, decyzje, konkret).\n\n"
@@ -1323,7 +1326,11 @@ def main():
 
                                     if hist and isinstance(hist[-1], dict):
                                         ai_convers = hist[-1].get('role', None) == 'user'
-                                        if ai_convers:
+                                        if ai_convers or catching_gerina:
+
+                                            if catching_gerina:
+                                                hist[-1]['role'] = 'user'
+
                                             __aifa_answer = ""
                                             if answer_mistral_aifa:
                                                 __aifa_answer = (
@@ -1354,8 +1361,8 @@ def main():
                                                 time.sleep(3)
 
                                 # PIONIER
-                                # mgr = MistralChatManager(mgr_api_key)
-                                if bot_rotation.lower() in ['pionier', 'razem'] or bot_rotation[:-1].lower() in str(answer_mistral_aifa).lower() or bot_rotation[:-1].lower() in str(answer_mistral_gerina).lower():
+                                catching_pionier = bot_rotation[:-1].lower() in str(answer_mistral_aifa).lower() or bot_rotation[:-1].lower() in str(answer_mistral_gerina).lower()
+                                if bot_rotation.lower() in ['pionier', 'razem'] or catching_pionier:
                                     sys_prmt_pionier = (
                                         "Jesteś Pionier (on/jego).\n"
                                         "Rola: nawigacyjna jednostka SI w systemie DMD (procedury, kroki, prowadzenie procesu).\n\n"
@@ -1397,7 +1404,11 @@ def main():
 
                                     if hist and isinstance(hist[-1], dict):
                                         ai_convers = hist[-1].get('role', None) == 'user'
-                                        if ai_convers:                                            
+                                        if ai_convers or catching_pionier:
+
+                                            if catching_pionier:
+                                                hist[-1]['role'] = 'user'
+                                                             
                                             __aifa_answer = ""
                                             if answer_mistral_aifa:
                                                 __aifa_answer = (
