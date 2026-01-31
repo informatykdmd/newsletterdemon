@@ -417,7 +417,7 @@ def prepare_prompt(began_prompt):
             uname = str(theme["user_name"])
 
             print("uname", uname)
-            
+
             is_peer = uname.lower() in {"aifa", "gerina", "pionier"}
 
             if not is_peer:
@@ -1289,6 +1289,7 @@ def main():
 
                                 # GERINA
                                 catching_gerina = bot_rotation[:-1].lower() in str(answer_mistral_aifa).lower()
+                                print("catching_gerina", catching_gerina)
                                 if bot_rotation.lower() in ['gerina', 'razem'] or catching_gerina:
                                     sys_prmt_gerina = (
                                         "Jesteś Gerina (ona/jej).\n"
@@ -1362,6 +1363,7 @@ def main():
 
                                 # PIONIER
                                 catching_pionier = bot_rotation[:-1].lower() in str(answer_mistral_aifa).lower() or bot_rotation[:-1].lower() in str(answer_mistral_gerina).lower()
+                                print("catching_pionier", catching_pionier)
                                 if bot_rotation.lower() in ['pionier', 'razem'] or catching_pionier:
                                     sys_prmt_pionier = (
                                         "Jesteś Pionier (on/jego).\n"
