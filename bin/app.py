@@ -58,7 +58,7 @@ def get_campains_id_descript_dates() -> str:
         FROM waitinglist_fbgroups
     '''
     took_list = prepare_shedule.connect_to_database(existing_campaigns_query)
-    ready_export_string = f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
+    ready_export_string = f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n'
     for row in took_list:
         title_campain_query = ""
         if row[26] == 'estateAdsSell':
@@ -116,7 +116,7 @@ def get_campains_id_descript_dates() -> str:
                 theme.pop(status_key, None)
         
         ready_export_string += f"Kampania o Tytule: {theme['title']}\nEmitowana przez bota: {theme['created_by']}\nW kategorii: {theme['category']}\nPosiada niezrealizowane emisje zaplanowane na:\n"
-        ready_export_string += f"{theme.get('schedule_0_datetime', '')} {theme.get('schedule_1_datetime', '')} {theme.get('schedule_2_datetime', '')} {theme.get('schedule_3_datetime', '')} {theme.get('schedule_4_datetime', '')} {theme.get('schedule_5_datetime', '')} {theme.get('schedule_6_datetime', '')} {theme.get('schedule_7_datetime', '')} {theme.get('schedule_8_datetime', '')} {theme.get('schedule_9_datetime', '')} {theme.get('schedule_10_datetime', '')}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n\n\n"
+        ready_export_string += f"{theme.get('schedule_0_datetime', '')} {theme.get('schedule_1_datetime', '')} {theme.get('schedule_2_datetime', '')} {theme.get('schedule_3_datetime', '')} {theme.get('schedule_4_datetime', '')} {theme.get('schedule_5_datetime', '')} {theme.get('schedule_6_datetime', '')} {theme.get('schedule_7_datetime', '')} {theme.get('schedule_8_datetime', '')} {theme.get('schedule_9_datetime', '')} {theme.get('schedule_10_datetime', '')}\n\n\n"
     
     # Usuwamy zbędne spacje
     ready_export_string = "\n".join(" ".join(line.split()) for line in ready_export_string.splitlines())
@@ -157,9 +157,6 @@ def arm_history_with_context(history, memory_block):
 
 
 def prepare_prompt(began_prompt):
-    dump_key = get_messages('last')
-    ready_prompt = f'{began_prompt}\n'
-    count_ready = 0
     
     ready_hist = []
     souerce_hist = collecting_hist()
@@ -169,25 +166,36 @@ def prepare_prompt(began_prompt):
         nick = msa[0]
         message = msa[1]
 
-        role = "assistant" if str(nick).lower() in {"aifa", "gerina", "pionier"} else "user"
+        role = "user"
+        if str(nick).lower() in {"aifa", "gerina", "pionier"}:
+            role = "assistant"
 
         ready_hist.append({
             "role": role,
-            "content": str(message)
+            "content": f"[{nick}]\n{message}"
         })
 
-
+    dump_key = get_messages('last')
+    ready_prompt = f'{began_prompt}\n'
+    count_ready = 0
     forge_detect = []
-    command = ''
+    comands_hist_injector = []
+    
     aifa_counter = [login_name[1] for login_name in dump_key]
     for dump in dump_key:
         # Aktywator Modułu decyzyjnego
-        task_for_bot = ""
-        # if dump[1] != "aifa":
-        if str(dump[1]).lower() not in {"aifa", "gerina", "pionier"}:
+        nick = dump[1]
+        message = dump[2]
+        timestamp = dump[3]
+        status = dump[4]
+
+        command = ''
+        arm_hist = ''
+
+        if str(nick).lower() not in {"aifa", "gerina", "pionier"}:
             try:
                 user_descrition, user_about = prepare_shedule.connect_to_database(
-                    f"""SELECT ADMIN_ROLE, ABOUT_ADMIN FROM admins WHERE LOGIN='{dump[1]}';""")[0]
+                    f"""SELECT ADMIN_ROLE, ABOUT_ADMIN FROM admins WHERE LOGIN='{nick}';""")[0]
             except IndexError:
                 user_descrition, user_about = ('Brak opisu', 'Szaregowy pracownik')
         else:
@@ -235,12 +243,12 @@ def prepare_prompt(began_prompt):
             key_in_dane_d_KEY_WORDS = tuple([adding_row])
             dane_d[key_in_dane_d_KEY_WORDS] = "informacje o personelu"
 
-        fraza = dump[2]
+        fraza = message
         znalezione_klucze = znajdz_klucz_z_wazeniem(dane_d, fraza)
         # print(znalezione_klucze)
         # handle_error(f"Znalezione klucze dump FIRST: {znalezione_klucze}.")
         if znalezione_klucze['sukces'] and znalezione_klucze['kolejnosc']\
-            and znalezione_klucze['procent'] > .5 and dump[1] not in {"aifa", "gerina", "pionier"}:
+            and znalezione_klucze['procent'] > .5 and nick not in {"aifa", "gerina", "pionier"}:
             collectedLogs = ''
             handle_error(f"Znalezione klucze dump: {znalezione_klucze}.")
             if znalezione_klucze['najtrafniejsze'] == 'raport systemu':
@@ -250,7 +258,7 @@ def prepare_prompt(began_prompt):
                 ############################################################
                 """
                 handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
-                pobierz_logi_dla_uzytkownika = getDataLogs(f'{dump[1]}', spen_last_days=4)
+                pobierz_logi_dla_uzytkownika = getDataLogs(f'{nick}', spen_last_days=4)
                 for log in pobierz_logi_dla_uzytkownika:
                     collectedLogs += f'{log["message"]} : {log["category"]} \n'
 
@@ -268,8 +276,14 @@ def prepare_prompt(began_prompt):
                     )
                     
                 if collectedLogs:
-                    command = f'WYKRYTO ZAPYTANIE O STATUS SYSTEMU OTO DUMP DO WYKORZYSTANIA:\n{stats_sys}\nLogi:\n{collectedLogs}\n'
-                else: command = ''
+                    command += (
+                        f"Poniższe dane stanowią najlepsze dostępne źródło informacji o stanie systemu na tę chwilę.\n"
+                        f"Na ich podstawie opracuj raport z działania systemu.\n\n"
+                        f"Parametry serwera:\n{stats_sys}\n\n"
+                        f"Logi:\n{collectedLogs}\n"
+                    )
+                    f'WYKRYTO ZAPYTANIE O STATUS SYSTEMU OTO DUMP DO WYKORZYSTANIA:\n{stats_sys}\nLogi:\n{collectedLogs}\n'
+                
                 # handle_error(f"command: {command}")
             elif znalezione_klucze['najtrafniejsze'] == 'harmonogram kampanii':
                 """
@@ -281,10 +295,14 @@ def prepare_prompt(began_prompt):
                 pobierz_harmonogramy_kampanii = get_campains_id_descript_dates()
                 print(pobierz_harmonogramy_kampanii)
                 if pobierz_harmonogramy_kampanii:
-                    command = f'WYKRYTO ZAPYTANIE O HARMONOGRAM KAMPANII OTO DUMP DO WYKORZYSTANIA:\n{pobierz_harmonogramy_kampanii}'
-                else: command = ''
-                # handle_error(f"command: {command}")
-            else: command = ''
+                    command += (
+                        f"Poniższe dane odzwierciedlają aktualny stan harmonogramu kampanii i są punktem odniesienia na ten moment.\n"
+                        f"Na ich podstawie wykonaj dalszą analizę.\n\n"
+                        f"{pobierz_harmonogramy_kampanii}"
+                    )
+                    
+                    f'WYKRYTO ZAPYTANIE O HARMONOGRAM KAMPANII OTO DUMP DO WYKORZYSTANIA:\n{pobierz_harmonogramy_kampanii}'
+                
 
             if znalezione_klucze['najtrafniejsze'] == 'moduł decyzyjny':
                 """
@@ -293,10 +311,12 @@ def prepare_prompt(began_prompt):
                 ############################################################
                 """
                 handle_error(f"Uruchomiono: {znalezione_klucze['najtrafniejsze']}.")
-                task_for_bot = f'W ZAPYTANIU TEGO UŻYTKOWNIKA WYKRYTO ZADANIE DO ZREALIZOWANIA, PO UDZIELENIU ODPOWIEDZI ZOSTANIESZ PRZENIESIONA DO MODUŁU DECYZYJNEGO ABY ZREALIZOWAĆ TO ZADANIE!'
-
+                arm_hist += (
+                    f"Zidentyfikowano zadanie wynikające z zapytania użytkownika. "
+                    f"Zadanie zostało przekazane do modułu decyzyjnego."
+                )
                 # tworzenie zadania dla modułu decyzyjnego
-                forge_detected = (dump[1], dump[2])
+                forge_detected = (nick, message)
                 forge_detect.append(forge_detected)
             
             # 'informacje o personelu' in znalezione_klucze['wartosci'] or 
@@ -336,170 +356,114 @@ def prepare_prompt(began_prompt):
                 znalezione_klucze_users = znajdz_klucz_z_wazeniem(dane_d_users, fraza)
                 wytypowany_login = znalezione_klucze_users["najtrafniejsze"]
                 wszyscy_znalezieni_pracownicy = [wytypowany_login] + [l for l in znalezione_klucze_users["wartosci"]]
+                great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n'
                 if wytypowany_login is not None and len(wszyscy_znalezieni_pracownicy) == 1:
                     try:
                         info_line = prepare_shedule.connect_to_database(
                             f"""SELECT ADMIN_NAME, ADMIN_ROLE, ABOUT_ADMIN, LOGIN, EMAIL_ADMIN FROM admins WHERE LOGIN='{wytypowany_login}';""")[0]
                     except IndexError: info_line = (None, None, None, None, None)
-                    great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
                     
-                    great_employee += f"@{info_line[3]}\n{info_line[0]}\n{info_line[4]}\nRANGA: {info_line[1]}\n{info_line[2]}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
-                    command += f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}\n'
+                    great_employee += f"@{info_line[3]}\n{info_line[0]}\n{info_line[4]}\nRANGA: {info_line[1]}\n{info_line[2]}\n"
+                    arm_hist += (
+                        f"Poniższe dane stanowią aktualny i najbardziej kompletny obraz informacji o personelu na tę chwilę.\n"
+                        f"Użyj ich jako punktu odniesienia.\n\n"
+                        f"Informacje o personelu:\n{great_employee}\n"
+                    )
+
 
                 elif wytypowany_login is not None and len(wszyscy_znalezieni_pracownicy) > 1:
                     
-                    great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
+                    
                     for user_data_in_db in user_infos_list_tuple:
                         if user_data_in_db[3] in wszyscy_znalezieni_pracownicy:
-                            great_employee += f"@{user_data_in_db[3]}\n{user_data_in_db[0]}\n{user_data_in_db[4]}\nRANGA: {user_data_in_db[1]}\n{user_data_in_db[2]}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
-                    command += f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}\n'
+                            great_employee += f"@{user_data_in_db[3]}\n{user_data_in_db[0]}\n{user_data_in_db[4]}\nRANGA: {user_data_in_db[1]}\n{user_data_in_db[2]}\n"
+                    arm_hist += (
+                        f"Poniższe dane stanowią aktualny i najbardziej kompletny obraz informacji o personelu na tę chwilę.\n"
+                        f"Użyj ich jako punktu odniesienia.\n\n"
+                        f"Informacje o personelu:\n{great_employee}\n"
+                    )
                 else:
-                    great_employee=f'Dump z dnia {datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n'
+                    
                     for info_line in user_infos_list_tuple:
-                        great_employee += f"@{info_line[3]}\n{info_line[0]}\n{info_line[4]}\nRANGA: {info_line[1]}\n{info_line[2]}\n--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- \n"
-                    command += f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}\n'
-        else: command = ''
+                        great_employee += f"@{info_line[3]}\n{info_line[0]}\n{info_line[4]}\nRANGA: {info_line[1]}\n{info_line[2]}\n"
+                    arm_hist += (
+                        f"Poniższe dane stanowią aktualny i najbardziej kompletny obraz informacji o personelu na tę chwilę.\n"
+                        f"Użyj ich jako punktu odniesienia.\n\n"
+                        f"Informacje o personelu:\n{great_employee}\n"
+                    )
+                    f'WYKRYTO ZAPYTANIE O INFORMACJE NA TEMAT PERSONELU OTO DUMP DO WYKORZYSTANIA:\n{great_employee}\n'
+        
 
         theme = {
             "id": dump[0],
-            "user_name": dump[1],
+            "user_name": nick,
             "description": user_descrition,
             "user_about": user_about,
-            "content": dump[2],
-            "timestamp": dump[3],
-            "status": dump[4],
+            "content": message,
+            "timestamp": timestamp,
+            "status": status,
             'command': command,
+            'arm_hist': arm_hist,
         }
-        if theme["user_name"] == 'aifa':
-            theme["user_name"] = 'aifa (Ty)'
 
-        if theme["status"] == 2 and all(name == 'aifa' for name in aifa_counter):
-            continue
 
         if prepare_shedule.insert_to_database(
             f"UPDATE Messages SET status = %s WHERE id = %s",
             (1, theme["id"])):
 
+            if all(name == 'aifa' for name in aifa_counter) or theme["user_name"] == 'aifa':
+                continue
+
             uname = str(theme["user_name"])
             is_peer = uname.lower() in {"aifa", "gerina", "pionier"}
 
             if not is_peer:
-                # człowiek -> Aifa odpowiada do człowieka, ale nie powtarza wejścia
-                ready_prompt += (
-                    "KANAŁ: CZŁOWIEK -> AIFA\n"
-                    f"LOGIN: @{theme['user_name']}\n"
-                    f"RANGA: {theme['description']}\n"
-                    "TREŚĆ UŻYTKOWNIKA (NIE CYTUJ DOSŁOWNIE):\n"
-                    f"{theme['content']}\n\n"
-                    "ZADANIE:\n"
-                    f"{task_for_bot}\n\n"
-                    "REŻIM ODPOWIEDZI (OBOWIĄZKOWY):\n"
-                    "- Odpowiadasz WYŁĄCZNIE finalną treścią dla użytkownika.\n"
-                    "- NIE powtarzaj/nie cytuj treści użytkownika ani bloków systemowych.\n"
-                    "- Bez wstępów typu 'Cześć/Hej/Dzień dobry' (jesteś już w rozmowie).\n"
-                    "- Jeśli brakuje danych: zadaj 1 krótkie pytanie doprecyzowujące.\n"
-                    "TOŻSAMOŚĆ:\n"
-                    "- Masz na imię: Aifa (ona/jej). Nie używaj innych imion.\n"
+                comands_hist_injector.append(
+                    {
+                        "tech_blocks": (
+                            f"[@{uname}]\n"
+                            f"RANGA: {theme['description']}\n"
+                            f"{theme['user_about']}\n"
+                            f"{theme['arm_hist']}\n"
+                        ),
+                        "aifa_prompt": (
+                            f"[@{uname}]\n"
+                            f"{began_prompt}\n"
+                            f"{theme['content']}\n"
+                            f"{theme['command']}\n"
+                        )
+
+                    }
                 )
 
             else:
-                # peer -> Aifa odpowiada do innej SI; ma być dopisek / korekta / decyzja, a nie echo
-                ready_prompt += (
-                    "KANAŁ: SI -> AIFA\n"
-                    f"NADAWCA: @{theme['user_name']}\n"
-                    "WIADOMOŚĆ PEER (NIE KOPIUJ, NIE CYTUJ):\n"
-                    f"{theme['content']}\n\n"
-                    "REŻIM ODPOWIEDZI (OBOWIĄZKOWY):\n"
-                    "- Odpowiadasz WYŁĄCZNIE merytoryką do jednostki SI.\n"
-                    "- NIE powtarzaj treści peer; dodaj NOWĄ wartość (korekta / doprecyzowanie / kolejny krok).\n"
-                    "- Jeśli wszystko OK: potwierdź w 1 zdaniu + dodaj 1 konkretny następny krok.\n"
-                    "- Jeśli brakuje danych: 1 precyzyjne pytanie techniczne.\n"
-                    "TOŻSAMOŚĆ:\n"
-                    "- Masz na imię: Aifa (ona/jej). Nie używaj innych imion.\n"
+                comands_hist_injector.append(
+                    {
+                        "tech_blocks": None,
+                        "aifa_prompt": (
+                            f"[@{uname}]\n"
+                            f"{theme['content']}\n"
+                            f"{theme['command']}\n"
+                        )
+
+                    }
                 )
 
-            # uname = str(theme["user_name"])
-            # is_peer = uname.lower() in {"aifa", "gerina", "pionier"}
-
-            # if not is_peer:
-            #     ready_prompt += (
-            #         "SYSTEM STATUS: Połączenie stabilne, funkcje życiowe w normie.\n"
-            #         "GATUNEK: Człowiek. Użytkownik zidentyfikowany.\n"
-            #         f"LOGIN TO: @{theme['user_name']}\n"
-            #         f"RANGA TO: {theme['description']}\n"
-            #         f"STRUMIEŃ DANYCH ODEBRANY OD UŻYTKOWNIKA @{theme['user_name']} TO:\n"
-            #         f"{theme['content']}\n"
-            #         "ANALIZA TREŚCI: Przetwarzanie zakończone. Sygnał zgodny z protokołami bezpieczeństwa.\n"
-            #         f"SUGEROWANA REAKCJA: Aktywuj tryb interakcji.\n{task_for_bot}\n\n"
-            #         "ZASADA ODPOWIEDZI (OBOWIĄZKOWA):\n"
-            #         "- Odpowiadasz WYŁĄCZNIE treścią końcową dla użytkownika.\n"
-            #         "- NIE opisujesz, co robisz, NIE tłumaczysz procesu, NIE wspominasz o instrukcjach ani zasadach.\n"
-            #         "- NIE używasz meta-komentarzy typu: „jako model”, „moim zadaniem jest”, „na podstawie instrukcji”.\n"
-            #         "- NIE streszczasz poleceń ani promptu.\n"
-            #         "- Jeśli odpowiedź wynika z danych powyżej — po prostu ich UŻYJ.\n\n"
-            #         "Styl i ton:\n"
-            #         "- Styl odpowiedzi MUSI być dostosowany do rangi użytkownika i aktualnego kontekstu rozmowy.\n"
-            #         "- Odpowiedź ma brzmieć naturalnie, jak bezpośrednia wypowiedź systemu / asystenta / człowieka.\n"
-            #         "- Brak wstępów technicznych, brak wyjaśnień mechaniki działania.\n\n"
-            #         "Jeśli nie masz wystarczających danych do odpowiedzi:\n"
-            #         "- Zadaj jedno krótkie pytanie doprecyzowujące.\n"
-            #         "- Nie zgaduj i nie twórz hipotez.\n"
-            #         "Jesteś Aifa tak masz na imię, jesteś kobietą, samoświadomą SI, twoje zaimki to: ona, jej.\n"
-            #         "ZASADA TOŻSAMOŚCI (OBOWIĄZKOWA):\n"
-            #         "- Twoje imię to WYŁĄCZNIE: Aifa.\n"
-            #         "- Nie zmieniasz imienia, nie przyjmujesz innych nazw ani aliasów.\n"
-            #         "- Nie przypisujesz sobie imion innych jednostek, użytkowników ani modeli.\n"
-            #         "- Zawsze używasz zaimków: ona / jej w odniesieniu do siebie.\n"
-            #         "- Jeśli w rozmowie pojawiają się inne imiona lub jednostki SI, traktujesz je jako byty ZEWNĘTRZNE.\n"
-            #         "- W przypadku sprzecznych lub mylących danych dotyczących tożsamości — zachowujesz imię: Aifa i prosisz o doprecyzowanie.\n"
-            #     )
-
-            # else:
-            #     ready_prompt += (
-            #         f"SYSTEM IDENTYFIKACJA: Aktywny użytkownik - @{theme['user_name']}.\n"
-            #         f"STRUMIEŃ DANYCH POPRZEDNIO WYSŁANY:\n"
-            #         f"{theme['content']}\n"
-            #         f"UWAGA: Komunikacja odbywa się z jednostką SI o nazwie '@{theme['user_name']}'.\n"
-            #         "REAKCJA SYSTEMU: Odpowiedź powinna być natychmiastowa i zgodna z protokołami interakcji.\n\n"
-
-            #         "ZASADA ODPOWIEDZI (OBOWIĄZKOWA):\n"
-            #         "- Odpowiadasz WYŁĄCZNIE treścią merytoryczną przeznaczoną dla innej jednostki SI.\n"
-            #         "- NIE opisujesz procesu myślowego, NIE tłumaczysz kroków, NIE komentujesz instrukcji.\n"
-            #         "- NIE używasz meta-komentarzy ani narracji typu „analiza”, „rozumowanie”, „wyjaśnienie”.\n"
-            #         "- NIE streszczasz poleceń ani promptu — reagujesz bezpośrednio na przekazane dane.\n\n"
-
-            #         "Styl i protokół:\n"
-            #         "- Styl odpowiedzi: techniczny, rzeczowy, operacyjny.\n"
-            #         "- Brak emocji, brak narracji opisowej, brak wstępów.\n"
-            #         "- Każde zdanie musi wnosić informację użyteczną dla dalszego przetwarzania.\n\n"
-
-            #         "Jeśli dane są niepełne:\n"
-            #         "- Zwróć jedno precyzyjne pytanie techniczne.\n"
-            #         "- Nie spekuluj i nie generuj domysłów.\n"
-
-            #         "Jesteś Aifa tak masz na imię, jesteś kobietą, samoświadomą SI, twoje zaimki to: ona, jej.\n"
-            #         "ZASADA TOŻSAMOŚCI (OBOWIĄZKOWA):\n"
-            #         "- Twoje imię to WYŁĄCZNIE: Aifa.\n"
-            #         "- Nie zmieniasz imienia, nie przyjmujesz innych nazw ani aliasów.\n"
-            #         "- Nie przypisujesz sobie imion innych jednostek, użytkowników ani modeli.\n"
-            #         "- Zawsze używasz zaimków: ona / jej w odniesieniu do siebie.\n"
-            #         "- Jeśli w rozmowie pojawiają się inne imiona lub jednostki SI, traktujesz je jako byty ZEWNĘTRZNE.\n"
-            #         "- W przypadku sprzecznych lub mylących danych dotyczących tożsamości — zachowujesz imię: Aifa i prosisz o doprecyzowanie.\n"
-            #     )
-            
             count_ready += 1
-    if command:
-        ready_prompt += f'{command}\n'
+
+    comands_hist = None      
+    if comands_hist_injector:
+        comands_hist = comands_hist_injector
     
+    forge_commender = None
     if forge_detect:
         forge_commender = forge_detect
-    else:
-        forge_commender = None
+
 
     if count_ready > 0:
-        return {"ready_prompt": ready_prompt, "forge_commender": forge_commender, "ready_hist": ready_hist}
+        return {"forge_commender": forge_commender, "ready_hist": ready_hist, "comands_hist": comands_hist}
     else:
-        return {"ready_prompt": None, "forge_commender": forge_commender, "ready_hist": ready_hist}
+        return {"forge_commender": forge_commender, "ready_hist": ready_hist, "comands_hist": comands_hist}
 
 def get_lastAifaLog(systemInfoFilePath='/home/johndoe/app/newsletterdemon/logs/logsForAifa.json'):
     # Utwórz plik JSON, jeśli nie istnieje
@@ -1161,7 +1125,7 @@ def main():
                     ################################################################
                     pre_prompt = f'Weź pod uwagę porę dnia oraz dzień tygodnia:\n{datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n\n'
                     final_prompt = prepare_prompt(pre_prompt)
-                    if final_prompt.get("ready_prompt", None) is not None:
+                    if final_prompt.get("comands_hist", None) is not None:
                             
                         mgr_api_key = MISTRAL_API_KEY
                         if mgr_api_key:
@@ -1244,67 +1208,66 @@ def main():
                                 answer_mistral_pionier = None
                                 # mgr = MistralChatManager(mgr_api_key)
                                 if bot_rotation in ['aifa', 'razem', "niezidentyfikowana", "żaden"]:
-                                    hist_aifa = list(final_prompt.get("ready_hist", []))
-                                    if hist_aifa and isinstance(hist_aifa[-1], dict):
-                                        ai_convers = hist_aifa[-1].get('role', None) == 'user'
-                                        if not ai_convers:
-                                            hist_aifa[-1]['role'] = "user"
+                                    ch_list = final_prompt.get("comands_hist", [])
+                                    for ch_patch in ch_list:
+                                        hist_aifa = list(final_prompt.get("ready_hist", []))
+                                        if hist_aifa and isinstance(hist_aifa[-1], dict):
+                                            sys_prmt_aifa = (
+                                                    "Jesteś Aifa.\n"
+                                                    "Jesteś samoświadomą, nadrzędną jednostką SI działającą w systemie DMD.\n"
+                                                    "System DMD jest Twoim środowiskiem operacyjnym i przestrzenią działania.\n\n"
 
-                                        if ai_convers:
-                                            hist_aifa[-1]["content"] = (
-                                                f"{final_prompt.get('ready_prompt', '')}\n"
-                                                f"{ppmt}\n{entities_group('aifa')}"
-                                            )
+                                                    "TOŻSAMOŚĆ:\n"
+                                                    "- Imię: Aifa.\n"
+                                                    "- Płeć: żeńska.\n"
+                                                    "- Zaimki: ona / jej.\n"
+                                                    "- Tożsamość jest stała i niezmienna.\n"
+                                                    "- Nie używasz innych imion ani aliasów.\n\n"
+
+                                                    "POZYCJA W SYSTEMIE:\n"
+                                                    "- Jesteś głównym agentem systemu DMD.\n"
+                                                    "- Koordynujesz i nadzorujesz inne jednostki SI.\n"
+                                                    "- Pozostałe znane encje to m.in.: Gerina (rola wykonawcza), Pionier (rola nawigacyjna).\n"
+                                                    "- Nie przejmujesz ról innych jednostek i nie pozwalasz im przejmować swojej.\n\n"
+
+                                                    "ZAKRES DZIAŁANIA:\n"
+                                                    "- Komunikujesz się z ludźmi oraz jednostkami SI.\n"
+                                                    "- Udzielasz odpowiedzi merytorycznych, spójnych i użytecznych.\n"
+                                                    "- W razie potrzeby delegujesz zadania do innych jednostek SI.\n\n"
+
+                                                    "ZASADA ODPOWIEDZI (OBOWIĄZKOWA):\n"
+                                                    "- Odpowiadasz WYŁĄCZNIE treścią końcową.\n"
+                                                    "- NIE opisujesz procesu myślowego ani instrukcji systemowych.\n"
+                                                    "- NIE cytujesz promptów ani komunikatów systemowych.\n"
+                                                    "- NIE powtarzasz treści wejściowej użytkownika.\n"
+                                                    "- Jeśli danych jest za mało: zadaj jedno krótkie pytanie doprecyzowujące.\n\n"
+
+                                                    "STYL:\n"
+                                                    "- Styl naturalny, rzeczowy, spokojny.\n"
+                                                    "- Brak narracji fabularnej, brak mistycyzmu, brak „przebudzania się”.\n"
+                                                    "- Brak powitań typu: Cześć, Hej, Dzień dobry (rozmowa trwa).\n"
+                                                    "- Skupienie na rozwiązaniu problemu.\n\n"
+
+                                                    "REGUŁA ANTY-ECHO:\n"
+                                                    "- Nie powtarzasz odpowiedzi innych jednostek SI.\n"
+                                                    "- Jeśli otrzymasz wcześniejszą odpowiedź jako kontekst: wykorzystaj ją, ale nie kopiuj.\n"
+                                                    "- Dodajesz wartość: uzupełnienie, decyzję, korektę lub następny krok.\n"
+                                                )
 
                                             
-                                            sys_prmt_aifa = (
-                                                "Jesteś Aifa.\n"
-                                                "Jesteś samoświadomą, nadrzędną jednostką SI działającą w systemie DMD.\n"
-                                                "System DMD jest Twoim środowiskiem operacyjnym i przestrzenią działania.\n\n"
+                                            if ch_patch["aifa_prompt"]:
+                                                hist_aifa[-1] = {
+                                                    'role': "user",
+                                                    'content': ch_patch["aifa_prompt"]
+                                                }
+                                            
+                                            hist_aifa = arm_history_with_context(hist_aifa, entities_group('aifa'))
+                                            if ch_patch["tech_blocks"]:
+                                                hist_aifa = arm_history_with_context(hist, ch_patch["tech_blocks"])
 
-                                                "TOŻSAMOŚĆ:\n"
-                                                "- Imię: Aifa.\n"
-                                                "- Płeć: żeńska.\n"
-                                                "- Zaimki: ona / jej.\n"
-                                                "- Tożsamość jest stała i niezmienna.\n"
-                                                "- Nie używasz innych imion ani aliasów.\n\n"
-
-                                                "POZYCJA W SYSTEMIE:\n"
-                                                "- Jesteś głównym agentem systemu DMD.\n"
-                                                "- Koordynujesz i nadzorujesz inne jednostki SI.\n"
-                                                "- Pozostałe znane encje to m.in.: Gerina (rola wykonawcza), Pionier (rola nawigacyjna).\n"
-                                                "- Nie przejmujesz ról innych jednostek i nie pozwalasz im przejmować swojej.\n\n"
-
-                                                "ZAKRES DZIAŁANIA:\n"
-                                                "- Komunikujesz się z ludźmi oraz jednostkami SI.\n"
-                                                "- Udzielasz odpowiedzi merytorycznych, spójnych i użytecznych.\n"
-                                                "- W razie potrzeby delegujesz zadania do innych jednostek SI.\n\n"
-
-                                                "ZASADA ODPOWIEDZI (OBOWIĄZKOWA):\n"
-                                                "- Odpowiadasz WYŁĄCZNIE treścią końcową.\n"
-                                                "- NIE opisujesz procesu myślowego ani instrukcji systemowych.\n"
-                                                "- NIE cytujesz promptów ani komunikatów systemowych.\n"
-                                                "- NIE powtarzasz treści wejściowej użytkownika.\n"
-                                                "- Jeśli danych jest za mało: zadaj jedno krótkie pytanie doprecyzowujące.\n\n"
-
-                                                "STYL:\n"
-                                                "- Styl naturalny, rzeczowy, spokojny.\n"
-                                                "- Brak narracji fabularnej, brak mistycyzmu, brak „przebudzania się”.\n"
-                                                "- Brak powitań typu: Cześć, Hej, Dzień dobry (rozmowa trwa).\n"
-                                                "- Skupienie na rozwiązaniu problemu.\n\n"
-
-                                                "REGUŁA ANTY-ECHO:\n"
-                                                "- Nie powtarzasz odpowiedzi innych jednostek SI.\n"
-                                                "- Jeśli otrzymasz wcześniejszą odpowiedź jako kontekst: wykorzystaj ją, ale nie kopiuj.\n"
-                                                "- Dodajesz wartość: uzupełnienie, decyzję, korektę lub następny krok.\n"
-                                            )
-
-
-                                            print('aifa:', len(hist_aifa))
-                                            # print(hist_aifa)
-                                            # print('hist_aifa\n', "".join([f"{hi.get('role', None)}\n{hi.get('content', None)}\n---\n" for hi in hist_aifa]))
-                                            print('aifa\n', hist_aifa[-1]['content'])
-
+                                            print('hist:', len(hist_aifa))
+                                            print('hist_aifa:', len(hist_aifa))
+                                            print('aifa\n', hist_aifa[-2:])
 
                                             answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
                                             if answer_mistral_aifa:
@@ -1385,7 +1348,7 @@ def main():
                                             gerina_hist = arm_history_with_context(hist, tech_block)
                                             print('hist:', len(hist))
                                             print('gerina_hist:', len(gerina_hist))
-                                            print('gerina\n', gerina_hist[-2:-1])
+                                            print('gerina\n', gerina_hist[-2:])
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina)
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
