@@ -297,7 +297,7 @@ def prepare_prompt(began_prompt):
                 if pobierz_harmonogramy_kampanii:
                     command += (
                         f"Poniższe dane odzwierciedlają aktualny stan harmonogramu kampanii i są punktem odniesienia na ten moment.\n"
-                        f"Na ich podstawie wykonaj dalszą analizę.\n\n"
+                         f"Na ich podstawie opracuj raport\n\n"
                         f"{pobierz_harmonogramy_kampanii}"
                     )
                     
@@ -1266,7 +1266,7 @@ def main():
                                                 hist_aifa = arm_history_with_context(hist_aifa, ch_patch["tech_blocks"])
 
                                             print('hist_aifa:', len(hist_aifa))
-                                            print('aifa\n', hist_aifa[-4:])
+                                            print('aifa\n', hist_aifa[-2:])
 
                                             answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
                                             if answer_mistral_aifa:
@@ -1286,7 +1286,7 @@ def main():
 
                                 # GERINA
                                 # mgr = MistralChatManager(mgr_api_key)
-                                if bot_rotation in ['gerina', 'razem'] or bot_rotation[:-1] in str(answer_mistral_aifa):
+                                if bot_rotation.lower() in ['gerina', 'razem'] or bot_rotation[:-1].lower() in str(answer_mistral_aifa).lower():
                                     sys_prmt_gerina = (
                                         "Jesteś Gerina (ona/jej).\n"
                                         "Rola: wykonawcza jednostka SI w systemie DMD (realizacja, decyzje, konkret).\n\n"
@@ -1355,7 +1355,7 @@ def main():
 
                                 # PIONIER
                                 # mgr = MistralChatManager(mgr_api_key)
-                                if bot_rotation in ['pionier', 'razem'] or bot_rotation[:-1] in str(answer_mistral_aifa) or bot_rotation[:-1] in str(answer_mistral_gerina):
+                                if bot_rotation.lower() in ['pionier', 'razem'] or bot_rotation[:-1].lower() in str(answer_mistral_aifa).lower() or bot_rotation[:-1].lower() in str(answer_mistral_gerina).lower():
                                     sys_prmt_pionier = (
                                         "Jesteś Pionier (on/jego).\n"
                                         "Rola: nawigacyjna jednostka SI w systemie DMD (procedury, kroki, prowadzenie procesu).\n\n"
@@ -1434,7 +1434,7 @@ def main():
                                             pionier_hist = arm_history_with_context(hist, tech_block)
                                             print('hist:', len(hist))
                                             print('pionier_hist:', len(pionier_hist))
-                                            print('pionier\n', pionier_hist[-2:-1])
+                                            print('pionier\n', pionier_hist[-2:])
 
                                             answer_mistral_pionier = mgr.continue_conversation_with_system(pionier_hist, sys_prmt_pionier)
                                             if answer_mistral_pionier:
