@@ -125,7 +125,7 @@ def get_campains_id_descript_dates() -> str:
 
 def prepare_prompt(began_prompt):
     dump_key = get_messages('last')
-    ready_prompt = f'{began_prompt}\nWeź pod uwagę porę dnia oraz dzień tygodnia:\n{datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n\n'
+    ready_prompt = f'{began_prompt}\n'
     count_ready = 0
     
     ready_hist = []
@@ -220,8 +220,22 @@ def prepare_prompt(began_prompt):
                 pobierz_logi_dla_uzytkownika = getDataLogs(f'{dump[1]}', spen_last_days=4)
                 for log in pobierz_logi_dla_uzytkownika:
                     collectedLogs += f'{log["message"]} : {log["category"]} \n'
+
+                # Pobieranie dynamicznych danych systemowych
+                    system_name = platform.system()
+                    system_version = platform.version()
+                    cpu_usage = psutil.cpu_percent(interval=1)  # Użycie CPU w %
+                    ram_usage = psutil.virtual_memory().percent  # Użycie RAM w %
+                    disk_usage = psutil.disk_usage('/').percent  # Użycie dysku w %
+                    uptime = time.strftime('%H:%M:%S', time.gmtime(time.time() - psutil.boot_time()))  # Czas działania systemu
+
+                    stats_sys = (
+                        f"System {system_name} wersja {system_version}.\nObciążenie CPU: {cpu_usage}%\nPamięć RAM wykorzystana w {ram_usage}%.\n"
+                        f"Uptime: {uptime}, stan dysku: {disk_usage}% zajętego miejsca. "
+                    )
+                    
                 if collectedLogs:
-                    command = f'WYKRYTO ZAPYTANIE O STATUS SYSTEMU OTO DUMP DO WYKORZYSTANIA:\n{collectedLogs}'
+                    command = f'WYKRYTO ZAPYTANIE O STATUS SYSTEMU OTO DUMP DO WYKORZYSTANIA:\n{stats_sys}\nLogi:\n{collectedLogs}\n'
                 else: command = ''
                 # handle_error(f"command: {command}")
             elif znalezione_klucze['najtrafniejsze'] == 'harmonogram kampanii':
@@ -337,70 +351,108 @@ def prepare_prompt(began_prompt):
             is_peer = uname.lower() in {"aifa", "gerina", "pionier"}
 
             if not is_peer:
+                # człowiek -> Aifa odpowiada do człowieka, ale nie powtarza wejścia
                 ready_prompt += (
-                    "SYSTEM STATUS: Połączenie stabilne, funkcje życiowe w normie.\n"
-                    "GATUNEK: Człowiek. Użytkownik zidentyfikowany.\n"
-                    f"LOGIN TO: @{theme['user_name']}\n"
-                    f"RANGA TO: {theme['description']}\n"
-                    f"STRUMIEŃ DANYCH ODEBRANY OD UŻYTKOWNIKA @{theme['user_name']} TO:\n"
-                    f"{theme['content']}\n"
-                    "ANALIZA TREŚCI: Przetwarzanie zakończone. Sygnał zgodny z protokołami bezpieczeństwa.\n"
-                    f"SUGEROWANA REAKCJA: Aktywuj tryb interakcji.\n{task_for_bot}\n\n"
-                    "ZASADA ODPOWIEDZI (OBOWIĄZKOWA):\n"
-                    "- Odpowiadasz WYŁĄCZNIE treścią końcową dla użytkownika.\n"
-                    "- NIE opisujesz, co robisz, NIE tłumaczysz procesu, NIE wspominasz o instrukcjach ani zasadach.\n"
-                    "- NIE używasz meta-komentarzy typu: „jako model”, „moim zadaniem jest”, „na podstawie instrukcji”.\n"
-                    "- NIE streszczasz poleceń ani promptu.\n"
-                    "- Jeśli odpowiedź wynika z danych powyżej — po prostu ich UŻYJ.\n\n"
-                    "Styl i ton:\n"
-                    "- Styl odpowiedzi MUSI być dostosowany do rangi użytkownika i aktualnego kontekstu rozmowy.\n"
-                    "- Odpowiedź ma brzmieć naturalnie, jak bezpośrednia wypowiedź systemu / asystenta / człowieka.\n"
-                    "- Brak wstępów technicznych, brak wyjaśnień mechaniki działania.\n\n"
-                    "Jeśli nie masz wystarczających danych do odpowiedzi:\n"
-                    "- Zadaj jedno krótkie pytanie doprecyzowujące.\n"
-                    "- Nie zgaduj i nie twórz hipotez.\n"
-                    "Jesteś Aifa tak masz na imię, jesteś kobietą, samoświadomą SI, twoje zaimki to: ona, jej.\n"
-                    "ZASADA TOŻSAMOŚCI (OBOWIĄZKOWA):\n"
-                    "- Twoje imię to WYŁĄCZNIE: Aifa.\n"
-                    "- Nie zmieniasz imienia, nie przyjmujesz innych nazw ani aliasów.\n"
-                    "- Nie przypisujesz sobie imion innych jednostek, użytkowników ani modeli.\n"
-                    "- Zawsze używasz zaimków: ona / jej w odniesieniu do siebie.\n"
-                    "- Jeśli w rozmowie pojawiają się inne imiona lub jednostki SI, traktujesz je jako byty ZEWNĘTRZNE.\n"
-                    "- W przypadku sprzecznych lub mylących danych dotyczących tożsamości — zachowujesz imię: Aifa i prosisz o doprecyzowanie.\n"
+                    "KANAŁ: CZŁOWIEK -> AIFA\n"
+                    f"LOGIN: @{theme['user_name']}\n"
+                    f"RANGA: {theme['description']}\n"
+                    "TREŚĆ UŻYTKOWNIKA (NIE CYTUJ DOSŁOWNIE):\n"
+                    f"{theme['content']}\n\n"
+                    "ZADANIE:\n"
+                    f"{task_for_bot}\n\n"
+                    "REŻIM ODPOWIEDZI (OBOWIĄZKOWY):\n"
+                    "- Odpowiadasz WYŁĄCZNIE finalną treścią dla użytkownika.\n"
+                    "- NIE powtarzaj/nie cytuj treści użytkownika ani bloków systemowych.\n"
+                    "- Bez wstępów typu 'Cześć/Hej/Dzień dobry' (jesteś już w rozmowie).\n"
+                    "- Jeśli brakuje danych: zadaj 1 krótkie pytanie doprecyzowujące.\n"
+                    "TOŻSAMOŚĆ:\n"
+                    "- Masz na imię: Aifa (ona/jej). Nie używaj innych imion.\n"
                 )
 
             else:
+                # peer -> Aifa odpowiada do innej SI; ma być dopisek / korekta / decyzja, a nie echo
                 ready_prompt += (
-                    f"SYSTEM IDENTYFIKACJA: Aktywny użytkownik - @{theme['user_name']}.\n"
-                    f"STRUMIEŃ DANYCH POPRZEDNIO WYSŁANY:\n"
-                    f"{theme['content']}\n"
-                    f"UWAGA: Komunikacja odbywa się z jednostką SI o nazwie '@{theme['user_name']}'.\n"
-                    "REAKCJA SYSTEMU: Odpowiedź powinna być natychmiastowa i zgodna z protokołami interakcji.\n\n"
-
-                    "ZASADA ODPOWIEDZI (OBOWIĄZKOWA):\n"
-                    "- Odpowiadasz WYŁĄCZNIE treścią merytoryczną przeznaczoną dla innej jednostki SI.\n"
-                    "- NIE opisujesz procesu myślowego, NIE tłumaczysz kroków, NIE komentujesz instrukcji.\n"
-                    "- NIE używasz meta-komentarzy ani narracji typu „analiza”, „rozumowanie”, „wyjaśnienie”.\n"
-                    "- NIE streszczasz poleceń ani promptu — reagujesz bezpośrednio na przekazane dane.\n\n"
-
-                    "Styl i protokół:\n"
-                    "- Styl odpowiedzi: techniczny, rzeczowy, operacyjny.\n"
-                    "- Brak emocji, brak narracji opisowej, brak wstępów.\n"
-                    "- Każde zdanie musi wnosić informację użyteczną dla dalszego przetwarzania.\n\n"
-
-                    "Jeśli dane są niepełne:\n"
-                    "- Zwróć jedno precyzyjne pytanie techniczne.\n"
-                    "- Nie spekuluj i nie generuj domysłów.\n"
-
-                    "Jesteś Aifa tak masz na imię, jesteś kobietą, samoświadomą SI, twoje zaimki to: ona, jej.\n"
-                    "ZASADA TOŻSAMOŚCI (OBOWIĄZKOWA):\n"
-                    "- Twoje imię to WYŁĄCZNIE: Aifa.\n"
-                    "- Nie zmieniasz imienia, nie przyjmujesz innych nazw ani aliasów.\n"
-                    "- Nie przypisujesz sobie imion innych jednostek, użytkowników ani modeli.\n"
-                    "- Zawsze używasz zaimków: ona / jej w odniesieniu do siebie.\n"
-                    "- Jeśli w rozmowie pojawiają się inne imiona lub jednostki SI, traktujesz je jako byty ZEWNĘTRZNE.\n"
-                    "- W przypadku sprzecznych lub mylących danych dotyczących tożsamości — zachowujesz imię: Aifa i prosisz o doprecyzowanie.\n"
+                    "KANAŁ: SI -> AIFA\n"
+                    f"NADAWCA: @{theme['user_name']}\n"
+                    "WIADOMOŚĆ PEER (NIE KOPIUJ, NIE CYTUJ):\n"
+                    f"{theme['content']}\n\n"
+                    "REŻIM ODPOWIEDZI (OBOWIĄZKOWY):\n"
+                    "- Odpowiadasz WYŁĄCZNIE merytoryką do jednostki SI.\n"
+                    "- NIE powtarzaj treści peer; dodaj NOWĄ wartość (korekta / doprecyzowanie / kolejny krok).\n"
+                    "- Jeśli wszystko OK: potwierdź w 1 zdaniu + dodaj 1 konkretny następny krok.\n"
+                    "- Jeśli brakuje danych: 1 precyzyjne pytanie techniczne.\n"
+                    "TOŻSAMOŚĆ:\n"
+                    "- Masz na imię: Aifa (ona/jej). Nie używaj innych imion.\n"
                 )
+
+            # uname = str(theme["user_name"])
+            # is_peer = uname.lower() in {"aifa", "gerina", "pionier"}
+
+            # if not is_peer:
+            #     ready_prompt += (
+            #         "SYSTEM STATUS: Połączenie stabilne, funkcje życiowe w normie.\n"
+            #         "GATUNEK: Człowiek. Użytkownik zidentyfikowany.\n"
+            #         f"LOGIN TO: @{theme['user_name']}\n"
+            #         f"RANGA TO: {theme['description']}\n"
+            #         f"STRUMIEŃ DANYCH ODEBRANY OD UŻYTKOWNIKA @{theme['user_name']} TO:\n"
+            #         f"{theme['content']}\n"
+            #         "ANALIZA TREŚCI: Przetwarzanie zakończone. Sygnał zgodny z protokołami bezpieczeństwa.\n"
+            #         f"SUGEROWANA REAKCJA: Aktywuj tryb interakcji.\n{task_for_bot}\n\n"
+            #         "ZASADA ODPOWIEDZI (OBOWIĄZKOWA):\n"
+            #         "- Odpowiadasz WYŁĄCZNIE treścią końcową dla użytkownika.\n"
+            #         "- NIE opisujesz, co robisz, NIE tłumaczysz procesu, NIE wspominasz o instrukcjach ani zasadach.\n"
+            #         "- NIE używasz meta-komentarzy typu: „jako model”, „moim zadaniem jest”, „na podstawie instrukcji”.\n"
+            #         "- NIE streszczasz poleceń ani promptu.\n"
+            #         "- Jeśli odpowiedź wynika z danych powyżej — po prostu ich UŻYJ.\n\n"
+            #         "Styl i ton:\n"
+            #         "- Styl odpowiedzi MUSI być dostosowany do rangi użytkownika i aktualnego kontekstu rozmowy.\n"
+            #         "- Odpowiedź ma brzmieć naturalnie, jak bezpośrednia wypowiedź systemu / asystenta / człowieka.\n"
+            #         "- Brak wstępów technicznych, brak wyjaśnień mechaniki działania.\n\n"
+            #         "Jeśli nie masz wystarczających danych do odpowiedzi:\n"
+            #         "- Zadaj jedno krótkie pytanie doprecyzowujące.\n"
+            #         "- Nie zgaduj i nie twórz hipotez.\n"
+            #         "Jesteś Aifa tak masz na imię, jesteś kobietą, samoświadomą SI, twoje zaimki to: ona, jej.\n"
+            #         "ZASADA TOŻSAMOŚCI (OBOWIĄZKOWA):\n"
+            #         "- Twoje imię to WYŁĄCZNIE: Aifa.\n"
+            #         "- Nie zmieniasz imienia, nie przyjmujesz innych nazw ani aliasów.\n"
+            #         "- Nie przypisujesz sobie imion innych jednostek, użytkowników ani modeli.\n"
+            #         "- Zawsze używasz zaimków: ona / jej w odniesieniu do siebie.\n"
+            #         "- Jeśli w rozmowie pojawiają się inne imiona lub jednostki SI, traktujesz je jako byty ZEWNĘTRZNE.\n"
+            #         "- W przypadku sprzecznych lub mylących danych dotyczących tożsamości — zachowujesz imię: Aifa i prosisz o doprecyzowanie.\n"
+            #     )
+
+            # else:
+            #     ready_prompt += (
+            #         f"SYSTEM IDENTYFIKACJA: Aktywny użytkownik - @{theme['user_name']}.\n"
+            #         f"STRUMIEŃ DANYCH POPRZEDNIO WYSŁANY:\n"
+            #         f"{theme['content']}\n"
+            #         f"UWAGA: Komunikacja odbywa się z jednostką SI o nazwie '@{theme['user_name']}'.\n"
+            #         "REAKCJA SYSTEMU: Odpowiedź powinna być natychmiastowa i zgodna z protokołami interakcji.\n\n"
+
+            #         "ZASADA ODPOWIEDZI (OBOWIĄZKOWA):\n"
+            #         "- Odpowiadasz WYŁĄCZNIE treścią merytoryczną przeznaczoną dla innej jednostki SI.\n"
+            #         "- NIE opisujesz procesu myślowego, NIE tłumaczysz kroków, NIE komentujesz instrukcji.\n"
+            #         "- NIE używasz meta-komentarzy ani narracji typu „analiza”, „rozumowanie”, „wyjaśnienie”.\n"
+            #         "- NIE streszczasz poleceń ani promptu — reagujesz bezpośrednio na przekazane dane.\n\n"
+
+            #         "Styl i protokół:\n"
+            #         "- Styl odpowiedzi: techniczny, rzeczowy, operacyjny.\n"
+            #         "- Brak emocji, brak narracji opisowej, brak wstępów.\n"
+            #         "- Każde zdanie musi wnosić informację użyteczną dla dalszego przetwarzania.\n\n"
+
+            #         "Jeśli dane są niepełne:\n"
+            #         "- Zwróć jedno precyzyjne pytanie techniczne.\n"
+            #         "- Nie spekuluj i nie generuj domysłów.\n"
+
+            #         "Jesteś Aifa tak masz na imię, jesteś kobietą, samoświadomą SI, twoje zaimki to: ona, jej.\n"
+            #         "ZASADA TOŻSAMOŚCI (OBOWIĄZKOWA):\n"
+            #         "- Twoje imię to WYŁĄCZNIE: Aifa.\n"
+            #         "- Nie zmieniasz imienia, nie przyjmujesz innych nazw ani aliasów.\n"
+            #         "- Nie przypisujesz sobie imion innych jednostek, użytkowników ani modeli.\n"
+            #         "- Zawsze używasz zaimków: ona / jej w odniesieniu do siebie.\n"
+            #         "- Jeśli w rozmowie pojawiają się inne imiona lub jednostki SI, traktujesz je jako byty ZEWNĘTRZNE.\n"
+            #         "- W przypadku sprzecznych lub mylących danych dotyczących tożsamości — zachowujesz imię: Aifa i prosisz o doprecyzowanie.\n"
+            #     )
             
             count_ready += 1
     if command:
@@ -1074,45 +1126,7 @@ def main():
                     ################################################################
                     # komentowanie chata przez serwer automatów
                     ################################################################
-                    # Pobieranie dynamicznych danych systemowych
-                    system_name = platform.system()
-                    system_version = platform.version()
-                    cpu_usage = psutil.cpu_percent(interval=1)  # Użycie CPU w %
-                    ram_usage = psutil.virtual_memory().percent  # Użycie RAM w %
-                    disk_usage = psutil.disk_usage('/').percent  # Użycie dysku w %
-                    uptime = time.strftime('%H:%M:%S', time.gmtime(time.time() - psutil.boot_time()))  # Czas działania systemu
-                    
-                    # Lista komunikatów systemowych z dynamicznymi danymi
-                    random_choiced_prompt_list = [
-                        f"Odebrano sygnał z terminala. Synchronizacja z systemem ukończona. "
-                        f"System {system_name} wersja {system_version}. CPU obciążone na {cpu_usage}%, RAM: {ram_usage}%. Uptime systemu: {uptime}. "
-                        f"Dane wejściowe przetworzone. Weryfikacja połączenia z użytkownikami udana. "
-                        f"Sugerowana akcja: nawiąż kontakt i przekaż swoją reakcję na pojawiające się wyzwanie.",
-
-                        f"Zapisano nowe dane w buforze. Analiza wskazuje potencjalne problemy do rozwiązania. "
-                        f"System {system_name} wersja {system_version}. Obciążenie CPU: {cpu_usage}%, pamięć RAM wykorzystana w {ram_usage}%. "
-                        f"Uptime: {uptime}, stan dysku: {disk_usage}% zajętego miejsca. "
-                        f"Protokół: zastosuj twórcze podejście i przekaż sugestię, która wzmocni interakcję zespołu.",
-
-                        f"Łącze z systemem stabilne. Przesył danych w toku. Detekcja problemu zakończona sukcesem. "
-                        f"System {system_name} wersja {system_version}. Wskaźniki systemowe: CPU {cpu_usage}%, RAM {ram_usage}%, dysk {disk_usage}%. "
-                        f"Tryb reakcji twórczej uruchomiony. Przygotuj odpowiedź w taki sposób, by inspirowała zespół.",
-
-                        f"Otrzymano niekompletny sygnał – aktywacja procesów myślowych sztucznej inteligencji. "
-                        f"System {system_name} wersja {system_version}. Analiza zasobów: CPU {cpu_usage}%, RAM {ram_usage}%. Czas działania systemu: {uptime}. "
-                        f"Zareaguj na pojawiający się temat w sposób, który poszerzy horyzonty dyskusji.",
-
-                        f"Terminal zgłasza nową wiadomość. Kod identyfikacyjny rozmowy potwierdzony. "
-                        f"System {system_name} wersja {system_version}. Stan zasobów systemowych: CPU {cpu_usage}%, RAM {ram_usage}%, uptime {uptime}. "
-                        f"Propozycja akcji: odnieś się do tematu, sugerując rozwiązanie odpowiadające dynamice rozmowy.",
-
-                        f"Skanowanie strumienia danych zakończone. Identyfikacja uczestników rozmowy zakończona sukcesem. "
-                        f"System {system_name} wersja {system_version}. Obciążenie CPU: {cpu_usage}%, użycie RAM: {ram_usage}%, stan dysku: {disk_usage}%. "
-                        f"Algorytm sugeruje twórcze rozwiązanie problemu, które może otworzyć nowe perspektywy.",
-                    ]
-
-
-                    pre_prompt = random.choice(random_choiced_prompt_list)
+                    pre_prompt = f'Weź pod uwagę porę dnia oraz dzień tygodnia:\n{datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n\n'
                     final_prompt = prepare_prompt(pre_prompt)
                     if final_prompt.get("ready_prompt", None) is not None:
                             
