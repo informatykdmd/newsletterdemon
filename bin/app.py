@@ -894,6 +894,7 @@ def decision_module(user_name, task_description, ready_hist = []):
                         f'Brawo! Realizacja: "{task_description}" zakończona sukcesem. {responder_answer.get("procedura_zakonczona")}.'
                     ]
                     add_to_prompt = random.choice(add_to_prompt_list)
+                    time.sleep(5)
 
                 elif responder_answer.get("raport_zgodnosci", False):
                     add_to_prompt_list = [
@@ -906,6 +907,7 @@ def decision_module(user_name, task_description, ready_hist = []):
                         f'Niespójne dane w: "{task_description}". Szczegóły analizy: {responder_answer.get("raport_zgodnosci")}. Sprawdź i wprowadź poprawki.'
                     ]
                     add_to_prompt = random.choice(add_to_prompt_list)
+                    time.sleep(5)
                 
                 elif responder_answer.get("anuluj_zadanie", False):
                     add_to_prompt_list = [
@@ -918,6 +920,7 @@ def decision_module(user_name, task_description, ready_hist = []):
                         f'Zadanie: "{task_description}" zostało cofnięte. Informacja: {responder_answer.get("anuluj_zadanie")}.'
                     ]
                     add_to_prompt = random.choice(add_to_prompt_list)
+                    time.sleep(5)
 
                 elif responder_answer.get("raport_koncowy", False):
                     add_to_prompt_list = [
@@ -930,6 +933,7 @@ def decision_module(user_name, task_description, ready_hist = []):
                         f'Podsumowanie: "{task_description}" zakończone sukcesem. Raport etapu: {responder_answer.get("raport_koncowy")}.'
                     ]
                     add_to_prompt = random.choice(add_to_prompt_list)
+                    time.sleep(5)
             else:
                 if responder_answer.get("error", False):
                     add_to_prompt_list = [
@@ -942,6 +946,7 @@ def decision_module(user_name, task_description, ready_hist = []):
                         f'Wystąpił błąd dla: "{task_description}". Oto szczegóły: {responder_answer.get("error")}. Być może dasz radę samodzielnie go naprawić.'
                     ]
                     add_to_prompt = random.choice(add_to_prompt_list)
+                    time.sleep(5)
                     # break
         else:
             if proba == 5:
@@ -955,6 +960,7 @@ def decision_module(user_name, task_description, ready_hist = []):
                     f'Problem z endpointem uniemożliwia realizację: "{task_description}". Rozpoczynam działania naprawcze.'
                 ]
                 add_to_prompt = random.choice(add_to_prompt_list)
+                time.sleep(5)
                 break 
             add_to_prompt_list = [
                 f'Zauważono dziwną sytuację. Twoje polecenie: "{task_description}". Sprawdźmy to ponownie!',
@@ -966,6 +972,7 @@ def decision_module(user_name, task_description, ready_hist = []):
                 f'Nie widzę wszystkich danych dla zadania. Sprawdźmy to ponownie i naprawmy problem!'
             ]
             add_to_prompt = random.choice(add_to_prompt_list)
+            time.sleep(5)
             proba += 1
         time.sleep(2)
         
