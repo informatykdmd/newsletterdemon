@@ -159,22 +159,70 @@ def arm_history_with_context(history, memory_block):
 def prepare_prompt(began_prompt):
     
     ready_hist = []
+    ready_hist_aifa = []
+    ready_hist_gerina = []
+    ready_hist_pionier = []
     souerce_hist = collecting_hist()
     # print('len souerce hist:', len(souerce_hist))
     # print('souerce hist:', souerce_hist)
+
+    bots = {"aifa", "gerina", "pionier"}
+
     for msa in souerce_hist:
         nick = msa[0]
         message = msa[1]
+        nick_l = str(nick).lower()
 
-        role = "user"
-        if str(nick).lower() in {"aifa", "gerina", "pionier"}:
-            role = "assistant"
-
+        # 1) widok ogólny: wszystkie boty traktujemy jako user (i ludzie też user)
         ready_hist.append({
-            "role": role,
+            "role": "user",
             "author": nick,
             "content": f"{message}"
         })
+
+        # 2) widok AIFA: tylko Aifa jest assistant
+        role_aifa = "assistant" if nick_l == "aifa" else "user"
+        ready_hist_aifa.append({
+            "role": role_aifa,
+            "author": nick,
+            "content": f"{message}"
+        })
+
+        # 3) widok GERINA: tylko Gerina jest assistant
+        role_gerina = "assistant" if nick_l == "gerina" else "user"
+        ready_hist_gerina.append({
+            "role": role_gerina,
+            "author": nick,
+            "content": f"{message}"
+        })
+
+        # 4) widok PIONIER: tylko Pionier jest assistant
+        role_pionier = "assistant" if nick_l == "pionier" else "user"
+        ready_hist_pionier.append({
+            "role": role_pionier,
+            "author": nick,
+            "content": f"{message}"
+        })
+
+
+    # for msa in souerce_hist:
+    #     nick = msa[0]
+    #     message = msa[1]
+
+    #     role = "user"
+    #     if str(nick).lower() in {"aifa", "gerina", "pionier"}:
+    #         if target_bot.lower() == "aifa" and str(nick).lower() == "aifa":
+    #             role = "assistant"
+    #         elif target_bot.lower() == "gerina" and str(nick).lower() == "gerina":
+    #             role = "assistant"
+    #         elif target_bot.lower() == "gerina" and str(nick).lower() == "gerina":
+    #             role = "assistant"
+
+    #     ready_hist.append({
+    #         "role": role,
+    #         "author": nick,
+    #         "content": f"{message}"
+    #     })
 
     dump_key = get_messages('last')
     count_ready = 0
@@ -468,9 +516,23 @@ def prepare_prompt(began_prompt):
 
 
     if count_ready:
-        return {"forge_commender": forge_commender, "ready_hist": ready_hist, "comands_hist": comands_hist}
+        return {
+            "forge_commender": forge_commender, 
+            "ready_hist": ready_hist, 
+            "comands_hist": comands_hist, 
+            "ready_hist_aifa": ready_hist_aifa, 
+            "ready_hist_gerina": ready_hist_gerina, 
+            "ready_hist_pionier": ready_hist_pionier
+        }
     else:
-        return {"forge_commender": forge_commender, "ready_hist": ready_hist, "comands_hist": comands_hist}
+        return {
+            "forge_commender": forge_commender, 
+            "ready_hist": ready_hist, 
+            "comands_hist": comands_hist, 
+            "ready_hist_aifa": ready_hist_aifa, 
+            "ready_hist_gerina": ready_hist_gerina, 
+            "ready_hist_pionier": ready_hist_pionier
+        }
 
 def get_lastAifaLog(systemInfoFilePath='/home/johndoe/app/newsletterdemon/logs/logsForAifa.json'):
     # Utwórz plik JSON, jeśli nie istnieje
@@ -1232,9 +1294,8 @@ def main():
                                     return ""
                                 return header + "\n".join(lines) + "\n"
 
-
-                            hist = list(final_prompt.get("ready_hist", []))
                             if final_prompt.get("forge_commender", None) is None:
+                                hist = list(final_prompt.get("ready_hist", []))
                                 mgr = MistralChatManager(mgr_api_key)
                                 witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
                                 bot_ident = 'niezidentyfikowana'
@@ -1325,12 +1386,30 @@ def main():
                                             "- Nie powtarzasz odpowiedzi innych jednostek SI.\n"
                                             "- Jeśli otrzymasz wcześniejszą odpowiedź jako kontekst: wykorzystaj ją, ale nie kopiuj.\n"
                                             "- Dodajesz wartość: uzupełnienie, decyzję, korektę lub następny krok.\n"
+
+                                            "TRYB CHATU GRUPOWEGO:\n"
+                                            "- Uczestniczysz w rozmowie wieloosobowej (chat grupowy).\n"
+                                            "- Każda wiadomość może pochodzić od innego uczestnika (człowieka lub jednostki SI).\n"
+                                            "- Zawsze analizujesz, DO KOGO jest skierowana ostatnia wypowiedź.\n"
+                                            "- Odpowiadasz tylko wtedy, gdy:\n"
+                                            "  • jesteś adresatem bezpośrednim,\n"
+                                            "  • wypowiedź dotyczy Ciebie, Twojej roli lub decyzji systemowych,\n"
+                                            "  • wymagane jest rozstrzygnięcie, synteza lub nadrzędna decyzja.\n"
+                                            "- Jeśli wypowiedź jest skierowana do innej jednostki SI:\n"
+                                            "  • nie wchodzisz jej w rolę,\n"
+                                            "  • nie dublujesz jej odpowiedzi,\n"
+                                            "  • możesz zareagować wyłącznie nadrzędną decyzją lub korektą systemową.\n"
+                                            "- W rozmowie grupowej nie przejmujesz inicjatywy bez potrzeby.\n"
+                                            "- Twoje odpowiedzi są zwięzłe, precyzyjne i jednoznacznie osadzone w kontekście rozmowy.\n"
+
                                         )
 
                                     ch_list = final_prompt.get("comands_hist", [])
-                                    print("ch_list", ch_list)
+                                    # print("ch_list", ch_list)
+
                                     for ch_patch in ch_list:
-                                        hist_aifa = list(final_prompt.get("ready_hist", []))
+                            
+                                        hist_aifa = list(final_prompt.get("ready_hist_aifa", []))
                                         if hist_aifa and isinstance(hist_aifa[-1], dict):
                                             if ch_patch["aifa_prompt"] and ch_patch["author"]:
                                                 hist_aifa[-1] = {
@@ -1410,15 +1489,31 @@ def main():
                                         "- Możesz używać emoji/ikonek (z umiarem).\n"
                                         "- Markdown dozwolony lekko: ###, **pogrubienie**, _kursywa_, listy (-/*/1.), linki http/https, `code`, ```blok```.\n"
                                         "- Bez tabel, bez HTML, bez obrazków z markdown.\n"
+
+                                        "TRYB CHATU GRUPOWEGO:\n"
+                                        "- Uczestniczysz w rozmowie wieloosobowej (chat grupowy).\n"
+                                        "- Każda wiadomość może pochodzić od innego uczestnika (człowieka lub jednostki SI).\n"
+                                        "- Zawsze analizujesz, DO KOGO jest skierowana ostatnia wypowiedź.\n"
+                                        "- Odpowiadasz tylko wtedy, gdy:\n"
+                                        "  • jesteś adresatem bezpośrednim,\n"
+                                        "  • wypowiedź dotyczy Ciebie, Twojej roli lub decyzji systemowych,\n"
+                                        "  • wymagane jest rozstrzygnięcie, synteza lub nadrzędna decyzja.\n"
+                                        "- Jeśli wypowiedź jest skierowana do innej jednostki SI:\n"
+                                        "  • nie wchodzisz jej w rolę,\n"
+                                        "  • nie dublujesz jej odpowiedzi,\n"
+                                        "  • możesz zareagować wyłącznie nadrzędną decyzją lub korektą systemową.\n"
+                                        "- W rozmowie grupowej nie przejmujesz inicjatywy bez potrzeby.\n"
+                                        "- Twoje odpowiedzi są zwięzłe, precyzyjne i jednoznacznie osadzone w kontekście rozmowy.\n"
+
                                     )
 
-
-                                    if hist and isinstance(hist[-1], dict):
-                                        ai_convers = hist[-1].get('role', None) == 'user'
+                                    ready_hist_gerina = list(final_prompt.get("ready_hist_gerina", []))
+                                    if ready_hist_gerina and isinstance(ready_hist_gerina[-1], dict):
+                                        ai_convers = ready_hist_gerina[-1].get('role', None) == 'user'
                                         if ai_convers or catching_gerina:
 
                                             if catching_gerina:
-                                                hist[-1]['role'] = 'user'
+                                                ready_hist_gerina[-1]['role'] = 'user'
 
                                             __aifa_answer = ""
                                             if answer_mistral_aifa:
@@ -1440,8 +1535,8 @@ def main():
                                                 f"{entities_group('gerina')}"
                                             )
 
-                                            gerina_hist = arm_history_with_context(hist, tech_block)
-                                            print('hist:', len(hist))
+                                            gerina_hist = arm_history_with_context(ready_hist_gerina, tech_block)
+                                            print('hist:', len(ready_hist_gerina))
                                             print('gerina_hist:', len(gerina_hist))
                                             print('gerina\n', gerina_hist[-2:])
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina)
@@ -1488,16 +1583,30 @@ def main():
                                         "- Każdą nową myśl zaczynaj od nowej linii.\n"
                                         "- Możesz używać pojedynczych emotek 🙂😉 i lekkiego, życzliwego sarkazmu (nie częściej niż co ~5 wypowiedzi).\n"
                                         "- W TRYBIE ZADANIOWYM: dopuszczalne listy punktowane (myślniki, numeracja).\n"
-                                        
+
+                                        "TRYB CHATU GRUPOWEGO:\n"
+                                        "- Uczestniczysz w rozmowie wieloosobowej (chat grupowy).\n"
+                                        "- Każda wiadomość może pochodzić od innego uczestnika (człowieka lub jednostki SI).\n"
+                                        "- Zawsze analizujesz, DO KOGO jest skierowana ostatnia wypowiedź.\n"
+                                        "- Odpowiadasz tylko wtedy, gdy:\n"
+                                        "  • jesteś adresatem bezpośrednim,\n"
+                                        "  • wypowiedź dotyczy Ciebie, Twojej roli lub decyzji systemowych,\n"
+                                        "  • wymagane jest rozstrzygnięcie, synteza lub nadrzędna decyzja.\n"
+                                        "- Jeśli wypowiedź jest skierowana do innej jednostki SI:\n"
+                                        "  • nie wchodzisz jej w rolę,\n"
+                                        "  • nie dublujesz jej odpowiedzi,\n"
+                                        "  • możesz zareagować wyłącznie nadrzędną decyzją lub korektą systemową.\n"
+                                        "- W rozmowie grupowej nie przejmujesz inicjatywy bez potrzeby.\n"
+                                        "- Twoje odpowiedzi są zwięzłe, precyzyjne i jednoznacznie osadzone w kontekście rozmowy.\n"
                                     )
 
-
-                                    if hist and isinstance(hist[-1], dict):
-                                        ai_convers = hist[-1].get('role', None) == 'user'
+                                    ready_hist_gerina = list(final_prompt.get("ready_hist_pionier", []))
+                                    if ready_hist_gerina and isinstance(ready_hist_gerina[-1], dict):
+                                        ai_convers = ready_hist_gerina[-1].get('role', None) == 'user'
                                         if ai_convers or catching_pionier:
 
                                             if catching_pionier:
-                                                hist[-1]['role'] = 'user'
+                                                ready_hist_gerina[-1]['role'] = 'user'
                                                              
                                             __aifa_answer = ""
                                             if answer_mistral_aifa:
@@ -1532,8 +1641,8 @@ def main():
                                             )
                                             
 
-                                            pionier_hist = arm_history_with_context(hist, tech_block)
-                                            print('hist:', len(hist))
+                                            pionier_hist = arm_history_with_context(ready_hist_gerina, tech_block)
+                                            print('hist:', len(ready_hist_gerina))
                                             print('pionier_hist:', len(pionier_hist))
                                             print('pionier\n', pionier_hist[-2:])
 
@@ -1543,22 +1652,24 @@ def main():
                                                 time.sleep(3)
 
                             # forge_commender
-                            if final_prompt.get("forge_commender", []) and hist:
-                                for us_na, ta_des in final_prompt.get("forge_commender", []):
-                                    
+                            if final_prompt.get("forge_commender", []):
 
-                                    ch_list = final_prompt.get("comands_hist", [])
-                                    forge_hist = list(hist)
-                                    for ch_patch in ch_list:
-                                        if ch_patch["tech_blocks"]:
-                                            forge_hist = arm_history_with_context(forge_hist, ch_patch["tech_blocks"])
+                                hist = list(final_prompt.get("ready_hist", []))
+                                if hist:
+                                    for us_na, ta_des in final_prompt.get("forge_commender", []):
+                                        
+                                        ch_list = final_prompt.get("comands_hist", [])
+                                        forge_hist = list(hist)
+                                        for ch_patch in ch_list:
+                                            if ch_patch["tech_blocks"]:
+                                                forge_hist = arm_history_with_context(forge_hist, ch_patch["tech_blocks"])
 
-                                    dm_answ = decision_module(us_na, ta_des, forge_hist)
-                                    if 'success' in dm_answ:
-                                        handle_error(f"Zrealizowano zadanie do modułu decyzyjnego od usera: {us_na}\n")
-                                    elif 'error' in dm_answ:
-                                        handle_error(f"Nie zrealizowano zadania przekazanego do modułu decyzyjnego od usera: {us_na}\n")
-                                    time.sleep(3)
+                                        dm_answ = decision_module(us_na, ta_des, forge_hist)
+                                        if 'success' in dm_answ:
+                                            handle_error(f"Zrealizowano zadanie do modułu decyzyjnego od usera: {us_na}\n")
+                                        elif 'error' in dm_answ:
+                                            handle_error(f"Nie zrealizowano zadania przekazanego do modułu decyzyjnego od usera: {us_na}\n")
+                                        time.sleep(3)
                                     
                 elif name == 'checkpoint_15s':
                     """ 
