@@ -833,23 +833,29 @@ def decision_module(user_name, task_description, ready_hist = []):
         templates = show_template(user_name, api_key, api_url=tempalate_url)
         # print(add_to_prompt)
         print("templates: ", templates)
-        time.sleep(3)
+        time.sleep(5)
         if templates.get("prompt", None) and templates.get("data", None) and templates.get("level", None) is not None:
             build_prompt = f'{add_to_prompt}\n{templates.get("prompt", "")}\n{templates.get("data", None)}'
             print("build_prompt", build_prompt)
             
             ready_hist.append({
                 "role": "user",
+                "author": 'pionier',
                 "content": build_prompt
             })
             
-            answeing = mgr.continue_conversation_with_system(ready_hist, systemPrompt)
+            for i in range(3):
+                answeing = mgr.continue_conversation_with_system(ready_hist, systemPrompt)
+                if not answeing:
+                    time.sleep(5 * i)
+                else: break
             
             print("answeing", answeing)
 
             # Budowanie historii - assistant
             ready_hist.append({
                 "role": "assistant",
+                "author": 'aifa',
                 "content": answeing
             })
 
@@ -980,6 +986,7 @@ def decision_module(user_name, task_description, ready_hist = []):
 
     ready_hist.append({
         "role": "user",
+        "author": 'pionier',
         "content": build_prompt
     })
 
@@ -1000,16 +1007,23 @@ def decision_module(user_name, task_description, ready_hist = []):
     )
 
 
-    answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
     time.sleep(3)
 
-    print("answeing:", answeing)
+    for i in range(3):
+        answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
+        if not answeing:
+            time.sleep(5 * i)
+        else: break
 
-    # Budowanie historii - assistant
-    ready_hist.append({
-        "role": "assistant",
-        "content": answeing
-    })
+    if answeing:
+        print("answeing:", answeing)
+
+        # Budowanie historii - assistant
+        ready_hist.append({
+            "role": "assistant",
+            "author": 'aifa',
+            "content": answeing
+        })
 
     add_to_prompt_list = [
         f'Opisz krótko, jak przebiegło zadanie wykonane dla użytkownika @{user_name} w kontekście polecenia: "{task_description}". Skup się na konkretach i efektach. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.',
@@ -1025,20 +1039,27 @@ def decision_module(user_name, task_description, ready_hist = []):
 
     ready_hist.append({
         "role": "user",
+        "author": 'pionier',
         "content": final_prompt
-    })
+        })
 
     print("final_prompt:", final_prompt)
 
-    answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
-    print("final_answeing:", answeing)
+    time.sleep(3)
+    for i in range(3):
+        answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
+        if not answeing:
+            time.sleep(5 * i)
+        else: break
 
-
-    # Budowanie historii - assistant
-    ready_hist.append({
-        "role": "assistant",
-        "content": answeing
-    })
+    if answeing:
+        print("final_answeing:", answeing)
+        # Budowanie historii - assistant
+        ready_hist.append({
+            "role": "assistant",
+            "author": 'aifa',
+            "content": answeing
+        })
 
     if answeing:
         if save_chat_message("aifa", answeing, 0):
