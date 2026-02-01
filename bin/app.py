@@ -1564,7 +1564,14 @@ def main():
                             # forge_commender
                             if final_prompt.get("forge_commender", []) and hist:
                                 for us_na, ta_des in final_prompt.get("forge_commender", []):
-                                    dm_answ = decision_module(us_na, ta_des, hist)
+                                    
+
+                                    ch_list = final_prompt.get("comands_hist", [])
+                                    forge_hist = list(hist)
+                                    for ch_patch in ch_list:
+                                        forge_hist = arm_history_with_context(forge_hist, tech_block)
+
+                                    dm_answ = decision_module(us_na, ta_des, forge_hist)
                                     if 'success' in dm_answ:
                                         handle_error(f"Zrealizowano zadanie do modułu decyzyjnego od usera: {us_na}\n")
                                     elif 'error' in dm_answ:
