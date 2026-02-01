@@ -908,7 +908,7 @@ def decision_module(user_name, task_description, ready_hist = []):
             })
             
             for i in range(3):
-                answeing = mgr.continue_conversation_with_system(ready_hist, systemPrompt)
+                answeing = mgr.continue_conversation_with_system(ready_hist, systemPrompt, max_tokens = 1200)
                 if not answeing:
                     time.sleep(5 * i)
                 else: break
@@ -1093,7 +1093,7 @@ def decision_module(user_name, task_description, ready_hist = []):
 
     time.sleep(5)
     for i in range(3):
-        final_answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
+        final_answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt, max_tokens = 800)
         if not final_answeing:
             time.sleep(5 * i)
         else: break
@@ -1438,7 +1438,7 @@ def main():
                                             print('hist_aifa:', len(hist_aifa))
                                             print('aifa\n', hist_aifa[-2:])
 
-                                            answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
+                                            answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa, max_tokens = 800)
                                             if answer_mistral_aifa:
                                                 save_chat_message("aifa", answer_mistral_aifa, 0)
                                                 time.sleep(3)
@@ -1553,7 +1553,7 @@ def main():
                                             print('hist:', len(ready_hist_gerina))
                                             print('gerina_hist:', len(gerina_hist))
                                             print('gerina\n', gerina_hist[-2:])
-                                            answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina)
+                                            answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina, max_tokens = 800)
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
                                                 time.sleep(3)
@@ -1667,7 +1667,7 @@ def main():
                                             print('pionier_hist:', len(pionier_hist))
                                             print('pionier\n', pionier_hist[-2:])
 
-                                            answer_mistral_pionier = mgr.continue_conversation_with_system(pionier_hist, sys_prmt_pionier)
+                                            answer_mistral_pionier = mgr.continue_conversation_with_system(pionier_hist, sys_prmt_pionier, max_tokens = 800)
                                             if answer_mistral_pionier:
                                                 save_chat_message("pionier", answer_mistral_pionier, 0)
                                                 time.sleep(3)
@@ -1792,7 +1792,7 @@ def main():
                                 "role": "user",
                                 "content": preParator
                             }]
-                            answer_mistral = mgr.continue_conversation_with_system(hist_aifa_logs, sys_prmt_aifa)
+                            answer_mistral = mgr.continue_conversation_with_system(hist_aifa_logs, sys_prmt_aifa, max_tokens = 800)
                             if answer_mistral:
                                 save_chat_message("aifa", answer_mistral, 1)
 
