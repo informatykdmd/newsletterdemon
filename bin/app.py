@@ -838,7 +838,7 @@ def decision_module(user_name, task_description, ready_hist = []):
             build_prompt = f'{add_to_prompt}\n{templates.get("prompt", "")}\n{templates.get("data", None)}'
             print("build_prompt", build_prompt)
             
-            ready_hist.append({
+            ready_hist[-1] = ({
                 "role": "user",
                 "author": 'pionier',
                 "content": build_prompt
@@ -852,14 +852,14 @@ def decision_module(user_name, task_description, ready_hist = []):
             
             print("answeing", answeing)
 
-            # Budowanie historii - assistant
-            ready_hist.append({
-                "role": "assistant",
-                "author": 'aifa',
-                "content": answeing
-            })
 
             if answeing:
+                # Budowanie historii - assistant
+                ready_hist.append({
+                    "role": "assistant",
+                    "author": 'aifa',
+                    "content": answeing
+                })
                 responder_answer = communicate_with_endpoint(answeing, user_name, api_key, api_url=responder_url)
                 print("responder_answer:", responder_answer)
 
@@ -984,11 +984,11 @@ def decision_module(user_name, task_description, ready_hist = []):
     messages_goodbye = random.choice(messages_cu)
     build_prompt = f'{add_to_prompt}\n{messages_goodbye}'
 
-    ready_hist.append({
+    ready_hist[-1] = {
         "role": "user",
         "author": 'pionier',
         "content": build_prompt
-    })
+    }
 
     print("build_prompt:", build_prompt)
 
@@ -1037,11 +1037,11 @@ def decision_module(user_name, task_description, ready_hist = []):
 
     final_prompt = random.choice(add_to_prompt_list)
 
-    ready_hist.append({
+    ready_hist[-1] = {
         "role": "user",
         "author": 'pionier',
         "content": final_prompt
-        })
+    }
 
     print("final_prompt:", final_prompt)
 
@@ -1055,11 +1055,11 @@ def decision_module(user_name, task_description, ready_hist = []):
     if answeing:
         print("final_answeing:", answeing)
         # Budowanie historii - assistant
-        ready_hist.append({
-            "role": "assistant",
-            "author": 'aifa',
-            "content": answeing
-        })
+        # ready_hist.append({
+        #     "role": "assistant",
+        #     "author": 'aifa',
+        #     "content": answeing
+        # })
 
     if answeing:
         if save_chat_message("aifa", answeing, 0):
