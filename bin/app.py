@@ -1062,7 +1062,7 @@ def decision_module(user_name, task_description, ready_hist = []):
         #     "content": answeing
         # })
 
-    if answeing:
+    if final_answeing:
         if save_chat_message("aifa", final_answeing, 0):
             return {'success': 'Dane zostały zapisane'}
         else:
