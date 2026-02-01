@@ -1244,6 +1244,8 @@ def main():
                                         for x in hist[-5:]
                                     )
                                     latest_user_message = hist[-1].get("content", "")
+                                    latest_user_message_role = hist[-1].get("role", "")
+                                    latest_user_message_author = hist[-1].get("author", "")
 
                                     prompti = (
                                         "Zadanie: wskaż jednego adresata wiadomości spośród: gerina, pionier, aifa, niezidentyfikowana.\n"
@@ -1259,15 +1261,17 @@ def main():
                                         "Najświeższa wiadomość użytkownika (kluczowa do decyzji):\n"
                                         f"{latest_user_message}\n"
                                     )
+                                    if latest_user_message_author not in ['gerina', 'pionier']:
+                                        bot_ident = mgr.categorize_response(
+                                            prompti,
+                                            witch_bot_list,
+                                            max_tokens=100
+                                        )
+                                        bot_rotation = bot_ident
+                                        time.sleep(3)
+                                    else:
+                                        bot_rotation = 'aifa'
 
-                                    bot_ident = mgr.categorize_response(
-                                        prompti,
-                                        witch_bot_list,
-                                        max_tokens=100
-                                    )
-
-                                    bot_rotation = bot_ident
-                                    time.sleep(3)
 
                                 if bot_ident == 'niezidentyfikowana':
                                     bot_rotation = random.choice(['gerina', 'pionier', 'aifa', 'razem', 'żaden'])
