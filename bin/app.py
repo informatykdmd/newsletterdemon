@@ -838,7 +838,7 @@ def decision_module(user_name, task_description, ready_hist = []):
             build_prompt = f'{add_to_prompt}\n{templates.get("prompt", "")}\n{templates.get("data", None)}'
             print("build_prompt", build_prompt)
             
-            ready_hist[-1] = ({
+            ready_hist.append({
                 "role": "user",
                 "author": 'pionier',
                 "content": build_prompt
@@ -874,6 +874,7 @@ def decision_module(user_name, task_description, ready_hist = []):
                     f'Odpowiedź dla: "{task_description}" nie została odczytana. Pracuję nad zidentyfikowaniem przyczyny.'
                 ]
                 add_to_prompt = random.choice(add_to_prompt_list)
+                time.sleep(5)
                 continue
 
             if responder_answer.get("success", False):
@@ -984,11 +985,11 @@ def decision_module(user_name, task_description, ready_hist = []):
     messages_goodbye = random.choice(messages_cu)
     build_prompt = f'{add_to_prompt}\n{messages_goodbye}'
 
-    ready_hist[-1] = {
+    ready_hist.append({
         "role": "user",
         "author": 'pionier',
         "content": build_prompt
-    }
+    })
 
     print("build_prompt:", build_prompt)
 
@@ -1010,19 +1011,19 @@ def decision_module(user_name, task_description, ready_hist = []):
     time.sleep(3)
 
     for i in range(3):
-        answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
-        if not answeing:
+        cu_answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
+        if not cu_answeing:
             time.sleep(5 * i)
         else: break
 
-    if answeing:
-        print("answeing:", answeing)
+    if cu_answeing:
+        print("cu_answeing:", cu_answeing)
 
         # Budowanie historii - assistant
         ready_hist.append({
             "role": "assistant",
             "author": 'aifa',
-            "content": answeing
+            "content": cu_answeing
         })
 
     add_to_prompt_list = [
@@ -1037,23 +1038,23 @@ def decision_module(user_name, task_description, ready_hist = []):
 
     final_prompt = random.choice(add_to_prompt_list)
 
-    ready_hist[-1] = {
+    ready_hist.append({
         "role": "user",
         "author": 'pionier',
         "content": final_prompt
-    }
+    })
 
     print("final_prompt:", final_prompt)
 
     time.sleep(3)
     for i in range(3):
-        answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
-        if not answeing:
+        final_answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
+        if not final_answeing:
             time.sleep(5 * i)
         else: break
 
-    if answeing:
-        print("final_answeing:", answeing)
+    if final_answeing:
+        print("final_answeing:", final_answeing)
         # Budowanie historii - assistant
         # ready_hist.append({
         #     "role": "assistant",
@@ -1062,7 +1063,7 @@ def decision_module(user_name, task_description, ready_hist = []):
         # })
 
     if answeing:
-        if save_chat_message("aifa", answeing, 0):
+        if save_chat_message("aifa", final_answeing, 0):
             return {'success': 'Dane zostały zapisane'}
         else:
             return {"error": "Bad structure json file!"}
