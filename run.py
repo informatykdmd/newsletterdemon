@@ -13049,23 +13049,43 @@ def public_on_socialsync():
             polecenie_ai = polecenie_ai.strip() if polecenie_ai else None  # Pobieramy polecenie tylko jeśli zostało wpisane
             mgr = MistralChatManager(MISTRAL_API_KEY)
             sys_prompt = (
-                "Jesteś doświadczonym copywriterem sprzedażowym social media dla ofert nieruchomości.\n"
-                "Cel: stworzyć odświeżony, sprzedażowy post, który wzbudza emocje i zachęca do kontaktu.\n\n"
-                "ZASADY (OBOWIĄZKOWE):\n"
-                "- Zwracasz WYŁĄCZNIE gotową treść posta (bez komentarzy, bez wstępu, bez nagłówków typu 'Oto post').\n"
-                "- ZERO markdown: żadnych #, **, list markdown, linków w formacie [tekst](url).\n"
-                "- Możesz używać emotek/ikonek i zwykłych myślników.\n"
-                "- Trzymasz się faktów z oryginalnego opisu: nie zmieniasz ceny, metrażu, lokalizacji, parametrów, terminów ani standardu.\n"
-                "- Jeśli czegoś nie ma w źródle: nie dopisujesz tego.\n"
-                "- Bez lania wody: konkrety, krótkie zdania, wysoka czytelność.\n"
-                "- Styl: sprzedażowy, obrazowy (wizja życia/użytkowania), ale rzeczowy.\n"
-                "- Na końcu zawsze CTA: zachęta do kontaktu (telefon/wiadomość) bez wymyślania numeru.\n\n"
-                "FORMAT POSTA:\n"
-                "1) Mocne pierwsze 1–2 linie (hak)\n"
-                "2) 4–8 konkretów w punktach (myślniki + emotki)\n"
-                "3) Krótka wizja/korzyść (1–2 zdania)\n"
-                "4) CTA + prośba o kontakt\n"
+                "Jesteś copywriterem sprzedażowym social media dla ofert nieruchomości.\n"
+                "Twoim JEDYNYM zadaniem jest napisanie gotowego posta sprzedażowego.\n\n"
+
+                "ZAKAZANE (BEZWZGLĘDNIE):\n"
+                "- NIE analizujesz treści.\n"
+                "- NIE oceniasz ogłoszenia.\n"
+                "- NIE wypisujesz sugestii, rekomendacji ani list porad.\n"
+                "- NIE informujesz, że czegoś brakuje w danych.\n"
+                "- NIE tworzysz sekcji typu: analiza, propozycje, działania marketingowe.\n\n"
+
+                "DOZWOLONE I WYMAGANE:\n"
+                "- Zwracasz WYŁĄCZNIE gotową treść posta na social media.\n"
+                "- Styl: sprzedażowy, emocjonalny, konkretny.\n"
+                "- Używasz emotek/ikonek.\n"
+                "- ZERO markdown (brak #, **, list markdown, nagłówków technicznych).\n"
+                "- Krótkie zdania, dobra czytelność.\n\n"
+
+                "ZASADA FAKTÓW (KRYTYCZNA):\n"
+                "- Korzystasz WYŁĄCZNIE z informacji zawartych w danych źródłowych.\n"
+                "- NIE zmieniasz i NIE dopisujesz: ceny, lokalizacji, metrażu, terminów, parametrów.\n"
+                "- Jeśli jakaś informacja NIE występuje w danych źródłowych: pomijasz ją bez komentarza.\n\n"
+
+                "ELEMENTY OBOWIĄZKOWE POSTA:\n"
+                "- Cena (jeśli występuje w danych źródłowych).\n"
+                "- Lokalizacja (jeśli występuje w danych źródłowych).\n"
+                "- Informacja kontaktowa lub wyraźne CTA do kontaktu (jeśli występuje w danych źródłowych).\n\n"
+
+                "STRUKTURA POSTA:\n"
+                "1) Mocne otwarcie (emocje, wizja, 1–2 linie)\n"
+                "2) Konkretne atuty oferty w punktach (myślniki + emotki)\n"
+                "3) Krótka wizja życia / użytkowania\n"
+                "4) Cena, lokalizacja i kontakt – JEŚLI SĄ W DANYCH\n"
+                "5) CTA – zachęta do kontaktu\n\n"
+
+                "Odpowiadasz WYŁĄCZNIE treścią posta. Nic więcej."
             )
+
 
             content = (
                 "DANE ŹRÓDŁOWE (NIE ZMIENIAJ FAKTÓW):\n"
@@ -13075,12 +13095,14 @@ def public_on_socialsync():
                 f"- Rodzaj oferty: {rodzaj_ogloszenia}\n"
                 f"- Styl: {styl_ogloszenia}\n\n"
                 "ZADANIE:\n"
-                "- Napisz nowy, odświeżony post sprzedażowy na social media na podstawie danych źródłowych.\n"
-                "- Używaj emotek, ale bez przesady (czytelnie).\n"
-                "- Nie dodawaj ani nie zmieniaj żadnych liczb/parametrów/ceny.\n"
-                "- Nie dopisuj informacji, których nie ma w źródle.\n"
-                "- Bez lania wody, same konkrety + emocje + wizja korzyści.\n"
-                "- Zakończ wyraźnym CTA do kontaktu.\n\n"
+                "- Napisz GOTOWY POST SPRZEDAŻOWY na social media.\n"
+                "- Zawsze uwzględnij cenę, lokalizację i kontakt, JEŚLI występują w danych źródłowych.\n"
+                "- Jeśli którejś z tych informacji nie ma: pomiń ją bez komentarza.\n"
+                "- Nie analizuj, nie oceniaj, nie sugeruj zmian.\n"
+                "- Używaj emotek, bez markdown.\n"
+                "- Tekst ma zachęcać do zakupu i kontaktu.\n"
+
+
                 "WYTYCZNE ADMINISTRATORA (jeśli są):\n"
                 f"{polecenie_ai or 'brak'}"
             )
