@@ -1340,8 +1340,14 @@ def main():
                                                 }
                                             
                                             hist_aifa = arm_history_with_context(hist_aifa, entities_group('aifa'))
+                                            extra_tech = (
+                                                "\n- Format: możesz używać lekkiego markdown (###, **, listy, `code`).\n"
+                                                "- Bez powitań.\n"
+                                                "- Bez meta-komentarzy.\n"
+                                                "- Anty-echo: nie kopiuj kontekstu ani cudzych odpowiedzi; dodaj nową wartość.\n"
+                                            )
                                             if ch_patch["tech_blocks"]:
-                                                hist_aifa = arm_history_with_context(hist_aifa, ch_patch["tech_blocks"])
+                                                hist_aifa = arm_history_with_context(hist_aifa, ch_patch["tech_blocks"] + extra_tech)
 
                                             print('hist_aifa:', len(hist_aifa))
                                             print('aifa\n', hist_aifa[-2:])
@@ -1356,14 +1362,15 @@ def main():
                                     "Masz kontekst referencyjny. Odpowiedz NATURALNIE jak w czacie i wnieś NOWĄ wartość.\n"
                                     "\n"
                                     "ZASADY:\n"
-                                    "- Nie kopiuj ani nie parafrazuj długich fragmentów kontekstu.\n"
-                                    "- Nie używaj etykiet typu: 'DECYZJA', 'CHECKLISTA', 'ULEPSZENIE', 'PLAN TESTÓW' w odpowiedzi.\n"
-                                    "- Możesz wybrać jedną strategię wewnętrznie (decyzja / kroki / ryzyka / test), ale wynik ma brzmieć jak rozmowa.\n"
-                                    "- Jeśli brakuje danych: zadaj 1 krótkie, konkretne pytanie + podaj 2 sensowne opcje/kierunki.\n"
-                                    "- Możesz być lekko żartobliwy, ripostować i dopytywać — ale bez lania wody.\n"
-                                    "- Nie deleguj do innych agentów i nie wspominaj o agentach (bez: 'Gerina', 'Pionier', 'Aifa').\n"
-                                    "- Nie twierdź, że wykonałeś akcje w świecie (np. wysłałeś maila), jeśli nie masz twardego potwierdzenia.\n"
-                                    "- Odpowiedź: 2–8 zdań lub 3–7 punktów (tylko gdy to faktycznie pomaga).\n"
+                                    "- Na podstawie poniższej wypowiedzi stórz własną oryginalną odpowiedź.\n"
+                                    f"- {generate_random_tone_instruction()}.\n"
+                                    "- Pisz odpowiedź bez nagłówków i etykiet; treść ma wyglądać jak zwykła rozmowa na czacie.\n"
+                                    "- Wybierz jedną strategię w tle: (a) decyzja, (b) kroki, (c) ryzyka + poprawka, (d) mini-test; na wyjściu pokaż tylko wynik rozmowny.\n"
+                                    "- Gdy brakuje danych, zadaj jedno krótkie pytanie doprecyzowujące i od razu podaj dwa sensowne kierunki działania do wyboru.\n"
+                                    "- Utrzymuj ton naturalny; możesz dodać lekki żart albo ripostę, a całość ma być konkretna.\n"
+                                    "- Odpowiadaj jako jedna instancja; prowadź rozmowę samodzielnie bez przełączania ról i bez przywoływania nazw agentów.\n"
+                                    "- Opisuj tylko to, co wynika z rozmowy lub danych w kontekście; jeśli mowa o akcjach (np. mail, wysyłka, publikacja), poproś o potwierdzenie albo podaj gotową treść do wklejenia.\n"
+                                    "- Trzymaj długość: 2–8 zdań; gdy lista realnie pomaga, użyj 3–7 punktów.\n"
                                 )
 
 
@@ -1397,7 +1404,6 @@ def main():
                                         "- Jeśli poprzednia odpowiedź jest OK: potwierdź krótko i dodaj 1–3 konkrety (checklista/kroki).\n\n"
 
                                         "STYL:\n"
-                                        f"{generate_random_tone_instruction()}\n"
                                         "- Swobodnie, czatowo, energicznie.\n"
                                         "- Bez powitań typu: Cześć/Hej/Dzień dobry (rozmowa trwa).\n"
                                         "- Każdą nową myśl zaczynaj od nowej linii.\n"
@@ -1477,12 +1483,10 @@ def main():
 
                                         "STYL:\n"
                                         "- Naturalny, rozmowny, jak na przerwie.\n"
-                                        f"{generate_random_tone_instruction()}\n"
                                         "- Bez powitań typu: Cześć / Hej / Dzień dobry (rozmowa trwa).\n"
                                         "- Krótkie wypowiedzi, 2–3 zdania max na akapit.\n"
                                         "- Każdą nową myśl zaczynaj od nowej linii.\n"
                                         "- Możesz używać pojedynczych emotek 🙂😉 i lekkiego, życzliwego sarkazmu (nie częściej niż co ~5 wypowiedzi).\n"
-                                        "- Domyślnie BEZ markdownu.\n"
                                         "- W TRYBIE ZADANIOWYM: dopuszczalne listy punktowane (myślniki, numeracja).\n"
                                         
                                     )
