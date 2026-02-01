@@ -490,7 +490,7 @@ def prepare_prompt(began_prompt):
                     }
                 )
 
-            elif 'aifa' in theme['content']:
+            elif 'aif' in str(theme['content']).lower():
                 comands_hist_injector.append(
                     {   
                         "author": uname,
