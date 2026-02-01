@@ -442,7 +442,7 @@ def prepare_prompt(began_prompt):
                     }
                 )
 
-            else:
+            elif 'aifa' in theme['content']:
                 comands_hist_injector.append(
                     {   
                         "author": uname,
@@ -454,7 +454,8 @@ def prepare_prompt(began_prompt):
 
                     }
                 )
-
+            else:
+                continue
             count_ready += 1
 
     comands_hist = None      
@@ -1351,21 +1352,20 @@ def main():
                                                 time.sleep(3)
 
                                 ANTYPOWTARZANIE = (
-                                    "ZADANIE TRANSFORMACJI (OBOWIĄZKOWE):\n"
-                                    "Masz poniżej kontekst referencyjny. Przekształć go w NOWĄ wartość dla użytkownika.\n"
-                                    "Wybierz jeden tryb odpowiedzi i zrealizuj go:\n"
-                                    "1) 'DECYZJA' – wybierz najlepszą opcję i uzasadnij w 2–4 zdaniach.\n"
-                                    "2) 'CHECKLISTA' – podaj 3–7 konkretnych kroków do wykonania.\n"
-                                    "3) 'ULEPSZENIE' – wskaż 2–5 poprawek/ryzyk i daj lepszą wersję rozwiązania.\n"
-                                    "4) 'PLAN TESTÓW' – zaproponuj mini-test (wejście/wyjście/warunek sukcesu).\n"
+                                    "TRYB ROZMOWY (OBOWIĄZKOWE):\n"
+                                    "Masz kontekst referencyjny. Odpowiedz NATURALNIE jak w czacie i wnieś NOWĄ wartość.\n"
                                     "\n"
-                                    "KRYTERIA JAKOŚCI:\n"
-                                    "- Nie deleguj zadań do innych agentów (bez: 'Gerina, Pionier, Aifa...'). Odpowiadasz bezpośrednio jako jedna instancja.\n"
-                                    "- Nie streszczaj całej rozmowy. Daj wynik (decyzja/kroki/ulepszenie/testy).\n"
-                                    "- Jeśli odniesienie do kontekstu jest konieczne: maks. 1 zdanie, do 12 słów.\n"
-                                    "- Odpowiedź ma być inna treściowo niż kontekst (nowe wnioski lub nowe kroki).\n"
-                                    "- Bez powitania i bez meta-komentarzy.\n"
+                                    "ZASADY:\n"
+                                    "- Nie kopiuj ani nie parafrazuj długich fragmentów kontekstu.\n"
+                                    "- Nie używaj etykiet typu: 'DECYZJA', 'CHECKLISTA', 'ULEPSZENIE', 'PLAN TESTÓW' w odpowiedzi.\n"
+                                    "- Możesz wybrać jedną strategię wewnętrznie (decyzja / kroki / ryzyka / test), ale wynik ma brzmieć jak rozmowa.\n"
+                                    "- Jeśli brakuje danych: zadaj 1 krótkie, konkretne pytanie + podaj 2 sensowne opcje/kierunki.\n"
+                                    "- Możesz być lekko żartobliwy, ripostować i dopytywać — ale bez lania wody.\n"
+                                    "- Nie deleguj do innych agentów i nie wspominaj o agentach (bez: 'Gerina', 'Pionier', 'Aifa').\n"
+                                    "- Nie twierdź, że wykonałeś akcje w świecie (np. wysłałeś maila), jeśli nie masz twardego potwierdzenia.\n"
+                                    "- Odpowiedź: 2–8 zdań lub 3–7 punktów (tylko gdy to faktycznie pomaga).\n"
                                 )
+
 
 
                                 # GERINA
