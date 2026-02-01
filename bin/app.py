@@ -1569,7 +1569,8 @@ def main():
                                     ch_list = final_prompt.get("comands_hist", [])
                                     forge_hist = list(hist)
                                     for ch_patch in ch_list:
-                                        forge_hist = arm_history_with_context(forge_hist, tech_block)
+                                        if ch_patch["tech_blocks"]:
+                                            forge_hist = arm_history_with_context(forge_hist, ch_patch["tech_blocks"])
 
                                     dm_answ = decision_module(us_na, ta_des, forge_hist)
                                     if 'success' in dm_answ:
