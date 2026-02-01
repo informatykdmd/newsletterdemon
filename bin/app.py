@@ -983,15 +983,7 @@ def decision_module(user_name, task_description, ready_hist = []):
         "Świetny zespół z nas, Aifo! Dzięki za współpracę. Do następnego spotkania!"
     ]
     messages_goodbye = random.choice(messages_cu)
-    build_prompt = f'{add_to_prompt}\n{messages_goodbye}'
 
-    ready_hist.append({
-        "role": "user",
-        "author": 'pionier',
-        "content": build_prompt
-    })
-
-    print("build_prompt:", build_prompt)
 
     final_system_prompt = (
         "Jesteś modelem językowym, który komunikuje się w sposób swobodny, naturalny i przyjazny, "
@@ -1008,24 +1000,6 @@ def decision_module(user_name, task_description, ready_hist = []):
     )
 
 
-    time.sleep(3)
-
-    for i in range(3):
-        cu_answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
-        if not cu_answeing:
-            time.sleep(5 * i)
-        else: break
-
-    if cu_answeing:
-        print("cu_answeing:", cu_answeing)
-
-        # Budowanie historii - assistant
-        ready_hist.append({
-            "role": "assistant",
-            "author": 'aifa',
-            "content": cu_answeing
-        })
-
     add_to_prompt_list = [
         f'Opisz krótko, jak przebiegło zadanie wykonane dla użytkownika @{user_name} w kontekście polecenia: "{task_description}". Skup się na konkretach i efektach. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.',
         f'Krótko opisz przebieg i rezultat zadania zrealizowanego dla @{user_name} na podstawie polecenia: "{task_description}". Uwzględnij tylko najważniejsze informacje. Napisz swoją odpowiedź od razu, bez żadnych metatekstów na początku ani na końcu.',
@@ -1037,16 +1011,17 @@ def decision_module(user_name, task_description, ready_hist = []):
     ]
 
     final_prompt = random.choice(add_to_prompt_list)
+    build_prompt = f'{add_to_prompt}\n{messages_goodbye}\nNa koniec:\n{final_prompt}'
 
     ready_hist.append({
         "role": "user",
         "author": 'pionier',
-        "content": final_prompt
+        "content": build_prompt
     })
 
     print("final_prompt:", final_prompt)
 
-    time.sleep(3)
+    time.sleep(5)
     for i in range(3):
         final_answeing = mgr.continue_conversation_with_system(ready_hist, final_system_prompt)
         if not final_answeing:
@@ -1055,12 +1030,7 @@ def decision_module(user_name, task_description, ready_hist = []):
 
     if final_answeing:
         print("final_answeing:", final_answeing)
-        # Budowanie historii - assistant
-        # ready_hist.append({
-        #     "role": "assistant",
-        #     "author": 'aifa',
-        #     "content": answeing
-        # })
+
 
     if final_answeing:
         if save_chat_message("aifa", final_answeing, 0):
