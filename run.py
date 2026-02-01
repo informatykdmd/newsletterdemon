@@ -13045,8 +13045,56 @@ def public_on_socialsync():
             polecenie_ai = None  # Nie generujemy opisu, więc polecenie nie jest potrzebne
         elif generuj_opis:
             styl_ogloszenia = 1
-            status = 5
+            status = 4
             polecenie_ai = polecenie_ai.strip() if polecenie_ai else None  # Pobieramy polecenie tylko jeśli zostało wpisane
+            mgr = MistralChatManager(MISTRAL_API_KEY)
+            sys_prompt = (
+                "Jesteś doświadczonym copywriterem sprzedażowym social media dla ofert nieruchomości.\n"
+                "Cel: stworzyć odświeżony, sprzedażowy post, który wzbudza emocje i zachęca do kontaktu.\n\n"
+                "ZASADY (OBOWIĄZKOWE):\n"
+                "- Zwracasz WYŁĄCZNIE gotową treść posta (bez komentarzy, bez wstępu, bez nagłówków typu 'Oto post').\n"
+                "- ZERO markdown: żadnych #, **, list markdown, linków w formacie [tekst](url).\n"
+                "- Możesz używać emotek/ikonek i zwykłych myślników.\n"
+                "- Trzymasz się faktów z oryginalnego opisu: nie zmieniasz ceny, metrażu, lokalizacji, parametrów, terminów ani standardu.\n"
+                "- Jeśli czegoś nie ma w źródle: nie dopisujesz tego.\n"
+                "- Bez lania wody: konkrety, krótkie zdania, wysoka czytelność.\n"
+                "- Styl: sprzedażowy, obrazowy (wizja życia/użytkowania), ale rzeczowy.\n"
+                "- Na końcu zawsze CTA: zachęta do kontaktu (telefon/wiadomość) bez wymyślania numeru.\n\n"
+                "FORMAT POSTA:\n"
+                "1) Mocne pierwsze 1–2 linie (hak)\n"
+                "2) 4–8 konkretów w punktach (myślniki + emotki)\n"
+                "3) Krótka wizja/korzyść (1–2 zdania)\n"
+                "4) CTA + prośba o kontakt\n"
+            )
+
+            content = (
+                "DANE ŹRÓDŁOWE (NIE ZMIENIAJ FAKTÓW):\n"
+                f"{opis_ogloszenia}\n\n"
+                "KONTEKST OFERTY:\n"
+                f"- Kategoria: {kategoria_ogloszenia}\n"
+                f"- Rodzaj oferty: {rodzaj_ogloszenia}\n"
+                f"- Styl: {styl_ogloszenia}\n\n"
+                "ZADANIE:\n"
+                "- Napisz nowy, odświeżony post sprzedażowy na social media na podstawie danych źródłowych.\n"
+                "- Używaj emotek, ale bez przesady (czytelnie).\n"
+                "- Nie dodawaj ani nie zmieniaj żadnych liczb/parametrów/ceny.\n"
+                "- Nie dopisuj informacji, których nie ma w źródle.\n"
+                "- Bez lania wody, same konkrety + emocje + wizja korzyści.\n"
+                "- Zakończ wyraźnym CTA do kontaktu.\n\n"
+                "WYTYCZNE ADMINISTRATORA (jeśli są):\n"
+                f"{polecenie_ai or 'brak'}"
+            )
+
+            hist = [
+                {"role": "user", "content": content}
+            ]
+
+            answering = mgr.continue_conversation_with_system(hist, sys_prompt, max_tokens=800)
+            if answering and len(str(answering).strip()) > 30:
+                opis_ogloszenia = answering
+            else:
+                flash(f'Opis nie został wygenrowany, wystąpił BŁĄD:SI', 'danger')
+
         else:
             status = 4
             styl_ogloszenia = 0
