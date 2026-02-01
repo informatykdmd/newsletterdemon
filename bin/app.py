@@ -1255,7 +1255,7 @@ def main():
                                 return header + "\n".join(lines) + "\n"
 
 
-                            hist = final_prompt.get("ready_hist", [])
+                            hist = list(final_prompt.get("ready_hist", []))
                             if final_prompt.get("forge_commender", None) is None:
                                 mgr = MistralChatManager(mgr_api_key)
                                 witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
