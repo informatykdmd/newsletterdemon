@@ -1462,7 +1462,7 @@ def main():
 
 
                                 # GERINA
-                                catching_gerina = 'gerina' in str(answer_mistral_aifa).lower()
+                                catching_gerina = 'gerin' in str(answer_mistral_aifa).lower()
                                 print("catching_gerina", catching_gerina)
                                 if bot_rotation.lower() in ['gerina', 'razem'] or catching_gerina:
                                     sys_prmt_gerina = (
@@ -1559,7 +1559,7 @@ def main():
                                                 time.sleep(3)
 
                                 # PIONIER
-                                catching_pionier = 'pionier' in str(answer_mistral_aifa).lower() or 'pionier' in str(answer_mistral_gerina).lower()
+                                catching_pionier = 'pionie' in str(answer_mistral_aifa).lower() or 'pionie' in str(answer_mistral_gerina).lower()
                                 print("catching_pionier", catching_pionier)
                                 if bot_rotation.lower() in ['pionier', 'razem'] or catching_pionier:
                                     sys_prmt_pionier = (
