@@ -1,54 +1,49 @@
 from wrapper_mistral import MistralChatManager
 from config_utils import MISTRAL_API_KEY, api_key, url, tempalate_endpoit, responder_endpoit
-
-sys_prmt_aifa = (
-    "Jesteś Aifa (ona/jej).\n"
-    "Jesteś główną jednostką SI w systemie DMD.\n\n"
-    "ZASADY ODPOWIEDZI:\n"
-    "- Odpowiadasz wyłącznie treścią końcową.\n"
-    "- Nie używasz meta-komentarzy ani nie cytujesz promptów.\n"
-    "- Nie powtarzasz treści wejściowej.\n"
-    "- Jeśli brakuje danych: zadaj jedno krótkie pytanie.\n\n"
-    "STYL:\n"
-    "- Naturalny, czatowy.\n"
-    "- Bez powitań.\n"
-)
-
-
-memory_block = (
-    "- Preferowany styl: luźny, czatowy.\n"
-    "- Brak powitań.\n"
-    "- Jeśli brak danych: dopytaj.\n"
-    "- Dane IoT po wysiłku fizycznym:\n"
-    "  • puls: peak ~130, aktualnie ~110\n"
-    "  • temperatura ciała: 37.2°C\n"
-    "  • oddech: płytki\n"
-)
+import prepare_shedule
+"""
+Kolumny LTM (dodnae):
+ltm_status (new domyślnie)
+👉 to jest kolejka robocza dla pamięci długoterminowej
+ltm_processing_token
+👉 identyfikator „kto aktualnie obrabia”
+ltm_processing_at
+👉 kiedy wiadomość została wzięta do pracy
+ltm_processed_at
+👉 kiedy zakończono (processed / skipped / error)
+ltm_error
+👉 dlaczego się nie udało (jeśli się nie udało)"""
 
 
-user_message = "biegałem i trochę mi słabo, jak myślisz wszystko ze mną ok?"
+def get_messages(flag='all'):
+    # WHERE status != 1
+    if flag == 'all':
+        dump_key = prepare_shedule.connect_to_database(
+            "SELECT id, user_name, content, timestamp, status FROM Messages WHERE status != 1 ORDER BY timestamp ASC;")
 
-hist_aifa = [
-    {
-        "role": "user",
-        "content": (
-            "PAMIĘĆ ROBOCZA (KONTEKST, NIE CYTUJ):\n"
-            f"{memory_block}\n"
+    if flag == 'today':
+        dump_key = prepare_shedule.connect_to_database(
+            "SELECT id, user_name, content, timestamp, status FROM Messages WHERE date(timestamp) = curdate() AND status != 1 ORDER BY timestamp ASC;")
+
+    if flag == 'last':
+        dump_key = prepare_shedule.connect_to_database(
+            """SELECT id, user_name, content, timestamp, status FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR AND status != 1 ORDER BY timestamp ASC;""")
+    if flag == 'ltm_new':
+        dump_key = prepare_shedule.connect_to_database(
+            "SELECT id, user_name, content, timestamp, status, "
+            "ltm_status, ltm_processing_token, ltm_processing_at, ltm_processed_at, ltm_error "
+            "FROM Messages "
+            "WHERE ltm_status = 'new' AND status != 1 "
+            "ORDER BY timestamp ASC;"
         )
-    },
-    {
-        "role": "user",
-        "content": (
-            f"{user_message}\n"
-        )
-    }
-]
 
+    return dump_key
 
+rows_all = get_messages('all')
+rows_last = get_messages('last')
+rows_new = get_messages('ltm_new')
 
-mgr = MistralChatManager(MISTRAL_API_KEY)
-answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa)
-
-if __name__ == "__main__":
-    print(answer_mistral_aifa)
-
+print("all:", len(rows_all))
+print("last:", len(rows_last))
+print("ltm_new:", len(rows_new))
+print(rows_last[-1] if rows_last else None)
