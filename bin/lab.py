@@ -1,6 +1,6 @@
 from wrapper_mistral import MistralChatManager
 from config_utils import MISTRAL_API_KEY, api_key, url, tempalate_endpoit, responder_endpoit
-import prepare_shedule
+import connectAndQuery as cad
 """
 Kolumny LTM (dodnae):
 ltm_status (new domyślnie)
@@ -18,22 +18,23 @@ ltm_error
 def get_messages(flag='all'):
     # WHERE status != 1
     if flag == 'all':
-        dump_key = prepare_shedule.connect_to_database(
+        dump_key = cad.connect_to_database(
             "SELECT id, user_name, content, timestamp, status FROM Messages WHERE status != 1 ORDER BY timestamp ASC;")
 
     if flag == 'today':
-        dump_key = prepare_shedule.connect_to_database(
+        dump_key = cad.connect_to_database(
             "SELECT id, user_name, content, timestamp, status FROM Messages WHERE date(timestamp) = curdate() AND status != 1 ORDER BY timestamp ASC;")
 
     if flag == 'last':
-        dump_key = prepare_shedule.connect_to_database(
+        dump_key = cad.connect_to_database(
             """SELECT id, user_name, content, timestamp, status FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR AND status != 1 ORDER BY timestamp ASC;""")
+    
     if flag == 'ltm_new':
-        dump_key = prepare_shedule.connect_to_database(
+        dump_key = cad.connect_to_database(
             "SELECT id, user_name, content, timestamp, status, "
             "ltm_status, ltm_processing_token, ltm_processing_at, ltm_processed_at, ltm_error "
             "FROM Messages "
-            "WHERE ltm_status = 'new' AND status != 1 "
+            "WHERE ltm_status = 'new' "
             "ORDER BY timestamp ASC;"
         )
 
