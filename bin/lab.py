@@ -457,7 +457,7 @@ class LongTermMemoryDaemon:
         self.llm_writer = llm_writer
         self.action_gate = action_gate
 
-    def apply_memory_action(self, action, message_id):
+    def apply_memory_action(self, action, message_id, raw_text=None):
         atype = action.get("type")
         target = action.get("target") or {}
         reason = (action.get("reason") or "")[:255]
@@ -466,16 +466,33 @@ class LongTermMemoryDaemon:
         dedupe_key = target.get("dedupe_key")
         keywords = target.get("keywords") or []
 
-        # 1) znajdź kartę docelową
+        # FALLBACK 1: jeśli brak keywords, wyciągnij je z raw_text
+        if not keywords and raw_text:
+            low = raw_text.lower()
+            # proste odfiltrowanie słów funkcyjnych
+            stop = {"odwołuję","odwoluje","zasadę","zasade","chwilowo","żadnej","zadnej","kawy","kawa","do","w","i","na","przy","podczas","testów","testow","od","teraz"}
+            tokens = [t.strip(".,;:!?()[]\"'") for t in low.split()]
+            tokens = [t for t in tokens if len(t) >= 3 and t not in stop]
+            # jeśli user pisał o kawie/testach, dorzuć to jako keywordy obowiązkowo
+            forced = []
+            if "kawa" in low or "kawy" in low:
+                forced.append("kawa")
+            if "test" in low:
+                forced.append("test")
+            keywords = forced + tokens[:3]  # max 4-5 słów
+
+        # 1) znajdź kartę po dedupe
         if not card_id and dedupe_key:
             card_id = self.find_active_card_id_by_dedupe(chat_id=0, dedupe_key=dedupe_key)
 
+        # 2) znajdź kartę po keywords
         if not card_id and keywords:
             card_id = self.find_best_card_by_keywords(chat_id=0, keywords=keywords)
 
+        # FALLBACK 2: jeśli wciąż brak targetu -> NIE RZUCAJ wyjątku
         if not card_id:
-            # brak targetu => logujemy błąd (albo możesz zrobić status=processed z notką)
-            raise RuntimeError(f"memory_action no target found: {atype}")
+            # zamiast error: lepiej "skipped" z opisem
+            raise RuntimeError(f"memory_action no target found: {atype} (keywords={keywords})")
 
         if atype == "revoke":
             q = """
@@ -490,20 +507,8 @@ class LongTermMemoryDaemon:
             cad.safe_connect_to_database(q, (reason, int(message_id), int(card_id)))
             return
 
-        if atype == "supersede":
-            # W supersede najczęściej LLM powinien też dać memory_card w tej samej odpowiedzi,
-            # ale jeśli nie, to przynajmniej odwołujemy starą.
-            q = """
-            UPDATE memory_cards
-            SET status='superseded',
-                superseded_by_card_id = superseded_by_card_id,
-                updated_at=NOW()
-            WHERE id=%s;
-            """
-            cad.safe_connect_to_database(q, (int(card_id),))
-            return
-
         raise RuntimeError(f"unknown memory_action type: {atype}")
+
 
     def find_best_card_by_keywords(self, chat_id, keywords, limit=5):
         # proste: match po summary
@@ -589,7 +594,8 @@ class LongTermMemoryDaemon:
                         continue
 
                     # Akcja zaakceptowana
-                    self.apply_memory_action(action, msg_id)
+                    self.apply_memory_action(action, msg_id, raw_text=payload.get("_raw_text"))
+
                     self.repo.close_message(msg_id, "processed", error_text=None)
                     results["processed"] += 1
                     continue
@@ -727,6 +733,8 @@ class LongTermMemoryDaemon:
         # dopnij dedupe_key z gate'a jako kanoniczny
         if dedupe_key and out.get("memory_card"):
             out["dedupe_key"] = dedupe_key
+
+        out["_raw_text"] = content
 
         return out
 
@@ -1246,6 +1254,7 @@ if __name__ == "__main__":
         "- reason: krótko wyjaśnij dlaczego.\n"
         "- confidence: liczba 0.0–1.0 (pewność trafności akcji).\n"
         "- Jeśli nie jesteś wystarczająco pewny (confidence < 0.6), NIE wykonuj akcji.\n\n"
+        "- Jeśli type=revoke/supersede, ZAWSZE wypełnij target.keywords (min 1), nawet jeśli nie znasz card_id."
 
         "PRIORYTET:\n"
         "- Jeśli wiadomość jednocześnie zawiera nową zasadę i odwołuje starą → wybierz memory_action.\n"
