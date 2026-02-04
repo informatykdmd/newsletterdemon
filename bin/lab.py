@@ -481,6 +481,21 @@ class LongTermMemoryDaemon:
                 forced.append("test")
             keywords = forced + tokens[:3]  # max 4-5 słów
 
+            # normalizacja PL: tniemy do rdzeni żeby LIKE łapał odmiany (kawa/kawy, testy/testów)
+            def _stem_pl(w: str) -> str:
+                w = (w or "").strip().lower()
+                w = re.sub(r"[^a-z0-9ąćęłńóśźż]", "", w)
+                if len(w) <= 3:
+                    return w
+                # prosta heurystyka: obetnij końcówki fleksyjne
+                for suf in ("ami","ach","owi","owe","owego","owych","ami","em","ie","y","a","u","ów","om","e","i","ą","ę"):
+                    if w.endswith(suf) and len(w) - len(suf) >= 3:
+                        return w[:-len(suf)]
+                return w[:4]  # fallback: krótki rdzeń
+
+            keywords = [_stem_pl(k) for k in keywords if k]
+
+
         # 1) znajdź kartę po dedupe
         if not card_id and dedupe_key:
             card_id = self.find_active_card_id_by_dedupe(chat_id=0, dedupe_key=dedupe_key)
@@ -511,20 +526,40 @@ class LongTermMemoryDaemon:
 
 
     def find_best_card_by_keywords(self, chat_id, keywords, limit=5):
-        # proste: match po summary
-        like = " AND ".join(["summary LIKE %s" for _ in keywords])
-        params = [int(chat_id)] + [f"%{k}%" for k in keywords] + [int(limit)]
+        """
+        Dopasowanie po summary (MVP) ale odporne na odmiany:
+        - OR zamiast AND
+        - ranking po liczbie trafień
+        """
+        kws = [k for k in (keywords or []) if k]
+        if not kws:
+            return None
+
+        # OR do “kandydatów”
+        where_or = " OR ".join(["summary LIKE %s" for _ in kws])
+
+        # ranking: zliczamy trafienia (CASE WHEN ...)
+        score_expr = " + ".join([f"(CASE WHEN summary LIKE %s THEN 1 ELSE 0 END)" for _ in kws])
+
+        params = [int(chat_id)]
+        params += [f"%{k}%" for k in kws]          # do WHERE OR
+        params += [f"%{k}%" for k in kws]          # do score_expr
+        params += [int(limit)]
+
         q = f"""
-        SELECT id
+        SELECT id,
+            ({score_expr}) AS hits
         FROM memory_cards
-        WHERE chat_id=%s AND status='active'
+        WHERE chat_id=%s
+        AND status='active'
         AND (expires_at IS NULL OR expires_at > NOW())
-        AND {like}
-        ORDER BY score DESC, updated_at DESC
+        AND ({where_or})
+        ORDER BY hits DESC, score DESC, updated_at DESC
         LIMIT %s;
         """
         rows = cad.safe_connect_to_database(q, tuple(params))
         return rows[0][0] if rows else None
+
 
 
     def run_once(self, batch_size=20, dry_run=False, token=None):
@@ -594,11 +629,22 @@ class LongTermMemoryDaemon:
                         continue
 
                     # Akcja zaakceptowana
-                    self.apply_memory_action(action, msg_id, raw_text=payload.get("_raw_text"))
+                    try:
+                        self.apply_memory_action(action, msg_id, raw_text=payload.get("_raw_text"))
+                    except RuntimeError as e:
+                        # brak targetu = normalne -> skipped (a nie error)
+                        msg = str(e)
+                        if "no target found" in msg:
+                            self.repo.close_message(msg_id, "skipped", error_text=msg[:255])
+                            print(f"[LTM] memory_action skipped: {msg} msg_id={msg_id}")
+                            results["skipped"] += 1
+                            continue
+                        raise
 
                     self.repo.close_message(msg_id, "processed", error_text=None)
                     results["processed"] += 1
                     continue
+
 
                 # 2) cache hit -> bump + źródło
                 if payload.get("_cache_hit"):
