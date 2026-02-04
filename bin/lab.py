@@ -253,8 +253,9 @@ class LongTermMemoryDaemon:
     - w razie błędu -> error
     """
 
-    def __init__(self, repo):
+    def __init__(self, repo, write_cards=False):
         self.repo = repo
+        self.write_cards = bool(write_cards)
 
     def run_once(self, batch_size=20, dry_run=False, token=None):
         """
@@ -290,14 +291,13 @@ class LongTermMemoryDaemon:
                     results["processed"] += 1
                     continue
 
-                # 1) upsert karta
-                card_id = self.upsert_memory_card(classification)
+                # Jeśli write_cards=False, to tylko oznaczamy processed/skipped bez tabel memory_*
+                if self.write_cards:
+                    card_id = self.upsert_memory_card(classification)
+                    self.link_source_message(card_id, msg_id)
 
-                # 2) link źródła
-                self.link_source_message(card_id, msg_id)
-
-                # 3) zamknij wiadomość
                 self.repo.close_message(msg_id, "processed", error_text=None)
+
 
                 results["processed"] += 1
 
@@ -309,40 +309,46 @@ class LongTermMemoryDaemon:
         return results
 
     def classify_message(self, row):
-        """
-        Minimalna, bezpieczna klasyfikacja (MVP):
-        - Na start: nie budujemy jeszcze faktycznej pamięci -> wszystko skipped
-        - Jak będziesz gotowy: podmień tę funkcję na heurystyki/LLM.
+        user_name = (row[IDX_USER_NAME] or "").strip().lower()
+        content = (row[IDX_CONTENT] or "").strip()
+        if not content:
+            return None
 
-        Zwraca dict (classification) albo None.
-        """
-        # >>> START: w tej iteracji świadomie nic nie zapamiętujemy
-        # (bo jeszcze nie mamy ustalonych reguł i tabel pamięci w DB)
-        return None
-        # <<< END
+        low = content.lower()
 
-        # Przykład (zostawiam jako “ściąga” do przyszłej edycji):
-        # user_name = row[IDX_USER_NAME]
-        # content = (row[IDX_CONTENT] or "").strip()
-        # if not content:
-        #     return None
-        # return {
-        #     "chat_id": 0,                 # dopóki nie masz chat_id w Messages
-        #     "scope": "shared",
-        #     "kind": "temp",
-        #     "topic": "general",
-        #     "owner_user_login": None,
-        #     "owner_agent_id": None,
-        #     "visibility": "all",
-        #     "audience_json": None,
-        #     "score": 2,
-        #     "trust_level": 1,
-        #     "status": "active",
-        #     "ttl_days": 30,
-        #     "summary": content[:300],
-        #     "facts": [content[:300]],
-        #     "dedupe_key": "TODO_HASH",
-        # }
+        # 1) Bezpiecznik: nie chcemy na start pamiętać paplaniny botów.
+        # Zmienisz to później, na razie ograniczamy źródło.
+        ALLOW_USERS = {"michal"}   # <- dopisz inne loginy ludzi, jeśli chcesz
+        if user_name not in ALLOW_USERS:
+            return None
+
+        # 2) Markery "to jest ustalenie/procedura"
+        MARKERS = ["zasada", "reguła", "od teraz", "ustalamy", "procedura", "zawsze rób", "nie rób", "must have"]
+        if not any(m in low for m in MARKERS):
+            return None
+
+        # 3) Minimalna karta shared
+        summary = content.replace("\n", " ").strip()
+        if len(summary) > 280:
+            summary = summary[:280].rstrip() + "…"
+
+        return {
+            "chat_id": 0,                 # dopóki Messages nie ma chat_id
+            "scope": "shared",
+            "kind": "procedure",
+            "topic": "general",
+            "owner_user_login": None,
+            "owner_agent_id": None,
+            "visibility": "all",
+            "audience_json": None,
+            "score": 4,
+            "trust_level": 2,
+            "status": "active",
+            "ttl_days": 180,
+            "summary": summary,
+            "facts": [summary],
+        }
+
 
     def upsert_memory_card(self, c):
         """
@@ -621,8 +627,9 @@ if __name__ == "__main__":
     print(rows_new[-1] if rows_new else None)
 
     # 2) demon: jeden przebieg = jedna rezerwacja
-    daemon = LongTermMemoryDaemon(repo)
+    daemon = LongTermMemoryDaemon(repo, write_cards=False)
     res = daemon.run_once(batch_size=BATCH_SIZE, dry_run=DRY_RUN)
+
     print(f"\nDAEMON RUN (dry_run={DRY_RUN}):", res)
 
     # 3) podgląd batcha po tokenie (widzisz finalne statusy)
