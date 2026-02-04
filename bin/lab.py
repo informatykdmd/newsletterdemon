@@ -464,36 +464,68 @@ class LongTermMemoryDaemon:
 
         card_id = target.get("card_id")
         dedupe_key = target.get("dedupe_key")
+
         keywords = target.get("keywords") or []
+
+        def _stem_pl(w: str) -> str:
+            w = (w or "").strip().lower()
+            w = re.sub(r"[^a-z0-9ąćęłńóśźż]", "", w)
+            if len(w) <= 3:
+                return w
+            for suf in ("ami","ach","owi","owe","owego","owych","em","ie","y","a","u","ów","om","e","i","ą","ę"):
+                if w.endswith(suf) and len(w) - len(suf) >= 3:
+                    return w[:-len(suf)]
+            return w[:4]
 
         # FALLBACK 1: jeśli brak keywords, wyciągnij je z raw_text
         if not keywords and raw_text:
             low = raw_text.lower()
-            # proste odfiltrowanie słów funkcyjnych
             stop = {"odwołuję","odwoluje","zasadę","zasade","chwilowo","żadnej","zadnej","kawy","kawa","do","w","i","na","przy","podczas","testów","testow","od","teraz"}
             tokens = [t.strip(".,;:!?()[]\"'") for t in low.split()]
             tokens = [t for t in tokens if len(t) >= 3 and t not in stop]
-            # jeśli user pisał o kawie/testach, dorzuć to jako keywordy obowiązkowo
             forced = []
             if "kawa" in low or "kawy" in low:
                 forced.append("kawa")
             if "test" in low:
                 forced.append("test")
-            keywords = forced + tokens[:3]  # max 4-5 słów
+            keywords = forced + tokens[:3]
 
-            # normalizacja PL: tniemy do rdzeni żeby LIKE łapał odmiany (kawa/kawy, testy/testów)
-            def _stem_pl(w: str) -> str:
-                w = (w or "").strip().lower()
-                w = re.sub(r"[^a-z0-9ąćęłńóśźż]", "", w)
-                if len(w) <= 3:
-                    return w
-                # prosta heurystyka: obetnij końcówki fleksyjne
-                for suf in ("ami","ach","owi","owe","owego","owych","ami","em","ie","y","a","u","ów","om","e","i","ą","ę"):
-                    if w.endswith(suf) and len(w) - len(suf) >= 3:
-                        return w[:-len(suf)]
-                return w[:4]  # fallback: krótki rdzeń
+        # STEMPING ZAWSZE (niezależnie od źródła)
+        keywords = [_stem_pl(k) for k in keywords if k]
+        print(f"[LTM] action keywords(stemmed)={keywords} msg_id={message_id}")
 
-            keywords = [_stem_pl(k) for k in keywords if k]
+
+
+        # keywords = target.get("keywords") or []
+
+        # # FALLBACK 1: jeśli brak keywords, wyciągnij je z raw_text
+        # if not keywords and raw_text:
+        #     low = raw_text.lower()
+        #     # proste odfiltrowanie słów funkcyjnych
+        #     stop = {"odwołuję","odwoluje","zasadę","zasade","chwilowo","żadnej","zadnej","kawy","kawa","do","w","i","na","przy","podczas","testów","testow","od","teraz"}
+        #     tokens = [t.strip(".,;:!?()[]\"'") for t in low.split()]
+        #     tokens = [t for t in tokens if len(t) >= 3 and t not in stop]
+        #     # jeśli user pisał o kawie/testach, dorzuć to jako keywordy obowiązkowo
+        #     forced = []
+        #     if "kawa" in low or "kawy" in low:
+        #         forced.append("kawa")
+        #     if "test" in low:
+        #         forced.append("test")
+        #     keywords = forced + tokens[:3]  # max 4-5 słów
+
+        #     # normalizacja PL: tniemy do rdzeni żeby LIKE łapał odmiany (kawa/kawy, testy/testów)
+        #     def _stem_pl(w: str) -> str:
+        #         w = (w or "").strip().lower()
+        #         w = re.sub(r"[^a-z0-9ąćęłńóśźż]", "", w)
+        #         if len(w) <= 3:
+        #             return w
+        #         # prosta heurystyka: obetnij końcówki fleksyjne
+        #         for suf in ("ami","ach","owi","owe","owego","owych","ami","em","ie","y","a","u","ów","om","e","i","ą","ę"):
+        #             if w.endswith(suf) and len(w) - len(suf) >= 3:
+        #                 return w[:-len(suf)]
+        #         return w[:4]  # fallback: krótki rdzeń
+
+        #     keywords = [_stem_pl(k) for k in keywords if k]
 
 
         # 1) znajdź kartę po dedupe
