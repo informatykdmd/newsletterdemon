@@ -612,6 +612,39 @@ class MemorySelector:
             out.append(f"- {ts} @{user}: {txt}")
         return "\n".join(out) + "\n"
 
+
+def seed_memory_card_if_empty():
+    """
+    Wrzuca jedną testową kartę do memory_cards, jeśli tabela istnieje i jest pusta.
+    Dzięki temu od razu widzisz, czy MemorySelector składa memory_block.
+    """
+    try:
+        # czy są jakieś karty?
+        rows = cad.safe_connect_to_database("SELECT COUNT(*) FROM memory_cards WHERE chat_id=%s;", (0,))
+        cnt = int(rows[0][0]) if rows else 0
+        if cnt > 0:
+            return
+
+        # wrzuć 1 testową kartę
+        q = """
+        INSERT INTO memory_cards
+        (chat_id, scope, kind, topic, owner_user_login, owner_agent_id,
+         visibility, audience_json, score, trust_level, status, ttl_days, expires_at,
+         summary, facts_json, dedupe_key, version, created_at, updated_at)
+        VALUES
+        (%s,'shared','procedure','memory',NULL,NULL,
+         'all',NULL,5,2,'active',180,DATE_ADD(NOW(), INTERVAL 180 DAY),
+         %s,%s,%s,1,NOW(),NOW());
+        """
+        summary = "TEST: pamięć shared działa (seed z laba)."
+        facts_json = '["TEST: pamięć shared działa (seed z laba)."]'
+        dedupe_key = "seed-demo-0001"
+        cad.safe_connect_to_database(q, (0, summary, facts_json, dedupe_key))
+
+    except Exception as e:
+        print("seed_memory_card_if_empty(): pomijam (brak tabeli lub błąd):", str(e)[:160])
+
+
 if __name__ == "__main__":
     repo = MessagesRepo()
 
@@ -627,7 +660,7 @@ if __name__ == "__main__":
     print(rows_new[-1] if rows_new else None)
 
     # 2) demon: jeden przebieg = jedna rezerwacja
-    daemon = LongTermMemoryDaemon(repo, write_cards=False)
+    daemon = LongTermMemoryDaemon(repo, write_cards=True)
     res = daemon.run_once(batch_size=BATCH_SIZE, dry_run=DRY_RUN)
 
     print(f"\nDAEMON RUN (dry_run={DRY_RUN}):", res)
@@ -640,6 +673,10 @@ if __name__ == "__main__":
         # pokaż pierwsze 3 dla czytelności
         for r in tok_rows[:3]:
             print("  ", (r[0], r[1], r[5], r[7], r[8]))  # id, user, ltm_status, proc_at, processed_at
+
+    # test memory card
+    seed_memory_card_if_empty()
+
 
     # 4) selector: złożenie kontekstu (memory empty na tym etapie)
     selector = MemorySelector(repo)
