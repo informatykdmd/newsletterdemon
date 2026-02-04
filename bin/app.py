@@ -9,7 +9,7 @@ import os
 import json
 from typing import List, Optional
 from archiveSents import archive_sents
-from appslib import handle_error
+from appslib import handle_error, handle_error_Turbo
 from fbwaitninglist import give_me_curently_tasks
 from ExpiryMonitor import check_all_tables_for_expiry, insert_to_database, delete_row_from_database
 from znajdz_klucz_z_wazeniem import znajdz_klucz_z_wazeniem
@@ -1873,7 +1873,7 @@ def main():
 
                         str_report = format_memoria_report(report)
                         print(str_report)
-                        handle_error(f"Działąnie daemona Memoria {str_report}\n")
+                        handle_error_Turbo(f"Działąnie daemona Memoria {str_report}\n")
 
                 elif name == 'checkpoint_60s':
                     
