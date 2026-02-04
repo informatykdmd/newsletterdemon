@@ -1,6 +1,7 @@
 from datetime import datetime
 import os
 import logging
+import time
 
 def handle_error(exception, retry_count=3, log_path="../logs/errors.log"):
     print(f'Zapis loga: {exception} w toku..')
@@ -11,6 +12,7 @@ def handle_error(exception, retry_count=3, log_path="../logs/errors.log"):
             log.write(message)
     except Exception as e:
         if retry_count > 0:
+            time.sleep(0.5)
             print(f"Błąd podczas zapisywania do pliku: {e}. Ponawiam próbę...")
             handle_error(exception, retry_count - 1, log_path)
         else:
