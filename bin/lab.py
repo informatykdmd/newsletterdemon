@@ -470,22 +470,52 @@ def sufix_pl(word: str) -> str:
 
 
 def normalize_keyword_pl(word: str) -> str:
+    """
+    BAZOWE słowo do dopasowań w DB (powinno realnie występować w summary/facts).
+    Tu nie robimy suffix/stem — tylko czyszczenie.
+    """
     w = (word or "").strip().lower()
     if not w:
         return ""
-
     w = re.sub(r"[^a-z0-9ąćęłńóśźż]", "", w)
-    if len(w) <= 2:
-        return w
+    return w
+
+
+
+def keyword_variants_pl(word: str) -> list:
+    """
+    Warianty do dopasowania w DB.
+    1) base word (pełne, czyste)
+    2) prefix (pierwsze 4 znaki) – łapie odmiany
+    3) sufix_pl – Twój sygnał językowy (opcjonalny)
+    """
+    w = normalize_keyword_pl(word)
+    if not w:
+        return []
+
+    out = [w]
+
+    if len(w) >= 4:
+        out.append(w[:4])
+    elif len(w) >= 3:
+        out.append(w[:3])
 
     try:
         s = sufix_pl(w)
         s = (s or "").strip().lower()
-        if len(s) < 2:
-            return w[:4]
-        return s
+        if s and len(s) >= 2:
+            out.append(s)
     except Exception:
-        return w[:4]
+        pass
+
+    # dedup w kolejności
+    uniq = []
+    seen = set()
+    for x in out:
+        if x not in seen:
+            seen.add(x)
+            uniq.append(x)
+    return uniq
 
 
 
@@ -534,7 +564,11 @@ class LongTermMemoryDaemon:
             keywords = tokens[:6]
 
         # NORMALIZACJA ZAWSZE (LLM + fallback)
-        keywords = [normalize_keyword_pl(k) for k in keywords if k]
+        expanded = []
+        for k in (keywords or []):
+            expanded.extend(keyword_variants_pl(k))
+        keywords = expanded
+
 
         # dedup + filtr długości (żeby nie szukać po "ie"/"a"/itp.)
         uniq = []
@@ -546,10 +580,10 @@ class LongTermMemoryDaemon:
                 continue
             seen.add(k)
             uniq.append(k)
-        keywords = uniq[:6]
+        keywords = uniq[:10]
 
 
-        print(f"[LTM] action keywords(norm)={keywords} msg_id={message_id}")
+        print(f"[LTM] action keywords(variants)={keywords} msg_id={message_id}")
 
 
 
