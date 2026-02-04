@@ -1873,7 +1873,7 @@ def main():
 
                         str_report = format_memoria_report(report)
                         print(str_report)
-                        handle_error_Turbo(f"Działąnie daemona Memoria {str_report}\n")
+                        # handle_error_Turbo(f"Działąnie daemona Memoria {str_report}\n")
 
                 elif name == 'checkpoint_60s':
                     
