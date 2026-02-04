@@ -246,6 +246,18 @@ IDX_LTM_PROCESSING_AT = 7
 IDX_LTM_PROCESSED_AT = 8
 IDX_LTM_ERROR = 9
 
+class ActionGate:
+    def __init__(self):
+        self.revoke_rx = re.compile(r"\b(odwołuję|odwoluje|cofam|anuluj|przestaje obowiązywać|przestaje obowiazywac|już nie obowiązuje|juz nie obowiazuje)\b", re.I)
+        self.supersede_rx = re.compile(r"\b(zamiast|zastępuje|zastapuje|nowa zasada.*zastępuje|zmiana zasady)\b", re.I)
+
+    def might_be_action(self, text: str) -> bool:
+        t = (text or "").strip()
+        if not t:
+            return False
+        return bool(self.revoke_rx.search(t) or self.supersede_rx.search(t))
+
+
 class HeuristicGate:
     """
     Szybka bramka: decyduje czy wołać LLM.
@@ -332,16 +344,59 @@ class LLMMemoryWriter:
             "message": message_text,
             "meta": meta,
             "output_contract": {
-                "type": "memory_card_or_null",
+                "type": "memory_payload",
+                "variants": ["memory_card", "memory_action", "null"],
                 "memory_card_fields": [
                     "scope", "kind", "topic",
                     "owner_user_login", "owner_agent_id",
                     "score", "ttl_days",
                     "summary", "facts"
+                ],
+                "memory_action_fields": [
+                    "type",
+                    "scope",
+                    "owner_user_login",
+                    "owner_agent_id",
+                    "target",
+                    "reason",
+                    "confidence"
+                ],
+                "memory_action_target_fields": [
+                    "card_id",
+                    "dedupe_key",
+                    "keywords"
                 ]
             }
+
         }
         return [{"role": "user", "content": json.dumps(payload, ensure_ascii=False)}]
+
+    def classify_full(self, message_text, meta, max_tokens=500):
+        ready_hist = self.build_ready_hist(message_text, meta)
+        out = self.mgr.continue_conversation_with_system(ready_hist, self.system_prompt, max_tokens=max_tokens)
+        if not out:
+            return None
+
+        txt = out.strip()
+        try:
+            j = json.loads(txt)
+        except Exception:
+            m = re.search(r"\{.*\}", txt, flags=re.S)
+            if not m:
+                return None
+            j = json.loads(m.group(0))
+
+        if not isinstance(j, dict):
+            return None
+
+        # normalizacja kontraktu
+        if "memory_card" not in j:
+            j["memory_card"] = None
+        if "memory_action" not in j:
+            j["memory_action"] = None
+
+        return j
+
 
     def classify(self, message_text, meta, max_tokens=400):
         ready_hist = self.build_ready_hist(message_text, meta)
@@ -395,11 +450,76 @@ class LongTermMemoryDaemon:
     - w razie błędu -> error
     """
 
-    def __init__(self, repo, write_cards=False, gate=None, llm_writer=None):
+    def __init__(self, repo, write_cards=False, gate=None, llm_writer=None, action_gate=None):
         self.repo = repo
         self.write_cards = bool(write_cards)
         self.gate = gate
         self.llm_writer = llm_writer
+        self.action_gate = action_gate
+
+    def apply_memory_action(self, action, message_id):
+        atype = action.get("type")
+        target = action.get("target") or {}
+        reason = (action.get("reason") or "")[:255]
+
+        card_id = target.get("card_id")
+        dedupe_key = target.get("dedupe_key")
+        keywords = target.get("keywords") or []
+
+        # 1) znajdź kartę docelową
+        if not card_id and dedupe_key:
+            card_id = self.find_active_card_id_by_dedupe(chat_id=0, dedupe_key=dedupe_key)
+
+        if not card_id and keywords:
+            card_id = self.find_best_card_by_keywords(chat_id=0, keywords=keywords)
+
+        if not card_id:
+            # brak targetu => logujemy błąd (albo możesz zrobić status=processed z notką)
+            raise RuntimeError(f"memory_action no target found: {atype}")
+
+        if atype == "revoke":
+            q = """
+            UPDATE memory_cards
+            SET status='revoked',
+                revoked_at=NOW(),
+                revoked_reason=%s,
+                revoked_by_message_id=%s,
+                updated_at=NOW()
+            WHERE id=%s;
+            """
+            cad.safe_connect_to_database(q, (reason, int(message_id), int(card_id)))
+            return
+
+        if atype == "supersede":
+            # W supersede najczęściej LLM powinien też dać memory_card w tej samej odpowiedzi,
+            # ale jeśli nie, to przynajmniej odwołujemy starą.
+            q = """
+            UPDATE memory_cards
+            SET status='superseded',
+                superseded_by_card_id = superseded_by_card_id,
+                updated_at=NOW()
+            WHERE id=%s;
+            """
+            cad.safe_connect_to_database(q, (int(card_id),))
+            return
+
+        raise RuntimeError(f"unknown memory_action type: {atype}")
+
+    def find_best_card_by_keywords(self, chat_id, keywords, limit=5):
+        # proste: match po summary
+        like = " AND ".join(["summary LIKE %s" for _ in keywords])
+        params = [int(chat_id)] + [f"%{k}%" for k in keywords] + [int(limit)]
+        q = f"""
+        SELECT id
+        FROM memory_cards
+        WHERE chat_id=%s AND status='active'
+        AND (expires_at IS NULL OR expires_at > NOW())
+        AND {like}
+        ORDER BY score DESC, updated_at DESC
+        LIMIT %s;
+        """
+        rows = cad.safe_connect_to_database(q, tuple(params))
+        return rows[0][0] if rows else None
 
 
     def run_once(self, batch_size=20, dry_run=False, token=None):
@@ -420,38 +540,128 @@ class LongTermMemoryDaemon:
             "dry_run": bool(dry_run),
         }
 
+        # Cache lokalny na czas jednego batcha: dedupe_key -> memory_card_id
+        batch_cache = {}
+
         for row in rows:
             msg_id = row[IDX_ID]
             try:
-                classification = self.classify_message(row)
-
-                if classification is None:
+                classification = self.classify_message(row, batch_cache=batch_cache)
+                payload = classification
+                if payload is None:
                     if not dry_run:
                         self.repo.close_message(msg_id, "skipped", error_text=None)
                     results["skipped"] += 1
                     continue
 
+                # dry_run: nie dotykamy DB (poza rezerwacją batcha)
                 if dry_run:
-                    # tylko symulacja: nie dotykamy DB poza rezerwacją
+                    # policzmy tylko co by było
+                    if payload.get("memory_action") or payload.get("memory_card") or payload.get("_cache_hit"):
+                        results["processed"] += 1
+                    else:
+                        results["skipped"] += 1
+                    continue
+
+                action = payload.get("memory_action")
+                card = payload.get("memory_card")
+
+                # 1) akcja revoke/supersede
+                if action:
+                    confidence = float(action.get("confidence", 0.0))
+
+                    # Bezpiecznik: LLM niepewny → NIE wykonujemy akcji
+                    if confidence < 0.6:
+                        self.repo.close_message(
+                            msg_id,
+                            "skipped",
+                            error_text=f"memory_action confidence too low: {confidence}"
+                        )
+
+                        # smart debug
+                        atype = action.get("type")
+                        print(
+                            f"[LTM] memory_action ignored "
+                            f"(type={atype}, confidence={confidence}) msg_id={msg_id}"
+                        )
+
+                        results["skipped"] += 1
+                        continue
+
+                    # Akcja zaakceptowana
+                    self.apply_memory_action(action, msg_id)
+                    self.repo.close_message(msg_id, "processed", error_text=None)
                     results["processed"] += 1
                     continue
 
-                # Jeśli write_cards=False, to tylko oznaczamy processed/skipped bez tabel memory_*
-                if self.write_cards:
-                    # CACHE HIT: nie wołamy LLM i nie robimy upsert – tylko bump wersji + źródło
-                    if classification.get("_cache_hit"):
-                        card_id = int(classification["memory_card_id"])
-                        self.bump_memory_card_version(card_id)
-                        self.link_source_message(card_id, msg_id)
-                    else:
-                        card_id = self.upsert_memory_card(classification)
-                        self.link_source_message(card_id, msg_id)
+                # 2) cache hit -> bump + źródło
+                if payload.get("_cache_hit"):
+                    card_id = int(payload["memory_card_id"])
+                    self.bump_memory_card_signal(card_id, bump_score=True)
+                    self.link_source_message(card_id, msg_id)
+                    self.repo.close_message(msg_id, "processed", error_text=None)
+                    results["processed"] += 1
+                    continue
+
+                # 3) nowa karta
+                if card:
+                    # kanoniczny dedupe_key z gate'a, jeśli jest
+                    if payload.get("dedupe_key"):
+                        card["dedupe_key"] = payload["dedupe_key"]
+
+                    card_id = self.upsert_memory_card(card)
+
+                    dk = card.get("dedupe_key") or payload.get("dedupe_key")
+                    if dk:
+                        batch_cache[dk] = int(card_id)
+
+                    self.link_source_message(card_id, msg_id)
+                    self.repo.close_message(msg_id, "processed", error_text=None)
+                    results["processed"] += 1
+                    continue
+
+                # 4) nic
+                self.repo.close_message(msg_id, "skipped", error_text=None)
+                results["skipped"] += 1
+
+                
 
 
-                self.repo.close_message(msg_id, "processed", error_text=None)
 
 
-                results["processed"] += 1
+                # if classification is None:
+                #     if not dry_run:
+                #         self.repo.close_message(msg_id, "skipped", error_text=None)
+                #     results["skipped"] += 1
+                #     continue
+
+                # if dry_run:
+                #     # tylko symulacja: nie dotykamy DB poza rezerwacją
+                #     results["processed"] += 1
+                #     continue
+
+                # # Jeśli write_cards=False, to tylko oznaczamy processed/skipped bez tabel memory_*
+                # if self.write_cards:
+                #     # CACHE HIT: nie wołamy LLM i nie robimy upsert – tylko bump wersji + źródło
+                #     if classification.get("_cache_hit"):
+                #         card_id = int(classification["memory_card_id"])
+                #         print(f"[LTM] CACHE HIT dedupe={classification.get('dedupe_key')[:10]}.. -> card_id={card_id}")
+                #         self.bump_memory_card_signal(card_id, bump_score=True)
+                #         self.link_source_message(card_id, msg_id)
+
+                #     else:
+                #         card_id = self.upsert_memory_card(classification)
+                #         dk = classification.get("dedupe_key")
+                #         if dk:
+                #             batch_cache[dk] = int(card_id)
+
+                #         self.link_source_message(card_id, msg_id)
+
+
+                # self.repo.close_message(msg_id, "processed", error_text=None)
+
+
+                # results["processed"] += 1
 
             except Exception as e:
                 if not dry_run:
@@ -460,19 +670,26 @@ class LongTermMemoryDaemon:
 
         return results
 
-    def classify_message(self, row):
+    def classify_message(self, row, batch_cache=None):
         user_name = row[IDX_USER_NAME]
         content = row[IDX_CONTENT]
 
-        # 1) heurystyka bramkująca
-        if self.gate:
-            hint = self.gate.check(user_name, content)
-            if hint is None:
-                return None
-        else:
-            hint = None
+        if not content or not str(content).strip():
+            return None
 
-        # 2) LLM (tylko jeśli mamy writer)
+        # 0) action gate -> przepuszcza do LLM bez markerów
+        is_action = bool(self.action_gate and self.action_gate.might_be_action(content))
+
+        # 1) heurystyka bramkująca (jeśli nie action)
+        hint = None
+        if not is_action:
+            if self.gate:
+                hint = self.gate.check(user_name, content)
+                if hint is None:
+                    return None
+        else:
+            hint = {"scope_hint": "shared", "owner_user_login": None, "owner_agent_id": None, "dedupe_key": None}
+
         if not self.llm_writer:
             return None
 
@@ -484,37 +701,102 @@ class LongTermMemoryDaemon:
             "owner_agent_id": (hint or {}).get("owner_agent_id"),
             "dedupe_key": (hint or {}).get("dedupe_key"),
         }
-        # 1.5) CACHE HIT: jeśli już mamy kartę o tym dedupe_key, nie wołamy LLM
+
         dedupe_key = meta.get("dedupe_key")
-        if dedupe_key:
+
+        # 2) CACHE HIT (tylko gdy mamy dedupe_key i nie jest to action)
+        if dedupe_key and not is_action:
+            if batch_cache is not None and dedupe_key in batch_cache:
+                return {"_cache_hit": True, "memory_card_id": batch_cache[dedupe_key], "dedupe_key": dedupe_key, "memory_card": None, "memory_action": None}
+
             existing_id = self.find_active_card_id_by_dedupe(chat_id=0, dedupe_key=dedupe_key)
             if existing_id:
-                return {
-                    "_cache_hit": True,
-                    "memory_card_id": existing_id,
-                    "dedupe_key": dedupe_key,
-                }
+                if batch_cache is not None:
+                    batch_cache[dedupe_key] = existing_id
+                return {"_cache_hit": True, "memory_card_id": existing_id, "dedupe_key": dedupe_key, "memory_card": None, "memory_action": None}
 
+        # 3) LLM
+        out = self.llm_writer.classify_full(content, meta)
 
-        mc = self.llm_writer.classify(content, meta, max_tokens=400)
-        if mc is None:
+        if not out or not isinstance(out, dict):
             return None
+
+        out.setdefault("memory_card", None)
+        out.setdefault("memory_action", None)
+
+        # dopnij dedupe_key z gate'a jako kanoniczny
+        if dedupe_key and out.get("memory_card"):
+            out["dedupe_key"] = dedupe_key
+
+        return out
+
+
+        # user_name = row[IDX_USER_NAME]
+        # content = row[IDX_CONTENT]
+
+        # # 1) heurystyka bramkująca
+        # if self.gate:
+        #     hint = self.gate.check(user_name, content)
+        #     if hint is None:
+        #         return None
+        # else:
+        #     hint = None
+
+        # # 2) LLM (tylko jeśli mamy writer)
+        # if not self.llm_writer:
+        #     return None
+
+        # meta = {
+        #     "chat_id": 0,
+        #     "author_login": (user_name or "").strip(),
+        #     "scope_hint": (hint or {}).get("scope_hint"),
+        #     "owner_user_login": (hint or {}).get("owner_user_login"),
+        #     "owner_agent_id": (hint or {}).get("owner_agent_id"),
+        #     "dedupe_key": (hint or {}).get("dedupe_key"),
+        # }
+        # # 1.5) CACHE HIT: jeśli już mamy kartę o tym dedupe_key, nie wołamy LLM
+        # dedupe_key = meta.get("dedupe_key")
+        # if dedupe_key:
+        #     # 1) RAM cache (ten batch)
+        #     if batch_cache is not None and dedupe_key in batch_cache:
+        #         return {
+        #             "_cache_hit": True,
+        #             "memory_card_id": batch_cache[dedupe_key],
+        #             "dedupe_key": dedupe_key,
+        #         }
+
+        #     # 2) DB cache
+        #     existing_id = self.find_active_card_id_by_dedupe(chat_id=0, dedupe_key=dedupe_key)
+        #     if existing_id:
+        #         if batch_cache is not None:
+        #             batch_cache[dedupe_key] = existing_id
+        #         return {
+        #             "_cache_hit": True,
+        #             "memory_card_id": existing_id,
+        #             "dedupe_key": dedupe_key,
+        #         }
+
+
+
+        # mc = self.llm_writer.classify(content, meta, max_tokens=400)
+        # if mc is None:
+        #     return None
         
-        # Utrwalamy kanoniczny dedupe_key z gate'a
-        if meta.get("dedupe_key"):
-            mc["dedupe_key"] = meta["dedupe_key"]
+        # # Utrwalamy kanoniczny dedupe_key z gate'a
+        # if meta.get("dedupe_key"):
+        #     mc["dedupe_key"] = meta["dedupe_key"]
 
 
-        # dopnij pola wymagane przez upsert w Twoim kodzie
-        mc["chat_id"] = 0
-        mc.setdefault("owner_user_login", meta.get("owner_user_login"))
-        mc.setdefault("owner_agent_id", meta.get("owner_agent_id"))
-        mc.setdefault("visibility", "all")
-        mc.setdefault("audience_json", None)
-        mc.setdefault("trust_level", 2)
-        mc.setdefault("status", "active")
+        # # dopnij pola wymagane przez upsert w Twoim kodzie
+        # mc["chat_id"] = 0
+        # mc.setdefault("owner_user_login", meta.get("owner_user_login"))
+        # mc.setdefault("owner_agent_id", meta.get("owner_agent_id"))
+        # mc.setdefault("visibility", "all")
+        # mc.setdefault("audience_json", None)
+        # mc.setdefault("trust_level", 2)
+        # mc.setdefault("status", "active")
 
-        return mc
+        # return mc
 
         # user_name = (row[IDX_USER_NAME] or "").strip().lower()
         # content = (row[IDX_CONTENT] or "").strip()
@@ -575,6 +857,27 @@ class LongTermMemoryDaemon:
             updated_at = NOW()
         WHERE id=%s;
         """
+        cad.safe_connect_to_database(q, (int(memory_card_id),))
+
+    def bump_memory_card_signal(self, memory_card_id, bump_score=False):
+        """
+        Podbija wersję zawsze, a opcjonalnie score (max 5).
+        """
+        if bump_score:
+            q = """
+            UPDATE memory_cards
+            SET version = version + 1,
+                score = LEAST(5, score + 1),
+                updated_at = NOW()
+            WHERE id=%s;
+            """
+        else:
+            q = """
+            UPDATE memory_cards
+            SET version = version + 1,
+                updated_at = NOW()
+            WHERE id=%s;
+            """
         cad.safe_connect_to_database(q, (int(memory_card_id),))
 
 
@@ -902,26 +1205,69 @@ if __name__ == "__main__":
     # daemon = LongTermMemoryDaemon(repo, write_cards=True)
     # res = daemon.run_once(batch_size=BATCH_SIZE, dry_run=DRY_RUN)
     classifier_system_prompt = (
-        "Jesteś klasyfikatorem pamięci długoterminowej dla czatu grupowego.\n"
-        "Twoje zadanie: na podstawie podanej wiadomości zwrócić WYŁĄCZNIE poprawny JSON.\n"
-        "Jeśli wiadomość nie nadaje się do pamięci, zwróć: {\"memory_card\": null}\n"
-        "Jeśli się nadaje, zwróć: {\"memory_card\": {...}}\n"
-        "Zasady:\n"
-        "- Nie zapisuj komend, small talku, pytań bez ustalenia.\n"
-        "- Summary musi być neutralne, bez emocji, 1-2 zdania.\n"
-        "- Facts to lista 1-5 punktów.\n"
-        "- scope: shared/user/agent zgodnie z meta.scope_hint jeśli jest.\n"
-        "- kind: procedure/decision/profile/temp\n"
-        "- topic: infra/db/marketing/memory/general\n"
-        "- score 1..5 (5 = bardzo ważne)\n"
-        "- ttl_days: 30/90/180/365 lub null\n"
-        "Zwracaj TYLKO JSON. Bez markdown, bez komentarzy."
+        "Jesteś klasyfikatorem pamięci długoterminowej (LTM) dla czatu grupowego.\n"
+        "Twoim zadaniem jest zdecydować, czy wiadomość:\n"
+        "- tworzy nową pamięć (memory_card),\n"
+        "- wykonuje akcję na istniejącej pamięci (memory_action),\n"
+        "- albo nie wnosi nic trwałego (null).\n\n"
+
+        "ZWRAJASZ WYŁĄCZNIE poprawny JSON. Bez markdown, bez komentarzy, bez tekstu poza JSON.\n\n"
+
+        "FORMAT ODPOWIEDZI (ZAWSZE TEN SAM):\n"
+        "{\n"
+        '  "memory_card": { ... } | null,\n'
+        '  "memory_action": { ... } | null\n'
+        "}\n\n"
+
+        "Jeśli wiadomość NIE tworzy pamięci i NIE jest akcją:\n"
+        '{"memory_card": null, "memory_action": null}\n\n'
+
+        "ZASADY OGÓLNE:\n"
+        "- Nie zapisuj small talku, żartów, reakcji, potwierdzeń, podziękowań.\n"
+        "- Nie zapisuj pytań ani poleceń, jeśli nie zawierają trwałego ustalenia.\n"
+        "- Pamięć musi być użyteczna w przyszłych rozmowach.\n"
+        "- Summary: neutralne, 1–2 zdania.\n"
+        "- Facts: 1–5 krótkich, konkretnych punktów.\n"
+        "- score: liczba całkowita 1–5 (ważność).\n"
+        "- ttl_days: jedna z wartości 30 / 90 / 180 / 365 lub null.\n"
+        "- scope: shared / user / agent (zgodne z meta.scope_hint jeśli podane).\n"
+        "- topic: infra / db / marketing / memory / general.\n\n"
+
+        "MEMORY_CARD (gdy tworzysz nową pamięć):\n"
+        "- Użyj wyłącznie pól wymienionych w output_contract.memory_card_fields.\n"
+        "- Nie dodawaj dodatkowych kluczy.\n\n"
+
+        "MEMORY_ACTION (gdy wiadomość odwołuje lub zastępuje pamięć):\n"
+        "- type: 'revoke' albo 'supersede'.\n"
+        "- target: wskaż istniejącą pamięć przez:\n"
+        "  * card_id LUB\n"
+        "  * dedupe_key LUB\n"
+        "  * keywords (co najmniej jedno słowo kluczowe).\n"
+        "- reason: krótko wyjaśnij dlaczego.\n"
+        "- confidence: liczba 0.0–1.0 (pewność trafności akcji).\n"
+        "- Jeśli nie jesteś wystarczająco pewny (confidence < 0.6), NIE wykonuj akcji.\n\n"
+
+        "PRIORYTET:\n"
+        "- Jeśli wiadomość jednocześnie zawiera nową zasadę i odwołuje starą → wybierz memory_action.\n"
+        "- Jeśli treść jest niejednoznaczna → zwróć null.\n\n"
+
+        "ZWRAJASZ TYLKO JSON."
     )
+
+
 
     gate = HeuristicGate(allow_users=["michal"])  # na start tylko ludzie
     writer = LLMMemoryWriter(mgr, classifier_system_prompt)
 
-    daemon = LongTermMemoryDaemon(repo, write_cards=True, gate=gate, llm_writer=writer)
+    action_gate = ActionGate()
+    daemon = LongTermMemoryDaemon(
+        repo,
+        write_cards=True,
+        gate=gate,
+        llm_writer=writer,
+        action_gate=action_gate
+    )
+
     res = daemon.run_once(batch_size=BATCH_SIZE, dry_run=DRY_RUN)
 
 
