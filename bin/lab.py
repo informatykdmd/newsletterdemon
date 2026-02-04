@@ -438,8 +438,15 @@ class LongTermMemoryDaemon:
 
                 # Jeśli write_cards=False, to tylko oznaczamy processed/skipped bez tabel memory_*
                 if self.write_cards:
-                    card_id = self.upsert_memory_card(classification)
-                    self.link_source_message(card_id, msg_id)
+                    # CACHE HIT: nie wołamy LLM i nie robimy upsert – tylko bump wersji + źródło
+                    if classification.get("_cache_hit"):
+                        card_id = int(classification["memory_card_id"])
+                        self.bump_memory_card_version(card_id)
+                        self.link_source_message(card_id, msg_id)
+                    else:
+                        card_id = self.upsert_memory_card(classification)
+                        self.link_source_message(card_id, msg_id)
+
 
                 self.repo.close_message(msg_id, "processed", error_text=None)
 
@@ -477,10 +484,26 @@ class LongTermMemoryDaemon:
             "owner_agent_id": (hint or {}).get("owner_agent_id"),
             "dedupe_key": (hint or {}).get("dedupe_key"),
         }
+        # 1.5) CACHE HIT: jeśli już mamy kartę o tym dedupe_key, nie wołamy LLM
+        dedupe_key = meta.get("dedupe_key")
+        if dedupe_key:
+            existing_id = self.find_active_card_id_by_dedupe(chat_id=0, dedupe_key=dedupe_key)
+            if existing_id:
+                return {
+                    "_cache_hit": True,
+                    "memory_card_id": existing_id,
+                    "dedupe_key": dedupe_key,
+                }
+
 
         mc = self.llm_writer.classify(content, meta, max_tokens=400)
         if mc is None:
             return None
+        
+        # Utrwalamy kanoniczny dedupe_key z gate'a
+        if meta.get("dedupe_key"):
+            mc["dedupe_key"] = meta["dedupe_key"]
+
 
         # dopnij pola wymagane przez upsert w Twoim kodzie
         mc["chat_id"] = 0
@@ -533,6 +556,27 @@ class LongTermMemoryDaemon:
         #     "facts": [summary],
         # }
 
+    def find_active_card_id_by_dedupe(self, chat_id, dedupe_key):
+        q = """
+        SELECT id
+        FROM memory_cards
+        WHERE chat_id=%s AND dedupe_key=%s
+          AND status='active'
+          AND (expires_at IS NULL OR expires_at > NOW())
+        LIMIT 1;
+        """
+        rows = cad.safe_connect_to_database(q, (int(chat_id), str(dedupe_key)))
+        return rows[0][0] if rows else None
+
+    def bump_memory_card_version(self, memory_card_id):
+        q = """
+        UPDATE memory_cards
+        SET version = version + 1,
+            updated_at = NOW()
+        WHERE id=%s;
+        """
+        cad.safe_connect_to_database(q, (int(memory_card_id),))
+
 
     def upsert_memory_card(self, c):
         """
@@ -553,9 +597,17 @@ class LongTermMemoryDaemon:
         owner_agent = c.get("owner_agent_id") or ""
         summary = c["summary"]
 
-        base = f"{chat_id}|{scope}|{owner_user}|{owner_agent}|{topic}|{summary.strip().lower()}"
-        dedupe_key = sha1(base.encode("utf-8")).hexdigest()
+        # base = f"{chat_id}|{scope}|{owner_user}|{owner_agent}|{topic}|{summary.strip().lower()}"
+        # dedupe_key = sha1(base.encode("utf-8")).hexdigest()
+        # c["dedupe_key"] = dedupe_key
+
+        # Jeśli dedupe_key przychodzi z gate'a/klasyfikacji – używamy go jako kanonicznego.
+        dedupe_key = c.get("dedupe_key")
+        if not dedupe_key:
+            base = f"{chat_id}|{scope}|{owner_user}|{owner_agent}|{topic}|{summary.strip().lower()}"
+            dedupe_key = sha1(base.encode("utf-8")).hexdigest()
         c["dedupe_key"] = dedupe_key
+
 
         ttl_days = c.get("ttl_days")
         expires_at_sql = "NULL"
