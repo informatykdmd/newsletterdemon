@@ -3,7 +3,7 @@ import os
 import logging
 
 def handle_error(exception, retry_count=3, log_path="../logs/errors.log"):
-    print(f'Zapis loga: {message} w toku..')
+    print(f'Zapis loga: {exception} w toku..')
     try:
         with open(log_path, "a") as log:
             now = str(datetime.now())
