@@ -170,6 +170,21 @@ class MessagesRepo:
         """
         return cad.safe_connect_to_database(q, (token,))
 
+    def fetch_by_token(self, token):
+        """
+        Podgląd wszystkich rekordów oznaczonych danym tokenem (niezależnie od ltm_status).
+        To jest super do debugowania: widzisz, czy demon zamknął batch na skipped/processed/error.
+        """
+        q = f"""
+        SELECT id, user_name, content, timestamp, status,
+               ltm_status, ltm_processing_token, ltm_processing_at, ltm_processed_at, ltm_error
+        FROM {self.table}
+        WHERE ltm_processing_token=%s
+        ORDER BY timestamp ASC;
+        """
+        return cad.safe_connect_to_database(q, (token,))
+
+
     def close_message(self, message_id, new_ltm_status, error_text=None):
         """
         Zamyka pojedynczą wiadomość po obróbce.
@@ -241,15 +256,13 @@ class LongTermMemoryDaemon:
     def __init__(self, repo):
         self.repo = repo
 
-    def run_once(self, batch_size=20, dry_run=False):
+    def run_once(self, batch_size=20, dry_run=False, token=None):
         """
-        1) reserve batch (new -> processing)
-        2) fetch reserved
-        3) process each message:
-           - classify
-           - skipped OR upsert card + link source + processed
+        Jeśli token=None -> demon sam rezerwuje batch.
+        Jeśli token podany -> demon przetwarza batch już zarezerwowany tym tokenem (bez rezerwacji).
         """
-        token = self.repo.reserve_ltm_batch(limit=batch_size)
+        if token is None:
+            token = self.repo.reserve_ltm_batch(limit=batch_size)
         rows = self.repo.fetch_reserved_batch(token)
 
         results = {
@@ -596,22 +609,30 @@ class MemorySelector:
 if __name__ == "__main__":
     repo = MessagesRepo()
 
+    DRY_RUN = False
+    BATCH_SIZE = 5
+
+    # 0) (opcjonalnie) posprzątaj stare processing, jeśli coś utknęło
+    # repo.reset_stuck_processing(older_than_minutes=30)
+
     # 1) podgląd kolejki
     rows_new = repo.fetch_ltm(ltm_status="new", limit=10)
     print("ltm_new (preview 10):", len(rows_new))
     print(rows_new[-1] if rows_new else None)
 
-    # 2) rezerwacja batcha (lab)
-    token = repo.reserve_ltm_batch(limit=5)
-    batch = repo.fetch_reserved_batch(token)
-    print("\nRESERVED TOKEN:", token)
-    print("reserved batch:", len(batch))
-    print(batch[0] if batch else None)
-
-    # 3) demon: uruchomienie 1 przebiegu (na start DRY RUN)
+    # 2) demon: jeden przebieg = jedna rezerwacja
     daemon = LongTermMemoryDaemon(repo)
-    res = daemon.run_once(batch_size=5, dry_run=False)
-    print("\nDAEMON RUN (dry_run=True):", res)
+    res = daemon.run_once(batch_size=BATCH_SIZE, dry_run=DRY_RUN)
+    print(f"\nDAEMON RUN (dry_run={DRY_RUN}):", res)
+
+    # 3) podgląd batcha po tokenie (widzisz finalne statusy)
+    token = res["token"]
+    tok_rows = repo.fetch_by_token(token)
+    print("\nBATCH BY TOKEN:", token, "rows:", len(tok_rows))
+    if tok_rows:
+        # pokaż pierwsze 3 dla czytelności
+        for r in tok_rows[:3]:
+            print("  ", (r[0], r[1], r[5], r[7], r[8]))  # id, user, ltm_status, proc_at, processed_at
 
     # 4) selector: złożenie kontekstu (memory empty na tym etapie)
     selector = MemorySelector(repo)
@@ -620,3 +641,4 @@ if __name__ == "__main__":
     print(ctx["memory_block"])
     print("--- SHORT TERM BLOCK ---")
     print(ctx["short_term_block"])
+
