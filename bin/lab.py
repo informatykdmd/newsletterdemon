@@ -610,7 +610,7 @@ if __name__ == "__main__":
 
     # 3) demon: uruchomienie 1 przebiegu (na start DRY RUN)
     daemon = LongTermMemoryDaemon(repo)
-    res = daemon.run_once(batch_size=5, dry_run=True)
+    res = daemon.run_once(batch_size=5, dry_run=False)
     print("\nDAEMON RUN (dry_run=True):", res)
 
     # 4) selector: złożenie kontekstu (memory empty na tym etapie)
