@@ -19,6 +19,8 @@ import platform
 from wrapper_mistral import MistralChatManager
 from config_utils import MISTRAL_API_KEY, api_key, url, tempalate_endpoit, responder_endpoit
 from MindForgeClient import show_template, communicate_with_endpoint
+from memoria import LongTermMemoryClient, MessagesRepo, MemoryDaemonClient, LLMMemoryWriter, HeuristicGate, ActionGate
+
 
 def get_messages(flag='all'):
     # WHERE status != 1
@@ -168,6 +170,11 @@ def prepare_prompt(began_prompt):
 
     bots = {"aifa", "gerina", "pionier"}
 
+    
+    repo = MessagesRepo()
+    mem = LongTermMemoryClient(repo)
+
+    ua_ls = set()
     for msa in souerce_hist:
         nick = msa[0]
         message = msa[1]
@@ -179,7 +186,7 @@ def prepare_prompt(began_prompt):
             "author": nick,
             "content": f"{message}"
         })
-
+        
         # 2) widok AIFA: tylko Aifa jest assistant
         role_aifa = "assistant" if nick_l == "aifa" else "user"
         ready_hist_aifa.append({
@@ -204,25 +211,56 @@ def prepare_prompt(began_prompt):
             "content": f"{message}"
         })
 
+        if nick not in bots:
+            ua_ls.add(nick)
 
-    # for msa in souerce_hist:
-    #     nick = msa[0]
-    #     message = msa[1]
+    for b in bots:
+        cur_bot_l = str(b).lower()
+        for ul in ua_ls:
+            cur_nick_l = str(ul).lower()
+            if cur_bot_l == "aifa":
+                block_for_ready_hist_aifa = mem.get_long_memory(
+                    chat_id=0,
+                    user_login = cur_nick_l,
+                    agent_id=cur_bot_l,
+                    budget_chars=1200
+                )
+                if block_for_ready_hist_aifa:
+                    ready_hist_aifa.insert(0, {
+                        "role": "user",
+                        "author": cur_nick_l,
+                        "content": f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_aifa}"
+                    })
+                    print("block_for_ready_hist_aifa:", block_for_ready_hist_aifa)  # block -> str
 
-    #     role = "user"
-    #     if str(nick).lower() in {"aifa", "gerina", "pionier"}:
-    #         if target_bot.lower() == "aifa" and str(nick).lower() == "aifa":
-    #             role = "assistant"
-    #         elif target_bot.lower() == "gerina" and str(nick).lower() == "gerina":
-    #             role = "assistant"
-    #         elif target_bot.lower() == "gerina" and str(nick).lower() == "gerina":
-    #             role = "assistant"
+            if cur_bot_l == "gerina":
+                block_for_ready_hist_gerina = mem.get_long_memory(
+                    chat_id=0,
+                    user_login = cur_nick_l,
+                    agent_id=cur_bot_l,
+                    budget_chars=1200
+                )
+                if block_for_ready_hist_gerina:
+                    ready_hist_gerina.insert(0, {
+                        "role": "user",
+                        "content": f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_gerina}"
+                    })
+                    print("block_for_ready_hist_gerina", block_for_ready_hist_gerina)  # block -> str
 
-    #     ready_hist.append({
-    #         "role": role,
-    #         "author": nick,
-    #         "content": f"{message}"
-    #     })
+            if cur_bot_l == "pionier":
+                block_for_ready_hist_pionier = mem.get_long_memory(
+                    chat_id=0,
+                    user_login = cur_nick_l,
+                    agent_id=cur_bot_l,
+                    budget_chars=1200
+                )
+                if block_for_ready_hist_pionier:
+                    ready_hist_pionier.insert(0, {
+                        "role": "user",
+                        "content": f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_pionier}"
+                    })
+                    print("block_for_ready_hist_pionier", block_for_ready_hist_pionier)  # block -> str
+
 
     dump_key = get_messages('last')
     count_ready = 0
@@ -1755,6 +1793,93 @@ def main():
                         handle_error(f"Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]} z podanym kontaktem {data[2]}\n")
                         # add_aifaLog(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}')
                         addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
+
+
+                    #####################################
+                    # Daemon memoria                    #
+                    #####################################
+                    if mgr_api_key:
+                        mgr = MistralChatManager(mgr_api_key)
+                        repo = MessagesRepo()
+                        
+                        bots = {"aifa", "gerina", "pionier"}
+                        ua_ls = set()
+                        souerce_hist = collecting_hist()
+                        for msa in souerce_hist:
+                            nick = msa[0]
+                            if nick not in bots:
+                                ua_ls.add(nick)
+                        allow_users = [str(u).lower() for u in ua_ls]
+                        gate = HeuristicGate(allow_users=allow_users)  # na start tylko ludzie
+                        action_gate = ActionGate()
+                        classifier_system_prompt = (
+                            "Jesteś klasyfikatorem pamięci długoterminowej (LTM) dla czatu grupowego.\n"
+                            "Twoim zadaniem jest zdecydować, czy wiadomość:\n"
+                            "- tworzy nową pamięć (memory_card),\n"
+                            "- wykonuje akcję na istniejącej pamięci (memory_action),\n"
+                            "- albo nie wnosi nic trwałego (null).\n\n"
+
+                            "ZWRAJASZ WYŁĄCZNIE poprawny JSON. Bez markdown, bez komentarzy, bez tekstu poza JSON.\n\n"
+
+                            "FORMAT ODPOWIEDZI (ZAWSZE TEN SAM):\n"
+                            "{\n"
+                            '  "memory_card": { ... } | null,\n'
+                            '  "memory_action": { ... } | null\n'
+                            "}\n\n"
+
+                            "Jeśli wiadomość NIE tworzy pamięci i NIE jest akcją:\n"
+                            '{"memory_card": null, "memory_action": null}\n\n'
+
+                            "ZASADY OGÓLNE:\n"
+                            "- Nie zapisuj small talku, żartów, reakcji, potwierdzeń, podziękowań.\n"
+                            "- Nie zapisuj pytań ani poleceń, jeśli nie zawierają trwałego ustalenia.\n"
+                            "- Pamięć musi być użyteczna w przyszłych rozmowach.\n"
+                            "- Summary: neutralne, 1–2 zdania.\n"
+                            "- Facts: 1–5 krótkich, konkretnych punktów.\n"
+                            "- score: liczba całkowita 1–5 (ważność).\n"
+                            "- ttl_days: jedna z wartości 30 / 90 / 180 / 365 lub null.\n"
+                            "- scope: shared / user / agent (zgodne z meta.scope_hint jeśli podane).\n"
+                            "- topic: infra / db / marketing / memory / general.\n\n"
+
+                            "MEMORY_CARD (gdy tworzysz nową pamięć):\n"
+                            "- Użyj wyłącznie pól wymienionych w output_contract.memory_card_fields.\n"
+                            "- Nie dodawaj dodatkowych kluczy.\n\n"
+
+                            "MEMORY_ACTION (gdy wiadomość odwołuje lub zastępuje pamięć):\n"
+                            "- type: 'revoke' albo 'supersede'.\n"
+                            "- target: wskaż istniejącą pamięć przez:\n"
+                            "  * card_id LUB\n"
+                            "  * dedupe_key LUB\n"
+                            "  * keywords (co najmniej jedno słowo kluczowe).\n"
+                            "- reason: krótko wyjaśnij dlaczego.\n"
+                            "- confidence: liczba 0.0–1.0 (pewność trafności akcji).\n"
+                            "- Jeśli nie jesteś wystarczająco pewny (confidence < 0.6), NIE wykonuj akcji.\n\n"
+                            "- Jeśli type=revoke/supersede, ZAWSZE wypełnij target.keywords (min 1), nawet jeśli nie znasz card_id.\n\n"
+
+                            "PRIORYTET:\n"
+                            "- Jeśli wiadomość jednocześnie zawiera nową zasadę i odwołuje starą → wybierz memory_action.\n"
+                            "- Jeśli treść jest niejednoznaczna → zwróć null.\n\n"
+
+                            "ZWRAJASZ TYLKO JSON."
+                        )
+                        writer = LLMMemoryWriter(mgr, classifier_system_prompt)
+                        daemon_cli = MemoryDaemonClient(repo, writer, gate=gate, action_gate=action_gate)
+                        def format_memoria_report(report: dict) -> str:
+                            return (
+                                "[MEMORIA] "
+                                f"processed={report.get('processed', 0)} "
+                                f"skipped={report.get('skipped', 0)} "
+                                f"errors={report.get('errors', 0)} "
+                                f"reserved={report.get('reserved', 0)} "
+                                f"dry_run={report.get('dry_run', False)} "
+                                f"t={report.get('duration_sec', '?')}s"
+                            )
+                        
+                        report = daemon_cli.run(batch_size=20)
+
+                        str_report = format_memoria_report(report)
+                        print(str_report)
+                        handle_error(f"Działąnie daemona Memoria {str_report}\n")
 
                 elif name == 'checkpoint_60s':
                     

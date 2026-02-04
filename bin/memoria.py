@@ -1199,12 +1199,14 @@ class MemoryDaemonClient:
     Klient do uruchamiania przetwarzania LTM (daemon).
     """
 
-    def __init__(self, db, llm_writer, *, write_cards=True):
+    def __init__(self, db, llm_writer, gate, action_gate, *, write_cards=True):
         self.db = db
         self.daemon = LongTermMemoryDaemon(
-            db=db,
+            repo=db,
             llm_writer=llm_writer,
-            write_cards=write_cards
+            gate=gate,
+            write_cards=write_cards,
+            action_gate=action_gate
         )
 
     def run(self, batch_size: int = 20, dry_run: bool = False) -> dict:
