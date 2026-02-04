@@ -437,6 +437,56 @@ class LLMMemoryWriter:
 
         return mc
 
+SG = set(['a','ą','e','ę','i','o','ó','u','y','A','Ą','E','Ę','I','O','Ó','U','Y'])
+
+def sam_g(x: str) -> bool:
+    return x in SG
+
+def sufix_pl(word: str) -> str:
+    if not word:
+        return word
+    word = str(word)
+
+    i = len(word) - 1
+    while i > 0 and not sam_g(word[i]):
+        i -= 1
+    if i <= 0:
+        return word
+
+    start = max(0, i - 2)
+    pre = word[:i]
+
+    for tri in ("dż", "dź"):
+        if pre.endswith(tri):
+            start = max(0, i - 3)
+            break
+    else:
+        for di in ("ch", "cz", "rz", "dz"):
+            if pre.endswith(di):
+                start = max(0, i - 3)
+                break
+
+    return word[start:]
+
+
+def normalize_keyword_pl(word: str) -> str:
+    w = (word or "").strip().lower()
+    if not w:
+        return ""
+
+    w = re.sub(r"[^a-z0-9ąćęłńóśźż]", "", w)
+    if len(w) <= 2:
+        return w
+
+    try:
+        s = sufix_pl(w)
+        s = (s or "").strip().lower()
+        if len(s) < 2:
+            return w[:4]
+        return s
+    except Exception:
+        return w[:4]
+
 
 
 class LongTermMemoryDaemon:
@@ -465,67 +515,42 @@ class LongTermMemoryDaemon:
         card_id = target.get("card_id")
         dedupe_key = target.get("dedupe_key")
 
-        keywords = target.get("keywords") or []
+        
 
-        def _stem_pl(w: str) -> str:
-            w = (w or "").strip().lower()
-            w = re.sub(r"[^a-z0-9ąćęłńóśźż]", "", w)
-            if len(w) <= 3:
-                return w
-            for suf in ("ami","ach","owi","owe","owego","owych","em","ie","y","a","u","ów","om","e","i","ą","ę"):
-                if w.endswith(suf) and len(w) - len(suf) >= 3:
-                    return w[:-len(suf)]
-            return w[:4]
+
+        keywords = target.get("keywords") or []
 
         # FALLBACK 1: jeśli brak keywords, wyciągnij je z raw_text
         if not keywords and raw_text:
             low = raw_text.lower()
-            stop = {"odwołuję","odwoluje","zasadę","zasade","chwilowo","żadnej","zadnej","kawy","kawa","do","w","i","na","przy","podczas","testów","testow","od","teraz"}
+            stop = {
+                "odwołuję","odwoluje","cofam","anuluj","usun","usuń",
+                "zasada","zasadę","zasade","chwilowo","od","teraz",
+                "w","we","i","a","oraz","na","do","z","za","przy","podczas","dla",
+                "jest","nie","brak","żadnej","zadnej"
+            }
             tokens = [t.strip(".,;:!?()[]\"'") for t in low.split()]
             tokens = [t for t in tokens if len(t) >= 3 and t not in stop]
-            forced = []
-            if "kawa" in low or "kawy" in low:
-                forced.append("kawa")
-            if "test" in low:
-                forced.append("test")
-            keywords = forced + tokens[:3]
+            keywords = tokens[:6]
 
-        # STEMPING ZAWSZE (niezależnie od źródła)
-        keywords = [_stem_pl(k) for k in keywords if k]
-        print(f"[LTM] action keywords(stemmed)={keywords} msg_id={message_id}")
+        # NORMALIZACJA ZAWSZE (LLM + fallback)
+        keywords = [normalize_keyword_pl(k) for k in keywords if k]
+
+        # dedup + filtr długości (żeby nie szukać po "ie"/"a"/itp.)
+        uniq = []
+        seen = set()
+        for k in keywords:
+            if not k or len(k) < 2:
+                continue
+            if k in seen:
+                continue
+            seen.add(k)
+            uniq.append(k)
+        keywords = uniq[:6]
 
 
+        print(f"[LTM] action keywords(norm)={keywords} msg_id={message_id}")
 
-        # keywords = target.get("keywords") or []
-
-        # # FALLBACK 1: jeśli brak keywords, wyciągnij je z raw_text
-        # if not keywords and raw_text:
-        #     low = raw_text.lower()
-        #     # proste odfiltrowanie słów funkcyjnych
-        #     stop = {"odwołuję","odwoluje","zasadę","zasade","chwilowo","żadnej","zadnej","kawy","kawa","do","w","i","na","przy","podczas","testów","testow","od","teraz"}
-        #     tokens = [t.strip(".,;:!?()[]\"'") for t in low.split()]
-        #     tokens = [t for t in tokens if len(t) >= 3 and t not in stop]
-        #     # jeśli user pisał o kawie/testach, dorzuć to jako keywordy obowiązkowo
-        #     forced = []
-        #     if "kawa" in low or "kawy" in low:
-        #         forced.append("kawa")
-        #     if "test" in low:
-        #         forced.append("test")
-        #     keywords = forced + tokens[:3]  # max 4-5 słów
-
-        #     # normalizacja PL: tniemy do rdzeni żeby LIKE łapał odmiany (kawa/kawy, testy/testów)
-        #     def _stem_pl(w: str) -> str:
-        #         w = (w or "").strip().lower()
-        #         w = re.sub(r"[^a-z0-9ąćęłńóśźż]", "", w)
-        #         if len(w) <= 3:
-        #             return w
-        #         # prosta heurystyka: obetnij końcówki fleksyjne
-        #         for suf in ("ami","ach","owi","owe","owego","owych","ami","em","ie","y","a","u","ów","om","e","i","ą","ę"):
-        #             if w.endswith(suf) and len(w) - len(suf) >= 3:
-        #                 return w[:-len(suf)]
-        #         return w[:4]  # fallback: krótki rdzeń
-
-        #     keywords = [_stem_pl(k) for k in keywords if k]
 
 
         # 1) znajdź kartę po dedupe
@@ -568,15 +593,20 @@ class LongTermMemoryDaemon:
             return None
 
         # OR do “kandydatów”
-        where_or = " OR ".join(["summary LIKE %s" for _ in kws])
-
-        # ranking: zliczamy trafienia (CASE WHEN ...)
-        score_expr = " + ".join([f"(CASE WHEN summary LIKE %s THEN 1 ELSE 0 END)" for _ in kws])
+        where_or = " OR ".join(["(summary LIKE %s OR facts_json LIKE %s)" for _ in kws])
+        score_expr = " + ".join([f"(CASE WHEN (summary LIKE %s OR facts_json LIKE %s) THEN 1 ELSE 0 END)" for _ in kws])
 
         params = [int(chat_id)]
-        params += [f"%{k}%" for k in kws]          # do WHERE OR
-        params += [f"%{k}%" for k in kws]          # do score_expr
+        # WHERE: po 2 paramy na keyword
+        for k in kws:
+            like = f"%{k}%"
+            params += [like, like]
+        # SCORE: po 2 paramy na keyword
+        for k in kws:
+            like = f"%{k}%"
+            params += [like, like]
         params += [int(limit)]
+
 
         q = f"""
         SELECT id,
@@ -708,45 +738,6 @@ class LongTermMemoryDaemon:
                 self.repo.close_message(msg_id, "skipped", error_text=None)
                 results["skipped"] += 1
 
-                
-
-
-
-
-                # if classification is None:
-                #     if not dry_run:
-                #         self.repo.close_message(msg_id, "skipped", error_text=None)
-                #     results["skipped"] += 1
-                #     continue
-
-                # if dry_run:
-                #     # tylko symulacja: nie dotykamy DB poza rezerwacją
-                #     results["processed"] += 1
-                #     continue
-
-                # # Jeśli write_cards=False, to tylko oznaczamy processed/skipped bez tabel memory_*
-                # if self.write_cards:
-                #     # CACHE HIT: nie wołamy LLM i nie robimy upsert – tylko bump wersji + źródło
-                #     if classification.get("_cache_hit"):
-                #         card_id = int(classification["memory_card_id"])
-                #         print(f"[LTM] CACHE HIT dedupe={classification.get('dedupe_key')[:10]}.. -> card_id={card_id}")
-                #         self.bump_memory_card_signal(card_id, bump_score=True)
-                #         self.link_source_message(card_id, msg_id)
-
-                #     else:
-                #         card_id = self.upsert_memory_card(classification)
-                #         dk = classification.get("dedupe_key")
-                #         if dk:
-                #             batch_cache[dk] = int(card_id)
-
-                #         self.link_source_message(card_id, msg_id)
-
-
-                # self.repo.close_message(msg_id, "processed", error_text=None)
-
-
-                # results["processed"] += 1
-
             except Exception as e:
                 if not dry_run:
                     self.repo.close_message(msg_id, "error", error_text=str(e)[:1000])
@@ -815,114 +806,6 @@ class LongTermMemoryDaemon:
         out["_raw_text"] = content
 
         return out
-
-
-        # user_name = row[IDX_USER_NAME]
-        # content = row[IDX_CONTENT]
-
-        # # 1) heurystyka bramkująca
-        # if self.gate:
-        #     hint = self.gate.check(user_name, content)
-        #     if hint is None:
-        #         return None
-        # else:
-        #     hint = None
-
-        # # 2) LLM (tylko jeśli mamy writer)
-        # if not self.llm_writer:
-        #     return None
-
-        # meta = {
-        #     "chat_id": 0,
-        #     "author_login": (user_name or "").strip(),
-        #     "scope_hint": (hint or {}).get("scope_hint"),
-        #     "owner_user_login": (hint or {}).get("owner_user_login"),
-        #     "owner_agent_id": (hint or {}).get("owner_agent_id"),
-        #     "dedupe_key": (hint or {}).get("dedupe_key"),
-        # }
-        # # 1.5) CACHE HIT: jeśli już mamy kartę o tym dedupe_key, nie wołamy LLM
-        # dedupe_key = meta.get("dedupe_key")
-        # if dedupe_key:
-        #     # 1) RAM cache (ten batch)
-        #     if batch_cache is not None and dedupe_key in batch_cache:
-        #         return {
-        #             "_cache_hit": True,
-        #             "memory_card_id": batch_cache[dedupe_key],
-        #             "dedupe_key": dedupe_key,
-        #         }
-
-        #     # 2) DB cache
-        #     existing_id = self.find_active_card_id_by_dedupe(chat_id=0, dedupe_key=dedupe_key)
-        #     if existing_id:
-        #         if batch_cache is not None:
-        #             batch_cache[dedupe_key] = existing_id
-        #         return {
-        #             "_cache_hit": True,
-        #             "memory_card_id": existing_id,
-        #             "dedupe_key": dedupe_key,
-        #         }
-
-
-
-        # mc = self.llm_writer.classify(content, meta, max_tokens=400)
-        # if mc is None:
-        #     return None
-        
-        # # Utrwalamy kanoniczny dedupe_key z gate'a
-        # if meta.get("dedupe_key"):
-        #     mc["dedupe_key"] = meta["dedupe_key"]
-
-
-        # # dopnij pola wymagane przez upsert w Twoim kodzie
-        # mc["chat_id"] = 0
-        # mc.setdefault("owner_user_login", meta.get("owner_user_login"))
-        # mc.setdefault("owner_agent_id", meta.get("owner_agent_id"))
-        # mc.setdefault("visibility", "all")
-        # mc.setdefault("audience_json", None)
-        # mc.setdefault("trust_level", 2)
-        # mc.setdefault("status", "active")
-
-        # return mc
-
-        # user_name = (row[IDX_USER_NAME] or "").strip().lower()
-        # content = (row[IDX_CONTENT] or "").strip()
-        # if not content:
-        #     return None
-
-        # low = content.lower()
-
-        # # 1) Bezpiecznik: nie chcemy na start pamiętać paplaniny botów.
-        # # Zmienisz to później, na razie ograniczamy źródło.
-        # ALLOW_USERS = {"michal"}   # <- dopisz inne loginy ludzi, jeśli chcesz
-        # if user_name not in ALLOW_USERS:
-        #     return None
-
-        # # 2) Markery "to jest ustalenie/procedura"
-        # MARKERS = ["zasada", "reguła", "od teraz", "ustalamy", "procedura", "zawsze rób", "nie rób", "must have"]
-        # if not any(m in low for m in MARKERS):
-        #     return None
-
-        # # 3) Minimalna karta shared
-        # summary = content.replace("\n", " ").strip()
-        # if len(summary) > 280:
-        #     summary = summary[:280].rstrip() + "…"
-
-        # return {
-        #     "chat_id": 0,                 # dopóki Messages nie ma chat_id
-        #     "scope": "shared",
-        #     "kind": "procedure",
-        #     "topic": "general",
-        #     "owner_user_login": None,
-        #     "owner_agent_id": None,
-        #     "visibility": "all",
-        #     "audience_json": None,
-        #     "score": 4,
-        #     "trust_level": 2,
-        #     "status": "active",
-        #     "ttl_days": 180,
-        #     "summary": summary,
-        #     "facts": [summary],
-        # }
 
     def find_active_card_id_by_dedupe(self, chat_id, dedupe_key):
         q = """
