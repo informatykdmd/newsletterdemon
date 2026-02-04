@@ -1,6 +1,15 @@
 from wrapper_mistral import MistralChatManager
 from config_utils import MISTRAL_API_KEY, api_key, url, tempalate_endpoit, responder_endpoit
 import connectAndQuery as cad
+import uuid
+from datetime import datetime, timedelta
+
+import connectAndQuery as cad
+
+import json
+import re
+from hashlib import sha1
+
 """
 Kolumny LTM (dodnae):
 ltm_status (new domyślnie)
@@ -12,12 +21,8 @@ ltm_processing_at
 ltm_processed_at
 👉 kiedy zakończono (processed / skipped / error)
 ltm_error
-👉 dlaczego się nie udało (jeśli się nie udało)"""
-
-import uuid
-from datetime import datetime, timedelta
-
-import connectAndQuery as cad
+👉 dlaczego się nie udało (jeśli się nie udało)
+"""
 
 
 class MessagesRepo:
@@ -241,6 +246,143 @@ IDX_LTM_PROCESSING_AT = 7
 IDX_LTM_PROCESSED_AT = 8
 IDX_LTM_ERROR = 9
 
+class HeuristicGate:
+    """
+    Szybka bramka: decyduje czy wołać LLM.
+    Zwraca:
+      - None => skip
+      - dict (partial) => kandydat dla LLM (z wstępnym scope/owner)
+    """
+
+    def __init__(self, allow_users=None):
+        self.allow_users = set([u.lower() for u in (allow_users or [])])
+
+        self.markers = [
+            "zasada:", "ustalenie:", "preferencja:", "od teraz", "ważne:",
+            "must have", "reguła", "procedura", "pipeline", "standard:"
+        ]
+
+        self.skip_patterns = [
+            r"^@help\b", r"^@ustawienia\b", r"^dzięki\b", r"^ok\b", r"^spoko\b",
+            r"^rozumiem\b"
+        ]
+
+    def check(self, user_name, content):
+        u = (user_name or "").strip().lower()
+        t = (content or "").strip()
+        if not t:
+            return None
+
+        # krótkie komendy / small talk
+        low = t.lower().strip()
+        if len(low) < 20:
+            return None
+
+        for pat in self.skip_patterns:
+            if re.search(pat, low):
+                return None
+
+        # na start ograniczamy źródło do ludzi
+        if self.allow_users and u not in self.allow_users:
+            return None
+
+        # marker pamięci
+        if not any(m in low for m in self.markers):
+            return None
+
+        # wstępne scope/owner po prefiksie
+        scope = "shared"
+        owner_user = None
+        owner_agent = None
+
+        if low.startswith("preferencja:"):
+            scope = "user"
+            owner_user = u
+
+        # prosta obsługa "gerina: ... pamiętaj" jako agent
+        if low.startswith("gerina:") or low.startswith("aifa:") or low.startswith("pionier:"):
+            if "pamiętaj" in low or "zapamiętaj" in low:
+                scope = "agent"
+                owner_agent = low.split(":", 1)[0].strip()
+
+        # dedupe key do cache/antyspamu LLM
+        norm = re.sub(r"\s+", " ", low)
+        dedupe_key = sha1(f"{scope}|{owner_user}|{owner_agent}|{norm}".encode("utf-8")).hexdigest()
+
+        return {
+            "scope_hint": scope,
+            "owner_user_login": owner_user,
+            "owner_agent_id": owner_agent,
+            "dedupe_key": dedupe_key,
+        }
+
+
+class LLMMemoryWriter:
+    """
+    Woła Mistral i zwraca dict klasyfikacji (albo None).
+    Wymusza JSON output.
+    """
+
+    def __init__(self, mgr, model_system_prompt):
+        self.mgr = mgr
+        self.system_prompt = model_system_prompt
+
+    def build_ready_hist(self, message_text, meta):
+        payload = {
+            "message": message_text,
+            "meta": meta,
+            "output_contract": {
+                "type": "memory_card_or_null",
+                "memory_card_fields": [
+                    "scope", "kind", "topic",
+                    "owner_user_login", "owner_agent_id",
+                    "score", "ttl_days",
+                    "summary", "facts"
+                ]
+            }
+        }
+        return [{"role": "user", "content": json.dumps(payload, ensure_ascii=False)}]
+
+    def classify(self, message_text, meta, max_tokens=400):
+        ready_hist = self.build_ready_hist(message_text, meta)
+        out = self.mgr.continue_conversation_with_system(
+            ready_hist,
+            self.system_prompt,
+            max_tokens=max_tokens
+        )
+
+        # out może być stringiem albo strukturą zależnie od wrappera; zakładam string
+        if not out:
+            return None
+
+        # próbujemy wyciągnąć JSON (na wypadek gdy model doda tekst)
+        txt = out.strip()
+        j = None
+        try:
+            j = json.loads(txt)
+        except Exception:
+            m = re.search(r"\{.*\}", txt, flags=re.S)
+            if m:
+                try:
+                    j = json.loads(m.group(0))
+                except Exception:
+                    return None
+            else:
+                return None
+
+        if not isinstance(j, dict):
+            return None
+
+        # kontrakt: {"memory_card": {...}} albo {"memory_card": null}
+        mc = j.get("memory_card", None)
+        if mc is None:
+            return None
+        if not isinstance(mc, dict):
+            return None
+
+        return mc
+
+
 
 class LongTermMemoryDaemon:
     """
@@ -253,9 +395,12 @@ class LongTermMemoryDaemon:
     - w razie błędu -> error
     """
 
-    def __init__(self, repo, write_cards=False):
+    def __init__(self, repo, write_cards=False, gate=None, llm_writer=None):
         self.repo = repo
         self.write_cards = bool(write_cards)
+        self.gate = gate
+        self.llm_writer = llm_writer
+
 
     def run_once(self, batch_size=20, dry_run=False, token=None):
         """
@@ -309,45 +454,84 @@ class LongTermMemoryDaemon:
         return results
 
     def classify_message(self, row):
-        user_name = (row[IDX_USER_NAME] or "").strip().lower()
-        content = (row[IDX_CONTENT] or "").strip()
-        if not content:
+        user_name = row[IDX_USER_NAME]
+        content = row[IDX_CONTENT]
+
+        # 1) heurystyka bramkująca
+        if self.gate:
+            hint = self.gate.check(user_name, content)
+            if hint is None:
+                return None
+        else:
+            hint = None
+
+        # 2) LLM (tylko jeśli mamy writer)
+        if not self.llm_writer:
             return None
 
-        low = content.lower()
-
-        # 1) Bezpiecznik: nie chcemy na start pamiętać paplaniny botów.
-        # Zmienisz to później, na razie ograniczamy źródło.
-        ALLOW_USERS = {"michal"}   # <- dopisz inne loginy ludzi, jeśli chcesz
-        if user_name not in ALLOW_USERS:
-            return None
-
-        # 2) Markery "to jest ustalenie/procedura"
-        MARKERS = ["zasada", "reguła", "od teraz", "ustalamy", "procedura", "zawsze rób", "nie rób", "must have"]
-        if not any(m in low for m in MARKERS):
-            return None
-
-        # 3) Minimalna karta shared
-        summary = content.replace("\n", " ").strip()
-        if len(summary) > 280:
-            summary = summary[:280].rstrip() + "…"
-
-        return {
-            "chat_id": 0,                 # dopóki Messages nie ma chat_id
-            "scope": "shared",
-            "kind": "procedure",
-            "topic": "general",
-            "owner_user_login": None,
-            "owner_agent_id": None,
-            "visibility": "all",
-            "audience_json": None,
-            "score": 4,
-            "trust_level": 2,
-            "status": "active",
-            "ttl_days": 180,
-            "summary": summary,
-            "facts": [summary],
+        meta = {
+            "chat_id": 0,
+            "author_login": (user_name or "").strip(),
+            "scope_hint": (hint or {}).get("scope_hint"),
+            "owner_user_login": (hint or {}).get("owner_user_login"),
+            "owner_agent_id": (hint or {}).get("owner_agent_id"),
+            "dedupe_key": (hint or {}).get("dedupe_key"),
         }
+
+        mc = self.llm_writer.classify(content, meta, max_tokens=400)
+        if mc is None:
+            return None
+
+        # dopnij pola wymagane przez upsert w Twoim kodzie
+        mc["chat_id"] = 0
+        mc.setdefault("owner_user_login", meta.get("owner_user_login"))
+        mc.setdefault("owner_agent_id", meta.get("owner_agent_id"))
+        mc.setdefault("visibility", "all")
+        mc.setdefault("audience_json", None)
+        mc.setdefault("trust_level", 2)
+        mc.setdefault("status", "active")
+
+        return mc
+
+        # user_name = (row[IDX_USER_NAME] or "").strip().lower()
+        # content = (row[IDX_CONTENT] or "").strip()
+        # if not content:
+        #     return None
+
+        # low = content.lower()
+
+        # # 1) Bezpiecznik: nie chcemy na start pamiętać paplaniny botów.
+        # # Zmienisz to później, na razie ograniczamy źródło.
+        # ALLOW_USERS = {"michal"}   # <- dopisz inne loginy ludzi, jeśli chcesz
+        # if user_name not in ALLOW_USERS:
+        #     return None
+
+        # # 2) Markery "to jest ustalenie/procedura"
+        # MARKERS = ["zasada", "reguła", "od teraz", "ustalamy", "procedura", "zawsze rób", "nie rób", "must have"]
+        # if not any(m in low for m in MARKERS):
+        #     return None
+
+        # # 3) Minimalna karta shared
+        # summary = content.replace("\n", " ").strip()
+        # if len(summary) > 280:
+        #     summary = summary[:280].rstrip() + "…"
+
+        # return {
+        #     "chat_id": 0,                 # dopóki Messages nie ma chat_id
+        #     "scope": "shared",
+        #     "kind": "procedure",
+        #     "topic": "general",
+        #     "owner_user_login": None,
+        #     "owner_agent_id": None,
+        #     "visibility": "all",
+        #     "audience_json": None,
+        #     "score": 4,
+        #     "trust_level": 2,
+        #     "status": "active",
+        #     "ttl_days": 180,
+        #     "summary": summary,
+        #     "facts": [summary],
+        # }
 
 
     def upsert_memory_card(self, c):
@@ -646,6 +830,9 @@ def seed_memory_card_if_empty():
 
 
 if __name__ == "__main__":
+
+    mgr = MistralChatManager(MISTRAL_API_KEY)
+
     repo = MessagesRepo()
 
     DRY_RUN = False
@@ -660,8 +847,31 @@ if __name__ == "__main__":
     print(rows_new[-1] if rows_new else None)
 
     # 2) demon: jeden przebieg = jedna rezerwacja
-    daemon = LongTermMemoryDaemon(repo, write_cards=True)
+    # daemon = LongTermMemoryDaemon(repo, write_cards=True)
+    # res = daemon.run_once(batch_size=BATCH_SIZE, dry_run=DRY_RUN)
+    classifier_system_prompt = (
+        "Jesteś klasyfikatorem pamięci długoterminowej dla czatu grupowego.\n"
+        "Twoje zadanie: na podstawie podanej wiadomości zwrócić WYŁĄCZNIE poprawny JSON.\n"
+        "Jeśli wiadomość nie nadaje się do pamięci, zwróć: {\"memory_card\": null}\n"
+        "Jeśli się nadaje, zwróć: {\"memory_card\": {...}}\n"
+        "Zasady:\n"
+        "- Nie zapisuj komend, small talku, pytań bez ustalenia.\n"
+        "- Summary musi być neutralne, bez emocji, 1-2 zdania.\n"
+        "- Facts to lista 1-5 punktów.\n"
+        "- scope: shared/user/agent zgodnie z meta.scope_hint jeśli jest.\n"
+        "- kind: procedure/decision/profile/temp\n"
+        "- topic: infra/db/marketing/memory/general\n"
+        "- score 1..5 (5 = bardzo ważne)\n"
+        "- ttl_days: 30/90/180/365 lub null\n"
+        "Zwracaj TYLKO JSON. Bez markdown, bez komentarzy."
+    )
+
+    gate = HeuristicGate(allow_users=["michal"])  # na start tylko ludzie
+    writer = LLMMemoryWriter(mgr, classifier_system_prompt)
+
+    daemon = LongTermMemoryDaemon(repo, write_cards=True, gate=gate, llm_writer=writer)
     res = daemon.run_once(batch_size=BATCH_SIZE, dry_run=DRY_RUN)
+
 
     print(f"\nDAEMON RUN (dry_run={DRY_RUN}):", res)
 
@@ -674,8 +884,8 @@ if __name__ == "__main__":
         for r in tok_rows[:3]:
             print("  ", (r[0], r[1], r[5], r[7], r[8]))  # id, user, ltm_status, proc_at, processed_at
 
-    # test memory card
-    seed_memory_card_if_empty()
+    # # test memory card
+    # seed_memory_card_if_empty()
 
 
     # 4) selector: złożenie kontekstu (memory empty na tym etapie)
