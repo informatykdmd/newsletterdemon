@@ -559,7 +559,10 @@ class LongTermMemoryDaemon:
                 "w","we","i","a","oraz","na","do","z","za","przy","podczas","dla",
                 "jest","nie","brak","żadnej","zadnej"
             }
-            tokens = [t.strip(".,;:!?()[]\"'") for t in low.split()]
+            # tokens = [t.strip(".,;:!?()[]\"'") for t in low.split()]
+            low2 = re.sub(r"[^a-z0-9ąćęłńóśźż]+", " ", low)
+            tokens = [t for t in low2.split() if t]
+
             tokens = [t for t in tokens if len(t) >= 3 and t not in stop]
             keywords = tokens[:6]
 
