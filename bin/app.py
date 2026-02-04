@@ -220,8 +220,6 @@ def prepare_prompt(began_prompt):
             cur_nick_l = str(ul).lower()
             if cur_bot_l == "aifa":
                 block_for_ready_hist_aifa = mem.get_long_memory(
-                    chat_id=0,
-                    user_login = cur_nick_l,
                     agent_id=cur_bot_l,
                     budget_chars=1200
                 )
@@ -235,8 +233,6 @@ def prepare_prompt(began_prompt):
 
             if cur_bot_l == "gerina":
                 block_for_ready_hist_gerina = mem.get_long_memory(
-                    chat_id=0,
-                    user_login = cur_nick_l,
                     agent_id=cur_bot_l,
                     budget_chars=1200
                 )
@@ -249,8 +245,6 @@ def prepare_prompt(began_prompt):
 
             if cur_bot_l == "pionier":
                 block_for_ready_hist_pionier = mem.get_long_memory(
-                    chat_id=0,
-                    user_login = cur_nick_l,
                     agent_id=cur_bot_l,
                     budget_chars=1200
                 )

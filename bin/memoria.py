@@ -1170,8 +1170,6 @@ class LongTermMemoryClient:
 
     def get_long_memory(
         self,
-        chat_id: int,
-        user_login: str | None = None,
         agent_id: str | None = None,
         budget_chars: int = 1200
     ) -> str:
@@ -1181,18 +1179,15 @@ class LongTermMemoryClient:
         albo pusty string jeśli brak pamięci.
         """
 
-        # aktywni userzy – na razie tylko requester
-        active_users = [user_login] if user_login else []
-
-        block = self.selector.build_context(
-            chat_id=chat_id,
+        ctx = self.selector.build_context(
             agent_id=agent_id,
-            last_hour_messages=[],   # tu już NIE wchodzimy
-            active_users=active_users,
+            window_minutes=60,
             budget_chars=budget_chars,
         )
 
-        return block or ""
+        # build_context zwraca dict
+        return (ctx.get("memory_block") or "").strip()
+
 
 class MemoryDaemonClient:
     """
@@ -1375,7 +1370,7 @@ if __name__ == "__main__":
     mem = LongTermMemoryClient(repo)
 
     block = mem.get_long_memory(
-        chat_id=0,
+        # chat_id=0,
         user_login="michal",
         agent_id="aifa",
         budget_chars=1200
