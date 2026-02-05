@@ -226,10 +226,11 @@ def prepare_prompt(began_prompt):
                     budget_chars=1200
                 )
                 if block_for_ready_hist_aifa:
+                    block_for_ready_hist_aifa = f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_aifa}"
                     ready_hist_aifa.insert(0, {
                         "role": "user",
                         "author": cur_nick_l,
-                        "content": f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_aifa}"
+                        "content": block_for_ready_hist_aifa
                     })
                     print("block_for_ready_hist_aifa:", block_for_ready_hist_aifa)  # block -> str
 
@@ -241,9 +242,10 @@ def prepare_prompt(began_prompt):
                     budget_chars=1200
                 )
                 if block_for_ready_hist_gerina:
+                    block_for_ready_hist_gerina = f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_gerina}"
                     ready_hist_gerina.insert(0, {
                         "role": "user",
-                        "content": f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_gerina}"
+                        "content": block_for_ready_hist_gerina
                     })
                     print("block_for_ready_hist_gerina", block_for_ready_hist_gerina)  # block -> str
 
@@ -255,9 +257,10 @@ def prepare_prompt(began_prompt):
                     budget_chars=1200
                 )
                 if block_for_ready_hist_pionier:
+                    block_for_ready_hist_pionier = f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_pionier}"
                     ready_hist_pionier.insert(0, {
                         "role": "user",
-                        "content": f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_pionier}"
+                        "content": block_for_ready_hist_pionier
                     })
                     print("block_for_ready_hist_pionier", block_for_ready_hist_pionier)  # block -> str
 
