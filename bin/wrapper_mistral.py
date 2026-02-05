@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 from typing import Optional
 from mistralai import Mistral
 from mistralai.utils import BackoffStrategy, RetryConfig
@@ -29,6 +30,7 @@ def _ollama_chat(
     payload = {
         "model": model,
         "stream": False,
+        "keep_alive": "10m",  # trzyma model “rozgrzany” w RAM, mniej timeoutów po 1. zapytaniu
         "messages": messages,
         "options": {
             "temperature": temperature,
@@ -38,12 +40,21 @@ def _ollama_chat(
         },
     }
 
+
     try:
-        r = requests.post(
-            url,
-            json=payload,
-            timeout=(2, total_timeout),
-        )
+        try:
+            r = requests.post(
+                url,
+                json=payload,
+                timeout=(2, total_timeout),
+            )
+        except requests.exceptions.ReadTimeout:
+            # typowo: cold start / dogrywanie modelu -> dajemy drugą szansę z większym limitem
+            r = requests.post(
+                url,
+                json=payload,
+                timeout=(2, min(total_timeout * 2, 600.0)),
+            )
         r.raise_for_status()
         data = r.json() or {}
         msg = data.get("message") or {}
@@ -414,6 +425,11 @@ class MistralChatManager:
                 print(f"[Mistral SDK ERROR] {repr(e)}")
 
             # Fallback na Ollamę tylko przy błędach "chwilowych" (429/5xx/timeout itp.)
+            sc = _extract_status_code(e)
+            if sc == 429:
+                # mały oddech przy rate limit – często wystarcza i zmniejsza spam fallbacków
+                time.sleep(min(base_delay, 2.0))
+
             if _is_retryable(e):
                 try:
                     fallback_text = _ollama_chat(
@@ -425,7 +441,7 @@ class MistralChatManager:
                         logger=logger,
                     )
 
-                    print(f"[Ollama FALLBACK TEXT]\n{fallback_text}[END]\n")
+                    print(f"[Ollama FALLBACK TEXT]\n{fallback_text}\n[END]\n")
 
                     return self._normalize_content_to_text(fallback_text)
                 except Exception as e2:
