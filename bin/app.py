@@ -1339,7 +1339,7 @@ def main():
                                 hist = list(final_prompt.get("ready_hist", []))
                                 mgr = MistralChatManager(mgr_api_key)
                                 witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
-                                bot_ident = 'niezidentyfikowana'
+                                bot_rotation = 'niezidentyfikowana'
                                 acive_bot_valided = False
                                 if hist and isinstance(hist[-1], dict):
                                     last_context = "\n".join(
@@ -1372,17 +1372,17 @@ def main():
                                         )
                                         if bot_ident:
                                             acive_bot_valided = True
-                                        bot_rotation = bot_ident
-                                        time.sleep(3)
+                                            bot_rotation = bot_ident
+                                            time.sleep(3)
+                                        else: bot_rotation = 'aifa'
+                                    else: bot_rotation = 'aifa'
 
-                                    else:
-                                        bot_rotation = 'aifa'
 
-
-                                if bot_ident == 'niezidentyfikowana':
+                                if bot_rotation == 'niezidentyfikowana':
                                     bot_rotation = random.choice(['gerina', 'pionier', 'aifa', 'razem', 'żaden'])
 
                                 print("bot_rotation", bot_rotation)
+                                print("acive_bot_valided", acive_bot_valided)
 
                                 
                                 # Aifa
