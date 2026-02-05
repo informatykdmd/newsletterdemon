@@ -1543,8 +1543,26 @@ def main():
 
                                             if not acive_bot_valided:
                                                 # snapshot, żeby wątek nie dostał referencji modyfikowanej w kolejnych iteracjach
-                                                hist_snapshot = list(hist_aifa)
+                                                hist_snapshot = list(hist_aifa[-12:])
+                                                                                                
+                                                extra_tech_hist_aifa = (
+                                                    "\n[warning]\n"
+                                                    "Uwaga: w systemie mogą występować chwilowe utrudnienia w działaniu funkcji opartych o SI. "
+                                                    "Część agentów może być tymczasowo niedostępna lub działać w ograniczonym zakresie. "
+                                                    "Prace nad usunięciem problemów są w toku. Przepraszamy za utrudnienia.\n"
+                                                    "\n"
+                                                    "- Jeśli odpowiadasz po chwili ciszy lub po kilku wiadomościach użytkownika, "
+                                                    "rozpocznij od 1 krótkiego zdania informującego o utrudnieniach (bez technikaliów), "
+                                                    "a następnie normalnie przejdź do pomocy.\n"
+                                                    "- Format: możesz używać lekkiego markdown (###, **, listy, `code`).\n"
+                                                    "- Bez klasycznych powitań.\n"
+                                                    "- Bez meta-komentarzy.\n"
+                                                    "- Anty-echo: nie kopiuj kontekstu ani cudzych odpowiedzi; dodaj nową wartość.\n"
+                                                )
 
+                                                hist_snapshot = arm_history_with_context(hist_snapshot, extra_tech_hist_aifa)
+
+                                                print("⚠️ warning index OK:", len(hist_snapshot) - 2)
                                                 print(f"🧵 AIFA BG | start task #{i} | routing_valid={acive_bot_valided}")
 
                                                 t = threading.Thread(target=_bg_aifa_job, args=(i, hist_snapshot, sys_prmt_aifa), daemon=True)
