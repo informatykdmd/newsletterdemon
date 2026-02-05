@@ -361,6 +361,7 @@ class MistralChatManager:
         total_timeout: float = 120.0,  # jw.
         fail_silently: bool = True,
         logger=None,
+        mistral: bool = True,
     ) -> Optional[str]:
         """
         Wywołanie przez oficjalny SDK (mistralai).
@@ -368,6 +369,27 @@ class MistralChatManager:
         - fail_silently (zwraca "" zamiast wyjątku)
         - jeden spójny parsing odpowiedzi do stringa
         """
+                # ŚCIEŻKA OLLAMA (osobna, bez mieszania w wyjątki Mistrala)
+        if not mistral:
+            try:
+                txt = _ollama_chat(
+                    messages=messages,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    total_timeout=total_timeout,
+                    fail_silently=fail_silently,
+                    logger=logger,
+                )
+                return self._normalize_content_to_text(txt)
+            except Exception as e:
+                if logger:
+                    logger.error(f"Ollama error: {repr(e)}")
+                else:
+                    print(f"[Ollama ERROR] {repr(e)}")
+                if fail_silently:
+                    return ""
+                raise
+
         try:
             # Retry/backoff w SDK (opcjonalne, ale mega wygodne)
             retry_cfg = RetryConfig(
@@ -385,8 +407,8 @@ class MistralChatManager:
                 api_key=self.api_key,
                 server=self.server,
                 retry_config=retry_cfg,
-            ) as mistral:
-                res = mistral.chat.complete(
+            ) as mistral_client:
+                res = mistral_client.chat.complete(
                     model=self.model,
                     messages=messages,
                     temperature=temperature,
@@ -424,49 +446,23 @@ class MistralChatManager:
             else:
                 print(f"[Mistral SDK ERROR] {repr(e)}")
 
-            # Fallback na Ollamę tylko przy błędach "chwilowych" (429/5xx/timeout itp.)
-            sc = _extract_status_code(e)
-            if sc == 429:
-                # mały oddech przy rate limit – często wystarcza i zmniejsza spam fallbacków
-                time.sleep(min(base_delay, 2.0))
-
-            if _is_retryable(e):
-                try:
-                    fallback_text = _ollama_chat(
-                        messages=messages,
-                        max_tokens=max_tokens,
-                        temperature=temperature,
-                        total_timeout=total_timeout,
-                        fail_silently=fail_silently,
-                        logger=logger,
-                    )
-
-                    print(f"[Ollama FALLBACK TEXT]\n{fallback_text}\n[END]\n")
-
-                    return self._normalize_content_to_text(fallback_text)
-                except Exception as e2:
-                    if logger:
-                        logger.error(f"Ollama fallback error: {repr(e2)}")
-                    else:
-                        print(f"[Ollama FALLBACK ERROR] {repr(e2)}")
-
             if fail_silently:
                 return ""
             raise
 
 
-    def text_response(self, user_message, max_tokens=500):
+    def text_response(self, user_message, max_tokens=500, mistral: bool = True):
         messages = [
             {"role": "user", "content": user_message}
         ]
-        return self._post(messages, max_tokens=max_tokens)
+        return self._post(messages, max_tokens=max_tokens, mistral=mistral)
 
-    def categorize_response(self, user_message, categories, max_tokens=100):
+    def categorize_response(self, user_message, categories, max_tokens=100, mistral: bool = True):
         prompt = f"Wybierz jedną kategorię spośród: {', '.join(categories)}. Zwróć tylko nazwę kategorii."
         response = self._post([
             {"role": "system", "content": prompt},
             {"role": "user", "content": user_message}
-        ], max_tokens=max_tokens)
+        ], max_tokens=max_tokens, mistral=mistral)
 
         cleaned = response.strip().lower()
         categories_l = [c.lower() for c in categories]
@@ -484,6 +480,7 @@ class MistralChatManager:
         temperature: float = 0.0,
         system_prompt: str = None,
         user_prompt: str = None,
+        mistral: bool = True
     ) -> str:
         """
         Klasyfikuje treść z formularza kontaktowego jako 'SPAM' lub 'WIADOMOŚĆ'.
@@ -537,6 +534,7 @@ class MistralChatManager:
             ],
             max_tokens=max_tokens,
             temperature=temperature,
+            mistral=mistral
         )
 
         raw = (response or "").strip()
@@ -554,7 +552,7 @@ class MistralChatManager:
         # Ostatecznie: domyślnie 'WIADOMOŚĆ' (zgodnie z polityką)
         return labels[1] if len(labels) > 1 else "WIADOMOŚĆ"
 
-    def translate(self, text: str, target_lang: str = "pl", source_lang: str | None = None, max_tokens: int = 1200) -> str:
+    def translate(self, text: str, target_lang: str = "pl", source_lang: str | None = None, max_tokens: int = 1200, mistral: bool = True) -> str:
         lang_info = f"z języka {source_lang} " if source_lang else "z wykryciem języka źródłowego "
         system_prompt = (
             f"Jesteś profesjonalnym tłumaczem. Przetłumacz poniższy tekst {lang_info}"
@@ -569,10 +567,11 @@ class MistralChatManager:
             {"role": "user", "content": text}],
             max_tokens=max_tokens,
             temperature=0.1,
+            mistral=mistral
         )
 
     
-    def multi_categorize_response(self, user_message, categories, max_tokens=1500):
+    def multi_categorize_response(self, user_message, categories, max_tokens=1500, mistral: bool = True):
         prompt = f"Wybierz nabrdziej pasujące kategorie do kontekstu, spośród: {', '.join(categories)}. Uzupełnij listę obiektu json."
         context_prompt = (
             "KONTEKST:\n"
@@ -583,14 +582,14 @@ class MistralChatManager:
         input_json = {
             "wybrane_kategorie": []
         }
-        response = self.json_completion(input_json, context_prompt=context_prompt, return_json=True, max_tokens=max_tokens)
+        response = self.json_completion(input_json, context_prompt=context_prompt, return_json=True, max_tokens=max_tokens, mistra=mistral)
         if "wybrane_kategorie" in response:
             if isinstance(response.get("wybrane_kategorie", None), list):
                 return response.get("wybrane_kategorie", [])
         return []
 
     def json_completion(self, input_json, history=None, instruction="Uzupełnij wartości w tym JSON-ie. Odpowiedź musi być kodem JSON.",
-                        context_prompt=None, return_json=False, max_tokens=3000):
+                        context_prompt=None, return_json=False, max_tokens=3000, mistral: bool = True):
         if history is None or not isinstance(history, list):
             history = []
 
@@ -610,7 +609,7 @@ class MistralChatManager:
         messages.append({"role": "user", "content": user_prompt})
 
 
-        raw_output = self._post(messages, max_tokens=max_tokens, temperature=.9)
+        raw_output = self._post(messages, max_tokens=max_tokens, temperature=.9, mistral=mistral)
 
         # print("[MISTRAL] raw_output", raw_output)
 
@@ -625,41 +624,53 @@ class MistralChatManager:
 
         return raw_output
 
-    def continue_conversation(self, history, new_user_message, max_tokens=500, temperature: float = 0.7):
+    def continue_conversation(self, history, new_user_message, max_tokens=500, temperature: float = 0.7, mistral: bool = True):
         messages = history + [{"role": "user", "content": new_user_message}]
-        return self._post(messages, max_tokens=max_tokens, temperature=temperature)
+        return self._post(messages, max_tokens=max_tokens, temperature=temperature, mistral=mistral)
     
     def continue_conversation_with_system(
             self, history, 
             system_prompt="Prowadzisz normalną rozmowę w luźnym stylu.", 
             max_tokens=500, 
-            temperature: float = 0.7):
+            temperature: float = 0.7,
+            mistral: bool = True
+        ):
         messages = [{"role": "system", "content": system_prompt}] + history
-        return self._post(messages, max_tokens=max_tokens, temperature=temperature)
+        return self._post(messages, max_tokens=max_tokens, temperature=temperature, mistral=mistral)
 
-    def summarize(self, text, max_tokens=500):
+    def summarize(self, text, max_tokens=500, mistral: bool = True):
         messages = [
             {"role": "system", "content": "Streść poniższy tekst w kilku punktach."},
             {"role": "user", "content": text}
         ]
-        return self._post(messages, max_tokens=max_tokens)
+        return self._post(messages, max_tokens=max_tokens, mistral=mistral)
 
-    def synthesize(self, text, max_tokens=100):
+    def synthesize(self, text, max_tokens=100, mistral: bool = True):
         messages = [
             {"role": "system", "content": "Zsyntetyzuj poniższy tekst do jednego słowa, które najlepiej oddaje jego sens. Zwróć tylko to jedno słowo."},
             {"role": "user", "content": text}
         ]
-        return self._post(messages, max_tokens=max_tokens).strip()
+        return self._post(messages, max_tokens=max_tokens, mistral=mistral).strip()
 
 
-    def tone_shift(self, text, tone="formalny", max_tokens=500):
+    def tone_shift(self, text, tone="formalny", max_tokens=500, mistral: bool = True):
         messages = [
             {"role": "system", "content": f"Przekształć poniższy tekst na ton: {tone}"},
             {"role": "user", "content": text}
         ]
-        return self._post(messages, max_tokens=max_tokens)
+        return self._post(messages, max_tokens=max_tokens, mistral=mistral)
     
-    def interface(self, context_prompt, json_template: dict, instruction: str, history=None, max_attempts=15, as_string=False, max_tokens=3200):
+    def interface(
+            self, 
+            context_prompt, 
+            json_template: dict, 
+            instruction: str, 
+            history=None, 
+            max_attempts=15, 
+            as_string=False, 
+            max_tokens=3200,
+            mistral: bool = True
+            ):
         """
         Metoda wyboru interfejsu: zmienia wartości z false na true zgodnie z instrukcją, bez zmiany kluczy.
 
@@ -686,7 +697,8 @@ class MistralChatManager:
                 context_prompt=context_prompt,
                 history=history,
                 return_json=True,
-                max_tokens=max_tokens
+                max_tokens=max_tokens,
+                mistral=mistral
             )
             # print(attempt, "response_raw", response_raw)
 

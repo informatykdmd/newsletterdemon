@@ -39,7 +39,7 @@ def get_messages(flag='all'):
 
 def collecting_hist():
     return prepare_shedule.connect_to_database(
-        """SELECT user_name, content FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR ORDER BY timestamp ASC;"""
+        """SELECT user_name, content FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR ORDER BY timestamp ASC LIMIT 12;"""
     )
 
 def get_campains_id_descript_dates() -> str:
@@ -1340,9 +1340,10 @@ def main():
                                 mgr = MistralChatManager(mgr_api_key)
                                 witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
                                 bot_ident = 'niezidentyfikowana'
+                                acive_bot_valided = False
                                 if hist and isinstance(hist[-1], dict):
                                     last_context = "\n".join(
-                                        f"{x.get('role', '')}\n{x.get('content', '')}"
+                                        f"{x.get('author', '')}\n{x.get('content', '')}"
                                         for x in hist[-5:]
                                     )
                                     latest_user_message = hist[-1].get("content", "")
@@ -1369,8 +1370,11 @@ def main():
                                             witch_bot_list,
                                             max_tokens=100
                                         )
+                                        if bot_ident:
+                                            acive_bot_valided = True
                                         bot_rotation = bot_ident
                                         time.sleep(3)
+
                                     else:
                                         bot_rotation = 'aifa'
 
@@ -1489,34 +1493,99 @@ def main():
                                     ch_list = final_prompt.get("comands_hist", [])
                                     # print("ch_list", ch_list)
 
-                                    for ch_patch in ch_list:
-                            
+                                    import threading
+
+                                    # limit równoległości, żeby nie zabić CPU / Ollamy
+                                    _OLLAMA_BG_SEM = threading.Semaphore(2)
+
+                                    def _bg_aifa_job(idx: int, hist_snapshot: list, sys_prompt: str):
+                                        try:
+                                            with _OLLAMA_BG_SEM:
+                                                # Tu świadomie jedziemy OLLAMĄ (mistral=False)
+                                                ans = mgr.continue_conversation_with_system(
+                                                    hist_snapshot,
+                                                    sys_prompt,
+                                                    max_tokens=1500,
+                                                    mistral=False,
+                                                )
+                                                if ans:
+                                                    save_chat_message("aifa", ans, 0)
+                                        except Exception as e:
+                                            print(f"[BG AIFA ERROR] idx={idx} err={repr(e)}")
+
+                                    for i, ch_patch in enumerate(ch_list):
+
                                         hist_aifa = list(final_prompt.get("ready_hist_aifa", []))
+
                                         if hist_aifa and isinstance(hist_aifa[-1], dict):
-                                            if ch_patch["aifa_prompt"] and ch_patch["author"]:
+                                            if ch_patch.get("aifa_prompt") and ch_patch.get("author"):
                                                 hist_aifa[-1] = {
-                                                    'role': "user",
+                                                    "role": "user",
                                                     "author": ch_patch["author"],
-                                                    'content': ch_patch["aifa_prompt"]
+                                                    "content": ch_patch["aifa_prompt"],
                                                 }
-                                            
-                                            hist_aifa = arm_history_with_context(hist_aifa, entities_group('aifa'))
+
+                                            hist_aifa = arm_history_with_context(hist_aifa, entities_group("aifa"))
+
                                             extra_tech = (
                                                 "\n- Format: możesz używać lekkiego markdown (###, **, listy, `code`).\n"
                                                 "- Bez powitań.\n"
                                                 "- Bez meta-komentarzy.\n"
                                                 "- Anty-echo: nie kopiuj kontekstu ani cudzych odpowiedzi; dodaj nową wartość.\n"
                                             )
-                                            if ch_patch["tech_blocks"]:
+
+                                            if ch_patch.get("tech_blocks"):
                                                 hist_aifa = arm_history_with_context(hist_aifa, ch_patch["tech_blocks"] + extra_tech)
 
-                                            print('hist_aifa:', len(hist_aifa))
-                                            print('aifa\n', hist_aifa[-2:])
+                                            print("hist_aifa:", len(hist_aifa))
+                                            print("aifa\n", hist_aifa[-2:])
 
-                                            answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa, max_tokens = 800)
-                                            if answer_mistral_aifa:
-                                                save_chat_message("aifa", answer_mistral_aifa, 0)
-                                                time.sleep(3)
+                                            if not acive_bot_valided:
+                                                # snapshot, żeby wątek nie dostał referencji modyfikowanej w kolejnych iteracjach
+                                                hist_snapshot = list(hist_aifa)
+                                                t = threading.Thread(target=_bg_aifa_job, args=(i, hist_snapshot, sys_prmt_aifa), daemon=True)
+                                                t.start()
+                                            else:
+                                                answer_mistral_aifa = mgr.continue_conversation_with_system(
+                                                    hist_aifa,
+                                                    sys_prmt_aifa,
+                                                    max_tokens=800,
+                                                    mistral=True,
+                                                )
+                                                if answer_mistral_aifa:
+                                                    save_chat_message("aifa", answer_mistral_aifa, 0)
+                                                    time.sleep(3)
+
+
+                                    # for ch_patch in ch_list:
+                            
+                                    #     hist_aifa = list(final_prompt.get("ready_hist_aifa", []))
+                                    #     if hist_aifa and isinstance(hist_aifa[-1], dict):
+                                    #         if ch_patch["aifa_prompt"] and ch_patch["author"]:
+                                    #             hist_aifa[-1] = {
+                                    #                 'role': "user",
+                                    #                 "author": ch_patch["author"],
+                                    #                 'content': ch_patch["aifa_prompt"]
+                                    #             }
+                                            
+                                    #         hist_aifa = arm_history_with_context(hist_aifa, entities_group('aifa'))
+                                    #         extra_tech = (
+                                    #             "\n- Format: możesz używać lekkiego markdown (###, **, listy, `code`).\n"
+                                    #             "- Bez powitań.\n"
+                                    #             "- Bez meta-komentarzy.\n"
+                                    #             "- Anty-echo: nie kopiuj kontekstu ani cudzych odpowiedzi; dodaj nową wartość.\n"
+                                    #         )
+                                    #         if ch_patch["tech_blocks"]:
+                                    #             hist_aifa = arm_history_with_context(hist_aifa, ch_patch["tech_blocks"] + extra_tech)
+
+                                    #         print('hist_aifa:', len(hist_aifa))
+                                    #         print('aifa\n', hist_aifa[-2:])
+
+                                          
+                                    #         answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa, max_tokens = 800)
+                                    #         if answer_mistral_aifa:
+                                    #             save_chat_message("aifa", answer_mistral_aifa, 0)
+                                    #             time.sleep(3)
 
                                 ANTYPOWTARZANIE = (
                                     "TRYB ROZMOWY (OBOWIĄZKOWE):\n"
@@ -1539,7 +1608,7 @@ def main():
                                 # GERINA
                                 catching_gerina = 'gerin' in str(answer_mistral_aifa).lower()
                                 print("catching_gerina", catching_gerina)
-                                if bot_rotation.lower() in ['gerina', 'razem'] or catching_gerina:
+                                if (bot_rotation.lower() in ['gerina', 'razem'] or catching_gerina) and acive_bot_valided:
                                     sys_prmt_gerina = (
                                         "Jesteś Gerina (ona/jej).\n"
                                         "Rola: wykonawcza jednostka SI w systemie DMD (realizacja, decyzje, konkret).\n\n"
@@ -1661,7 +1730,7 @@ def main():
                                 # PIONIER
                                 catching_pionier = 'pionie' in str(answer_mistral_aifa).lower() or 'pionie' in str(answer_mistral_gerina).lower()
                                 print("catching_pionier", catching_pionier)
-                                if bot_rotation.lower() in ['pionier', 'razem'] or catching_pionier:
+                                if (bot_rotation.lower() in ['pionier', 'razem'] or catching_pionier) and acive_bot_valided:
                                     sys_prmt_pionier = (
                                         "Jesteś Pionier (on/jego).\n"
                                         "Rola: nawigacyjna jednostka SI w systemie DMD (procedury, kroki, prowadzenie procesu).\n\n"
@@ -1799,7 +1868,7 @@ def main():
                                                 time.sleep(3)
 
                             # forge_commender
-                            if final_prompt.get("forge_commender", []):
+                            if final_prompt.get("forge_commender", []) and acive_bot_valided:
 
                                 hist = list(final_prompt.get("ready_hist", []))
                                 if hist:
