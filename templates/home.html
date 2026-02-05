@@ -1046,7 +1046,7 @@
     });
 
     // Wyłącz rzeczy których nie chcesz
-    md.disable(["table"]);
+    // md.disable(["table"]);
     md.disable(["image"]);
 
     // Normalizacja nagłówków: nie pozwalamy na # i ##, tylko ### max
@@ -1062,45 +1062,45 @@
     };
 
     md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
-    const hrefIdx = tokens[idx].attrIndex("href");
-    if (hrefIdx >= 0) {
-        let href = tokens[idx].attrs[hrefIdx][1] || "";
+        const hrefIdx = tokens[idx].attrIndex("href");
+        if (hrefIdx >= 0) {
+            let href = tokens[idx].attrs[hrefIdx][1] || "";
 
-        // 🔧 wisienka: www.domena.pl → https://www.domena.pl
-        if (/^www\./i.test(href)) {
-        href = "https://" + href;
+            // 🔧 wisienka: www.domena.pl → https://www.domena.pl
+            if (/^www\./i.test(href)) {
+            href = "https://" + href;
+            }
+
+            const ok = /^https?:\/\//i.test(href);
+            if (!ok) {
+            href = "#";
+            }
+
+            tokens[idx].attrs[hrefIdx][1] = href;
         }
 
-        const ok = /^https?:\/\//i.test(href);
-        if (!ok) {
-        href = "#";
-        }
-
-        tokens[idx].attrs[hrefIdx][1] = href;
-    }
-
-    tokens[idx].attrSet("target", "_blank");
-    tokens[idx].attrSet("rel", "noopener noreferrer nofollow");
-    return defaultLinkOpen(tokens, idx, options, env, self);
+        tokens[idx].attrSet("target", "_blank");
+        tokens[idx].attrSet("rel", "noopener noreferrer nofollow");
+        return defaultLinkOpen(tokens, idx, options, env, self);
     };
 
     function renderChatMarkdown(rawText) {
-    const normalized = normalizeHeadings(rawText);
-    const html = md.render(normalized);
+        const normalized = normalizeHeadings(rawText);
+        const html = md.render(normalized);
 
-    // Sanitizacja + whitelist tagów/atrybutów
-    return window.DOMPurify.sanitize(html, {
-        ALLOWED_TAGS: [
-        "p", "br",
-        "strong", "em",
-        "h3",
-        "ul", "ol", "li",
-        "code", "pre",
-        "a"
-        ],
-        ALLOWED_ATTR: ["href", "target", "rel"],
-        ALLOWED_URI_REGEXP: /^https?:\/\//i
-    });
+        // Sanitizacja + whitelist tagów/atrybutów
+        return window.DOMPurify.sanitize(html, {
+            ALLOWED_TAGS: [
+            "p", "br",
+            "strong", "em",
+            "h3",
+            "ul", "ol", "li",
+            "code", "pre",
+            "a"
+            ],
+            ALLOWED_ATTR: ["href", "target", "rel"],
+            ALLOWED_URI_REGEXP: /^https?:\/\//i
+        });
     }
 
     function escapeHtml(s) {
