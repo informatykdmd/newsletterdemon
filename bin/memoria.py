@@ -829,13 +829,33 @@ class LongTermMemoryDaemon:
                 return {"_cache_hit": True, "memory_card_id": existing_id, "dedupe_key": dedupe_key, "memory_card": None, "memory_action": None}
 
         # 3) LLM
-        out = self.llm_writer.classify_full(content, meta)
 
+        out = self.llm_writer.classify_full(content, meta)
         if not out or not isinstance(out, dict):
             return None
 
         out.setdefault("memory_card", None)
         out.setdefault("memory_action", None)
+
+        card = out.get("memory_card")
+        if isinstance(card, dict):
+            # twardo dopnij chat_id
+            card["chat_id"] = int(meta.get("chat_id", 0))
+
+            # scope: preferuj to co model dał, ale fallback na hint
+            scope = (card.get("scope") or meta.get("scope_hint") or "shared").strip().lower()
+            card["scope"] = scope
+
+            # owner fallbacki
+            if scope == "user" and not card.get("owner_user_login"):
+                card["owner_user_login"] = meta.get("owner_user_login") or meta.get("author_login")
+
+            if scope == "agent" and not card.get("owner_agent_id"):
+                card["owner_agent_id"] = meta.get("owner_agent_id")
+
+            if scope == "shared":
+                card["owner_user_login"] = None
+                card["owner_agent_id"] = None
 
         # dopnij dedupe_key z gate'a jako kanoniczny
         if dedupe_key and out.get("memory_card"):
@@ -1007,7 +1027,33 @@ class MemorySelector:
     def __init__(self, repo):
         self.repo = repo
 
-    def build_context(self, agent_id="lab_agent", group_id=None, window_minutes=60, budget_chars=4000):
+    def build_context(self, chat_id=0, user_login=None, agent_id="lab_agent",
+                  group_id=None, window_minutes=60, budget_chars=4000,
+                  include_scopes=("shared","user","agent")):
+        last_rows = self.repo.fetch_group_context(group_id=group_id, window_minutes=window_minutes)
+        active_users = self.repo.detect_active_users(group_id=group_id, window_minutes=window_minutes)
+
+        mem_cards = self._select_memory_cards(
+            chat_id=chat_id,
+            user_login=user_login,
+            agent_id=agent_id,
+            active_users=active_users,
+            budget_chars=budget_chars,
+            include_scopes=include_scopes
+        )
+
+        memory_block = self._render_memory_block(mem_cards)
+        st_block = self._render_short_term(last_rows)
+
+        return {
+            "memory_block": memory_block,
+            "short_term_block": st_block,
+            "active_users": active_users,
+            "last_rows_count": len(last_rows),
+            "mem_cards_count": len(mem_cards),
+        }
+
+    def build_context_old(self, agent_id="lab_agent", group_id=None, window_minutes=60, budget_chars=4000):
         """
         group_id na razie ignorowane (dopóki Messages nie ma chat_id).
         """
@@ -1031,8 +1077,46 @@ class MemorySelector:
             "last_rows_count": len(last_rows),
             "mem_cards_count": len(mem_cards),
         }
+    
+    def _select_memory_cards(self, chat_id, user_login, agent_id, active_users, budget_chars, include_scopes):
+        try:
+            selected = []
+            used = 0
 
-    def _select_memory_cards(self, group_id, agent_id, active_users, budget_chars):
+            def try_add(card):
+                nonlocal used
+                line = f"- [{card['scope']}/{card['topic']}/s{card['score']}] {card['summary']}\n"
+                cost = len(line)
+                if used + cost > budget_chars:
+                    return False
+                selected.append(card)
+                used += cost
+                return True
+
+            if "shared" in include_scopes:
+                for c in self.fetch_cards_shared(chat_id):
+                    if not try_add(c): break
+
+            if "user" in include_scopes:
+                # jeśli podano user_login → bierzemy jego pamięć, niezależnie od active_users
+                if user_login:
+                    for c in self.fetch_cards_user(chat_id, user_login):
+                        if not try_add(c): break
+                else:
+                    for u in self._normalize_users(active_users):
+                        for c in self.fetch_cards_user(chat_id, u):
+                            if not try_add(c): break
+
+            if "agent" in include_scopes and agent_id:
+                for c in self.fetch_cards_agent(chat_id, agent_id):
+                    if not try_add(c): break
+
+            return selected
+        except Exception:
+            return []
+
+
+    def _select_memory_cards_old(self, group_id, agent_id, active_users, budget_chars):
         """
         Docelowo:
         - shared
@@ -1170,23 +1254,23 @@ class LongTermMemoryClient:
 
     def get_long_memory(
         self,
+        chat_id: int = 0,
+        user_login: str | None = None,
         agent_id: str | None = None,
-        budget_chars: int = 1200
+        window_minutes: int = 60,
+        budget_chars: int = 1200,
+        include_scopes: tuple = ("shared", "user", "agent"),
     ) -> str:
-        """
-        Zwraca GOTOWY tekst:
-        'LONG-TERM MEMORY:\\n- ...'
-        albo pusty string jeśli brak pamięci.
-        """
-
         ctx = self.selector.build_context(
+            chat_id=chat_id,
+            user_login=user_login,
             agent_id=agent_id,
-            window_minutes=60,
+            window_minutes=window_minutes,
             budget_chars=budget_chars,
+            include_scopes=include_scopes,
         )
-
-        # build_context zwraca dict
         return (ctx.get("memory_block") or "").strip()
+
 
 
 class MemoryDaemonClient:
@@ -1377,7 +1461,7 @@ if __name__ == "__main__":
     )
     print("block <= mem.get_long_memory", block)  # block -> str
 
-    daemon_cli = MemoryDaemonClient(repo, writer)
+    daemon_cli = MemoryDaemonClient(repo, writer, gate, action_gate)
 
     report = daemon_cli.run(batch_size=20)
 

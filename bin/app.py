@@ -220,6 +220,8 @@ def prepare_prompt(began_prompt):
             cur_nick_l = str(ul).lower()
             if cur_bot_l == "aifa":
                 block_for_ready_hist_aifa = mem.get_long_memory(
+                    chat_id=0,
+                    user_login = cur_nick_l,
                     agent_id=cur_bot_l,
                     budget_chars=1200
                 )
@@ -233,6 +235,8 @@ def prepare_prompt(began_prompt):
 
             if cur_bot_l == "gerina":
                 block_for_ready_hist_gerina = mem.get_long_memory(
+                    chat_id=0,
+                    user_login = cur_nick_l,
                     agent_id=cur_bot_l,
                     budget_chars=1200
                 )
@@ -245,6 +249,8 @@ def prepare_prompt(began_prompt):
 
             if cur_bot_l == "pionier":
                 block_for_ready_hist_pionier = mem.get_long_memory(
+                    chat_id=0,
+                    user_login = cur_nick_l,
                     agent_id=cur_bot_l,
                     budget_chars=1200
                 )
@@ -522,7 +528,7 @@ def prepare_prompt(began_prompt):
                     }
                 )
 
-            elif 'aif' in str(theme['content']).lower():
+            elif str(theme['content']).lower().count('aif'):
                 comands_hist_injector.append(
                     {   
                         "author": uname,
@@ -1828,7 +1834,7 @@ def main():
                             "- Nie zapisuj small talku, żartów, reakcji, potwierdzeń, podziękowań.\n"
                             "- Nie zapisuj pytań ani poleceń, jeśli nie zawierają trwałego ustalenia.\n"
                             "- Pamięć musi być użyteczna w przyszłych rozmowach.\n"
-                            "- Summary: neutralne, 1–2 zdania.\n"
+                            "- Summary: neutralne, 1–2 zdania, Kwitesencja z definicją.\n"
                             "- Facts: 1–5 krótkich, konkretnych punktów.\n"
                             "- score: liczba całkowita 1–5 (ważność).\n"
                             "- ttl_days: jedna z wartości 30 / 90 / 180 / 365 lub null.\n"
@@ -1838,6 +1844,7 @@ def main():
                             "MEMORY_CARD (gdy tworzysz nową pamięć):\n"
                             "- Użyj wyłącznie pól wymienionych w output_contract.memory_card_fields.\n"
                             "- Nie dodawaj dodatkowych kluczy.\n\n"
+                            "- Twórz 'Summary' jasne, nisące wartościową informację deskrypcję.\n\n"
 
                             "MEMORY_ACTION (gdy wiadomość odwołuje lub zastępuje pamięć):\n"
                             "- type: 'revoke' albo 'supersede'.\n"
