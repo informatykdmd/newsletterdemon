@@ -1,11 +1,103 @@
 import requests
 import json
-import time, random
 from typing import Optional
-import socket
-
 from mistralai import Mistral
 from mistralai.utils import BackoffStrategy, RetryConfig
+
+
+# --- OLLAMA FALLBACK (local) ---
+OLLAMA_BASE_URL = "http://127.0.0.1:11434"
+OLLAMA_FALLBACK_MODEL = "llama3.1:8b"   # możesz zmienić np. na swój profil: llama3.1:8b-tech-pl
+OLLAMA_TIMEOUT = (2, 120)              # connect, read
+
+def _ollama_chat(
+    messages,
+    model: str = OLLAMA_FALLBACK_MODEL,
+    max_tokens: int = 512,
+    temperature: float = 0.7,
+    total_timeout: float = 120.0,
+    fail_silently: bool = True,
+    logger=None,
+) -> str:
+
+    """
+    Fallback: Ollama /api/chat
+    messages: lista {"role","content"} — zgodna z Mistral/OpenAI
+    """
+    url = f"{OLLAMA_BASE_URL.rstrip('/')}/api/chat"
+
+    payload = {
+        "model": model,
+        "stream": False,
+        "messages": messages,
+        "options": {
+            "temperature": temperature,
+            "num_predict": max_tokens,      # odpowiednik max_tokens
+            "top_p": 0.9,
+            "repeat_penalty": 1.1,
+        },
+    }
+
+    try:
+        r = requests.post(
+            url,
+            json=payload,
+            timeout=(2, total_timeout),
+        )
+        r.raise_for_status()
+        data = r.json() or {}
+        msg = data.get("message") or {}
+        return (msg.get("content") or "").strip()
+
+    except Exception as e:
+        if logger:
+            logger.error(f"Ollama fallback error: {repr(e)}")
+        else:
+            print(f"[Ollama FALLBACK ERROR] {repr(e)}")
+
+        if fail_silently:
+            return ""
+        raise
+
+
+def _extract_status_code(err: Exception):
+    """
+    Próbuje wydobyć HTTP status z wyjątków SDK/requests.
+    """
+    sc = getattr(err, "status_code", None)
+    if isinstance(sc, int):
+        return sc
+    resp = getattr(err, "response", None)
+    if resp is not None:
+        sc = getattr(resp, "status_code", None)
+        if isinstance(sc, int):
+            return sc
+    return None
+
+def _is_retryable(err: Exception) -> bool:
+    """
+    Kiedy robimy fallback (rate limit / chwilowe problemy).
+    """
+    sc = _extract_status_code(err)
+    if sc in (408, 409, 425, 429):
+        return True
+    if sc is not None and 500 <= sc <= 599:
+        return True
+
+    msg = (repr(err) + " " + str(err)).lower()
+    markers = (
+        "rate limit",
+        "too many requests",
+        "429",
+        "timeout",
+        "timed out",
+        "temporarily unavailable",
+        "service unavailable",
+        "connection reset",
+        "connection aborted",
+        "getaddrinfo failed",
+    )
+    return any(m in msg for m in markers)
 
 
 
@@ -189,14 +281,6 @@ class MistralChatManager:
     }
 
     """
-    # def __init__(self, api_key, model="mistral-small-latest"):
-    #     self.api_key = api_key
-    #     self.model = model
-    #     self.base_url = "https://api.mistral.ai/v1/chat/completions"
-    #     self.headers = {
-    #         "Authorization": f"Bearer {self.api_key}",
-    #         "Content-Type": "application/json"
-    #     }
 
     def __init__(self, api_key, model="mistral-small-latest", server="eu"):
         self.api_key = api_key
@@ -204,127 +288,11 @@ class MistralChatManager:
         self.server = server  # opcjonalnie: "eu" (albo ustaw server_url, jeśli wolisz)
 
 
-    # def _post(
-    #     self,
-    #     messages,
-    #     max_tokens: int = 512,
-    #     temperature: float = 0.7,
-    #     retries: int = 8,
-    #     base_delay: float = 0.8,
-    #     max_delay: float = 60.0,
-    #     total_timeout: float = 120.0,
-    #     fail_silently: bool = True,
-    #     logger=None,
-    #     ) -> Optional[str]:
-    #     """
-    #     Miękkie wywołanie API:
-    #     - exponential backoff + jitter
-    #     - szacunek dla Retry-After (429)
-    #     - po wyczerpaniu prób zwraca None (gdy fail_silently=True) zamiast rzucać.
-    #     """
-    #     payload = {
-    #         "model": self.model,
-    #         "messages": messages,
-    #         "temperature": temperature,
-    #         "max_tokens": max_tokens,
-    #     }
-
-    #     start_ts = time.time()
-    #     last_err = None
-
-    #     for attempt in range(retries):
-    #         try:
-    #             response = requests.post(
-    #                 self.base_url,
-    #                 headers=self.headers,
-    #                 json=payload,
-    #                 timeout=90,  # timeout pojedynczego requestu
-    #             )
-
-    #             if response.status_code == 429:
-    #                 # Backoff wg Retry-After, jeśli jest
-    #                 ra = response.headers.get("Retry-After")
-    #                 if ra:
-    #                     try:
-    #                         sleep_s = float(ra)
-    #                     except Exception:
-    #                         sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
-    #                 else:
-    #                     sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
-
-    #                 if logger:
-    #                     logger.warning(f"Mistral 429; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
-    #                 if time.time() - start_ts + sleep_s > total_timeout:
-    #                     break
-    #                 time.sleep(sleep_s)
-    #                 print(f"[_post MISTRAL ERROR] 429 Backoff wg Retry-After, jeśli jest | sleep_s:{sleep_s}")
-    #                 continue
-
-    #             # Inne błędy HTTP
-    #             if 500 <= response.status_code < 600:
-    #                 # Retry przy 5xx
-    #                 last_err = requests.HTTPError(f"{response.status_code} {response.reason}")
-    #                 sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
-    #                 if logger:
-    #                     logger.warning(f"Mistral {response.status_code}; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
-    #                 if time.time() - start_ts + sleep_s > total_timeout:
-    #                     break
-    #                 time.sleep(sleep_s)
-    #                 print("[_post MISTRAL ERROR] 500 - 600 | Inne błędy HTTP")
-    #                 continue
-
-    #             # Podniesie dla 4xx (poza 429) — zwykle błąd nie do retry
-    #             response.raise_for_status()
-
-    #             data = response.json()
-    #             return data["choices"][0]["message"]["content"]
-
-    #         except (requests.Timeout, requests.ConnectionError, socket.gaierror) as e:
-    #             # typowe błędy sieciowe, w tym getaddrinfo failed
-    #             print("[_post MISTRAL ERROR] typowe błędy sieciowe, w tym getaddrinfo failed")
-    #             last_err = e
-    #             sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
-    #             if logger:
-    #                 logger.warning(f"Mistral network error: {repr(e)}; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
-    #             if time.time() - start_ts + sleep_s > total_timeout:
-    #                 break
-    #             time.sleep(sleep_s)
-    #             continue
-
-    #         except requests.HTTPError as e:
-    #             print(f"[_post MISTRAL ERROR] 4xx bez 429 (np. 401, 403, 404) — raczej nie ma sensu retry: {e}")
-    #             # 4xx bez 429 (np. 401, 403, 404) — raczej nie ma sensu retry
-    #             last_err = e
-    #             if logger:
-    #                 logger.error(f"Mistral HTTP error (no retry): {repr(e)}")
-    #             break
-
-    #         except Exception as e:
-    #             print(f"[_post MISTRAL ERROR] cokolwiek innego — spróbujmy jeszcze raz z backoffem: {e}")
-    #             # cokolwiek innego — spróbujmy jeszcze raz z backoffem
-    #             last_err = e
-    #             sleep_s = min(base_delay * (2 ** attempt) + random.random(), max_delay)
-    #             if logger:
-    #                 logger.warning(f"Mistral unknown error: {repr(e)}; sleep {sleep_s:.2f}s (attempt {attempt+1}/{retries})")
-    #             if time.time() - start_ts + sleep_s > total_timeout:
-    #                 break
-    #             time.sleep(sleep_s)
-    #             continue
-
-    #     # Po wyczerpaniu prób/limitu czasu
-    #     if logger:
-    #         print(f"[_post MISTRAL ERROR] Mistral unavailable after retries; last_err={repr(last_err)}")
-    #         logger.error(f"Mistral unavailable after retries; last_err={repr(last_err)}")
-
-    #     if fail_silently:
-    #         return ""
-    #     else:
-    #         raise Exception(f"Błąd połączenia z API Mistral po retry: {last_err}")
-
     def _normalize_content_to_text(self, content) -> str:
         """
         Normalizuje Mistral 'message.content' do czystego tekstu.
-        Mistral: content może być string albo listą chunków. :contentReference[oaicite:1]{index=1}
+        Mistral: content może być string albo listą chunków (np. [{"type":"text","text":"..."}]).
+
         """
         if content is None:
             return ""
@@ -445,11 +413,30 @@ class MistralChatManager:
             else:
                 print(f"[Mistral SDK ERROR] {repr(e)}")
 
+            # Fallback na Ollamę tylko przy błędach "chwilowych" (429/5xx/timeout itp.)
+            if _is_retryable(e):
+                try:
+                    fallback_text = _ollama_chat(
+                        messages=messages,
+                        max_tokens=max_tokens,
+                        temperature=temperature,
+                        total_timeout=total_timeout,
+                        fail_silently=fail_silently,
+                        logger=logger,
+                    )
+
+                    print(f"[Ollama FALLBACK TEXT]\n{fallback_text}[END]\n")
+
+                    return self._normalize_content_to_text(fallback_text)
+                except Exception as e2:
+                    if logger:
+                        logger.error(f"Ollama fallback error: {repr(e2)}")
+                    else:
+                        print(f"[Ollama FALLBACK ERROR] {repr(e2)}")
+
             if fail_silently:
                 return ""
             raise
-
-
 
 
     def text_response(self, user_message, max_tokens=500):
