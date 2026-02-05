@@ -1370,7 +1370,7 @@ def main():
                                             witch_bot_list,
                                             max_tokens=100
                                         )
-                                        if bot_ident:
+                                        if bot_ident != "nieznana":
                                             acive_bot_valided = True
                                             bot_rotation = bot_ident
                                             time.sleep(3)
@@ -1378,7 +1378,7 @@ def main():
                                     else: bot_rotation = 'aifa'
 
 
-                                if bot_rotation == 'niezidentyfikowana':
+                                if bot_rotation in 'niezidentyfikowana':
                                     bot_rotation = random.choice(['gerina', 'pionier', 'aifa', 'razem', 'żaden'])
 
                                 print("bot_rotation", bot_rotation)
