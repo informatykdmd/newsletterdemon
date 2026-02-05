@@ -2030,6 +2030,56 @@ color:#969696;
   background: rgba(0,0,0,0.22);
 }
 
+/* TABELKI MD */
+
+.chat-message-fill table,
+.chat-message-fill-self table {
+  background: rgba(0,0,0,0.32);
+  border-radius: 10px;
+  padding: 6px;
+  margin: 8px 0;
+  border-collapse: collapse;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* wrapper na overflow poziomy */
+.chat-message-fill table,
+.chat-message-fill-self table {
+  display: block;
+  overflow-x: auto;
+}
+
+/* wiersze */
+.chat-message-fill tr,
+.chat-message-fill-self tr {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* nagłówki */
+.chat-message-fill th,
+.chat-message-fill-self th {
+  text-align: left;
+  font-weight: 600;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.06);
+  white-space: nowrap;
+}
+
+/* komórki */
+.chat-message-fill td,
+.chat-message-fill-self td {
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+
+/* ostatni wiersz bez kreski */
+.chat-message-fill tr:last-child,
+.chat-message-fill-self tr:last-child {
+  border-bottom: none;
+}
+
+
 
 .file-upload-wrapper {
   width: 100%;

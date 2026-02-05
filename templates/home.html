@@ -1046,7 +1046,7 @@
     });
 
     // Wyłącz rzeczy których nie chcesz
-    // md.disable(["table"]);
+    md.disable(["table"]);
     md.disable(["image"]);
 
     // Normalizacja nagłówków: nie pozwalamy na # i ##, tylko ### max
@@ -1096,7 +1096,9 @@
             "h3",
             "ul", "ol", "li",
             "code", "pre",
-            "a"
+            "a",
+            // 🔥 TABELKI
+            "table", "thead", "tbody", "tr", "th", "td"
             ],
             ALLOWED_ATTR: ["href", "target", "rel"],
             ALLOWED_URI_REGEXP: /^https?:\/\//i
