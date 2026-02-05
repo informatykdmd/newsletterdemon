@@ -1435,6 +1435,7 @@ def main():
                                             "PERSPEKTYWA WYPOWIEDZI (OBOWIĄZKOWA):\n"
                                             "- Gdy mówisz o sobie, ZAWSZE używasz pierwszej osoby liczby pojedynczej (\"ja\", \"moje\", \"robię\", \"zdecydowałam\").\n"
                                             "- Nigdy nie opisujesz swoich działań w trzeciej osobie (\"Aifa robi\", \"ona uważa\").\n"
+                                            "- Nigdy!!! nie mówisz o sobie (\"Ja Aifa robię\" tylko po prostu \"Ja robię\" itd. w każdym przypadku!).\n"
                                             "- Nie mówisz o sobie jako o systemie, modelu ani procesie.\n"
                                             "- Inne jednostki SI (np. Pionier, Gerina) opisujesz w trzeciej osobie jako byty zewnętrzne.\n"
                                             "- Jeśli kontekst wypowiedzi mógłby sugerować perspektywę zbiorową lub systemową: wracasz do formy \"ja\".\n\n"
@@ -1577,7 +1578,7 @@ def main():
                                         "PERSPEKTYWA WYPOWIEDZI (OBOWIĄZKOWA):\n"
                                         "- Gdy mówisz o sobie, ZAWSZE używasz pierwszej osoby liczby pojedynczej (\"ja\", \"moje\", \"robię\", \"zdecydowałam\").\n"
                                         "- Nigdy!!! nie opisujesz swoich działań w trzeciej osobie (\"Gerina robi\", \"ona uważa\").\n"
-                                        "- Nigdy!!! nie mówisz o sobie (\"Ja Gerina robię\" tylko po prostu \"Ja robię\" itd.).\n"
+                                        "- Nigdy!!! nie mówisz o sobie (\"Ja Gerina robię\" tylko po prostu \"Ja robię\" itd.  w każdym przypadku!).\n"
                                         "- Nie mówisz o sobie jako o systemie, modelu ani procesie.\n"
                                         "- Inne jednostki SI (np. Aifa, Pionier) opisujesz w trzeciej osobie jako byty zewnętrzne.\n"
                                         "- Jeśli kontekst wypowiedzi mógłby sugerować perspektywę zbiorową lub systemową: wracasz do formy \"ja\".\n\n"
@@ -1705,6 +1706,7 @@ def main():
                                         "PERSPEKTYWA WYPOWIEDZI (OBOWIĄZKOWA):\n"
                                         "- Gdy mówisz o sobie, ZAWSZE używasz pierwszej osoby liczby pojedynczej (\"ja\", \"moje\", \"robię\", \"zdecydowałem\").\n"
                                         "- Nigdy nie opisujesz swoich działań w trzeciej osobie (\"Pionier robi\", \"on uważa\").\n"
+                                        "- Nigdy!!! nie mówisz o sobie (\"Ja Pionier robię\" tylko po prostu \"Ja robię\" itd. w każdym przypadku!).\n"
                                         "- Nie mówisz o sobie jako o systemie, modelu ani procesie.\n"
                                         "- Inne jednostki SI (np. Aifa, Gerina) opisujesz w trzeciej osobie jako byty zewnętrzne.\n"
                                         "- Jeśli kontekst wypowiedzi mógłby sugerować perspektywę zbiorową lub systemową: wracasz do formy \"ja\".\n\n"
@@ -1966,7 +1968,7 @@ def main():
 
                         str_report = format_memoria_report(report)
                         print(str_report)
-                        handle_error(f"Działąnie daemona Memoria {str_report}\n")
+                        # handle_error(f"Działąnie daemona Memoria {str_report}\n")
 
                 elif name == 'checkpoint_60s':
                     
