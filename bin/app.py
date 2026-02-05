@@ -1381,8 +1381,7 @@ def main():
                                 if bot_rotation in 'niezidentyfikowana':
                                     bot_rotation = random.choice(['gerina', 'pionier', 'aifa', 'razem', 'żaden'])
 
-                                print("bot_rotation", bot_rotation)
-                                print("acive_bot_valided", acive_bot_valided)
+                                print(f"🧭 bot={bot_rotation} | validated={acive_bot_valided}")
 
                                 
                                 # Aifa
@@ -1512,7 +1511,7 @@ def main():
                                                 if ans:
                                                     save_chat_message("aifa", ans, 0)
                                         except Exception as e:
-                                            print(f"[BG AIFA ERROR] idx={idx} err={repr(e)}")
+                                            handle_error(f"[BG AIFA ERROR] idx={idx} err={repr(e)}")
 
                                     for i, ch_patch in enumerate(ch_list):
 
@@ -1538,19 +1537,23 @@ def main():
                                             if ch_patch.get("tech_blocks"):
                                                 hist_aifa = arm_history_with_context(hist_aifa, ch_patch["tech_blocks"] + extra_tech)
 
-                                            print("hist_aifa:", len(hist_aifa))
-                                            print("aifa\n", hist_aifa[-2:])
+                                            print(f"🧠 hist_aifa[0]: {hist_aifa[0] if hist_aifa else ''}")
+                                            print(f"📚 hist_aifa.len: {len(hist_aifa)}")
+                                            print(f"🤖 aifa.tail:\n{hist_aifa[-2:]}")
 
                                             if not acive_bot_valided:
                                                 # snapshot, żeby wątek nie dostał referencji modyfikowanej w kolejnych iteracjach
                                                 hist_snapshot = list(hist_aifa)
+
+                                                print(f"🧵 AIFA BG | start task #{i} | routing_valid={acive_bot_valided}")
+
                                                 t = threading.Thread(target=_bg_aifa_job, args=(i, hist_snapshot, sys_prmt_aifa), daemon=True)
                                                 t.start()
                                             else:
                                                 answer_mistral_aifa = mgr.continue_conversation_with_system(
                                                     hist_aifa,
                                                     sys_prmt_aifa,
-                                                    max_tokens=800,
+                                                    max_tokens=1500,
                                                     mistral=True,
                                                 )
                                                 if answer_mistral_aifa:
@@ -1578,7 +1581,7 @@ def main():
 
                                 # GERINA
                                 catching_gerina = 'gerin' in str(answer_mistral_aifa).lower()
-                                print("catching_gerina", catching_gerina)
+                                print(f"🎣 catching_gerina: {catching_gerina} | 🔐 validated: {acive_bot_valided}")
                                 if (bot_rotation.lower() in ['gerina', 'razem'] or catching_gerina) and acive_bot_valided:
                                     sys_prmt_gerina = (
                                         "Jesteś Gerina (ona/jej).\n"
@@ -1690,9 +1693,9 @@ def main():
                                             )
 
                                             gerina_hist = arm_history_with_context(ready_hist_gerina, tech_block)
-                                            print('hist:', len(ready_hist_gerina))
-                                            print('gerina_hist:', len(gerina_hist))
-                                            print('gerina\n', gerina_hist[-2:])
+                                            # print('hist:', len(ready_hist_gerina))
+                                            # print('gerina_hist:', len(gerina_hist))
+                                            # print('gerina\n', gerina_hist[-2:])
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina, max_tokens = 800)
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
@@ -1700,7 +1703,7 @@ def main():
 
                                 # PIONIER
                                 catching_pionier = 'pionie' in str(answer_mistral_aifa).lower() or 'pionie' in str(answer_mistral_gerina).lower()
-                                print("catching_pionier", catching_pionier)
+                                print(f"🎣 catching_pionier: {catching_pionier} | 🔐 validated: {acive_bot_valided}")
                                 if (bot_rotation.lower() in ['pionier', 'razem'] or catching_pionier) and acive_bot_valided:
                                     sys_prmt_pionier = (
                                         "Jesteś Pionier (on/jego).\n"
@@ -1829,9 +1832,9 @@ def main():
                                             
 
                                             pionier_hist = arm_history_with_context(ready_hist_gerina, tech_block)
-                                            print('hist:', len(ready_hist_gerina))
-                                            print('pionier_hist:', len(pionier_hist))
-                                            print('pionier\n', pionier_hist[-2:])
+                                            # print('hist:', len(ready_hist_gerina))
+                                            # print('pionier_hist:', len(pionier_hist))
+                                            # print('pionier\n', pionier_hist[-2:])
 
                                             answer_mistral_pionier = mgr.continue_conversation_with_system(pionier_hist, sys_prmt_pionier, max_tokens = 800)
                                             if answer_mistral_pionier:
