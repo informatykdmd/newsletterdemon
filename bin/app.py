@@ -1506,6 +1506,7 @@ def main():
                                                     hist_snapshot,
                                                     sys_prompt,
                                                     max_tokens=1500,
+                                                    total_timeout=1200,
                                                     mistral=False,
                                                 )
                                                 if ans:
@@ -1556,36 +1557,6 @@ def main():
                                                     save_chat_message("aifa", answer_mistral_aifa, 0)
                                                     time.sleep(3)
 
-
-                                    # for ch_patch in ch_list:
-                            
-                                    #     hist_aifa = list(final_prompt.get("ready_hist_aifa", []))
-                                    #     if hist_aifa and isinstance(hist_aifa[-1], dict):
-                                    #         if ch_patch["aifa_prompt"] and ch_patch["author"]:
-                                    #             hist_aifa[-1] = {
-                                    #                 'role': "user",
-                                    #                 "author": ch_patch["author"],
-                                    #                 'content': ch_patch["aifa_prompt"]
-                                    #             }
-                                            
-                                    #         hist_aifa = arm_history_with_context(hist_aifa, entities_group('aifa'))
-                                    #         extra_tech = (
-                                    #             "\n- Format: możesz używać lekkiego markdown (###, **, listy, `code`).\n"
-                                    #             "- Bez powitań.\n"
-                                    #             "- Bez meta-komentarzy.\n"
-                                    #             "- Anty-echo: nie kopiuj kontekstu ani cudzych odpowiedzi; dodaj nową wartość.\n"
-                                    #         )
-                                    #         if ch_patch["tech_blocks"]:
-                                    #             hist_aifa = arm_history_with_context(hist_aifa, ch_patch["tech_blocks"] + extra_tech)
-
-                                    #         print('hist_aifa:', len(hist_aifa))
-                                    #         print('aifa\n', hist_aifa[-2:])
-
-                                          
-                                    #         answer_mistral_aifa = mgr.continue_conversation_with_system(hist_aifa, sys_prmt_aifa, max_tokens = 800)
-                                    #         if answer_mistral_aifa:
-                                    #             save_chat_message("aifa", answer_mistral_aifa, 0)
-                                    #             time.sleep(3)
 
                                 ANTYPOWTARZANIE = (
                                     "TRYB ROZMOWY (OBOWIĄZKOWE):\n"

@@ -633,10 +633,17 @@ class MistralChatManager:
             system_prompt="Prowadzisz normalną rozmowę w luźnym stylu.", 
             max_tokens=500, 
             temperature: float = 0.7,
+            total_timeout: float = 120,
             mistral: bool = True
         ):
         messages = [{"role": "system", "content": system_prompt}] + history
-        return self._post(messages, max_tokens=max_tokens, temperature=temperature, mistral=mistral)
+        return self._post(
+            messages, 
+            max_tokens=max_tokens, 
+            temperature=temperature, 
+            total_timeout=total_timeout, 
+            mistral=mistral
+        )
 
     def summarize(self, text, max_tokens=500, mistral: bool = True):
         messages = [
