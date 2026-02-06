@@ -13038,14 +13038,14 @@ def public_on_socialsync():
         else:
             generator = True
         opis_ogloszenia, zdjecia_string, kategoria_ogloszenia = generate_offer_description(picked_offer, rodzaj_ogloszenia, generator)
-
+        status = 4
         if uzyj_aktualnego_opisu:
             styl_ogloszenia = 0
-            status = 4
+            
             polecenie_ai = None  # Nie generujemy opisu, więc polecenie nie jest potrzebne
         elif generuj_opis:
             styl_ogloszenia = 1
-            status = 4
+            
             polecenie_ai = polecenie_ai.strip() if polecenie_ai else None  # Pobieramy polecenie tylko jeśli zostało wpisane
             mgr = MistralChatManager(MISTRAL_API_KEY)
             sys_prompt = (
@@ -13115,10 +13115,10 @@ def public_on_socialsync():
             if answering and len(str(answering).strip()) > 30:
                 opis_ogloszenia = answering
             else:
-                flash(f'Opis nie został wygenrowany, wystąpił BŁĄD:SI', 'danger')
+                status = 7 # → PENDING_AI_OLLAMA / TRYB_AWARYJNY
+                flash("Post generuje się w tle (tryb awaryjny).", "warning")
 
         else:
-            status = 4
             styl_ogloszenia = 0
             polecenie_ai = None  # Domyślnie brak polecenia
 

@@ -480,6 +480,7 @@ class MistralChatManager:
         temperature: float = 0.0,
         system_prompt: str = None,
         user_prompt: str = None,
+        total_timeout: float = 120.0,
         mistral: bool = True
     ) -> str:
         """
@@ -534,6 +535,7 @@ class MistralChatManager:
             ],
             max_tokens=max_tokens,
             temperature=temperature,
+            total_timeout=total_timeout,
             mistral=mistral
         )
 

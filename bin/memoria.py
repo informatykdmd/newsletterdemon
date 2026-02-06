@@ -336,9 +336,11 @@ class LLMMemoryWriter:
     Wymusza JSON output.
     """
 
-    def __init__(self, mgr, model_system_prompt):
+    def __init__(self, mgr, model_system_prompt, total_timeout: float = 120.0, mistral: bool = True):
         self.mgr = mgr
-        self.system_prompt = model_system_prompt
+        self.system_prompt = model_system_prompt,
+        self.total_timeout = total_timeout,
+        self.mistral = mistral
 
     def build_ready_hist(self, message_text, meta):
         payload = {
@@ -374,7 +376,13 @@ class LLMMemoryWriter:
 
     def classify_full(self, message_text, meta, max_tokens=500):
         ready_hist = self.build_ready_hist(message_text, meta)
-        out = self.mgr.continue_conversation_with_system(ready_hist, self.system_prompt, max_tokens=max_tokens)
+        out = self.mgr.continue_conversation_with_system(
+            ready_hist, 
+            self.system_prompt, 
+            max_tokens=max_tokens, 
+            total_timeout=self.total_timeout, 
+            mistral=self.mistral
+        )
         if not out:
             return None
 
@@ -399,12 +407,14 @@ class LLMMemoryWriter:
         return j
 
 
-    def classify(self, message_text, meta, max_tokens=400):
+    def classify(self, message_text, meta, max_tokens=400,):
         ready_hist = self.build_ready_hist(message_text, meta)
         out = self.mgr.continue_conversation_with_system(
             ready_hist,
             self.system_prompt,
-            max_tokens=max_tokens
+            max_tokens=max_tokens,
+            total_timeout=self.total_timeout, 
+            mistral=self.mistral
         )
 
         # out może być stringiem albo strukturą zależnie od wrappera; zakładam string

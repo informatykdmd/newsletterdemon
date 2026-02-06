@@ -5,7 +5,7 @@ import prepare_shedule
 import messagerCreator 
 import sendEmailBySmtp
 import random
-import os
+import os, re
 import json
 from typing import List, Optional
 from archiveSents import archive_sents
@@ -20,7 +20,7 @@ from wrapper_mistral import MistralChatManager
 from config_utils import MISTRAL_API_KEY, api_key, url, tempalate_endpoit, responder_endpoit
 from MindForgeClient import show_template, communicate_with_endpoint
 from memoria import LongTermMemoryClient, MessagesRepo, MemoryDaemonClient, LLMMemoryWriter, HeuristicGate, ActionGate
-
+import threading
 
 def get_messages(flag='all'):
     # WHERE status != 1
@@ -1223,6 +1223,13 @@ def generate_random_tone_instruction() -> str:
 
     return instruction
 
+def mistral_healthcheck(mgr: MistralChatManager) -> bool:
+    try:
+        txt = mgr.text_response("ping", max_tokens=2, mistral=True) or ""
+        return bool(re.search(r"[A-Za-z0-9]", txt))
+    except Exception:
+        return False
+
 
 def main():
     # Checkpointy i ich interwały w sekundach
@@ -1301,6 +1308,149 @@ def main():
                         **********************************************************
                     """
                     print("CHECKPOINT 5 SECONDS")
+                    ################################################################
+                    # Pisanie postów dla ogloszenia_socialsync
+                    ################################################################
+                    zapytanie_sql = '''
+                        SELECT id, rodzaj_ogloszenia, kategoria_ogloszenia, tresc_ogloszenia,
+                               styl_ogloszenia, polecenie_ai, status
+                        FROM ogloszenia_socialsync
+                        WHERE status=7;
+                    '''
+                    conn = prepare_shedule.connect_to_database(zapytanie_sql)
+                    if conn:
+                        
+                        # limit równoległości, żeby nie zabić CPU / Ollamy
+                        _OLLAMA_BG_SOCIALSYNC = threading.Semaphore(1)
+
+                        def _bg_socialsync_job(
+                                mgr: MistralChatManager,
+                                idx: int, 
+                                rodzaj_ogloszenia: str, 
+                                kategoria_ogloszenia: str, 
+                                tresc_ogloszenia: str, 
+                                styl_ogloszenia: int, 
+                                polecenie_ai: str, 
+                                ):
+                            try:
+                                with _OLLAMA_BG_SOCIALSYNC:
+
+                                    sys_prompt = (
+                                        "Jesteś copywriterem sprzedażowym social media dla ofert nieruchomości.\n"
+                                        "Twoim JEDYNYM zadaniem jest napisanie gotowego posta sprzedażowego.\n\n"
+
+                                        "ZAKAZANE (BEZWZGLĘDNIE):\n"
+                                        "- NIE analizujesz treści.\n"
+                                        "- NIE oceniasz ogłoszenia.\n"
+                                        "- NIE wypisujesz sugestii, rekomendacji ani list porad.\n"
+                                        "- NIE informujesz, że czegoś brakuje w danych.\n"
+                                        "- NIE tworzysz sekcji typu: analiza, propozycje, działania marketingowe.\n\n"
+
+                                        "DOZWOLONE I WYMAGANE:\n"
+                                        "- Zwracasz WYŁĄCZNIE gotową treść posta na social media.\n"
+                                        "- Styl: sprzedażowy, emocjonalny, konkretny.\n"
+                                        "- Używasz emotek/ikonek.\n"
+                                        "- ZERO markdown (brak #, **, list markdown, nagłówków technicznych).\n"
+                                        "- Krótkie zdania, dobra czytelność.\n\n"
+
+                                        "ZASADA FAKTÓW (KRYTYCZNA):\n"
+                                        "- Korzystasz WYŁĄCZNIE z informacji zawartych w danych źródłowych.\n"
+                                        "- NIE zmieniasz i NIE dopisujesz: ceny, lokalizacji, metrażu, terminów, parametrów.\n"
+                                        "- Jeśli jakaś informacja NIE występuje w danych źródłowych: pomijasz ją bez komentarza.\n\n"
+
+                                        "ELEMENTY OBOWIĄZKOWE POSTA:\n"
+                                        "- Cena (jeśli występuje w danych źródłowych).\n"
+                                        "- Lokalizacja (jeśli występuje w danych źródłowych).\n"
+                                        "- Informacja kontaktowa lub wyraźne CTA do kontaktu (jeśli występuje w danych źródłowych).\n\n"
+
+                                        "STRUKTURA POSTA:\n"
+                                        "1) Mocne otwarcie (emocje, wizja, 1–2 linie)\n"
+                                        "2) Konkretne atuty oferty w punktach (myślniki + emotki)\n"
+                                        "3) Krótka wizja życia / użytkowania\n"
+                                        "4) Cena, lokalizacja i kontakt – JEŚLI SĄ W DANYCH\n"
+                                        "5) CTA – zachęta do kontaktu\n\n"
+
+                                        "Odpowiadasz WYŁĄCZNIE treścią posta. Nic więcej."
+                                    )
+
+
+                                    content = (
+                                        "DANE ŹRÓDŁOWE (TRZYMAJ SIĘ FAKTÓW):\n"
+                                        f"{tresc_ogloszenia}\n\n"
+                                        "KONTEKST OFERTY:\n"
+                                        f"- Kategoria: {kategoria_ogloszenia}\n"
+                                        f"- Rodzaj oferty: {rodzaj_ogloszenia}\n"
+                                        f"- Styl: {styl_ogloszenia}\n\n"
+                                        "ZADANIE:\n"
+                                        "- Napisz GOTOWY POST SPRZEDAŻOWY na social media.\n"
+                                        "- Zawsze uwzględnij cenę, lokalizację i kontakt, JEŚLI występują w danych źródłowych.\n"
+                                        "- Jeśli którejś z tych informacji nie ma: pomiń ją bez komentarza.\n"
+                                        "- Nie analizuj, nie oceniaj, nie sugeruj zmian.\n"
+                                        "- Używaj emotek, bez markdown.\n"
+                                        "- Tekst ma zachęcać do zakupu i kontaktu.\n"
+
+
+                                        "WYTYCZNE ADMINISTRATORA (jeśli są):\n"
+                                        f"{polecenie_ai or 'brak'}"
+                                    )
+
+                                    hist = [
+                                        {"role": "user", "content": content}
+                                    ]
+                                    # Tu świadomie jedziemy OLLAMĄ (mistral=False)
+                                    ans = mgr.continue_conversation_with_system(
+                                        hist,
+                                        sys_prompt,
+                                        max_tokens=1500,
+                                        total_timeout=1500.0,
+                                        mistral=False,
+                                    )
+                                    if ans:
+                                        query = '''
+                                            UPDATE ogloszenia_socialsync
+                                            SET tresc_ogloszenia = %s, status = 4
+                                            WHERE id = %s;
+                                        '''
+                                        params = (ans, idx)
+                                        if not prepare_shedule.insert_to_database(query, params):
+                                            handle_error(f"[BG SOCIALSYNC ERROR] idx={idx} err=Błąd zapisu bazy danych!")
+                                    else:
+                                        fail_q = "UPDATE ogloszenia_socialsync SET status=%s WHERE id=%s;"
+                                        prepare_shedule.insert_to_database(fail_q, (4, idx))  # 9 = AI_ERROR (albo wróć na 7)
+                                        handle_error(f"[BG SOCIALSYNC] idx={idx} err=Empty/None answer from Ollama")
+
+
+                            except Exception as e:
+                                handle_error(f"[BG SOCIALSYNC ERROR] idx={idx} err={repr(e)}")
+
+                        mgr_api_key = MISTRAL_API_KEY
+                        if mgr_api_key:
+                            mgr = MistralChatManager(mgr_api_key) if mgr_api_key else None
+
+                        for c_row in conn:
+                            idx = c_row[0]
+                            rodzaj_ogloszenia = c_row[1]
+                            kategoria_ogloszenia = c_row[2]
+                            tresc_ogloszenia = c_row[3]
+                            styl_ogloszenia = c_row[4]
+                            polecenie_ai = c_row[5]
+                            status = c_row[6]
+
+
+                            if mgr:
+                                print(f"🧵 SOCIALSYNC BG | start task #{idx} | routing_valid={True}")
+                                # claim rekordu: 7 -> 8 (processing), żeby uniknąć dubli
+                                t = threading.Thread(target=_bg_socialsync_job, 
+                                    args=(
+                                        mgr, idx, rodzaj_ogloszenia, kategoria_ogloszenia, 
+                                        tresc_ogloszenia, styl_ogloszenia, polecenie_ai
+                                    ), 
+                                    daemon=True)
+                                claim_q = "UPDATE ogloszenia_socialsync SET status = %s WHERE id = %s AND status = %s;"
+                                if not prepare_shedule.insert_to_database(claim_q, (8, idx, 7)):
+                                    continue  # ktoś inny już przejął albo status zmieniony
+                                t.start()
+
                     ################################################################
                     # komentowanie chata przez serwer automatów
                     ################################################################
@@ -1492,7 +1642,7 @@ def main():
                                     ch_list = final_prompt.get("comands_hist", [])
                                     # print("ch_list", ch_list)
 
-                                    import threading
+                                    
 
                                     # limit równoległości, żeby nie zabić CPU / Ollamy
                                     _OLLAMA_BG_SEM = threading.Semaphore(2)
@@ -1913,54 +2063,150 @@ def main():
                     ################################################################
                     mgr_api_key = MISTRAL_API_KEY
 
+                    # limit równoległości, żeby nie zabić CPU / Ollamy
+                    _OLLAMA_BG_SPAM = threading.Semaphore(2)
+
+                    def _bg_spam_catcher(mgr: MistralChatManager, __id: int, client_name: str, client_email: str, subject: str, message: str, dt: str):
+                        try:
+                            with _OLLAMA_BG_SPAM:
+                                # Tu świadomie jedziemy OLLAMĄ (mistral=False)
+                                label = mgr.spam_catcher(
+                                    client_name=client_name,
+                                    client_email=client_email,
+                                    subject=subject,
+                                    message=message,
+                                    dt=dt,
+                                    total_timeout=1500.0,
+                                    mistral=False,
+                                )
+                                if label:
+                                    if label.upper() in ["WIADOMOŚĆ", "WIADOMOSC"]:
+                                        EMAIL_COMPANY = "pawel@dmdbudownictwo.pl"
+                                    else: 
+                                        EMAIL_COMPANY = "informatyk@dmdbudownictwo.pl"
+
+                                TITLE_MESSAGE = f"{subject.strip()}"
+                                HTML_MESSAGE = messagerCreator.create_html_resend(client_name=client_name, client_email=client_email, data=dt, tresc=message)
+
+                                sendEmailBySmtp.send_html_email(TITLE_MESSAGE, HTML_MESSAGE, EMAIL_COMPANY)
+                                prepare_shedule.insert_to_database(
+                                    f"UPDATE contact SET DONE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                                    (0, __id, client_email)
+                                    )
+                                
+                                handle_error(f"Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {client_name} z podanym kontaktem {client_email}\n")
+                                addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {client_name}', 'success')
+
+                        except Exception as e:
+                            handle_error(f"[BG SPAM CATCHER ERROR] id={__id} err={repr(e)}")
+                    
+                    if mgr_api_key:
+                        mgr = MistralChatManager(mgr_api_key) if mgr_api_key else None
+
                     contectDB = prepare_shedule.connect_to_database(f'SELECT ID, CLIENT_NAME, CLIENT_EMAIL, SUBJECT, MESSAGE, DATE_TIME FROM contact WHERE DONE=1;')
                     for data in contectDB:
-                        if mgr_api_key:
-                            mgr = MistralChatManager(mgr_api_key)
+                        activ_bv = False
+                        _id = data[0]
+                        client_name=data[1]
+                        client_email=data[2]
+                        subject=data[3]
+                        message=data[4]
+                        dt=str(data[5])
+                        if mgr:
                             label = mgr.spam_catcher(
-                                client_name=data[1],
-                                client_email=data[2],
-                                subject=data[3],
-                                message=data[4],
-                                dt=str(data[5])
+                                client_name=client_name,
+                                client_email=client_email,
+                                subject=subject,
+                                message=message,
+                                dt=dt
                             )
-                            EMAIL_COMPANY = "pawel@dmdbudownictwo.pl" if label == "WIADOMOŚĆ" else "informatyk@dmdbudownictwo.pl"
-                        else: 
+                            if label:
+                                if label and str(label).upper() in ["WIADOMOŚĆ", "WIADOMOSC"]:
+                                    EMAIL_COMPANY = "pawel@dmdbudownictwo.pl"
+                                else: 
+                                    EMAIL_COMPANY = "informatyk@dmdbudownictwo.pl"
+
+                                # EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
+                                TITLE_MESSAGE = f"{subject}"
+                                message = messagerCreator.create_html_resend(client_name=client_name, client_email=client_email, data=dt, tresc=message)
+
+                                sendEmailBySmtp.send_html_email(TITLE_MESSAGE, message, EMAIL_COMPANY)
+                                prepare_shedule.insert_to_database(
+                                    f"UPDATE contact SET DONE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                                    (0, data[0], data[2])
+                                    )
+                                
+                                handle_error(f"Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]} z podanym kontaktem {data[2]}\n")
+                                addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
+                                activ_bv = True
                             
-                            EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
-
-                        # EMAIL_COMPANY = 'informatyk@dmdbudownictwo.pl' #devs
-                        TITLE_MESSAGE = f"{data[3]}"
-                        message = messagerCreator.create_html_resend(client_name=data[1], client_email=data[2], data=data[5], tresc=data[4])
-
-                        sendEmailBySmtp.send_html_email(TITLE_MESSAGE, message, EMAIL_COMPANY)
-                        prepare_shedule.insert_to_database(
-                            f"UPDATE contact SET DONE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
-                            (0, data[0], data[2])
-                            )
-                        
-                        handle_error(f"Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]} z podanym kontaktem {data[2]}\n")
-                        # add_aifaLog(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}')
-                        addDataLogs(f'Przekazano wiadmość ze strony firmowej w temacie: {TITLE_MESSAGE} od {data[1]}', 'success')
-
+                        if mgr and not activ_bv:  
+                            print(f"🧵 SPAM CATCHER | start task #{_id} | routing_valid={activ_bv}")
+                            t_spam = threading.Thread(target=_bg_spam_catcher, args=(mgr, _id, client_name, client_email, subject, message, dt), daemon=True)
+                            t_spam.start()
+                                
 
                     #####################################
                     # Daemon memoria                    #
                     #####################################
-                    if mgr_api_key:
-                        mgr = MistralChatManager(mgr_api_key)
-                        repo = MessagesRepo()
-                        
-                        bots = {"aifa", "gerina", "pionier"}
-                        ua_ls = set()
-                        souerce_hist = collecting_hist()
-                        for msa in souerce_hist:
-                            nick = msa[0]
-                            if nick not in bots:
-                                ua_ls.add(nick)
-                        allow_users = [str(u).lower() for u in ua_ls]
-                        gate = HeuristicGate(allow_users=allow_users)  # na start tylko ludzie
-                        action_gate = ActionGate()
+                    def format_memoria_report(report: dict) -> str:
+                        return (
+                            "[MEMORIA] "
+                            f"processed={report.get('processed', 0)} "
+                            f"skipped={report.get('skipped', 0)} "
+                            f"errors={report.get('errors', 0)} "
+                            f"reserved={report.get('reserved', 0)} "
+                            f"dry_run={report.get('dry_run', False)} "
+                            f"t={report.get('duration_sec', '?')}s"
+                        )
+                    
+                    _MEMORIA_BG = threading.Semaphore(1)
+                    def _bg_memoria_daemon(
+                            mgr: MistralChatManager, 
+                            classifier_system_prompt:str,
+                            total_timeout: float = 120.0,
+                            mistral: bool = True
+                        ):
+                        try:
+                            with _MEMORIA_BG:
+                                repo = MessagesRepo()
+
+                                bots = {"aifa", "gerina", "pionier"}
+                                ua_ls = set()
+                                souerce_hist = collecting_hist()
+                                for msa in souerce_hist:
+                                    nick = msa[0]
+                                    if nick not in bots:
+                                        ua_ls.add(nick)
+
+                                allow_users = [str(u).lower() for u in ua_ls]
+                                gate = HeuristicGate(allow_users=allow_users)
+                                action_gate = ActionGate()
+
+                                writer = LLMMemoryWriter(
+                                    mgr,
+                                    classifier_system_prompt,
+                                    total_timeout=total_timeout,
+                                    mistral=mistral,
+                                )
+
+                                daemon_cli = MemoryDaemonClient(
+                                    repo,
+                                    writer,
+                                    gate=gate,
+                                    action_gate=action_gate
+                                )
+
+                                report = daemon_cli.run(batch_size=20)
+
+                                str_report = format_memoria_report(report)
+                                print(f"[MEMORIA BG REPORT]::({str_report})")
+
+                        except Exception as e:
+                            print(f"[MEMORIA BG ERROR] {repr(e)}")
+                    
+                    if mgr:
+                        print("🧵 MEMORIA | start background processing")
                         classifier_system_prompt = (
                             "Jesteś klasyfikatorem pamięci długoterminowej (LTM) dla czatu grupowego.\n"
                             "Twoim zadaniem jest zdecydować, czy wiadomość:\n"
@@ -2012,24 +2258,19 @@ def main():
 
                             "ZWRAJASZ TYLKO JSON."
                         )
-                        writer = LLMMemoryWriter(mgr, classifier_system_prompt)
-                        daemon_cli = MemoryDaemonClient(repo, writer, gate=gate, action_gate=action_gate)
-                        def format_memoria_report(report: dict) -> str:
-                            return (
-                                "[MEMORIA] "
-                                f"processed={report.get('processed', 0)} "
-                                f"skipped={report.get('skipped', 0)} "
-                                f"errors={report.get('errors', 0)} "
-                                f"reserved={report.get('reserved', 0)} "
-                                f"dry_run={report.get('dry_run', False)} "
-                                f"t={report.get('duration_sec', '?')}s"
-                            )
-                        
-                        report = daemon_cli.run(batch_size=20)
 
-                        str_report = format_memoria_report(report)
-                        print(str_report)
-                        # handle_error(f"Działąnie daemona Memoria {str_report}\n")
+                        mgr_health = mistral_healthcheck(mgr)
+                        timeout_mgr = 120.0 if mgr_health else 1500.0
+
+                        print(f"🩺 MEMORIA | mistral_ok={mgr_health} | timeout={timeout_mgr}s")
+
+                        t_mem = threading.Thread(
+                            target=_bg_memoria_daemon,
+                            args=(mgr, classifier_system_prompt, timeout_mgr, mgr_health),
+                            daemon=True
+                        )
+                        t_mem.start()
+                    
 
                 elif name == 'checkpoint_60s':
                     
@@ -2042,19 +2283,31 @@ def main():
                     ################################################################
                     # Obsługa automatycznego wysyłania logów dla modelu SI
                     ################################################################
-                    random_choiced_prompt_list = [
-                        "Aktywowano strumień danych, Gerina melduje się! Aifo, mam dla ciebie nowe informacje. Szczegóły:\n",
-                        "Strumień danych otwarty. Gerina raportuje! Aifo, oto dane, które udało mi się zebrać:\n",
-                        "Gerina zgłasza zakończenie procesu. Aifo, oto raport z zadania:\n",
-                        "Komunikat od Geriny: wszystkie operacje zakończone sukcesem. Aifo, przekazuję następujące dane:\n",
-                        "Kanał komunikacji aktywowany. Gerina przesyła raport. Aifo, oto szczegóły:\n",
-                        "Raport specjalny od Geriny. Aifo, poniżej znajdziesz istotne dane do analizy:\n"
-                    ]
+                    # limit równoległości dla raportów z logów (LLM + DB)
+                    _LOGS_BG = threading.Semaphore(1)
 
-                    pre_prompt = random.choice(random_choiced_prompt_list)
+                    def _bg_aifa_logs_job(mgr: MistralChatManager, hist_aifa_logs: list, sys_prmt_aifa: str):
+                        try:
+                            with _LOGS_BG:
+                                ans = mgr.continue_conversation_with_system(
+                                    hist_aifa_logs,
+                                    sys_prmt_aifa,
+                                    max_tokens=800,
+                                    total_timeout=1500.0,
+                                    mistral=False,  # świadomie lokalnie w tle
+                                )
+                                if ans:
+                                    save_chat_message("aifa", ans, 1)
+                        except Exception as e:
+                            print(f"[BG AIFA LOGS ERROR] {repr(e)}")
+
+                    pre_prompt = (
+                        "Strumień danych otwarty. Gerina raportuje! Aifo, oto dane, które udało mi się zebrać:\n"
+                    )
+                        
                     tuncteLogs = get_lastAifaLog()
                     if tuncteLogs and isinstance(tuncteLogs, str):
-                        preParator = f"{pre_prompt}\n{tuncteLogs}\n\nZadanie:\nStwórz komunikat dla Administratora systemu."
+                        preParator = f"{pre_prompt}\n{tuncteLogs}\n\nZadanie:\nStwórz jedno akapitowy komunikat dla Administratora systemu."
                         mgr_api_key = MISTRAL_API_KEY
                         if mgr_api_key:
                             mgr = MistralChatManager(mgr_api_key)
@@ -2067,9 +2320,23 @@ def main():
                                 "role": "user",
                                 "content": preParator
                             }]
-                            answer_mistral = mgr.continue_conversation_with_system(hist_aifa_logs, sys_prmt_aifa, max_tokens = 800)
+
+                            answer_mistral = mgr.continue_conversation_with_system(
+                                hist_aifa_logs,
+                                sys_prmt_aifa,
+                                max_tokens=800,
+                                mistral=True
+                            )
                             if answer_mistral:
                                 save_chat_message("aifa", answer_mistral, 1)
+                            else:
+                                print("🧵 AIFA LOGS | Mistral down -> BG Ollama")
+                                t_logs = threading.Thread(
+                                    target=_bg_aifa_logs_job,
+                                    args=(mgr, list(hist_aifa_logs), sys_prmt_aifa),
+                                    daemon=True
+                                )
+                                t_logs.start()
 
                     handle_error(f'{datetime.datetime.now()} - {__name__} is working...\n')
                         
@@ -2153,6 +2420,99 @@ def main():
                     ################################################################
                     # Aktywacja konta subskrybenta + spam_catcher
                     ################################################################
+                    _NEWSLETTER_BG = threading.Semaphore(2)
+
+                    def _bg_newsletter_catcher(
+                        mgr: MistralChatManager,
+                        newsletter_id: int,
+                        client_name: str,
+                        client_email: str,
+                        user_hash: str,
+                        subscribed_at,
+                        referer: str,
+                        TITLE_ACTIVE: str,
+                        labels: tuple,
+                        signup_payload: str,
+                        system_prompt: str,
+                        user_prompt: str,
+                        ADMIN_ALERT_EMAIL: str,
+                    ):
+                        try:
+                            with _NEWSLETTER_BG:
+                                # OLLAMA (mistral=False) – asynchronicznie
+                                label = mgr.spam_catcher(
+                                    client_name=client_name,
+                                    client_email=client_email,
+                                    subject=TITLE_ACTIVE,
+                                    labels=labels,
+                                    message=signup_payload,
+                                    dt=str(subscribed_at),
+                                    system_prompt=system_prompt,
+                                    user_prompt=user_prompt,
+                                    total_timeout = 1500.0,
+                                    mistral=False,
+                                )
+
+                                # fallback bezpieczeństwa
+                                if label not in list(labels) + ["WIADOMOŚĆ", "WIADOMOSC"]:
+                                    label = "SUBSKRYPCJA"
+
+                                # (poniżej: ta sama logika akcji co w ścieżce sync)
+                                if label in ("SUBSKRYPCJA", "WIADOMOŚĆ", "WIADOMOSC"):
+                                    message = (
+                                        messagerCreator.HTML_ACTIVE
+                                        .replace("{{imie klienta}}", client_name)
+                                        .replace("{{hashes}}", user_hash)
+                                    )
+                                    sendEmailBySmtp.send_html_email(TITLE_ACTIVE, message, client_email)
+
+                                    prepare_shedule.insert_to_database(
+                                        "UPDATE newsletter SET ACTIVE = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                                        (3, newsletter_id, client_email)
+                                    )
+                                    addDataLogs(f"{TITLE_ACTIVE} OK (BG/Ollama): {client_name} <{client_email}> (referer: {referer})", "success")
+                                else:
+                                    safe_site = referer if referer else "https://dmdbudownictwo.pl"
+
+                                    message_user = f"""
+                                    <div style="font-family:Arial, sans-serif; line-height:1.5;">
+                                    <h2>Nie możemy potwierdzić subskrypcji</h2>
+                                    <p>Cześć {client_name},</p>
+                                    <p>Próba zapisu z <b>{client_email}</b> została oznaczona jako podejrzana i tymczasowo zablokowana.</p>
+                                    <p>Jeśli to pomyłka, prosimy o kontakt przez stronę:
+                                        <a href="{safe_site}" target="_blank" rel="noopener noreferrer">{safe_site}</a>
+                                    </p>
+                                    <p>Dziękujemy za wyrozumiałość.</p>
+                                    </div>
+                                    """
+                                    sendEmailBySmtp.send_html_email("Weryfikacja subskrypcji", message_user, client_email)
+
+                                    prepare_shedule.insert_to_database(
+                                        "UPDATE newsletter SET ACTIVE = %s, USER_HASH = %s WHERE ID = %s AND CLIENT_EMAIL = %s",
+                                        (408, "BLOCKED&REMOVED408", newsletter_id, client_email)
+                                    )
+
+                                    message_admin = f"""
+                                    <div style="font-family:Arial, sans-serif; line-height:1.5;">
+                                    <h2>ALERT: Newsletter oznaczony jako SPAM i zablokowany</h2>
+                                    <p><b>Imię/nazwa:</b> {client_name}</p>
+                                    <p><b>Email:</b> {client_email}</p>
+                                    <p><b>Referer:</b> {referer}</p>
+                                    <p><b>subscribed_at:</b> {subscribed_at}</p>
+                                    <p><b>Akcja:</b> ACTIVE=408, USER_HASH=BLOCKED&REMOVED408</p>
+                                    <pre style="background:#f5f5f5; padding:10px; border-radius:6px;">{signup_payload}</pre>
+                                    </div>
+                                    """
+                                    sendEmailBySmtp.send_html_email("ALERT: Newsletter SPAM zablokowany", message_admin, ADMIN_ALERT_EMAIL)
+                                    addDataLogs(f"{TITLE_ACTIVE} SPAM/BLOCKED (BG/Ollama): {client_name} <{client_email}> (referer: {referer})", "danger")
+
+                        except Exception as e:
+                            handle_error(f"[BG NEWSLETTER ERROR] id={newsletter_id} err={repr(e)}")
+                    
+                    mgr = MistralChatManager(mgr_api_key) if mgr_api_key else None
+                    mgr_health = False
+                    if mgr:
+                        mgr_health = mistral_healthcheck(mgr)                        
 
                     ADMIN_ALERT_EMAIL = 'informatyk@dmdbudownictwo.pl'
 
@@ -2206,25 +2566,35 @@ def main():
                             f"Dane zgłoszenia:\n{signup_payload}\n"
                         )
 
-                        if not mgr_api_key:
-                            addDataLogs(
-                                f"{TITLE_ACTIVE}: brak mgr_api_key — pominięto spam_catcher dla {client_email} ({client_name})",
-                                "danger"
-                            )
+                        if not mgr:
+                            addDataLogs(f"{TITLE_ACTIVE}: brak mgr (no api key) — nie można ocenić zgłoszenia: {client_email} ({client_name})", "danger")
                             continue
 
-                        mgr = MistralChatManager(mgr_api_key)
+                        if mgr_health:
+                            label = mgr.spam_catcher(
+                                client_name=client_name,
+                                client_email=client_email,
+                                subject=TITLE_ACTIVE,
+                                labels=labels,
+                                message=signup_payload,
+                                dt=str(subscribed_at),
+                                system_prompt=system_prompt,
+                                user_prompt=user_prompt,
+                                mistral=True,
+                            )
+                        else:
+                            print(f"🧵 NEWSLETTER | start BG task #{newsletter_id} | mistral_ok={mgr_health}")
+                            t_news = threading.Thread(
+                                target=_bg_newsletter_catcher,
+                                args=(
+                                    mgr, newsletter_id, client_name, client_email, user_hash, subscribed_at, referer,
+                                    TITLE_ACTIVE, labels, signup_payload, system_prompt, user_prompt, ADMIN_ALERT_EMAIL
+                                ),
+                                daemon=True
+                            )
+                            t_news.start()
+                            continue
 
-                        label = mgr.spam_catcher(
-                            client_name=client_name,
-                            client_email=client_email,
-                            subject=TITLE_ACTIVE,
-                            labels=labels,
-                            message=signup_payload,
-                            dt=str(subscribed_at),
-                            system_prompt=system_prompt,
-                            user_prompt=user_prompt
-                        )
 
                         # Domyślny fallback bezpieczeństwa: jeśli model zwróci coś spoza etykiet
                         if label not in list(labels) + ["WIADOMOŚĆ", "WIADOMOSC"]:
