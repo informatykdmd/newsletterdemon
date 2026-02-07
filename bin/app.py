@@ -232,7 +232,7 @@ def prepare_prompt(began_prompt):
                         "author": cur_nick_l,
                         "content": block_for_ready_hist_aifa
                     })
-                    print("block_for_ready_hist_aifa:", block_for_ready_hist_aifa)  # block -> str
+                    # print("block_for_ready_hist_aifa:", block_for_ready_hist_aifa)  # block -> str
 
             if cur_bot_l == "gerina":
                 block_for_ready_hist_gerina = mem.get_long_memory(
@@ -247,7 +247,7 @@ def prepare_prompt(began_prompt):
                         "role": "user",
                         "content": block_for_ready_hist_gerina
                     })
-                    print("block_for_ready_hist_gerina", block_for_ready_hist_gerina)  # block -> str
+                    # print("block_for_ready_hist_gerina", block_for_ready_hist_gerina)  # block -> str
 
             if cur_bot_l == "pionier":
                 block_for_ready_hist_pionier = mem.get_long_memory(
@@ -262,7 +262,7 @@ def prepare_prompt(began_prompt):
                         "role": "user",
                         "content": block_for_ready_hist_pionier
                     })
-                    print("block_for_ready_hist_pionier", block_for_ready_hist_pionier)  # block -> str
+                    # print("block_for_ready_hist_pionier", block_for_ready_hist_pionier)  # block -> str
 
 
     dump_key = get_messages('last')
@@ -1736,6 +1736,7 @@ def main():
                                                     max_tokens=1500,
                                                     mistral=True,
                                                 )
+                                                print(f"🧵 AIFA REGULAR | start answer #{i} | aifa:((\n{answer_mistral_aifa}\n))")
                                                 if answer_mistral_aifa:
                                                     save_chat_message("aifa", answer_mistral_aifa, 0)
                                                     time.sleep(3)
