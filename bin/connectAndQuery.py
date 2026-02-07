@@ -73,10 +73,13 @@ def connect_to_database(queryA):
     return database.execute_query(queryA)
 
 def safe_connect_to_database(queryA, queryB):
-    print(f"[DBDBG] safe_connect_to_database enter | q0={repr((queryA or '').strip()[:20]).lower()} | params_type={type(queryB)} | params_has_none={queryB is not None and any(p is None for p in (queryB if isinstance(queryB,(list,tuple)) else [queryB]))}")
-    print(f"[DBDBG] query_head:\n{(queryA or '').strip()[:200]}")
-    print(f"[DBDBG] params={queryB}")
-    """Wykonuje zapytanie SQL z parametrami i zwraca wynik."""
+    if (queryA or "").lstrip().lower().startswith(("update","insert","delete","replace","alter","create","drop")):
+        # print(f"[DBDBG] safe_connect_to_database enter | q0={repr((queryA or '').strip()[:20]).lower()} | params_type={type(queryB)} | params_has_none={queryB is not None and any(p is None for p in (queryB if isinstance(queryB,(list,tuple)) else [queryB]))}")
+        print(f"[DBDBG] query_head:\n{(queryA or '').strip()[:200]}")
+        # print(f"[DBDBG] params={queryB}")
+        """Wykonuje zapytanie SQL z parametrami i zwraca wynik."""
+        raise RuntimeError("safe_connect_to_database is SELECT-only; use insert_to_database for DML")
+
     return database.execute_query(queryA, queryB)
 
 def insert_to_database(queryA, queryB):

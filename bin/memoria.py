@@ -157,7 +157,7 @@ class MessagesRepo:
         ORDER BY timestamp ASC
         LIMIT %s;
         """
-        cad.safe_connect_to_database(q, (token, int(limit)))
+        cad.insert_to_database(q, (token, int(limit)))
         return token
 
     def fetch_reserved_batch(self, token):
@@ -205,7 +205,7 @@ class MessagesRepo:
             ltm_error=%s
         WHERE id=%s;
         """
-        cad.safe_connect_to_database(q, (new_ltm_status, error_text, int(message_id)))
+        cad.insert_to_database(q, (new_ltm_status, error_text, int(message_id)))
 
     # -------------------------
     # RECOVERY / UTRZYMANIE
@@ -229,7 +229,7 @@ class MessagesRepo:
         WHERE ltm_status='processing'
           AND ltm_processing_at <= NOW() - INTERVAL %s MINUTE;
         """
-        return cad.safe_connect_to_database(q, (int(older_than_minutes),))
+        return cad.insert_to_database(q, (int(older_than_minutes),))
 
 
 # === LTM: stałe indeksy (bo DB wrapper zwraca tuple) ===
@@ -336,8 +336,8 @@ class LLMMemoryWriter:
 
     def __init__(self, mgr, model_system_prompt, total_timeout: float = 120.0, mistral: bool = True):
         self.mgr = mgr
-        self.system_prompt = model_system_prompt,
-        self.total_timeout = total_timeout,
+        self.system_prompt = model_system_prompt
+        self.total_timeout = total_timeout
         self.mistral = mistral
 
     def build_ready_hist(self, message_text, meta):
@@ -622,7 +622,7 @@ class LongTermMemoryDaemon:
                 updated_at=NOW()
             WHERE id=%s;
             """
-            cad.safe_connect_to_database(q, (reason, int(message_id), int(card_id)))
+            cad.insert_to_database(q, (reason, int(message_id), int(card_id)))
             return
 
         raise RuntimeError(f"unknown memory_action type: {atype}")
@@ -892,7 +892,7 @@ class LongTermMemoryDaemon:
             updated_at = NOW()
         WHERE id=%s;
         """
-        cad.safe_connect_to_database(q, (int(memory_card_id),))
+        cad.insert_to_database(q, (int(memory_card_id),))
 
     def bump_memory_card_signal(self, memory_card_id, bump_score=False):
         """
@@ -913,7 +913,7 @@ class LongTermMemoryDaemon:
                 updated_at = NOW()
             WHERE id=%s;
             """
-        cad.safe_connect_to_database(q, (int(memory_card_id),))
+        cad.insert_to_database(q, (int(memory_card_id),))
 
 
     def upsert_memory_card(self, c):
@@ -960,7 +960,7 @@ class LongTermMemoryDaemon:
         if c.get("audience_json") is not None:
             audience_json = json.dumps(c["audience_json"], ensure_ascii=False)
 
-        # UWAGA: tu używamy cad.safe_connect_to_database, bo mamy parametry
+        # UWAGA: tu używamy cad.insert_to_database, bo mamy parametry
         q = f"""
         INSERT INTO memory_cards (
             chat_id, scope, kind, topic,
@@ -1000,7 +1000,7 @@ class LongTermMemoryDaemon:
             dedupe_key
         )
 
-        cad.safe_connect_to_database(q, params)
+        cad.insert_to_database(q, params)
 
         # pobierz id karty po dedupe
         q2 = """
@@ -1021,7 +1021,7 @@ class LongTermMemoryDaemon:
         INSERT IGNORE INTO memory_card_sources (memory_card_id, message_id, created_at)
         VALUES (%s, %s, NOW());
         """
-        cad.safe_connect_to_database(q, (int(memory_card_id), int(message_id)))
+        cad.insert_to_database(q, (int(memory_card_id), int(message_id)))
 
 
 class MemorySelector:
@@ -1343,7 +1343,7 @@ def seed_memory_card_if_empty():
         summary = "TEST: pamięć shared działa (seed z laba)."
         facts_json = '["TEST: pamięć shared działa (seed z laba)."]'
         dedupe_key = "seed-demo-0001"
-        cad.safe_connect_to_database(q, (0, summary, facts_json, dedupe_key))
+        cad.insert_to_database(q, (0, summary, facts_json, dedupe_key))
 
     except Exception as e:
         print("seed_memory_card_if_empty(): pomijam (brak tabeli lub błąd):", str(e)[:160])
