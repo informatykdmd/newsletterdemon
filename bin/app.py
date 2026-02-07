@@ -1887,7 +1887,7 @@ def main():
                                             print(f"📚 hist_gerina.len: {len(gerina_hist)}")
                                             print(f"🤖 gerina.tail:\n{gerina_hist[-2:]}")
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina, max_tokens = 1800)
-                                            print(f"🧵 PIONIER REGULAR | answer:((\n{answer_mistral_pionier}\n))")
+                                            print(f"🧵 GERINA REGULAR | answer:((\n{answer_mistral_gerina}\n))")
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
                                                 time.sleep(3)
