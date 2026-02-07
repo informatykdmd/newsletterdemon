@@ -1710,6 +1710,7 @@ def main():
                                             print(f"🧠 hist_aifa[0]: {hist_aifa[0] if hist_aifa else ''}")
                                             print(f"📚 hist_aifa.len: {len(hist_aifa)}")
                                             print(f"🤖 aifa.tail:\n{hist_aifa[-2:]}")
+                                            
 
                                             if not acive_bot_valided:
                                                 # snapshot, żeby wątek nie dostał referencji modyfikowanej w kolejnych iteracjach
@@ -1882,10 +1883,11 @@ def main():
                                             )
 
                                             gerina_hist = arm_history_with_context(ready_hist_gerina, tech_block)
-                                            # print('hist:', len(ready_hist_gerina))
-                                            # print('gerina_hist:', len(gerina_hist))
-                                            # print('gerina\n', gerina_hist[-2:])
-                                            answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina, max_tokens = 800)
+                                            print(f"🧠 hist_gerina[0]: {gerina_hist[0] if gerina_hist else ''}")
+                                            print(f"📚 hist_gerina.len: {len(gerina_hist)}")
+                                            print(f"🤖 gerina.tail:\n{gerina_hist[-2:]}")
+                                            answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina, max_tokens = 1800)
+                                            print(f"🧵 PIONIER REGULAR | answer:((\n{answer_mistral_pionier}\n))")
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
                                                 time.sleep(3)
@@ -1979,13 +1981,13 @@ def main():
                                         "- Twoje odpowiedzi są zwięzłe, precyzyjne i jednoznacznie osadzone w kontekście rozmowy.\n"
                                     )
 
-                                    ready_hist_gerina = list(final_prompt.get("ready_hist_pionier", []))
-                                    if ready_hist_gerina and isinstance(ready_hist_gerina[-1], dict):
-                                        ai_convers = ready_hist_gerina[-1].get('role', None) == 'user'
+                                    ready_hist_pionier = list(final_prompt.get("ready_hist_pionier", []))
+                                    if ready_hist_pionier and isinstance(ready_hist_pionier[-1], dict):
+                                        ai_convers = ready_hist_pionier[-1].get('role', None) == 'user'
                                         if ai_convers or catching_pionier:
 
                                             if catching_pionier:
-                                                ready_hist_gerina[-1]['role'] = 'user'
+                                                ready_hist_pionier[-1]['role'] = 'user'
                                                              
                                             __aifa_answer = ""
                                             if answer_mistral_aifa:
@@ -2020,12 +2022,14 @@ def main():
                                             )
                                             
 
-                                            pionier_hist = arm_history_with_context(ready_hist_gerina, tech_block)
-                                            # print('hist:', len(ready_hist_gerina))
-                                            # print('pionier_hist:', len(pionier_hist))
-                                            # print('pionier\n', pionier_hist[-2:])
+                                            pionier_hist = arm_history_with_context(ready_hist_pionier, tech_block)
 
-                                            answer_mistral_pionier = mgr.continue_conversation_with_system(pionier_hist, sys_prmt_pionier, max_tokens = 800)
+                                            print(f"🧠 hist_pionier[0]: {pionier_hist[0] if pionier_hist else ''}")
+                                            print(f"📚 hist_pionier.len: {len(pionier_hist)}")
+                                            print(f"🤖 pionier.tail:\n{pionier_hist[-2:]}")
+
+                                            answer_mistral_pionier = mgr.continue_conversation_with_system(pionier_hist, sys_prmt_pionier, max_tokens = 1800)
+                                            print(f"🧵 PIONIER REGULAR | answer:((\n{answer_mistral_pionier}\n))")
                                             if answer_mistral_pionier:
                                                 save_chat_message("pionier", answer_mistral_pionier, 0)
                                                 time.sleep(3)
