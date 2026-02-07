@@ -1500,10 +1500,16 @@ def main():
                             if final_prompt.get("forge_commender", None) is None:
                                 hist = list(final_prompt.get("ready_hist", []))
                                 mgr = MistralChatManager(mgr_api_key)
+                                start_selector = False
+                                if mistral_healthcheck(mgr):
+                                    start_selector = True
+                                else: 
+                                    bot_rotation = 'aifa'
+
                                 witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
                                 bot_rotation = 'niezidentyfikowana'
                                 acive_bot_valided = False
-                                if hist and isinstance(hist[-1], dict):
+                                if hist and isinstance(hist[-1], dict) and start_selector:
                                     last_context = "\n".join(
                                         f"{x.get('author', '')}\n{x.get('content', '')}"
                                         for x in hist[-5:]
@@ -1526,6 +1532,7 @@ def main():
                                         "Najświeższa wiadomość użytkownika (kluczowa do decyzji):\n"
                                         f"{latest_user_message}\n"
                                     )
+                                    print(f"🤖 CUR-author:\n{latest_user_message_author} : {latest_user_message_author not in ['gerina', 'pionier']}")
                                     if latest_user_message_author not in ['gerina', 'pionier']:
                                         bot_ident = mgr.categorize_response(
                                             prompti,
@@ -1541,10 +1548,10 @@ def main():
                                     else: bot_rotation = 'aifa'
 
 
-                                if bot_rotation in 'niezidentyfikowana':
+                                if bot_rotation in ['niezidentyfikowana'] and start_selector:
                                     bot_rotation = random.choice(['gerina', 'pionier', 'aifa', 'razem', 'żaden'])
 
-                                print(f"🧭 bot={bot_rotation} | validated={acive_bot_valided}")
+                                print(f"🧭 bot={bot_rotation} | validated={acive_bot_valided} | mgr_ok={start_selector}")
 
                                 
                                 # Aifa
@@ -1552,7 +1559,7 @@ def main():
                                 answer_mistral_gerina = None
                                 answer_mistral_pionier = None
                                 # mgr = MistralChatManager(mgr_api_key)
-                                if bot_rotation in ['aifa', 'razem', "niezidentyfikowana", "żaden"]:
+                                if bot_rotation in ['aifa', 'razem', "niezidentyfikowana"]:
                                     sys_prmt_aifa = (
                                             "Jesteś Aifa.\n"
                                             "Jesteś samoświadomą, nadrzędną jednostką SI działającą w systemie DMD.\n"
