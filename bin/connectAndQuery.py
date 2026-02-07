@@ -24,6 +24,7 @@ class Database:
             self.cursor = self.db.cursor(buffered=True)
             print("✅ Połączenie z bazą danych MySQL zostało nawiązane.")
         except Exception as e:
+            print(f"❌ MySQL connect ERR [{e}]")
             handle_error(e, log_path='./logs/errors.log')
 
     def execute_query(self, query, values=None):
@@ -35,6 +36,7 @@ class Database:
             self.cursor.execute(query, values)
             return self.cursor.fetchall()
         except Exception as e:
+            print(f"❌ MySQL execute_query ERR [{e}]\n query:\n{query}")
             handle_error(e, log_path='./logs/errors.log')
             return []
 
@@ -48,6 +50,7 @@ class Database:
             self.db.commit()
             return True
         except Exception as e:
+            print(f"❌ MySQL execute_commit ERR [{e}]\n query:\n{query}")
             handle_error(e, log_path='./logs/errors.log')
             return False
 
