@@ -1315,7 +1315,7 @@ def main():
                         SELECT id, rodzaj_ogloszenia, kategoria_ogloszenia, tresc_ogloszenia,
                                styl_ogloszenia, polecenie_ai, status
                         FROM ogloszenia_socialsync
-                        WHERE status=7;
+                        WHERE status=7 AND active_task=0;
                     '''
                     conn = prepare_shedule.connect_to_database(zapytanie_sql)
                     if conn:
@@ -1408,20 +1408,26 @@ def main():
                                     if ans:
                                         query = '''
                                             UPDATE ogloszenia_socialsync
-                                            SET tresc_ogloszenia = %s, status = 4
+                                            SET tresc_ogloszenia = %s, status = 4, active_task = 0
                                             WHERE id = %s;
                                         '''
                                         params = (ans, idx)
                                         if not prepare_shedule.insert_to_database(query, params):
                                             handle_error(f"[BG SOCIALSYNC ERROR] idx={idx} err=Błąd zapisu bazy danych!")
                                     else:
-                                        fail_q = "UPDATE ogloszenia_socialsync SET status=%s WHERE id=%s;"
-                                        prepare_shedule.insert_to_database(fail_q, (4, idx))  # 9 = AI_ERROR (albo wróć na 7)
+                                        fail_q = "UPDATE ogloszenia_socialsync SET status=%s, active_task=%s WHERE id=%s;"
+                                        prepare_shedule.insert_to_database(fail_q, (4, 0, idx)) 
                                         handle_error(f"[BG SOCIALSYNC] idx={idx} err=Empty/None answer from Ollama")
 
-
                             except Exception as e:
+                                try:
+                                    # nie zmieniamy statusu — tylko odblokowujemy rekord
+                                    unlock_q = "UPDATE ogloszenia_socialsync SET active_task=%s WHERE id=%s;"
+                                    prepare_shedule.insert_to_database(unlock_q, (0, idx))
+                                except Exception:
+                                    pass
                                 handle_error(f"[BG SOCIALSYNC ERROR] idx={idx} err={repr(e)}")
+
 
                         mgr_api_key = MISTRAL_API_KEY
                         if mgr_api_key:
@@ -1439,17 +1445,23 @@ def main():
 
                             if mgr:
                                 print(f"🧵 SOCIALSYNC BG | start task #{idx} | routing_valid={True}")
-                                # claim rekordu: 7 -> 8 (processing), żeby uniknąć dubli
+                                
                                 t = threading.Thread(target=_bg_socialsync_job, 
                                     args=(
                                         mgr, idx, rodzaj_ogloszenia, kategoria_ogloszenia, 
                                         tresc_ogloszenia, styl_ogloszenia, polecenie_ai
                                     ), 
                                     daemon=True)
-                                claim_q = "UPDATE ogloszenia_socialsync SET status = %s WHERE id = %s AND status = %s;"
-                                if not prepare_shedule.insert_to_database(claim_q, (8, idx, 7)):
-                                    continue  # ktoś inny już przejął albo status zmieniony
+                                
+                                claim_q = """
+                                    UPDATE ogloszenia_socialsync
+                                    SET active_task = %s
+                                    WHERE id = %s AND status = %s AND active_task = %s;
+                                """
+                                if not prepare_shedule.insert_to_database(claim_q, (1, idx, 7, 0)):
+                                    continue  # ktoś inny już przejął
                                 t.start()
+
 
                     ################################################################
                     # komentowanie chata przez serwer automatów

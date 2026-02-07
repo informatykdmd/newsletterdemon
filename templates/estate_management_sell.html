@@ -2605,7 +2605,7 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                            {% elif post_data.socialSync.status == 4 or post_data.socialSync.status == 5 or post_data.socialSync.status == 7 or post_data.socialSync.status == 8 %}
+                                            {% elif post_data.socialSync.status == 4 %}
                                             <div class="mb-3 mt-3 p-3 border rounded bg-dark">
                                                 <h5 class="text-info">⏳ FACEBOOK PROFIL</h5>
                                                 <p class="mb-1">📌 Status: <strong class="text-primary">Oferta w trakcie publikacji...</strong></p>
@@ -2643,6 +2643,84 @@
                                                     </form>
                                                 </div>
                                             </div>
+                                            {% elif post_data.socialSync.status == 5  %} 
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                <h5 class="text-warning">⚠️ OSTRZEŻENIE SYSTEMOWE</h5>
+                                                <p class="mb-1">📌 Status: <strong class="text-warning">Wykryto anomalię — uruchomiono nieaktualną wersję systemu.</strong></p>
+                                                <p class="text-secondary">🛑 Zalecenie: przerwij zadanie lub skontaktuj się z administratorem.</p>
+                                            </div>
+                                            <div class="row row-cols-auto ">
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Odswiez" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Odświeżenie statusu
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Anuluj_zadanie" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-warning btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Przerwij zadanie
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        {% elif post_data.socialSync.status == 7  %} 
+                                            <div class="mb-3 mt-3 p-3 border rounded bg-dark">
+                                                <h5 class="text-info">🧠 TRYB LOKALNY</h5>
+                                                <p class="mb-1">📌 Status: <strong class="text-primary">Treść posta jest tworzona lokalnie...</strong></p>
+                                                <p class="text-secondary">⏱️ Przewidywany czas: ok. <strong>7 minut</strong>. Post zostanie opublikowany automatycznie — obserwuj status.</p>
+                                            </div>
+                                            <div class="row row-cols-auto ">
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Odswiez" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Odświeżenie statusu
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="col">
+                                                    <form action="{{ url_for('public_on_socialsync') }}" method="POST" enctype="multipart/form-data">
+                                                        <input type="hidden" name="socialSync_id" value="{{ post_data.socialSync.id }}" />
+                                                        <input type="hidden" name="redirectGoal" value="estateAdsSell" />
+                                                        <input type="hidden" name="PostID" value="{{post_id}}" />
+                                                        <div class="col me-1 mb-1">
+                                                            <input type="hidden" name="Status" value="0" />
+                                                            <input type="hidden" name="task_kind" value="Anuluj_zadanie" />
+                                                            
+                                                            <button type="submit" class="btn btn-outline-info btn-sm" style="max-height: 30px; font-size: 12px;" onclick>
+                                                                Anuluj zadanie
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
                                             {% elif post_data.socialSync.status == None %}
                                             <div class="mb-3 mt-3 p-3 border rounded bg-dark">
                                                 <h5 class="text-success">🌟 FACEBOOK PROFIL</h5>
