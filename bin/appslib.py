@@ -4,19 +4,20 @@ import logging
 import time
 
 def handle_error(exception, retry_count=3, log_path="../logs/errors.log"):
-    print(f'Zapis loga: {exception} w toku..')
+    # print(f'Zapis loga: {exception} w toku..')
     try:
         with open(log_path, "a") as log:
             now = str(datetime.now())
             message = "{0} {1}\n".format(now, exception)
-            log.write(message)
+            if exception:
+                log.write(message)
     except Exception as e:
         if retry_count > 0:
             time.sleep(0.5)
-            print(f"Błąd podczas zapisywania do pliku: {e}. Ponawiam próbę...")
+            # print(f"Błąd podczas zapisywania do pliku: {e}. Ponawiam próbę...")
             handle_error(exception, retry_count - 1, log_path)
         else:
-            print("Nieudana próba zapisu do pliku. Przekroczono limit ponawiania.")
+            print(f"Nieudana próba zapisu do pliku.\n{exception}\nPrzekroczono limit ponawiania.")
 
 
 # Ustalanie ścieżki logów (project/logs/errors.log)

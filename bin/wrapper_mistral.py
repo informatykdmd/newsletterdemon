@@ -423,14 +423,15 @@ class MistralChatManager:
             try:
                 # najczęstsze: res.choices[0].message.content
                 content = res.choices[0].message.content
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"[Mistral ERROR 01] {repr(e)}")
 
             if content is None:
                 try:
                     # fallback jakby res był dictopodobny
                     content = res["choices"][0]["message"]["content"]
-                except Exception:
+                except Exception as e:
+                    print(f"[Mistral ERROR 02] {repr(e)}")
                     content = None
 
             if content is None:
@@ -444,7 +445,7 @@ class MistralChatManager:
             if logger:
                 logger.error(f"Mistral SDK error: {repr(e)}")
             else:
-                print(f"[Mistral SDK ERROR] {repr(e)}")
+                print(f"[Mistral SDK ERROR 00] {repr(e)}")
 
             if fail_silently:
                 return ""
