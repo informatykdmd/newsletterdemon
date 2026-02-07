@@ -1532,6 +1532,7 @@ def main():
                                             witch_bot_list,
                                             max_tokens=100
                                         )
+                                        print(f"🤖 bot_ident.selector:\n{bot_ident}")
                                         if bot_ident != "nieznana":
                                             acive_bot_valided = True
                                             bot_rotation = bot_ident
