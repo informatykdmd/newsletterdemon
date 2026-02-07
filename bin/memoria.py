@@ -5,8 +5,6 @@ import uuid
 from datetime import datetime, timedelta
 import time
 
-import connectAndQuery as cad
-
 import json
 import re
 from hashlib import sha1
