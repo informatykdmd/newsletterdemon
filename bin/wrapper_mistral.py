@@ -293,7 +293,11 @@ class MistralChatManager:
 
     """
 
-    def __init__(self, api_key, model="mistral-small-latest", server="eu"):
+    def __init__(
+            self, api_key, 
+            model="mistral-large-2402", #mistral-small-latest 
+            server="eu"
+        ):
         self.api_key = api_key
         self.model = model
         self.server = server  # opcjonalnie: "eu" (albo ustaw server_url, jeśli wolisz)
