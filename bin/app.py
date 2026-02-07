@@ -1500,13 +1500,13 @@ def main():
                             if final_prompt.get("forge_commender", None) is None:
                                 hist = list(final_prompt.get("ready_hist", []))
                                 mgr = MistralChatManager(mgr_api_key)
-                                start_selector = False
-                                if mistral_healthcheck(mgr):
-                                    start_selector = True
-                                else: 
-                                    bot_rotation = 'aifa'
+                                start_selector = mistral_healthcheck(mgr)
 
                                 witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
+                                
+                                if not start_selector:
+                                    bot_rotation = 'aifa'
+
                                 bot_rotation = 'niezidentyfikowana'
                                 acive_bot_valided = False
                                 if hist and isinstance(hist[-1], dict) and start_selector:
@@ -1532,19 +1532,18 @@ def main():
                                         "Najświeższa wiadomość użytkownika (kluczowa do decyzji):\n"
                                         f"{latest_user_message}\n"
                                     )
-                                    print(f"🤖 CUR-author:\n{latest_user_message_author} : {latest_user_message_author not in ['gerina', 'pionier']}")
+                                    print(f"🤖 CUR-author: {latest_user_message_author} : {latest_user_message_author not in ['gerina', 'pionier']}")
                                     if latest_user_message_author not in ['gerina', 'pionier']:
                                         bot_ident = mgr.categorize_response(
                                             prompti,
                                             witch_bot_list,
                                             max_tokens=100
                                         )
-                                        print(f"🤖 bot_ident.selector:\n{bot_ident}")
+                                        print(f"🤖 bot_ident.selector: {bot_ident}")
                                         if bot_ident != "nieznana":
                                             acive_bot_valided = True
                                             bot_rotation = bot_ident
                                             time.sleep(3)
-                                        else: bot_rotation = 'aifa'
                                     else: bot_rotation = 'aifa'
 
 
