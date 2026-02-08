@@ -1876,7 +1876,7 @@ color:#969696;
   font-size: 0.6rem;
   color: #666;
   text-align: right;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 @media (max-width: 400px) {
@@ -1936,7 +1936,7 @@ color:#969696;
   font-size: 0.6rem;
   color: #666;
   text-align: left;
-  margin-top: 1px;
+  margin-top: 2px;
   clear: both;
 }
 
@@ -1949,8 +1949,8 @@ color:#969696;
 /* Opcje pod dymkiem — minimalna, izolowana poprawka pozycjonowania */
 .chat-bubble-options{
     display: flex;
-    margin-top: 0px;         /* podciąga ikonkę do góry (dostosuj) */
-    padding-left: 6px;        /* żeby nie kleiło się do krawędzi */
+    margin-top: 2px;         /* podciąga ikonkę do góry (dostosuj) */
+    padding-left: 7px;        /* żeby nie kleiło się do krawędzi */
     pointer-events: auto;
 }
 
