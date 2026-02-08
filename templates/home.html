@@ -1177,20 +1177,19 @@
                                             <div class="chat-message-fill">
                                                 ${formattedMessage}
                                             </div>
-                                            
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <div class="chat-bubble-options">
+                                                        <i class="bi bi-copy"
+                                                        title="Kopiuj"
+                                                        onclick="copyNearestChatText(this)"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="chat-timestamp text-end">${ts}</div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="chat-bubble-options">
-                                            <i class="bi bi-copy"
-                                            title="Kopiuj"
-                                            onclick="copyNearestChatText(this)"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="chat-timestamp text-end">${ts}</div>
                                     </div>
                                 </div>
                             `);
