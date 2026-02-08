@@ -1834,6 +1834,13 @@ color:#969696;
   align-items: center; 
 }
 
+#message-input:empty:before {
+  content: attr(data-placeholder);
+  color: #9da2a8;
+  opacity: 0.7;
+}
+
+
 .chat-avatar {
   flex-shrink: 0;
   width: 40px;

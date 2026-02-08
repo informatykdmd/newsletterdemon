@@ -986,9 +986,31 @@
     </div>
 </div>
 <div class="jasne rogi formatyj-maly-wiersz formatuj-padding-lg">
-    <div class="chat-container justify-content-center" id="chat-box">
+    <div class="chat-container" id="chat-box">
         <!-- Wiadomości będą tutaj -->
     </div>
+    
+    <div class="m-2">
+        <form id="chat-form" class="d-flex gap-2">
+            <div
+            id="message-input"
+            class="form-control bg-dark text-warning"
+            contenteditable="true"
+            role="textbox"
+            aria-label="Wiadomość"
+            data-placeholder="Wpisz wiadomość"
+            style="width: 100%; min-height: 40px; max-height: 140px; overflow-y: auto; font-size: 14px; color: #9da2a8; border:#6a6a6a solid 1px;"
+            ></div>
+
+            <button type="submit" class="btn btn-outline-warning" style="height: 40px;">
+            Wyślij
+            </button>
+        </form>
+    </div>
+
+
+<!-- 
+
     <div class="m-2" >
         <form id="chat-form">
             <input 
@@ -998,7 +1020,7 @@
                 style="max-height: 40px; width: 100%; font-size: 14px; color: #9da2a8; border:#6a6a6a solid 1px;" 
                 aria-label=".form-control-lg example" required>
         </form>
-    </div>
+    </div> -->
 </div>
 
 {% endblock %}
@@ -1227,30 +1249,94 @@
     });
 
     // wysyłanie na czat
-    document.getElementById('chat-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Zapobiega przeładowaniu strony
+    // document.getElementById('chat-form').addEventListener('submit', function(event) {
+    //     event.preventDefault(); // Zapobiega przeładowaniu strony
 
-        var messageInput = document.getElementById('message-input');
-        var message = messageInput.value;
+    //     var messageInput = document.getElementById('message-input');
+    //     var message = messageInput.value;
 
-        if (message.trim() !== "") {
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/send-chat-message', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
+    //     if (message.trim() !== "") {
+    //         var xhr = new XMLHttpRequest();
+    //         xhr.open('POST', '/send-chat-message', true);
+    //         xhr.setRequestHeader('Content-Type', 'application/json');
 
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE && (xhr.status === 201 || xhr.status === 200)) {
-                    messageInput.value = ''; 
+    //         xhr.onreadystatechange = function() {
+    //             if (xhr.readyState === XMLHttpRequest.DONE && (xhr.status === 201 || xhr.status === 200)) {
+    //                 messageInput.value = ''; 
+    //             }
+    //         };
+
+    //         var data = JSON.stringify({
+    //             content: message
+    //         });
+
+    //         xhr.send(data);
+    //     }
+    // });
+
+    function getEditableText(el) {
+    // zamieniamy NBSP i trimujemy
+    return (el.innerText || "")
+        .replace(/\u00A0/g, " ")
+        .trim();
+    }
+
+    function clearEditable(el) {
+        el.innerHTML = "";
+    }
+
+    function sendChatMessage(text, onDone) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/send-chat-message', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 201 || xhr.status === 200) {
+                    onDone && onDone(true);
+                } else {
+                    onDone && onDone(false);
                 }
-            };
+            }
+        };
 
-            var data = JSON.stringify({
-                content: message
-            });
+        xhr.send(JSON.stringify({ content: text }));
+    }
 
-            xhr.send(data);
+    const msgEl = document.getElementById('message-input');
+    const formEl = document.getElementById('chat-form');
+
+    // Enter = wyślij, Shift+Enter = nowa linia
+    msgEl.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            if (e.shiftKey) {
+                // zostawiamy domyślne zachowanie (nowa linia)
+                return;
+            }
+            e.preventDefault(); // nie rób nowej linii
+            formEl.requestSubmit(); // wyślij jak submit
         }
     });
+
+    // Submit działa zarówno po Enter (requestSubmit) jak i po kliknięciu przycisku
+    formEl.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const message = getEditableText(msgEl);
+        if (!message) return;
+
+        sendChatMessage(message, function (ok) {
+            if (ok) {
+                clearEditable(msgEl);
+                msgEl.focus();
+            } else {
+                alert("Nie udało się wysłać wiadomości.");
+            }
+        });
+    });
+
+
+
 
     function copyToClipboard(logText) {
         // Tworzymy tymczasowy element <textarea> do skopiowania tekstu
