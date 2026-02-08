@@ -1946,6 +1946,23 @@ color:#969696;
   }
 }
 
+/* Opcje pod dymkiem — minimalna, izolowana poprawka pozycjonowania */
+.chat-bubble-options{
+    display: flex;
+    justify-content: flex-end; /* do prawej */
+    align-items: center;
+    margin-top: -18px;         /* podciąga ikonkę do góry (dostosuj) */
+    padding-right: 6px;        /* żeby nie kleiło się do krawędzi */
+    pointer-events: auto;
+}
+
+/* Ikona trochę większa i czytelniejsza */
+.chat-bubble-options .bi{
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
 /* =========================================================
    Markdown: LINKI i CODE — baza (działa dla obu bąbelków)
    ========================================================= */
