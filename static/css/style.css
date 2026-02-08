@@ -1841,8 +1841,6 @@ color:#969696;
 }
 
 #chat-form {
-  display: flex;
-  flex-direction: column;
   max-width: 1000px;
   margin: 0 auto;
 }
