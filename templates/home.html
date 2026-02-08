@@ -1310,69 +1310,6 @@
     }
 
 
-    function sendChatToEmail_old(el) {
-        try {
-            // 1) znajdź blok wiadomości (row z dymkiem)
-            const msgWrap = el.closest(".row"); // u Ciebie: row mb-2
-            if (!msgWrap) {
-                alert("sendChatToEmail: nie znalazłem bloku wiadomości (.row)");
-                return;
-            }
-
-            // 2) autor (nagłówek jest tuż NAD msgWrap)
-            let author = "unknown";
-            const header = msgWrap.previousElementSibling;
-            if (header) {
-                const nickEl = header.querySelector(".chat-nickname, .chat-nickname-self");
-                if (nickEl) {
-                    author = (nickEl.innerText || nickEl.textContent || "").trim() || author;
-                }
-            }
-
-            // 3) treść (HTML po markdown + fallback text)
-            const msgEl = msgWrap.querySelector(".chat-message-fill, .chat-message-fill-self");
-            const html = msgEl ? (msgEl.innerHTML || "").trim() : "";
-            const text = msgEl ? ((msgEl.innerText || msgEl.textContent || "").trim()) : "";
-
-            if (!html && !text) {
-                alert("sendChatToEmail: pusta treść");
-                return;
-            }
-
-            // 4) timestamp (z wnętrza msgWrap)
-            let ts = "";
-            const tsEl = msgWrap.querySelector(".chat-timestamp, .chat-timestamp-self");
-            if (tsEl) ts = (tsEl.innerText || tsEl.textContent || "").trim();
-
-            // 5) payload
-            const payload = { author, ts, html, text };
-
-            // 6) request
-            $.ajax({
-                url: "/send-chat-email",
-                method: "POST",
-                contentType: "application/json",
-                dataType: "json",
-                data: JSON.stringify(payload),
-
-                success: function () {
-                    showEmailNotification();
-                },
-
-                error: function (xhr) {
-                    console.log("[sendChatToEmail] ERROR", xhr.status, xhr.responseText);
-                    alert("Błąd wysyłki na email: " + xhr.status + "\n" + (xhr.responseText || ""));
-                }
-            });
-
-        } catch (e) {
-            console.log("[sendChatToEmail] exception:", e);
-            alert("Wyjątek w sendChatToEmail, zobacz konsolę");
-        }
-    }
-
-
-
     function getEditableText(el) {
     // zamieniamy NBSP i trimujemy
     return (el.innerText || "")

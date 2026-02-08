@@ -1914,7 +1914,7 @@ def send_chat_email():
     safe_author = author if author else "unknown"
     safe_ts = ts if ts else datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
 
-    subject = f"[DMD Chat] {safe_author} @ {safe_ts}"
+    subject = f"💬 @{safe_author} — wiadomość z czatu DMD"
 
     html_body = f"""
     <html>

@@ -1504,11 +1504,11 @@ def main():
 
                                 witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
                                 
+                                acive_bot_valided = False
                                 if not start_selector:
                                     bot_rotation = 'aifa'
 
                                 bot_rotation = 'niezidentyfikowana'
-                                acive_bot_valided = False
                                 if hist and isinstance(hist[-1], dict) and start_selector:
                                     last_context = "\n".join(
                                         f"{x.get('author', '')}\n{x.get('content', '')}"
@@ -1544,7 +1544,9 @@ def main():
                                             acive_bot_valided = True
                                             bot_rotation = bot_ident
                                             time.sleep(3)
-                                    else: bot_rotation = 'aifa'
+                                    else: 
+                                        acive_bot_valided = True
+                                        bot_rotation = 'aifa'
 
 
                                 if bot_rotation in ['niezidentyfikowana'] and start_selector:
