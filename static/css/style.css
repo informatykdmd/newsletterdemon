@@ -1936,7 +1936,7 @@ color:#969696;
 
 .chat-timestamp-self {
   font-size: 0.6rem;
-  color: #666;
+  color: #666666;
   text-align: left;
   margin-top: 2px;
   margin-right: 8px;
@@ -1960,7 +1960,7 @@ color:#969696;
 /* Ikona trochę większa i czytelniejsza */
 .chat-bubble-options .bi{
     font-size: 13px;
-    margin-right: 3px;
+    margin-right: 8px;
     cursor: pointer;
 }
 
