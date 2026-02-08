@@ -1840,6 +1840,13 @@ color:#969696;
   opacity: 0.7;
 }
 
+#chat-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 
 .chat-avatar {
   flex-shrink: 0;
