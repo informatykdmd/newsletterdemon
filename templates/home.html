@@ -1184,9 +1184,7 @@
                                     <div class="col-12">
                                         <i class="bi bi-copy"
                                             title="Kopiuj"
-                                            data-copy="${encodeURIComponent(message[1] || '')}"
-                                            onclick="copyFromDataAttr(this)"></i>
-
+                                            onclick="copyNearestChatText(this)"></i>
                                     </div>
                                 </div>
                             `);
@@ -1281,6 +1279,17 @@
         const text = decodeURIComponent(encoded);
         copyToClipboard(text);
     }
+    // Kopiuje "to co widać" w czacie (tekst po renderze, bez znaczników MD)
+    function copyNearestChatText(el) {
+        // Ikona jest w osobnym .row, bańka jest w poprzednim .row
+        const row = el.closest(".row");
+        const prevRow = row ? row.previousElementSibling : null;
+        const msgEl = prevRow ? prevRow.querySelector(".chat-message-fill, .chat-message-fill-self") : null;
+
+        const text = msgEl ? (msgEl.innerText || msgEl.textContent || "") : "";
+        copyToClipboard(text.trim());
+    }
+
 
 
 </script>
