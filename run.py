@@ -1916,12 +1916,15 @@ def send_chat_email():
 
             <!-- Autor -->
             <div style="
-                font-size:13px;
-                color:#9da2a8;
-                margin-bottom:6px;
+                font-size:16px;
+                font-weight:600;
+                color:#cfd3da;
+                margin-left:14px;
+                margin-bottom:8px;
             ">
                 {safe_author}
             </div>
+
 
             <!-- Dymek -->
             <div style="
