@@ -1886,9 +1886,15 @@ def send_chat_email():
     #     return jsonify({"ok": False, "error": "empty_text"}), 400
 
     html_in = (data.get("html") or "").strip()
+    text_in = (data.get("text") or "").strip()
 
-    if not html_in:
-        return jsonify({"ok": False, "error": "empty_html"}), 400
+    if not html_in and not text_in:
+        return jsonify({"ok": False, "error": "empty_payload"}), 400
+
+    # fallback: jeśli nie ma html, ale jest tekst -> opakuj w <pre>
+    if not html_in and text_in:
+        html_in = f"<pre style='white-space:pre-wrap; font-family:Consolas, monospace;'>{text_in}</pre>"
+
 
 
     # --- log ---

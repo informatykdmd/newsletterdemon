@@ -1275,8 +1275,10 @@
 
             const msgEl = bubble.querySelector(".chat-message-fill, .chat-message-fill-self");
             const html = msgEl ? (msgEl.innerHTML || "").trim() : "";
+            const text = msgEl ? ((msgEl.innerText || msgEl.textContent || "").trim()) : "";
 
-            if (!html) return;
+            if (!html && !text) return;
+
 
             let ts = "";
             const tsEl = bubble.querySelector(".chat-timestamp, .chat-timestamp-self");
@@ -1284,7 +1286,9 @@
 
             // const payload_text = { author, ts, text };
             // console.log("[sendChatToEmail] POST /send-chat-email payload:", payload_text);
-            const payload_html = { author, ts, html };
+            // const payload_html = { author, ts, html };
+            const payload_html = { author, ts, html, text };
+
 
             // Żebyś widział, że TO jest mail, a nie copy:
             // alert("Wysyłam na email (sprawdź Network -> POST /send-chat-email)");
@@ -1293,6 +1297,7 @@
                 url: "/send-chat-email",
                 method: "POST",
                 contentType: "application/json",
+                dataType: "json",
                 data: JSON.stringify(payload_html),
                 
                 success: function (resp) {
@@ -1302,8 +1307,9 @@
 
                 error: function (xhr) {
                     console.log("[sendChatToEmail] ERROR", xhr.status, xhr.responseText);
-                    alert("Błąd wysyłki na email: " + xhr.status);
+                    alert("Błąd wysyłki na email: " + xhr.status + "\n" + (xhr.responseText || ""));
                 }
+
             });
 
         } catch (e) {
