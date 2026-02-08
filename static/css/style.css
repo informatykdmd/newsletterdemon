@@ -1825,6 +1825,7 @@ color:#969696;
   flex-direction: column;
   gap: 7px;
   max-width: 1000px;
+  margin: 0 auto;
 }
 
 .chat-message {
