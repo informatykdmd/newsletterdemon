@@ -1850,18 +1850,32 @@ def home():
             )
 
 
-
 @app.route("/send-chat-email", methods=["POST"])
 def send_chat_email():
-    """
-    Frontend wysyła JSON:
-    {
-      "author": "...",
-      "ts": "...",
-      "text": "..."
-    }
-    Na razie tylko przechwytujemy i logujemy.
-    """
+    # --- auth / sesja ---
+    if 'username' not in session:
+        msq.handle_error(
+            'UWAGA! wywołanie endpointa /send-chat-email bez autoryzacji.',
+            log_path=logFileName
+        )
+        return jsonify({"ok": False, "error": "unauthorized"}), 401
+
+    if 'user_data' not in session:
+        msq.handle_error(
+            'UWAGA! brak user_data w sesji dla /send-chat-email.',
+            log_path=logFileName
+        )
+        return jsonify({"ok": False, "error": "missing_user_data"}), 400
+
+    user_email_direct = (session['user_data'].get('email') or "").strip()
+    if not user_email_direct:
+        msq.handle_error(
+            'UWAGA! brak email użytkownika w sesji dla /send-chat-email.',
+            log_path=logFileName
+        )
+        return jsonify({"ok": False, "error": "missing_user_email"}), 400
+
+    # --- payload ---
     data = request.get_json(silent=True) or {}
 
     author = (data.get("author") or "").strip()
@@ -1871,7 +1885,7 @@ def send_chat_email():
     if not text:
         return jsonify({"ok": False, "error": "empty_text"}), 400
 
-    # Minimalny log (podmień na swój logger)
+    # --- log ---
     print("[CHAT->EMAIL]", {
         "at": datetime.datetime.utcnow().isoformat() + "Z",
         "author": author,
@@ -1882,7 +1896,35 @@ def send_chat_email():
         "ua": request.headers.get("User-Agent", "")
     })
 
-    # TODO: tu dopniesz wysyłkę e-mail
+    # --- email ---
+    safe_author = author if author else "unknown"
+    safe_ts = ts if ts else datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+
+    subject = f"[DMD Chat] {safe_author} @ {safe_ts}"
+
+    html_body = f"""
+    <html><body style="font-family:Arial, sans-serif;">
+      <h3>Wiadomość z czatu</h3>
+      <p><strong>Od:</strong> {safe_author}</p>
+      <p><strong>Czas:</strong> {safe_ts}</p>
+      <hr/>
+      <pre style="white-space:pre-wrap; font-family:Consolas, monospace;">{text}</pre>
+      <hr/>
+      <p style="color:#777; font-size:12px;">
+        Wysłane przez: {session.get("username")} • IP: {request.remote_addr}
+      </p>
+    </body></html>
+    """
+
+    try:
+        mails.send_html_email(subject, html_body, user_email_direct)
+    except Exception as e:
+        msq.handle_error(
+            f'Błąd wysyłki maila /send-chat-email: {e}',
+            log_path=logFileName
+        )
+        return jsonify({"ok": False, "error": "email_send_failed"}), 500
+
     return jsonify({"ok": True}), 200
 
 

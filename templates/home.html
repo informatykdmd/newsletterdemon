@@ -75,7 +75,9 @@
         z-index: 1000;">
         Copied to clipboard!
     </div>
-    <div id="email-notification" style="display:none;">Wysłano na email</div>
+    <div id="email-notification" style="display:none; position: fixed; bottom: 20px; right: 20px; background: #222; color: #fff; padding: 10px 14px; border: 1px solid #666; border-radius: 8px; z-index: 9999;">
+        Wysłano na email ✅
+    </div>
 
     <!-- d-block d-sm-none tylko na średnim sm+ -->
     <div class="d-block d-sm-none">
@@ -1242,7 +1244,7 @@
     });
 
     function sendChatToEmail(el) {
-        console.log("[sendChatToEmail] clicked", el);
+        // console.log("[sendChatToEmail] clicked", el);
 
         try {
             const bubble = el.closest(".chat-bubble, .chat-bubble-self");
@@ -1255,7 +1257,7 @@
 
             const msgEl = bubble.querySelector(".chat-message-fill, .chat-message-fill-self");
             const text = msgEl ? (msgEl.innerText || msgEl.textContent || "").trim() : "";
-            console.log("[sendChatToEmail] text len:", text.length);
+            // console.log("[sendChatToEmail] text len:", text.length);
 
             if (!text) {
                 alert("sendChatToEmail: pusta treść");
@@ -1279,17 +1281,19 @@
             console.log("[sendChatToEmail] POST /send-chat-email payload:", payload);
 
             // Żebyś widział, że TO jest mail, a nie copy:
-            alert("Wysyłam na email (sprawdź Network -> POST /send-chat-email)");
+            // alert("Wysyłam na email (sprawdź Network -> POST /send-chat-email)");
 
             $.ajax({
                 url: "/send-chat-email",
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(payload),
+                
                 success: function (resp) {
-                    console.log("[sendChatToEmail] success:", resp);
-                    alert("Backend odpowiedział OK (sprawdź logi serwera).");
+                    // osobne, lekkie powiadomienie (nie "copied")
+                    showEmailNotification();
                 },
+
                 error: function (xhr) {
                     console.log("[sendChatToEmail] ERROR", xhr.status, xhr.responseText);
                     alert("Błąd wysyłki na email: " + xhr.status);
@@ -1398,13 +1402,14 @@
         }, 2000);
     }
 
+
     function showEmailNotification() {
-        const n = document.getElementById("email-notification");
-        n.style.display = "block";
-        setTimeout(() => n.style.display = "none", 2000);
+        const notification = document.getElementById("email-notification");
+        notification.style.display = "block";
+        setTimeout(function() {
+            notification.style.display = "none";
+        }, 2000);
     }
-
-
     // Kopiowanie bez wkładania tekstu do onclick (bezpieczne dla HTML/MD)
     function copyFromDataAttr(el) {
         const encoded = el.getAttribute("data-copy") || "";
