@@ -1562,11 +1562,10 @@ def main():
                                         )
                                         print(f"🤖 bot_ident.selector: {bot_ident}")
                                         if bot_ident != "nieznana":
-                                            acive_bot_valided = True
                                             bot_rotation = bot_ident
                                             time.sleep(3)
+                                            acive_bot_valided = True
                                     else: 
-                                        acive_bot_valided = True
                                         bot_rotation = 'aifa'
 
 
