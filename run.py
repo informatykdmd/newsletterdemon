@@ -1849,6 +1849,43 @@ def home():
             users_data=session['user_data']
             )
 
+
+
+@app.route("/send-chat-email", methods=["POST"])
+def send_chat_email():
+    """
+    Frontend wysyła JSON:
+    {
+      "author": "...",
+      "ts": "...",
+      "text": "..."
+    }
+    Na razie tylko przechwytujemy i logujemy.
+    """
+    data = request.get_json(silent=True) or {}
+
+    author = (data.get("author") or "").strip()
+    ts     = (data.get("ts") or "").strip()
+    text   = (data.get("text") or "").strip()
+
+    if not text:
+        return jsonify({"ok": False, "error": "empty_text"}), 400
+
+    # Minimalny log (podmień na swój logger)
+    print("[CHAT->EMAIL]", {
+        "at": datetime.datetime.utcnow().isoformat() + "Z",
+        "author": author,
+        "ts": ts,
+        "text_preview": text[:200],
+        "text_len": len(text),
+        "ip": request.remote_addr,
+        "ua": request.headers.get("User-Agent", "")
+    })
+
+    # TODO: tu dopniesz wysyłkę e-mail
+    return jsonify({"ok": True}), 200
+
+
 @app.route('/fetch-messages')
 def fetch_messages():
     if 'username' not in session:

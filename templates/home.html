@@ -75,6 +75,8 @@
         z-index: 1000;">
         Copied to clipboard!
     </div>
+    <div id="email-notification" style="display:none;">Wysłano na email</div>
+
     <!-- d-block d-sm-none tylko na średnim sm+ -->
     <div class="d-block d-sm-none">
         <div class="row formatuj-padding">
@@ -1194,7 +1196,8 @@
                                                         style="color: #00B7FF;"></i>
 
                                                         <i class="bi bi-envelope-arrow-up" 
-                                                        title="Wyślij @ do siebie"
+                                                        title="Wyślij do siebie na email"
+                                                        onclick="sendChatToEmail(this)"
                                                         style="color: #FF8C00;"></i>
 
                                                         <i class="bi bi-soundwave" 
@@ -1237,6 +1240,55 @@
             }
         });
     });
+
+    function sendChatToEmail(el) {
+        try {
+            const bubble = el.closest(".chat-bubble, .chat-bubble-self");
+            if (!bubble) return;
+
+            const msgEl = bubble.querySelector(".chat-message-fill, .chat-message-fill-self");
+            const text = msgEl ? (msgEl.innerText || msgEl.textContent || "").trim() : "";
+            if (!text) return;
+
+            // Autor: spróbuj znaleźć najbliższy nagłówek wiadomości nad bubble
+            // (w Twoim układzie jest to poprzedzający blok .chat-message / .chat-message-self)
+            let author = "unknown";
+            const row = bubble.closest(".row");
+            const header = row ? row.previousElementSibling : null;
+
+            if (header) {
+                const nickEl = header.querySelector(".chat-nickname, .chat-nickname-self");
+                if (nickEl) author = (nickEl.innerText || nickEl.textContent || "").trim() || author;
+            }
+
+            // Timestamp z dymku (masz go wewnątrz)
+            let ts = "";
+            const tsEl = bubble.querySelector(".chat-timestamp, .chat-timestamp-self");
+            if (tsEl) ts = (tsEl.innerText || tsEl.textContent || "").trim();
+
+            // Wyślij do backendu (endpoint do zrobienia później)
+            $.ajax({
+                url: "/send-chat-email",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    author: author,
+                    ts: ts,
+                    text: text
+                }),
+                success: function () {
+                    showNotification(); // możesz mieć osobny toast, ale na szybko użyjmy istniejącego
+                },
+                error: function () {
+                    alert("Nie udało się wysłać na email.");
+                }
+            });
+
+        } catch (e) {
+            console.log("sendChatToEmail error:", e);
+        }
+    }
+
 
 
     function getEditableText(el) {
@@ -1331,6 +1383,13 @@
             notification.style.display = "none";
         }, 2000);
     }
+
+    function showEmailNotification() {
+        const n = document.getElementById("email-notification");
+        n.style.display = "block";
+        setTimeout(() => n.style.display = "none", 2000);
+    }
+
 
     // Kopiowanie bez wkładania tekstu do onclick (bezpieczne dla HTML/MD)
     function copyFromDataAttr(el) {
