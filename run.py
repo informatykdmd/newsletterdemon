@@ -1903,18 +1903,71 @@ def send_chat_email():
     subject = f"[DMD Chat] {safe_author} @ {safe_ts}"
 
     html_body = f"""
-    <html><body style="font-family:Arial, sans-serif;">
-      <h3>Wiadomość z czatu</h3>
-      <p><strong>Od:</strong> {safe_author}</p>
-      <p><strong>Czas:</strong> {safe_ts}</p>
-      <hr/>
-      <pre style="white-space:pre-wrap; font-family:Consolas, monospace;">{text}</pre>
-      <hr/>
-      <p style="color:#777; font-size:12px;">
-        Wysłane przez: {session.get("username")} • IP: {request.remote_addr}
-      </p>
-    </body></html>
+        <html>
+        <body style="
+            margin:0;
+            padding:24px;
+            background:#0f1115;
+            font-family:Arial, Helvetica, sans-serif;
+            color:#e6e6e6;
+        ">
+
+            <div style="max-width:800px; margin:0 auto;">
+
+            <!-- Autor -->
+            <div style="
+                font-size:13px;
+                color:#9da2a8;
+                margin-bottom:6px;
+            ">
+                {safe_author}
+            </div>
+
+            <!-- Dymek -->
+            <div style="
+                background:#0d6efd;
+                color:#ffffff;
+                border-radius:14px;
+                padding:16px 18px;
+                box-shadow:0 4px 16px rgba(0,0,0,0.35);
+            ">
+                <div style="
+                white-space:pre-wrap;
+                font-size:14px;
+                line-height:1.45;
+                font-family:Arial, Helvetica, sans-serif;
+                ">
+        {text}
+                </div>
+
+                <!-- Footer dymku -->
+                <div style="
+                display:flex;
+                justify-content:flex-end;
+                margin-top:10px;
+                font-size:11px;
+                color:rgba(255,255,255,0.75);
+                ">
+                {safe_ts}
+                </div>
+            </div>
+
+            <!-- Stopka techniczna -->
+            <div style="
+                margin-top:18px;
+                font-size:11px;
+                color:#6c757d;
+                text-align:right;
+            ">
+                Wysłane z panelu DMD • użytkownik: {session.get("username")} • IP: {request.remote_addr}
+            </div>
+
+            </div>
+
+        </body>
+        </html>
     """
+
 
     try:
         mails.send_html_email(subject, html_body, user_email_direct)
