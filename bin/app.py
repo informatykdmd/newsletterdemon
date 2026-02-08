@@ -1566,6 +1566,7 @@ def main():
                                             time.sleep(3)
                                             acive_bot_valided = True
                                     else: 
+                                        acive_bot_valided = start_selector
                                         bot_rotation = 'aifa'
 
 
