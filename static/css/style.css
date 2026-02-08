@@ -1877,6 +1877,8 @@ color:#969696;
   color: #666;
   text-align: right;
   margin-top: 2px;
+  margin-right: 8px;
+
 }
 
 @media (max-width: 400px) {
@@ -1937,6 +1939,7 @@ color:#969696;
   color: #666;
   text-align: left;
   margin-top: 2px;
+  margin-right: 8px;
   clear: both;
 }
 
