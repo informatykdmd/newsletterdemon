@@ -1244,64 +1244,51 @@
     });
 
     function sendChatToEmail(el) {
-        // console.log("[sendChatToEmail] clicked", el);
-
         try {
-            const bubble = el.closest(".chat-bubble, .chat-bubble-self");
-            console.log("[sendChatToEmail] bubble:", bubble);
-
-            if (!bubble) {
-                alert("sendChatToEmail: nie znalazłem bubble");
+            // 1) znajdź blok wiadomości (row z dymkiem)
+            const msgWrap = el.closest(".row"); // u Ciebie: row mb-2
+            if (!msgWrap) {
+                alert("sendChatToEmail: nie znalazłem bloku wiadomości (.row)");
                 return;
             }
 
-            // const msgEl = bubble.querySelector(".chat-message-fill, .chat-message-fill-self");
-            // const text = msgEl ? (msgEl.innerText || msgEl.textContent || "").trim() : "";
-            // // console.log("[sendChatToEmail] text len:", text.length);
-
-            // if (!text) {
-            //     alert("sendChatToEmail: pusta treść");
-            //     return;
-            // }
-
+            // 2) autor (nagłówek jest tuż NAD msgWrap)
             let author = "unknown";
-            const row = bubble.closest(".row");
-            const header = row ? row.previousElementSibling : null;
-
+            const header = msgWrap.previousElementSibling;
             if (header) {
                 const nickEl = header.querySelector(".chat-nickname, .chat-nickname-self");
-                if (nickEl) author = (nickEl.innerText || nickEl.textContent || "").trim() || author;
+                if (nickEl) {
+                    author = (nickEl.innerText || nickEl.textContent || "").trim() || author;
+                }
             }
 
-            const msgEl = bubble.querySelector(".chat-message-fill, .chat-message-fill-self");
+            // 3) treść (HTML po markdown + fallback text)
+            const msgEl = msgWrap.querySelector(".chat-message-fill, .chat-message-fill-self");
             const html = msgEl ? (msgEl.innerHTML || "").trim() : "";
             const text = msgEl ? ((msgEl.innerText || msgEl.textContent || "").trim()) : "";
 
-            if (!html && !text) return;
+            if (!html && !text) {
+                alert("sendChatToEmail: pusta treść");
+                return;
+            }
 
-
+            // 4) timestamp (z wnętrza msgWrap)
             let ts = "";
-            const tsEl = bubble.querySelector(".chat-timestamp, .chat-timestamp-self");
+            const tsEl = msgWrap.querySelector(".chat-timestamp, .chat-timestamp-self");
             if (tsEl) ts = (tsEl.innerText || tsEl.textContent || "").trim();
 
-            // const payload_text = { author, ts, text };
-            // console.log("[sendChatToEmail] POST /send-chat-email payload:", payload_text);
-            // const payload_html = { author, ts, html };
-            const payload_html = { author, ts, html, text };
+            // 5) payload
+            const payload = { author, ts, html, text };
 
-
-            // Żebyś widział, że TO jest mail, a nie copy:
-            // alert("Wysyłam na email (sprawdź Network -> POST /send-chat-email)");
-
+            // 6) request
             $.ajax({
                 url: "/send-chat-email",
                 method: "POST",
                 contentType: "application/json",
                 dataType: "json",
-                data: JSON.stringify(payload_html),
-                
-                success: function (resp) {
-                    // osobne, lekkie powiadomienie (nie "copied")
+                data: JSON.stringify(payload),
+
+                success: function () {
                     showEmailNotification();
                 },
 
@@ -1309,7 +1296,6 @@
                     console.log("[sendChatToEmail] ERROR", xhr.status, xhr.responseText);
                     alert("Błąd wysyłki na email: " + xhr.status + "\n" + (xhr.responseText || ""));
                 }
-
             });
 
         } catch (e) {
@@ -1317,7 +1303,6 @@
             alert("Wyjątek w sendChatToEmail, zobacz konsolę");
         }
     }
-
 
 
 
