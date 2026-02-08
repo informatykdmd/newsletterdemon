@@ -1960,6 +1960,7 @@ color:#969696;
 /* Ikona trochę większa i czytelniejsza */
 .chat-bubble-options .bi{
     font-size: 13px;
+    margin-right: 3px;
     cursor: pointer;
 }
 
