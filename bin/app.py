@@ -37,21 +37,48 @@ def get_messages(flag='all'):
             """SELECT id, user_name, content, timestamp, status FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR AND status != 1 ORDER BY timestamp ASC;""")
     return dump_key
 
+# def collecting_hist():
+#     return prepare_shedule.connect_to_database(
+#         """
+#             SELECT user_name, content
+#             FROM (
+#                 SELECT user_name, content, timestamp
+#                 FROM Messages
+#                 WHERE timestamp >= NOW() - INTERVAL 1 HOUR
+#                 ORDER BY timestamp DESC
+#                 LIMIT 12
+#             ) t
+#             ORDER BY timestamp ASC;
+
+#         """
+#     )
+
 def collecting_hist():
     return prepare_shedule.connect_to_database(
         """
-            SELECT user_name, content
-            FROM (
-                SELECT user_name, content, timestamp
+        SELECT user_name, content
+        FROM (
+            SELECT user_name, content, timestamp
+            FROM Messages
+            WHERE timestamp >= NOW() - INTERVAL 1 HOUR
+
+            UNION ALL
+
+            SELECT user_name, content, timestamp
+            FROM Messages
+            WHERE NOT EXISTS (
+                SELECT 1
                 FROM Messages
                 WHERE timestamp >= NOW() - INTERVAL 1 HOUR
-                ORDER BY timestamp DESC
-                LIMIT 12
-            ) t
-            ORDER BY timestamp ASC;
-
+            )
+            ORDER BY timestamp DESC
+            LIMIT 3
+        ) t
+        ORDER BY timestamp ASC
+        LIMIT 12;
         """
     )
+
 
 def get_campains_id_descript_dates() -> str:
     existing_campaigns_query = '''
