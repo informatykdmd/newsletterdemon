@@ -186,7 +186,8 @@ def prepare_prompt(began_prompt):
     mem = LongTermMemoryClient(repo)
 
     ua_ls = set()
-    for msa in souerce_hist:
+    len_souerce_hist = len(souerce_hist)
+    for i, msa in enumerate(souerce_hist):
         nick = str(msa[0]).strip()
         message = msa[1]
         nick_l = str(nick).lower()
@@ -196,6 +197,7 @@ def prepare_prompt(began_prompt):
             "role": "user",
             "author": nick,
             "content": f"{message}"
+            
         })
         
         # 2) widok AIFA: tylko Aifa jest assistant
@@ -203,7 +205,7 @@ def prepare_prompt(began_prompt):
         ready_hist_aifa.append({
             "role": role_aifa,
             "author": nick,
-            "content": f"{message}"
+            "content": f"[CHAT]\n@{nick_l}\n{message}" if (len_souerce_hist - 1 != i) and role_aifa == "user" else f"{message}"
         })
 
         # 3) widok GERINA: tylko Gerina jest assistant
@@ -211,7 +213,7 @@ def prepare_prompt(began_prompt):
         ready_hist_gerina.append({
             "role": role_gerina,
             "author": nick,
-            "content": f"{message}"
+            "content": f"[CHAT]\n@{nick_l}\n{message}" if (len_souerce_hist - 1 != i) and role_gerina == "user" else f"{message}"
         })
 
         # 4) widok PIONIER: tylko Pionier jest assistant
@@ -219,7 +221,7 @@ def prepare_prompt(began_prompt):
         ready_hist_pionier.append({
             "role": role_pionier,
             "author": nick,
-            "content": f"{message}"
+            "content": f"[CHAT]\n@{nick_l}\n{message}" if (len_souerce_hist - 1 != i) and role_pionier == "user" else f"{message}"
         })
 
         if nick not in bots:
@@ -548,6 +550,7 @@ def prepare_prompt(began_prompt):
                         "author": uname,
                         "tech_blocks": None,
                         "aifa_prompt": (
+                            f"{began_prompt}\n@{uname}\n"
                             f"{theme['content']}\n"
                             f"{theme['command']}\n"
                         )
