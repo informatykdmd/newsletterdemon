@@ -1182,7 +1182,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <i class="bi bi-copy" onclick="copyToClipboard('${formattedMessage}')" ></i>
+                                        <i class="bi bi-copy"
+                                            title="Kopiuj"
+                                            data-copy="${encodeURIComponent(message[1] || '')}"
+                                            onclick="copyFromDataAttr(this)"></i>
+
                                     </div>
                                 </div>
                             `);
@@ -1269,6 +1273,15 @@
             notification.style.display = "none";
         }, 2000);
     }
+
+    // Kopiowanie bez wkładania tekstu do onclick (bezpieczne dla HTML/MD)
+    function copyFromDataAttr(el) {
+        const encoded = el.getAttribute("data-copy") || "";
+        // data-copy jest zakodowane przez encodeURIComponent
+        const text = decodeURIComponent(encoded);
+        copyToClipboard(text);
+    }
+
 
 </script>
 {% endblock %}
