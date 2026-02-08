@@ -1555,6 +1555,7 @@ def main():
                                     )
                                     print(f"🤖 CUR-author: {latest_user_message_author} : {latest_user_message_author not in ['gerina', 'pionier']}")
                                     if latest_user_message_author not in ['gerina', 'pionier']:
+                                        time.sleep(2)
                                         bot_ident = mgr.categorize_response(
                                             prompti,
                                             witch_bot_list,
@@ -1563,7 +1564,7 @@ def main():
                                         print(f"🤖 bot_ident.selector: {bot_ident}")
                                         if bot_ident != "nieznana":
                                             bot_rotation = bot_ident
-                                            time.sleep(3)
+                                            time.sleep(2)
                                             acive_bot_valided = True
                                     else: 
                                         acive_bot_valided = start_selector
