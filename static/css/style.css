@@ -2079,6 +2079,42 @@ color:#969696;
   border-bottom: none;
 }
 
+/* Pasek na dole dymku: opcje + timestamp w jednej linii */
+.chat-bubble-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+/* Kontener na ikonki (teraz 1, później więcej) */
+.chat-bubble-options {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.85;
+}
+
+/* Ikonki akcji na dymku */
+.chat-bubble-options .bi {
+    font-size: 16px;      /* było za małe */
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* hover - delikatnie, żeby było "klikane" */
+.chat-bubble-options .bi:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+/* Timestamp w footerze nie potrzebuje text-end */
+.chat-bubble .chat-timestamp {
+    font-size: 12px; /* dopasuj do swojego */
+    opacity: 0.75;
+}
+
 
 
 .file-upload-wrapper {

@@ -1148,17 +1148,20 @@
                                         <img src="${avatar}" alt="Avatar">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="chat-bubble-self float-end">
-                                            <div class="chat-message-fill-self float-end">
-                                                ${formattedMessage}
-                                            </div>
-                                            <div class="chat-timestamp-self text-end">
-                                                ${ts}
-                                            </div>
-                                        </div>
+                                <div class="chat-bubble-self float-end">
+                                    <div class="chat-message-fill-self float-end">
+                                        ${formattedMessage}
                                     </div>
+
+                                    <div class="chat-bubble-footer chat-bubble-footer-self">
+                                        <div class="chat-bubble-options">
+                                            <i class="bi bi-copy"
+                                            title="Kopiuj"
+                                            onclick="copyNearestChatText(this)"></i>
+                                        </div>
+                                        <div class="chat-timestamp-self">${ts}</div>
+                                    </div>
+
                                 </div>
                             `);
                         } else {
@@ -1176,15 +1179,17 @@
                                             <div class="chat-message-fill">
                                                 ${formattedMessage}
                                             </div>
-                                            <div class="chat-timestamp text-end">${ts}</div>
+
+                                            <div class="chat-bubble-footer">
+                                                <div class="chat-bubble-options">
+                                                    <i class="bi bi-copy"
+                                                    title="Kopiuj"
+                                                    onclick="copyNearestChatText(this)"></i>
+                                                </div>
+                                                <div class="chat-timestamp">${ts}</div>
+                                            </div>
+
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <i class="bi bi-copy"
-                                            title="Kopiuj"
-                                            onclick="copyNearestChatText(this)"></i>
                                     </div>
                                 </div>
                             `);
