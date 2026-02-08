@@ -1255,14 +1255,14 @@
                 return;
             }
 
-            const msgEl = bubble.querySelector(".chat-message-fill, .chat-message-fill-self");
-            const text = msgEl ? (msgEl.innerText || msgEl.textContent || "").trim() : "";
-            // console.log("[sendChatToEmail] text len:", text.length);
+            // const msgEl = bubble.querySelector(".chat-message-fill, .chat-message-fill-self");
+            // const text = msgEl ? (msgEl.innerText || msgEl.textContent || "").trim() : "";
+            // // console.log("[sendChatToEmail] text len:", text.length);
 
-            if (!text) {
-                alert("sendChatToEmail: pusta treść");
-                return;
-            }
+            // if (!text) {
+            //     alert("sendChatToEmail: pusta treść");
+            //     return;
+            // }
 
             let author = "unknown";
             const row = bubble.closest(".row");
@@ -1273,12 +1273,18 @@
                 if (nickEl) author = (nickEl.innerText || nickEl.textContent || "").trim() || author;
             }
 
+            const msgEl = bubble.querySelector(".chat-message-fill, .chat-message-fill-self");
+            const html = msgEl ? (msgEl.innerHTML || "").trim() : "";
+
+            if (!html) return;
+
             let ts = "";
             const tsEl = bubble.querySelector(".chat-timestamp, .chat-timestamp-self");
             if (tsEl) ts = (tsEl.innerText || tsEl.textContent || "").trim();
 
-            const payload = { author, ts, text };
-            console.log("[sendChatToEmail] POST /send-chat-email payload:", payload);
+            // const payload_text = { author, ts, text };
+            // console.log("[sendChatToEmail] POST /send-chat-email payload:", payload_text);
+            const payload_html = { author, ts, html };
 
             // Żebyś widział, że TO jest mail, a nie copy:
             // alert("Wysyłam na email (sprawdź Network -> POST /send-chat-email)");
@@ -1287,7 +1293,7 @@
                 url: "/send-chat-email",
                 method: "POST",
                 contentType: "application/json",
-                data: JSON.stringify(payload),
+                data: JSON.stringify(payload_html),
                 
                 success: function (resp) {
                     // osobne, lekkie powiadomienie (nie "copied")

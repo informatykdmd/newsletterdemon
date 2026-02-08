@@ -1880,18 +1880,24 @@ def send_chat_email():
 
     author = (data.get("author") or "").strip()
     ts     = (data.get("ts") or "").strip()
-    text   = (data.get("text") or "").strip()
+    # text   = (data.get("text") or "").strip()
 
-    if not text:
-        return jsonify({"ok": False, "error": "empty_text"}), 400
+    # if not text:
+    #     return jsonify({"ok": False, "error": "empty_text"}), 400
+
+    html_in = (data.get("html") or "").strip()
+
+    if not html_in:
+        return jsonify({"ok": False, "error": "empty_html"}), 400
+
 
     # --- log ---
     print("[CHAT->EMAIL]", {
         "at": datetime.datetime.utcnow().isoformat() + "Z",
         "author": author,
         "ts": ts,
-        "text_preview": text[:200],
-        "text_len": len(text),
+        "html_in": html_in[:200],
+        "html_len": len(html_in),
         "ip": request.remote_addr,
         "ua": request.headers.get("User-Agent", "")
     })
@@ -1937,7 +1943,7 @@ def send_chat_email():
                 font-size:14px;
                 line-height:1.45;
                 font-family:Arial, Helvetica, sans-serif;
-                ">{text}</div>
+                ">{html_in}</div>
 
                 <!-- Footer dymku -->
                 <div style="
