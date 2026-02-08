@@ -1922,7 +1922,7 @@ def send_chat_email():
                 margin-left:14px;
                 margin-bottom:8px;
             ">
-                {safe_author}
+                @{safe_author.capitalize()}
             </div>
 
 
