@@ -176,7 +176,7 @@ def prepare_prompt(began_prompt):
 
     ua_ls = set()
     for msa in souerce_hist:
-        nick = msa[0]
+        nick = str(msa[0]).strip()
         message = msa[1]
         nick_l = str(nick).lower()
 
@@ -523,7 +523,7 @@ def prepare_prompt(began_prompt):
                             f"{theme['arm_hist']}\n"
                         ),
                         "aifa_prompt": (
-                            f"{began_prompt}\n"
+                            f"{began_prompt}\n@{uname}\n"
                             f"{theme['content']}\n"
                             f"{theme['command']}\n"
                         )
@@ -806,10 +806,7 @@ def save_chat_message(user_name, content, status):
     dane = (user_name, content, status)
     return prepare_shedule.insert_to_database(zapytanie_sql, dane)
 
-
-def sprawdz_czas(dzien_tygodnia=None, dzien_miesiaca=None, tydzien_miesiaca=None,
-                 miesiac=None, rok=None, pora_dnia=None):
-    def pobierz_aktualne_warunki():
+def pobierz_aktualne_warunki():
         teraz = datetime.datetime.now()
         dni_tygodnia = {
             'Monday': 'poniedziałek',
@@ -863,6 +860,23 @@ def sprawdz_czas(dzien_tygodnia=None, dzien_miesiaca=None, tydzien_miesiaca=None
             'rok': rok,
             'pora_dnia': pora_dnia
         }
+
+def format_pl_czas():
+    a = pobierz_aktualne_warunki()
+    teraz = a['teraz']
+
+    return (
+        f"{a['dzien_tygodnia']} "
+        f"{a['dzien_miesiaca']} "
+        f"{a['miesiac']} "
+        f"{a['rok']} "
+        f"{teraz.hour:02d}:{teraz.minute:02d}"
+    )
+
+
+def sprawdz_czas(dzien_tygodnia=None, dzien_miesiaca=None, tydzien_miesiaca=None,
+                 miesiac=None, rok=None, pora_dnia=None):
+    
     
     aktualne = pobierz_aktualne_warunki()
 
@@ -1466,7 +1480,11 @@ def main():
                     ################################################################
                     # komentowanie chata przez serwer automatów
                     ################################################################
-                    pre_prompt = f'Weź pod uwagę porę dnia oraz dzień tygodnia:\n{datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n\n'
+                    # pre_prompt = f'Weź pod uwagę porę dnia oraz dzień tygodnia:\n{datetime.datetime.now().strftime("%Y-%B-%d %H:%M")}\n\n'
+                    pre_prompt = (
+                        "[CHAT]\n"
+                        f"{format_pl_czas()}\n\n"
+                    )
                     final_prompt = prepare_prompt(pre_prompt)
                     if final_prompt.get("comands_hist", None) is not None:
                             
