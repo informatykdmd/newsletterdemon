@@ -1245,6 +1245,73 @@
 
     function sendChatToEmail(el) {
         try {
+            // 1) znajdź bańkę, w której jest kliknięta ikonka
+            const bubble = el.closest(".chat-bubble, .chat-bubble-self");
+            if (!bubble) {
+                alert("sendChatToEmail: brak .chat-bubble");
+                return;
+            }
+
+            // 2) treść z tego samego dymku
+            const msgEl = bubble.querySelector(".chat-message-fill, .chat-message-fill-self");
+            if (!msgEl) {
+                alert("sendChatToEmail: brak .chat-message-fill w bubble");
+                return;
+            }
+
+            const html = (msgEl.innerHTML || "").trim();
+            const text = ((msgEl.innerText || msgEl.textContent || "")).trim();
+
+            if (!html && !text) {
+                alert("sendChatToEmail: pusta treść");
+                return;
+            }
+
+            // 3) timestamp z tego samego dymku
+            let ts = "";
+            const tsEl = bubble.querySelector(".chat-timestamp, .chat-timestamp-self");
+            if (tsEl) ts = (tsEl.innerText || tsEl.textContent || "").trim();
+
+            // 4) autor jest w nagłówku NAD row mb-2 (to jest rodzic bubble)
+            let author = "unknown";
+            const bubbleRow = bubble.closest(".row.mb-2") || bubble.closest(".row");
+            const header = bubbleRow ? bubbleRow.previousElementSibling : null;
+
+            if (header) {
+                const nickEl = header.querySelector(".chat-nickname, .chat-nickname-self");
+                if (nickEl) author = (nickEl.innerText || nickEl.textContent || "").trim() || author;
+            }
+
+            // 5) payload
+            const payload = { author, ts, html, text };
+
+            // 6) request
+            $.ajax({
+                url: "/send-chat-email",
+                method: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(payload),
+
+                success: function () {
+                    showEmailNotification();
+                },
+
+                error: function (xhr) {
+                    console.log("[sendChatToEmail] ERROR", xhr.status, xhr.responseText);
+                    alert("Błąd wysyłki na email: " + xhr.status + "\n" + (xhr.responseText || ""));
+                }
+            });
+
+        } catch (e) {
+            console.log("[sendChatToEmail] exception:", e);
+            alert("Wyjątek w sendChatToEmail, zobacz konsolę");
+        }
+    }
+
+
+    function sendChatToEmail_old(el) {
+        try {
             // 1) znajdź blok wiadomości (row z dymkiem)
             const msgWrap = el.closest(".row"); // u Ciebie: row mb-2
             if (!msgWrap) {
