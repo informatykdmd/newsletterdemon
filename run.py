@@ -1921,9 +1921,7 @@ def send_chat_email():
                 color:#cfd3da;
                 margin-left:14px;
                 margin-bottom:8px;
-            ">
-                @{safe_author.capitalize()}
-            </div>
+            ">@{safe_author.capitalize()}</div>
 
 
             <!-- Dymek -->
@@ -1939,9 +1937,7 @@ def send_chat_email():
                 font-size:14px;
                 line-height:1.45;
                 font-family:Arial, Helvetica, sans-serif;
-                ">
-        {str(text).rsplit()}
-                </div>
+                ">{text}</div>
 
                 <!-- Footer dymku -->
                 <div style="
@@ -1950,9 +1946,7 @@ def send_chat_email():
                 margin-top:10px;
                 font-size:11px;
                 color:rgba(255,255,255,0.75);
-                ">
-                {safe_ts}
-                </div>
+                ">{safe_ts}</div>
             </div>
 
             <!-- Stopka techniczna -->
