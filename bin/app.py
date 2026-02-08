@@ -1911,7 +1911,7 @@ def main():
                                                     "<< end >>\n"
                                                 )
                                             
-                                            add_command_akapit = "WAŻNE! Odpowiedz jednym akapitem!" if __aifa_answer else ""
+                                            add_command_akapit = "WAŻNE! Odpowiedz krótko, jednym akapitem!" if __aifa_answer else ""
                                             tech_block = (
                                                 "- Format: możesz używać lekkiego markdown (###, **, listy, `code`).\n"
                                                 "- Bez powitań.\n"
@@ -1927,7 +1927,7 @@ def main():
                                             print(f"🧠 hist_gerina[0]: {gerina_hist[0] if gerina_hist else ''}")
                                             print(f"📚 hist_gerina.len: {len(gerina_hist)}")
                                             print(f"🤖 gerina.tail:\n{gerina_hist[-2:]}")
-                                            answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina, max_tokens = 1800 if not answer_mistral_aifa else 300)
+                                            answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina, max_tokens = 1800 if answer_mistral_aifa else 300)
                                             print(f"🧵 GERINA REGULAR | answer:((\n{answer_mistral_gerina}\n))")
                                             if answer_mistral_gerina:
                                                 save_chat_message("gerina", answer_mistral_gerina, 0)
@@ -2050,7 +2050,7 @@ def main():
                                                     "<< end >>\n"
                                                 )
                                             add_ANTYPOWTARZANIE = ANTYPOWTARZANIE if __aifa_answer or __gerina_answer else ""
-                                            add_command_akapit = "WAŻNE! Odpowiedz jednym akapitem!" if __aifa_answer or __gerina_answer else ""
+                                            add_command_akapit = "WAŻNE! Odpowiedz krótko, jednym akapitem!" if __aifa_answer or __gerina_answer else ""
 
                                             tech_block = (
                                                 "- Format: możesz używać lekkiego markdown (###, **, listy, `code`).\n"
@@ -2071,7 +2071,7 @@ def main():
                                             print(f"📚 hist_pionier.len: {len(pionier_hist)}")
                                             print(f"🤖 pionier.tail:\n{pionier_hist[-2:]}")
 
-                                            answer_mistral_pionier = mgr.continue_conversation_with_system(pionier_hist, sys_prmt_pionier, max_tokens = 1800 if not add_ANTYPOWTARZANIE else 300)
+                                            answer_mistral_pionier = mgr.continue_conversation_with_system(pionier_hist, sys_prmt_pionier, max_tokens = 1800 if add_ANTYPOWTARZANIE else 300)
                                             print(f"🧵 PIONIER REGULAR | answer:((\n{answer_mistral_pionier}\n))")
                                             if answer_mistral_pionier:
                                                 save_chat_message("pionier", answer_mistral_pionier, 0)
