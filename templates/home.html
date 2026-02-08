@@ -1286,14 +1286,14 @@
     }
     // Kopiuje "to co widać" w czacie (tekst po renderze, bez znaczników MD)
     function copyNearestChatText(el) {
-        // Ikona jest w osobnym .row, bańka jest w poprzednim .row
-        const row = el.closest(".row");
-        const prevRow = row ? row.previousElementSibling : null;
-        const msgEl = prevRow ? prevRow.querySelector(".chat-message-fill, .chat-message-fill-self") : null;
+        // Ikona jest w środku dymku, więc bierzemy tekst z tej samej bańki
+        const bubble = el.closest(".chat-bubble, .chat-bubble-self");
+        const msgEl = bubble ? bubble.querySelector(".chat-message-fill, .chat-message-fill-self") : null;
 
         const text = msgEl ? (msgEl.innerText || msgEl.textContent || "") : "";
         copyToClipboard(text.trim());
     }
+
 
 
 
