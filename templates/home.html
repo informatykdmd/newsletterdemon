@@ -1148,20 +1148,17 @@
                                         <img src="${avatar}" alt="Avatar">
                                     </div>
                                 </div>
-                                <div class="chat-bubble-self float-end">
-                                    <div class="chat-message-fill-self float-end">
-                                        ${formattedMessage}
-                                    </div>
-
-                                    <div class="chat-bubble-footer chat-bubble-footer-self">
-                                        <div class="chat-bubble-options">
-                                            <i class="bi bi-copy"
-                                            title="Kopiuj"
-                                            onclick="copyNearestChatText(this)"></i>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="chat-bubble-self float-end">
+                                            <div class="chat-message-fill-self float-end">
+                                                ${formattedMessage}
+                                            </div>
+                                            <div class="chat-timestamp-self text-end">
+                                                ${ts}
+                                            </div>
                                         </div>
-                                        <div class="chat-timestamp-self">${ts}</div>
                                     </div>
-
                                 </div>
                             `);
                         } else {
@@ -1173,28 +1170,32 @@
                                     </div>
                                     <div class="chat-nickname">${nick}</div>
                                 </div>
+                                
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="chat-bubble">
                                             <div class="chat-message-fill">
                                                 ${formattedMessage}
                                             </div>
-
-                                            <div class="chat-bubble-footer">
-                                                <div class="chat-bubble-options">
-                                                    <i class="bi bi-copy"
-                                                    title="Kopiuj"
-                                                    onclick="copyNearestChatText(this)"></i>
-                                                </div>
-                                                <div class="chat-timestamp">${ts}</div>
-                                            </div>
-
+                                            
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="chat-bubble-options">
+                                            <i class="bi bi-copy"
+                                            title="Kopiuj"
+                                            onclick="copyNearestChatText(this)"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="chat-timestamp text-end">${ts}</div>
                                     </div>
                                 </div>
                             `);
                         }
-                        // chatBox.append(`<div class="card m-2 bg-dark"><div class="card-header text-info fs-5">${message[0]}</div><div class="card-body"><blockquote class="blockquote mb-0 fs-7"><p>${message[1]}</p><footer class="blockquote-footer"><small>(${message[2]})</small></footer></blockquote></div></div>`);
+                        
                     });
                     if (autoScrollEnabled) {
                         // Przewijanie na dół po załadowaniu wiadomości
