@@ -807,59 +807,62 @@ def save_chat_message(user_name, content, status):
     return prepare_shedule.insert_to_database(zapytanie_sql, dane)
 
 def pobierz_aktualne_warunki():
-        teraz = datetime.datetime.now()
-        dni_tygodnia = {
-            'Monday': 'poniedziałek',
-            'Tuesday': 'wtorek',
-            'Wednesday': 'środa',
-            'Thursday': 'czwartek',
-            'Friday': 'piątek',
-            'Saturday': 'sobota',
-            'Sunday': 'niedziela'
-        }
+    teraz = datetime.datetime.now()
 
-        miesiace = {
-            'January': 'styczeń',
-            'February': 'luty',
-            'March': 'marzec',
-            'April': 'kwiecień',
-            'May': 'maj',
-            'June': 'czerwiec',
-            'July': 'lipiec',
-            'August': 'sierpień',
-            'September': 'wrzesień',
-            'October': 'październik',
-            'November': 'listopad',
-            'December': 'grudzień'
-        }
+    dni_tygodnia = {
+        'Monday': 'poniedziałek',
+        'Tuesday': 'wtorek',
+        'Wednesday': 'środa',
+        'Thursday': 'czwartek',
+        'Friday': 'piątek',
+        'Saturday': 'sobota',
+        'Sunday': 'niedziela'
+    }
 
-        dzien_tygodnia = dni_tygodnia[teraz.strftime('%A')]
-        dzien_miesiaca = teraz.day
-        miesiac = miesiace[teraz.strftime('%B')]
-        rok = teraz.year
+    miesiace = {
+        'January': 'styczeń',
+        'February': 'luty',
+        'March': 'marzec',
+        'April': 'kwiecień',
+        'May': 'maj',
+        'June': 'czerwiec',
+        'July': 'lipiec',
+        'August': 'sierpień',
+        'September': 'wrzesień',
+        'October': 'październik',
+        'November': 'listopad',
+        'December': 'grudzień'
+    }
 
-        tydzien_miesiaca = (teraz.day - 1) // 7 + 1
+    dzien_tygodnia = dni_tygodnia[teraz.strftime('%A')]
+    dzien_miesiaca = teraz.day
+    miesiac = miesiace[teraz.strftime('%B')]
+    rok = teraz.year
 
-        godzina = teraz.hour
-        if 5 <= godzina < 8:
-            pora_dnia = 'świt'
-        elif 8 <= godzina < 12:
-            pora_dnia = 'poranek'
-        elif 12 <= godzina < 17:
-            pora_dnia = 'południe'
-        elif 17 <= godzina < 21:
-            pora_dnia = 'wieczór'
-        else:
-            pora_dnia = 'noc'
+    tydzien_miesiaca = (teraz.day - 1) // 7 + 1
 
-        return {
-            'dzien_tygodnia': dzien_tygodnia,
-            'dzien_miesiaca': dzien_miesiaca,
-            'tydzien_miesiaca': tydzien_miesiaca,
-            'miesiac': miesiac,
-            'rok': rok,
-            'pora_dnia': pora_dnia
-        }
+    godzina = teraz.hour
+    if 5 <= godzina < 8:
+        pora_dnia = 'świt'
+    elif 8 <= godzina < 12:
+        pora_dnia = 'poranek'
+    elif 12 <= godzina < 17:
+        pora_dnia = 'południe'
+    elif 17 <= godzina < 21:
+        pora_dnia = 'wieczór'
+    else:
+        pora_dnia = 'noc'
+
+    return {
+        'teraz': teraz,
+        'dzien_tygodnia': dzien_tygodnia,
+        'dzien_miesiaca': dzien_miesiaca,
+        'tydzien_miesiaca': tydzien_miesiaca,
+        'miesiac': miesiac,
+        'rok': rok,
+        'pora_dnia': pora_dnia
+    }
+
 
 def format_pl_czas():
     a = pobierz_aktualne_warunki()
