@@ -1940,7 +1940,7 @@ def send_chat_email():
                 line-height:1.45;
                 font-family:Arial, Helvetica, sans-serif;
                 ">
-        {text}
+        {str(text).rsplit()}
                 </div>
 
                 <!-- Footer dymku -->
