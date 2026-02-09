@@ -12,8 +12,57 @@ smtp_config = {
 }
 
 from appslib import handle_error
+from email.utils import formataddr
+import socket
 
 def send_html_email(subject, html_body, to_email):
+    try:
+        smtp_server = smtp_config['smtp_server']
+        smtp_port = smtp_config['smtp_port']
+        smtp_username = smtp_config['smtp_username']
+        smtp_password = smtp_config['smtp_password']
+
+        # twarde timeouty, żeby nie zabić workera (Gunicorn)
+        socket.setdefaulttimeout(10)
+
+        message = MIMEMultipart()
+        # From jako pełny adres (może być z nazwą)
+        message["From"] = formataddr(("DMD System", smtp_username))
+        message["To"] = to_email
+        message["Subject"] = subject
+
+        # (opcjonalnie) jeśli chcesz mieć odpowiedź do innego maila:
+        # message["Reply-To"] = "informatyk@dmdbudownictwo.pl"
+
+        message.attach(MIMEText(html_body, "html"))
+
+        with smtplib.SMTP(smtp_server, smtp_port, timeout=10) as server:
+            # dobrze jest zrobić EHLO przed TLS
+            server.ehlo()
+
+            # STARTTLS (Cyber-Folks na 587 tego oczekuje)
+            server.starttls()
+            # i EHLO po TLS (część serwerów tego wymaga)
+            server.ehlo()
+
+            server.login(smtp_username, smtp_password)
+
+            # envelope-from MUSI być smtp_username (żeby nie było #FAKE-HEADER-FROM)
+            server.sendmail(
+                smtp_username,
+                [to_email],
+                message.as_string()
+            )
+
+    except Exception as e:
+        handle_error(f'Wysyłanie maila do {to_email} nieudane: {e}')
+        # opcjonalnie: zwróć False / rzuć dalej jeśli chcesz to obsługiwać wyżej
+        return False
+
+    return True
+
+
+def send_html_email_old(subject, html_body, to_email):
     try:
         # Utwórz wiadomość
         message = MIMEMultipart()
