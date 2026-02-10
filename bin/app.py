@@ -37,21 +37,7 @@ def get_messages(flag='all'):
             """SELECT id, user_name, content, timestamp, status FROM Messages WHERE timestamp >= NOW() - INTERVAL 1 HOUR AND status != 1 ORDER BY timestamp ASC;""")
     return dump_key
 
-# def collecting_hist():
-#     return prepare_shedule.connect_to_database(
-#         """
-#             SELECT user_name, content
-#             FROM (
-#                 SELECT user_name, content, timestamp
-#                 FROM Messages
-#                 WHERE timestamp >= NOW() - INTERVAL 1 HOUR
-#                 ORDER BY timestamp DESC
-#                 LIMIT 12
-#             ) t
-#             ORDER BY timestamp ASC;
 
-#         """
-#     )
 
 def collecting_hist():
     return prepare_shedule.connect_to_database(
@@ -1573,7 +1559,7 @@ def main():
                                 bot_rotation = 'niezidentyfikowana'
                                 if hist and isinstance(hist[-1], dict) and start_selector:
                                     last_context = "\n".join(
-                                        f"{x.get('author', '')}\n{x.get('content', '')}"
+                                        f"@{x.get('author', '')}\n{x.get('content', '')[:500]}"
                                         for x in hist[-5:]
                                     )
                                     latest_user_message = hist[-1].get("content", "")
