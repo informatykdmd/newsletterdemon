@@ -2120,11 +2120,24 @@ def main():
                     # Obsługa automatycznej publikacji ogłoszeń na gupach FACEBOOKA
                     # TWORZENIE ZADANIA DLA AUTOMATU
                     ################################################################
-                    
-                    for task_data in give_me_curently_tasks():
-                        if make_fbgroups_task(task_data):
-                            handle_error(f"Przygotowano kampanię FB w sekcji {task_data.get('section', None)} dla kategorii {task_data.get('category', None)} eminowaną przez bota {task_data.get('created_by', None)} o id: {task_data.get('post_id', None)}.\n")
-                            time.sleep(5)
+                    _AUTOPUBLIC_BG = threading.Semaphore(1)
+
+                    def _bg_autopublic():
+                        try:
+                            with _AUTOPUBLIC_BG:
+                                for task_data in give_me_curently_tasks():
+                                    if make_fbgroups_task(task_data):
+                                        handle_error(f"Przygotowano kampanię FB w sekcji {task_data.get('section', None)} dla kategorii {task_data.get('category', None)} eminowaną przez bota {task_data.get('created_by', None)} o id: {task_data.get('post_id', None)}.\n")
+                                        time.sleep(2)
+                        except Exception as e:
+                            print(f"[AUTOPUBLIC BG ERROR] {repr(e)}")
+
+                    t_autopublic = threading.Thread(
+                        target=_bg_autopublic,
+                        args=(),
+                        daemon=True
+                    )
+                    t_autopublic.start()
 
                 elif name == 'checkpoint_30s':
                     """ 
@@ -2255,7 +2268,7 @@ def main():
                                 ua_ls = set()
                                 souerce_hist = collecting_hist()
                                 for msa in souerce_hist:
-                                    nick = msa[0]
+                                    nick = str(msa[0]).strip()
                                     if nick not in bots:
                                         ua_ls.add(nick)
 
@@ -2431,40 +2444,54 @@ def main():
                     # Obsługa automatycznego wygaszania zakończonych ogłoszeń na 
                     # ALLEGRO OTODOM LENTO
                     ################################################################
+                    _AUTOEXPIRY_BG = threading.Semaphore(1)
 
-                    expired_records = check_all_tables_for_expiry()
+                    def _bg_autoexpiry():
+                        try:
+                            with _AUTOEXPIRY_BG:
 
-                    for record in expired_records:
-                        table_name = record.get('table', None)
-                        record_id = record.get('id', None)
-                        status = record.get('status', None)
-                        
-                        if table_name is None or record_id is None or status is None:
-                            handle_error(f"Pominięto rekord z brakującymi danymi: {record}.\n")
-                            continue
+                                expired_records = check_all_tables_for_expiry()
 
-                        # Jeżeli status jest 1 lub 0 -> Zmieniamy status na 6 (Trwa proces usuwania ogłoszenia)
-                        query_update_status = f"UPDATE {table_name} SET status = %s, active_task = %s WHERE id = %s"
-                        if status in [0, 1]:
-                            if table_name == 'ogloszenia_otodom' or status == 0:
-                                values = (6, 0, record_id)
-                            else:
-                                values = (7, 0, record_id)
-                            try:
-                                insert_to_database(query_update_status, values)  # Zakładam, że insert_to_database obsługuje także update
-                                handle_error(f"Wygaszanie ogłoszenia o ID {record_id} w tabeli {table_name}.\n")
-                            except Exception as e:
-                                handle_error(f"Błąd przy aktualizacji rekordu o ID {record_id} w tabeli {table_name}: {e}.\n")
-                        
-                        # Jeżeli status jest 2 -> Usuwamy rekord
-                        elif status == 2:
-                            query_delete_record = f"DELETE FROM {table_name} WHERE id = %s"
-                            values = (record_id,)
-                            try:
-                                delete_row_from_database(query_delete_record, values)
-                                handle_error(f"Usunięto rekord o ID {record_id} z tabeli {table_name}.\n")
-                            except Exception as e:
-                                handle_error(f"Błąd przy usuwaniu rekordu o ID {record_id} z tabeli {table_name}: {e}.\n")
+                                for record in expired_records:
+                                    table_name = record.get('table', None)
+                                    record_id = record.get('id', None)
+                                    status = record.get('status', None)
+                                    
+                                    if table_name is None or record_id is None or status is None:
+                                        handle_error(f"Pominięto rekord z brakującymi danymi: {record}.\n")
+                                        continue
+
+                                    # Jeżeli status jest 1 lub 0 -> Zmieniamy status na 6 (Trwa proces usuwania ogłoszenia)
+                                    query_update_status = f"UPDATE {table_name} SET status = %s, active_task = %s WHERE id = %s"
+                                    if status in [0, 1]:
+                                        if table_name == 'ogloszenia_otodom' or status == 0:
+                                            values = (6, 0, record_id)
+                                        else:
+                                            values = (7, 0, record_id)
+                                        try:
+                                            insert_to_database(query_update_status, values)  #insert_to_database obsługuje także update
+                                            handle_error(f"Wygaszanie ogłoszenia o ID {record_id} w tabeli {table_name}.\n")
+                                        except Exception as e:
+                                            handle_error(f"Błąd przy aktualizacji rekordu o ID {record_id} w tabeli {table_name}: {e}.\n")
+                                    
+                                    # Jeżeli status jest 2 -> Usuwamy rekord
+                                    elif status == 2:
+                                        query_delete_record = f"DELETE FROM {table_name} WHERE id = %s"
+                                        values = (record_id,)
+                                        try:
+                                            delete_row_from_database(query_delete_record, values)
+                                            handle_error(f"Usunięto rekord o ID {record_id} z tabeli {table_name}.\n")
+                                        except Exception as e:
+                                            handle_error(f"Błąd przy usuwaniu rekordu o ID {record_id} z tabeli {table_name}: {e}.\n")
+                        except Exception as ex:
+                            print(f"[FORMAPITST BG ERROR] {repr(ex)}")
+
+                    t_expiry = threading.Thread(
+                        target=_bg_autoexpiry,
+                        args=(),
+                        daemon=True
+                    )
+                    t_expiry.start()
 
                 elif name == 'checkpoint_300s':
                     """ 
@@ -2476,26 +2503,39 @@ def main():
                     ################################################################
                     # Wysyłka newslettera do aktywnych użytkowników według planu wysyłki
                     ################################################################
+                    _SENDINGNEWS_BG = threading.Semaphore(1)
 
-                    shcedule = prepare_shedule.prepare_mailing_plan(prepare_shedule.get_allPostsID(), prepare_shedule.get_sent())
-                    time.sleep(1)
-                    prepare_shedule.save_shedule(shcedule)
-                    time.sleep(1)
-                    current_time_newslettera = datetime.datetime.now()
-                    for row in prepare_shedule.connect_to_database(
-                            'SELECT * FROM schedule;'):
-                        if row[2] < current_time_newslettera:
-                            TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
-                            nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=1;')
-                            # add_aifaLog(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}')
-                            addDataLogs(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}', 'success')
-                            for data in nesletterDB:
-                                hashes = data[2]
-                                HTML = messagerCreator.create_html_message(row[1], data[0], hashes)
-                                if HTML != '':
-                                    sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
-                                    archive_sents(row[1])
-                                    handle_error(f"Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE} do {data[1]} \n")
+                    def _bg_sending_newsletter():
+                        try:
+                            with _SENDINGNEWS_BG:
+                                shcedule = prepare_shedule.prepare_mailing_plan(prepare_shedule.get_allPostsID(), prepare_shedule.get_sent())
+                                time.sleep(1)
+                                prepare_shedule.save_shedule(shcedule)
+                                time.sleep(1)
+                                current_time_newslettera = datetime.datetime.now()
+                                for row in prepare_shedule.connect_to_database(
+                                        'SELECT * FROM schedule;'):
+                                    if row[2] < current_time_newslettera:
+                                        TITLE = prepare_shedule.connect_to_database(f'SELECT TITLE FROM contents WHERE  ID={row[1]};')[0][0]
+                                        nesletterDB = prepare_shedule.connect_to_database(f'SELECT CLIENT_NAME, CLIENT_EMAIL, USER_HASH FROM newsletter WHERE ACTIVE=1;')
+                                        # add_aifaLog(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}')
+                                        addDataLogs(f'Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE}', 'success')
+                                        for data in nesletterDB:
+                                            hashes = data[2]
+                                            HTML = messagerCreator.create_html_message(row[1], data[0], hashes)
+                                            if HTML != '':
+                                                sendEmailBySmtp.send_html_email(TITLE, HTML, data[1])
+                                                archive_sents(row[1])
+                                                handle_error(f"Wysłano zaplanowaną wysyłkę newslettera na dzień {row[2]} pt. {TITLE} do {data[1]} \n")
+                        except Exception as e:
+                            print(f"[SENDINGNEWS BG ERROR] {repr(e)}")
+
+                    t_sending = threading.Thread(
+                        target=_bg_sending_newsletter(),
+                        args=(),
+                        daemon=True
+                    )
+                    t_sending.start()
 
                     ################################################################
                     # Aktywacja konta subskrybenta + spam_catcher
@@ -2770,55 +2810,81 @@ def main():
                     # Weryfikacja statusu ogłoszeń nieruchomości na:
                     # - otodom, allegro, lento, adresowo
                     ################################################################
-                    try:
-                        create_visibility_tasks()
-                        print("Zadania weryfikacji widoczności ogłoszeń zostały utworzone.")
-                        handle_error(f"Zadania weryfikacji widoczności ogłoszeń zostały utworzone.\n")
-                        addDataLogs(f'Zadania weryfikacji widoczności ogłoszeń zostały utworzone.', 'success')
-                    except Exception as e:
-                        print(f"Błąd podczas tworzenia zadań weryfikacji: {e}")
-                        handle_error(f"Błąd podczas tworzenia zadań weryfikacji: {e}\n")
-                        addDataLogs(f'Błąd podczas tworzenia zadań weryfikacji: {e}', 'danger')
+                    _VISIBILITYTASK_BG = threading.Semaphore(1)
+                    def _bg_visibilytytask():
+                        try:
+                            with _VISIBILITYTASK_BG:
+                                create_visibility_tasks()
+                                print("Zadania weryfikacji widoczności ogłoszeń zostały utworzone.")
+                                handle_error(f"Zadania weryfikacji widoczności ogłoszeń zostały utworzone.\n")
+                                addDataLogs(f'Zadania weryfikacji widoczności ogłoszeń zostały utworzone.', 'success')
+                        except Exception as e:
+                            print(f"Błąd podczas tworzenia zadań weryfikacji: {e}")
+                            handle_error(f"Błąd podczas tworzenia zadań weryfikacji: {e}\n")
+                            addDataLogs(f'Błąd podczas tworzenia zadań weryfikacji: {e}', 'danger')
 
+                    t_visibility = threading.Thread(
+                        target=_bg_visibilytytask,
+                        args=(),
+                        daemon=True
+                    )
+                    t_visibility.start()
                     if sprawdz_czas(dzien_tygodnia='sobota'):
                         ################################################################
                         # Automatyczne zbieranie statystyk dla FB-GROUPS
                         ################################################################
 
-                        created_by_bot = ['dmddomy', 'fredgraf', 'michalformatyk']
+                        _FBGROUPS_BG = threading.Semaphore(1)
 
-                        # Sprawdzenie, czy istnieją zadania ze statusem 7
-                        pending_tasks = prepare_shedule.connect_to_database(
-                            'SELECT id FROM fbgroups_stats_monitor WHERE status = 7 ORDER BY id LIMIT 1;'
-                        )
+                        def _bg_fbgroups_stats():
+                            try:
+                                with _FBGROUPS_BG:
 
-                        if pending_tasks:
-                            # Jeśli istnieją, zmieniamy status pierwszego na 4
-                            task_id = pending_tasks[0][0]
-                            prepare_shedule.insert_to_database(
-                                'UPDATE fbgroups_stats_monitor SET status = 4 WHERE id = %s;', (task_id,)
-                            )
-                        else:
-                            # Jeśli nie ma zadań statusu 7, to przygotowujemy nowe zadania
-                            for bot in created_by_bot:
-                                # Pobranie ID i linków grup utworzonych przez bota
-                                id_group_links = prepare_shedule.connect_to_database(
-                                    f'SELECT id, link FROM facebook_gropus WHERE created_by="{bot}";'
-                                )
+                                    created_by_bot = ['dmddomy', 'fredgraf', 'michalformatyk']
 
-                                # Podział na paczki po maksymalnie 15 grup (ostatnia paczka może mieć mniej niż 15!)
-                                for i in range(0, len(id_group_links), 15):
-                                    batch = id_group_links[i:i+15]  # Ostatnia paczka może mieć <15 elementów, ale nadal działa!
-                                    ready_string = '-@-'.join(f"{id}-$-{link}" for id, link in batch)
-
-                                    # Wstawienie nowego zadania do bazy z początkowym statusem 7
-                                    prepare_shedule.insert_to_database(
-                                        """INSERT INTO fbgroups_stats_monitor
-                                            (id_and_links_string, created_by, status)
-                                        VALUES 
-                                            (%s, %s, %s)""",
-                                        (ready_string, bot, 7)
+                                    # Sprawdzenie, czy istnieją zadania ze statusem 7
+                                    pending_tasks = prepare_shedule.connect_to_database(
+                                        'SELECT id FROM fbgroups_stats_monitor WHERE status = 7 ORDER BY id LIMIT 1;'
                                     )
+
+                                    if pending_tasks:
+                                        # Jeśli istnieją, zmieniamy status pierwszego na 4
+                                        task_id = pending_tasks[0][0]
+                                        prepare_shedule.insert_to_database(
+                                            'UPDATE fbgroups_stats_monitor SET status = 4 WHERE id = %s;', (task_id,)
+                                        )
+                                    else:
+                                        # Jeśli nie ma zadań statusu 7, to przygotowujemy nowe zadania
+                                        for bot in created_by_bot:
+                                            # Pobranie ID i linków grup utworzonych przez bota
+                                            id_group_links = prepare_shedule.connect_to_database(
+                                                f'SELECT id, link FROM facebook_gropus WHERE created_by="{bot}";'
+                                            )
+
+                                            # Podział na paczki po maksymalnie 15 grup (ostatnia paczka może mieć mniej niż 15!)
+                                            for i in range(0, len(id_group_links), 15):
+                                                batch = id_group_links[i:i+15]  # Ostatnia paczka może mieć <15 elementów, ale nadal działa!
+                                                ready_string = '-@-'.join(f"{id}-$-{link}" for id, link in batch)
+
+                                                # Wstawienie nowego zadania do bazy z początkowym statusem 7
+                                                prepare_shedule.insert_to_database(
+                                                    """INSERT INTO fbgroups_stats_monitor
+                                                        (id_and_links_string, created_by, status)
+                                                    VALUES 
+                                                        (%s, %s, %s)""",
+                                                    (ready_string, bot, 7)
+                                                )
+                            except Exception as e:
+                                print(f"[FBGROUPS BG ERROR] {repr(e)}")
+
+                        t_fbgroups = threading.Thread(
+                            target=_bg_fbgroups_stats,
+                            args=(),
+                            daemon=True
+                        )
+                        t_fbgroups.start()
+
+
                 elif name == 'checkpoint_24h': 
                     """ 
                         **********************************************************
@@ -2831,13 +2897,27 @@ def main():
                         # Automatyczne validacja formularzy automatyzacji
                         ################################################################
                         print("Zaczynamy poniedziałkowe południe!")
-                        prepare_shedule.insert_to_database(
-                            """INSERT INTO ogloszenia_formsapitest
-                                    (platform, status)
-                                VALUES 
-                                    (%s, %s)""",
-                                ('FORMS-API-TEST', 4)
-                            )
+                        _FORMAPITEST_BG = threading.Semaphore(1)
+
+                        def _bg_formsapitest():
+                            try:
+                                with _FORMAPITEST_BG:
+                                    prepare_shedule.insert_to_database(
+                                        """INSERT INTO ogloszenia_formsapitest
+                                                (platform, status)
+                                            VALUES 
+                                                (%s, %s)""",
+                                            ('FORMS-API-TEST', 4)
+                                    )
+                            except Exception as e:
+                                print(f"[FORMAPITST BG ERROR] {repr(e)}")
+
+                        t_apitest = threading.Thread(
+                            target=_bg_formsapitest,
+                            args=(),
+                            daemon=True
+                        )
+                        t_apitest.start()
                 
                 # Aktualizacja czasu ostatniego wykonania dla checkpointu
                 last_run_times[name] = current_time
