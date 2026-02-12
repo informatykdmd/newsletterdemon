@@ -15,7 +15,7 @@ from appslib import handle_error
 from email.utils import formataddr
 import socket
 
-def send_html_email(subject, html_body, to_email):
+def send_html_email(subject, html_body, to_email, headSystem = "DMD Newsletter"):
     try:
         smtp_server = smtp_config['smtp_server']
         smtp_port = smtp_config['smtp_port']
@@ -27,7 +27,7 @@ def send_html_email(subject, html_body, to_email):
 
         message = MIMEMultipart()
         # From jako pełny adres (może być z nazwą)
-        message["From"] = formataddr(("DMD System", smtp_username))
+        message["From"] = formataddr((headSystem, smtp_username))
         message["To"] = to_email
         message["Subject"] = subject
 
