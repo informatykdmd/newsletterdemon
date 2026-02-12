@@ -612,7 +612,7 @@ class LongTermMemoryDaemon:
             # zamiast error: lepiej "skipped" z opisem
             raise RuntimeError(f"memory_action no target found: {atype} (keywords={keywords})")
 
-        if atype == "revoke":
+        if atype in ("revoke", "supersede"):
             q = """
             UPDATE memory_cards
             SET status='revoked',
@@ -626,6 +626,22 @@ class LongTermMemoryDaemon:
             return
 
         raise RuntimeError(f"unknown memory_action type: {atype}")
+
+
+        # if atype == "revoke":
+        #     q = """
+        #     UPDATE memory_cards
+        #     SET status='revoked',
+        #         revoked_at=NOW(),
+        #         revoked_reason=%s,
+        #         revoked_by_message_id=%s,
+        #         updated_at=NOW()
+        #     WHERE id=%s;
+        #     """
+        #     cad.insert_to_database(q, (reason, int(message_id), int(card_id)))
+        #     return
+
+        # raise RuntimeError(f"unknown memory_action type: {atype}")
 
 
     def find_best_card_by_keywords(self, chat_id, keywords, limit=5):
@@ -715,43 +731,76 @@ class LongTermMemoryDaemon:
                 card = payload.get("memory_card")
 
                 # 1) akcja revoke/supersede
+                did_action = False
+
                 if action:
                     confidence = float(action.get("confidence", 0.0))
 
-                    # Bezpiecznik: LLM niepewny → NIE wykonujemy akcji
                     if confidence < 0.6:
                         self.repo.close_message(
                             msg_id,
                             "skipped",
                             error_text=f"memory_action confidence too low: {confidence}"
                         )
-
-                        # smart debug
-                        atype = action.get("type")
-                        print(
-                            f"[LTM] memory_action ignored "
-                            f"(type={atype}, confidence={confidence}) msg_id={msg_id}"
-                        )
-
                         results["skipped"] += 1
                         continue
 
-                    # Akcja zaakceptowana
                     try:
                         self.apply_memory_action(action, msg_id, raw_text=payload.get("_raw_text"))
+                        did_action = True
                     except RuntimeError as e:
-                        # brak targetu = normalne -> skipped (a nie error)
                         msg = str(e)
                         if "no target found" in msg:
                             self.repo.close_message(msg_id, "skipped", error_text=msg[:255])
-                            print(f"[LTM] memory_action skipped: {msg} msg_id={msg_id}")
                             results["skipped"] += 1
                             continue
                         raise
 
+                # jeśli była akcja i NIE ma karty, zamykamy jak dotychczas
+                if did_action and not card:
                     self.repo.close_message(msg_id, "processed", error_text=None)
                     results["processed"] += 1
                     continue
+
+                # jeśli była akcja i jest też karta – lecimy dalej normalnym flow (upsert poniżej)
+
+                # if action:
+                    # confidence = float(action.get("confidence", 0.0))
+
+                    # # Bezpiecznik: LLM niepewny → NIE wykonujemy akcji
+                    # if confidence < 0.6:
+                    #     self.repo.close_message(
+                    #         msg_id,
+                    #         "skipped",
+                    #         error_text=f"memory_action confidence too low: {confidence}"
+                    #     )
+
+                    #     # smart debug
+                    #     atype = action.get("type")
+                    #     print(
+                    #         f"[LTM] memory_action ignored "
+                    #         f"(type={atype}, confidence={confidence}) msg_id={msg_id}"
+                    #     )
+
+                    #     results["skipped"] += 1
+                    #     continue
+
+                    # Akcja zaakceptowana
+                    # try:
+                    #     self.apply_memory_action(action, msg_id, raw_text=payload.get("_raw_text"))
+                    # except RuntimeError as e:
+                    #     # brak targetu = normalne -> skipped (a nie error)
+                    #     msg = str(e)
+                    #     if "no target found" in msg:
+                    #         self.repo.close_message(msg_id, "skipped", error_text=msg[:255])
+                    #         print(f"[LTM] memory_action skipped: {msg} msg_id={msg_id}")
+                    #         results["skipped"] += 1
+                    #         continue
+                    #     raise
+
+                    # self.repo.close_message(msg_id, "processed", error_text=None)
+                    # results["processed"] += 1
+                    # continue
 
 
                 # 2) cache hit -> bump + źródło
@@ -800,6 +849,9 @@ class LongTermMemoryDaemon:
 
         # 0) action gate -> przepuszcza do LLM bez markerów
         is_action = bool(self.action_gate and self.action_gate.might_be_action(content))
+        if is_action:
+            print(f"[LTM] action_gate hit for msg: {content[:120]!r}")
+
 
         # 1) heurystyka bramkująca (jeśli nie action)
         hint = None
@@ -837,11 +889,13 @@ class LongTermMemoryDaemon:
                 return {"_cache_hit": True, "memory_card_id": existing_id, "dedupe_key": dedupe_key, "memory_card": None, "memory_action": None}
 
         # 3) LLM
-
         out = self.llm_writer.classify_full(content, meta)
+
         if not out or not isinstance(out, dict):
             return None
 
+        print(f"[LTM] llm out keys={list(out.keys())} action={bool(out.get('memory_action'))} card={bool(out.get('memory_card'))}")
+        
         out.setdefault("memory_card", None)
         out.setdefault("memory_action", None)
 
@@ -864,6 +918,20 @@ class LongTermMemoryDaemon:
             if scope == "shared":
                 card["owner_user_login"] = None
                 card["owner_agent_id"] = None
+
+            # visibility: backendowy default zależny od scope (personalizacja)
+            vis = (card.get("visibility") or "").strip()
+            if not vis:
+                if scope == "user":
+                    # pojedynczy user jako widoczność
+                    vis = (card.get("owner_user_login") or meta.get("owner_user_login") or meta.get("author_login") or "").strip()
+                    # jeżeli nadal pusto (nie powinno), fallback
+                    vis = vis or "all"
+                elif scope == "agent":
+                    vis = (card.get("owner_agent_id") or meta.get("owner_agent_id") or "").strip() or "all"
+                else:
+                    vis = "all"
+            card["visibility"] = vis
 
         # dopnij dedupe_key z gate'a jako kanoniczny
         if dedupe_key and out.get("memory_card"):
