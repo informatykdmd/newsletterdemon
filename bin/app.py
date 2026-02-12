@@ -2923,7 +2923,7 @@ def main():
                 last_run_times[name] = current_time
 
             # 🛑 **Efektywny sposób na oszczędzenie CPU**
-            time.sleep(3)  # Krótkie opóźnienie, aby nie przeciążać procesora
+            time.sleep(.3)  # Krótkie opóźnienie, aby nie przeciążać procesora
 
         # Czy jest poniedziałkowe południe?
         if sprawdz_czas(dzien_tygodnia='poniedziałek', pora_dnia='południe'):
