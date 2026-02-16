@@ -435,25 +435,25 @@ class MessagesToTurnsMigrator:
         self.msg_repo = MessagesRepoV2(db)
         self.turns_repo = TurnMessagesRepo(db)
 
-        def _role_from_user_name(self, user_name: str) -> str:
-            """
-            Odtwarzanie roli z Messages.user_name (bo w Messages nie ma roli).
+    def _role_from_user_name(self, user_name: str) -> str:
+        """
+        Odtwarzanie roli z Messages.user_name (bo w Messages nie ma roli).
 
-            Tryby:
-            - per_bot (domyślny, zgodny z Twoją appką):
-                assistant  -> nick == owner_agent_id (czyli “ten bot” mówi jako assistant)
-                user       -> każdy inny (człowiek + inne boty)
-            - global:
-                assistant  -> nick należy do self.bots
-                user       -> reszta
-            """
-            nick = (user_name or "").strip()
+        Tryby:
+        - per_bot (domyślny, zgodny z Twoją appką):
+            assistant  -> nick == owner_agent_id (czyli “ten bot” mówi jako assistant)
+            user       -> każdy inny (człowiek + inne boty)
+        - global:
+            assistant  -> nick należy do self.bots
+            user       -> reszta
+        """
+        nick = (user_name or "").strip()
 
-            if self.role_mode == "global":
-                return "assistant" if nick in self.bots else "user"
+        if self.role_mode == "global":
+            return "assistant" if nick in self.bots else "user"
 
-            # per_bot
-            return "assistant" if nick == self.scope.owner_agent_id else "user"
+        # per_bot
+        return "assistant" if nick == self.scope.owner_agent_id else "user"
 
 
     def run_once(self, *, processing_token: str, limit: int = 50) -> Dict[str, Any]:
@@ -2257,7 +2257,6 @@ class MemoriaDaemon:
         self.log = logger or logging.getLogger("memoria_v2")
 
         # migrator używa tego samego DB i scope
-        self.migrator = MessagesToTurnsMigrator(db=self.engine.db, scope=self.scope, logger=self.log)
         self.migrator = MessagesToTurnsMigrator(
             db=self.engine.db,
             scope=self.scope,
