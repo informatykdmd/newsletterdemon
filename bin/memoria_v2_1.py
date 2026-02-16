@@ -2232,11 +2232,7 @@ class LongTermMemoryClientV2:
 # =============================================================================
 
 class MemoriaDaemon:
-    """
-    Jeden daemon, dwa kroki:
-    1) migracja Messages -> turn_messages_v2 (żeby event store był kompletny)
-    2) MemoriaEngine.run_once() na turn_messages_v2
-    """
+
     def __init__(
         self,
         *,
@@ -2459,7 +2455,8 @@ def format_memoria_report(report: Dict[str, Any]) -> str:
 mem_block = get_memory_block(
     text=user_text,
     chat_id=chat_id,
-    user_name_bot_name=f"{user_login}|{bot_id}",   # np. "michal|aifa"
+    owner_user_login=f"{user_login}",  # np. "michal"
+    owner_agent_id=f"{bot_id}"   # np. "aifa"
 )
 # potem składasz prompt:
 # system + mem_block + historia + user_text
@@ -2468,7 +2465,8 @@ mem_block = get_memory_block(
 #Przykład B: daemon tick (raport string)
 report = run_daemon_loop(
     chat_id=chat_id,
-    user_name_bot_name=f"{user_login}|{bot_id}",
+    wner_user_login=f"{user_login}", 
+    owner_agent_id=f"{bot_id}"   
     processing_token="memoria-worker-1",
     ltm_batch_limit=20,
 )
