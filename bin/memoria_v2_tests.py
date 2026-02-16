@@ -2,34 +2,18 @@
 # -*- coding: utf-8 -*-
 
 """
-MEMORIA V2 TOOL TESTER (DEV)
+MEMORIA V2 TOOL TESTER (DEV) — odporne na różnice schematu
 
-Cel:
-- test end-to-end w pętlach:
-  (A) seed -> Messages
-  (B) migrate -> turn_messages_v2
-  (C) ltm -> memory_cards_v2 + memory_card_sources_v2
-  (D) blocks -> get_memory_block (selections + selection_items)
-  (E) combo -> dosiew + migrate/ltm + blocks
-
-Użycie przykładowe:
+Komendy:
   python3 memoria_v2_tests.py sanity
   python3 memoria_v2_tests.py snap
-
-  # 1) dosiej do Messages (jeśli schema pozwala)
   python3 memoria_v2_tests.py seed_msgs
-
-  # 2) migracja + LTM w pętli
-  python3 memoria_v2_tests.py migrate 3
-  python3 memoria_v2_tests.py ltm 3
-
-  # 3) pobieranie bloków pamięci (3 razy)
-  python3 memoria_v2_tests.py blocks 3 "Wolę lody owocowe."
-
-  # 4) scenariusz REAL: seed->migrate/ltm loops->blocks loops->combo
+  python3 memoria_v2_tests.py migrate <loops>
+  python3 memoria_v2_tests.py ltm <loops>
+  python3 memoria_v2_tests.py blocks <loops> "query text"
   python3 memoria_v2_tests.py real
 
-Konfiguracja (opcjonalnie env):
+ENV:
   MEM_CHAT_ID=900001
   MEM_USER=michal
   MEM_BOT=aifa
@@ -40,9 +24,8 @@ import os
 import sys
 import time
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime
 
-# import modułu z implementacją
 import memoria_v2_1 as m
 
 
@@ -55,18 +38,13 @@ TEST_USER_LOGIN = os.getenv("MEM_USER", "michal")
 TEST_BOT_ID = os.getenv("MEM_BOT", "aifa")
 TEST_TOKEN = os.getenv("MEM_TOKEN", "memoria-test-worker")
 
-# limity
 DEFAULT_MIGRATE_LIMIT = int(os.getenv("MEM_MIGRATE_LIMIT", "50"))
 DEFAULT_LTM_LIMIT = int(os.getenv("MEM_LTM_LIMIT", "20"))
 
-# seed messages (do Messages)
 SEED_MESSAGES = [
-    # krótkie i “pamięciowe” – gate może przepuścić/odrzucić zależnie od reguł; dajemy też pewniaki:
     ("michal", "Wolę lody owocowe."),
     ("michal", "Mam psa. Ma na imię Bąbel."),
     ("michal", "Jutro spotkanie po 16:00."),
-
-    # trochę dialogu + inny user (global/per_bot role mapping pokaże różnicę)
     ("mariajot", "Ja wolę lody czekoladowe, ale nie mogę ich jeść."),
     ("mariajot", "Co to za pogoda, -15'C!"),
     ("michal", "Nieważne ile stopni, tylko ile słońca."),
@@ -74,7 +52,7 @@ SEED_MESSAGES = [
 
 
 # ------------------------------------------------------------------------------
-# Helpers: printing
+# Helpers: print
 # ------------------------------------------------------------------------------
 
 def hr(char="=", n=70):
@@ -90,6 +68,13 @@ def print_section(txt: str):
     print(txt)
     print(hr("-"))
 
+def trunc(s: str, n: int = 140) -> str:
+    s = str(s or "")
+    s = s.replace("\n", " ").strip()
+    if len(s) <= n:
+        return s
+    return s[: n - 3] + "..."
+
 def safe_call(fn, *args, **kwargs):
     try:
         return fn(*args, **kwargs)
@@ -98,22 +83,13 @@ def safe_call(fn, *args, **kwargs):
         traceback.print_exc()
         return None
 
-def trunc(s: str, n: int = 140) -> str:
-    s = str(s or "")
-    s = s.replace("\n", " ").strip()
-    if len(s) <= n:
-        return s
-    return s[: n - 3] + "..."
-
 
 # ------------------------------------------------------------------------------
-# DB helpers
+# Runtime/DB
 # ------------------------------------------------------------------------------
 
 def get_runtime():
-    # runtime cached per bot_id (zgodnie z memoria_v2_1)
-    rt = m._get_or_create_runtime(owner_agent_id=TEST_BOT_ID)
-    return rt
+    return m._get_or_create_runtime(owner_agent_id=TEST_BOT_ID)
 
 def db():
     return get_runtime()["db"]
@@ -124,103 +100,143 @@ def engine():
 def scope():
     return m.Scope(chat_id=TEST_CHAT_ID, owner_user_login=TEST_USER_LOGIN, owner_agent_id=TEST_BOT_ID)
 
-def show_table_cols(table_name: str):
-    rows = db().query(f"SHOW COLUMNS FROM {table_name}")
-    return [r.get("Field") for r in rows]
-
-def table_exists(table_name: str) -> bool:
-    rows = db().query("SHOW TABLES")
-    for r in rows:
-        for _, v in r.items():
-            if str(v) == table_name:
-                return True
-    return False
-
 def q(sql: str, params=None):
     return db().query(sql, params or ())
 
 def x(sql: str, params=None):
     return db().execute(sql, params or ())
 
+def table_exists(table_name: str) -> bool:
+    rows = q("SHOW TABLES")
+    for r in rows:
+        for _, v in r.items():
+            if str(v) == table_name:
+                return True
+    return False
+
+def table_cols(table_name: str) -> set:
+    if not table_exists(table_name):
+        return set()
+    rows = q(f"SHOW COLUMNS FROM {table_name}")
+    return {str(r.get("Field")) for r in rows}
+
+def has_cols(table: str, *cols: str) -> bool:
+    cs = table_cols(table)
+    return all(c in cs for c in cols)
+
+def count_simple(table: str, where_sql: str = "", params=None) -> int:
+    if not table_exists(table):
+        return 0
+    sql = f"SELECT COUNT(*) AS c FROM {table} "
+    if where_sql:
+        sql += f" WHERE {where_sql} "
+    row = q(sql, params or ())
+    return int(row[0]["c"]) if row else 0
+
+
+# ------------------------------------------------------------------------------
+# Snapshot
+# ------------------------------------------------------------------------------
+
 def snap_counts():
-    """
-    Snapshot liczników w kluczowych tabelach.
-    """
     out = {}
 
-    # Messages (stare)
+    # Messages
     if table_exists(m.T_MESSAGES):
-        out["Messages_total"] = q(f"SELECT COUNT(*) AS c FROM {m.T_MESSAGES}")[0]["c"]
-        out["Messages_new"] = q(f"SELECT COUNT(*) AS c FROM {m.T_MESSAGES} WHERE ltm_status='new'")[0]["c"]
-        out["Messages_processing"] = q(f"SELECT COUNT(*) AS c FROM {m.T_MESSAGES} WHERE ltm_status='processing'")[0]["c"]
-        out["Messages_processed"] = q(f"SELECT COUNT(*) AS c FROM {m.T_MESSAGES} WHERE ltm_status='processed'")[0]["c"]
-        out["Messages_error"] = q(f"SELECT COUNT(*) AS c FROM {m.T_MESSAGES} WHERE ltm_status='error'")[0]["c"]
+        out["Messages_total"] = count_simple(m.T_MESSAGES)
+        if has_cols(m.T_MESSAGES, "ltm_status"):
+            out["Messages_new"] = count_simple(m.T_MESSAGES, "ltm_status='new'")
+            out["Messages_processing"] = count_simple(m.T_MESSAGES, "ltm_status='processing'")
+            out["Messages_processed"] = count_simple(m.T_MESSAGES, "ltm_status='processed'")
+            out["Messages_error"] = count_simple(m.T_MESSAGES, "ltm_status='error'")
+        else:
+            out["Messages_new"] = out["Messages_processing"] = out["Messages_processed"] = out["Messages_error"] = None
     else:
         out["Messages_total"] = None
+        out["Messages_new"] = out["Messages_processing"] = out["Messages_processed"] = out["Messages_error"] = None
 
-    # turns v2
-    out["Turns_total"] = q(
-        f"SELECT COUNT(*) AS c FROM {m.T_TURNS} WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s",
+    # Turns
+    out["Turns_total"] = count_simple(
+        m.T_TURNS,
+        "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s",
         (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
+    )
+    if has_cols(m.T_TURNS, "ltm_status"):
+        out["Turns_new"] = count_simple(
+            m.T_TURNS,
+            "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='new'",
+            (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
+        )
+        out["Turns_processing"] = count_simple(
+            m.T_TURNS,
+            "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='processing'",
+            (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
+        )
+        out["Turns_processed"] = count_simple(
+            m.T_TURNS,
+            "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='processed'",
+            (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
+        )
+        out["Turns_skipped"] = count_simple(
+            m.T_TURNS,
+            "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='skipped'",
+            (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
+        )
+        out["Turns_error"] = count_simple(
+            m.T_TURNS,
+            "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='error'",
+            (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
+        )
+    else:
+        out["Turns_new"] = out["Turns_processing"] = out["Turns_processed"] = out["Turns_skipped"] = out["Turns_error"] = None
 
-    out["Turns_new"] = q(
-        f"""SELECT COUNT(*) AS c FROM {m.T_TURNS}
-            WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='new'""",
+    # Cards
+    out["Cards_total"] = count_simple(
+        m.T_CARDS,
+        "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s",
         (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
+    )
 
-    out["Turns_processing"] = q(
-        f"""SELECT COUNT(*) AS c FROM {m.T_TURNS}
-            WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='processing'""",
+    # Sources (ma scope kolumny w v2)
+    out["Sources_total"] = count_simple(
+        m.T_SOURCES,
+        "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s",
         (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
+    )
 
-    out["Turns_processed"] = q(
-        f"""SELECT COUNT(*) AS c FROM {m.T_TURNS}
-            WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='processed'""",
+    # Selections (ma scope kolumny w v2)
+    out["Selections_total"] = count_simple(
+        m.T_SELECTIONS,
+        "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s",
         (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
+    )
 
-    out["Turns_skipped"] = q(
-        f"""SELECT COUNT(*) AS c FROM {m.T_TURNS}
-            WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='skipped'""",
-        (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
-
-    out["Turns_error"] = q(
-        f"""SELECT COUNT(*) AS c FROM {m.T_TURNS}
-            WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s AND ltm_status='error'""",
-        (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
-
-    # cards
-    out["Cards_total"] = q(
-        f"SELECT COUNT(*) AS c FROM {m.T_CARDS} WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s",
-        (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
-
-    # sources
-    out["Sources_total"] = q(
-        f"""SELECT COUNT(*) AS c FROM {m.T_SOURCES}
-            WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s""",
-        (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
-
-    # selections
-    out["Selections_total"] = q(
-        f"""SELECT COUNT(*) AS c FROM {m.T_SELECTIONS}
-            WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s""",
-        (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
-
-    out["SelectionItems_total"] = q(
-        f"""SELECT COUNT(*) AS c FROM {m.T_SELECTION_ITEMS}
-            WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s""",
-        (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )[0]["c"]
+    # Selection items:
+    # - czasem tabela ma scope kolumny (chat_id/owner...), a czasem nie (tylko selection_id).
+    if table_exists(m.T_SELECTION_ITEMS):
+        if has_cols(m.T_SELECTION_ITEMS, "chat_id", "owner_user_login", "owner_agent_id"):
+            out["SelectionItems_total"] = count_simple(
+                m.T_SELECTION_ITEMS,
+                "chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s",
+                (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
+            )
+        else:
+            # JOIN do selections
+            rows = q(
+                f"""
+                SELECT COUNT(*) AS c
+                FROM {m.T_SELECTION_ITEMS} si
+                JOIN {m.T_SELECTIONS} s ON s.id = si.selection_id
+                WHERE s.chat_id=%s AND s.owner_user_login=%s AND s.owner_agent_id=%s
+                """,
+                (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
+            )
+            out["SelectionItems_total"] = int(rows[0]["c"]) if rows else 0
+    else:
+        out["SelectionItems_total"] = 0
 
     return out
+
 
 def print_snapshot(label: str = "SNAPSHOT"):
     print_section(label)
@@ -229,40 +245,46 @@ def print_snapshot(label: str = "SNAPSHOT"):
         print(f"{k}: {counts[k]}")
 
     # last turns
-    turns = q(
-        f"""SELECT seq, turn_id, role, ltm_status, ltm_error, content
+    if table_exists(m.T_TURNS):
+        turns = q(
+            f"""
+            SELECT seq, turn_id, role, ltm_status, ltm_error, content
             FROM {m.T_TURNS}
             WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s
             ORDER BY seq DESC
-            LIMIT 5""",
-        (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )
-    print("\nLast turns (max 5):")
-    for r in turns:
-        print(
-            f"  seq={r['seq']} role={r['role']} status={r['ltm_status']} err={trunc(r.get('ltm_error'), 60)} | {trunc(r.get('content'))}"
+            LIMIT 5
+            """,
+            (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
         )
+        print("\nLast turns (max 5):")
+        for r in turns:
+            print(f"  seq={r['seq']} role={r['role']} status={r.get('ltm_status')} err={trunc(r.get('ltm_error'), 60)} | {trunc(r.get('content'))}")
+    else:
+        print("\nLast turns: (table missing)")
 
     # last cards
-    cards = q(
-        f"""SELECT id, kind, topic, status, version, dedupe_key, summary
+    if table_exists(m.T_CARDS):
+        cards = q(
+            f"""
+            SELECT id, kind, topic, status, version, dedupe_key, summary
             FROM {m.T_CARDS}
             WHERE chat_id=%s AND owner_user_login=%s AND owner_agent_id=%s
             ORDER BY id DESC
-            LIMIT 5""",
-        (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
-    )
-    print("\nLast cards (max 5):")
-    if not cards:
-        print("  (none)")
-    for r in cards:
-        print(
-            f"  id={r['id']} v={r['version']} status={r['status']} kind={r['kind']} topic={r['topic']} dk={trunc(r['dedupe_key'], 40)} | {trunc(r.get('summary'))}"
+            LIMIT 5
+            """,
+            (TEST_CHAT_ID, TEST_USER_LOGIN, TEST_BOT_ID),
         )
+        print("\nLast cards (max 5):")
+        if not cards:
+            print("  (none)")
+        for r in cards:
+            print(f"  id={r['id']} v={r['version']} status={r['status']} kind={r['kind']} topic={r['topic']} dk={trunc(r['dedupe_key'], 40)} | {trunc(r.get('summary'))}")
+    else:
+        print("\nLast cards: (table missing)")
 
 
 # ------------------------------------------------------------------------------
-# Actions: sanity
+# Commands
 # ------------------------------------------------------------------------------
 
 def cmd_sanity():
@@ -272,38 +294,33 @@ def cmd_sanity():
     out = m.sanity_check_tables(rt["db"])
     print(out)
 
-
-# ------------------------------------------------------------------------------
-# Actions: seed into Messages
-# ------------------------------------------------------------------------------
-
 def try_insert_message(user_name: str, content: str) -> bool:
     """
-    Próbuje dodać rekord do Messages. Działa tylko jeśli tabela ma sensowne kolumny.
+    Best-effort insert do Messages (jeśli schema pozwala).
     """
     if not table_exists(m.T_MESSAGES):
         print("Messages table not found -> skip seed.")
         return False
 
-    cols = set(show_table_cols(m.T_MESSAGES))
-    needed_min = {"user_name", "content"}
-    if not needed_min.issubset(cols):
-        print(f"Messages schema missing {needed_min - cols} -> skip seed.")
+    cols = table_cols(m.T_MESSAGES)
+    if "user_name" not in cols or "content" not in cols:
+        print("Messages missing user_name/content -> skip seed.")
         return False
 
-    # budujemy insert adaptacyjnie
     fields = ["user_name", "content"]
     values = [user_name, content]
 
+    # timestamp
     if "timestamp" in cols:
         fields.append("timestamp")
         values.append(datetime.utcnow())
 
+    # ltm_status
     if "ltm_status" in cols:
         fields.append("ltm_status")
         values.append("new")
 
-    # opcjonalne: group_id / chat_id / is_group — jeśli istnieją, ustawiamy 0
+    # opcjonalne
     for extra in ["group_id", "is_group", "chat_id"]:
         if extra in cols:
             fields.append(extra)
@@ -321,7 +338,7 @@ def try_insert_message(user_name: str, content: str) -> bool:
 
 def cmd_seed_msgs():
     print_title("MEMORIA V2 TOOL TESTER")
-    print_section("SEED -> Messages")
+    print_section("SEED -> Messages (best-effort)")
     ok = 0
     for user_name, content in SEED_MESSAGES:
         if try_insert_message(user_name, content):
@@ -332,15 +349,9 @@ def cmd_seed_msgs():
     print(f"\nSeed inserted: {ok}/{len(SEED_MESSAGES)}")
     print_snapshot("SNAPSHOT after seed_msgs")
 
-
-# ------------------------------------------------------------------------------
-# Actions: migrate loops
-# ------------------------------------------------------------------------------
-
 def migrate_once(limit=DEFAULT_MIGRATE_LIMIT):
-    rt = get_runtime()
     mig = m.MessagesToTurnsMigrator(
-        db=rt["db"],
+        db=db(),
         scope=scope(),
         logger=None,
         bots={"aifa", "gerina", "pionier"},
@@ -357,13 +368,7 @@ def cmd_migrate(loops: int = 1):
         print_snapshot(f"SNAPSHOT after migrate loop {i}")
         time.sleep(0.15)
 
-
-# ------------------------------------------------------------------------------
-# Actions: ltm loops
-# ------------------------------------------------------------------------------
-
 def ltm_once(limit=DEFAULT_LTM_LIMIT):
-    # używamy publicznego helpera (tylko turns->cards)
     return m.run_daemon_loop(
         chat_id=TEST_CHAT_ID,
         owner_user_login=TEST_USER_LOGIN,
@@ -381,11 +386,6 @@ def cmd_ltm(loops: int = 1):
         print(f"  report_str: {m.format_memoria_report(rep)}")
         print_snapshot(f"SNAPSHOT after ltm loop {i}")
         time.sleep(0.2)
-
-
-# ------------------------------------------------------------------------------
-# Actions: blocks loops (get_memory_block)
-# ------------------------------------------------------------------------------
 
 def cmd_blocks(loops: int, text: str):
     print_title("MEMORIA V2 TOOL TESTER")
@@ -405,33 +405,16 @@ def cmd_blocks(loops: int, text: str):
         print_snapshot(f"SNAPSHOT after block loop {i}")
         time.sleep(0.15)
 
-
-# ------------------------------------------------------------------------------
-# Actions: combo scenario (real)
-# ------------------------------------------------------------------------------
-
 def cmd_real():
-    """
-    Realny scenariusz w “falach”:
-
-    FALA 0: snapshot start
-    FALA 1: seed do Messages (jeśli możliwe)
-    FALA 2: 3x migrate (żeby przenieść new -> turns)
-    FALA 3: 3x ltm (żeby przerobić turns -> cards)
-    FALA 4: 3x blocks (żeby zobaczyć co wraca w prompt)
-    FALA 5: combo (dosiew + migrate/ltm + blocks)
-    """
     print_title("MEMORIA V2 TOOL TESTER")
     print_section("REAL SCENARIO")
     print(f"Scope: chat_id={TEST_CHAT_ID} user={TEST_USER_LOGIN} bot={TEST_BOT_ID} token={TEST_TOKEN}")
 
     print_snapshot("SNAPSHOT start")
 
-    # FALA 1
     print_section("FALA 1 — seed_msgs (best-effort)")
     cmd_seed_msgs()
 
-    # FALA 2
     print_section("FALA 2 — migrate x3")
     for i in range(1, 4):
         out = safe_call(migrate_once, DEFAULT_MIGRATE_LIMIT) or {}
@@ -439,7 +422,6 @@ def cmd_real():
         print_snapshot(f"SNAPSHOT after migrate {i}")
         time.sleep(0.15)
 
-    # FALA 3
     print_section("FALA 3 — ltm x3")
     for i in range(1, 4):
         rep = safe_call(ltm_once, DEFAULT_LTM_LIMIT) or {}
@@ -447,12 +429,11 @@ def cmd_real():
         print_snapshot(f"SNAPSHOT after ltm {i}")
         time.sleep(0.2)
 
-    # FALA 4
     print_section("FALA 4 — blocks x3")
     queries = [
         "Wolę lody owocowe.",
+        "Mam psa. Ma na imię Bąbel.",
         "Jutro spotkanie po 16:00.",
-        "Co z pogodą?",
     ]
     for qi, qtext in enumerate(queries, start=1):
         mem_block = safe_call(
@@ -469,63 +450,8 @@ def cmd_real():
         print_snapshot(f"SNAPSHOT after block {qi}")
         time.sleep(0.15)
 
-    # FALA 5: combo
-    print_section("FALA 5 — COMBO (dosiew + migrate/ltm + blocks)")
-    combo_msgs = [
-        ("michal", "Mam preferencję: wolę kawę z mlekiem."),
-        ("michal", "Odwołuję: jutro spotkanie po 16:00 nieaktualne."),
-        ("michal", "Zamiast tego: spotkanie jutro o 18:30."),
-    ]
-    inserted = 0
-    for u, c in combo_msgs:
-        if try_insert_message(u, c):
-            inserted += 1
-            print(f"  + {u}: {trunc(c)}")
-        else:
-            print(f"  ! skipped: {u}: {trunc(c)}")
-    print(f"combo seed inserted: {inserted}/{len(combo_msgs)}")
-    print_snapshot("SNAPSHOT after combo seed")
-
-    # migrate 3x
-    for i in range(1, 4):
-        out = safe_call(migrate_once, DEFAULT_MIGRATE_LIMIT) or {}
-        print(f"[combo migrate {i}/3] {out}")
-        time.sleep(0.15)
-
-    # ltm 3x
-    for i in range(1, 4):
-        rep = safe_call(ltm_once, DEFAULT_LTM_LIMIT) or {}
-        print(f"[combo ltm {i}/3] {rep} | {m.format_memoria_report(rep)}")
-        time.sleep(0.2)
-
-    # blocks 3x
-    for i in range(1, 4):
-        qtext = "Kawa z mlekiem i spotkanie jutro — przypomnij mi."
-        mem_block = safe_call(
-            m.get_memory_block,
-            text=qtext,
-            chat_id=TEST_CHAT_ID,
-            owner_user_login=TEST_USER_LOGIN,
-            owner_agent_id=TEST_BOT_ID,
-        )
-        print(f"\n[combo block {i}/3] query={qtext}")
-        print("--- MEMORY BLOCK ---")
-        print(mem_block or "")
-        print("--- END ---")
-        print_snapshot(f"SNAPSHOT after combo block {i}")
-        time.sleep(0.15)
-
     print_section("REAL SCENARIO DONE")
     print_snapshot("FINAL SNAPSHOT")
-
-
-# ------------------------------------------------------------------------------
-# Misc: snapshots
-# ------------------------------------------------------------------------------
-
-def cmd_snap():
-    print_title("MEMORIA V2 TOOL TESTER")
-    print_snapshot("SNAPSHOT")
 
 
 # ------------------------------------------------------------------------------
@@ -541,10 +467,6 @@ def usage():
     print("  python memoria_v2_tests.py ltm <loops>")
     print('  python memoria_v2_tests.py blocks <loops> "query text"')
     print("  python memoria_v2_tests.py real")
-    print("")
-    print("Env config:")
-    print("  MEM_CHAT_ID=900001 MEM_USER=michal MEM_BOT=aifa MEM_TOKEN=memoria-test-worker")
-
 
 def main():
     if len(sys.argv) < 2:
@@ -558,7 +480,8 @@ def main():
         return 0
 
     if cmd == "snap":
-        cmd_snap()
+        print_title("MEMORIA V2 TOOL TESTER")
+        print_snapshot("SNAPSHOT")
         return 0
 
     if cmd == "seed_msgs":
@@ -590,7 +513,6 @@ def main():
 
     usage()
     return 2
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
