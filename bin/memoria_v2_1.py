@@ -820,6 +820,8 @@ class MemoryCardsRepo:
         dedupe_key: str,
         created_from_turn_id: str,
     ) -> Tuple[int, int]:
+        
+        dedupe_key = normalize_dedupe_key(dedupe_key)
 
         keywords_norm = sorted(list({k.lower().strip() for k in keywords if k.strip()}))
         keywords_json = safe_json_dumps(keywords_norm)
@@ -1211,7 +1213,8 @@ class SimpleHeuristicExtractor(LLMExtractor):
 
         if "preferuję" in low or "wolę" in low:
             kws = ["preference"]
-            dedupe_key = sha1_hex(f"pref|{normalize_whitespace(low)[:80]}")
+            dedupe_key = normalize_dedupe_key(sha1_hex(f"pref|{normalize_whitespace(low)[:80]}"))
+ 
             items.append(
                 ExtractedMemory(
                     action="create",
@@ -1229,7 +1232,7 @@ class SimpleHeuristicExtractor(LLMExtractor):
 
         if low.startswith("mam ") or " pracuję " in low or " jestem " in low:
             kws = ["profile"]
-            dedupe_key = sha1_hex(f"profile|{normalize_whitespace(low)[:80]}")
+            dedupe_key = normalize_dedupe_key(sha1_hex(f"profile|{normalize_whitespace(low)[:80]}"))
             items.append(
                 ExtractedMemory(
                     action="create",
@@ -1411,7 +1414,9 @@ class LLMJsonExtractor(LLMExtractor):
 
         supersedes_dedupe_key = it.get("supersedes_dedupe_key", None)
         if supersedes_dedupe_key is not None:
-            supersedes_dedupe_key = str(supersedes_dedupe_key).strip() or None
+            raw = str(supersedes_dedupe_key).strip()
+            supersedes_dedupe_key = normalize_dedupe_key(raw) if raw else None
+
 
         return ExtractedMemory(
             action=action,
@@ -1699,7 +1704,7 @@ class MemoryApplier:
             # dedupe_key — jeśli pusty: wylicz stabilnie
             dedupe_key = extracted.dedupe_key.strip() if extracted.dedupe_key else ""
             if not dedupe_key:
-                dedupe_key = sha1_hex(f"{extracted.kind}|{extracted.topic}|{normalize_whitespace(extracted.title)[:80]}|{normalize_whitespace(extracted.body)[:120]}")
+                dedupe_key = normalize_dedupe_key(sha1_hex(f"{extracted.kind}|{extracted.topic}|{normalize_whitespace(extracted.title)[:80]}|{normalize_whitespace(extracted.body)[:120]}"))
 
             card_id, card_ver = self.cards_repo.upsert_active(
                 scope=scope,
@@ -1914,15 +1919,28 @@ class MemoryApplier:
 # =============================================================================
 # Orchestrator: pipeline per claimed turn
 # =============================================================================
+
 class FastGateV2:
 
     TRIGGERS = {
         # akcje / pamięć
         "zapomnij", "cofnij", "odwołuję", "odwoluje", "anuluj", "usuń", "usun",
         "nie pamiętaj", "wycofuję", "wycofuje",
+
         # preferencje / profil
         "preferuję", "preferuje", "wolę", "wole", "mam", "pracuję", "pracuje", "jestem",
+
+        # taski / ustalenia
+        "spotkanie", "jutro", "dzisiaj", "dziś", "raport", "podsumuj", "opracuj",
+        "zrób", "zrob", "proszę", "musimy", "ustalmy", "ustalmy",
+        "zadanie", "deadline", "termin",
+
+        # pogoda / liczby / parametry (częste w devops)
+        "pogoda", "temperatura", "stopni", "°c", "c'", "c°",
     }
+
+    _RE_TIME = re.compile(r"\b\d{1,2}:\d{2}\b")
+    _RE_TEMP = re.compile(r"[-+]?\d{1,2}\s*(?:°\s*c|°c|c'|c\b)")
 
     def should_process(self, text: str) -> bool:
         t = (text or "").strip()
@@ -1935,6 +1953,10 @@ class FastGateV2:
         if len(low) >= 80:
             return True
 
+        # szybkie patterny: godzina / temperatura
+        if self._RE_TIME.search(low) or self._RE_TEMP.search(low):
+            return True
+
         # krótkie, ale “triggerujące”
         for trig in self.TRIGGERS:
             if trig in low:
@@ -1945,6 +1967,7 @@ class FastGateV2:
             return True
 
         return False
+
 
 KIND_PRIORITY = {
     # najwyżej: reguły/ustalenia
@@ -1968,14 +1991,18 @@ def is_rule_kind(kind: str) -> bool:
     k = (kind or "").strip().lower()
     return k in ("rule", "policy")
 
-
 def render_memory_block(selected: List["SelectedCard"]) -> str:
-    """
-    Render do tekstu, który możesz wkleić do system promptu / contextu.
-    """
     lines: List[str] = []
+    seen: set[int] = set()
+
     for s in selected:
         c = s.card
+        cid = int(getattr(c, "id", 0) or 0)
+        if cid and cid in seen:
+            continue
+        if cid:
+            seen.add(cid)
+
         kind = (c.kind or "").strip()
         topic = (c.topic or "").strip()
         summary = (c.summary or "").strip()
