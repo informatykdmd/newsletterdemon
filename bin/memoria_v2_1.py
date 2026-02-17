@@ -1394,9 +1394,17 @@ class LLMJsonExtractor(LLMExtractor):
         confidence = float(it.get("confidence", 0.5) or 0.5)
         confidence = max(0.0, min(1.0, confidence))
 
-        dedupe_key = normalize_dedupe_key(str(it.get("dedupe_key", "")).strip())
-        if not dedupe_key:
-            dedupe_key = normalize_dedupe_key(sha1_hex(f"{kind}|{topic}|{title}"))
+        # dedupe_key = normalize_dedupe_key(str(it.get("dedupe_key", "")).strip())
+        # if not dedupe_key:
+        #     dedupe_key = normalize_dedupe_key(sha1_hex(f"{kind}|{topic}|{title}"))
+
+        raw_dk = str(it.get("dedupe_key", "") or "").strip()
+        # ufamy tylko SHA1 hex (40)
+        if re.fullmatch(r"[0-9a-f]{40}", raw_dk.lower()):
+            dedupe_key = raw_dk.lower()
+        else:
+            dedupe_key = ""  # wymusimy deterministic fallback w applier/repo
+
 
         target_hint = it.get("target_hint", None)
         if target_hint is not None and not isinstance(target_hint, dict):
