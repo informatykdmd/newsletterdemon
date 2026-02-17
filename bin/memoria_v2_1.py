@@ -28,6 +28,26 @@ def utc_now() -> datetime:
 def sha1_hex(s: str) -> str:
     return hashlib.sha1(s.encode("utf-8")).hexdigest()
 
+def normalize_dedupe_key(s: str, max_len: int = 64) -> str:
+    """
+    Dedupe key z LLM bywa zbyt długi / niestabilny.
+    Trzymamy w DB zawsze krótki, stabilny klucz.
+    - jeśli key jest krótki i "bezpieczny" -> zostawiamy
+    - w przeciwnym razie -> sha1(key) (40 hex)
+    """
+    raw = (s or "").strip()
+    if not raw:
+        return ""
+    raw = normalize_whitespace(raw)
+
+    # typowe "dobre" klucze (np. sha1, slug, itp.)
+    if len(raw) <= max_len and re.match(r"^[a-zA-Z0-9:_\-\.\|]+$", raw):
+        return raw
+
+    # fallback: stabilny hash zawsze mieści się w kolumnie
+    return sha1_hex(raw)
+
+
 def safe_json_dumps(obj: Any) -> str:
     return json.dumps(obj, ensure_ascii=False, separators=(",", ":"))
 
@@ -1371,7 +1391,7 @@ class LLMJsonExtractor(LLMExtractor):
         confidence = float(it.get("confidence", 0.5) or 0.5)
         confidence = max(0.0, min(1.0, confidence))
 
-        dedupe_key = str(it.get("dedupe_key", "")).strip()
+        dedupe_key = normalize_dedupe_key(str(it.get("dedupe_key", "")).strip())
         if not dedupe_key:
             dedupe_key = sha1_hex(f"{kind}|{topic}|{title}")
 
@@ -1785,12 +1805,12 @@ class MemoryApplier:
 
             # Supersede = (1) tworzę NOWĄ kartę (active) (2) oznaczam starą jako superseded (3) linkuję replace
             # Robimy to w transakcji, żeby nie było połówek.
-            dedupe_key_new = extracted.dedupe_key.strip() if extracted.dedupe_key else ""
+            
+            dedupe_key_new = normalize_dedupe_key(extracted.dedupe_key.strip() if extracted.dedupe_key else "")
             if not dedupe_key_new:
                 dedupe_key_new = sha1_hex(
                     f"{extracted.kind}|{extracted.topic}|{normalize_whitespace(extracted.title)[:80]}|{normalize_whitespace(extracted.body)[:120]}"
                 )
-            # card_id_new = sha1_hex(f"{scope.chat_id}|{scope.owner_user_login}|{scope.owner_agent_id}|{dedupe_key_new}")
 
             try:
                 with self.cards_repo.db.transaction() as tx:
