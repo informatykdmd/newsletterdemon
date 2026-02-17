@@ -1190,13 +1190,20 @@ class MistralLLMAdapter(LLMClient):
     """
     Adapter: dopasowuje wrapper_mistral.MistralChatManager do interfejsu LLMClient.
     """
-    def __init__(self, mgr: MistralChatManager, mistral:bool=True):
+    def __init__(self, mgr: MistralChatManager, mistral:bool=True, total_timeout: float = 120.0,):
         self.mgr = mgr
         self.mistral = mistral
+        self.total_timeout = total_timeout
 
     def chat(self, *, messages: List[Dict[str, str]], max_tokens: int = 900, temperature: float = 0.2) -> str:
         # UWAGA: dopasuj nazwę metody jeśli w Twoim wrapperze jest np. ask()/complete()/chat()
-        return self.mgr._post(messages=messages, max_tokens=max_tokens, temperature=temperature, mistral=self.mistral)
+        return self.mgr._post(
+            messages=messages, 
+            max_tokens=max_tokens, 
+            temperature=temperature, 
+            mistral=self.mistral, 
+            total_timeout=self.total_timeout
+        )
 
 
 class SimpleHeuristicExtractor(LLMExtractor):
@@ -2392,7 +2399,7 @@ _MEMORIA_RUNTIME: Dict[Tuple[str, str], Dict[str, Any]] = {}
 
 DEFAULT_BOTS = {"aifa", "gerina", "pionier"}
 
-def _get_or_create_runtime(*, owner_agent_id: str, mistral: bool = True) -> Dict[str, Any]:
+def _get_or_create_runtime(*, owner_agent_id: str, total_timeout: float = 120.0, mistral: bool = True) -> Dict[str, Any]:
     """
     Tworzy i cachuje:
       - db
@@ -2413,7 +2420,7 @@ def _get_or_create_runtime(*, owner_agent_id: str, mistral: bool = True) -> Dict
 
     # 2) LLM + extractor
     _mgr = MistralChatManager(MISTRAL_API_KEY)
-    llm = MistralLLMAdapter(_mgr, mistral=mistral)
+    llm = MistralLLMAdapter(_mgr, mistral=mistral, total_timeout=120.0)
     extractor = LLMJsonExtractor(llm=llm, logger=log)
 
     # 3) Engine
@@ -2465,7 +2472,10 @@ def run_daemon_loop(
     *,
     processing_token: str = "memoria-worker-1",
     ltm_batch_limit: int = 20,
-    mistral: bool = True
+    total_timeout: float = 120.0,
+    mistral: bool = True,
+    skip_migrate: bool = False,
+    migrate_limit: int = 50
 ) -> Dict[str, Any]:
     """
     Jeden „tick” pod daemon/cron/pm2 (bez pętli nieskończonej).
@@ -2480,14 +2490,28 @@ def run_daemon_loop(
     """
     owner_user_login = (owner_user_login or "").strip()
     owner_agent_id = (owner_agent_id or "").strip()
-    rt = _get_or_create_runtime(owner_agent_id=owner_agent_id, mistral=mistral)
+    rt = _get_or_create_runtime(owner_agent_id=owner_agent_id, mistral=mistral, total_timeout=total_timeout)
     engine: MemoriaEngine = rt["engine"]
+
+    # scope = Scope(chat_id=int(chat_id), owner_user_login=owner_user_login, owner_agent_id=owner_agent_id)
+
+    # t0 = time.monotonic()
+    # out = engine.run_once(scope=scope, processing_token=processing_token, limit=int(ltm_batch_limit))
+    # dt = max(0.0, time.monotonic() - t0)
 
     scope = Scope(chat_id=int(chat_id), owner_user_login=owner_user_login, owner_agent_id=owner_agent_id)
 
+    # 0) Messages -> turn_messages_v2 (idempotent: bierze tylko Messages "new")
+    migrate_out = {"status": "skipped", "claimed": 0, "moved": 0, "error": 0}
+    if not skip_migrate:
+        migrator = MessagesToTurnsMigrator(db=rt["db"], scope=scope)
+        migrate_out = migrator.run_once(processing_token=processing_token, limit=migrate_limit)
+
+    # 1) LTM: obrabiaj turn_messages_v2
     t0 = time.monotonic()
     out = engine.run_once(scope=scope, processing_token=processing_token, limit=int(ltm_batch_limit))
     dt = max(0.0, time.monotonic() - t0)
+
 
     claimed = int(out.get("claimed", 0) or 0)
     ok = int(out.get("ok", 0) or 0)
@@ -2502,6 +2526,7 @@ def run_daemon_loop(
         "dry_run": False,
         "duration_sec": round(dt, 3),
         "engine_status": out.get("status"),
+        "migrate": migrate_out
     }
     return report
 

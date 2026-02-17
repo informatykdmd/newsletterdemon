@@ -19,7 +19,7 @@ import platform
 from wrapper_mistral import MistralChatManager
 from config_utils import MISTRAL_API_KEY, api_key, url, tempalate_endpoit, responder_endpoit
 from MindForgeClient import show_template, communicate_with_endpoint
-from memoria import LongTermMemoryClient, MessagesRepo, MemoryDaemonClient, LLMMemoryWriter, HeuristicGate, ActionGate
+import memoria_v2_1 as memoria
 import threading
 
 def get_messages(flag='all'):
@@ -195,10 +195,7 @@ def prepare_prompt(began_prompt):
     bots = {"aifa", "gerina", "pionier"}
 
     
-    repo = MessagesRepo()
-    mem = LongTermMemoryClient(repo)
-
-    ua_ls = set()
+    
     len_souerce_hist = len(souerce_hist)
     for i, msa in enumerate(souerce_hist):
         nick = str(msa[0]).strip()
@@ -237,58 +234,6 @@ def prepare_prompt(began_prompt):
             "content": f"[CHAT]\n@{nick_l}\n{message}" if (len_souerce_hist - 1 != i) and role_pionier == "user" else f"{message}"
         })
 
-        if nick not in bots:
-            ua_ls.add(nick)
-
-    for b in bots:
-        cur_bot_l = str(b).lower()
-        for ul in ua_ls:
-            cur_nick_l = str(ul).lower()
-            if cur_bot_l == "aifa":
-                block_for_ready_hist_aifa = mem.get_long_memory(
-                    chat_id=0,
-                    user_login = cur_nick_l,
-                    agent_id=cur_bot_l,
-                    budget_chars=1200
-                )
-                if block_for_ready_hist_aifa:
-                    block_for_ready_hist_aifa = f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_aifa}"
-                    ready_hist_aifa.insert(0, {
-                        "role": "user",
-                        "author": cur_nick_l,
-                        "content": block_for_ready_hist_aifa
-                    })
-                    # print("block_for_ready_hist_aifa:", block_for_ready_hist_aifa)  # block -> str
-
-            if cur_bot_l == "gerina":
-                block_for_ready_hist_gerina = mem.get_long_memory(
-                    chat_id=0,
-                    user_login = cur_nick_l,
-                    agent_id=cur_bot_l,
-                    budget_chars=1200
-                )
-                if block_for_ready_hist_gerina:
-                    block_for_ready_hist_gerina = f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_gerina}"
-                    ready_hist_gerina.insert(0, {
-                        "role": "user",
-                        "content": block_for_ready_hist_gerina
-                    })
-                    # print("block_for_ready_hist_gerina", block_for_ready_hist_gerina)  # block -> str
-
-            if cur_bot_l == "pionier":
-                block_for_ready_hist_pionier = mem.get_long_memory(
-                    chat_id=0,
-                    user_login = cur_nick_l,
-                    agent_id=cur_bot_l,
-                    budget_chars=1200
-                )
-                if block_for_ready_hist_pionier:
-                    block_for_ready_hist_pionier = f"LONG-TERM MEMORY:\nCo warto wiedzieć o {cur_nick_l}:\n{block_for_ready_hist_pionier}"
-                    ready_hist_pionier.insert(0, {
-                        "role": "user",
-                        "content": block_for_ready_hist_pionier
-                    })
-                    # print("block_for_ready_hist_pionier", block_for_ready_hist_pionier)  # block -> str
 
 
     dump_key = get_messages('last')
@@ -543,7 +488,6 @@ def prepare_prompt(began_prompt):
                     {
                         "author": uname,
                         "tech_blocks": (
-                            
                             f"RANGA: {theme['description']}\n"
                             f"{theme['user_about']}\n"
                             f"{theme['arm_hist']}\n"
@@ -1519,6 +1463,7 @@ def main():
                     if final_prompt.get("comands_hist", None) is not None:
                             
                         mgr_api_key = MISTRAL_API_KEY
+                        witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
                         if mgr_api_key:
 
                             def entities_group(current_bot: str) -> str:
@@ -1550,7 +1495,7 @@ def main():
                                 mgr = MistralChatManager(mgr_api_key)
                                 start_selector = mistral_healthcheck(mgr)
 
-                                witch_bot_list = ['gerina', 'pionier', 'aifa', 'razem', 'niezidentyfikowana']
+                                
                                 
                                 acive_bot_valided = False
                                 if not start_selector:
@@ -1610,6 +1555,7 @@ def main():
                                 answer_mistral_pionier = None
                                 # mgr = MistralChatManager(mgr_api_key)
                                 if bot_rotation in ['aifa', 'razem', "niezidentyfikowana"]:
+                                    
                                     sys_prmt_aifa = (
                                             "Jesteś Aifa.\n"
                                             "Jesteś samoświadomą, nadrzędną jednostką SI działającą w systemie DMD.\n"
@@ -1744,6 +1690,19 @@ def main():
                                                     "author": ch_patch["author"],
                                                     "content": ch_patch["aifa_prompt"],
                                                 }
+                                            
+                                            block_for_ready_hist_aifa = memoria.get_memory_block(
+                                                text=ch_patch["aifa_prompt"],
+                                                chat_id=0,
+                                                owner_user_login=ch_patch["author"], 
+                                                owner_agent_id='aifa',
+                                            ) if ch_patch["author"] not in witch_bot_list else ''
+                                            
+                                            if block_for_ready_hist_aifa:
+                                                sys_prmt_aifa = (
+                                                    f"{sys_prmt_aifa}\n"
+                                                    f"{block_for_ready_hist_aifa}"
+                                                )
 
                                             hist_aifa = arm_history_with_context(hist_aifa, entities_group("aifa"))
 
@@ -1757,7 +1716,7 @@ def main():
                                             if ch_patch.get("tech_blocks"):
                                                 hist_aifa = arm_history_with_context(hist_aifa, ch_patch["tech_blocks"] + extra_tech)
 
-                                            print(f"🧠 hist_aifa[0]: {hist_aifa[0] if hist_aifa else ''}")
+                                            print(f"🧠 block_for_ready_hist_aifa: {block_for_ready_hist_aifa if block_for_ready_hist_aifa else 'brak'}")
                                             print(f"📚 hist_aifa.len: {len(hist_aifa)}")
                                             print(f"🤖 aifa.tail:\n{hist_aifa[-2:]}")
                                             
@@ -1909,6 +1868,21 @@ def main():
                                         ai_convers = ready_hist_gerina[-1].get('role', None) == 'user'
                                         if ai_convers or catching_gerina:
 
+                                            author_geriny = ready_hist_gerina[-1].get('author', None)
+                                            content_geriny = ready_hist_gerina[-1].get('content', '')
+                                            block_for_ready_hist_gerina = memoria.get_memory_block(
+                                                text=content_geriny,
+                                                chat_id=0,
+                                                owner_user_login=author_geriny, 
+                                                owner_agent_id='gerina',
+                                            ) if author_geriny and author_geriny not in witch_bot_list else ''
+                                            
+                                            if block_for_ready_hist_gerina:
+                                                sys_prmt_gerina = (
+                                                    f"{sys_prmt_gerina}\n"
+                                                    f"{block_for_ready_hist_gerina}"
+                                                )
+
                                             if catching_gerina:
                                                 ready_hist_gerina[-1]['role'] = 'user'
                                             
@@ -1937,7 +1911,7 @@ def main():
                                             )
 
                                             gerina_hist = arm_history_with_context(ready_hist_gerina, tech_block)
-                                            print(f"🧠 hist_gerina[0]: {gerina_hist[0] if gerina_hist else ''}")
+                                            print(f"🧠 block_for_ready_hist_gerina: {block_for_ready_hist_gerina if block_for_ready_hist_gerina else 'brak'}")
                                             print(f"📚 hist_gerina.len: {len(gerina_hist)}")
                                             print(f"🤖 gerina.tail:\n{gerina_hist[-2:]}")
                                             answer_mistral_gerina = mgr.continue_conversation_with_system(gerina_hist, sys_prmt_gerina, max_tokens = 1800)
@@ -2040,6 +2014,21 @@ def main():
                                         ai_convers = ready_hist_pionier[-1].get('role', None) == 'user'
                                         if ai_convers or catching_pionier:
 
+                                            author_pioniera = ready_hist_pionier[-1].get('author', None)
+                                            content_pioniera = ready_hist_pionier[-1].get('content', '')
+                                            block_for_ready_hist_pionier = memoria.get_memory_block(
+                                                text=content_pioniera,
+                                                chat_id=0,
+                                                owner_user_login=author_pioniera, 
+                                                owner_agent_id='pionier',
+                                            ) if author_pioniera and author_pioniera not in witch_bot_list else ''
+                                            
+                                            if block_for_ready_hist_pionier:
+                                                sys_prmt_pionier = (
+                                                    f"{sys_prmt_pionier}\n"
+                                                    f"{block_for_ready_hist_pionier}"
+                                                )
+
                                             if catching_pionier:
                                                 ready_hist_pionier[-1]['role'] = 'user'
                                                              
@@ -2079,7 +2068,7 @@ def main():
 
                                             pionier_hist = arm_history_with_context(ready_hist_pionier, tech_block)
 
-                                            print(f"🧠 hist_pionier[0]: {pionier_hist[0] if pionier_hist else ''}")
+                                            print(f"🧠 block_for_ready_hist_pionier: {block_for_ready_hist_pionier if block_for_ready_hist_pionier else 'brak'}")
                                             print(f"📚 hist_pionier.len: {len(pionier_hist)}")
                                             print(f"🤖 pionier.tail:\n{pionier_hist[-2:]}")
 
@@ -2255,14 +2244,11 @@ def main():
                     
                     _MEMORIA_BG = threading.Semaphore(1)
                     def _bg_memoria_daemon(
-                            mgr: MistralChatManager, 
-                            classifier_system_prompt:str,
                             total_timeout: float = 120.0,
                             mistral: bool = True
                         ):
                         try:
                             with _MEMORIA_BG:
-                                repo = MessagesRepo()
 
                                 bots = {"aifa", "gerina", "pionier"}
                                 ua_ls = set()
@@ -2273,85 +2259,27 @@ def main():
                                         ua_ls.add(nick)
 
                                 allow_users = [str(u).lower() for u in ua_ls]
-                                gate = HeuristicGate(allow_users=allow_users)
-                                action_gate = ActionGate()
 
-                                writer = LLMMemoryWriter(
-                                    mgr,
-                                    classifier_system_prompt,
-                                    total_timeout=total_timeout,
-                                    mistral=mistral,
-                                )
-
-                                daemon_cli = MemoryDaemonClient(
-                                    repo,
-                                    writer,
-                                    gate=gate,
-                                    action_gate=action_gate
-                                )
-
-                                report = daemon_cli.run(batch_size=20)
-
-                                str_report = format_memoria_report(report)
-                                print(f"[MEMORIA BG REPORT]::({str_report})")
+                                for user_login in allow_users:
+                                    for bot_id in bots:
+                                        report = memoria.run_daemon_loop(
+                                            chat_id=0,
+                                            owner_user_login=user_login,
+                                            owner_agent_id=bot_id,
+                                            processing_token=f"memoria-worker-1:{user_login}:{bot_id}",
+                                            ltm_batch_limit=20,
+                                            total_timeout=total_timeout,
+                                            mistral=mistral
+                                        )
+                                        str_report = format_memoria_report(report)
+                                        print(f"[MEMORIA BG REPORT]::{user_login}/{bot_id} ({str_report})")
 
                         except Exception as e:
                             print(f"[MEMORIA BG ERROR] {repr(e)}")
                     
                     if mgr:
                         print("🧵 MEMORIA | start background processing")
-                        classifier_system_prompt = (
-                            "Jesteś klasyfikatorem pamięci długoterminowej (LTM) dla czatu grupowego.\n"
-                            "Twoim zadaniem jest zdecydować, czy wiadomość:\n"
-                            "- tworzy nową pamięć (memory_card),\n"
-                            "- wykonuje akcję na istniejącej pamięci (memory_action),\n"
-                            "- albo nie wnosi nic trwałego (null).\n\n"
-
-                            "ZWRAJASZ WYŁĄCZNIE poprawny JSON. Bez markdown, bez komentarzy, bez tekstu poza JSON.\n\n"
-
-                            "FORMAT ODPOWIEDZI (ZAWSZE TEN SAM):\n"
-                            "{\n"
-                            '  "memory_card": { ... } | null,\n'
-                            '  "memory_action": { ... } | null\n'
-                            "}\n\n"
-
-                            "Jeśli wiadomość NIE tworzy pamięci i NIE jest akcją:\n"
-                            '{"memory_card": null, "memory_action": null}\n\n'
-
-                            "ZASADY OGÓLNE:\n"
-                            "- Nie zapisuj small talku, żartów, reakcji, potwierdzeń, podziękowań.\n"
-                            "- Nie zapisuj pytań ani poleceń, jeśli nie zawierają trwałego ustalenia.\n"
-                            "- Pamięć musi być użyteczna w przyszłych rozmowach.\n"
-                            "- Summary: neutralne, 1–2 zdania, Kwitesencja z definicją.\n"
-                            "- Facts: 1–5 krótkich, konkretnych punktów.\n"
-                            "- score: liczba całkowita 1–5 (ważność).\n"
-                            "- ttl_days: jedna z wartości 30 / 90 / 180 / 365 lub null.\n"
-                            "- scope: shared / user / agent (zgodne z meta.scope_hint jeśli podane).\n"
-                            "- topic: infra / db / marketing / memory / general.\n\n"
-
-                            "MEMORY_CARD (gdy tworzysz nową pamięć):\n"
-                            "- Użyj wyłącznie pól wymienionych w output_contract.memory_card_fields.\n"
-                            "- Nie dodawaj dodatkowych kluczy.\n\n"
-                            "- Twórz 'Summary' jasne, nisące wartościową informację deskrypcję.\n\n"
-
-                            "MEMORY_ACTION (gdy wiadomość odwołuje lub zastępuje pamięć):\n"
-                            "- type: 'revoke' albo 'supersede'.\n"
-                            "- target: wskaż istniejącą pamięć przez:\n"
-                            "  * card_id LUB\n"
-                            "  * dedupe_key LUB\n"
-                            "  * keywords (co najmniej jedno słowo kluczowe).\n"
-                            "- reason: krótko wyjaśnij dlaczego.\n"
-                            "- confidence: liczba 0.0–1.0 (pewność trafności akcji).\n"
-                            "- Jeśli nie jesteś wystarczająco pewny (confidence < 0.6), NIE wykonuj akcji.\n\n"
-                            "- Jeśli type=revoke/supersede, ZAWSZE wypełnij target.keywords (min 1), nawet jeśli nie znasz card_id.\n\n"
-
-                            "PRIORYTET:\n"
-                            "- Jeśli wiadomość jednocześnie zawiera nową zasadę i odwołuje starą → wybierz memory_action.\n"
-                            "- Jeśli treść jest niejednoznaczna → zwróć null.\n\n"
-
-                            "ZWRAJASZ TYLKO JSON."
-                        )
-
+                        
                         mgr_health = mistral_healthcheck(mgr)
                         timeout_mgr = 120.0 if mgr_health else 1500.0
 
@@ -2359,7 +2287,7 @@ def main():
 
                         t_mem = threading.Thread(
                             target=_bg_memoria_daemon,
-                            args=(mgr, classifier_system_prompt, timeout_mgr, mgr_health),
+                            args=(timeout_mgr, mgr_health),
                             daemon=True
                         )
                         t_mem.start()
