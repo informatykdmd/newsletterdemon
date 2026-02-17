@@ -1396,7 +1396,7 @@ class LLMJsonExtractor(LLMExtractor):
 
         dedupe_key = normalize_dedupe_key(str(it.get("dedupe_key", "")).strip())
         if not dedupe_key:
-            dedupe_key = sha1_hex(f"{kind}|{topic}|{title}")
+            dedupe_key = normalize_dedupe_key(sha1_hex(f"{kind}|{topic}|{title}"))
 
         target_hint = it.get("target_hint", None)
         if target_hint is not None and not isinstance(target_hint, dict):
@@ -1410,6 +1410,15 @@ class LLMJsonExtractor(LLMExtractor):
             except Exception:
                 # jak model da śmieci, wywalamy card_id z hintu
                 target_hint.pop("card_id", None)
+        
+        # v2: normalizacja target_hint.dedupe_key -> dedupe_key (string)
+        if isinstance(target_hint, dict) and "dedupe_key" in target_hint and target_hint["dedupe_key"] is not None:
+            try:
+                target_hint["dedupe_key"] = normalize_dedupe_key(str(target_hint["dedupe_key"]).strip())
+                if not target_hint["dedupe_key"]:
+                    target_hint.pop("dedupe_key", None)
+            except Exception:
+                target_hint.pop("dedupe_key", None)
 
 
         supersedes_dedupe_key = it.get("supersedes_dedupe_key", None)
@@ -1682,7 +1691,7 @@ class MemoryApplier:
 
         # 2) jeśli hint dedupe_key
         if not target_card and extracted.target_hint and extracted.target_hint.get("dedupe_key"):
-            target_card = self.cards_repo.find_by_dedupe_key(scope=scope, dedupe_key=str(extracted.target_hint["dedupe_key"]))
+            target_card = self.cards_repo.find_by_dedupe_key(scope=scope, dedupe_key=str(normalize_dedupe_key(extracted.target_hint["dedupe_key"])))
 
         # 3) jeśli supersede wskazuje dedupe
         if not target_card and extracted.supersedes_dedupe_key:
@@ -1704,7 +1713,9 @@ class MemoryApplier:
             # dedupe_key — jeśli pusty: wylicz stabilnie
             dedupe_key = extracted.dedupe_key.strip() if extracted.dedupe_key else ""
             if not dedupe_key:
-                dedupe_key = normalize_dedupe_key(sha1_hex(f"{extracted.kind}|{extracted.topic}|{normalize_whitespace(extracted.title)[:80]}|{normalize_whitespace(extracted.body)[:120]}"))
+                dedupe_key = normalize_dedupe_key(
+                    sha1_hex(f"{extracted.kind}|{extracted.topic}|{normalize_whitespace(extracted.title)[:80]}|{normalize_whitespace(extracted.body)[:120]}")
+                )
 
             card_id, card_ver = self.cards_repo.upsert_active(
                 scope=scope,

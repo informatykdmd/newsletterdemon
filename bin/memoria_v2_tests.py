@@ -315,6 +315,17 @@ def try_insert_message(user_name: str, content: str) -> bool:
         fields.append("timestamp")
         values.append(datetime.utcnow())
 
+    # anti-dup: jeśli taki sam content od tego usera był w ostatnich 10 minutach, to pomiń
+    if "timestamp" in cols:
+        exists = q(
+            f"SELECT id FROM {m.T_MESSAGES} "
+            f"WHERE user_name=%s AND content=%s AND timestamp >= (NOW() - INTERVAL 10 MINUTE) "
+            f"LIMIT 1",
+            (user_name, content),
+        )
+        if exists:
+            return False
+
     # ltm_status
     if "ltm_status" in cols:
         fields.append("ltm_status")
@@ -460,13 +471,13 @@ def cmd_real():
 
 def usage():
     print("Usage:")
-    print("  python memoria_v2_tests.py sanity")
-    print("  python memoria_v2_tests.py snap")
-    print("  python memoria_v2_tests.py seed_msgs")
-    print("  python memoria_v2_tests.py migrate <loops>")
-    print("  python memoria_v2_tests.py ltm <loops>")
-    print('  python memoria_v2_tests.py blocks <loops> "query text"')
-    print("  python memoria_v2_tests.py real")
+    print("  python3 memoria_v2_tests.py sanity")
+    print("  python3 memoria_v2_tests.py snap")
+    print("  python3 memoria_v2_tests.py seed_msgs")
+    print("  python3 memoria_v2_tests.py migrate <loops>")
+    print("  python3 memoria_v2_tests.py ltm <loops>")
+    print('  python3 memoria_v2_tests.py blocks <loops> "query text"')
+    print("  python3 memoria_v2_tests.py real")
 
 def main():
     if len(sys.argv) < 2:
