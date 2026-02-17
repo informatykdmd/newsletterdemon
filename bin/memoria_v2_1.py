@@ -1190,12 +1190,13 @@ class MistralLLMAdapter(LLMClient):
     """
     Adapter: dopasowuje wrapper_mistral.MistralChatManager do interfejsu LLMClient.
     """
-    def __init__(self, mgr: MistralChatManager):
+    def __init__(self, mgr: MistralChatManager, mistral:bool=True):
         self.mgr = mgr
+        self.mistral = mistral
 
     def chat(self, *, messages: List[Dict[str, str]], max_tokens: int = 900, temperature: float = 0.2) -> str:
         # UWAGA: dopasuj nazwę metody jeśli w Twoim wrapperze jest np. ask()/complete()/chat()
-        return self.mgr._post(messages=messages, max_tokens=max_tokens, temperature=temperature)
+        return self.mgr._post(messages=messages, max_tokens=max_tokens, temperature=temperature, mistral=self.mistral)
 
 
 class SimpleHeuristicExtractor(LLMExtractor):
@@ -2391,7 +2392,7 @@ _MEMORIA_RUNTIME: Dict[Tuple[str, str], Dict[str, Any]] = {}
 
 DEFAULT_BOTS = {"aifa", "gerina", "pionier"}
 
-def _get_or_create_runtime(*, owner_agent_id: str) -> Dict[str, Any]:
+def _get_or_create_runtime(*, owner_agent_id: str, mistral: bool = True) -> Dict[str, Any]:
     """
     Tworzy i cachuje:
       - db
@@ -2412,7 +2413,7 @@ def _get_or_create_runtime(*, owner_agent_id: str) -> Dict[str, Any]:
 
     # 2) LLM + extractor
     _mgr = MistralChatManager(MISTRAL_API_KEY)
-    llm = MistralLLMAdapter(_mgr)
+    llm = MistralLLMAdapter(_mgr, mistral=mistral)
     extractor = LLMJsonExtractor(llm=llm, logger=log)
 
     # 3) Engine
@@ -2464,6 +2465,7 @@ def run_daemon_loop(
     *,
     processing_token: str = "memoria-worker-1",
     ltm_batch_limit: int = 20,
+    mistral: bool = True
 ) -> Dict[str, Any]:
     """
     Jeden „tick” pod daemon/cron/pm2 (bez pętli nieskończonej).
@@ -2478,7 +2480,7 @@ def run_daemon_loop(
     """
     owner_user_login = (owner_user_login or "").strip()
     owner_agent_id = (owner_agent_id or "").strip()
-    rt = _get_or_create_runtime(owner_agent_id=owner_agent_id)
+    rt = _get_or_create_runtime(owner_agent_id=owner_agent_id, mistral=mistral)
     engine: MemoriaEngine = rt["engine"]
 
     scope = Scope(chat_id=int(chat_id), owner_user_login=owner_user_login, owner_agent_id=owner_agent_id)
@@ -2535,6 +2537,7 @@ report = run_daemon_loop(
     owner_agent_id=f"{bot_id}"   
     processing_token="memoria-worker-1",
     ltm_batch_limit=20,
+    mistral=True
 )
 str_report = format_memoria_report(report)
 print(f"[MEMORIA BG REPORT]::({str_report})")
