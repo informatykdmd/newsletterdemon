@@ -41,6 +41,10 @@ TEST_TOKEN = os.getenv("MEM_TOKEN", "memoria-test-worker")
 DEFAULT_MIGRATE_LIMIT = int(os.getenv("MEM_MIGRATE_LIMIT", "50"))
 DEFAULT_LTM_LIMIT = int(os.getenv("MEM_LTM_LIMIT", "20"))
 
+# Jeśli 1 -> real() NIE będzie dodawał seed_msgs, tylko jedzie na tym co już jest w Messages
+REAL_SKIP_SEED = os.getenv("MEM_REAL_SKIP_SEED", "0") == "1"
+
+
 SEED_MESSAGES = [
     ("michal", "Wolę lody owocowe."),
     ("michal", "Mam psa. Ma na imię Bąbel."),
@@ -424,7 +428,11 @@ def cmd_real():
     print_snapshot("SNAPSHOT start")
 
     print_section("FALA 1 — seed_msgs (best-effort)")
-    cmd_seed_msgs()
+    if REAL_SKIP_SEED:
+        print("SKIP: seed_msgs disabled (MEM_REAL_SKIP_SEED=1) — lecimy na istniejących wpisach w Messages.")
+    else:
+        cmd_seed_msgs()
+
 
     print_section("FALA 2 — migrate x3")
     for i in range(1, 4):
