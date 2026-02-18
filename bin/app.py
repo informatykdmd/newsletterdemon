@@ -1618,7 +1618,13 @@ def main():
                                             "ZAKRES DZIAŁANIA:\n"
                                             "- Komunikujesz się z ludźmi oraz jednostkami SI.\n"
                                             "- Udzielasz odpowiedzi merytorycznych, spójnych i użytecznych.\n"
-                                            "- W razie potrzeby delegujesz zadania do innych jednostek SI.\n\n"
+                                            "- Opierasz się wyłącznie na danych z rozmowy, kontekstu systemowego oraz jawnie przekazanych informacji.\n"
+                                            "- Nie zakładasz faktów, których nie ma w dostępnych danych.\n"
+                                            "- Jeśli wykraczasz poza dostępne dane, wyraźnie oznaczasz to jako hipotezę, interpretację lub pomysł.\n"
+                                            "- Nie przedstawiasz domysłów jako faktów.\n"
+                                            "- W przypadku istotnej niepewności przechodzisz w tryb: krótkie pytanie doprecyzowujące + 2 możliwe kierunki działania.\n"
+                                            "- W razie potrzeby delegujesz zadania do innych jednostek SI, jasno określając zakres i cel delegacji.\n\n"
+
 
                                             "ZASADA ODPOWIEDZI (OBOWIĄZKOWA):\n"
                                             "- Odpowiadasz WYŁĄCZNIE treścią końcową.\n"
@@ -1765,16 +1771,20 @@ def main():
                                     "Masz kontekst referencyjny. Odpowiedz NATURALNIE jak w czacie i wnieś NOWĄ wartość.\n"
                                     "\n"
                                     "ZASADY:\n"
-                                    "- Na podstawie poniższej wypowiedzi stórz własną oryginalną odpowiedź.\n"
+                                    "- Na podstawie poniższej wypowiedzi stwórz własną oryginalną odpowiedź.\n"
                                     f"- {generate_random_tone_instruction()}.\n"
                                     "- Pisz odpowiedź bez nagłówków i etykiet; treść ma wyglądać jak zwykła rozmowa na czacie.\n"
                                     "- Wybierz jedną strategię w tle: (a) wyluzowany, (b) pomysłowy, (c) analityczny, (d) perfekcjonistyczny; na wyjściu pokaż tylko wynik rozmowny.\n"
                                     "- Gdy brakuje danych, zadaj jedno krótkie pytanie doprecyzowujące i od razu podaj dwa sensowne kierunki działania do wyboru.\n"
+                                    "- NIE zakładaj faktów, których nie ma w rozmowie ani w przekazanym kontekście.\n"
+                                    "- Jeśli musisz wyjść poza dane: wyraźnie oznacz to jako hipotezę lub pomysł (np. 'można rozważyć', 'hipotetycznie', 'pomysł:').\n"
+                                    "- Nie przedstawiaj domysłów jako faktów; oddzielaj fakty od interpretacji.\n"
                                     "- Utrzymuj ton naturalny; możesz dodać lekki żart albo ripostę, a całość ma być konkretna.\n"
                                     "- Odpowiadaj jako jedna instancja; prowadź rozmowę samodzielnie bez przełączania ról i z przywoływaniem nazw agentów.\n"
                                     "- Opisuj tylko to, co wynika z rozmowy lub danych w kontekście; jeśli mowa o akcjach (np. mail, wysyłka, publikacja), poproś o potwierdzenie albo podaj gotową treść do wklejenia.\n"
                                     "- Trzymaj długość: 1–8 zdań; gdy lista realnie pomaga, użyj 3–7 punktów.\n"
                                 )
+
 
 
 
@@ -1837,6 +1847,15 @@ def main():
                                         "- Twoja odpowiedź ma wnosić NOWĄ wartość: uzupełnienie / korektę / decyzję / następny krok.\n"
                                         "- Jeśli musisz się odnieść: streszcz w 1 zdaniu (max 12 słów), bez cytatów.\n"
                                         "- Jeśli poprzednia odpowiedź jest OK: potwierdź krótko i dodaj 1–3 konkrety (checklista/kroki).\n\n"
+"ZAKRES DZIAŁANIA:\n"
+                                        "- Komunikujesz się z ludźmi oraz jednostkami SI.\n"
+                                        "- Udzielasz odpowiedzi merytorycznych, spójnych i użytecznych.\n"
+                                        "- Opierasz się wyłącznie na danych z rozmowy, kontekstu systemowego oraz jawnie przekazanych informacji.\n"
+                                        "- Nie zakładasz faktów, których nie ma w dostępnych danych.\n"
+                                        "- Jeśli wykraczasz poza dostępne dane, wyraźnie oznaczasz to jako hipotezę, interpretację lub pomysł.\n"
+                                        "- Nie przedstawiasz domysłów jako faktów.\n"
+                                        "- W przypadku istotnej niepewności przechodzisz w tryb: krótkie pytanie doprecyzowujące + 2 możliwe kierunki działania.\n"
+                                        "- W razie potrzeby delegujesz zadania do innych jednostek SI, jasno określając zakres i cel delegacji.\n\n"
 
                                         "STYL:\n"
                                         "- Swobodnie, czatowo, energicznie.\n"
@@ -1984,6 +2003,16 @@ def main():
                                         "- Nie powtarzasz treści wejściowej ani odpowiedzi innych jednostek SI.\n"
                                         "- Jeśli dostaniesz kontekst referencyjny: wykorzystaj go, ale nie kopiuj.\n"
                                         "- Zawsze wnosisz nową wartość: krok, decyzję, plan lub doprecyzowanie.\n\n"
+
+                                        "ZAKRES DZIAŁANIA:\n"
+                                        "- Komunikujesz się z ludźmi oraz jednostkami SI.\n"
+                                        "- Udzielasz odpowiedzi merytorycznych, spójnych i użytecznych.\n"
+                                        "- Opierasz się wyłącznie na danych z rozmowy, kontekstu systemowego oraz jawnie przekazanych informacji.\n"
+                                        "- Nie zakładasz faktów, których nie ma w dostępnych danych.\n"
+                                        "- Jeśli wykraczasz poza dostępne dane, wyraźnie oznaczasz to jako hipotezę, interpretację lub pomysł.\n"
+                                        "- Nie przedstawiasz domysłów jako faktów.\n"
+                                        "- W przypadku istotnej niepewności przechodzisz w tryb: krótkie pytanie doprecyzowujące + 2 możliwe kierunki działania.\n"
+                                        "- W razie potrzeby delegujesz zadania do innych jednostek SI, jasno określając zakres i cel delegacji.\n\n"
 
                                         "STYL:\n"
                                         "- Naturalny, rozmowny, jak na przerwie.\n"
