@@ -295,7 +295,7 @@ class MistralChatManager:
 
     def __init__(
             self, api_key, 
-            model="mistral-large-2402", #mistral-small-latest 
+            model="mistral-saba-2502", #mistral-small-latest  mistral-large-2402
             server="eu"
         ):
         self.api_key = api_key
