@@ -1204,7 +1204,8 @@
 
                                                         <i class="bi bi-soundwave" 
                                                         title="Odłuchaj na głos"
-                                                        style="color: #ee73fc;"></i>
+                                                        onclick="toggleSpeakNearestChatText(this)"
+                                                        style="color: #ee73fc; cursor: pointer;"></i>
                                                     </div>
                                                 </div>
                                                 <div class="col">
@@ -1427,6 +1428,92 @@
         const text = msgEl ? (msgEl.innerText || msgEl.textContent || "") : "";
         copyToClipboard(text.trim());
     }
+
+    // ===== TTS (Web Speech API) =====
+    let __ttsSpeaking = false;
+    let __ttsLastKey = "";
+
+    function getNearestChatTextForTTS(el) {
+        const bubble = el.closest(".chat-bubble, .chat-bubble-self");
+        const msgEl = bubble ? bubble.querySelector(".chat-message-fill, .chat-message-fill-self") : null;
+        const text = msgEl ? (msgEl.innerText || msgEl.textContent || "") : "";
+        return text.replace(/\s+/g, " ").trim();
+    }
+
+    function pickVoice(lang = "pl-PL") {
+        const voices = window.speechSynthesis?.getVoices?.() || [];
+        if (!voices.length) return null;
+
+        // 1) idealnie pl-PL
+        let v = voices.find(x => (x.lang || "").toLowerCase() === lang.toLowerCase());
+        if (v) return v;
+
+        // 2) cokolwiek "pl"
+        v = voices.find(x => (x.lang || "").toLowerCase().startsWith("pl"));
+        if (v) return v;
+
+        // 3) fallback: domyślny
+        return voices.find(x => x.default) || voices[0] || null;
+    }
+
+    function speakText(text) {
+        if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
+            alert("TTS nie jest wspierane w tej przeglądarce.");
+            return;
+        }
+        if (!text) return;
+
+        // Ubij wszystko co leci (bezpieczne przy kolejnych klikach)
+        window.speechSynthesis.cancel();
+
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "pl-PL";
+        u.rate = 1.0;   // 0.1–10 (realnie sensownie 0.8–1.2)
+        u.pitch = 1.0;  // 0–2
+        u.volume = 1.0; // 0–1
+
+        const voice = pickVoice("pl-PL");
+        if (voice) u.voice = voice;
+
+        u.onstart = () => { __ttsSpeaking = true; };
+        u.onend   = () => { __ttsSpeaking = false; __ttsLastKey = ""; };
+        u.onerror = () => { __ttsSpeaking = false; __ttsLastKey = ""; };
+
+        window.speechSynthesis.speak(u);
+    }
+
+    function toggleSpeakNearestChatText(el) {
+        const text = getNearestChatTextForTTS(el);
+        if (!text) return;
+
+        // klucz: "bańka+tekst" — pozwala na klik w ten sam dymek = stop
+        const bubble = el.closest(".chat-bubble, .chat-bubble-self");
+        const key = (bubble ? bubble.innerText : "") + "||" + text;
+
+        if (__ttsSpeaking && __ttsLastKey === key) {
+            window.speechSynthesis.cancel();
+            __ttsSpeaking = false;
+            __ttsLastKey = "";
+            return;
+        }
+
+        __ttsLastKey = key;
+
+        // W niektórych przeglądarkach lista głosów ładuje się async.
+        // To podejście robi "drugi strzał" gdy głosy dojadą.
+        const voicesNow = window.speechSynthesis.getVoices();
+        if (!voicesNow || !voicesNow.length) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.onvoiceschanged = null;
+                speakText(text);
+            };
+            // i tak próbujemy od razu (często zadziała)
+            speakText(text);
+        } else {
+            speakText(text);
+        }
+    }
+
 
 
 </script>
