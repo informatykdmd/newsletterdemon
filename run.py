@@ -13906,7 +13906,7 @@ def add_fb_group():
         else:
             link = form_data['link']
         
-        if not form_data['created_by']or form_data['created_by'] == '':
+        if not form_data['created_by'] or form_data['created_by'] == '':
             flash("Musisz wybrać profil posiadacza grupy FB", "danger")
             return redirect(url_for('fbGroups'))
         else:
