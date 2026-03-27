@@ -6348,6 +6348,12 @@ def estateAdsSell():
     # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
     all_sell = generator_sellOffert()
 
+    print(znajdz_wolny_termin(
+        ["2026-03-29 02:41:00"],
+        [],
+        interval_seconds=10800
+    ))
+
     new_all_sell = []
     for item in all_sell:
         if 'lento' not in item:
