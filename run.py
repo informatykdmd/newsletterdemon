@@ -34,6 +34,7 @@ import platform
 from pathlib import Path
 import hashlib
 import requests
+from zoneinfo import ZoneInfo
 
 
 """
@@ -62,6 +63,8 @@ logFileName = '/home/johndoe/app/newsletterdemon/logs/errors.log'
 # Konfiguracja loggera
 logging.basicConfig(filename=logFileName, level=logging.INFO,
                     format='%(asctime)s - %(message)s', filemode='a')
+
+WARSAW_TZ = ZoneInfo("Europe/Warsaw")
 
 # Funkcja do logowania informacji o zapytaniu
 def log_request():
@@ -1563,8 +1566,165 @@ def format_date_pl(date_str):
         print(f'Błąd podczas przekształcania daty: {e}')
         return None
 
+# Helpery funkcji przesuwającej harmonogram
+def normalize_nonexistent_local_time(dt_naive, tz=WARSAW_TZ):
+    """
+    Przyjmuje naiwny datetime w czasie lokalnym.
+    Jeśli trafia w nieistniejącą godzinę DST, przesuwa do przodu minutami,
+    aż trafi na prawidłowy lokalny czas.
+    Zwraca nadal datetime naiwny.
+    """
+    probe = dt_naive
+
+    while True:
+        aware = probe.replace(tzinfo=tz)
+
+        # round-trip: local -> utc -> local
+        back = aware.astimezone(datetime.timezone.utc).astimezone(tz).replace(tzinfo=None)
+
+        if back == probe:
+            return probe
+
+        probe += datetime.timedelta(minutes=1)
+
+
+def safe_parse_local_dt(dt_str, fmt='%Y-%m-%d %H:%M:%S', tz=WARSAW_TZ):
+    parsed = datetime.datetime.strptime(dt_str, fmt)
+    return normalize_nonexistent_local_time(parsed, tz)
+
+
+def safe_format_local_dt(dt_obj, fmt='%Y-%m-%d %H:%M:%S', tz=WARSAW_TZ):
+    fixed = normalize_nonexistent_local_time(dt_obj, tz)
+    return fixed.strftime(fmt)
+
 # Funkcja przesuwająca harmonogram jeśli występuje kolizja, konwertuje daty string → datetime → string
 def znajdz_wolny_termin(nowe_kampanie, istniejące_kampanie, interval_seconds=10800):
+    interval = datetime.timedelta(seconds=interval_seconds)
+
+    if not istniejące_kampanie:
+        # return nowe_kampanie
+        return [
+            safe_format_local_dt(safe_parse_local_dt(x, '%Y-%m-%d %H:%M:%S'))
+            for x in nowe_kampanie
+        ]
+
+    termin_export_list = []
+
+    wszystkie_zajete_terminy = []
+    for kampania in istniejące_kampanie:
+        for start_kampanii in kampania:
+            if start_kampanii is not None:
+                wszystkie_zajete_terminy.append(
+                    normalize_nonexistent_local_time(start_kampanii)
+                )
+
+    for checkPointDate in nowe_kampanie:
+        obraz_harmonogramu = {}
+        checkPointDate_objDT = safe_parse_local_dt(checkPointDate, '%Y-%m-%d %H:%M:%S')
+
+        wszystkie_datetimes = []
+
+        for start_kampanii in wszystkie_zajete_terminy:
+            start_kampanii = normalize_nonexistent_local_time(start_kampanii)
+            end_kampanii = normalize_nonexistent_local_time(start_kampanii + interval)
+            valid = start_kampanii >= checkPointDate_objDT
+
+            safe_start_key = safe_format_local_dt(start_kampanii)
+            obraz_harmonogramu[safe_start_key] = {
+                'start': start_kampanii,
+                'end': end_kampanii,
+                'type': 'kampania',
+                'valid': valid
+            }
+            wszystkie_datetimes.append(start_kampanii)
+
+        # Sortujemy daty kampanii chronologicznie
+        wszystkie_datetimes = sorted(set(wszystkie_datetimes))
+
+        # Znajdujemy najdalszą datę
+        if not wszystkie_datetimes:
+            check_fixed = safe_format_local_dt(checkPointDate_objDT)
+            termin_export_list.append(check_fixed)
+            msq.handle_error(
+                f"Brak poprawnych istniejących terminów. Kampania z dnia {checkPointDate} została przypisana do terminu: {check_fixed}\n",
+                log_path="./logs/errors.log"
+            )
+            continue
+        najdalsza_data = wszystkie_datetimes[-1]
+
+        # Dodajemy rok do najdalszej daty
+        # Tworzymy "kampanię widmo" oddaloną o rok, która zapewni dużo miejsca
+        nowa_data_start = normalize_nonexistent_local_time(
+            najdalsza_data + datetime.timedelta(days=365)
+        )
+        wszystkie_datetimes.append(nowa_data_start)
+
+        # Tworzenie "wolnych miejsc" i "pustych miejsc" między kampaniami
+        for i in range(1, len(wszystkie_datetimes)):
+            poprzednia_end = wszystkie_datetimes[i-1] + interval
+            aktualna_start = wszystkie_datetimes[i]
+            
+            # Jeśli jest przerwa między kampaniami
+            while poprzednia_end < aktualna_start:
+                wolny_start = normalize_nonexistent_local_time(poprzednia_end)
+                wolny_end = normalize_nonexistent_local_time(wolny_start + interval)
+                
+                # Jeśli kolejny wolny segment wykracza poza start kampanii
+                if wolny_end > aktualna_start:
+                    wolny_end = aktualna_start
+                    type_key = 'puste-miejsce'
+                    valid = False  # Puste miejsca zawsze mają 'valid': False
+                else:
+                    type_key = 'wolne-miejsce'
+                    valid = wolny_start >= checkPointDate_objDT  # Sprawdzamy, czy wolne miejsce jest w przeszłości czy przyszłości
+                
+                # Dodajemy segment o długości interwału
+                safe_free_key = safe_format_local_dt(wolny_start)
+                obraz_harmonogramu[safe_free_key] = {
+                    'start': wolny_start,
+                    'end': wolny_end,
+                    'type': type_key,
+                    'valid': valid
+                }
+                
+                # Aktualizujemy poprzednia_end na koniec dodanego segmentu
+                poprzednia_end = wolny_end
+        
+
+        wolne_sloty = []
+        for value in obraz_harmonogramu.values():
+            if value['type'] == 'wolne-miejsce' and value['valid']:
+                wolne_sloty.append(value['start'])
+
+        if wolne_sloty:
+            start_kampanii = normalize_nonexistent_local_time(min(wolne_sloty))
+            nowy_key = safe_format_local_dt(start_kampanii)
+            termin_export_list.append(nowy_key)
+        else:
+            start_kampanii = None
+            nowy_key = None
+
+        # Sprawdzamy, czy key zostało znalezione w pętli
+        if start_kampanii is not None:
+            end_kampanii = normalize_nonexistent_local_time(start_kampanii + interval)
+
+            # Wpis do harmonogramu
+            obraz_harmonogramu[nowy_key] = {
+                'start': start_kampanii,
+                'end': end_kampanii,
+                'type': 'kampania',
+                'valid': True
+            }
+            wszystkie_zajete_terminy.append(start_kampanii)
+            msq.handle_error(f"Kampania z dnia {checkPointDate} została przypisana do terminu: {nowy_key}\n", log_path = "./logs/errors.log")
+        else:
+            msq.handle_error(f"Nie znaleziono wolnego miejsca dla kampanii z dnia {checkPointDate}\n", log_path = "./logs/errors.log")
+
+    # Zwracamy listę nowych dat umieszczonych na wolnych miejscach (w formacie string)
+    return termin_export_list
+
+
+def znajdz_wolny_termin_old(nowe_kampanie, istniejące_kampanie, interval_seconds=10800):
     interval = datetime.timedelta(seconds=interval_seconds)
 
     if not istniejące_kampanie:
@@ -5800,6 +5960,12 @@ def update_rent_offer_status():
             msq.handle_error(f'UWAGA! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Allegro', log_path=logFileName)
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Allegro", "danger")
             return redirect(url_for('estateAdsRent'))
+
+        statusNaOtodom = checkOtodomStatus('r', set_post_id)
+        if statusNaOtodom[0] != None:
+            msq.handle_error(f'UWAGA! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Otodom', log_path=logFileName)
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Otodom", "danger")
+            return redirect(url_for('estateAdsRent'))
         
         if set_post_status == 0:
             removeSpecOffer(set_post_id, 'r')
@@ -6549,6 +6715,12 @@ def update_sell_offer_status():
             flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Allegro", "danger")
             return redirect(url_for('estateAdsSell'))
         
+        statusNaOtodom = checkOtodomStatus('s', set_post_id)
+        if statusNaOtodom[0] != None:
+            msq.handle_error(f'UWAGA! Status oferty nie został zmieniony przez {session["username"]}! Usuń na zawsze ogłoszenie z Otodom', log_path=logFileName)
+            flash("Status oferty nie został zmieniony. Usuń na zawsze ogłoszenie z Otodom", "danger")
+            return redirect(url_for('estateAdsSell'))
+
         if set_post_status == 0:
             removeSpecOffer(set_post_id, 's')
         zapytanie_sql = f'''
