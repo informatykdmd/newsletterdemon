@@ -6348,7 +6348,7 @@ def estateAdsSell():
     # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
     all_sell = generator_sellOffert()
 
-    print(znajdz_wolny_termin(
+    print(znajdz_wolny_termin_old(
         ["2026-03-29 02:41:00"],
         [],
         interval_seconds=10800
