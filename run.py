@@ -1724,7 +1724,7 @@ def znajdz_wolny_termin(nowe_kampanie, istniejące_kampanie, interval_seconds=10
     return termin_export_list
 
 
-def znajdz_wolny_termin_old(nowe_kampanie, istniejące_kampanie, interval_seconds=10800):
+def ______________________________________znajdz_wolny_termin_old(nowe_kampanie, istniejące_kampanie, interval_seconds=10800):
     interval = datetime.timedelta(seconds=interval_seconds)
 
     if not istniejące_kampanie:
@@ -6348,11 +6348,6 @@ def estateAdsSell():
     # Wczytanie listy wszystkich postów z bazy danych i przypisanie jej do zmiennej posts
     all_sell = generator_sellOffert()
 
-    print(znajdz_wolny_termin_old(
-        ["2026-03-29 02:41:00"],
-        [],
-        interval_seconds=10800
-    ))
 
     new_all_sell = []
     for item in all_sell:
