@@ -1337,16 +1337,38 @@ class LLMJsonExtractor(LLMExtractor):
     def _parse_items(self, raw: str) -> List[Dict[str, Any]]:
         s = (raw or "").strip()
 
-        # 1) szybka próba: raw jako JSON
         try:
             obj = json.loads(s)
-        except Exception:
-            # 2) fallback: wytnij największy sensowny fragment JSON od pierwszego '{' do ostatniego '}'
+        except Exception as first_error:
+            self.log.error(
+                "JSON PARSE ERROR RAW: %s",
+                str(first_error)
+            )
+
+            self.log.error(
+                "RAW JSON:\n%s",
+                s[:10000]
+            )
+
             if "{" in s and "}" in s:
                 cut = s[s.find("{"): s.rfind("}") + 1]
-                obj = json.loads(cut)
+
+                try:
+                    obj = json.loads(cut)
+                except Exception as second_error:
+                    self.log.error(
+                        "JSON PARSE ERROR CUT: %s",
+                        str(second_error)
+                    )
+
+                    self.log.error(
+                        "CUT JSON:\n%s",
+                        cut[:10000]
+                    )
+
+                    raise second_error
             else:
-                raise
+                raise first_error
 
         items = obj.get("items", [])
         if not isinstance(items, list):
