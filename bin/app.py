@@ -2271,40 +2271,126 @@ def main():
                             f"t={report.get('duration_sec', '?')}s"
                         )
                     
-                    _MEMORIA_BG = threading.Semaphore(1)
+                    # _MEMORIA_BG = threading.Semaphore(1)
+                    # def _bg_memoria_daemon(
+                    #         total_timeout: float = 120.0,
+                    #         mistral: bool = True
+                    #     ):
+                    #     try:
+                    #         with _MEMORIA_BG:
+
+                    #             bots = {"aifa", "gerina", "pionier"}
+                    #             ua_ls = set()
+                    #             souerce_hist = collecting_hist()
+                    #             for msa in souerce_hist:
+                    #                 nick = str(msa[0]).strip()
+                    #                 if nick not in bots:
+                    #                     ua_ls.add(nick)
+
+                    #             allow_users = [str(u).lower() for u in ua_ls]
+
+                    #             for user_login in allow_users:
+                    #                 for bot_id in bots:
+                    #                     report = memoria.run_daemon_loop(
+                    #                         chat_id=0,
+                    #                         owner_user_login=user_login,
+                    #                         owner_agent_id=bot_id,
+                    #                         processing_token=f"memoria-worker-1:{user_login}:{bot_id}",
+                    #                         ltm_batch_limit=20,
+                    #                         total_timeout=total_timeout,
+                    #                         mistral=mistral
+                    #                     )
+                    #                     str_report = format_memoria_report(report)
+                    #                     print(f"[MEMORIA BG REPORT]::{user_login}/{bot_id} ({str_report})")
+
+                    #     except Exception as e:
+                    #         print(f"[MEMORIA BG ERROR] {repr(e)}")
+
+                    _MEMORIA_BG = threading.Lock()
+
+
                     def _bg_memoria_daemon(
                             total_timeout: float = 120.0,
                             mistral: bool = True
                         ):
+
+                        # Jeżeli poprzedni worker nadal działa, nie uruchamiaj kolejnego
+                        if not _MEMORIA_BG.acquire(blocking=False):
+                            print("[MEMORIA BG] Worker już działa — pomijam kolejne uruchomienie.")
+                            return
+
                         try:
-                            with _MEMORIA_BG:
+                            bots = ("aifa", "gerina", "pionier")
 
-                                bots = {"aifa", "gerina", "pionier"}
-                                ua_ls = set()
-                                souerce_hist = collecting_hist()
-                                for msa in souerce_hist:
-                                    nick = str(msa[0]).strip()
-                                    if nick not in bots:
-                                        ua_ls.add(nick)
+                            ua_ls = set()
+                            source_hist = collecting_hist()
 
-                                allow_users = [str(u).lower() for u in ua_ls]
+                            for msa in source_hist:
+                                nick = str(msa[0]).strip().lower()
 
-                                for user_login in allow_users:
-                                    for bot_id in bots:
+                                if nick and nick not in bots:
+                                    ua_ls.add(nick)
+
+                            allow_users = sorted(ua_ls)
+
+                            print(
+                                f"[MEMORIA BG] START "
+                                f"users={len(allow_users)} bots={len(bots)}"
+                            )
+
+                            for user_login in allow_users:
+                                for bot_id in bots:
+
+                                    started = time.monotonic()
+
+                                    print(
+                                        f"[MEMORIA BG START] "
+                                        f"{user_login}/{bot_id}"
+                                    )
+
+                                    try:
                                         report = memoria.run_daemon_loop(
                                             chat_id=0,
                                             owner_user_login=user_login,
                                             owner_agent_id=bot_id,
-                                            processing_token=f"memoria-worker-1:{user_login}:{bot_id}",
+                                            processing_token=(
+                                                f"memoria-worker-1:"
+                                                f"{user_login}:{bot_id}"
+                                            ),
                                             ltm_batch_limit=20,
                                             total_timeout=total_timeout,
                                             mistral=mistral
                                         )
+
+                                        elapsed = time.monotonic() - started
+
                                         str_report = format_memoria_report(report)
-                                        print(f"[MEMORIA BG REPORT]::{user_login}/{bot_id} ({str_report})")
+
+                                        print(
+                                            f"[MEMORIA BG END] "
+                                            f"{user_login}/{bot_id} "
+                                            f"time={elapsed:.1f}s "
+                                            f"({str_report})"
+                                        )
+
+                                    except Exception as e:
+                                        elapsed = time.monotonic() - started
+
+                                        print(
+                                            f"[MEMORIA BG USER ERROR] "
+                                            f"{user_login}/{bot_id} "
+                                            f"time={elapsed:.1f}s "
+                                            f"{repr(e)}"
+                                        )
+
+                            print("[MEMORIA BG] FINISHED")
 
                         except Exception as e:
                             print(f"[MEMORIA BG ERROR] {repr(e)}")
+
+                        finally:
+                            _MEMORIA_BG.release()
+                            print("[MEMORIA BG] LOCK RELEASED")
                     
                     if mgr:
                         print("🧵 MEMORIA | start background processing")
